@@ -51,6 +51,10 @@ function render() {
   renderActivities();
   renderRestaurants();
   renderDisney();
+  renderGrid('building', '#buildingGrid', 'Scouting coworking spots &amp; work cafés…');
+  renderGrid('music', '#musicGrid', 'Digging through the music scene…');
+  renderGrid('geek', '#geekGrid', 'Mapping arcades, anime spots &amp; tech…');
+  renderGrid('meetups', '#meetupsGrid', 'Finding meetups &amp; conventions…');
   buildTOC();
   wireControls();
   wireTierFilter();
@@ -99,6 +103,15 @@ function renderDisney() {
   const list = DATA.disney || [];
   const grid = $('#disneyGrid');
   if (!list.length) { grid.innerHTML = `<div class="empty">Mapping out Disneyland &amp; DisneySea… this fills in automatically.</div>`; return; }
+  grid.innerHTML = list.map(contentCard).join('');
+}
+
+// generic pillar grid (building / music / geek / meetups) keyed by DATA[key]
+function renderGrid(key, sel, placeholder) {
+  const list = DATA[key] || [];
+  const grid = $(sel);
+  if (!grid) return;
+  if (!list.length) { grid.innerHTML = `<div class="empty">${placeholder} this fills in automatically.</div>`; return; }
   grid.innerHTML = list.map(contentCard).join('');
 }
 
@@ -265,6 +278,10 @@ function buildTOC() {
     ['activities', '🌸 Things I\'ll Do'],
     ['restaurants', '🍜 Restaurants'],
     ['disney', '🏰 Tokyo Disney'],
+    ['building', '💻 Building From Tokyo'],
+    ['music', '🎛️ Music & Gear'],
+    ['geek', '🎮 Games & Anime'],
+    ['meetups', '🤝 Meetups & Cons'],
     ['sourcesSection', '📚 Sources'],
   ];
   $('#toc').innerHTML = items

@@ -47,8 +47,131 @@ function render() {
   renderTop();
   renderSources();
   renderDomains();
+  renderChecklist();
+  renderActivities();
+  renderRestaurants();
+  renderDisney();
   buildTOC();
   wireControls();
+  wireTierFilter();
+}
+
+// ---- helpers for v2 content cards ----
+function metaPills(item) {
+  const out = [];
+  if (item.area_or_park) out.push(`<span class="pill area">${esc(item.area_or_park)}</span>`);
+  if (item.month_or_season) out.push(`<span class="pill when">${esc(item.month_or_season)}</span>`);
+  if (item.price_or_cost) out.push(`<span class="pill price">${esc(item.price_or_cost)}</span>`);
+  return out.join('');
+}
+function srcLinks(item) {
+  const s = (item.sources || []).filter(Boolean);
+  if (!s.length) return '';
+  return `<div class="c-src">${s.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">source ${i + 1} ↗</a>`).join('')}</div>`;
+}
+function contentCard(item) {
+  const tier = (item.tier || 'n/a').toLowerCase();
+  return `
+    <article class="card2 tier-${esc(tier)}" data-tier="${esc(tier)}">
+      <div class="c-name">${esc(item.name)}</div>
+      ${item.detail ? `<div class="c-detail">${esc(item.detail)}</div>` : ''}
+      ${item.how_or_when ? `<div class="c-detail"><b>↳</b> ${esc(item.how_or_when)}</div>` : ''}
+      <div class="c-meta">${metaPills(item)}</div>
+      ${srcLinks(item)}
+    </article>`;
+}
+
+function renderActivities() {
+  const list = DATA.activities || [];
+  const grid = $('#activitiesGrid');
+  if (!list.length) { grid.innerHTML = `<div class="empty">Researching the seasonal calendar… this fills in automatically.</div>`; return; }
+  grid.innerHTML = list.map(contentCard).join('');
+}
+
+function renderRestaurants() {
+  const list = DATA.restaurants || [];
+  const grid = $('#restaurantsGrid');
+  if (!list.length) { grid.innerHTML = `<div class="empty">Hunting down the best eats… this fills in automatically.</div>`; return; }
+  grid.innerHTML = list.map(contentCard).join('');
+}
+
+function renderDisney() {
+  const list = DATA.disney || [];
+  const grid = $('#disneyGrid');
+  if (!list.length) { grid.innerHTML = `<div class="empty">Mapping out Disneyland &amp; DisneySea… this fills in automatically.</div>`; return; }
+  grid.innerHTML = list.map(contentCard).join('');
+}
+
+// ---- saveable yearlong checklist ----
+const CHECK_KEY = 'jwh-checklist-v1';
+function loadChecks() { try { return JSON.parse(localStorage.getItem(CHECK_KEY)) || {}; } catch { return {}; } }
+function saveChecks(state) { try { localStorage.setItem(CHECK_KEY, JSON.stringify(state)); } catch {} }
+
+function renderChecklist() {
+  const phases = DATA.checklist || [];
+  const wrap = $('#checkPhases');
+  if (!phases.length) { wrap.innerHTML = `<div class="empty">Building the yearlong plan… this fills in automatically.</div>`; return; }
+  const state = loadChecks();
+  wrap.innerHTML = phases.map((p, pi) => `
+    <div class="phase-block">
+      <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
+      <ul class="check-list">
+        ${(p.items || []).map((it, ii) => {
+          const id = `c-${pi}-${ii}`;
+          const checked = state[id] ? 'checked' : '';
+          const kind = (it.kind || 'experience').toLowerCase();
+          return `
+          <li class="check-item">
+            <input type="checkbox" id="${id}" data-cid="${id}" ${checked} aria-label="${esc(it.task)}">
+            <label class="ci-body" for="${id}">
+              <span class="ci-task">${esc(it.task)}<span class="kind-tag kind-${esc(kind)}">${esc(kind)}</span></span>
+              ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
+            </label>
+          </li>`;
+        }).join('')}
+      </ul>
+    </div>`).join('');
+  $('#checkProgress').hidden = false;
+  wireChecklist();
+  updateProgress();
+}
+
+function wireChecklist() {
+  $$('#checkPhases input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const state = loadChecks();
+      if (cb.checked) state[cb.dataset.cid] = true; else delete state[cb.dataset.cid];
+      saveChecks(state);
+      updateProgress();
+    });
+  });
+  const reset = $('#checkReset');
+  if (reset) reset.addEventListener('click', () => {
+    if (!confirm('Reset all checkmarks?')) return;
+    saveChecks({});
+    $$('#checkPhases input[type=checkbox]').forEach(cb => { cb.checked = false; });
+    updateProgress();
+  });
+}
+
+function updateProgress() {
+  const boxes = $$('#checkPhases input[type=checkbox]');
+  if (!boxes.length) return;
+  const done = boxes.filter(b => b.checked).length;
+  const pct = Math.round((done / boxes.length) * 100);
+  $('#checkBar').style.width = pct + '%';
+  $('#checkPct').textContent = `${pct}% · ${done}/${boxes.length}`;
+}
+
+function wireTierFilter() {
+  $$('#tierFilters .chip').forEach(chip => chip.addEventListener('click', () => {
+    $$('#tierFilters .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const t = chip.dataset.tier;
+    $$('#restaurantsGrid .card2').forEach(card => {
+      card.style.display = (t === 'all' || card.dataset.tier === t) ? '' : 'none';
+    });
+  }));
 }
 
 function renderTimeSensitive() {
@@ -138,7 +261,10 @@ function buildTOC() {
     ['canadaSection', '🇨🇦 Canada'],
     ['sequenceSection', '🗓️ Sequence'],
     ['topSection', '🏆 Top Moves'],
-    ...(DATA.domains || []).map(d => [`d-${d.key}`, `${d.icon || ''} ${d.title}`]),
+    ['checklist', '✅ Yearlong Checklist'],
+    ['activities', '🌸 Things I\'ll Do'],
+    ['restaurants', '🍜 Restaurants'],
+    ['disney', '🏰 Tokyo Disney'],
     ['sourcesSection', '📚 Sources'],
   ];
   $('#toc').innerHTML = items

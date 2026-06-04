@@ -16,9 +16,9 @@
 <header class="hero">
   <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
   <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
-  <p class="hero-kicker">日本 · ワーキングホリデー</p>
-  <h1 id="heroTitle">Japan Working Holiday</h1>
-  <p class="hero-sub" id="heroSub">Insider living hacks · Canada → Tokyo</p>
+  <p class="hero-kicker">私の一年 · ワーキングホリデー</p>
+  <h1 id="heroTitle">My Year in Japan</h1>
+  <p class="hero-sub" id="heroSub">A working-holiday year in Tokyo — planned, packed, and lived</p>
   <p class="hero-status" id="heroStatus"></p>
   <div class="hero-meta">
     <span id="metaArrival"></span>
@@ -30,6 +30,14 @@
 <nav class="toc" id="toc"></nav>
 
 <main>
+  <p class="intro">
+    This is my plan for a full year in Tokyo — everything from the boring-but-critical paperwork
+    to the <em>cherry blossoms I don't want to miss</em>, the ramen counters I'm hunting down, and
+    the days I'll spend lost in DisneySea. It started as a relocation checklist and turned into a
+    map of the year I want to have. Everything here is researched and sourced; the checklist saves
+    as I tick things off.
+  </p>
+
   <!-- Time-sensitive -->
   <section class="block callout" id="timeSensitiveSection">
     <h2><span class="emoji">⏰</span> Time-Sensitive — given your June 30, 2026 arrival</h2>
@@ -73,6 +81,63 @@
   <!-- Domains -->
   <div id="domains"></div>
 
+  <!-- ============ YEARLONG CHECKLIST ============ -->
+  <section id="checklist">
+    <div class="pillar-head">
+      <span class="jp">一年の計画</span>
+      <h2>My Yearlong Checklist</h2>
+    </div>
+    <p class="lede">Phased across the whole year — logistics, experiences, food, and Disney days. Tick things off; your progress saves on this device.</p>
+    <div class="check-progress" id="checkProgress" hidden>
+      <span class="pct" id="checkPct">0%</span>
+      <div class="bar"><i id="checkBar"></i></div>
+      <button class="reset" id="checkReset" type="button">reset</button>
+    </div>
+    <div id="checkPhases" aria-live="polite"></div>
+  </section>
+
+  <!-- ============ ACTIVITIES ============ -->
+  <section id="activities">
+    <div class="pillar-head">
+      <span class="jp">四季の楽しみ</span>
+      <h2>Things I'll Do — Season by Season</h2>
+    </div>
+    <p class="lede">Hanami, fireworks, autumn leaves, winter illuminations, festivals, and the bucket-list day trips. Roughly in the order the calendar gives them to me.</p>
+    <div class="grid" id="activitiesGrid"></div>
+  </section>
+
+  <!-- ============ RESTAURANTS ============ -->
+  <section id="restaurants">
+    <div class="pillar-head">
+      <span class="jp">食べ歩き</span>
+      <h2>Restaurants to Try</h2>
+    </div>
+    <p class="lede">From ¥400 chain bowls to the splurges worth booking ahead. Filter by budget below.</p>
+    <div class="legend">
+      <span><i style="background:#1e8e3e"></i> budget</span>
+      <span><i style="background:#b8860b"></i> mid</span>
+      <span><i style="background:#bc002d"></i> splurge</span>
+      <span><i style="background:#223a70"></i> free / n-a</span>
+    </div>
+    <div class="filters" id="tierFilters" style="margin-bottom:var(--s4)">
+      <button class="chip active" data-tier="all" type="button">All</button>
+      <button class="chip" data-tier="budget" type="button">Budget</button>
+      <button class="chip" data-tier="mid" type="button">Mid</button>
+      <button class="chip" data-tier="splurge" type="button">Splurge</button>
+    </div>
+    <div class="grid" id="restaurantsGrid"></div>
+  </section>
+
+  <!-- ============ TOKYO DISNEY ============ -->
+  <section id="disney">
+    <div class="pillar-head">
+      <span class="jp">東京ディズニー</span>
+      <h2>Tokyo Disneyland &amp; DisneySea</h2>
+    </div>
+    <p class="lede">Must-dos across both parks, the current Premier Access / Standby Pass system, Fantasy Springs, seasonal events, and how to do it without melting my budget.</p>
+    <div class="grid" id="disneyGrid"></div>
+  </section>
+
   <!-- Sources -->
   <section class="block sources" id="sourcesSection">
     <h2><span class="emoji">📚</span> Sources</h2>
@@ -81,8 +146,8 @@
 </main>
 
 <footer>
-  <p>Personal relocation guide · generated <span id="footGen"></span></p>
-  <p class="disclaimer">Always verify visa, tax, and immigration details against official consulate / government sources before relying on them. Rules change.</p>
+  <p>My Year in Japan · last updated <span id="footGen"></span></p>
+  <p class="disclaimer">Visa, tax, and immigration rules change — I always verify against official consulate / government sources before relying on anything here. Prices and Disney systems shift too; treat everything as a starting point, not gospel.</p>
 </footer>
 
 <script src="assets/app.js"></script>

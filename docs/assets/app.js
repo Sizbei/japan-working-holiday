@@ -16,7 +16,15 @@ let query = '';
   document.documentElement.dataset.theme = theme;
   updateToggle(theme);
 })();
-function updateToggle(theme) { const b = $('#themeToggle'); if (b) b.textContent = theme === 'dark' ? '☀️' : '🌙'; }
+function updateToggle(theme) {
+  const b = $('#themeToggle');
+  if (!b) return;
+  const isDark = theme === 'dark';
+  const icon = b.querySelector('span') || b;
+  icon.textContent = isDark ? '☀️' : '🌙';
+  b.setAttribute('aria-pressed', String(isDark));
+  b.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
 $('#themeToggle').addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;

@@ -3,20 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Japan Working Holiday — Insider Living Hacks (Canada → Tokyo)</title>
-<meta name="description" content="A personal relocation guide: insider hacks for living in Japan on a Canadian Working Holiday Visa.">
+<title>My Year in Japan — A Working-Holiday Year in Tokyo</title>
+<meta name="description" content="A personal journal and plan for a working-holiday year in Tokyo — paperwork, seasons, food, Disney, music, and the days I want to have.">
+<meta name="theme-color" content="#bc002d" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14141a" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://sizbei.github.io/japan-working-holiday/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f7f4ee'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23bc002d'/%3E%3C/svg%3E">
+<meta property="og:title" content="My Year in Japan — A Working-Holiday Year in Tokyo">
+<meta property="og:description" content="A personal journal and plan for a working-holiday year in Tokyo — paperwork, seasons, food, Disney, music, and the days I want to have.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to content</a>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="hero">
-  <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">🌙</span></button>
   <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
-  <p class="hero-kicker">私の一年 · ワーキングホリデー</p>
+  <p class="hero-kicker" lang="ja" aria-hidden="true">私の一年 · ワーキングホリデー</p>
   <h1 id="heroTitle">My Year in Japan</h1>
   <p class="hero-sub" id="heroSub">A working-holiday year in Tokyo — planned, packed, and lived</p>
   <p class="hero-status" id="heroStatus"></p>
@@ -27,9 +36,9 @@
   </div>
 </header>
 
-<nav class="toc" id="toc"></nav>
+<nav class="toc" id="toc" aria-label="Section navigation"></nav>
 
-<main>
+<main id="main">
   <p class="intro">
     This is my plan for a full year in Tokyo — everything from the boring-but-critical paperwork
     to the <em>cherry blossoms I don't want to miss</em>, the ramen counters I'm hunting down, and
@@ -40,7 +49,7 @@
 
   <!-- Time-sensitive -->
   <section class="block callout" id="timeSensitiveSection">
-    <h2><span class="emoji">⏰</span> Time-Sensitive — given your June 30, 2026 arrival</h2>
+    <h2><span class="emoji" aria-hidden="true">⏰</span> Time-Sensitive — given your June 30, 2026 arrival</h2>
     <div class="table-wrap">
       <table id="timeTable">
         <thead><tr><th>Item</th><th>Timing</th><th>Action</th></tr></thead>
@@ -51,19 +60,19 @@
 
   <!-- Canada notes -->
   <section class="block" id="canadaSection">
-    <h2><span class="emoji">🇨🇦</span> Canada-Specific Notes</h2>
+    <h2><span class="emoji" aria-hidden="true">🇨🇦</span> Canada-Specific Notes</h2>
     <ul class="note-list" id="canadaList"></ul>
   </section>
 
   <!-- Arrival sequence -->
   <section class="block" id="sequenceSection">
-    <h2><span class="emoji">🗓️</span> Your Arrival-Week Sequence</h2>
+    <h2><span class="emoji" aria-hidden="true">🗓️</span> Your Arrival-Week Sequence</h2>
     <ol class="sequence" id="sequenceList"></ol>
   </section>
 
   <!-- Top 10 -->
   <section class="block" id="topSection">
-    <h2><span class="emoji">🏆</span> Highest-Value Moves</h2>
+    <h2><span class="emoji" aria-hidden="true">🏆</span> Highest-Value Moves</h2>
     <div class="top-grid" id="topGrid"></div>
   </section>
 
@@ -79,12 +88,12 @@
   </section>
 
   <!-- Domains -->
-  <div id="domains"></div>
+  <div id="domains" aria-live="polite" aria-busy="true"></div>
 
   <!-- ============ BRAINSTORM / BREW ============ -->
   <section id="brew">
     <div class="pillar-head">
-      <span class="jp">考える場所</span>
+      <span class="jp" lang="ja" aria-hidden="true">考える場所</span>
       <h2>Brainstorm &amp; Brew</h2>
     </div>
     <p class="lede">A space to think out loud — ideas, things to look up, places I hear about, plans half-formed. Saves on this device as I type; nothing leaves my browser.</p>
@@ -112,22 +121,22 @@
   <!-- ============ YEARLONG CHECKLIST ============ -->
   <section id="checklist">
     <div class="pillar-head">
-      <span class="jp">一年の計画</span>
+      <span class="jp" lang="ja" aria-hidden="true">一年の計画</span>
       <h2>My Yearlong Checklist</h2>
     </div>
     <p class="lede">Phased across the whole year — logistics, experiences, food, and Disney days. Tick things off; your progress saves on this device.</p>
     <div class="check-progress" id="checkProgress" hidden>
-      <span class="pct" id="checkPct">0%</span>
+      <span class="pct" id="checkPct" role="status" aria-live="polite">0%</span>
       <div class="bar"><i id="checkBar"></i></div>
       <button class="reset" id="checkReset" type="button">reset</button>
     </div>
-    <div id="checkPhases" aria-live="polite"></div>
+    <div id="checkPhases"></div>
   </section>
 
   <!-- ============ ACTIVITIES ============ -->
   <section id="activities">
     <div class="pillar-head">
-      <span class="jp">四季の楽しみ</span>
+      <span class="jp" lang="ja" aria-hidden="true">四季の楽しみ</span>
       <h2>Things I'll Do — Season by Season</h2>
     </div>
     <p class="lede">Hanami, fireworks, autumn leaves, winter illuminations, festivals, and the bucket-list day trips. Roughly in the order the calendar gives them to me.</p>
@@ -137,7 +146,7 @@
   <!-- ============ RESTAURANTS ============ -->
   <section id="restaurants">
     <div class="pillar-head">
-      <span class="jp">食べ歩き</span>
+      <span class="jp" lang="ja" aria-hidden="true">食べ歩き</span>
       <h2>Restaurants to Try</h2>
     </div>
     <p class="lede">From ¥400 chain bowls to the splurges worth booking ahead. Filter by budget below.</p>
@@ -159,7 +168,7 @@
   <!-- ============ TOKYO DISNEY ============ -->
   <section id="disney">
     <div class="pillar-head">
-      <span class="jp">東京ディズニー</span>
+      <span class="jp" lang="ja" aria-hidden="true">東京ディズニー</span>
       <h2>Tokyo Disneyland &amp; DisneySea</h2>
     </div>
     <p class="lede">Must-dos across both parks, the current Premier Access / Standby Pass system, Fantasy Springs, seasonal events, and how to do it without melting my budget.</p>
@@ -169,7 +178,7 @@
   <!-- ============ REMOTE WORK / BUILDING FROM TOKYO ============ -->
   <section id="building">
     <div class="pillar-head">
-      <span class="jp">東京で創る</span>
+      <span class="jp" lang="ja" aria-hidden="true">東京で創る</span>
       <h2>Building From Tokyo</h2>
     </div>
     <p class="lede">Keeping my projects shipping across a brutal time gap. Pacific ↔ Tokyo is ~16 hours — so this is about coworking spots, late-night work cafés, fast wifi, and an async rhythm that actually works.</p>
@@ -179,7 +188,7 @@
   <!-- ============ MUSIC SCENE ============ -->
   <section id="music">
     <div class="pillar-head">
-      <span class="jp">音楽の街</span>
+      <span class="jp" lang="ja" aria-hidden="true">音楽の街</span>
       <h2>Music, Gear &amp; Synths</h2>
     </div>
     <p class="lede">For the DAW brain: Ochanomizu's instrument street, synth and gear shops, Disk Union digging, live houses, and listening bars worth the trip.</p>
@@ -189,7 +198,7 @@
   <!-- ============ GAMES / TECH / ANIME CULTURE ============ -->
   <section id="geek">
     <div class="pillar-head">
-      <span class="jp">ゲーム・アニメ・技術</span>
+      <span class="jp" lang="ja" aria-hidden="true">ゲーム・アニメ・技術</span>
       <h2>Games, Anime &amp; Tech Culture</h2>
     </div>
     <p class="lede">Akihabara, retro arcades, game bars, anime &amp; manga spots, maker/hardware shops, and creative-tech spaces (teamLab and friends) that fit how I think.</p>
@@ -199,7 +208,7 @@
   <!-- ============ MEETUPS & CONVENTIONS ============ -->
   <section id="meetups">
     <div class="pillar-head">
-      <span class="jp">集まり・イベント</span>
+      <span class="jp" lang="ja" aria-hidden="true">集まり・イベント</span>
       <h2>Meetups &amp; Conventions</h2>
     </div>
     <p class="lede">Where to meet people who build and nerd out: dev/tech meetups (often English-friendly), founder/startup events, game-dev nights, and the big conventions — from tech expos to anime cons like Comiket.</p>
@@ -208,7 +217,7 @@
 
   <!-- Sources -->
   <section class="block sources" id="sourcesSection">
-    <h2><span class="emoji">📚</span> Sources</h2>
+    <h2><span class="emoji" aria-hidden="true">📚</span> Sources</h2>
     <ul id="sourcesList"></ul>
   </section>
 </main>

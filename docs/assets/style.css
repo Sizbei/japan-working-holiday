@@ -279,3 +279,31 @@ main { padding: var(--s6) var(--s4) var(--s12); }
   .check-item { padding: var(--s4) var(--s3); }
   .chip, .toc a { padding-top: .55rem; padding-bottom: .55rem; }
 }
+
+/* ============ Brainstorm & Brew ============ */
+.brew-wrap { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
+@media (min-width: 820px) { .brew-wrap { grid-template-columns: 1.3fr 1fr; align-items: start; } }
+.brew-pad, .brew-ideas { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.brew-bar { display: flex; align-items: center; justify-content: space-between; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
+.brew-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; color: var(--indigo); }
+.brew-saved { font-size: .72rem; color: var(--ink-soft); opacity: 0; transition: opacity .3s; }
+.brew-saved.show { opacity: 1; }
+#brewNotes {
+  width: 100%; min-height: 280px; border: none; resize: vertical; padding: var(--s4);
+  background: transparent; color: var(--ink); font-family: var(--serif); font-size: 1.02rem; line-height: 1.75;
+  /* subtle ruled-paper feel */
+  background-image: linear-gradient(var(--line) 1px, transparent 1px);
+  background-size: 100% 2.05em; background-position: 0 calc(var(--s4) + 1.2em);
+}
+#brewNotes:focus { outline: none; }
+.brew-add { display: flex; gap: var(--s2); padding: var(--s3) var(--s4); }
+.brew-add input { flex: 1; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: 100px; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: .9rem; }
+.brew-add input:focus { outline: 2px solid var(--indigo); border-color: transparent; }
+.brew-add button { width: 38px; height: 38px; flex-shrink: 0; border: none; border-radius: 50%; background: var(--red); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer; transition: transform .15s; }
+.brew-add button:hover { transform: scale(1.1); }
+.brew-list { list-style: none; margin: 0; padding: 0 var(--s4) var(--s4); display: flex; flex-direction: column; gap: var(--s2); }
+.brew-card { display: flex; align-items: flex-start; gap: var(--s2); background: var(--bg); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 10px; padding: var(--s3); font-size: .92rem; }
+.brew-card span { flex: 1; word-break: break-word; }
+.brew-card button { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .2rem; opacity: .6; }
+.brew-card button:hover { opacity: 1; color: var(--red); }
+.brew-empty { color: var(--ink-soft); font-style: italic; font-size: .88rem; padding: var(--s2) 0; }

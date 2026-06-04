@@ -109,7 +109,107 @@
       ]
     }
   ],
-  "checklist": [],
+  "checklist": [
+    {
+      "phase": "Pre-Departure (Canada)",
+      "window": "Now → late June 2026",
+      "items": [
+        { "task": "Confirm WHV eligibility (age 18–30, citizen, residing in Canada)", "kind": "logistics" },
+        { "task": "Gather visa documents: passport, form + photo, CV, written activity plan", "note": "Document prep takes 1–3 months — start early.", "kind": "logistics" },
+        { "task": "Show proof of funds in your account", "note": "~CAD $3,500 with a return ticket, ~CAD $4,500 without. Your flight is one-way → budget higher or add a changeable return.", "kind": "logistics" },
+        { "task": "Book consulate appointment and submit application", "note": "Processing ~7–15 business days. Visa must be in your passport before you fly.", "kind": "logistics" },
+        { "task": "Check passport validity + blank pages", "kind": "logistics" },
+        { "task": "Open a Wise multi-currency account from Canada", "note": "Bridges banking until Japan Post is set up; cheap FX.", "kind": "logistics" },
+        { "task": "Move 2FA to an authenticator app (don't rely on SMS abroad)", "kind": "logistics" },
+        { "task": "Reserve a furnished share house (book from abroad if possible)", "note": "Gives you an instant registrable address on arrival.", "kind": "logistics" },
+        { "task": "Buy a data eSIM (~5 days before flying)", "kind": "logistics" },
+        { "task": "Fill out Visit Japan Web for fast NRT arrival", "kind": "logistics" }
+      ]
+    },
+    {
+      "phase": "Arrival Week",
+      "window": "July 2026",
+      "items": [
+        { "task": "Get residence card (在留カード) at Narita immigration", "kind": "logistics" },
+        { "task": "Move into the share house", "kind": "logistics" },
+        { "task": "Register address (住民票) at your ward office within 14 days", "kind": "logistics" },
+        { "task": "Enroll in National Health Insurance + pension (same visit)", "kind": "logistics" },
+        { "task": "Open a Japan Post Bank (ゆうちょ) account", "kind": "logistics" },
+        { "task": "Set up Suica in Apple Wallet", "kind": "logistics" },
+        { "task": "First conbini + supermarket run; learn the trash/recycling rules", "kind": "experience" },
+        { "task": "Slurp a first bowl of ramen in the new neighborhood", "kind": "food" }
+      ]
+    },
+    {
+      "phase": "Month 1 — Settle In",
+      "window": "July 2026",
+      "items": [
+        { "task": "Scope coworking spaces + a reliable late-night work café", "kind": "logistics" },
+        { "task": "Lock an async work rhythm for the ~16h Pacific time gap", "kind": "logistics" },
+        { "task": "Find your local sento / public bath", "kind": "experience" },
+        { "task": "Walk Akihabara end to end", "kind": "experience" },
+        { "task": "Visit Ochanomizu instrument street + a synth/gear shop", "kind": "experience" },
+        { "task": "Join one English-friendly dev meetup (check Connpass/Meetup)", "kind": "experience" }
+      ]
+    },
+    {
+      "phase": "Summer 2026",
+      "window": "Jul–Aug 2026",
+      "items": [
+        { "task": "Catch a summer matsuri (festival) in yukata", "kind": "experience" },
+        { "task": "See a big hanabi (fireworks) show", "note": "Sumida River & others run mid–late summer.", "kind": "experience" },
+        { "task": "Eat kakigori (shaved ice) on a brutal humid day", "kind": "food" },
+        { "task": "Go to Tokyo DisneySea — ride Fantasy Springs", "kind": "disney" },
+        { "task": "Day trip to escape the heat (Hakone / Kamakura coast)", "kind": "experience" }
+      ]
+    },
+    {
+      "phase": "Autumn 2026",
+      "window": "Sep–Nov 2026",
+      "items": [
+        { "task": "Tokyo Game Show (~September)", "kind": "experience" },
+        { "task": "See koyo (autumn leaves) — late Nov in Tokyo parks", "kind": "experience" },
+        { "task": "Try seasonal foods: sanma, chestnuts, new-crop rice", "kind": "food" },
+        { "task": "Catch a sumo basho if one's running", "kind": "experience" },
+        { "task": "teamLab (Borderless or Planets)", "kind": "experience" }
+      ]
+    },
+    {
+      "phase": "Winter 2026–27",
+      "window": "Dec 2026 – Feb 2027",
+      "items": [
+        { "task": "Winter illuminations (start early Dec)", "kind": "experience" },
+        { "task": "Tokyo Disneyland Christmas season", "kind": "disney" },
+        { "task": "Hatsumode (first shrine visit) Jan 1", "kind": "experience" },
+        { "task": "Eat osechi / New Year foods", "kind": "food" },
+        { "task": "Mid-year admin check: residence tax, pension on track", "kind": "logistics" },
+        { "task": "Optional: snow trip / onsen weekend", "kind": "experience" }
+      ]
+    },
+    {
+      "phase": "Spring 2027",
+      "window": "Mar–Apr 2027",
+      "items": [
+        { "task": "Hanami — cherry blossoms (~late Mar–early Apr)", "note": "Ueno, Meguro River, Shinjuku Gyoen, Chidorigafuchi.", "kind": "experience" },
+        { "task": "Hanami picnic with conbini + depachika snacks", "kind": "food" },
+        { "task": "AnimeJapan (spring anime convention)", "kind": "experience" },
+        { "task": "A spring road/rail trip while the weather's perfect", "kind": "experience" }
+      ]
+    },
+    {
+      "phase": "Final Months & Departure Prep",
+      "window": "May–Jun 2027",
+      "items": [
+        { "task": "Tick off remaining bucket-list spots & restaurants", "kind": "experience" },
+        { "task": "Get a re-entry permit if leaving Japan before the visa ends", "note": "WHV is effectively single-entry — tick the box at the airport.", "kind": "logistics" },
+        { "task": "Close/settle bank account, utilities, phone, lease", "kind": "logistics" },
+        { "task": "File final tax / arrange residence-tax payment", "kind": "logistics" },
+        { "task": "De-register address at ward office before leaving", "kind": "logistics" },
+        { "task": "Claim the pension lump-sum withdrawal refund (within 2 years of leaving)", "note": "Keep pension book + My Number records.", "kind": "logistics" },
+        { "task": "Last bowl of ramen 🍜", "kind": "food" }
+      ]
+    }
+  ],
   "activities": [],
   "restaurants": [],
   "disney": [],

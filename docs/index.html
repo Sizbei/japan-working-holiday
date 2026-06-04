@@ -81,6 +81,34 @@
   <!-- Domains -->
   <div id="domains"></div>
 
+  <!-- ============ BRAINSTORM / BREW ============ -->
+  <section id="brew">
+    <div class="pillar-head">
+      <span class="jp">考える場所</span>
+      <h2>Brainstorm &amp; Brew</h2>
+    </div>
+    <p class="lede">A space to think out loud — ideas, things to look up, places I hear about, plans half-formed. Saves on this device as I type; nothing leaves my browser.</p>
+    <div class="brew-wrap">
+      <div class="brew-pad">
+        <div class="brew-bar">
+          <span class="brew-label">Scratchpad</span>
+          <span class="brew-saved" id="brewSaved">saved</span>
+        </div>
+        <textarea id="brewNotes" placeholder="Brain-dump here… ideas, links, restaurants someone mentioned, project thoughts, anything. It autosaves."></textarea>
+      </div>
+      <div class="brew-ideas">
+        <div class="brew-bar">
+          <span class="brew-label">Idea cards</span>
+        </div>
+        <form id="brewForm" class="brew-add">
+          <input type="text" id="brewInput" placeholder="Add an idea + Enter…" aria-label="Add an idea">
+          <button type="submit" aria-label="Add idea">+</button>
+        </form>
+        <ul class="brew-list" id="brewList" aria-live="polite"></ul>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ YEARLONG CHECKLIST ============ -->
   <section id="checklist">
     <div class="pillar-head">

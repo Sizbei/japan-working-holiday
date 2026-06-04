@@ -47,6 +47,7 @@ function render() {
   renderTop();
   renderSources();
   renderDomains();
+  initBrew();
   renderChecklist();
   renderActivities();
   renderRestaurants();
@@ -113,6 +114,59 @@ function renderGrid(key, sel, placeholder) {
   if (!grid) return;
   if (!list.length) { grid.innerHTML = `<div class="empty">${placeholder} this fills in automatically.</div>`; return; }
   grid.innerHTML = list.map(contentCard).join('');
+}
+
+// ---- Brainstorm & Brew (autosaving scratchpad + idea cards) ----
+const BREW_NOTES_KEY = 'jwh-brew-notes-v1';
+const BREW_IDEAS_KEY = 'jwh-brew-ideas-v1';
+function loadIdeas() { try { return JSON.parse(localStorage.getItem(BREW_IDEAS_KEY)) || []; } catch { return []; } }
+function saveIdeas(arr) { try { localStorage.setItem(BREW_IDEAS_KEY, JSON.stringify(arr)); } catch {} }
+
+function initBrew() {
+  const pad = $('#brewNotes');
+  const saved = $('#brewSaved');
+  if (pad) {
+    pad.value = localStorage.getItem(BREW_NOTES_KEY) || '';
+    let t;
+    pad.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        try { localStorage.setItem(BREW_NOTES_KEY, pad.value); } catch {}
+        if (saved) { saved.classList.add('show'); setTimeout(() => saved.classList.remove('show'), 1200); }
+      }, 350);
+    });
+  }
+  const form = $('#brewForm');
+  const input = $('#brewInput');
+  if (form && input) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = input.value.trim();
+      if (!val) return;
+      const ideas = loadIdeas();
+      ideas.unshift({ id: 'i' + Date.now(), text: val });
+      saveIdeas(ideas);
+      input.value = '';
+      renderIdeas();
+    });
+  }
+  renderIdeas();
+}
+
+function renderIdeas() {
+  const list = $('#brewList');
+  if (!list) return;
+  const ideas = loadIdeas();
+  if (!ideas.length) { list.innerHTML = `<li class="brew-empty">No idea cards yet — add one above.</li>`; return; }
+  list.innerHTML = ideas.map(i => `
+    <li class="brew-card">
+      <span>${esc(i.text)}</span>
+      <button type="button" data-del="${esc(i.id)}" aria-label="Delete idea">✕</button>
+    </li>`).join('');
+  list.querySelectorAll('button[data-del]').forEach(b => b.addEventListener('click', () => {
+    saveIdeas(loadIdeas().filter(x => x.id !== b.dataset.del));
+    renderIdeas();
+  }));
 }
 
 // ---- saveable yearlong checklist ----
@@ -274,6 +328,7 @@ function buildTOC() {
     ['canadaSection', '🇨🇦 Canada'],
     ['sequenceSection', '🗓️ Sequence'],
     ['topSection', '🏆 Top Moves'],
+    ['brew', '💭 Brainstorm & Brew'],
     ['checklist', '✅ Yearlong Checklist'],
     ['activities', '🌸 Things I\'ll Do'],
     ['restaurants', '🍜 Restaurants'],

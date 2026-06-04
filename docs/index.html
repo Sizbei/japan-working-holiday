@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan Working Holiday — Insider Living Hacks (Canada → Tokyo)</title>
+<meta name="description" content="A personal relocation guide: insider hacks for living in Japan on a Canadian Working Holiday Visa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="hero">
+  <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+  <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
+  <p class="hero-kicker">日本 · ワーキングホリデー</p>
+  <h1 id="heroTitle">Japan Working Holiday</h1>
+  <p class="hero-sub" id="heroSub">Insider living hacks · Canada → Tokyo</p>
+  <p class="hero-status" id="heroStatus"></p>
+  <div class="hero-meta">
+    <span id="metaArrival"></span>
+    <span class="dot">·</span>
+    <span id="metaGenerated"></span>
+  </div>
+</header>
+
+<nav class="toc" id="toc"></nav>
+
+<main>
+  <!-- Time-sensitive -->
+  <section class="block callout" id="timeSensitiveSection">
+    <h2><span class="emoji">⏰</span> Time-Sensitive — given your June 30, 2026 arrival</h2>
+    <div class="table-wrap">
+      <table id="timeTable">
+        <thead><tr><th>Item</th><th>Timing</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Canada notes -->
+  <section class="block" id="canadaSection">
+    <h2><span class="emoji">🇨🇦</span> Canada-Specific Notes</h2>
+    <ul class="note-list" id="canadaList"></ul>
+  </section>
+
+  <!-- Arrival sequence -->
+  <section class="block" id="sequenceSection">
+    <h2><span class="emoji">🗓️</span> Your Arrival-Week Sequence</h2>
+    <ol class="sequence" id="sequenceList"></ol>
+  </section>
+
+  <!-- Top 10 -->
+  <section class="block" id="topSection">
+    <h2><span class="emoji">🏆</span> Highest-Value Moves</h2>
+    <div class="top-grid" id="topGrid"></div>
+  </section>
+
+  <!-- Controls -->
+  <section class="controls" id="controls">
+    <input type="search" id="search" placeholder="Search tips… (e.g. bank, pension, suica)" aria-label="Search tips">
+    <div class="filters" id="confFilters">
+      <button class="chip active" data-conf="all">All</button>
+      <button class="chip" data-conf="high">High confidence</button>
+      <button class="chip" data-conf="medium">Medium</button>
+      <button class="chip" data-conf="low">Low · verify</button>
+    </div>
+  </section>
+
+  <!-- Domains -->
+  <div id="domains"></div>
+
+  <!-- Sources -->
+  <section class="block sources" id="sourcesSection">
+    <h2><span class="emoji">📚</span> Sources</h2>
+    <ul id="sourcesList"></ul>
+  </section>
+</main>
+
+<footer>
+  <p>Personal relocation guide · generated <span id="footGen"></span></p>
+  <p class="disclaimer">Always verify visa, tax, and immigration details against official consulate / government sources before relying on them. Rules change.</p>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

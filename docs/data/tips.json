@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "title": "Japan Working Holiday — Insider Living Hacks (Canada → Tokyo)",
+    "subtitle": "A personal relocation guide. Arrival: NRT, June 30 2026.",
+    "generated": "2026-06-04",
+    "status": "Research in progress — findings populate automatically as the deep-research workflow completes.",
+    "arrival_date": "2026-06-30"
+  },
+  "timeSensitive": [
+    {
+      "item": "Working Holiday Visa in passport BEFORE you fly",
+      "timing": "Before June 29 departure",
+      "action": "Document prep takes 1–3 months; consulate processing is only ~7–15 business days. The bottleneck is gathering documents. Confirm the visa is stamped before the flight.",
+      "confidence": "high"
+    },
+    {
+      "item": "Proof of funds (one-way ticket = higher bracket)",
+      "timing": "At visa application",
+      "action": "Canadian consulates require ~CAD $3,500 WITH a return ticket, or ~CAD $4,500 / +CAD $1,000 WITHOUT one. Your booking is one-way, so budget for the higher figure or add a changeable return.",
+      "confidence": "high"
+    },
+    {
+      "item": "Address registration at ward office (住民票)",
+      "timing": "Within 14 days of moving in",
+      "action": "Go to YOUR ward's office (区役所) with passport + residence card + housing contract. This unlocks health insurance, pension, and bank accounts.",
+      "confidence": "high"
+    },
+    {
+      "item": "National Health Insurance + pension enrollment",
+      "timing": "Same visit as address registration",
+      "action": "Enroll in 国民健康保険 (NHI) and pension. NHI makes medical affordable; pension contributions are partly refundable on departure (lump-sum withdrawal).",
+      "confidence": "high"
+    },
+    {
+      "item": "Pension lump-sum withdrawal refund",
+      "timing": "Claim AFTER leaving Japan (within 2 years of departure)",
+      "action": "Working-holiday makers who paid pension can claim a partial refund after they leave. Keep your pension book / My Number records.",
+      "confidence": "medium"
+    },
+    {
+      "item": "Re-entry permit before any trip abroad",
+      "timing": "Before leaving Japan during your stay",
+      "action": "The WHV is effectively single-entry; use the 'special re-entry permit' (tick the box at the airport) before any overseas trip or your residence status lapses.",
+      "confidence": "medium"
+    }
+  ],
+  "canadaNotes": [
+    "Since Dec 1 2024, the Canada–Japan WHV can be granted TWICE in a lifetime (two 1-year stays) or as one continuous 2-year stay.",
+    "Eligibility: Canadian citizen, age 18–30, residing in Canada, clean record, good health.",
+    "No consular fee — the visa is free.",
+    "Proof-of-funds figures vary by consulate (Vancouver, Toronto, Calgary, Montreal) — verify your specific consulate's current page.",
+    "You apply at a Japanese consulate IN CANADA before departure; the visa is not issued in Japan."
+  ],
+  "arrivalSequence": [
+    "Land at Narita (NRT) → receive your residence card (在留カード) at immigration.",
+    "Move into your share house (instant registrable address — no key money or guarantor).",
+    "Within 14 days: register your address (住民票) at your ward office.",
+    "Same visit: enroll in National Health Insurance + pension.",
+    "Open a Japan Post Bank (ゆうちょ) account — the most foreigner-friendly for new arrivals.",
+    "Set up phone/eSIM data + bridge spending with Wise + a no-FX-fee Canadian card until local payment is sorted."
+  ],
+  "top10": [
+    { "tip": "Use Wise (multi-currency) from Canada to bridge banking", "domain": "banking", "reason": "Opens in minutes, far cheaper FX than banks, covers you until Japan Post is set up." },
+    { "tip": "Open Japan Post Bank first, not a megabank", "domain": "banking", "reason": "Only bank that opens for WHV holders without 6-month residency or an employment contract." },
+    { "tip": "Start in a furnished share house", "domain": "housing", "reason": "Instant registrable address, no key money/guarantor/2-year lease — unlocks everything else fast." },
+    { "tip": "Don't auto-buy a JR Pass", "domain": "transit", "reason": "Post-2023 pricing means individual tickets are often cheaper unless you're doing multiple long Shinkansen legs." }
+  ],
+  "domains": [
+    {
+      "key": "visa",
+      "title": "Visa & Proof of Funds",
+      "icon": "📋",
+      "findings": [
+        { "tip": "Gather documents 1–3 months early", "why": "Processing is fast (7–15 business days) but document prep is the real bottleneck.", "how": "Passport, application form + photo, CV, written activity plan, proof of funds bank statement, flight itinerary.", "impact": "Avoids missing your departure", "confidence": "high", "sources": ["https://www.vancouver.ca.emb-japan.go.jp/itpr_en/working_holiday_en.html"] }
+      ]
+    },
+    {
+      "key": "banking",
+      "title": "Banking & Payments",
+      "icon": "🏦",
+      "findings": [
+        { "tip": "Japan Post Bank opens for new arrivals", "why": "Most banks demand 6 months residency; Japan Post does not.", "how": "Bring residence card + registered address (住民票). Visit a post office branch.", "impact": "Bank account in week one", "confidence": "high", "sources": ["https://wise.com/en-jp/blog/open-bank-account-japan-post-bank"] },
+        { "tip": "Japanese credit card is effectively impossible on a WHV", "why": "No local credit history; banks decline.", "how": "Use a no-foreign-transaction-fee Canadian card + Wise debit as the bridge. Rakuten is the eventual long shot.", "impact": "Saves wasted applications + FX fees", "confidence": "high", "sources": ["https://japan-workingholiday.com/money-credit-card"] }
+      ]
+    },
+    {
+      "key": "housing",
+      "title": "Housing & Where to Live",
+      "icon": "🏠",
+      "findings": [
+        { "tip": "Share houses skip key money + guarantor", "why": "A normal lease wants 3–5 months rent upfront plus a guarantor.", "how": "Oakhouse (largest), Sakura House (newcomer-focused), Borderless House (intl mix), Social Apartments (nicer). Many let you book from abroad.", "impact": "Saves ¥hundreds of thousands upfront", "confidence": "high", "sources": [] },
+        { "tip": "Start around the Chuo line west or Setagaya", "why": "Central access, lower cost, social, instant address.", "how": "Nakano / Koenji / Higashi-Nakano, or Sangenjaya / Shimokitazawa. Kichijoji if you'll pay a bit more for livability.", "impact": "Better value + faster settling in", "confidence": "medium", "sources": [] }
+      ]
+    },
+    {
+      "key": "connectivity",
+      "title": "Connectivity & Phone",
+      "icon": "📱",
+      "findings": [
+        { "tip": "Data-only eSIM + authenticator app beats a virtual number", "why": "Most travel eSIMs have no phone number; SMS 2FA is the only thing that breaks.", "how": "Buy an eSIM (Ubigi/Airalo) ~5 days before flying; move 2FA to an authenticator app or keep CA SMS roaming as backup.", "impact": "~$10–20 vs paying for an unused virtual number", "confidence": "high", "sources": [] }
+      ]
+    },
+    {
+      "key": "transit",
+      "title": "Transit Hacks",
+      "icon": "🚆",
+      "findings": [
+        { "tip": "Skip tourist IC cards — you're a resident", "why": "Welcome Suica etc. are for tourists.", "how": "Add Suica to Apple Wallet or get a personalized commuter pass (定期券) once you know your route.", "impact": "Commuter pass can save 30%+ on a fixed route", "confidence": "medium", "sources": [] }
+      ]
+    }
+  ],
+  "sources": [
+    "https://www.vancouver.ca.emb-japan.go.jp/itpr_en/working_holiday_en.html",
+    "https://www.toronto.ca.emb-japan.go.jp/itpr_en/b_000044.html",
+    "https://www.calgary.ca.emb-japan.go.jp/itpr_en/11_000001_00943.html",
+    "https://www.mofa.go.jp/j_info/visit/w_holiday/index.html",
+    "https://wise.com/en-jp/blog/open-bank-account-japan-post-bank",
+    "https://wise.com/en-jp/blog/best-bank-for-foreigners-in-japan",
+    "https://www.tokyodev.com/articles/bank-account-in-japan",
+    "https://japan-workingholiday.com/money-credit-card"
+  ]
+}

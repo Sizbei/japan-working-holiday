@@ -33,10 +33,10 @@ function restore(file, statusEl) {
       const parsed = JSON.parse(reader.result);
       const data = (parsed && parsed.data && typeof parsed.data === 'object') ? parsed.data : null;
       if (!data) throw new Error('unrecognised backup file');
-      const keys = Object.keys(data).filter(k => k.startsWith(PREFIX));
+      const keys = Object.keys(data).filter(k => k.startsWith(PREFIX) && typeof data[k] === 'string');
       if (!keys.length) throw new Error('no trip data in this file');
       if (!confirm(`Restore ${keys.length} saved items? This replaces the trip data on THIS device.`)) return;
-      keys.forEach(k => localStorage.setItem(k, String(data[k])));
+      keys.forEach(k => localStorage.setItem(k, data[k]));
       if (statusEl) statusEl.textContent = `Restored ${keys.length} items — reloading…`;
       setTimeout(() => location.reload(), 600);
     } catch (e) {

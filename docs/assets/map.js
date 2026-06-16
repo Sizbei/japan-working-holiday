@@ -60,7 +60,7 @@ function loadScript(src, ok, err) { const s = document.createElement('script'); 
 function ensureLeaflet() {
   if (leafletReady || leafletTried) return;
   leafletTried = true;
-  const fail = () => { const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline → link index stands alone
+  const fail = () => { leafletTried = false; const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline → link index stands alone; allow a retry on the next visit
   if (window.L && window.L.markerClusterGroup) { initMap(); return; }
   loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
   loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css');
@@ -97,7 +97,7 @@ function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; con
 function jitter(name) { let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0; return { dy: ((h % 1000) / 1000 - 0.5) * 0.011, dx: (((h >>> 10) % 1000) / 1000 - 0.5) * 0.011 }; }
 function centroid(group) { const g = DATA.areaGeo || {}; return g[group] || g['Around Tokyo'] || { lat: 35.68, lng: 139.74 }; }
 function icon(cat, pulse) {
-  return L.divIcon({ className: 'jwh-pin' + (pulse ? ' pulse' : ''), html: `<i class="jwh-pin-dot cat-${(cat || 'personal').toLowerCase()}"></i>`, iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10] });
+  return L.divIcon({ className: 'jwh-pin' + (pulse ? ' pulse' : ''), html: `<i class="jwh-pin-dot cat-${esc((cat || 'personal').toLowerCase())}"></i>`, iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10] });
 }
 function pinIcon(p) { return icon(p.category, isSoon(p.remindDate || p.date)); }
 
@@ -155,17 +155,18 @@ function bakedPopupHTML(p, lat, lng) {
     ${p.area ? `<div class="pin-addr">${esc(p.area)}</div>` : ''}
     <div class="pin-acts">
       <a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener">Maps ↗</a>
-      <button type="button" data-act="plan" data-name="${esc(p.name)}" data-area="${esc(p.area || '')}" data-lat="${lat}" data-lng="${lng}">📅 Plan a visit</button>
+      <button type="button" data-act="plan" data-name="${esc(p.name)}" data-area="${esc(p.area || '')}" data-lat="${esc(String(lat))}" data-lng="${esc(String(lng))}">📅 Plan a visit</button>
     </div></div>`;
 }
 function planVisit(p) {
+  if (loadPlaces().some(x => (x.name || '').toLowerCase() === p.name.toLowerCase())) { alert(`"${p.name}" is already saved.`); if (map) map.closePopup(); return; }
   const date = prompt(`Plan a visit to "${p.name}" on (YYYY-MM-DD):`, (DATA.meta?.arrival_date || '2026-06-30'));
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
   const place = { id: 'p' + Date.now(), name: p.name, address: p.area || '', lat: p.lat, lng: p.lng, category: 'personal', note: '', link: '', date: date.trim(), remindDate: date.trim(), eventId: '' };
-  place.eventId = pushEvent('Visit: ' + p.name, date.trim(), p.area || '');
-  savePlaces([...loadPlaces(), place]);
+  savePlaces([...loadPlaces(), place]);                          // save first so the re-render below shows it
+  const eid = pushEvent('Visit: ' + p.name, date.trim(), p.area || '');  // dispatches jwh:data-changed → single renderPins
+  patchPlace(place.id, { eventId: eid });                        // link for later deletion (no extra render needed)
   if (map) map.closePopup();
-  renderPins();
 }
 function fitAllPins() {
   if (!map || !allBounds.length) return;

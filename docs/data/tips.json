@@ -5059,6 +5059,18 @@
     "Around Tokyo": {
       "lat": 35.68,
       "lng": 139.74
+    },
+    "Omotesando": {
+      "lat": 35.66517,
+      "lng": 139.71244
+    },
+    "Sangenjaya": {
+      "lat": 35.64212,
+      "lng": 139.66879
+    },
+    "Kichijoji": {
+      "lat": 35.70314,
+      "lng": 139.58031
     }
   }
 }

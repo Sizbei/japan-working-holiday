@@ -78,7 +78,8 @@ function renderCountdown() {
   const el = $('#countdown');
   if (!el) return;
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', TODAY);
-  el.innerHTML = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${esc(c.label)}</span>`;
+  const unit = c.phase === 'arrived' ? (c.days === 1 ? 'DAY IN' : 'DAYS IN') : (c.days === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
+  el.innerHTML = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
   el.classList.toggle('arrived', c.phase === 'arrived');
 }
 
@@ -110,7 +111,7 @@ function renderPanel(alerts) {
   const panel = $('#notifPanel');
   if (!panel) return;
   if (!alerts.length) {
-    panel.innerHTML = `<div class="np-head">Notifications</div><div class="np-empty">All clear — nothing due soon. 🎏</div>`;
+    panel.innerHTML = `<div class="np-head">Notifications</div><div class="np-empty">ALL CLEAR — STANDBY 🎏</div>`;
     return;
   }
   panel.innerHTML = `<div class="np-head">Notifications <button id="npClear" class="np-clear">dismiss all</button></div>
@@ -145,7 +146,7 @@ function fill(sel, list) {
     ? `<ul>${list.slice(0, 5).map(a => `<li class="sev-${a.severity}">
         <a href="#${a.kind === 'event' ? 'calendarSection' : a.kind === 'book' ? 'trackerSection' : 'checklist'}">
         <span class="w-when">${esc(fmtShort(a.when))}</span> ${esc(clip(a.title, 52))}</a></li>`).join('')}</ul>`
-    : `<p class="w-empty">Nothing in the next 30 days.</p>`;
+    : `<p class="w-empty">NO TARGETS IN RANGE</p>`;
   el.querySelector('.widget-body').innerHTML = body;
 }
 function renderProgress() {

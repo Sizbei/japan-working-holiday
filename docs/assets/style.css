@@ -870,3 +870,95 @@ html.js-router .view.is-active { display: block; }
    mouse users don't see a big box after clicking a nav link. Keyboard focus on
    real controls still shows the ring. */
 [tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; box-shadow: none; }
+
+/* ============================================================
+   ARCADE / RETRO-TECH personalization layer
+   mono chrome + pixel display marks + CRT (hover, reduced-motion-safe)
+   + "score" countdown. Prose stays serif; AA preserved.
+   ============================================================ */
+:root{
+  --mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --pixel: 'DotGothic16', var(--sans);   /* display >=1.5rem only */
+  --crt-opacity: .045;
+  --glow: 0 0 6px color-mix(in srgb, var(--red) 55%, transparent);
+  --hinomaru: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2011%2011%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%224%22%20y%3D%220%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%221%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%224%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%225%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%226%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%229%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2210%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3C%2Fsvg%3E");
+  --c-geek: #167530; --c-geek-vivid: #1f9e5a;
+  --c-build: #3f51d6;
+  --c-meet: #a85716; --c-meet-vivid: #c0651a;
+}
+[data-theme="dark"]{
+  --crt-opacity: .055;
+  --glow: 0 0 8px color-mix(in srgb, var(--red) 70%, transparent);
+  --c-geek: #48d68a; --c-geek-vivid: #48d68a;
+  --c-build: #6f80ff;
+  --c-meet: #e0913f; --c-meet-vivid: #e0913f;
+}
+
+/* pixel hinomaru replaces every round dot */
+.hero-mark .sun, .tb-sun, .gate-mark{
+  background: var(--hinomaru) center/contain no-repeat !important;
+  border-radius: 0 !important; border: none !important; box-shadow: none !important;
+}
+.hero-mark .sun{ width: 60px; height: 60px; animation: none; }
+.tb-sun{ width: 15px; height: 15px; }
+.gate-mark{ width: 44px; height: 44px; }
+
+/* mono chrome (uppercase, tracked). Prose (.intro/.lede/h2 serif) untouched. */
+.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head, .mt-eyebrow{
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em;
+}
+.kind-tag, .trk-when, .w-when, .cp-badge, .due-tag, th, .badge, .phase-block .window, .agenda-cat, .cd-label{
+  font-family: var(--mono); letter-spacing: .02em;
+}
+.hero-kicker{ font-family: var(--pixel); letter-spacing: .16em; font-size: 1.05rem; }
+
+/* score countdown — recessed LCD plate, pixel digits, mono label */
+.countdown{
+  font-family: var(--mono);
+  background: color-mix(in srgb, var(--ink) 7%, var(--bg));
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm);
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 22%, transparent);
+  padding: .2rem .6rem; gap: .5rem;
+}
+.cd-num{ font-family: var(--pixel); font-size: 1.5rem; line-height: 1; color: var(--red);
+  text-shadow: var(--glow); font-variant-numeric: tabular-nums; }
+.cd-label{ font-size: .6rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+.cd-credit{ display: none; font-family: var(--mono); font-size: .55rem; color: var(--ok-ink); text-transform: uppercase; letter-spacing: .06em; }
+[data-arcade="on"] .cd-credit{ display: inline; }
+
+/* CRT scanline utility — hover-only, ultra-low opacity, never persistent over text */
+.crt{ position: relative; }
+.crt::before{
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; border-radius: inherit;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in srgb, var(--ink) 60%, transparent) 2px 3px);
+  mix-blend-mode: multiply; transition: opacity var(--t-base);
+}
+@media (hover: hover){ .crt:hover::before{ opacity: var(--crt-opacity); } }
+[data-arcade="on"] .crt::before{ opacity: var(--crt-opacity); }
+
+/* MY TOKYO dashboard band */
+#myTokyo{ max-width: var(--maxw); margin: 0 auto var(--s8); padding: 0 var(--gutter); }
+.mt-head{ display: flex; align-items: center; gap: .6rem; margin-bottom: var(--s4); }
+.mt-mark{ width: 22px; height: 22px; background: var(--hinomaru) center/contain no-repeat; display: inline-block; flex: none; }
+#myTokyoH{ font-family: var(--pixel); font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); letter-spacing: .06em; margin: 0; }
+.mt-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s4); }
+.mt-card{ text-decoration: none; color: var(--ink); display: block; }
+.mt-eyebrow{ display: block; font-size: .64rem; letter-spacing: .1em; margin-bottom: .3rem; }
+.mt-card.cat-gear .mt-eyebrow, .mt-card.cat-listen .mt-eyebrow{ color: var(--c-music-ink); }
+.mt-card.cat-arcade .mt-eyebrow{ color: var(--c-geek); }
+.mt-card.cat-build .mt-eyebrow{ color: var(--c-build); }
+
+/* per-pillar accents — my interests visually outrank logistics */
+#music .pillar-head::after{ background: var(--c-music); }
+#geek .pillar-head::after{ background: var(--c-geek-vivid); }
+#building .pillar-head::after{ background: var(--c-build); }
+#meetups .pillar-head::after{ background: var(--c-meet-vivid); }
+#music .pillar-head .jp{ color: var(--c-music-ink); }
+#geek .pillar-head .jp{ color: var(--c-geek); }
+#building .pillar-head .jp{ color: var(--c-build); }
+#meetups .pillar-head .jp{ color: var(--c-meet); }
+
+/* reduced-motion: kill phosphor glow + scanline entirely */
+@media (prefers-reduced-motion: reduce){
+  :root, [data-theme="dark"]{ --crt-opacity: 0; --glow: none; }
+}

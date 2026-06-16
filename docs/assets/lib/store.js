@@ -7,6 +7,7 @@ export const KEYS = {
   calFilters: 'jwh-calfilters-v1',
   checkOrder: 'jwh-checkorder-v1',
   widgetOrder: 'jwh-widgetorder-v1',
+  arcade: 'jwh-arcade-v1',
   due: 'jwh-due-v1',
   dismissed: 'jwh-notif-dismissed-v1',
   checklist: 'jwh-checklist-v1',

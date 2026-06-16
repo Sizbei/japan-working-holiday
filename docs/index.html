@@ -9,12 +9,12 @@
 <meta name="theme-color" content="#14141a" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://sizbei.github.io/japan-working-holiday/">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f7f4ee'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23bc002d'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2011%2011%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20width%3D%2211%22%20height%3D%2211%22%20fill%3D%22%23f7f4ee%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%220%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%221%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%224%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%225%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%226%22%20width%3D%229%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%229%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2210%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23bc002d%22%2F%3E%3C%2Fsvg%3E">
 <meta property="og:title" content="My Year in Japan — Trip Dashboard">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Space+Mono:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -40,7 +40,7 @@
   <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
   <p class="hero-kicker" lang="ja" aria-hidden="true">私の一年 · ワーキングホリデー</p>
   <h1 id="heroTitle">My Year in Japan</h1>
-  <p class="hero-sub" id="heroSub">A working-holiday year in Tokyo — planned, packed, and lived</p>
+  <p class="hero-sub" id="heroSub">Synths, arcades, shipping code at 2am JST — plus the paperwork that keeps me here.</p>
   <div class="hero-meta"><span id="metaArrival"></span></div>
 </header>
 
@@ -55,11 +55,15 @@
 <main id="main">
   <div class="view" id="view-dashboard" data-route="dashboard">
   <p class="intro">
-    My living plan for a year in Tokyo — the boring-but-critical paperwork, the booking
-    windows I can't afford to miss, and the <em>cherry blossoms, fireworks, and DisneySea days</em>
-    I'm building the year around. Everything's researched and sourced; the calendar and checklist
-    save right here on this device.
+    My save file for a year in Tokyo. The good stuff up top — Ochanomizu synth runs, Super Potato
+    afternoons, listening bars, and meetups where I bring a build to show. The <em>visa, bank, and
+    pension paperwork</em> lives below, sourced and handled. Everything saves right here on this device.
   </p>
+
+  <section id="myTokyo" aria-labelledby="myTokyoH">
+    <div class="mt-head"><span class="mt-mark" aria-hidden="true"></span><h2 id="myTokyoH">MY TOKYO</h2></div>
+    <div class="mt-grid" id="myTokyoGrid"></div>
+  </section>
 
   <!-- ============ DASHBOARD HOME ============ -->
   <section id="dashHome" class="dash">
@@ -107,7 +111,7 @@
   <!-- ============ LOTTERY / TIMED-RELEASE TRACKER ============ -->
   <section id="trackerSection">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">抽選・先行販売</span><h2>Lottery &amp; Timed-Release Drops</h2></div>
-    <p class="lede">The lose-by-minutes bookings: Ghibli's monthly 10:00 JST drop, Disney's 60-day window, sumo on-sale dates, and the research's dated booking windows. Set alarms to the exact minute.</p>
+    <p class="lede">High-score targets — the lose-by-minutes drops. Ghibli at 10:00 JST on the 10th, Disney's 60-day rolling window, sumo on-sale dates. Set the alarm to the minute or miss it.</p>
     <div id="trackerList"></div>
   </section>
 
@@ -148,7 +152,7 @@
   <div class="view" id="view-explore" data-route="explore">
   <!-- ============ SEARCHABLE LOGISTICS ============ -->
   <section class="controls" id="controls">
-    <input type="search" id="search" placeholder="Search logistics… (e.g. bank, pension, suica)" aria-label="Search tips">
+    <input type="search" id="search" placeholder="SEARCH LOGISTICS // bank · pension · suica" aria-label="Search tips">
     <div class="filters" id="confFilters">
       <button class="chip active" data-conf="all">All</button>
       <button class="chip" data-conf="high">High confidence</button>
@@ -205,25 +209,25 @@
 
   <section id="building">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">東京で創る</span><h2>Building From Tokyo</h2></div>
-    <p class="lede">Shipping across a ~16h time gap: coworking, late-night work cafés, fast wifi and an async rhythm that works.</p>
+    <p class="lede">Shipping 16h ahead of Vancouver. Hiroo library when I need free + focused, CIC Tokyo to plug into the startup scene, work cafés between calls. My standups are someone else's midnight.</p>
     <div class="grid" id="buildingGrid"></div>
   </section>
 
   <section id="music">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">音楽の街</span><h2>Music, Gear &amp; Synths</h2></div>
-    <p class="lede">Ochanomizu's instrument street, synth/gear shops, Disk Union digging and listening bars.</p>
+    <p class="lede">My pilgrimage list: Ochanomizu's guitar street, Five G for vintage poly, synth/gear shops, Disk Union to dig, and listening bars worth the trip. Go on a weekday — the good shops are tiny.</p>
     <div class="grid" id="musicGrid"></div>
   </section>
 
   <section id="geek">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">ゲーム・アニメ・技術</span><h2>Games, Anime &amp; Tech Culture</h2></div>
-    <p class="lede">Akihabara, retro arcades, game bars, anime/manga spots and creative-tech spaces.</p>
+    <p class="lede">Akihabara is home base. Super Potato for carts, GiGO for crane games, Nakano Broadway for the deep cuts. Budget a whole afternoon and bring cash.</p>
     <div class="grid" id="geekGrid"></div>
   </section>
 
   <section id="meetups">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">集まり・イベント</span><h2>Meetups &amp; Conventions</h2></div>
-    <p class="lede">Dev/tech meetups (often English-friendly), founder nights, game-dev jams and the big cons — Comiket, TGS, AnimeJapan.</p>
+    <p class="lede">My crowd. Tokyo Indies and AI Tinkerers for demo nights, Connpass/Doorkeeper for the rest, and the big cons — Comiket, TGS, AnimeJapan — when they land. Bring a build even if it's janky.</p>
     <div class="grid" id="meetupsGrid"></div>
   </section>
 

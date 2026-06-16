@@ -32,7 +32,7 @@
     {
       "item": "File Moving-In Notification (転入届) + register address at ward office",
       "timing": "Within 14 days of settling in — HARD legal deadline",
-      "action": "Bring passport + Residence Card. They print your address on the card's back and create your juminhyo. Request 2-3 juminhyo copies (~¥300 each) for the bank. Missing the window risks a fine up to ¥50,000. This unlocks pension, NHI, My Number, banking.",
+      "action": "Bring passport + Residence Card. They print your address on the card's back and create your juminhyo. Request 2-3 juminhyo copies (~¥300 each) for the bank. Missing the window risks a fine up to ¥200,000 under the Immigration Control Act (and up to ¥50,000 under the Basic Resident Registration Act), and in serious cases revocation of your status of residence after 90 days. This unlocks pension, NHI, My Number, banking.",
       "dueBy": "2026-07-14",
       "confidence": "high"
     },
@@ -72,10 +72,10 @@
       "confidence": "high"
     },
     {
-      "item": "Do tax-free (consumption-tax-exempt) big-ticket shopping",
-      "timing": "While under 6 months in Japan",
-      "action": "Buy synths, music gear, audio, electronics, anime/tech goods tax-free EARLY. After ~2026-12-30 you're treated as a resident and lose tax-free eligibility entirely. Bring passport when shopping.",
-      "dueBy": "2026-12-30",
+      "item": "No tax-free shopping on a Working Holiday visa — you pay the 10%",
+      "timing": "Whole stay",
+      "action": "Japan's tax-free (consumption-tax-exempt) shopping is ONLY for short-term 'temporary visitor' status. A Working Holiday visa admits you with a residence status, so you are NOT eligible — not even on landing day. Budget the full 10% consumption tax on gear/electronics; don't delay big purchases for a tax-free window that doesn't exist for you.",
+      "dueBy": "",
       "confidence": "high"
     },
     {
@@ -86,16 +86,9 @@
       "confidence": "high"
     },
     {
-      "item": "Tax-free shopping rules CHANGE Nov 2026 (+ resident caveat)",
-      "timing": "Mechanism changes 2026-11",
-      "action": "From Nov 2026 Japan switches to refund-on-departure (pay 10% at register, reclaim at the airport on exit) — the old buy-tax-free-at-checkout tactic largely ends. And as a registered RESIDENT (which you become on address registration) you likely lose tourist tax-free eligibility entirely. Do not plan big purchases around a tax-free hack.",
-      "dueBy": "2026-11-01",
-      "confidence": "high"
-    },
-    {
       "item": "Appoint a tax agent (納税管理人) BEFORE you leave Japan",
       "timing": "Before final departure (~May–Jun 2027)",
-      "action": "To reclaim the 20.42% withheld on a pension lump-sum AND to settle year-2 residence tax (levied on Jan-1-2027 residency, can bill after you go), appoint a Tax Payment Administrator at the ward tax office before leaving. Without it you forfeit the refund. Lump-sum claimable within 2 years of departure.",
+      "action": "To reclaim the 20.42% withheld on a pension lump-sum AND to settle year-2 residence tax (levied on Jan-1-2027 residency, can bill after you go), appoint a Tax Payment Administrator at the ward tax office before leaving. Without it you forfeit the refund. Lump-sum claimable within 2 years of departure. Note: the 20.42% withholding applies to the Employees' Pension (厚生年金) lump-sum; if you only ever pay National Pension (国民年金, Cat-1) the lump-sum has no income-tax withholding. The lump-sum cap rose to 96 contribution months (8 yrs) for departures on/after 1 Apr 2026 (was 60) — rates for months 61+ still pending; verify closer.",
       "dueBy": "2027-05-15",
       "confidence": "high"
     }
@@ -152,7 +145,7 @@
     {
       "id": "book-comiket-c108-summer-comic-market-aug-15",
       "when": "2026-07-15",
-      "what": "Comiket C108 (Summer Comic Market, Aug 15)",
+      "what": "Comiket C108 (Summer Comic Market, Aug 15–16)",
       "action": "Wristband/early-entry and circle-catalog logistics open ~2026-07-15. Buy the catalog/wristband; plan Big Sight access, cash, heat gear. C108 overlaps Obon/Asakusa Toro Nagashi — pick your day.",
       "leadTime": "~1 month ahead",
       "confidence": "high"
@@ -1387,7 +1380,7 @@
         "Lock your fixed address (move into the share house or confirm your lease). The address is the gateway to everything else.",
         "Top up your Suica buffer (¥2,000-3,000) at a station charge machine so you never get gate-stopped.",
         "Scout your ward office location and hours for tomorrow's registration run; gather passport + Residence Card.",
-        "Start a tax-free shopping wishlist (synths, gear, electronics) — you have until ~Dec 30 to buy consumption-tax-free."
+        "Note: as a Working Holiday resident you pay the full 10% consumption tax — there is no tax-free shopping for you, so don't postpone big purchases waiting for a discount that won't apply."
       ]
     },
     {
@@ -1443,9 +1436,9 @@
       "domain": "money"
     },
     {
-      "tip": "Front-load all big-ticket tax-free purchases (synths, music gear, audio, electronics) before ~Dec 30 2026",
-      "reason": "Foreigners lose consumption-tax-exempt eligibility entirely once past 6 months in Japan. For a synth/gear-focused traveler this is a real 10% saving with a hard expiry — buy the expensive stuff in the first half-year.",
-      "domain": "music/gear"
+      "tip": "Skip the tax-free myth — use point systems instead for real savings",
+      "reason": "WHV holders are NOT eligible for tax-free shopping (it needs temporary-visitor status), so you pay the 10% consumption tax like a resident. The real savings levers are point ecosystems (PayPay/Rakuten/dPoint), used-gear shops, and furusato-nozei once you're earning.",
+      "domain": "money"
     },
     {
       "tip": "Set up the money stack in the right order: Canada-issued Wise card → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)",
@@ -1578,6 +1571,50 @@
           "impact": "Commuter pass can save 30%+ on a fixed route",
           "confidence": "medium",
           "sources": []
+        }
+      ]
+    },
+    {
+      "key": "dailylife",
+      "title": "Daily Life & Safety",
+      "icon": "🛟",
+      "findings": [
+        {
+          "tip": "Install Japan's disaster apps + learn 119 / 110 in week one",
+          "why": "Tokyo gets frequent quakes; you arrive mid-tsuyu into typhoon season. Knowing the system before you need it matters.",
+          "how": "Install JNTO 'Safety Tips' (multilingual quake/tsunami/weather push alerts) and NHK World. Emergency numbers: 119 fire/ambulance, 110 police. Keep a small go-bag (water, light, power bank, copies of passport + residence card).",
+          "impact": "You react correctly in the first 60 seconds of a quake or evacuation order.",
+          "confidence": "high",
+          "sources": [
+            "https://www.jnto.go.jp/safety-tips/eng/app.html",
+            "https://www.metro.tokyo.lg.jp/english/"
+          ]
+        },
+        {
+          "tip": "Learn your ward's garbage sorting + collection days immediately",
+          "why": "Sorting is strict and per-ward; wrong bags get left (with a sticker) and can sour share-house relations.",
+          "how": "Get your ward's English garbage guide (burnable, non-burnable, recyclable PET/cans/bottles, oversized = yuryo sticker). Buy the designated bags at any conbini/supermarket. Note collection mornings — put it out by ~8:00, not the night before.",
+          "impact": "No rejected trash, no friction with housemates/neighbours.",
+          "confidence": "high",
+          "sources": []
+        },
+        {
+          "tip": "Register any bike you buy/receive (防犯登録) — it's mandatory",
+          "why": "Police do spot-checks; an unregistered bike (or one still in the seller's name) can be treated as stolen.",
+          "how": "Anti-theft registration (bouhan toroku) is ~¥600 at the bike shop on purchase. If given a used bike, transfer registration with the previous owner's details. Carry ID when riding.",
+          "impact": "Avoids an awkward (or worse) police stop.",
+          "confidence": "high",
+          "sources": []
+        },
+        {
+          "tip": "Know how to actually see a doctor on NHI before you're sick",
+          "why": "There's no GP-gatekeeper system; you pick a clinic directly, but English-friendly ones are limited.",
+          "how": "With NHI you pay 30% at any clinic/hospital. Use the Tokyo 'Himawari' medical info service (multilingual) or JNTO's clinic finder to find English-speaking clinics. Pharmacies (薬局) fill prescriptions; bring your insurance card every visit.",
+          "impact": "You get care fast without overpaying or language panic.",
+          "confidence": "high",
+          "sources": [
+            "https://www.himawari.metro.tokyo.lg.jp/"
+          ]
         }
       ]
     }
@@ -2117,16 +2154,16 @@
         },
         {
           "id": "chk-do-tax-free-consumption-tax-e",
-          "task": "Do tax-free (consumption-tax-exempt) shopping for big-ticket interests — synths, music gear, audio, electronics, anime/tech goods — EARLY, within your first ~6 months. As a foreigner you qualify for tax-free shopping only while you have been in Japan under 6 months. After roughly 2026-12-30 you are treated as a resident and lose tax-free eligibility entirely.",
+          "task": "Budget the 10% consumption tax — there is no tax-free shopping for you on a WHV",
           "window": "first 6 months (before ~2026-12-30)",
           "dueBy": "2026-12-30",
           "kind": "money",
-          "note": "Tax-free is tied to length of stay (<6 months), not visa type. Get a passport entry STAMP on arrival (use a staffed lane, not the auto gate) — without a stamp, shops may refuse tax-free. 10% consumption tax saved on, e.g., a 150,000 yen synth = ~13,600 yen. Japan is tightening tax-free rules in 2026; verify the exact stamp/procedure closer. NOTE (2026): tax-free shifts to refund-on-departure from Nov 2026, and as a registered resident you likely lose eligibility — do not rely on this.",
+          "note": "Tax-free shopping in Japan requires 'temporary visitor' status; a Working Holiday visa is a residence status, so you are not eligible (even on day one). Ignore any '<6 months' or 'before Dec 2026' advice — it doesn't apply. Plan gear/electronics budgets with the 10% in.",
           "sources": [
             "https://en.japantravel.com/article/tax-free-shopping-in-japan-2026-changes/72305",
             "https://www.gotokyo.org/en/plan/tax-free-shopping/index.html"
           ],
-          "confidence": "medium"
+          "confidence": "high"
         },
         {
           "id": "chk-use-wise-not-your-japanese-ba",
@@ -3121,10 +3158,10 @@
   "music": [
     {
       "name": "Ochanomizu Guitar Street (Meidai-dori / Gakkitengai)",
-      "detail": "Tokyo's guitar/gear district: ~50 instrument shops clustered along Meidai-dori next to Ochanomizu Station. New, vintage and heavily-discounted used guitars, basses, amps, effects/pedals from every major brand (Fender, Gibson, Gretsch, Rickenbacker, PRS). Shops are packed close so price-comparison is easy. Many shops are tax-free for foreign passport holders (bring passport). This is your home base for stringed gear and the easiest single afternoon to scope the whole scene.",
+      "detail": "Tokyo's guitar/gear district: ~50 instrument shops clustered along Meidai-dori next to Ochanomizu Station. New, vintage and heavily-discounted used guitars, basses, amps, effects/pedals from every major brand (Fender, Gibson, Gretsch, Rickenbacker, PRS). Shops are packed close so price-comparison is easy. This is your home base for stringed gear and the easiest single afternoon to scope the whole scene.",
       "how_or_when": "JR Chuo/Sobu Line or Tokyo Metro Marunouchi Line to Ochanomizu Stn — street is at the exit. Most shops 11:00-20:00. Weekday afternoons quietest.",
       "area_or_park": "Ochanomizu / Chiyoda",
-      "price_or_cost": "Free to browse; used guitars from ~¥10,000 to vintage 6-figures. Tax-free with passport on purchases over ¥5,000 at participating shops.",
+      "price_or_cost": "Free to browse; used guitars from ~¥10,000 to vintage 6-figures.",
       "tier": "mid",
       "sources": [
         "https://tokyocheapo.com/place/ochanomizu-medai-dori-guitar-street/",
@@ -3135,10 +3172,10 @@
     },
     {
       "name": "Shimokura / Shimokura Second Hands (Ochanomizu)",
-      "detail": "Anchor chain on Guitar Street. The Second Hands branch is the go-to for used/vintage guitars and basses with English support and tax-free service explicitly aimed at foreign buyers. Good first stop on the street for used stringed gear and to gauge market prices before buying elsewhere.",
+      "detail": "Anchor chain on Guitar Street. Good first stop on the street for used stringed gear and to gauge market prices before buying elsewhere.",
       "how_or_when": "Steps from Ochanomizu Stn on Meidai-dori. See access map on their site.",
       "area_or_park": "Ochanomizu / Chiyoda",
-      "price_or_cost": "Used guitars vary widely; tax-free for tourists with passport.",
+      "price_or_cost": "Used guitars vary widely;",
       "tier": "mid",
       "sources": [
         "http://www.shimokura-secondhands.com/english.html",
@@ -3151,7 +3188,7 @@
       "detail": "Osaka-based national chain with a strong Ochanomizu presence (including a 'Smalls' boutique guitar shop). Wide selection across guitars, amps and effects; part of the Ochanomizu cluster so easy to combine with the rest of the street. Note Miki Gakki also historically ran wind/band-instrument and pro stores — the Ochanomizu locations are guitar-focused.",
       "how_or_when": "~4-min walk from JR/Metro Ochanomizu Stn. Typical hours ~11:00-20:00.",
       "area_or_park": "Ochanomizu / Chiyoda",
-      "price_or_cost": "Free to browse; new and used stock across price tiers; tax-free with passport.",
+      "price_or_cost": "Free to browse; new and used stock across price tiers;",
       "tier": "mid",
       "sources": [
         "https://visit-chiyoda.com/ochanomizu-music-instrument-lovers-town/",
@@ -3164,7 +3201,7 @@
       "detail": "Legendary synth shop near Harajuku/Shibuya — Tokyo's single best destination for vintage AND modern synthesizers: classic analog mono/polysynths, modern keyboard synths, drum machines, plus a well-known Eurorack wall. Major Dave Smith Instruments/Sequential dealer. Staff repair and refurbish vintage units in-house, so vintage stock turnover can be slow and prices are fair-not-bargain. Treat it as a pilgrimage; serious vintage hunters should call/check stock before going.",
       "how_or_when": "Walk from Harajuku/Meiji-jingumae or Shibuya. Confirm current hours/address via shop before visiting; verify closer to your trip.",
       "area_or_park": "Harajuku / Shibuya-ku",
-      "price_or_cost": "Free to browse; used/vintage synths typically ¥50,000-¥500,000+. Not a bargain shop. Tax-free with passport on qualifying purchases.",
+      "price_or_cost": "Free to browse; used/vintage synths typically ¥50,000-¥500,000+. Not a bargain shop.",
       "tier": "splurge",
       "sources": [
         "https://ra.co/features/2777",
@@ -3178,7 +3215,7 @@
       "detail": "Pro audio / music-production specialist (est. 1989) in Jinnan, Shibuya. Best in Tokyo for DAWs, audio interfaces, monitors, controllers, plugins and studio gear — they've shifted from old analog synths toward pro production gear in recent years. Consultative, proposal-based shopping; good for kitting out a home/remote studio. English-friendly enough for browsing.",
       "how_or_when": "1-8-18-1F Jinnan, Shibuya-ku. Open ~12:00-19:00, closed Sundays and irregular holidays. ~7-min walk from Shibuya Stn.",
       "area_or_park": "Shibuya (Jinnan)",
-      "price_or_cost": "Free to browse; gear from entry-level interfaces (~¥15,000) to pro monitors/converters. Tax-free with passport.",
+      "price_or_cost": "Free to browse; gear from entry-level interfaces (~¥15,000) to pro monitors/converters.",
       "tier": "mid",
       "sources": [
         "https://www.yelp.com/biz/rock-on-company-shibuya-%E6%B8%8B%E8%B0%B7%E5%8C%BA",
@@ -3231,7 +3268,7 @@
       "detail": "Japan's premier personal-audio store — an entire building on Akihabara's main street with 3,000+ headphones/earphones/IEMs you can freely demo across all price tiers, plus a CIEM (custom in-ear monitor) section, a Devialet hi-fi corner, and new + checked second-hand stock with trade-ins and repair. The best place in Tokyo to audition monitoring/listening gear for your remote-work studio.",
       "how_or_when": "Shintou Bldg, 4-7-1 (also listed 4-6-7) Sotokanda, Chiyoda-ku — on Akihabara's main drag, ~3-min walk from Akihabara Stn Electric Town exit. Typically ~11:00-20:00.",
       "area_or_park": "Akihabara / Chiyoda",
-      "price_or_cost": "Free to demo; gear from ¥2,000 earbuds to ¥500,000+ flagship/CIEM. Tax-free with passport.",
+      "price_or_cost": "Free to demo; gear from ¥2,000 earbuds to ¥500,000+ flagship/CIEM.",
       "tier": "mid",
       "sources": [
         "https://www.devialet.com/en-us/store/e-earphone-akihabara-e-tokyo-2785/",
@@ -3309,8 +3346,8 @@
     },
     {
       "name": "WHV money gotcha: tax-free shopping + carrying gear home",
-      "detail": "Canadian-WHV-specific notes for gear buying. (1) Tax-free (10% consumption tax) is for SHORT-TERM visitors — once you have a residence card / are a registered resident on the Working Holiday visa, you generally CANNOT use tax-free shopping, so factor the 10% in for big synth/guitar purchases made after you settle. Buy duty-free-eligible items on arrival only if still a temporary visitor. (2) When you leave Japan after ~12 months, large gear (synths, guitars, modular cases) may face Canadian import duty/GST on re-entry — keep receipts. (3) Used-gear shops rarely take foreign cards for big-ticket items smoothly; set up a Japanese bank/IC payment early. (4) Voltage: Japan is 100V/50-60Hz — vintage synths and amps you buy here are wired for 100V; confirm before shipping anything back to Canada (120V).",
-      "how_or_when": "Use tax-free only while still a temporary visitor (first days). After residence registration, budget the 10%. Keep all receipts for the trip home.",
+      "detail": "Canadian-WHV-specific note for gear buying: Japan's tax-free (10% consumption-tax exemption) is for SHORT-TERM 'temporary visitor' status only. A Working Holiday visa is a residence status, so you are NOT eligible for tax-free — not on landing day, not in your first weeks. Budget the full 10% on every synth/amp/interface.",
+      "how_or_when": "Assume you pay the 10% consumption tax on all gear. Hunt used stock (Disk Union, second-hand shops) for real savings instead. Keep receipts only for your own records / carrying gear home.",
       "area_or_park": "n/a (city-wide / financial)",
       "price_or_cost": "Plan for 10% consumption tax on purchases once you're a resident; possible Canadian import duty on return.",
       "tier": "n/a",
@@ -3318,7 +3355,7 @@
         "https://blog.gaijinpot.com/the-5-cheapest-places-to-get-used-musical-instruments-in-japan/",
         "https://www.gearnews.com/buying-synthesizers-from-japan-synth/"
       ],
-      "confidence": "medium"
+      "confidence": "high"
     }
   ],
   "geek": [
@@ -3403,7 +3440,7 @@
     {
       "name": "Shibuya PARCO 6F — Nintendo TOKYO + Pokémon Center + Jump Shop + Capcom + Godzilla",
       "detail": "Five flagship pop-culture stores on one floor: Nintendo TOKYO (Japan's first official Nintendo store), Pokémon Center Shibuya, Jump Shop (Shonen Jump — One Piece, Dragon Ball, etc.), Capcom Store Tokyo, and the Godzilla Store. The single most efficient stop for first-party gaming/anime merch. Nintendo TOKYO gets queues on weekends.",
-      "how_or_when": "PARCO open daily ~11:00–21:00. ~5-min walk from Shibuya Station. No ticket needed; on busy days Nintendo TOKYO may issue numbered/timed entry — check the in-mall signage or PARCO site that morning. Tax-free counters available with passport.",
+      "how_or_when": "PARCO open daily ~11:00–21:00. ~5-min walk from Shibuya Station. No ticket needed; on busy days Nintendo TOKYO may issue numbered/timed entry — check the in-mall signage or PARCO site that morning.",
       "area_or_park": "Shibuya (PARCO, 6F 'Cyberspace SHIBUYA')",
       "price_or_cost": "Free entry; merch varies",
       "tier": "mid",
@@ -3429,7 +3466,7 @@
     {
       "name": "teamLab Borderless — Azabudai Hills (timed-ticket digital art)",
       "detail": "The 'wandering, borderless' digital-art museum — rooms with no fixed map where artworks move between spaces. Different experience from Planets (this one is shoes-on, no water). Dynamic pricing by date/time; weekend evening slots sell out first. This is a permanent flagship (newer than Planets), so less time pressure than Planets/Gundam.",
-      "how_or_when": "Buy TIMED tickets up to ~2 months ahead on the official site (teamlab.art) — book there first; resellers like Klook can sell out faster. Aim for a weekday slot. Bring passport for any tax-free/ID checks.",
+      "how_or_when": "Buy TIMED tickets up to ~2 months ahead on the official site (teamlab.art) — book there first; resellers like Klook can sell out faster. Aim for a weekday slot.",
       "area_or_park": "Azabudai Hills, Minato-ku (Kamiyacho/Roppopngi-itchome)",
       "price_or_cost": "Adult ¥3,800–¥4,800 (dynamic), 13–17 ¥2,800, 4–12 ¥1,500",
       "tier": "mid",
@@ -3741,6 +3778,8 @@
     "https://www.magical-trip.com/media/kawaguchiko-autumn-festival-2025-ultimate-guide-to-momiji-corridor-night-illuminations-top-fall-foliage-spots-around-mt-fuji/",
     "https://moyuhi.jp/en/event/a2b0c8f2-d9d0-4d0e-8af3-041ac5844441",
     "https://en.japantravel.com/tokyo/tori-no-ichi/32903",
-    "https://www.gotokyo.org/en/spot/ev090/index.html"
+    "https://www.gotokyo.org/en/spot/ev090/index.html",
+    "https://www.nta.go.jp/english/taxes/individual/12005.htm",
+    "https://www.nenkin.go.jp/international/english/lumpsum/lumpsum.html"
   ]
 }

@@ -30,6 +30,7 @@ export function mountMap(data) {
   DATA = data;
   renderIndex();                                  // offline-safe link index — ALWAYS
   wireAddPlace();
+  $('#mapFit')?.addEventListener('click', fitAllPins);
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'map') ensureLeaflet(); });
   document.addEventListener('jwh:data-changed', () => { if (leafletReady) renderPins(); });
 }
@@ -53,26 +54,33 @@ function renderIndex() {
     </div>`).join('');
 }
 
-// ---- lazy Leaflet bootstrap (only on #/map, network-only, init once) ----
+// ---- lazy Leaflet + markercluster bootstrap (only on #/map, network-only, init once) ----
+function loadCSS(href) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); }
+function loadScript(src, ok, err) { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = err; document.head.appendChild(s); }
 function ensureLeaflet() {
   if (leafletReady || leafletTried) return;
   leafletTried = true;
-  if (window.L) { initMap(); return; }
-  const css = document.createElement('link');
-  css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(css);
-  const js = document.createElement('script');
-  js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-  js.onload = initMap;
-  js.onerror = () => { const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline → link index stands alone
-  document.head.appendChild(js);
+  const fail = () => { const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline → link index stands alone
+  if (window.L && window.L.markerClusterGroup) { initMap(); return; }
+  loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css');
+  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css');
+  loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+    () => loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js', initMap, fail), fail);
 }
 function initMap() {
   const el = $('#mapCanvas');
   if (!el || map || !window.L) return;
   map = L.map(el, { scrollWheelZoom: false }).setView([35.69, 139.73], 12);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
-  pinLayer = L.layerGroup().addTo(map);
+  pinLayer = window.L.markerClusterGroup
+    ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46, spiderfyOnMaxZoom: true })
+    : L.layerGroup();
+  map.addLayer(pinLayer);
+  el.addEventListener('click', (e) => {   // delegated: "plan a visit" on a catalogue pin → saves it + a calendar event
+    const b = e.target.closest('[data-act="plan"]');
+    if (b) planVisit({ name: b.dataset.name, area: b.dataset.area, lat: +b.dataset.lat, lng: +b.dataset.lng });
+  });
   leafletReady = true;
   el.classList.add('ready');
   renderPins();
@@ -83,26 +91,86 @@ function flyTo(p) {
   map.setView([p.lat, p.lng], 15, { animate: !prefersReducedMotion() });   // setView pan is stable (avoids the flyTo NaN bug)
 }
 
-// ---- user pins (escaped popups, https-only links) ----
-function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; const diff = (Date.parse(d) - Date.now()) / 86400000; return diff >= -1 && diff <= 30; }
-function pinIcon(p) {
-  const cat = (p.category || 'personal').toLowerCase();
-  return L.divIcon({
-    className: 'jwh-pin' + (isSoon(p.remindDate || p.date) ? ' pulse' : ''),
-    html: `<i class="jwh-pin-dot cat-${cat}"></i>`,
-    iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10],
-  });
+// ---- pins: upcoming events + baked catalogue (area centroid + jitter) + user-saved (real coords) ----
+function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; const diff = (Date.parse(d) - Date.now()) / 86400000; return diff >= -1 && diff <= 45; }
+// deterministic per-name jitter so places sharing one neighbourhood centroid don't stack exactly
+function jitter(name) { let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0; return { dy: ((h % 1000) / 1000 - 0.5) * 0.011, dx: (((h >>> 10) % 1000) / 1000 - 0.5) * 0.011 }; }
+function centroid(group) { const g = DATA.areaGeo || {}; return g[group] || g['Around Tokyo'] || { lat: 35.68, lng: 139.74 }; }
+function icon(cat, pulse) {
+  return L.divIcon({ className: 'jwh-pin' + (pulse ? ' pulse' : ''), html: `<i class="jwh-pin-dot cat-${(cat || 'personal').toLowerCase()}"></i>`, iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10] });
 }
+function pinIcon(p) { return icon(p.category, isSoon(p.remindDate || p.date)); }
+
+const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet' };
+function bakedList() {
+  const out = [];
+  Object.keys(SRC_CAT).forEach(k => (DATA[k] || []).forEach(i => { const area = i.area || i.area_or_park || ''; if (i.name) out.push({ name: i.name, area, group: areaOf(area), cat: SRC_CAT[k] }); }));
+  (DATA.rooms || []).forEach(r => { if (r.name) out.push({ name: r.name, area: r.area, group: areaOf(r.area), cat: 'personal' }); });
+  return dedupe(out);
+}
+
+let allBounds = [];
 function renderPins() {
   if (!pinLayer || !window.L) return;
   pinLayer.clearLayers();
+  const today = new Date().toISOString().slice(0, 10);
+  const key = (s) => (s || '').toLowerCase().trim();
+  const seen = new Set(loadPlaces().map(p => key(p.name)));   // user-saved names win — no catalogue dupe
+  const bounds = [];
+  const addPt = (lat, lng, cat, pulse, popup) => { if (isNaN(lat) || isNaN(lng)) return; const m = L.marker([lat, lng], { icon: icon(cat, pulse), riseOnHover: true }); m.bindPopup(popup); pinLayer.addLayer(m); bounds.push([lat, lng]); };
+
+  // 1) coming-up events (pulse) at their neighbourhood
+  (DATA.calendar || []).forEach(e => {
+    if (!e.area || !e.date || e.date < today || e.category === 'holiday' || seen.has(key(e.title))) return;
+    seen.add(key(e.title));
+    const c = centroid(areaOf(e.area)), j = jitter(e.title);
+    addPt(c.lat + j.dy, c.lng + j.dx, e.category || 'festival', isSoon(e.date), eventPopupHTML(e.title, e.date, e.area));
+  });
+  // 2) baked catalogue places
+  bakedList().forEach(p => {
+    if (seen.has(key(p.name))) return; seen.add(key(p.name));
+    const c = centroid(p.group), j = jitter(p.name);
+    addPt(c.lat + j.dy, c.lng + j.dx, p.cat, false, bakedPopupHTML(p, c.lat + j.dy, c.lng + j.dx));
+  });
+  // 3) user-saved places (real coords, full actions)
   loadPlaces().forEach(p => {
     if (typeof p.lat !== 'number' || typeof p.lng !== 'number' || isNaN(p.lat) || isNaN(p.lng)) return;
     const m = L.marker([p.lat, p.lng], { icon: pinIcon(p), riseOnHover: true });
     m.bindPopup(popupHTML(p));
     m.on('popupopen', () => wirePopup(p));
-    m.addTo(pinLayer);
+    pinLayer.addLayer(m); bounds.push([p.lat, p.lng]);
   });
+
+  allBounds = bounds;
+  const el = $('#mapCount'); if (el) el.textContent = bounds.length ? `${bounds.length} pins` : '';
+}
+function eventPopupHTML(title, date, area) {
+  return `<div class="pin-pop"><b>${esc(title)}</b>
+    <div class="pin-rem">📅 ${esc(date)}</div>
+    ${area ? `<div class="pin-addr">${esc(area)}</div>` : ''}
+    <div class="pin-acts"><a href="${esc(gmaps(area || title))}" target="_blank" rel="noopener">Maps ↗</a></div></div>`;
+}
+function bakedPopupHTML(p, lat, lng) {
+  return `<div class="pin-pop"><b>${esc(p.name)}</b>
+    ${p.area ? `<div class="pin-addr">${esc(p.area)}</div>` : ''}
+    <div class="pin-acts">
+      <a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener">Maps ↗</a>
+      <button type="button" data-act="plan" data-name="${esc(p.name)}" data-area="${esc(p.area || '')}" data-lat="${lat}" data-lng="${lng}">📅 Plan a visit</button>
+    </div></div>`;
+}
+function planVisit(p) {
+  const date = prompt(`Plan a visit to "${p.name}" on (YYYY-MM-DD):`, (DATA.meta?.arrival_date || '2026-06-30'));
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
+  const place = { id: 'p' + Date.now(), name: p.name, address: p.area || '', lat: p.lat, lng: p.lng, category: 'personal', note: '', link: '', date: date.trim(), remindDate: date.trim(), eventId: '' };
+  place.eventId = pushEvent('Visit: ' + p.name, date.trim(), p.area || '');
+  savePlaces([...loadPlaces(), place]);
+  if (map) map.closePopup();
+  renderPins();
+}
+function fitAllPins() {
+  if (!map || !allBounds.length) return;
+  map.invalidateSize();
+  map.fitBounds(allBounds, { padding: [40, 40], maxZoom: 15, animate: !prefersReducedMotion() });
 }
 function popupHTML(p) {
   const safeLink = (p.link && /^https:\/\//i.test(p.link)) ? p.link : '';

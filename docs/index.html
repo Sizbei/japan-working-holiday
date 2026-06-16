@@ -313,9 +313,15 @@
       </div>
       <ul id="placeSug" class="place-sug" aria-live="polite"></ul>
     </div>
-    <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>
-    <p class="map-hint">Tap a pin to add it to your calendar or set a reminder (it shows in your notifications). The map needs a connection — the neighbourhood index below always works offline.</p>
-    <div id="mapList"></div>
+    <div id="mapTools" class="map-tools">
+      <button type="button" id="mapFit" class="map-fit">⤢ Fit all pins</button>
+      <span id="mapCount" class="map-count-live" aria-live="polite"></span>
+    </div>
+    <div class="map-split">
+      <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>
+      <div id="mapList" aria-label="Neighbourhood index"></div>
+    </div>
+    <p class="map-hint">Upcoming events &amp; every place are pre-pinned (pulsing = soon); tap a pin to open it in Maps or plan a visit. The map needs a connection — the neighbourhood index always works offline.</p>
   </section>
   </div><!-- /view-map -->
 </main>

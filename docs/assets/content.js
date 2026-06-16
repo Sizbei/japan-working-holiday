@@ -7,7 +7,7 @@ import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
-import { placeById, upsertPlace, patchPlace, deletePlace, catId } from './lib/places.js';
+import { placeById, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 
 let DATA = null;
@@ -43,12 +43,12 @@ function wireCollapsibleCards() {
   if (!ex) return;
   const toggle = (card) => { const on = card.classList.toggle('expanded'); card.setAttribute('aria-expanded', String(on)); };
   ex.addEventListener('click', (e) => {
-    if (e.target.closest('a')) return;                       // links inside don't toggle
+    if (e.target.closest('button, a')) return;               // links/buttons (e.g. ★ Tabetai) inside don't toggle
     const card = e.target.closest('.card2.collapsible'); if (card) toggle(card);
   });
   ex.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('.card2.collapsible'); if (!card || e.target.tagName === 'A') return;
+    const card = e.target.closest('.card2.collapsible'); if (!card || e.target.closest('button, a')) return;
     e.preventDefault(); toggle(card);
   });
 }
@@ -133,8 +133,8 @@ function wireTabetai(grid) {
     e.stopPropagation();                                     // don't toggle the card's expand
     const id = b.dataset.tb, existing = placeById(id);
     if (existing) {
-      if (existing.date || existing.eventId || existing.locked) patchPlace(id, { fav: false, visited: existing.visited });  // keep a planned/locked visit, just un-pin
-      else deletePlace(id);                                  // plain want-to-eat -> remove
+      if (existing.date || existing.eventId || existing.locked) { patchPlace(id, { fav: false }); dispatchChanged(); }  // keep a planned/locked visit, just un-pin (patchPlace is silent → dispatch)
+      else deletePlace(id);                                  // plain want-to-eat -> remove (dispatches)
     } else {
       const c = approxCoord(DATA.areaGeo, b.dataset.area, b.dataset.name);
       upsertPlace({ id, name: b.dataset.name, address: b.dataset.area, lat: c.lat, lng: c.lng, category: 'food', source: 'tabetai', fav: true, coordKind: 'approx', visited: false });

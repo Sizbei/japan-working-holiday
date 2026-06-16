@@ -11,9 +11,9 @@
 
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
-import { AREAS, areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
+import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
 import {
-  loadPlaces, savePlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, catId, slug,
+  loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, catId, slug,
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
 
@@ -258,14 +258,15 @@ function pushEvent(title, date, note) {
 }
 function change() { document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
 
+// NOTE: upsertPlace/deletePlace dispatch jwh:data-changed themselves; patchPlace is a SILENT
+// writer, so only the patchPlace branches call change() — never double-dispatch (CLAUDE.md).
 function saveCatalogue(id) {
   const pt = placesModel().find(x => x.id === id);
   if (!pt) return;
-  if (placeById(id)) { patchPlace(id, { fav: true }); }   // already saved → ensure pinned
+  if (placeById(id)) { patchPlace(id, { fav: true }); change(); }   // already saved → ensure pinned
   else upsertPlace({ id, name: pt.name, address: pt.area || '', lat: pt.lat, lng: pt.lng, category: pt.cat,
     source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', fav: true, coordKind: 'approx', visited: false });
   if (map) map.closePopup();
-  change();
 }
 function planVisit(id) {
   const pt = placesModel().find(x => x.id === id);
@@ -274,20 +275,19 @@ function planVisit(id) {
   const date = prompt(`Plan a visit to "${pt.name}" on (YYYY-MM-DD):`, (DATA.meta?.arrival_date || '2026-06-30'));
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
   const d = date.trim();
+  if (existing?.eventId) removeEvent(existing.eventId);   // clear the old event so we don't orphan it
   const eid = pushEvent('Visit: ' + pt.name, d, pt.area || '');
-  if (existing) patchPlace(existing.id, { date: d, remindDate: d, eventId: eid });
+  if (existing) { patchPlace(existing.id, { date: d, remindDate: d, eventId: eid }); change(); }
   else upsertPlace({ id, name: pt.name, address: pt.area || '', lat: pt.lat, lng: pt.lng, category: pt.cat,
     source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', coordKind: 'approx', date: d, remindDate: d, eventId: eid });
   if (map) map.closePopup();
-  change();
 }
 function dropPin(latlng) {
   const name = prompt('Name this pin:', '');
   if (!name || !name.trim()) return;
   toggleArm(false);
   upsertPlace({ id: 'p' + Date.now(), name: name.trim(), address: '', lat: +latlng.lat.toFixed(6), lng: +latlng.lng.toFixed(6),
-    category: 'personal', source: 'drop', coordKind: 'exact' });
-  change();
+    category: 'personal', source: 'drop', coordKind: 'exact' });   // dispatches → renders synchronously
   setTimeout(() => focusPlace(placeByName(name.trim())?.id), 50);
 }
 function addToCalendar(p) {
@@ -366,9 +366,9 @@ function renderSaved() {
       `<a href="#/checklist" class="map-ic" title="Your checklist" aria-label="Open checklist">✓</a>`,
     ].join('');
     return `<li class="map-srow${p.fav ? ' is-fav' : ''}" data-pid="${esc(p.id)}">
-      <button type="button" class="map-sgo" data-pid="${esc(p.id)}" title="Show on map">
+      <button type="button" class="map-sgo" data-pid="${esc(p.id)}" aria-label="Show ${esc(p.name)} on map" title="Show on map">
         <span class="map-sicon" aria-hidden="true">${icon}</span>
-        <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx">≈</span>' : ''}</span>
+        <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}</span>
       </button>
       <span class="map-slinks">${links}
         <button type="button" class="map-ic" data-del="${esc(p.id)}" aria-label="Delete ${esc(p.name)}"${p.locked ? ' disabled title="locked"' : ''}>✕</button>
@@ -377,7 +377,7 @@ function renderSaved() {
   wrap.innerHTML = `<h3 class="map-side-h">Your pins <span class="map-count">${places.length}</span></h3>
     <ul class="map-slist dense-list">${places.map(row).join('')}</ul>`;
   wrap.querySelectorAll('.map-sgo').forEach(b => b.addEventListener('click', () => focusPlace(b.dataset.pid)));
-  wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { if (confirm('Delete this pin?')) deletePlace(b.dataset.del); }));
+  wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { if (confirm('Delete this pin?') && !deletePlace(b.dataset.del)) alert('This pin is locked — unlock it first.'); }));
 }
 
 // ====================================================================== offline link index

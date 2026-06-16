@@ -84,3 +84,49 @@ test('reorderIds moves an id before/after a target', () => {
   assert.deepEqual(reorderIds(['a','b','c'], 'b', null), ['a','c','b']);
   assert.deepEqual(reorderIds(['a','b','c'], 'a', 'a'), ['a','b','c']);
 });
+
+import { normalize, slug, catId, upsertInto, deleteFrom } from '../docs/assets/lib/places.js';
+
+test('normalize back-fills new fields, infers coordKind, preserves data', () => {
+  const legacy = { id: 'p1', name: 'Old Pin', lat: 35.6, lng: 139.7, eventId: 'e9' };
+  const n = normalize(legacy);
+  assert.equal(n.source, 'drop');
+  assert.equal(n.fav, false);
+  assert.equal(n.locked, false);
+  assert.equal(n.coordKind, 'exact');           // had numeric coords
+  assert.equal(n.eventId, 'e9');                 // existing data wins over defaults
+  assert.equal(normalize({ id: 'x', name: 'NoCoords' }).coordKind, 'approx');
+});
+
+test('slug + catId are deterministic and url-safe', () => {
+  assert.equal(slug('Big Love Records (Harajuku)!'), 'big-love-records-harajuku');
+  assert.equal(catId('restaurants', 'Ichiran'), 'cat:restaurants:ichiran');
+  assert.equal(catId('restaurants', 'Ichiran'), catId('restaurants', 'Ichiran'));  // stable
+});
+
+test('upsertInto is idempotent on repeat star (no duplicate)', () => {
+  const rec = { id: 'cat:restaurants:ichiran', name: 'Ichiran', source: 'tabetai', fav: true };
+  let arr = upsertInto([], rec);
+  assert.equal(arr.length, 1);
+  arr = upsertInto(arr, { ...rec, visited: true });   // second press updates, not appends
+  assert.equal(arr.length, 1);
+  assert.equal(arr[0].visited, true);
+  assert.equal(arr[0].fav, true);
+});
+
+test('upsertInto does not mutate the input array (immutability)', () => {
+  const a = [];
+  const b = upsertInto(a, { id: 'z', name: 'Z' });
+  assert.equal(a.length, 0);
+  assert.equal(b.length, 1);
+});
+
+test('deleteFrom honours the lock and reports the removed record', () => {
+  const arr = [{ id: 'a', name: 'A', locked: false, eventId: 'e1' }, { id: 'b', name: 'B', locked: true }];
+  const ok = deleteFrom(arr, 'a');
+  assert.equal(ok.arr.length, 1);
+  assert.equal(ok.removed.eventId, 'e1');        // caller uses this to remove the linked event
+  const blocked = deleteFrom(arr, 'b');
+  assert.equal(blocked.arr.length, 2);           // locked → unchanged
+  assert.equal(blocked.removed, null);
+});

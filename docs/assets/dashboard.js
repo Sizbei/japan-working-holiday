@@ -105,6 +105,7 @@ function renderBadge(alerts) {
   badge.classList.toggle('hot', overdue);
 }
 const ICON = { deadline: '⚖️', book: '🎟️', task: '✅', event: '📅' };
+const ROUTE_FOR = { deadline: '#/deadlines', book: '#/deadlines', task: '#/checklist', event: '#/calendar' };
 function clip(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; }
 function renderPanel(alerts) {
   const panel = $('#notifPanel');
@@ -117,11 +118,13 @@ function renderPanel(alerts) {
     <ul class="np-list">${alerts.slice(0, 30).map(a => `
       <li class="np-item sev-${a.severity}">
         <span class="np-ico" aria-hidden="true">${ICON[a.kind] || '•'}</span>
-        <span class="np-body"><span class="np-title">${esc(clip(a.title, 76))}</span>
-          <span class="np-when">${a.severity === 'overdue' ? 'overdue · ' : ''}${esc(fmtShort(a.when))}${a.days >= 0 ? ` · in ${a.days}d` : ''}</span></span>
+        <a class="np-body" href="${ROUTE_FOR[a.kind] || '#/dashboard'}"><span class="np-title">${esc(clip(a.title, 76))}</span>
+          <span class="np-when">${a.severity === 'overdue' ? 'overdue · ' : ''}${esc(fmtShort(a.when))}${a.days >= 0 ? ` · in ${a.days}d` : ''}</span></a>
         <button class="np-x" data-dismiss="${esc(a.id)}" aria-label="Dismiss">✕</button>
       </li>`).join('')}</ul>`;
-  $$('#notifPanel .np-x').forEach(b => b.addEventListener('click', () => {
+  $$('#notifPanel .np-body').forEach(a => a.addEventListener('click', () => { panel.hidden = true; }));   // navigate (hash) + close
+  $$('#notifPanel .np-x').forEach(b => b.addEventListener('click', (e) => {
+    e.preventDefault(); e.stopPropagation();
     const d = get(KEYS.dismissed, []) || [];
     d.push(b.dataset.dismiss); set(KEYS.dismissed, d); refresh();
   }));

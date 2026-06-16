@@ -859,7 +859,7 @@ html.js-router .view.is-active { display: block; }
 }
 .dnd-handle:hover { color: var(--ink-soft); }
 .dnd-handle:active { cursor: grabbing; }
-.dnd-dragging { opacity: var(--drag-ghost-opacity); transform: scale(var(--drag-lift-scale)); box-shadow: var(--shadow-lg); position: relative; z-index: 30; }
+.dnd-dragging { opacity: var(--drag-ghost-opacity); transform: scale(var(--drag-lift-scale)); box-shadow: var(--shadow-lg); position: relative; z-index: 30; pointer-events: none; }
 .dnd-grabbed { box-shadow: var(--ring); }
 .dnd-movable { cursor: grab; }
 .dnd-over { outline: 2px dashed var(--indigo); outline-offset: -2px; background: color-mix(in srgb, var(--indigo) 8%, transparent); }
@@ -986,3 +986,7 @@ html.js-router .view.is-active { display: block; }
   .hero-mark .sun{ width: 44px; height: 44px; }
   .hero-kicker{ font-size: .9rem; }
 }
+
+/* clickable notification rows (navigate to the relevant view) */
+a.np-body{ text-decoration: none; color: inherit; cursor: pointer; border-radius: 6px; transition: background var(--t-hover); }
+a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }

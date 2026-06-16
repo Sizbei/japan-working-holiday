@@ -316,6 +316,14 @@
     <div id="mapTools" class="map-tools">
       <button type="button" id="mapFit" class="map-fit">⤢ Fit all pins</button>
       <span id="mapCount" class="map-count-live" aria-live="polite"></span>
+      <ul class="map-legend" aria-label="Pin colours">
+        <li><i class="jwh-pin-dot cat-music"></i>Music / events</li>
+        <li><i class="jwh-pin-dot cat-geek"></i>Geek &amp; arcade</li>
+        <li><i class="jwh-pin-dot cat-build"></i>Buildings &amp; places</li>
+        <li><i class="jwh-pin-dot cat-food"></i>Food</li>
+        <li><i class="jwh-pin-dot cat-meet"></i>Meetups</li>
+        <li><i class="jwh-pin-dot pulse-key"></i>Coming up soon</li>
+      </ul>
     </div>
     <div class="map-split">
       <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>
@@ -328,7 +336,13 @@
 
 <footer>
   <p>My Year in Japan · last updated <span id="footGen"></span></p>
-  <p class="disclaimer">Visa, tax, pension, Disney and booking systems all change — I verify against official sources before relying on anything here. Confidence flags and “verify closer” notes mark what to re-check. The passphrase is convenience only, not real security.</p>
+  <div class="backup">
+    <button type="button" id="backupExport" class="backup-btn" title="Download all your events, places, checklist and notes as a file">⬇ Back up my data</button>
+    <button type="button" id="backupImport" class="backup-btn" title="Restore from a backup file (replaces data on this device)">⬆ Restore</button>
+    <input type="file" id="backupFile" accept="application/json,.json" hidden>
+    <span id="backupStatus" class="backup-status" role="status" aria-live="polite"></span>
+  </div>
+  <p class="disclaimer">Everything you edit is saved only in this browser — back it up before clearing data or switching phones. Visa, tax, pension, Disney and booking systems all change — I verify against official sources before relying on anything here. Confidence flags and “verify closer” notes mark what to re-check. The passphrase is convenience only, not real security.</p>
 </footer>
 
 <script type="module" src="assets/main.js"></script>

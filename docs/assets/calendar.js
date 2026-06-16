@@ -264,7 +264,7 @@ function openDetail(ev) {
   ov.querySelector('#mdCopy')?.addEventListener('click', () => {
     const u = loadUser();
     u.push({ id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '' });
-    saveUser(u); closeModal(ov); render();
+    saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
   });
 }
 function srcline(s) {
@@ -304,9 +304,9 @@ function openModal(ev, presetDate) {
     const u = loadUser();
     if (ev && ev.id) { const i = u.findIndex(x => x.id === ev.id); if (i >= 0) u[i] = { ...u[i], ...obj }; }
     else u.push({ id: 'u' + Date.now(), ...obj });
-    saveUser(u); closeModal(ov); render();
+    saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
   });
-  ov.querySelector('#mdDel')?.addEventListener('click', () => { saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); render(); });
+  ov.querySelector('#mdDel')?.addEventListener('click', () => { saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); });
 }
 
 // ---- bulk add: tag-filtered .ics + Google import how-to ----
@@ -349,7 +349,7 @@ function onImport(e) {
     if (!confirm(`Import ${parsed.length} event(s) into your calendar?`)) return;
     const u = loadUser();
     parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
-    saveUser(u); render();
+    saveUser(u);   // jwh:data-changed → render()
   };
   reader.readAsText(file); e.target.value = '';
 }

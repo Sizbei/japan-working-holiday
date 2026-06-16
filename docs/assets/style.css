@@ -230,7 +230,7 @@ td:nth-child(2) { color: var(--red); font-weight: 500; white-space: nowrap; }
 }
 
 /* ---- Top grid ---- */
-.top-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .9rem; }
+.top-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .9rem; }
 .top-card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; transition: transform .2s, border-color .2s; }
 .top-card:hover { transform: translateY(-3px); border-color: var(--red); }
 .top-card .t-tip { font-weight: 700; font-size: .98rem; margin-bottom: .4rem; }
@@ -564,7 +564,7 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 /* ---- Tracker ---- */
 .trk-group{ margin-bottom: var(--s6); }
 .trk-h{ font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); margin:0 0 .6rem; }
-.trk-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: var(--s4); }
+.trk-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: var(--s4); }
 .trk-card{ background: var(--bg-soft); border:1px solid var(--line); border-left:4px solid var(--indigo);
   border-radius:12px; padding: var(--s4); box-shadow: var(--shadow); }
 .trk-card.recurring{ border-left-color: var(--gold-ink); }
@@ -941,7 +941,7 @@ html.js-router .view.is-active { display: block; }
 .mt-head{ display: flex; align-items: center; gap: .6rem; margin-bottom: var(--s4); }
 .mt-mark{ width: 22px; height: 22px; background: var(--hinomaru) center/contain no-repeat; display: inline-block; flex: none; }
 #myTokyoH{ font-family: var(--pixel); font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); letter-spacing: .06em; margin: 0; }
-.mt-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s4); }
+.mt-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s4); }
 .mt-card{ text-decoration: none; color: var(--ink); display: block; }
 .mt-eyebrow{ display: block; font-size: .64rem; letter-spacing: .1em; margin-bottom: .3rem; }
 .mt-card.cat-gear .mt-eyebrow, .mt-card.cat-listen .mt-eyebrow{ color: var(--c-music-ink); }

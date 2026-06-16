@@ -990,3 +990,7 @@ html.js-router .view.is-active { display: block; }
 /* clickable notification rows (navigate to the relevant view) */
 a.np-body{ text-decoration: none; color: inherit; cursor: pointer; border-radius: 6px; transition: background var(--t-hover); }
 a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
+
+/* live music section accent */
+#livemusic .pillar-head::after{ background: var(--c-music); }
+#livemusic .pillar-head .jp{ color: var(--c-music-ink); }

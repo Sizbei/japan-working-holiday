@@ -384,6 +384,23 @@
       "confidence": "high"
     },
     {
+      "id": "mus-fuji-rock-festival-26",
+      "title": "Fuji Rock Festival '26",
+      "date": "2026-07-24",
+      "endDate": "",
+      "category": "music",
+      "area": "Naeba Ski Resort, Niigata (~2.5h from Tokyo by shinkansen+bus)",
+      "cost": "~¥25,000/day to ~¥55,000 3-day; camping extra",
+      "bookBy": "",
+      "bookingNotes": "Fri–Sun, 24–26 Jul 2026 (3-day) · e+ / official site / Ticket Pia",
+      "why": "Japan's biggest and best-curated festival — sprawling mountain site with a deep electronic/leftfield presence (Red Marquee, Field of Heaven) alongside indie and global headliners.",
+      "sources": [
+        "https://www.fujirockfestival.com/",
+        "https://www.smash-uk.com/"
+      ],
+      "confidence": "high"
+    },
+    {
       "id": "ev-sumida-river-fireworks-festival-sumidagawa-ha",
       "title": "Sumida River Fireworks Festival (Sumidagawa Hanabi Taikai)",
       "date": "2026-07-25",
@@ -474,6 +491,22 @@
       "confidence": "medium"
     },
     {
+      "id": "mus-summer-sonic-2026-tokyo",
+      "title": "Summer Sonic 2026 (Tokyo)",
+      "date": "2026-08-14",
+      "endDate": "",
+      "category": "music",
+      "area": "Chiba / Makuhari (ZOZO Marine + Makuhari Messe) — not Tokyo proper",
+      "cost": "~¥20,000/day; multi-day options",
+      "bookBy": "",
+      "bookingNotes": "Fri–Sun, 14–16 Aug 2026 (25th anniversary, first-ever 3-day) · e+ / official site",
+      "why": "Urban festival with a strong pop/indie/rock bill and a dedicated dance stage (Sonic Stage / Sonicmania all-nighter) for electronic acts. Easy day-trip from central Tokyo.",
+      "sources": [
+        "https://www.summersonic.com/"
+      ],
+      "confidence": "high"
+    },
+    {
       "id": "ev-asakusa-toro-nagashi-sumida-river-lantern-flo",
       "title": "Asakusa Toro Nagashi (Sumida River Lantern Floating, Obon)",
       "date": "2026-08-15",
@@ -559,6 +592,71 @@
         "https://tokyocheapo.com/events/tokyo-game-show/",
         "https://xtrend.nikkei.com/sp/gaming/en/feature/atcl/2026/7/index.html",
         "https://www.wokeey.com/events/tokyo-game-show/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "mus-ultra-japan-2026",
+      "title": "Ultra Japan 2026",
+      "date": "2026-09-19",
+      "endDate": "",
+      "category": "music",
+      "area": "Tokyo — Odaiba Ultra Park (Aomi/Daiba; Yurikamome or Rinkai Line)",
+      "cost": "~¥18,000–25,000+ per day / GA 2-day",
+      "bookBy": "",
+      "bookingNotes": "Sat–Sun, 19–20 Sep 2026 (2-day) · Official site / Ticket Pia",
+      "why": "Big-stage EDM/house/techno festival in the city — mainstream and commercial, but a spectacle and an easy in-town electronic weekend.",
+      "sources": [
+        "https://ultrajapan.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "mus-ffkt-2026-formerly-taicoclub",
+      "title": "FFKT 2026 (formerly Taicoclub)",
+      "date": "2026-09-26",
+      "endDate": "",
+      "category": "music",
+      "area": "Izu Shimoda, Shizuoka — Hotel Izukyu, Shirahama Beach (~3 hr via Odoriko ltd express)",
+      "cost": "~¥15,000–22,000 + lodging/camping",
+      "bookBy": "",
+      "bookingNotes": "Sat–Sun, 26–27 Sep 2026 (best estimate — verify closer) · Official site / RA / e+",
+      "why": "Tastemaker outdoor festival blending forward-thinking electronic, ambient and live acts on a scenic seaside site. A core date for the discerning electronic crowd. Verify dates closer.",
+      "sources": [
+        "https://ffkt.jp/",
+        "https://ra.co/events"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "mus-blue-note-jazz-festival-in-japan-2026",
+      "title": "Blue Note Jazz Festival in Japan 2026",
+      "date": "2026-09-27",
+      "endDate": "",
+      "category": "music",
+      "area": "Tokyo — Ariake Arena, Koto (Yurikamome / Rinkai Line, Toyosu side)",
+      "cost": "~¥12,000–18,000+ per day",
+      "bookBy": "",
+      "bookingNotes": "Sat–Sun, 27–28 Sep 2026 (2-day) · Official site / e+",
+      "why": "Arena-scale jazz/soul/R&B festival from the Blue Note team — a concentrated dose of marquee jazz and soul-adjacent acts in one weekend. Verify dates closer.",
+      "sources": [
+        "https://www.bluenotejazzfestival.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "mus-the-labyrinth-2026-mindgames",
+      "title": "The Labyrinth 2026 (Mindgames)",
+      "date": "2026-10-10",
+      "endDate": "",
+      "category": "music",
+      "area": "Minakami, Gunma — Hodaigi Camp Site (~2.5 hr; shuttle from parking)",
+      "cost": "~¥18,000–25,000 (camping festival)",
+      "bookBy": "",
+      "bookingNotes": "Sat–Mon, 10–12 Oct 2026 (3 nights camping) · Official site (limited capacity, sells out)",
+      "why": "Legendary, intimate deep-/minimal-techno camping festival in the mountains with a famously pristine sound system and a no-frills, music-devotee ethos. A bucket-list rave. Verify dates closer.",
+      "sources": [
+        "https://www.mindgames.jp/"
       ],
       "confidence": "high"
     },
@@ -815,6 +913,23 @@
       "confidence": "low"
     },
     {
+      "id": "mus-tokyo-festival-of-modular-fom",
+      "title": "Tokyo Festival of Modular (FoM)",
+      "date": "2026-11-28",
+      "endDate": "",
+      "category": "music",
+      "area": "Daikanyama (concerts at ORD ~4 min from Daikanyama Stn) + exhibitor space",
+      "cost": "Day/weekend passes (~¥3,000–6,000); free-ish exhibitor browsing varies",
+      "bookBy": "",
+      "bookingNotes": "Annual, late November · Advance tickets via festival site / Peatix; verify dates closer",
+      "why": "Japan's flagship modular-synth gathering — hands-on gear from makers, performances and workshops. The single best event for the modular/maker lane. Verify exact 2026 dates closer.",
+      "sources": [
+        "https://www.festivalofmodular.com/",
+        "https://www.instagram.com/festivalofmodular/"
+      ],
+      "confidence": "medium"
+    },
+    {
       "id": "ev-shibuya-blue-cave-ao-no-dokutsu-illumination",
       "title": "Shibuya Blue Cave (Ao no Dokutsu) Illumination",
       "date": "2026-12-04",
@@ -831,6 +946,23 @@
         "https://www.timeout.com/tokyo/things-to-do/shibuya-ao-no-dokutsu"
       ],
       "confidence": "low"
+    },
+    {
+      "id": "mus-mutek-jp-2026-edition-11",
+      "title": "MUTEK.JP 2026 (Edition 11)",
+      "date": "2026-12-10",
+      "endDate": "",
+      "category": "music",
+      "area": "Shibuya, Tokyo — evening shows at Spotify O-East & WWW; daytime at Shibuya venues",
+      "cost": "Day passes / full passes (~¥4,000–12,000)",
+      "bookBy": "",
+      "bookingNotes": "Mid–late Nov 2026, 3–4 days (2025 ran Nov 21–23; verify exact 2026 dates closer) (Dec 10–13, 2026) · Official site / Peatix",
+      "why": "The city's premier festival for audiovisual and experimental electronic performance — exactly the cutting-edge synth/AV programming this lane lives for. Verify 2026 dates closer.",
+      "sources": [
+        "https://tokyo.mutek.org/en",
+        "https://ra.co/news/83481"
+      ],
+      "confidence": "high"
     },
     {
       "id": "ev-jump-festa-2027-shueisha-weekly-shonen-jump-f",
@@ -885,6 +1017,22 @@
         "https://tokyocheapo.com/entertainment/event-posts/tokyo-new-year-parties/"
       ],
       "confidence": "high"
+    },
+    {
+      "id": "mus-ohjo-rave-nye",
+      "title": "OHJO Rave NYE",
+      "date": "2026-12-31",
+      "endDate": "",
+      "category": "music",
+      "area": "Shinjuku Kabukicho, Tokyo — OHJO Bldg ('red-brick castle of Kabukicho')",
+      "cost": "~¥3,000–5,000 advance",
+      "bookBy": "",
+      "bookingNotes": "NYE overnight, 31 Dec 2026 → 1 Jan 2027 (2025→26 ran ~10pm–late) · RA / door",
+      "why": "Multi-floor Kabukicho NYE rave — a fun, central, all-night way to bring in the new year on the dance floor. Verify 2026 edition closer.",
+      "sources": [
+        "https://ra.co/events"
+      ],
+      "confidence": "medium"
     },
     {
       "id": "ev-hatsumode-at-meiji-jingu-first-shrine-visit-o",
@@ -3781,5 +3929,697 @@
     "https://www.gotokyo.org/en/spot/ev090/index.html",
     "https://www.nta.go.jp/english/taxes/individual/12005.htm",
     "https://www.nenkin.go.jp/international/english/lumpsum/lumpsum.html"
+  ],
+  "livemusic": [
+    {
+      "name": "Womb",
+      "detail": "Tokyo's flagship big-room techno/house club — Funktion-One-style sound, lasers, and a steady stream of international techno/house headliners. The default for a serious electronic night out.",
+      "how_or_when": "CLUB · Thu–Sun nightly; weekends ~23:00–morning · Door or RA advance; bring passport ID",
+      "area_or_park": "Shibuya / Maruyamacho (Shibuya Stn)",
+      "price_or_cost": "~¥3,000–4,500 door (more for big international guests); cheaper before midnight / with flyer or RA advance",
+      "tier": "n/a",
+      "sources": [
+        "https://www.womb.co.jp/",
+        "https://ra.co/clubs/355"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Vent",
+      "detail": "Dark, no-photos, sound-first basement built for deep/minimal techno and house heads. The closest spirit-successor to the old Contact for discerning electronic listeners.",
+      "how_or_when": "CLUB · Fri & Sat, doors ~23:00 til ~06:00 · Door or RA advance; passport ID required",
+      "area_or_park": "Omotesando / Minami-Aoyama (Omotesando Stn)",
+      "price_or_cost": "~¥2,500–4,000 door; RA advance often cheaper",
+      "tier": "n/a",
+      "sources": [
+        "https://vent-tokyo.net/",
+        "https://ra.co/clubs/121613"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Circus Tokyo",
+      "detail": "Intimate, low-ceilinged room with a cult following for leftfield techno, house, bass and live electronic acts. Great for catching rising local and touring artists up close.",
+      "how_or_when": "CLUB · Fri/Sat + scattered weeknights; check RA per event · Door or RA advance",
+      "area_or_park": "Shibuya (Shibuya Stn, New South Exit ~5 min)",
+      "price_or_cost": "~¥2,000–3,500; varies by event",
+      "tier": "n/a",
+      "sources": [
+        "https://circus-tokyo.jp/",
+        "https://ra.co/clubs/61991"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Aoyama Hachi",
+      "detail": "Two-floor club spanning house, techno, dub, bass and afro/global nights. Reliable mid-size venue for digging into Tokyo's underground residencies.",
+      "how_or_when": "CLUB · 6 nights/week; genre varies by night — check RA · Door or RA advance",
+      "area_or_park": "Shibuya / Aoyama (Shibuya Stn)",
+      "price_or_cost": "~¥2,000–3,500",
+      "tier": "n/a",
+      "sources": [
+        "https://aoyama-hachi.net/",
+        "https://ra.co/clubs/12858"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Aoyama Tunnel",
+      "detail": "Tiny, hidden underground bar-club for serious selectors — house, disco, ambient and experimental. A connoisseur's late-night spot.",
+      "how_or_when": "DJ BAR · Recurring 'TUNNEL FRIDAY' + weekend events · Door or RA; small room, go early",
+      "area_or_park": "Aoyama (Gaienmae / Omotesando Stn)",
+      "price_or_cost": "~¥1,500–3,000",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/110327"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Mitsuki",
+      "detail": "Compact basement room with a strong house/techno/disco programming streak — good for an unpretentious, dance-floor-focused weekend night.",
+      "how_or_when": "CLUB · Fri/Sat weekly; check RA · Door or RA advance",
+      "area_or_park": "Shibuya (B1, Dogenzaka, Scramble area; Shibuya Stn)",
+      "price_or_cost": "~¥2,000–3,000",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/132610"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Solfa",
+      "detail": "Cozy Nakameguro basement known for deep house, techno and minimal in a warm, intimate setting — a more relaxed alternative to the Shibuya crush.",
+      "how_or_when": "CLUB · Fri/Sat + select weeknights; check RA · Door or RA advance",
+      "area_or_park": "Nakameguro (Nakameguro Stn)",
+      "price_or_cost": "~¥2,000–3,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.solfa.jp/",
+        "https://ra.co/clubs/13049"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "DJ Bar Oath",
+      "detail": "Late-night DJ bar with a mirror-ball room and free-spirited house/disco/techno sets — a cheap, no-commitment way to end (or start) a night out.",
+      "how_or_when": "DJ BAR · Open most nights; different DJ event nightly · Walk in",
+      "area_or_park": "Shibuya (Dogenzaka 1-6-5, basement; Shibuya Stn)",
+      "price_or_cost": "Low cover (~¥1,000–2,000) or free early; cheap drinks",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/40139"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "DJ Bar Koara",
+      "detail": "Beloved tiny basement bar near Tower Records with sharp resident selectors across house, disco and broken beat. Big-name guests sometimes drop in for off-nights.",
+      "how_or_when": "DJ BAR · Weekends + recurring monthly residents; occasional intl guests · Walk in / check Instagram",
+      "area_or_park": "Shibuya (Jinnan 1-13-15, Koritsu Bldg B1F; Shibuya Stn)",
+      "price_or_cost": "Low cover; cheap drinks",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/116300"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Bar Bonobo",
+      "detail": "Converted old house turned multi-floor party spot with a rooftop — eclectic house, disco, dub and global sounds in an intimate, social atmosphere.",
+      "how_or_when": "DJ BAR · Frequent weekend DJ nights / events · Walk in / check Instagram",
+      "area_or_park": "Harajuku / Meiji-jingumae (Harajuku Stn)",
+      "price_or_cost": "~¥1,500–2,500 cover",
+      "tier": "n/a",
+      "sources": [
+        "https://bonobo.jp/",
+        "https://ra.co/clubs/35633"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Forestlimit",
+      "detail": "DIY experimental hub for noise, ambient, leftfield electronics, art shows and weirdo dance parties — the place to plug into Tokyo's underground/maker fringe.",
+      "how_or_when": "LIVE HOUSE · Irregular — KATO Massacre experimental night every Wed; noise/disco/ambient/dance events throughout; check IG @forestlimit_info / RA · Door / check Instagram or RA per event",
+      "area_or_park": "Hatagaya (1F, K3 Bldg, 2-8-15 Hatagaya, Shibuya-ku; Hatagaya Stn)",
+      "price_or_cost": "~¥1,500–2,500",
+      "tier": "n/a",
+      "sources": [
+        "https://www.instagram.com/forestlimit_info/",
+        "https://ra.co/clubs/77913"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Super Dommune",
+      "detail": "Japan's legendary live-streaming studio-venue mixing electronic music, talks and culture nightly. Catch the broadcasts, then snag rare in-person tickets for special sessions.",
+      "how_or_when": "VENUE · Webcasts mostly weekday evenings ~19:00–24:00; some in-person/ticketed specials · Watch live stream online; check site for ticketed events",
+      "area_or_park": "Shibuya (Shibuya PARCO 9F; Shibuya Stn)",
+      "price_or_cost": "Free to stream; ticketed for in-person specials",
+      "tier": "n/a",
+      "sources": [
+        "https://www.dommune.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "DJ Bar Bridge",
+      "detail": "DJ bar with a postcard view over Shibuya Crossing and a soundtrack spanning house, jazz and electronic — a refined, listening-focused vantage point on the city.",
+      "how_or_when": "LISTENING BAR · Nightly; DJ-led vinyl/electronic and jazzy sets · Walk in / reservation for window seats",
+      "area_or_park": "Shibuya (10F, overlooking Scramble Crossing; Shibuya Stn)",
+      "price_or_cost": "Cover + drink minimum (~¥1,500–2,500)",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/89357"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "WWW & WWW X",
+      "detail": "Former cinema turned two-room live house — the city's best mid-size stage for indie, electronic, post-rock and touring acts, plus host to MUTEK and Synchronicity showcases.",
+      "how_or_when": "LIVE HOUSE · Most nights; check monthly schedule · e+ / Ticket Pia / RA / door",
+      "area_or_park": "Shibuya (Udagawacho, near Center Gai; Shibuya Stn)",
+      "price_or_cost": "~¥3,000–6,000 depending on act",
+      "tier": "n/a",
+      "sources": [
+        "https://www-shibuya.jp/",
+        "https://ra.co/clubs/57338"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Liquidroom",
+      "detail": "~900-cap room that's a sweet spot for international indie and electronic touring acts, with excellent sound and the attached Time Out Cafe bar.",
+      "how_or_when": "LIVE HOUSE · Most nights; live gigs + occasional all-night club events · e+ / Ticket Pia / RA / door",
+      "area_or_park": "Ebisu (Higashi 3-chome; Ebisu Stn)",
+      "price_or_cost": "~¥4,000–7,000",
+      "tier": "n/a",
+      "sources": [
+        "https://liquidroom.net/",
+        "https://ra.co/clubs/2342"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Unit",
+      "detail": "Three-level basement complex (Unit + Saloon + Unice) that flips from indie/electronic gigs to late club nights — a core venue for forward-thinking bookings.",
+      "how_or_when": "LIVE HOUSE · Most nights; live early, club/DJ late on weekends · e+ / Ticket Pia / RA / door",
+      "area_or_park": "Daikanyama (Daikanyama / Ebisu Stn)",
+      "price_or_cost": "~¥3,000–6,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.unit-tokyo.com/",
+        "https://ra.co/clubs/2611"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Spotify O-East",
+      "detail": "Large multi-floor live house anchoring Shibuya's club street — hosts indie/rock/electronic headliners and festival showcases (MUTEK evening shows).",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / Ticket Pia / door",
+      "area_or_park": "Shibuya (Dogenzaka; Shibuya Stn)",
+      "price_or_cost": "~¥4,000–7,000",
+      "tier": "n/a",
+      "sources": [
+        "https://shibuya-o.com/",
+        "https://ra.co/clubs/3441"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Spotify O-nest",
+      "detail": "Small, intimate top-floor room ideal for indie, experimental and emerging electronic acts — go here to find what's next.",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / Ticket Pia / door",
+      "area_or_park": "Shibuya (Dogenzaka, top of the O complex; Shibuya Stn)",
+      "price_or_cost": "~¥2,500–4,000",
+      "tier": "n/a",
+      "sources": [
+        "https://shibuya-o.com/nest/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shibuya Club Quattro",
+      "detail": "Long-running ~700-cap room with a strong indie and international booking pedigree and clean sightlines/sound — a reliable bet for touring indie acts.",
+      "how_or_when": "LIVE HOUSE · Most nights; hosts festival showcases (e.g. Synchronicity) · e+ / Ticket Pia / door",
+      "area_or_park": "Shibuya (top of Center Gai; Shibuya Stn)",
+      "price_or_cost": "~¥4,000–6,500",
+      "tier": "n/a",
+      "sources": [
+        "https://www.club-quattro.com/shibuya/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shimokitazawa Shelter",
+      "detail": "Tiny, sweaty basement that's the spiritual heart of Shimokita's indie/punk circuit — the place to see Japanese guitar bands at arm's length.",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / door",
+      "area_or_park": "Shimokitazawa (Shimokitazawa Stn)",
+      "price_or_cost": "~¥2,500–4,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.loft-prj.co.jp/SHELTER/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shimokitazawa Basement Bar & Three",
+      "detail": "Two adjoining basement rooms covering indie gigs and DJ/bar nights — a dense, scene-defining node for discovering local bands and selectors.",
+      "how_or_when": "LIVE HOUSE · Most nights; Three flips between gig and DJ/bar nights · e+ / door",
+      "area_or_park": "Shimokitazawa (Shimokitazawa Stn)",
+      "price_or_cost": "~¥2,500–4,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.toos.co.jp/3/",
+        "https://ra.co/clubs/64084"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shimokitazawa Era",
+      "detail": "Small underground room with an adventurous booking policy spanning indie, post-rock and experimental — good for off-the-radar bills.",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / door",
+      "area_or_park": "Shimokitazawa (2-34-5 Kitazawa; Shimokitazawa Stn)",
+      "price_or_cost": "~¥2,500–3,500",
+      "tier": "n/a",
+      "sources": [
+        "https://s-era.jp/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Club 251",
+      "detail": "Veteran Shimokita live house for indie/rock bills — rounds out a neighbourhood you can pub-crawl between venues in one night.",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / door",
+      "area_or_park": "Shimokitazawa (south side; Shimokitazawa Stn)",
+      "price_or_cost": "~¥2,500–3,500",
+      "tier": "n/a",
+      "sources": [
+        "https://www.club251.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Koenji High",
+      "detail": "Mid-size room anchoring Koenji's gritty DIY/punk/indie scene — pair with the neighbourhood's record shops and dive bars for a full day out.",
+      "how_or_when": "LIVE HOUSE · Most nights · e+ / door",
+      "area_or_park": "Koenji (south exit; Koenji Stn)",
+      "price_or_cost": "~¥2,500–4,000",
+      "tier": "n/a",
+      "sources": [
+        "https://koenji-high.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Niman Den-atsu (20000V)",
+      "detail": "Successor to the legendary 20000V — raw noise, punk, hardcore and experimental. Essential for the harder, weirder end of the live spectrum.",
+      "how_or_when": "LIVE HOUSE · Nightly bills · Door / check schedule",
+      "area_or_park": "Higashi-Koenji (Higashi-Koenji Stn, Marunouchi line)",
+      "price_or_cost": "~¥2,000–3,500",
+      "tier": "n/a",
+      "sources": [
+        "https://nimandenatsu.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shinjuku Loft",
+      "detail": "Historic live house (since the '70s) with main and bar stages running parallel bills — a Kabukicho institution for rock, indie and punk.",
+      "how_or_when": "LIVE HOUSE · Most nights; two-stage events (main + Bar stage) · e+ / Ticket Pia / door",
+      "area_or_park": "Shinjuku (Kabukicho; Shinjuku Stn)",
+      "price_or_cost": "~¥3,000–5,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.loft-prj.co.jp/loft/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Blue Note Tokyo",
+      "detail": "Tokyo's premier jazz room, drawing world-class jazz, soul and electronic-leaning artists. Splurge-worthy for a marquee name in an intimate seated setting.",
+      "how_or_when": "JAZZ · Nightly; typically two sets (~17:00/19:00 & ~20:00/21:30) — check per artist · Reserve online (members/general); arrive early for seating",
+      "area_or_park": "Minami-Aoyama (Omotesando Stn)",
+      "price_or_cost": "~¥7,000–13,000+ music charge depending on artist",
+      "tier": "n/a",
+      "sources": [
+        "https://www.bluenote.co.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Cotton Club",
+      "detail": "Blue Note's sister room — slightly more intimate, with a programming streak that wanders into soul, nu-jazz and electronic-adjacent artists.",
+      "how_or_when": "JAZZ · Most nights; first show ~17:00–19:00, usually two sets · Reserve online",
+      "area_or_park": "Marunouchi (Tokyo Stn, Tokia Bldg 2F)",
+      "price_or_cost": "~¥6,000–12,000+ music charge",
+      "tier": "n/a",
+      "sources": [
+        "https://www.cottonclubjapan.co.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Shinjuku Pit Inn",
+      "detail": "The serious-listener's jazz club — focused on Japanese avant-garde, free and modern jazz at very fair prices. No frills, all music.",
+      "how_or_when": "JAZZ · Daily; daytime set ~14:30 and evening set ~19:30/20:00 · Door / check schedule",
+      "area_or_park": "Shinjuku-sanchome (Accord Bldg B1; Shinjuku Stn)",
+      "price_or_cost": "~¥1,300 (matinee) to ~¥3,000–4,000 (evening)",
+      "tier": "n/a",
+      "sources": [
+        "https://pit-inn.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Body & Soul",
+      "detail": "Intimate live-jazz room run by a legendary host, spotlighting top Japanese players in a warm, dinner-club setting.",
+      "how_or_when": "JAZZ · Most nights; two sets ~20:00 & ~21:45 (one charge usually covers both) · Reserve by phone/online",
+      "area_or_park": "Shibuya (moved from Omotesando Oct 2021; Shibuya Stn)",
+      "price_or_cost": "~¥4,000–6,000 music charge + food/drink",
+      "tier": "n/a",
+      "sources": [
+        "https://www.bodyandsoul.co.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Jazz SPOT Intro — all-night Saturday jam",
+      "detail": "Cramped, smoky basement hosting Tokyo's famous all-night Saturday jam session — players rotate til dawn. A only-in-Tokyo jazz rite of passage.",
+      "how_or_when": "JAZZ · Saturday all-night jam ~17:00 til ~05:00 (first trains); other jams midweek · Walk in",
+      "area_or_park": "Takadanobaba (Takadanobaba Stn)",
+      "price_or_cost": "Low cover (~¥1,500) + drinks",
+      "tier": "n/a",
+      "sources": [
+        "https://intro.co.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Dug (Jazz Cafe & Bar)",
+      "detail": "Storied Shinjuku jazz-kissa (a Murakami haunt) — vintage decor, deep vinyl, and a no-pressure way to settle in with a coffee or cocktail and listen.",
+      "how_or_when": "JAZZ · Daily ~12:00–23:30; jazz-kissa by day, bar by night · Walk in",
+      "area_or_park": "Shinjuku (B1, Yasukuni-dori, near east exit; Shinjuku Stn)",
+      "price_or_cost": "Drink prices only (no heavy cover); records + occasional live",
+      "tier": "n/a",
+      "sources": [
+        "https://www.dug.co.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Eagle (jazz kissa)",
+      "detail": "Textbook old-school jazz-kissa: order a coffee, stay silent, and let a hand-built hi-fi rig and decades-deep record wall do the talking. Pure listening ritual.",
+      "how_or_when": "JAZZ · Daily; talking prohibited until 18:00, light conversation after · Walk in",
+      "area_or_park": "Yotsuya (Yotsuya / Yotsuya-sanchome Stn)",
+      "price_or_cost": "Coffee/drink price (~¥600+)",
+      "tier": "n/a",
+      "sources": [
+        "https://4ad.jp/eagle/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "JBS (Jazz, Blues, Soul)",
+      "detail": "One-man bar where owner Kobayashi-san spins from ~10,000 LPs of jazz, blues and soul. A hushed, vinyl-purist sanctuary in the middle of Shibuya.",
+      "how_or_when": "LISTENING BAR · Evenings; quiet listening · Walk in (tiny — go early)",
+      "area_or_park": "Shibuya (Dogenzaka 1-17-10; Shibuya Stn)",
+      "price_or_cost": "~¥600–900 cover + drinks",
+      "tier": "n/a",
+      "sources": [
+        "https://www.timeout.com/tokyo/bars/jbs"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Bar Martha",
+      "detail": "Archetypal Tokyo listening bar — tube amps, vintage horns, candlelight and a strict no-requests policy. The template the global 'listening bar' trend copied.",
+      "how_or_when": "LISTENING BAR · Nightly; vinyl played loud-and-detailed, conversation kept low, no requests · Walk in",
+      "area_or_park": "Ebisu (Shibuya-ku; Ebisu Stn)",
+      "price_or_cost": "Drink prices (cocktails ~¥1,000+)",
+      "tier": "n/a",
+      "sources": [
+        "https://martha-records.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Grandfather's",
+      "detail": "Long-running rock/soul listening bar with a warm vintage system and a wide, crowd-pleasing record wall — an easy first listening-bar to break the ice.",
+      "how_or_when": "LISTENING BAR · 17:00–02:00, closed Mondays · Walk in",
+      "area_or_park": "Shibuya (B1F, Flat Bldg, 1-24-7 Shibuya; Shibuya Stn)",
+      "price_or_cost": "Drink prices + small charge",
+      "tier": "n/a",
+      "sources": [
+        "https://www.timeout.com/tokyo/bars/grandfathers"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Studio Mule",
+      "detail": "Run by the Mule Musiq label — hi-fi listening, natural wine and an attached record shop. A tastemaker hangout bridging the listening-bar and electronic worlds.",
+      "how_or_when": "LISTENING BAR · Evenings; hi-fi listening + small record shop & wine · Walk in",
+      "area_or_park": "Shibuya (3E, 16-4 Kamiyama-cho; Shibuya Stn)",
+      "price_or_cost": "Drink/wine prices",
+      "tier": "n/a",
+      "sources": [
+        "https://www.mule-musiq.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Ginza Music Bar",
+      "detail": "Upscale, design-forward listening bar with an audiophile rig — a polished, date-worthy contrast to the gritty Shibuya kissa.",
+      "how_or_when": "LISTENING BAR · Evenings; curated vinyl on a high-fidelity system, 3,000+ records · Reserve recommended",
+      "area_or_park": "Ginza / Nihonbashi (Chuo-ku)",
+      "price_or_cost": "Cover + premium drink prices",
+      "tier": "n/a",
+      "sources": [
+        "https://www.ginzamusicbar.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Wax Poetic & Epulor",
+      "detail": "Pair of Nakameguro listening spots blending jazz, soul and electronic on serious vintage systems — central to the neighbourhood's hi-fi bar cluster.",
+      "how_or_when": "LISTENING BAR · Evenings; vintage audio + deep records (Wax Poetic); DJ across jazz/soul/electronic (Epulor) · Walk in / check IG",
+      "area_or_park": "Nakameguro (Meguro-ku; Nakameguro Stn)",
+      "price_or_cost": "Drink prices + possible cover",
+      "tier": "n/a",
+      "sources": [
+        "https://www.instagram.com/waxpoetic_nakameguro/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Tokyo Record Bar",
+      "detail": "Novel 'vinyl omakase' — a host curates a multi-course record set for the room, with each guest also picking a track. A fun, social one-off experience.",
+      "how_or_when": "LISTENING BAR · Seatings by booking; communal 'vinyl omakase' format · Reserve online in advance",
+      "area_or_park": "Shibuya (basement)",
+      "price_or_cost": "Set price per seating (food/drink + vinyl program)",
+      "tier": "n/a",
+      "sources": [
+        "https://www.tokyorecordbar.jp/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Tokyo Festival of Modular (FoM)",
+      "detail": "Japan's flagship modular-synth gathering — hands-on gear from makers, performances and workshops. The single best event for the modular/maker lane. Verify exact 2026 dates closer.",
+      "how_or_when": "FESTIVAL · Annual, late November · Advance tickets via festival site / Peatix; verify dates closer",
+      "area_or_park": "Daikanyama (concerts at ORD ~4 min from Daikanyama Stn) + exhibitor space",
+      "price_or_cost": "Day/weekend passes (~¥3,000–6,000); free-ish exhibitor browsing varies",
+      "tier": "n/a",
+      "sources": [
+        "https://www.festivalofmodular.com/",
+        "https://www.instagram.com/festivalofmodular/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Fuji Rock Festival '26",
+      "detail": "Japan's biggest and best-curated festival — sprawling mountain site with a deep electronic/leftfield presence (Red Marquee, Field of Heaven) alongside indie and global headliners.",
+      "how_or_when": "FESTIVAL · Fri–Sun, 24–26 Jul 2026 (3-day) · e+ / official site / Ticket Pia",
+      "area_or_park": "Naeba Ski Resort, Niigata (~2.5h from Tokyo by shinkansen+bus)",
+      "price_or_cost": "~¥25,000/day to ~¥55,000 3-day; camping extra",
+      "tier": "n/a",
+      "sources": [
+        "https://www.fujirockfestival.com/",
+        "https://www.smash-uk.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Summer Sonic 2026 (Tokyo)",
+      "detail": "Urban festival with a strong pop/indie/rock bill and a dedicated dance stage (Sonic Stage / Sonicmania all-nighter) for electronic acts. Easy day-trip from central Tokyo.",
+      "how_or_when": "FESTIVAL · Fri–Sun, 14–16 Aug 2026 (25th anniversary, first-ever 3-day) · e+ / official site",
+      "area_or_park": "Chiba / Makuhari (ZOZO Marine + Makuhari Messe) — not Tokyo proper",
+      "price_or_cost": "~¥20,000/day; multi-day options",
+      "tier": "n/a",
+      "sources": [
+        "https://www.summersonic.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Ultra Japan 2026",
+      "detail": "Big-stage EDM/house/techno festival in the city — mainstream and commercial, but a spectacle and an easy in-town electronic weekend.",
+      "how_or_when": "FESTIVAL · Sat–Sun, 19–20 Sep 2026 (2-day) · Official site / Ticket Pia",
+      "area_or_park": "Tokyo — Odaiba Ultra Park (Aomi/Daiba; Yurikamome or Rinkai Line)",
+      "price_or_cost": "~¥18,000–25,000+ per day / GA 2-day",
+      "tier": "n/a",
+      "sources": [
+        "https://ultrajapan.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "FFKT 2026 (formerly Taicoclub)",
+      "detail": "Tastemaker outdoor festival blending forward-thinking electronic, ambient and live acts on a scenic seaside site. A core date for the discerning electronic crowd. Verify dates closer.",
+      "how_or_when": "FESTIVAL · Sat–Sun, 26–27 Sep 2026 (best estimate — verify closer) · Official site / RA / e+",
+      "area_or_park": "Izu Shimoda, Shizuoka — Hotel Izukyu, Shirahama Beach (~3 hr via Odoriko ltd express)",
+      "price_or_cost": "~¥15,000–22,000 + lodging/camping",
+      "tier": "n/a",
+      "sources": [
+        "https://ffkt.jp/",
+        "https://ra.co/events"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "The Labyrinth 2026 (Mindgames)",
+      "detail": "Legendary, intimate deep-/minimal-techno camping festival in the mountains with a famously pristine sound system and a no-frills, music-devotee ethos. A bucket-list rave. Verify dates closer.",
+      "how_or_when": "FESTIVAL · Sat–Mon, 10–12 Oct 2026 (3 nights camping) · Official site (limited capacity, sells out)",
+      "area_or_park": "Minakami, Gunma — Hodaigi Camp Site (~2.5 hr; shuttle from parking)",
+      "price_or_cost": "~¥18,000–25,000 (camping festival)",
+      "tier": "n/a",
+      "sources": [
+        "https://www.mindgames.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "MUTEK.JP 2026 (Edition 11)",
+      "detail": "The city's premier festival for audiovisual and experimental electronic performance — exactly the cutting-edge synth/AV programming this lane lives for. Verify 2026 dates closer.",
+      "how_or_when": "FESTIVAL · Mid–late Nov 2026, 3–4 days (2025 ran Nov 21–23; verify exact 2026 dates closer) (Dec 10–13, 2026) · Official site / Peatix",
+      "area_or_park": "Shibuya, Tokyo — evening shows at Spotify O-East & WWW; daytime at Shibuya venues",
+      "price_or_cost": "Day passes / full passes (~¥4,000–12,000)",
+      "tier": "n/a",
+      "sources": [
+        "https://tokyo.mutek.org/en",
+        "https://ra.co/news/83481"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "electraglide",
+      "detail": "Storied indoor all-night electronic festival that has returned after hiatuses — worth watching for a marquee techno/IDM lineup. Low confidence it runs this cycle; verify closer. (Note: intermittent — may not run in 2026; verify.)",
+      "how_or_when": "FESTIVAL · Historically late autumn/winter; watch for a 2026/early-2027 edition — verify closer · e+ / RA (if it runs)",
+      "area_or_park": "Tokyo/Chiba — historically Makuhari Messe / Shin-Kiba (verify venue)",
+      "price_or_cost": "~¥8,000–12,000",
+      "tier": "n/a",
+      "sources": [
+        "https://www.electraglide.info/"
+      ],
+      "confidence": "low"
+    },
+    {
+      "name": "Blue Note Jazz Festival in Japan 2026",
+      "detail": "Arena-scale jazz/soul/R&B festival from the Blue Note team — a concentrated dose of marquee jazz and soul-adjacent acts in one weekend. Verify dates closer.",
+      "how_or_when": "FESTIVAL · Sat–Sun, 27–28 Sep 2026 (2-day) · Official site / e+",
+      "area_or_park": "Tokyo — Ariake Arena, Koto (Yurikamome / Rinkai Line, Toyosu side)",
+      "price_or_cost": "~¥12,000–18,000+ per day",
+      "tier": "n/a",
+      "sources": [
+        "https://www.bluenotejazzfestival.jp/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Tokyo Jazz Festival (東京JAZZ)",
+      "detail": "Long-running flagship jazz festival spanning straight-ahead, fusion and crossover/electronic-jazz acts. A reliable annual anchor for the jazz lane. Verify dates closer.",
+      "how_or_when": "FESTIVAL · Historically late Aug / early autumn over several days (verify exact 2026 dates) · e+ / Ticket Pia / official site",
+      "area_or_park": "Shibuya, Tokyo — NHK Hall (flagship) + satellite stages",
+      "price_or_cost": "Per-show tickets (~¥6,000–10,000)",
+      "tier": "n/a",
+      "sources": [
+        "https://www.tokyo-jazz.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "OHJO Rave NYE",
+      "detail": "Multi-floor Kabukicho NYE rave — a fun, central, all-night way to bring in the new year on the dance floor. Verify 2026 edition closer.",
+      "how_or_when": "FESTIVAL · NYE overnight, 31 Dec 2026 → 1 Jan 2027 (2025→26 ran ~10pm–late) · RA / door",
+      "area_or_park": "Shinjuku Kabukicho, Tokyo — OHJO Bldg ('red-brick castle of Kabukicho')",
+      "price_or_cost": "~¥3,000–5,000 advance",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/events"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Rainbow Disco Club 2027 (RDC)",
+      "detail": "Beloved open-air house/disco/techno festival on a scenic Izu plateau, with stellar international lineups (recent years: Four Tet, Gilles Peterson, Kode9). A spring highlight. Verify 2027 dates closer.",
+      "how_or_when": "FESTIVAL · Mid-Apr 2027 (2026 ran ~mid-April; recently moved off Golden Week — verify closer) · RA / official site",
+      "area_or_park": "Higashi-Izu, Shizuoka — Higashi-Izu Cross Country Course (~2.5 hr)",
+      "price_or_cost": "~¥15,000–22,000 (camping/day options)",
+      "tier": "n/a",
+      "sources": [
+        "https://rainbowdiscoclub.com/",
+        "https://ra.co/news/84307"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Synchronicity Festival 2027",
+      "detail": "Multi-venue Shibuya circuit festival spanning indie, electronic and crossover acts — wristband-hop between rooms in one neighbourhood. Verify 2027 dates closer.",
+      "how_or_when": "FESTIVAL · Mid-Apr 2027 (2026 ran 11–12 Apr Sat–Sun + Fri pre-party — verify closer) · e+ / official site",
+      "area_or_park": "Shibuya, Tokyo — multi-venue (WWW, WWW X, O-East area) + pre-party at Duo Music Exchange",
+      "price_or_cost": "1-day / 2-day passes (~¥6,000–11,000)",
+      "tier": "n/a",
+      "sources": [
+        "https://synchronicity.tv/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Tokyo Gig Guide",
+      "detail": "English-language gig listings aggregator — the easiest way to keep a weekly pulse on indie/live shows you'd otherwise miss behind Japanese-only schedules.",
+      "how_or_when": "MEETUP · Ongoing; check weekly · Browse listings online; many link to English ticketing",
+      "area_or_park": "Citywide (online resource)",
+      "price_or_cost": "Free",
+      "tier": "n/a",
+      "sources": [
+        "https://www.tokyogigguide.com/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Resident Advisor (RA) — Tokyo events",
+      "detail": "The essential map for the electronic/club lane — every venue above lists nights here, and advance RA tickets are often cheaper than the door. Set up alerts for your favourite venues.",
+      "how_or_when": "MEETUP · Ongoing; check weekly · RA app/site — filter by Tokyo, follow venues/artists",
+      "area_or_park": "Citywide (online resource + ticketing)",
+      "price_or_cost": "Free to browse; advance tickets via RA",
+      "tier": "n/a",
+      "sources": [
+        "https://ra.co/clubs/jp/tokyo"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "e+ / Lawson Ticket / Ticket Pia (how to buy)",
+      "detail": "The three domestic ticketing platforms most live houses and festivals use — knowing how to navigate them (and konbini pickup) unlocks shows that never reach international sellers.",
+      "how_or_when": "MEETUP · Ongoing · e+ (eplus.jp), Lawson Ticket (l-tike.com), Ticket Pia (t.pia.jp); pay/collect at konbini",
+      "area_or_park": "Citywide (ticketing)",
+      "price_or_cost": "Face value + small fees",
+      "tier": "n/a",
+      "sources": [
+        "https://eplus.jp/",
+        "https://www.t.pia.jp/"
+      ],
+      "confidence": "high"
+    }
   ]
 }

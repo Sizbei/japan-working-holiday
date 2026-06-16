@@ -28,6 +28,7 @@ export function renderContent(data, today) {
   renderPillar('music', '#musicGrid', 'Digging through the music scene…');
   renderPillar('geek', '#geekGrid', 'Mapping arcades, anime spots &amp; tech…');
   renderPillar('meetups', '#meetupsGrid', 'Finding meetups &amp; conventions…');
+  renderPillar('livemusic', '#livemusicGrid', 'Digging up Tokyo nightlife &amp; gigs…');
   wireControls();
   wireTierFilter();
 }

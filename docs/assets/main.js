@@ -43,7 +43,11 @@ function boot() {
 function setText(sel, txt) { const el = $(sel); if (el) el.textContent = txt; }
 
 function registerSW() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
-  }
+  if (!('serviceWorker' in navigator)) return;
+  // auto-reload once when a new SW takes control, so users never get stuck on a stale build
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloaded) return; reloaded = true; location.reload();
+  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }

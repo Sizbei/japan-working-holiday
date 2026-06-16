@@ -5,6 +5,7 @@ export const KEYS = {
   auth: 'jwh-auth-v1',
   events: 'jwh-events-v1',
   calFilters: 'jwh-calfilters-v1',
+  eventOverrides: 'jwh-event-overrides-v1',
   checkOrder: 'jwh-checkorder-v1',
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',

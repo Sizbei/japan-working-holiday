@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Year in Japan — A Working-Holiday Year in Tokyo</title>
-<meta name="description" content="A personal journal and plan for a working-holiday year in Tokyo — paperwork, seasons, food, Disney, music, and the days I want to have.">
+<title>My Year in Japan — Trip Dashboard</title>
+<meta name="description" content="A personal, password-gated trip dashboard for a working-holiday year in Tokyo — editable calendar, booking deadlines, paperwork, seasons, food and Disney.">
 <meta name="theme-color" content="#bc002d" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14141a" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://sizbei.github.io/japan-working-holiday/">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f7f4ee'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23bc002d'/%3E%3C/svg%3E">
-<meta property="og:title" content="My Year in Japan — A Working-Holiday Year in Tokyo">
-<meta property="og:description" content="A personal journal and plan for a working-holiday year in Tokyo — paperwork, seasons, food, Disney, music, and the days I want to have.">
+<meta property="og:title" content="My Year in Japan — Trip Dashboard">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -22,34 +21,88 @@
 <a href="#main" class="skip-link">Skip to content</a>
 <div class="grain" aria-hidden="true"></div>
 
+<!-- Top bar: countdown (left) · notifications bell + theme (top-right) -->
+<div class="topbar">
+  <a class="topbar-brand" href="#main"><span class="tb-sun" aria-hidden="true"></span> My Year in Japan</a>
+  <span class="countdown" id="countdown" role="status" aria-live="polite"></span>
+  <div class="topbar-right">
+    <div class="bell-wrap">
+      <button id="notifBell" class="bell" type="button" aria-label="Notifications" aria-expanded="false" aria-haspopup="true">
+        🔔<span class="badge" id="notifBadge" hidden>0</span>
+      </button>
+      <div class="notif-panel" id="notifPanel" hidden></div>
+    </div>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">🌙</span></button>
+  </div>
+</div>
+
 <header class="hero">
-  <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">🌙</span></button>
   <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
   <p class="hero-kicker" lang="ja" aria-hidden="true">私の一年 · ワーキングホリデー</p>
   <h1 id="heroTitle">My Year in Japan</h1>
   <p class="hero-sub" id="heroSub">A working-holiday year in Tokyo — planned, packed, and lived</p>
-  <p class="hero-status" id="heroStatus"></p>
-  <div class="hero-meta">
-    <span id="metaArrival"></span>
-    <span class="dot">·</span>
-    <span id="metaGenerated"></span>
-  </div>
+  <div class="hero-meta"><span id="metaArrival"></span></div>
 </header>
 
 <nav class="toc" id="toc" aria-label="Section navigation"></nav>
 
 <main id="main">
   <p class="intro">
-    This is my plan for a full year in Tokyo — everything from the boring-but-critical paperwork
-    to the <em>cherry blossoms I don't want to miss</em>, the ramen counters I'm hunting down, and
-    the days I'll spend lost in DisneySea. It started as a relocation checklist and turned into a
-    map of the year I want to have. Everything here is researched and sourced; the checklist saves
-    as I tick things off.
+    My living plan for a year in Tokyo — the boring-but-critical paperwork, the booking
+    windows I can't afford to miss, and the <em>cherry blossoms, fireworks, and DisneySea days</em>
+    I'm building the year around. Everything's researched and sourced; the calendar and checklist
+    save right here on this device.
   </p>
 
-  <!-- Time-sensitive -->
+  <!-- ============ DASHBOARD HOME ============ -->
+  <section id="dashHome" class="dash">
+    <div class="widget" id="wDeadlines"><h3 class="widget-h">⚖️ Next deadlines</h3><div class="widget-body"></div></div>
+    <div class="widget" id="wEvents"><h3 class="widget-h">📅 Upcoming events</h3><div class="widget-body"></div></div>
+    <div class="widget" id="wBookBy"><h3 class="widget-h">🎟️ Book-by alerts</h3><div class="widget-body"></div></div>
+    <div class="widget" id="wProgress"><h3 class="widget-h">✅ Checklist</h3><div class="widget-body"></div></div>
+  </section>
+
+  <!-- ============ CALENDAR ============ -->
+  <section id="calendarSection">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">カレンダー</span><h2>My Calendar</h2></div>
+    <p class="lede">Researched events are baked in (colour-coded by type); click any day to add your own. Edit, delete, import an .ics, or export just the tags you want.</p>
+    <div class="cal-toolbar">
+      <div class="cal-nav">
+        <button id="calPrev" class="cal-btn" aria-label="Previous month">‹</button>
+        <span id="calLabel" class="cal-label">—</span>
+        <button id="calNext" class="cal-btn" aria-label="Next month">›</button>
+        <button id="calToday" class="cal-btn text">Today</button>
+      </div>
+      <div class="cal-actions">
+        <div class="cal-modes">
+          <button id="calModeMonth" class="cal-btn text active">Month</button>
+          <button id="calModeAgenda" class="cal-btn text">Agenda</button>
+        </div>
+        <button id="calAdd" class="cal-btn primary">+ Add</button>
+        <button id="calImportBtn" class="cal-btn text">Import</button>
+        <button id="calExport" class="cal-btn text">Export</button>
+        <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
+      </div>
+    </div>
+    <div id="calView" aria-live="polite"></div>
+    <p class="cal-legend">
+      <span class="lg cat-festival">festival</span><span class="lg cat-fireworks">fireworks</span>
+      <span class="lg cat-illumination">illumination</span><span class="lg cat-convention">convention</span>
+      <span class="lg cat-seasonal">seasonal</span><span class="lg cat-nature">nature</span>
+      <span class="lg cat-holiday">holiday</span><span class="lg cat-personal">mine</span>
+    </p>
+  </section>
+
+  <!-- ============ LOTTERY / TIMED-RELEASE TRACKER ============ -->
+  <section id="trackerSection">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">抽選・先行販売</span><h2>Lottery &amp; Timed-Release Drops</h2></div>
+    <p class="lede">The lose-by-minutes bookings: Ghibli's monthly 10:00 JST drop, Disney's 60-day window, sumo on-sale dates, and the research's dated booking windows. Set alarms to the exact minute.</p>
+    <div id="trackerList"></div>
+  </section>
+
+  <!-- ============ DEADLINES ============ -->
   <section class="block callout" id="timeSensitiveSection">
-    <h2><span class="emoji" aria-hidden="true">⏰</span> Time-Sensitive — given your June 30, 2026 arrival</h2>
+    <h2><span class="emoji" aria-hidden="true">⏰</span> Time-Sensitive — anchored to June 30, 2026 arrival</h2>
     <div class="table-wrap">
       <table id="timeTable">
         <thead><tr><th>Item</th><th>Timing</th><th>Action</th></tr></thead>
@@ -58,27 +111,27 @@
     </div>
   </section>
 
-  <!-- Canada notes -->
-  <section class="block" id="canadaSection">
-    <h2><span class="emoji" aria-hidden="true">🇨🇦</span> Canada-Specific Notes</h2>
-    <ul class="note-list" id="canadaList"></ul>
-  </section>
-
-  <!-- Arrival sequence -->
-  <section class="block" id="sequenceSection">
-    <h2><span class="emoji" aria-hidden="true">🗓️</span> Your Arrival-Week Sequence</h2>
-    <ol class="sequence" id="sequenceList"></ol>
-  </section>
-
-  <!-- Top 10 -->
+  <!-- ============ TOP MOVES ============ -->
   <section class="block" id="topSection">
     <h2><span class="emoji" aria-hidden="true">🏆</span> Highest-Value Moves</h2>
     <div class="top-grid" id="topGrid"></div>
   </section>
 
-  <!-- Controls -->
+  <!-- ============ CHECKLIST ============ -->
+  <section id="checklist">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">一年の計画</span><h2>My Yearlong Checklist</h2></div>
+    <p class="lede">Phased across the year. Locked steps unlock once their prerequisite is done; tap 📅 to set a due date (it flows into your notifications). Progress saves on this device.</p>
+    <div class="check-progress" id="checkProgress" hidden>
+      <span class="pct" id="checkPct" role="status" aria-live="polite">0%</span>
+      <div class="bar"><i id="checkBar"></i></div>
+      <button class="reset" id="checkReset" type="button">reset</button>
+    </div>
+    <div id="checkPhases"></div>
+  </section>
+
+  <!-- ============ SEARCHABLE LOGISTICS ============ -->
   <section class="controls" id="controls">
-    <input type="search" id="search" placeholder="Search tips… (e.g. bank, pension, suica)" aria-label="Search tips">
+    <input type="search" id="search" placeholder="Search logistics… (e.g. bank, pension, suica)" aria-label="Search tips">
     <div class="filters" id="confFilters">
       <button class="chip active" data-conf="all">All</button>
       <button class="chip" data-conf="high">High confidence</button>
@@ -86,29 +139,19 @@
       <button class="chip" data-conf="low">Low · verify</button>
     </div>
   </section>
-
-  <!-- Domains -->
   <div id="domains" aria-live="polite" aria-busy="true"></div>
 
   <!-- ============ BRAINSTORM / BREW ============ -->
   <section id="brew">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">考える場所</span>
-      <h2>Brainstorm &amp; Brew</h2>
-    </div>
-    <p class="lede">A space to think out loud — ideas, things to look up, places I hear about, plans half-formed. Saves on this device as I type; nothing leaves my browser.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">考える場所</span><h2>Brainstorm &amp; Brew</h2></div>
+    <p class="lede">Think out loud — ideas, things to look up, places I hear about. Autosaves on this device; nothing leaves the browser.</p>
     <div class="brew-wrap">
       <div class="brew-pad">
-        <div class="brew-bar">
-          <span class="brew-label">Scratchpad</span>
-          <span class="brew-saved" id="brewSaved">saved</span>
-        </div>
-        <textarea id="brewNotes" placeholder="Brain-dump here… ideas, links, restaurants someone mentioned, project thoughts, anything. It autosaves."></textarea>
+        <div class="brew-bar"><span class="brew-label">Scratchpad</span><span class="brew-saved" id="brewSaved">saved</span></div>
+        <textarea id="brewNotes" placeholder="Brain-dump here… it autosaves."></textarea>
       </div>
       <div class="brew-ideas">
-        <div class="brew-bar">
-          <span class="brew-label">Idea cards</span>
-        </div>
+        <div class="brew-bar"><span class="brew-label">Idea cards</span></div>
         <form id="brewForm" class="brew-add">
           <input type="text" id="brewInput" placeholder="Add an idea + Enter…" aria-label="Add an idea">
           <button type="submit" aria-label="Add idea">+</button>
@@ -118,44 +161,16 @@
     </div>
   </section>
 
-  <!-- ============ YEARLONG CHECKLIST ============ -->
-  <section id="checklist">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">一年の計画</span>
-      <h2>My Yearlong Checklist</h2>
-    </div>
-    <p class="lede">Phased across the whole year — logistics, experiences, food, and Disney days. Tick things off; your progress saves on this device.</p>
-    <div class="check-progress" id="checkProgress" hidden>
-      <span class="pct" id="checkPct" role="status" aria-live="polite">0%</span>
-      <div class="bar"><i id="checkBar"></i></div>
-      <button class="reset" id="checkReset" type="button">reset</button>
-    </div>
-    <div id="checkPhases"></div>
-  </section>
-
-  <!-- ============ ACTIVITIES ============ -->
+  <!-- ============ PILLARS ============ -->
   <section id="activities">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">四季の楽しみ</span>
-      <h2>Things I'll Do — Season by Season</h2>
-    </div>
-    <p class="lede">Hanami, fireworks, autumn leaves, winter illuminations, festivals, and the bucket-list day trips. Roughly in the order the calendar gives them to me.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">四季の楽しみ</span><h2>Things I'll Do — Season by Season</h2></div>
+    <p class="lede">Hanami, fireworks, autumn leaves, illuminations, festivals and the bucket-list day trips.</p>
     <div class="grid" id="activitiesGrid"></div>
   </section>
 
-  <!-- ============ RESTAURANTS ============ -->
   <section id="restaurants">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">食べ歩き</span>
-      <h2>Restaurants to Try</h2>
-    </div>
-    <p class="lede">From ¥400 chain bowls to the splurges worth booking ahead. Filter by budget below.</p>
-    <div class="legend">
-      <span><i style="background:#1e8e3e"></i> budget</span>
-      <span><i style="background:#b8860b"></i> mid</span>
-      <span><i style="background:#bc002d"></i> splurge</span>
-      <span><i style="background:#223a70"></i> free / n-a</span>
-    </div>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">食べ歩き</span><h2>Restaurants to Try</h2></div>
+    <p class="lede">From ¥400 chain bowls to the splurges worth booking ahead. Filter by budget.</p>
     <div class="filters" id="tierFilters" style="margin-bottom:var(--s4)">
       <button class="chip active" data-tier="all" type="button">All</button>
       <button class="chip" data-tier="budget" type="button">Budget</button>
@@ -165,57 +180,43 @@
     <div class="grid" id="restaurantsGrid"></div>
   </section>
 
-  <!-- ============ TOKYO DISNEY ============ -->
   <section id="disney">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">東京ディズニー</span>
-      <h2>Tokyo Disneyland &amp; DisneySea</h2>
-    </div>
-    <p class="lede">Must-dos across both parks, the current Premier Access / Standby Pass system, Fantasy Springs, seasonal events, and how to do it without melting my budget.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">東京ディズニー</span><h2>Tokyo Disneyland &amp; DisneySea</h2></div>
+    <p class="lede">Must-dos across both parks, the Premier Access / Standby system, Fantasy Springs and how to do it without melting the budget.</p>
     <div class="grid" id="disneyGrid"></div>
   </section>
 
-  <!-- ============ REMOTE WORK / BUILDING FROM TOKYO ============ -->
   <section id="building">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">東京で創る</span>
-      <h2>Building From Tokyo</h2>
-    </div>
-    <p class="lede">Keeping my projects shipping across a brutal time gap. Pacific ↔ Tokyo is ~16 hours — so this is about coworking spots, late-night work cafés, fast wifi, and an async rhythm that actually works.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">東京で創る</span><h2>Building From Tokyo</h2></div>
+    <p class="lede">Shipping across a ~16h time gap: coworking, late-night work cafés, fast wifi and an async rhythm that works.</p>
     <div class="grid" id="buildingGrid"></div>
   </section>
 
-  <!-- ============ MUSIC SCENE ============ -->
   <section id="music">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">音楽の街</span>
-      <h2>Music, Gear &amp; Synths</h2>
-    </div>
-    <p class="lede">For the DAW brain: Ochanomizu's instrument street, synth and gear shops, Disk Union digging, live houses, and listening bars worth the trip.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">音楽の街</span><h2>Music, Gear &amp; Synths</h2></div>
+    <p class="lede">Ochanomizu's instrument street, synth/gear shops, Disk Union digging and listening bars.</p>
     <div class="grid" id="musicGrid"></div>
   </section>
 
-  <!-- ============ GAMES / TECH / ANIME CULTURE ============ -->
   <section id="geek">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">ゲーム・アニメ・技術</span>
-      <h2>Games, Anime &amp; Tech Culture</h2>
-    </div>
-    <p class="lede">Akihabara, retro arcades, game bars, anime &amp; manga spots, maker/hardware shops, and creative-tech spaces (teamLab and friends) that fit how I think.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">ゲーム・アニメ・技術</span><h2>Games, Anime &amp; Tech Culture</h2></div>
+    <p class="lede">Akihabara, retro arcades, game bars, anime/manga spots and creative-tech spaces.</p>
     <div class="grid" id="geekGrid"></div>
   </section>
 
-  <!-- ============ MEETUPS & CONVENTIONS ============ -->
   <section id="meetups">
-    <div class="pillar-head">
-      <span class="jp" lang="ja" aria-hidden="true">集まり・イベント</span>
-      <h2>Meetups &amp; Conventions</h2>
-    </div>
-    <p class="lede">Where to meet people who build and nerd out: dev/tech meetups (often English-friendly), founder/startup events, game-dev nights, and the big conventions — from tech expos to anime cons like Comiket.</p>
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">集まり・イベント</span><h2>Meetups &amp; Conventions</h2></div>
+    <p class="lede">Dev/tech meetups (often English-friendly), founder nights, game-dev jams and the big cons — Comiket, TGS, AnimeJapan.</p>
     <div class="grid" id="meetupsGrid"></div>
   </section>
 
-  <!-- Sources -->
+  <!-- ============ CANADA NOTES ============ -->
+  <section class="block" id="canadaSection">
+    <h2><span class="emoji" aria-hidden="true">🇨🇦</span> Canada-Specific Notes</h2>
+    <ul class="note-list" id="canadaList"></ul>
+  </section>
+
+  <!-- ============ SOURCES ============ -->
   <section class="block sources" id="sourcesSection">
     <h2><span class="emoji" aria-hidden="true">📚</span> Sources</h2>
     <ul id="sourcesList"></ul>
@@ -224,9 +225,9 @@
 
 <footer>
   <p>My Year in Japan · last updated <span id="footGen"></span></p>
-  <p class="disclaimer">Visa, tax, and immigration rules change — I always verify against official consulate / government sources before relying on anything here. Prices and Disney systems shift too; treat everything as a starting point, not gospel.</p>
+  <p class="disclaimer">Visa, tax, pension, Disney and booking systems all change — I verify against official sources before relying on anything here. Confidence flags and “verify closer” notes mark what to re-check. The passphrase is convenience only, not real security.</p>
 </footer>
 
-<script src="assets/app.js"></script>
+<script type="module" src="assets/main.js"></script>
 </body>
 </html>

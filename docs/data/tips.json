@@ -606,24 +606,6 @@
       "confidence": "medium"
     },
     {
-      "id": "ev-yomiuriland-jewellumination",
-      "title": "Yomiuriland Jewellumination",
-      "date": "2026-10-22",
-      "endDate": "2027-04-04",
-      "category": "illumination",
-      "area": "Inagi / Kawasaki (western Tokyo, Keio line)",
-      "cost": "View-only ~¥1,800 adult; entry+rides day pass ~¥5,900 adult",
-      "bookBy": "",
-      "bookingNotes": "Buy view-only or ride-pass tickets at the gate or online. Runs into spring (~early April) with a Night Cherry Blossom Jewellumination finale (~Mar 20-Apr 5). Typical maintenance gap in early-mid March (lights off). Cold + outdoors - dress warm. DATE NOTE: 2025-26 ran Oct 23 - Apr 5 (no lights Mar 2-13); 2026-27 estimate mirrors this. Verify dates + March gap closer.",
-      "why": "Massive jewel-themed amusement-park illumination (millions of lights) - one of Kanto's biggest. Runs all winter so flexible; good rides + lights combo for the games/theme-park interest.",
-      "sources": [
-        "https://tokyocheapo.com/events/yomiuriland-jewellumination/",
-        "https://www.gltjp.com/en/article/item/11066/",
-        "https://en.japantravel.com/kanagawa/jewellumination-at-yomiuri-land/24146"
-      ],
-      "confidence": "medium"
-    },
-    {
       "id": "ev-mt-takao-autumn-leaves-momiji-festival",
       "title": "Mt. Takao Autumn Leaves (Momiji) Festival",
       "date": "2026-10-25",
@@ -732,24 +714,6 @@
       "confidence": "medium"
     },
     {
-      "id": "ev-marunouchi-illumination-begins-champagne-gold",
-      "title": "Marunouchi Illumination begins (champagne-gold, Tokyo Station)",
-      "date": "2026-11-13",
-      "endDate": "2027-02-15",
-      "category": "illumination",
-      "area": "Marunouchi Naka-dori & Gyoko-dori, Chiyoda",
-      "cost": "Free.",
-      "bookBy": "",
-      "bookingNotes": "No booking. Pair with the Tokyo Station Marunouchi facade light-up. Best after ~5pm. Nov 13 start mirrors the 2025–26 dates — verify on the official Marunouchi site.",
-      "why": "Among the first major central-Tokyo illuminations to switch on (~820,000 champagne-gold LEDs over 340+ trees between Tokyo Station and the Imperial Palace). Free, elegant, walkable — marks the start of illumination season overlapping with peak koyo.",
-      "sources": [
-        "https://en.japantravel.com/tokyo/marunouchi-winter-illuminations/41743",
-        "https://www.japan-guide.com/e/e2303.html",
-        "https://www.gotokyo.org/en/story/guide/winter-illuimnation-guide/index.html"
-      ],
-      "confidence": "medium"
-    },
-    {
       "id": "ev-showa-kinen-park-koyo-peak-autumn-night-illum",
       "title": "Showa Kinen Park koyo peak + Autumn Night Illumination",
       "date": "2026-11-14",
@@ -854,24 +818,6 @@
         "https://tokyocheapo.com/events/tokyo-modular-festival/",
         "https://www.ericasynths.lv/news/erica-synths-will-attend-tokyo-festival-modular/",
         "https://www.facebook.com/TokyoModularFestival/"
-      ],
-      "confidence": "low"
-    },
-    {
-      "id": "ev-roppongi-hills-keyakizaka-snow-blue-illuminat",
-      "title": "Roppongi Hills Keyakizaka 'Snow & Blue' Illumination begins",
-      "date": "2026-11-26",
-      "endDate": "2026-12-25",
-      "category": "illumination",
-      "area": "Keyakizaka-dori, Roppongi Hills, Minato",
-      "cost": "Free (street); Tokyo City View observation deck extra for the high angle.",
-      "bookBy": "",
-      "bookingNotes": "No booking for the street view. Crowds build through December — go a weekday evening soon after switch-on. Late-Nov start estimated from prior years; exact 2026 date not yet published — verify closer.",
-      "why": "Tokyo's signature illumination shot: ~800,000 blue/white LEDs down a 400m slope framing Tokyo Tower at the end. Typically switches on around late Nov. A classic free autumn-into-winter evening with a view, central and on-brand for tech/city culture.",
-      "sources": [
-        "https://livejapan.com/en/in-tokyo/in-pref-tokyo/in-tokyo_train_station/article-a0000611/",
-        "https://www.japan-guide.com/e/e2303.html",
-        "https://www.gotokyo.org/en/story/guide/winter-illuimnation-guide/index.html"
       ],
       "confidence": "low"
     },
@@ -1738,7 +1684,7 @@
           "confidence": "high"
         },
         {
-          "id": "chk-order-a-wise-formerly-transfe",
+          "id": "chk-order-a-wise-formerly-transfe-2",
           "task": "Order a Wise (formerly TransferWise) card and verify the account while still in CANADA, before you fly. A Wise card issued in Canada keeps Apple Pay/Google Pay compatibility; a Wise card issued after you become a Japan resident does NOT work with Apple Pay/Google Pay, so you lose the ability to top up a mobile Suica with it. Load some JPY at the mid-market rate so you land with spendable funds.",
           "window": "before departure (now through 2026-06-29)",
           "dueBy": "2026-06-29",
@@ -1751,23 +1697,7 @@
           "confidence": "high"
         },
         {
-          "id": "chk-before-you-fly-buy-and-instal",
-          "task": "Before you fly: buy and install a landing-day eSIM (Ubigi or Sakura Mobile) on your iPhone/Android, but do NOT activate it until you land. This gives you instant data the moment you step off the plane at NRT, before you deal with any long-term SIM. Aim for a 10-15GB or unlimited 15-30 day plan to bridge your first weeks. Keep it un-activated in case your flight changes.",
-          "window": "1-3 days before departure (install by 2026-06-29)",
-          "dueBy": "2026-06-29",
-          "kind": "setup",
-          "note": "eSIM works without any Japanese card - you pay with your Canadian card at purchase. Ubigi is rated best overall for coverage incl. rural; Sakura has the best English support. Cost roughly CAD 15-35 for the bridge period. Activate only after landing. Confirm your phone is carrier-unlocked and eSIM-capable.",
-          "sources": [
-            "https://www.sakuramobile.jp/blog/japan-sim/best-esim-for-japan-2026-instant-data-5g-options-where-to-buy/",
-            "https://whereandwander.com/regional-showdown-airalo-vs-ubigi-best-esim-in-japan/"
-          ],
-          "confidence": "high",
-          "requires": [
-            "chk-bank-open"
-          ]
-        },
-        {
-          "id": "chk-decide-your-long-term-plan-bef",
+          "id": "chk-decide-your-long-term-plan-bef-2",
           "task": "Decide your long-term plan BEFORE arrival: a WHV holder cannot get a Japanese credit card or major carrier (docomo/au/SoftBank/Rakuten) contract on day one because they reject foreign cards and want a residence card. Pre-order a foreigner-friendly SIM from Mobal (no residence card needed, real 070/080/090 number, free worldwide shipping, pays with your Canadian card) so a physical SIM is waiting or shippable. Sakura Mobile and GTN are alternatives but lean toward needing a residence card / convenience-store payment.",
           "window": "1-2 weeks before departure",
           "dueBy": "2026-06-29",
@@ -1783,7 +1713,7 @@
           ]
         },
         {
-          "id": "chk-lock-the-proof-of-funds-figure",
+          "id": "chk-lock-the-proof-of-funds-figure-2",
           "task": "Lock the proof-of-funds figure with YOUR consulate before flying. Canadian WHV: most recent bank statement showing roughly CAD 3,500 if you hold a return/onward ticket, OR ~CAD 4,500-5,000 if you do NOT. Print a fresh bank statement (dated within the last few days) and carry a paper copy. Note: this is checked at APPLICATION (already done if visa is in hand), but also keep it on you for landing.",
           "window": "before 2026-06-30 (carry on landing day)",
           "dueBy": "2026-06-29",
@@ -1796,7 +1726,7 @@
           "confidence": "high"
         },
         {
-          "id": "chk-decide-the-one-way-vs-return-f",
+          "id": "chk-decide-the-one-way-vs-return-f-2",
           "task": "Decide the one-way vs return-flight question deliberately. Japanese immigration almost never asks WHV holders for an onward ticket at the border (the visa IS your permission to stay 12 months), BUT the AIRLINE can deny boarding at NRT departure check-in, and holding a return/onward ticket lets you use the lower CAD 3,500 funds tier. Cheapest compliant move: buy a flexible/refundable onward ticket or a cheap throwaway flight out of Japan, OR ensure your bank balance clears the higher (~CAD 4,500-5,000) no-ticket threshold.",
           "window": "before booking flights",
           "dueBy": "2026-06-25",
@@ -1805,31 +1735,6 @@
           "sources": [
             "https://tiketvisa.com/does-japan-require-proof-of-onward-travel/",
             "https://www.tripadvisor.com/ShowTopic-g294232-i525-k14174030-Onward_ticket_from_Japan_needed_for_immigration-Japan.html"
-          ],
-          "confidence": "high"
-        },
-        {
-          "id": "chk-book-first-week-accommodation",
-          "task": "Book first-week accommodation BEFORE landing - do not arrive without a reservation. Best strategy for a 12-month WHV base-building in Tokyo: book 5-10 nights at a hotel or hostel near a hub (Shinjuku/Shibuya/Ueno) as a soft-landing buffer while you view share houses in person. Budget hotel ~6,000-12,000 yen/night; hostel dorm ~3,000-5,000/night. This avoids committing to a room sight-unseen.",
-          "window": "before 2026-06-30",
-          "dueBy": "2026-06-20",
-          "kind": "housing",
-          "note": "Have a confirmed booking printout for landing (immigration occasionally asks where you're staying). A hotel/hostel buffer beats locking a 1-year lease blind. NRT to central Tokyo: Keisei Skyliner ~2,500 yen / ~45 min, or cheaper Access Express.",
-          "sources": [
-            "https://www.oakhouse.jp/eng/area/tokyo/monthly"
-          ],
-          "confidence": "high"
-        },
-        {
-          "id": "chk-line-up-a-no-key-money-share-h",
-          "task": "Line up a no-key-money share house (Oakhouse / Sakura House / Borderless House) as your real first base instead of a normal Japanese apartment. These skip the four classic rental gotchas: NO key money (reikin, normally 1-2 months non-refundable), NO guarantor (hoshonin - nearly impossible as a new arrival), NO agent fee, and little/no deposit. You can apply online from Canada and reserve a room before you land. Typical Tokyo all-in: ~50,000-90,000 yen/month rent + a one-time contract fee (~30,000-50,000 yen) + monthly utilities/maintenance fee, furnished with wifi included.",
-          "window": "apply 2-4 weeks before landing; move in within first week",
-          "dueBy": "2026-06-22",
-          "kind": "housing",
-          "note": "Oakhouse explicitly advertises no deposit, no key money, no agent fee, no guarantor, furnished + wifi. This is THE workaround for the guarantor/key-money trap that blocks most newly-arrived foreigners from normal leases. A regular apartment can demand 4-6 months' rent upfront plus a Japanese guarantor.",
-          "sources": [
-            "https://www.oakhouse.jp/eng/",
-            "https://www.oakhouse.jp/eng/area/tokyo/lowprice"
           ],
           "confidence": "high"
         }

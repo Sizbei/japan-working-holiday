@@ -29,12 +29,11 @@ function setupWidgetDnD() {
   if (!dash) return;
   dash.querySelectorAll('.widget').forEach(w => {
     w.dataset.id = w.id;
-    const h = w.querySelector('.widget-h');
-    if (h && !h.querySelector('.dnd-handle')) {
+    if (!w.querySelector(':scope > .dnd-handle')) {   // sibling of the heading, NOT inside it (keeps the h3 accessible name clean)
       const b = document.createElement('button');
       b.className = 'dnd-handle'; b.type = 'button'; b.textContent = '⠿';
-      b.setAttribute('aria-label', 'Reorder widget');
-      h.prepend(b);
+      b.setAttribute('aria-label', `Reorder ${w.id.replace('w', '')} widget`);
+      w.insertBefore(b, w.firstChild);
     }
   });
   const order = get(KEYS.widgetOrder, null);

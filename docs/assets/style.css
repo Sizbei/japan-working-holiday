@@ -1073,3 +1073,16 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 .leaflet-marker-icon{ animation: pinDrop var(--t-spring); }
 @keyframes pinDrop{ 0%{ transform: translateY(-16px); opacity:0; } 100%{ transform: none; opacity:1; } }
 @media (prefers-reduced-motion: reduce){ .leaflet-marker-icon{ animation: none; } }
+
+/* custom animated map pins + dark tiles */
+.jwh-pin{ animation: pinDrop var(--t-spring); }
+.jwh-pin-dot{ display:block; width:16px; height:16px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.45); background: var(--c-personal); transition: transform var(--t-hover); }
+.jwh-pin-dot:hover{ transform: scale(1.25); }
+.jwh-pin.pulse .jwh-pin-dot{ animation: pinPulse 1.8s ease-in-out infinite; }
+@keyframes pinPulse{ 0%,100%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 0 color-mix(in srgb, var(--red) 55%, transparent); } 50%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 9px transparent; } }
+[data-theme="dark"] .leaflet-tile{ filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.9); }
+[data-theme="dark"] .leaflet-container{ background: #15151c; }
+.map-add-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
+.map-add-row #placeSearch{ flex:1; min-width:200px; }
+#placeDate{ font-family: var(--mono); font-size:.78rem; padding:.5rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
+@media (prefers-reduced-motion: reduce){ .jwh-pin, .jwh-pin.pulse .jwh-pin-dot{ animation: none; } }

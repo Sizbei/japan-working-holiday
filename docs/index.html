@@ -307,7 +307,10 @@
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">地図</span><h2>My Tokyo Map</h2></div>
     <p class="lede">Every place in here, grouped by neighbourhood — tap any spot to open it in Google Maps (opens the Maps app on your phone). The embed below is central Tokyo for orientation.</p>
     <div id="mapAdd">
-      <input type="search" id="placeSearch" placeholder="ADD A PLACE // search an address or name…" aria-label="Add a place" autocomplete="off">
+      <div class="map-add-row">
+        <input type="search" id="placeSearch" placeholder="ADD A PLACE // search an address or name…" aria-label="Add a place" autocomplete="off">
+        <input type="date" id="placeDate" aria-label="Optional date — also adds it to your calendar" title="Optional date — also adds it to your calendar &amp; notifications">
+      </div>
       <ul id="placeSug" class="place-sug" aria-live="polite"></ul>
     </div>
     <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>

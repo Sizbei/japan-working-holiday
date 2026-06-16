@@ -84,12 +84,21 @@ function flyTo(p) {
 }
 
 // ---- user pins (escaped popups, https-only links) ----
+function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; const diff = (Date.parse(d) - Date.now()) / 86400000; return diff >= -1 && diff <= 30; }
+function pinIcon(p) {
+  const cat = (p.category || 'personal').toLowerCase();
+  return L.divIcon({
+    className: 'jwh-pin' + (isSoon(p.remindDate || p.date) ? ' pulse' : ''),
+    html: `<i class="jwh-pin-dot cat-${cat}"></i>`,
+    iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10],
+  });
+}
 function renderPins() {
   if (!pinLayer || !window.L) return;
   pinLayer.clearLayers();
   loadPlaces().forEach(p => {
-    if (typeof p.lat !== 'number' || typeof p.lng !== 'number') return;
-    const m = L.marker([p.lat, p.lng]);
+    if (typeof p.lat !== 'number' || typeof p.lng !== 'number' || isNaN(p.lat) || isNaN(p.lng)) return;
+    const m = L.marker([p.lat, p.lng], { icon: pinIcon(p), riseOnHover: true });
     m.bindPopup(popupHTML(p));
     m.on('popupopen', () => wirePopup(p));
     m.addTo(pinLayer);
@@ -185,9 +194,15 @@ function wireAddPlace() {
   sug.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-lat]');
     if (!b) return;
-    const place = { id: 'p' + Date.now(), name: b.dataset.name, address: b.dataset.addr, lat: +b.dataset.lat, lng: +b.dataset.lng, category: 'personal', note: '', link: '', remindDate: '', eventId: '' };
+    const dateEl = $('#placeDate');
+    const date = (dateEl?.value || '').trim();
+    const place = { id: 'p' + Date.now(), name: b.dataset.name, address: b.dataset.addr, lat: +b.dataset.lat, lng: +b.dataset.lng, category: 'personal', note: '', link: '', date: '', remindDate: '', eventId: '' };
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {        // a dated place spawns a calendar event (→ agenda + notifications) AND a dated pin
+      place.date = date; place.remindDate = date;
+      place.eventId = pushEvent('Visit: ' + place.name, date, place.address);
+    }
     savePlaces([...loadPlaces(), place]);
-    input.value = ''; sug.innerHTML = '';
+    input.value = ''; sug.innerHTML = ''; if (dateEl) dateEl.value = '';
     ensureLeaflet();
     if (leafletReady) { renderPins(); flyTo(place); }
   });

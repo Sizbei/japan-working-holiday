@@ -44,9 +44,16 @@
   <div class="hero-meta"><span id="metaArrival"></span></div>
 </header>
 
-<nav class="toc" id="toc" aria-label="Section navigation"></nav>
+<nav class="route-nav" id="routeNav" aria-label="Primary navigation">
+  <a href="#/dashboard" data-route="dashboard">Dashboard</a>
+  <a href="#/calendar" data-route="calendar">Calendar</a>
+  <a href="#/checklist" data-route="checklist">Checklist</a>
+  <a href="#/deadlines" data-route="deadlines">Deadlines</a>
+  <a href="#/explore" data-route="explore">Explore</a>
+</nav>
 
 <main id="main">
+  <div class="view" id="view-dashboard" data-route="dashboard">
   <p class="intro">
     My living plan for a year in Tokyo — the boring-but-critical paperwork, the booking
     windows I can't afford to miss, and the <em>cherry blossoms, fireworks, and DisneySea days</em>
@@ -62,6 +69,9 @@
     <div class="widget" id="wProgress"><h3 class="widget-h">✅ Checklist</h3><div class="widget-body"></div></div>
   </section>
 
+  </div><!-- /view-dashboard -->
+
+  <div class="view" id="view-calendar" data-route="calendar">
   <!-- ============ CALENDAR ============ -->
   <section id="calendarSection">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">カレンダー</span><h2>My Calendar</h2></div>
@@ -91,6 +101,9 @@
     </div>
   </section>
 
+  </div><!-- /view-calendar -->
+
+  <div class="view" id="view-deadlines" data-route="deadlines">
   <!-- ============ LOTTERY / TIMED-RELEASE TRACKER ============ -->
   <section id="trackerSection">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">抽選・先行販売</span><h2>Lottery &amp; Timed-Release Drops</h2></div>
@@ -115,6 +128,9 @@
     <div class="top-grid" id="topGrid"></div>
   </section>
 
+  </div><!-- /view-deadlines -->
+
+  <div class="view" id="view-checklist" data-route="checklist">
   <!-- ============ CHECKLIST ============ -->
   <section id="checklist">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">一年の計画</span><h2>My Yearlong Checklist</h2></div>
@@ -127,6 +143,9 @@
     <div id="checkPhases"></div>
   </section>
 
+  </div><!-- /view-checklist -->
+
+  <div class="view" id="view-explore" data-route="explore">
   <!-- ============ SEARCHABLE LOGISTICS ============ -->
   <section class="controls" id="controls">
     <input type="search" id="search" placeholder="Search logistics… (e.g. bank, pension, suica)" aria-label="Search tips">
@@ -219,6 +238,7 @@
     <h2><span class="emoji" aria-hidden="true">📚</span> Sources</h2>
     <ul id="sourcesList"></ul>
   </section>
+  </div><!-- /view-explore -->
 </main>
 
 <footer>

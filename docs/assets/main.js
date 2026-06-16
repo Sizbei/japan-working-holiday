@@ -6,8 +6,10 @@ import { renderContent } from './content.js';
 import { mountCalendar } from './calendar.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
+import { initRouter } from './router.js';
+import { stagger } from './motion.js';
 import { nowISO } from './lib/dates.js';
-import { $, esc } from './lib/dom.js';
+import { $, $$, esc } from './lib/dom.js';
 
 mountGate(boot);
 
@@ -24,7 +26,8 @@ function boot() {
       mountTracker(data);
       renderContent(data, today);
       mountDashboard(data, today);   // reads calendar + content, so mount last
-      buildTOC();
+      initRouter();                  // hash-router SPA: split views, animated transitions
+      stagger($$('.hero > *'), { y: 14, step: 60 });   // signature hero entrance, once
     })
     .catch(err => {
       const d = $('#domains');
@@ -34,21 +37,6 @@ function boot() {
 }
 
 function setText(sel, txt) { const el = $(sel); if (el) el.textContent = txt; }
-
-function buildTOC() {
-  const items = [
-    ['dashHome', '📊 Dashboard'], ['calendarSection', '📅 Calendar'], ['trackerSection', '🎟️ Drops'],
-    ['timeSensitiveSection', '⏰ Deadlines'], ['topSection', '🏆 Top Moves'], ['checklist', '✅ Checklist'],
-    ['brew', '💭 Brew'], ['activities', '🌸 Things I\'ll Do'], ['restaurants', '🍜 Restaurants'],
-    ['disney', '🏰 Disney'], ['building', '💻 Building'], ['music', '🎛️ Music'], ['geek', '🎮 Games'],
-    ['meetups', '🤝 Meetups'], ['canadaSection', '🇨🇦 Canada'], ['sourcesSection', '📚 Sources'],
-  ];
-  const toc = $('#toc');
-  if (!toc) return;
-  toc.innerHTML = items
-    .filter(([id]) => { const el = document.getElementById(id); return el && el.style.display !== 'none'; })
-    .map(([id, label]) => `<a href="#${id}">${esc(label)}</a>`).join('');
-}
 
 function registerSW() {
   if ('serviceWorker' in navigator) {

@@ -812,3 +812,37 @@ html.gated{ overflow: hidden; }
 .toast.out { animation: toastIn var(--t-base) reverse; }
 .toast button { background: none; border: none; color: var(--indigo-ink); font-weight: 800; cursor: pointer; font-size: var(--fs-sm); }
 @keyframes toastIn { from{ opacity:0; transform: translateX(-50%) translateY(12px);} to{ opacity:1; transform: translateX(-50%);} }
+
+/* ============================================================
+   SPA — route views + nav + transition scoping
+   ============================================================ */
+.view { display: block; }
+html.js-router .view { display: none; }
+html.js-router .view.is-active { display: block; }
+
+.route-nav {
+  position: sticky; top: var(--header-h); z-index: 20;
+  display: flex; gap: .25rem; justify-content: center; flex-wrap: wrap; align-items: center;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(1.3) blur(8px);
+  padding: .4rem var(--gutter); border-bottom: 1px solid var(--line);
+}
+.route-nav a {
+  font-family: var(--sans); font-weight: 700; font-size: var(--fs-sm); color: var(--ink-soft);
+  text-decoration: none; padding: .45rem .9rem; border-radius: var(--r-pill);
+  transition: background var(--t-hover), color var(--t-hover), transform var(--t-hover);
+}
+.route-nav a:hover { color: var(--ink); background: var(--bg-soft); }
+.route-nav a:active { transform: scale(var(--press-scale)); }
+.route-nav a[aria-current="page"] { color: var(--on-accent); background: var(--red); }
+
+/* hero is now a persistent header — trim it so it doesn't dominate every route */
+.hero { padding: 2.75rem var(--gutter) 1.75rem; }
+
+/* stable regions keep their own snapshot — only the active view cross-fades */
+.topbar    { view-transition-name: jwh-topbar; }
+.route-nav { view-transition-name: jwh-routenav; }
+.hero      { view-transition-name: jwh-hero; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: var(--dur-2); animation-timing-function: var(--ease-out);
+}

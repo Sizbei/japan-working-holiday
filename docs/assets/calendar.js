@@ -25,7 +25,14 @@ function loadUser() { return get(KEYS.events, []) || []; }
 function saveUser(a) { set(KEYS.events, a); changed(); }
 function changed() { document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
 
-function bakedEvents() { return (DATA.calendar || []).map(e => ({ ...e, source: 'baked' })); }
+function loadOverrides() { return get(KEYS.eventOverrides, {}) || {}; }
+function saveOverrides(o) { set(KEYS.eventOverrides, o); changed(); }
+function bakedEvents() {
+  const ov = loadOverrides();
+  return (DATA.calendar || []).map(e => ov[e.id]
+    ? { ...e, date: ov[e.id], endDate: '', source: 'baked', moved: true }
+    : { ...e, source: 'baked' });
+}
 export function allEvents() {
   return [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))].filter(e => parseISO(e.date));
 }
@@ -218,10 +225,19 @@ function wireReschedule() {
   if (!view) return;
   makeMovable(view, {
     itemSelector: '.cal-chip[data-ev]', label: 'event',
-    canDrag: el => { const ev = allEvents().find(x => x.id === el.dataset.ev); return !!(ev && ev.source === 'user'); },
+    canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,
-    onMove: (id, day) => { const u = loadUser(); const i = u.findIndex(x => x.id === id); if (i >= 0) { u[i] = { ...u[i], date: day, endDate: '' }; saveUser(u); } },
+    onMove: (id, day) => {
+      const ev = allEvents().find(x => x.id === id);
+      if (!ev) return;
+      if (ev.source === 'user') {
+        const u = loadUser(); const i = u.findIndex(x => x.id === id);
+        if (i >= 0) { u[i] = { ...u[i], date: day, endDate: '' }; saveUser(u); }
+      } else {                                  // baked event → store a date override (tips.json stays untouched)
+        const o = loadOverrides(); o[id] = day; saveOverrides(o);
+      }
+    },
   });
 }
 
@@ -271,11 +287,14 @@ function openDetail(ev) {
     ${ev.bookingNotes ? `<p class="modal-note">${esc(ev.bookingNotes)}</p>` : ''}
     ${ev.why ? `<p class="modal-note">${esc(ev.why)}</p>` : ''}
     ${srcline(ev.sources)}
+    ${ev.moved ? '<p class="modal-line">↩ You rescheduled this from its researched date.</p>' : ''}
     <div class="modal-actions">
+      ${ev.moved ? '<button class="btn" id="mdReset">↺ Reset date</button>' : ''}
       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener">+ Google Calendar</a>
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
+  ov.querySelector('#mdReset')?.addEventListener('click', () => { const o = loadOverrides(); delete o[ev.id]; saveOverrides(o); closeModal(ov); });
   ov.querySelector('#mdCopy')?.addEventListener('click', () => {
     const u = loadUser();
     u.push({ id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '' });

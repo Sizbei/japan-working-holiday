@@ -994,3 +994,10 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 /* live music section accent */
 #livemusic .pillar-head::after{ background: var(--c-music); }
 #livemusic .pillar-head .jp{ color: var(--c-music-ink); }
+
+/* discover/explore filter bar */
+#discoverBar{ max-width: var(--maxw); margin: 0 auto var(--s6); padding: 0 var(--gutter); display:flex; flex-wrap:wrap; gap: var(--s3); align-items:center; }
+#discSearch{ flex:1; min-width:240px; font-family: var(--mono); font-size:.82rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
+#discSearch:focus{ outline:none; box-shadow: var(--ring); }
+/* swipe-to-dismiss notifications */
+.np-item{ touch-action: pan-y; transition: transform var(--t-base), opacity var(--t-base); }

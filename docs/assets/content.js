@@ -31,6 +31,31 @@ export function renderContent(data, today) {
   renderPillar('livemusic', '#livemusicGrid', 'Digging up Tokyo nightlife &amp; gigs…');
   wireControls();
   wireTierFilter();
+  wireDiscoverFilter();
+}
+
+// Discover/Explore filter: by interest (which pillar) + free-text across all pillar cards
+function wireDiscoverFilter() {
+  const bar = $('#discInterest');
+  if (!bar) return;
+  const SECMAP = { activities: '#activities', food: '#restaurants', disney: '#disney', building: '#building', gear: '#music', games: '#geek', meetups: '#meetups', nightlife: '#livemusic' };
+  const search = $('#discSearch');
+  const apply = () => {
+    const q = (search?.value || '').trim().toLowerCase();
+    const sec = $('#discInterest .chip.active')?.dataset.sec || 'all';
+    Object.entries(SECMAP).forEach(([k, sel]) => { const el = $(sel); if (el) el.style.display = (sec === 'all' || sec === k) ? '' : 'none'; });
+    if (q) {
+      $$('#view-explore .grid .card2').forEach(card => { card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+    } else {
+      $$('#view-explore .grid .card2').forEach(card => { card.style.display = ''; });   // clear any search-hidden
+      applyTierFilter();                                                                // re-assert the restaurant tier filter (don't stomp it)
+    }
+  };
+  search?.addEventListener('input', apply);
+  $$('#discInterest .chip').forEach(c => c.addEventListener('click', () => {
+    $$('#discInterest .chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active'); apply();
+  }));
 }
 
 // ---- content cards (pillars) ----
@@ -150,14 +175,15 @@ function wireControls() {
     renderDomains();
   }));
 }
+function applyTierFilter() {
+  const t = $('#tierFilters .chip.active')?.dataset.tier || 'all';
+  $$('#restaurantsGrid .card2').forEach(card => { card.style.display = (t === 'all' || card.dataset.tier === t) ? '' : 'none'; });
+}
 function wireTierFilter() {
   $$('#tierFilters .chip').forEach(chip => chip.addEventListener('click', () => {
     $$('#tierFilters .chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
-    const t = chip.dataset.tier;
-    $$('#restaurantsGrid .card2').forEach(card => {
-      card.style.display = (t === 'all' || card.dataset.tier === t) ? '' : 'none';
-    });
+    applyTierFilter();
   }));
 }
 

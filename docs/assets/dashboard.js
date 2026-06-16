@@ -52,6 +52,12 @@ function refresh() {
   renderWidgets(alerts);
 }
 
+function dismiss(id) {
+  if (!id) return;
+  const d = get(KEYS.dismissed, []) || [];
+  set(KEYS.dismissed, [...d, id]); refresh();
+}
+
 function buildItems() {
   const checks = get(KEYS.checklist, {}) || {};
   const items = [];
@@ -125,9 +131,27 @@ function renderPanel(alerts) {
   $$('#notifPanel .np-body').forEach(a => a.addEventListener('click', () => { panel.hidden = true; }));   // navigate (hash) + close
   $$('#notifPanel .np-x').forEach(b => b.addEventListener('click', (e) => {
     e.preventDefault(); e.stopPropagation();
-    const d = get(KEYS.dismissed, []) || [];
-    d.push(b.dataset.dismiss); set(KEYS.dismissed, d); refresh();
+    dismiss(b.dataset.dismiss);
   }));
+  // swipe-to-dismiss (pointer; tap still navigates, vertical scroll preserved)
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $$('#notifPanel .np-item').forEach(li => {
+    let sx = 0, dx = 0, dragging = false;
+    li.addEventListener('pointerdown', e => { sx = e.clientX; dx = 0; dragging = true; li.setPointerCapture?.(e.pointerId); });
+    li.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      dx = e.clientX - sx;
+      if (Math.abs(dx) > 6) { e.preventDefault(); if (!reduce) { li.style.transform = `translateX(${dx}px)`; li.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 180)); } }
+    });
+    const end = () => {
+      if (!dragging) return; dragging = false;
+      const id = li.querySelector('.np-x')?.dataset.dismiss;
+      if (Math.abs(dx) > 90 && id) dismiss(id);
+      else { li.style.transform = ''; li.style.opacity = ''; }
+    };
+    li.addEventListener('pointerup', end);
+    li.addEventListener('pointercancel', end);
+  });
   $('#npClear')?.addEventListener('click', () => {
     const d = get(KEYS.dismissed, []) || [];
     set(KEYS.dismissed, [...new Set([...d, ...alerts.map(a => a.id)])]); refresh();

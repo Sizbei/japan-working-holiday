@@ -7,6 +7,7 @@ import { mountCalendar } from './calendar.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
 import { mountMyTokyo } from './dashboard-mytokyo.js';
+import { mountRooms } from './rooms.js';
 import { initRouter } from './router.js';
 import { initKonami } from './konami.js';
 import { stagger } from './motion.js';
@@ -29,6 +30,7 @@ function boot() {
       renderContent(data, today);
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountMyTokyo(data);            // surface my interests at the top of the dashboard
+      mountRooms(data);              // share-room finder (#/rooms)
       initRouter();                  // hash-router SPA: split views, animated transitions
       initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode
       stagger($$('.hero > *'), { y: 14, step: 60 });   // signature hero entrance, once

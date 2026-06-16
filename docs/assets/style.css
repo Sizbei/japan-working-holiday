@@ -1001,3 +1001,28 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 #discSearch:focus{ outline:none; box-shadow: var(--ring); }
 /* swipe-to-dismiss notifications */
 .np-item{ touch-action: pan-y; transition: transform var(--t-base), opacity var(--t-base); }
+
+/* ============================================================
+   FIND A ROOM (#/rooms)
+   ============================================================ */
+#rooms{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 var(--gutter); }
+.room-count{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); }
+#roomFilters{ display:flex; flex-wrap:wrap; gap: var(--s3); align-items:center; margin-bottom: var(--s5); }
+#roomSearch{ flex:1; min-width:240px; font-family: var(--mono); font-size:.82rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
+#roomSearch:focus{ outline:none; box-shadow: var(--ring); }
+.chip.toggle{ cursor:pointer; }
+.chip.toggle.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
+.room-card{ background: var(--bg-soft); border:1px solid var(--line); border-left:4px solid var(--line); border-radius: var(--r-md); padding: var(--s5); box-shadow: var(--shadow); display:flex; flex-direction:column; gap:.4rem; }
+.room-card.tier-budget{ border-left-color: var(--ok-fill); }
+.room-card.tier-mid{ border-left-color: var(--indigo); }
+.room-card.tier-splurge{ border-left-color: var(--gold); }
+.room-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:.6rem; }
+.room-name{ font-family: var(--serif); font-size:1.1rem; margin:0; line-height:1.25; }
+.room-flag{ font-family: var(--mono); font-size:.58rem; font-weight:700; letter-spacing:.04em; color: var(--ok-ink); background: color-mix(in srgb, var(--ok-fill) 14%, transparent); border-radius: var(--r-pill); padding:2px 8px; white-space:nowrap; flex:none; }
+.room-provider{ font-size:.8rem; color: var(--ink-soft); }
+.room-cost{ font-family: var(--mono); font-weight:700; color: var(--indigo-ink); font-size:.95rem; }
+.room-meta{ list-style:none; margin:.3rem 0; padding:0; display:flex; flex-direction:column; gap:.25rem; font-size:.82rem; line-height:1.4; }
+.room-meta b{ color: var(--ink-soft); font-weight:700; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; margin-right:.3rem; }
+.room-note{ font-size:.82rem; color: var(--ink-soft); margin:.3rem 0; }
+.room-links{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.4rem; }
+.room-links .btn{ font-size:.78rem; padding:.4rem .7rem; }

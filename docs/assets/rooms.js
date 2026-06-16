@@ -1,0 +1,72 @@
+'use strict';
+// Share-room finder (#/rooms). Curated foreigner-friendly providers/houses with
+// cost, move-in, requirements, contacts, links — filterable. No provider has a
+// public listings API, so this is curated; live availability lives on the links.
+
+import { $, $$, esc } from './lib/dom.js';
+
+let DATA = null;
+
+export function mountRooms(data) {
+  DATA = data;
+  render();
+  wire();
+}
+
+function card(r) {
+  return `<article class="room-card tier-${esc(r.tier)}" data-tier="${esc(r.tier)}" data-nokey="${!!r.noKeyMoney}" data-room="${esc(r.roomType)}">
+    <div class="room-head">
+      <h3 class="room-name">${esc(r.name)}</h3>
+      ${r.noKeyMoney ? '<span class="room-flag">NO KEY MONEY</span>' : ''}
+    </div>
+    <div class="room-provider">${esc(r.provider)} · <span class="room-area">📍 ${esc(r.area)}</span></div>
+    <div class="room-cost">${esc(r.rent)}</div>
+    <ul class="room-meta">
+      <li><b>Move-in</b> ${esc(r.moveIn)}</li>
+      <li><b>Fees</b> ${esc(r.fees)} · <b>Initial</b> ${esc(r.oneTime)}</li>
+      <li><b>Room</b> ${esc(r.roomType)} · ${esc(r.gender)}</li>
+      <li><b>Requirements</b> ${esc((r.requirements || []).join(' · '))}</li>
+      <li><b>Contact</b> ${esc(r.contact)}</li>
+    </ul>
+    <p class="room-note">${esc(r.note)}</p>
+    <div class="room-links">
+      <a class="btn primary" href="${esc(r.listingUrl)}" target="_blank" rel="noopener">Browse listings ↗</a>
+      <a class="btn ghost" href="${esc(r.providerUrl)}" target="_blank" rel="noopener">${esc(r.provider)} ↗</a>
+    </div>
+  </article>`;
+}
+
+function render() {
+  const grid = $('#roomsGrid');
+  if (!grid) return;
+  grid.innerHTML = (DATA.rooms || []).map(card).join('');
+  updateCount();
+}
+
+function updateCount() {
+  const n = $$('#roomsGrid .room-card').filter(c => c.style.display !== 'none').length;
+  const el = $('#roomCount'); if (el) el.textContent = `${n} option${n === 1 ? '' : 's'}`;
+}
+
+function wire() {
+  const apply = () => {
+    const q = ($('#roomSearch')?.value || '').trim().toLowerCase();
+    const tier = $('#roomTier .chip.active')?.dataset.tier || 'all';
+    const room = $('#roomTypeF .chip.active')?.dataset.room || 'all';
+    const noKey = $('#roomNoKey')?.classList.contains('active');
+    $$('#roomsGrid .room-card').forEach(c => {
+      const okQ = !q || c.textContent.toLowerCase().includes(q);
+      const okTier = tier === 'all' || c.dataset.tier === tier;
+      const okRoom = room === 'all' || c.dataset.room === room || c.dataset.room === 'both';
+      const okKey = !noKey || c.dataset.nokey === 'true';
+      c.style.display = (okQ && okTier && okRoom && okKey) ? '' : 'none';
+    });
+    updateCount();
+  };
+  $('#roomSearch')?.addEventListener('input', apply);
+  $$('#roomTier .chip, #roomTypeF .chip').forEach(ch => ch.addEventListener('click', () => {
+    [...ch.parentElement.querySelectorAll('.chip')].forEach(x => x.classList.remove('active'));
+    ch.classList.add('active'); apply();
+  }));
+  $('#roomNoKey')?.addEventListener('click', () => { $('#roomNoKey').classList.toggle('active'); apply(); });
+}

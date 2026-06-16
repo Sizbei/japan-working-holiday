@@ -2,11 +2,11 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v11';
+const CACHE = 'jwh-v12';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/calendar.js',
-  'assets/dashboard.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/dnd.js', 'assets/dashboard-mytokyo.js', 'assets/konami.js',
+  'assets/dashboard.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/dnd.js', 'assets/dashboard-mytokyo.js', 'assets/konami.js', 'assets/rooms.js',
   'assets/lib/dom.js', 'assets/lib/store.js', 'assets/lib/dates.js',
   'assets/lib/notify.js', 'assets/lib/ics.js',
 ];

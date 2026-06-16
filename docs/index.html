@@ -51,6 +51,7 @@
   <a href="#/checklist" data-route="checklist">Checklist</a>
   <a href="#/deadlines" data-route="deadlines">Deadlines</a>
   <a href="#/explore" data-route="explore">Explore</a>
+  <a href="#/rooms" data-route="rooms">Rooms</a>
 </nav>
 
 <main id="main">
@@ -267,6 +268,28 @@
     <ul id="sourcesList"></ul>
   </section>
   </div><!-- /view-explore -->
+  <div class="view" id="view-rooms" data-route="rooms">
+  <section id="rooms">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">部屋探し</span><h2>Find a Room</h2></div>
+    <p class="lede">Foreigner-friendly share houses &amp; apartments — no key money, no guarantor, book from abroad. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count"></span></p>
+    <div id="roomFilters">
+      <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · ¥50k · dorm…" aria-label="Filter rooms">
+      <div class="filters" id="roomTier" role="group" aria-label="Budget">
+        <button class="chip active" data-tier="all" type="button">Any budget</button>
+        <button class="chip" data-tier="budget" type="button">Budget</button>
+        <button class="chip" data-tier="mid" type="button">Mid</button>
+        <button class="chip" data-tier="splurge" type="button">Splurge</button>
+      </div>
+      <div class="filters" id="roomTypeF" role="group" aria-label="Room type">
+        <button class="chip active" data-room="all" type="button">Any room</button>
+        <button class="chip" data-room="private" type="button">Private</button>
+        <button class="chip" data-room="dorm" type="button">Dorm</button>
+      </div>
+      <button class="chip toggle" id="roomNoKey" type="button">No key money</button>
+    </div>
+    <div class="grid" id="roomsGrid"></div>
+  </section>
+  </div><!-- /view-rooms -->
 </main>
 
 <footer>

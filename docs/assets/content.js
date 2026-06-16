@@ -32,6 +32,23 @@ export function renderContent(data, today) {
   wireControls();
   wireTierFilter();
   wireDiscoverFilter();
+  wireCollapsibleCards();
+}
+
+// Explore cards: compact by default, click/Enter to expand the full description
+function wireCollapsibleCards() {
+  const ex = $('#view-explore');
+  if (!ex) return;
+  const toggle = (card) => { const on = card.classList.toggle('expanded'); card.setAttribute('aria-expanded', String(on)); };
+  ex.addEventListener('click', (e) => {
+    if (e.target.closest('a')) return;                       // links inside don't toggle
+    const card = e.target.closest('.card2.collapsible'); if (card) toggle(card);
+  });
+  ex.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.card2.collapsible'); if (!card || e.target.tagName === 'A') return;
+    e.preventDefault(); toggle(card);
+  });
 }
 
 // Discover/Explore filter: by interest (which pillar) + free-text across all pillar cards
@@ -43,17 +60,21 @@ function wireDiscoverFilter() {
   const apply = () => {
     const q = (search?.value || '').trim().toLowerCase();
     const sec = $('#discInterest .chip.active')?.dataset.sec || 'all';
+    const area = $('#discArea .chip.active')?.dataset.area || 'all';
     Object.entries(SECMAP).forEach(([k, sel]) => { const el = $(sel); if (el) el.style.display = (sec === 'all' || sec === k) ? '' : 'none'; });
-    if (q) {
-      $$('#view-explore .grid .card2').forEach(card => { card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+    if (q || area !== 'all') {
+      $$('#view-explore .grid .card2').forEach(card => {
+        const txt = card.textContent.toLowerCase();
+        card.style.display = ((!q || txt.includes(q)) && (area === 'all' || txt.includes(area))) ? '' : 'none';
+      });
     } else {
-      $$('#view-explore .grid .card2').forEach(card => { card.style.display = ''; });   // clear any search-hidden
+      $$('#view-explore .grid .card2').forEach(card => { card.style.display = ''; });   // clear any search/area-hidden
       applyTierFilter();                                                                // re-assert the restaurant tier filter (don't stomp it)
     }
   };
   search?.addEventListener('input', apply);
-  $$('#discInterest .chip').forEach(c => c.addEventListener('click', () => {
-    $$('#discInterest .chip').forEach(x => x.classList.remove('active'));
+  $$('#discInterest .chip, #discArea .chip').forEach(c => c.addEventListener('click', () => {
+    [...c.parentElement.querySelectorAll('.chip')].forEach(x => x.classList.remove('active'));
     c.classList.add('active'); apply();
   }));
 }
@@ -67,13 +88,16 @@ function metaPills(item) {
 }
 function contentCard(item) {
   const tier = (item.tier || 'n/a').toLowerCase();
+  const hasBody = !!(item.detail || item.how_or_when || (item.sources && item.sources.length));
   return `
-    <article class="card2 tier-${esc(tier)}" data-tier="${esc(tier)}">
-      <div class="c-name">${esc(item.name)}</div>
-      ${item.detail ? `<div class="c-detail">${esc(item.detail)}</div>` : ''}
-      ${item.how_or_when ? `<div class="c-detail"><b>↳</b> ${esc(item.how_or_when)}</div>` : ''}
+    <article class="card2 tier-${esc(tier)} ${hasBody ? 'collapsible' : ''}" data-tier="${esc(tier)}" ${hasBody ? 'tabindex="0" role="button" aria-expanded="false"' : ''}>
+      <div class="c-top"><span class="c-name">${esc(item.name)}</span>${hasBody ? '<span class="c-chev" aria-hidden="true">▾</span>' : ''}</div>
       <div class="c-meta">${metaPills(item)}</div>
-      ${srcLinks(item.sources)}
+      ${hasBody ? `<div class="c-body">
+        ${item.detail ? `<div class="c-detail">${esc(item.detail)}</div>` : ''}
+        ${item.how_or_when ? `<div class="c-detail"><b>↳</b> ${esc(item.how_or_when)}</div>` : ''}
+        ${srcLinks(item.sources)}
+      </div>` : ''}
     </article>`;
 }
 function renderPillar(key, sel, placeholder) {

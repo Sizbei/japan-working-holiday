@@ -52,6 +52,7 @@
   <a href="#/deadlines" data-route="deadlines">Deadlines</a>
   <a href="#/explore" data-route="explore">Explore</a>
   <a href="#/rooms" data-route="rooms">Rooms</a>
+  <a href="#/map" data-route="map">Map</a>
 </nav>
 
 <main id="main">
@@ -198,6 +199,17 @@
       <button class="chip" data-sec="meetups" type="button">🤝 Meetups</button>
       <button class="chip" data-sec="disney" type="button">🏰 Disney</button>
     </div>
+    <div class="filters" id="discArea" role="group" aria-label="Filter by area">
+      <button class="chip active" data-area="all" type="button">All areas</button>
+      <button class="chip" data-area="shibuya" type="button">Shibuya</button>
+      <button class="chip" data-area="shinjuku" type="button">Shinjuku</button>
+      <button class="chip" data-area="akihabara" type="button">Akihabara</button>
+      <button class="chip" data-area="nakano" type="button">Nakano</button>
+      <button class="chip" data-area="koenji" type="button">Koenji</button>
+      <button class="chip" data-area="shimokita" type="button">Shimokita</button>
+      <button class="chip" data-area="ebisu" type="button">Ebisu</button>
+      <button class="chip" data-area="ikebukuro" type="button">Ikebukuro</button>
+    </div>
   </section>
 
   <!-- ============ PILLARS ============ -->
@@ -290,6 +302,15 @@
     <div class="grid" id="roomsGrid"></div>
   </section>
   </div><!-- /view-rooms -->
+  <div class="view" id="view-map" data-route="map">
+  <section id="map">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">地図</span><h2>My Tokyo Map</h2></div>
+    <p class="lede">Every place in here, grouped by neighbourhood — tap any spot to open it in Google Maps (opens the Maps app on your phone). The embed below is central Tokyo for orientation.</p>
+    <iframe class="map-frame" title="Central Tokyo map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=139.6500%2C35.6300%2C139.8200%2C35.7450&layer=mapnik"></iframe>
+    <p class="map-osm"><a href="https://www.openstreetmap.org/#map=12/35.69/139.73" target="_blank" rel="noopener">View larger map ↗</a></p>
+    <div id="mapList"></div>
+  </section>
+  </div><!-- /view-map -->
 </main>
 
 <footer>

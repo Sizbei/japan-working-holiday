@@ -4978,5 +4978,87 @@
       "tier": "splurge",
       "foreignerFriendly": true
     }
-  ]
+  ],
+  "areaGeo": {
+    "Akihabara": {
+      "lat": 35.70189,
+      "lng": 139.77437
+    },
+    "Aoyama": {
+      "lat": 35.66057,
+      "lng": 139.71042
+    },
+    "Asakusa": {
+      "lat": 35.7176,
+      "lng": 139.79756
+    },
+    "Daikanyama": {
+      "lat": 35.64816,
+      "lng": 139.70325
+    },
+    "Ebisu": {
+      "lat": 35.64697,
+      "lng": 139.70865
+    },
+    "Ginza": {
+      "lat": 35.67201,
+      "lng": 139.76472
+    },
+    "Harajuku": {
+      "lat": 35.6687,
+      "lng": 139.70534
+    },
+    "Ikebukuro": {
+      "lat": 35.72809,
+      "lng": 139.71104
+    },
+    "Koenji": {
+      "lat": 35.70494,
+      "lng": 139.64991
+    },
+    "Nakameguro": {
+      "lat": 35.64408,
+      "lng": 139.69895
+    },
+    "Nakano": {
+      "lat": 35.70862,
+      "lng": 139.66294
+    },
+    "Ochanomizu": {
+      "lat": 35.70059,
+      "lng": 139.76409
+    },
+    "Roppongi": {
+      "lat": 35.66246,
+      "lng": 139.7335
+    },
+    "Setagaya": {
+      "lat": 35.6469,
+      "lng": 139.65253
+    },
+    "Shibuya": {
+      "lat": 35.66337,
+      "lng": 139.6965
+    },
+    "Shimokitazawa": {
+      "lat": 35.66168,
+      "lng": 139.66633
+    },
+    "Shinjuku": {
+      "lat": 35.69376,
+      "lng": 139.70363
+    },
+    "Toyosu": {
+      "lat": 35.65014,
+      "lng": 139.79312
+    },
+    "Ueno": {
+      "lat": 35.71169,
+      "lng": 139.77617
+    },
+    "Around Tokyo": {
+      "lat": 35.68,
+      "lng": 139.74
+    }
+  }
 }

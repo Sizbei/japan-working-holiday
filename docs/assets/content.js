@@ -6,6 +6,7 @@
 import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
+import { makeSortable, dndToast } from './dnd.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -194,7 +195,8 @@ function renderIdeas() {
   const ideas = loadIdeas();
   if (!ideas.length) { list.innerHTML = `<li class="brew-empty">No idea cards yet — add one above.</li>`; return; }
   list.innerHTML = ideas.map(i => `
-    <li class="brew-card">
+    <li class="brew-card" data-id="${esc(i.id)}">
+      <button type="button" class="dnd-handle" aria-hidden="true" tabindex="-1">⠿</button>
       <span>${esc(i.text)}</span>
       <button type="button" data-del="${esc(i.id)}" aria-label="Delete idea">✕</button>
     </li>`).join('');
@@ -202,6 +204,11 @@ function renderIdeas() {
     saveIdeas(loadIdeas().filter(x => x.id !== b.dataset.del));
     renderIdeas();
   }));
+  makeSortable(list, {
+    itemSelector: '.brew-card', handleSelector: '.dnd-handle', label: 'idea',
+    idOf: el => el.dataset.id,
+    onReorder: (ids) => { const by = loadIdeas(); saveIdeas(ids.map(id => by.find(x => x.id === id)).filter(Boolean)); renderIdeas(); },
+  });
 }
 
 // ---- dependency-aware checklist with due dates ----
@@ -221,6 +228,18 @@ export function checklistItems(data) {
   return out;
 }
 
+// reconcile a phase's items against a saved id order (unknown/new ids append). Pure.
+export function orderItems(items, savedOrder) {
+  if (!savedOrder || !savedOrder.length) return items;
+  const map = new Map(items.map(it => [it.id, it]));
+  const out = [];
+  savedOrder.forEach(id => { if (map.has(id)) { out.push(map.get(id)); map.delete(id); } });
+  items.forEach(it => { if (map.has(it.id)) out.push(it); });
+  return out;
+}
+function loadCheckOrder() { return get(KEYS.checkOrder, {}) || {}; }
+function saveCheckOrder(o) { set(KEYS.checkOrder, o); }
+
 function renderChecklist(today) {
   const phases = DATA.checklist || [];
   const wrap = $('#checkPhases');
@@ -228,17 +247,23 @@ function renderChecklist(today) {
   if (!phases.length) { wrap.innerHTML = `<div class="empty">Building the yearlong plan…</div>`; return; }
   const state = loadChecks();
   const due = loadDue();
+  const order = loadCheckOrder();
   const now = today || nowISO();
-  wrap.innerHTML = phases.map(p => `
+  wrap.innerHTML = phases.map((p, pi) => `
     <div class="phase-block">
       <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
-      <ul class="check-list">
-        ${(p.items || []).map(it => checkItemHTML(it, state, due, now)).join('')}
+      <ul class="check-list" data-phase="${pi}">
+        ${orderItems(p.items || [], order[pi]).map(it => checkItemHTML(it, state, due, now)).join('')}
       </ul>
     </div>`).join('');
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
   wireChecklist();
+  $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
+    itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
+    idOf: el => el.dataset.id,
+    onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
+  }));
   updateProgress();
 }
 function checkItemHTML(it, state, due, now) {
@@ -252,6 +277,7 @@ function checkItemHTML(it, state, due, now) {
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';
   return `
     <li class="check-item ${locked ? 'locked' : ''}" data-id="${esc(id)}">
+      <button type="button" class="dnd-handle" aria-label="Reorder task" tabindex="0">⠿</button>
       <input type="checkbox" id="cb-${esc(id)}" data-cid="${esc(id)}" ${checked} ${locked ? 'disabled' : ''}
              aria-label="${esc(it.task)}">
       <label class="ci-body" for="cb-${esc(id)}">

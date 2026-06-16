@@ -846,3 +846,19 @@ html.js-router .view.is-active { display: block; }
 ::view-transition-old(root), ::view-transition-new(root) {
   animation-duration: var(--dur-2); animation-timing-function: var(--ease-out);
 }
+
+/* ============================================================
+   DRAG & DROP affordances
+   ============================================================ */
+.dnd-handle {
+  cursor: grab; color: var(--ink-faint); background: none; border: none;
+  padding: 0 .3rem; font-size: 1rem; line-height: 1; touch-action: none; user-select: none;
+  display: inline-flex; align-items: center; align-self: center;
+}
+.dnd-handle:hover { color: var(--ink-soft); }
+.dnd-handle:active { cursor: grabbing; }
+.dnd-dragging { opacity: var(--drag-ghost-opacity); transform: scale(var(--drag-lift-scale)); box-shadow: var(--shadow-lg); position: relative; z-index: 30; }
+.dnd-grabbed { box-shadow: var(--ring); }
+.dnd-movable { cursor: grab; }
+.dnd-over { outline: 2px dashed var(--indigo); outline-offset: -2px; background: color-mix(in srgb, var(--indigo) 8%, transparent); }
+@media (hover: none) { .dnd-handle { min-width: 44px; min-height: 44px; justify-content: center; } }

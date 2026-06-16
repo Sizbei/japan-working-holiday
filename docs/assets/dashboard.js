@@ -9,6 +9,7 @@ import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
 import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
+import { makeSortable } from './dnd.js';
 
 let DATA = null, TODAY = '2026-06-15';
 
@@ -18,8 +19,31 @@ export function mountDashboard(data, today) {
   initTheme();
   renderCountdown();
   wireBell();
+  setupWidgetDnD();
   refresh();
   document.addEventListener('jwh:data-changed', refresh);
+}
+
+function setupWidgetDnD() {
+  const dash = $('#dashHome');
+  if (!dash) return;
+  dash.querySelectorAll('.widget').forEach(w => {
+    w.dataset.id = w.id;
+    const h = w.querySelector('.widget-h');
+    if (h && !h.querySelector('.dnd-handle')) {
+      const b = document.createElement('button');
+      b.className = 'dnd-handle'; b.type = 'button'; b.textContent = '⠿';
+      b.setAttribute('aria-label', 'Reorder widget');
+      h.prepend(b);
+    }
+  });
+  const order = get(KEYS.widgetOrder, null);
+  if (order && order.length) order.forEach(id => { const w = document.getElementById(id); if (w) dash.appendChild(w); });
+  makeSortable(dash, {
+    itemSelector: '.widget', handleSelector: '.dnd-handle', label: 'widget',
+    idOf: el => el.dataset.id,
+    onReorder: (ids) => set(KEYS.widgetOrder, ids),
+  });
 }
 
 function refresh() {

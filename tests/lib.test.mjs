@@ -76,3 +76,11 @@ test('gcalUrl builds a template link', () => {
   assert.match(u, /dates=20260710%2F20260711/);
   assert.match(u, /text=teamLab/);
 });
+
+import { reorderIds } from '../docs/assets/dnd.js';
+test('reorderIds moves an id before/after a target', () => {
+  assert.deepEqual(reorderIds(['a','b','c'], 'a', 'c', true), ['b','c','a']);
+  assert.deepEqual(reorderIds(['a','b','c'], 'c', 'a', false), ['c','a','b']);
+  assert.deepEqual(reorderIds(['a','b','c'], 'b', null), ['a','c','b']);
+  assert.deepEqual(reorderIds(['a','b','c'], 'a', 'a'), ['a','b','c']);
+});

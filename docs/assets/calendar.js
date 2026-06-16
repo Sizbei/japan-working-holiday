@@ -9,6 +9,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
+import { makeMovable } from './dnd.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
@@ -98,6 +99,7 @@ function render() {
     view.innerHTML = monthHTML();
     if (panel) { panel.hidden = false; panel.innerHTML = panelHTML(); wirePanel(); }
     wireCells();
+    wireReschedule();
   } else {
     view.innerHTML = agendaHTML();
     if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate
@@ -210,6 +212,19 @@ function wireCells() {
     c.addEventListener('keydown', (e) => { if (e.key === 'Enter') dayPopover(c.dataset.day, c); });
   });
 }
+// drag a USER event chip onto another day to reschedule (baked events are fixed)
+function wireReschedule() {
+  const view = $('#calView');
+  if (!view) return;
+  makeMovable(view, {
+    itemSelector: '.cal-chip[data-ev]', label: 'event',
+    canDrag: el => { const ev = allEvents().find(x => x.id === el.dataset.ev); return !!(ev && ev.source === 'user'); },
+    idOf: el => el.dataset.ev,
+    targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,
+    onMove: (id, day) => { const u = loadUser(); const i = u.findIndex(x => x.id === id); if (i >= 0) { u[i] = { ...u[i], date: day, endDate: '' }; saveUser(u); } },
+  });
+}
+
 function dismissPopover() {
   if (popCleanup) { popCleanup(); popCleanup = null; }
   if (popEl) { popEl.remove(); popEl = null; }

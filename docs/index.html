@@ -314,22 +314,20 @@
       <ul id="placeSug" class="place-sug" aria-live="polite"></ul>
     </div>
     <div id="mapTools" class="map-tools">
+      <button type="button" id="mapDrop" class="map-fit" aria-pressed="false">＋ Drop a pin</button>
       <button type="button" id="mapFit" class="map-fit">⤢ Fit all pins</button>
       <span id="mapCount" class="map-count-live" aria-live="polite"></span>
-      <ul class="map-legend" aria-label="Pin colours">
-        <li><i class="jwh-pin-dot cat-music"></i>Music / events</li>
-        <li><i class="jwh-pin-dot cat-geek"></i>Geek &amp; arcade</li>
-        <li><i class="jwh-pin-dot cat-build"></i>Buildings &amp; places</li>
-        <li><i class="jwh-pin-dot cat-food"></i>Food</li>
-        <li><i class="jwh-pin-dot cat-meet"></i>Meetups</li>
-        <li><i class="jwh-pin-dot pulse-key"></i>Coming up soon</li>
-      </ul>
     </div>
+    <div id="mapFilters" class="map-filters"></div>
+    <span id="mapLive" class="sr-only" aria-live="polite"></span>
     <div class="map-split">
       <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>
-      <div id="mapList" aria-label="Neighbourhood index"></div>
+      <div class="map-side">
+        <div id="mapSaved" aria-label="Your saved pins"></div>
+        <div id="mapList" aria-label="All places by neighbourhood"></div>
+      </div>
     </div>
-    <p class="map-hint">Upcoming events &amp; every place are pre-pinned at <em>neighbourhood level</em> (pulsing = soon) — tap a pin to open the exact spot in Maps or plan a visit. The map needs a connection; the neighbourhood index always works offline.</p>
+    <p class="map-hint">Your ★ pins stay always-visible (never hidden in a cluster); catalogue &amp; event pins sit at <em>neighbourhood level</em> (the ≈ mark) — open any to plan a visit, ⭐ Tabetai a restaurant, or “set exact”. Backspace deletes the open pin. The map needs a connection; the index always works offline.</p>
   </section>
   </div><!-- /view-map -->
 </main>

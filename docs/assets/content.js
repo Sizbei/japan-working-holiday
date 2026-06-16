@@ -7,6 +7,8 @@ import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
+import { placeById, upsertPlace, patchPlace, deletePlace, catId } from './lib/places.js';
+import { approxCoord } from './lib/geo.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -86,12 +88,15 @@ function metaPills(item) {
   if (item.price_or_cost) out.push(`<span class="pill price">${esc(item.price_or_cost)}</span>`);
   return out.join('');
 }
-function contentCard(item) {
+function contentCard(item, withStar) {
   const tier = (item.tier || 'n/a').toLowerCase();
   const hasBody = !!(item.detail || item.how_or_when || (item.sources && item.sources.length));
+  const star = withStar
+    ? `<button type="button" class="tabetai-star" data-tb="${esc(catId('restaurants', item.name))}" data-name="${esc(item.name)}" data-area="${esc(item.area_or_park || '')}" aria-pressed="false" aria-label="Tabetai — want to eat ${esc(item.name)}" title="Tabetai (want to eat) — saves to your map &amp; list">☆</button>`
+    : '';
   return `
     <article class="card2 tier-${esc(tier)} ${hasBody ? 'collapsible' : ''}" data-tier="${esc(tier)}" ${hasBody ? 'tabindex="0" role="button" aria-expanded="false"' : ''}>
-      <div class="c-top"><span class="c-name">${esc(item.name)}</span>${hasBody ? '<span class="c-chev" aria-hidden="true">▾</span>' : ''}</div>
+      <div class="c-top"><span class="c-name">${esc(item.name)}</span>${star}${hasBody ? '<span class="c-chev" aria-hidden="true">▾</span>' : ''}</div>
       <div class="c-meta">${metaPills(item)}</div>
       ${hasBody ? `<div class="c-body">
         ${item.detail ? `<div class="c-detail">${esc(item.detail)}</div>` : ''}
@@ -104,9 +109,38 @@ function renderPillar(key, sel, placeholder) {
   const grid = $(sel);
   if (!grid) return;
   const list = DATA[key] || [];
+  const withStar = key === 'restaurants';                    // ★ Tabetai only on restaurants
   grid.innerHTML = list.length
-    ? list.map(contentCard).join('')
+    ? list.map(i => contentCard(i, withStar)).join('')
     : `<div class="empty">${placeholder} this fills in as research lands.</div>`;
+  if (withStar) wireTabetai(grid);
+}
+
+// ---- Tabetai (want-to-eat): ★ a restaurant -> a source:'tabetai' place (map pin + saved list) ----
+function syncStars(grid) {
+  grid.querySelectorAll('.tabetai-star').forEach(b => {
+    const on = !!placeById(b.dataset.tb);
+    b.textContent = on ? '★' : '☆';
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+function wireTabetai(grid) {
+  syncStars(grid);
+  grid.addEventListener('click', (e) => {
+    const b = e.target.closest('.tabetai-star');
+    if (!b) return;
+    e.stopPropagation();                                     // don't toggle the card's expand
+    const id = b.dataset.tb, existing = placeById(id);
+    if (existing) {
+      if (existing.date || existing.eventId || existing.locked) patchPlace(id, { fav: false, visited: existing.visited });  // keep a planned/locked visit, just un-pin
+      else deletePlace(id);                                  // plain want-to-eat -> remove
+    } else {
+      const c = approxCoord(DATA.areaGeo, b.dataset.area, b.dataset.name);
+      upsertPlace({ id, name: b.dataset.name, address: b.dataset.area, lat: c.lat, lng: c.lng, category: 'food', source: 'tabetai', fav: true, coordKind: 'approx', visited: false });
+    }
+  });
+  document.addEventListener('jwh:data-changed', () => syncStars(grid));
 }
 
 // ---- deadlines table ----

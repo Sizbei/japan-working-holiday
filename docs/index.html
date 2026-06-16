@@ -84,13 +84,11 @@
         <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
       </div>
     </div>
-    <div id="calView" aria-live="polite"></div>
-    <p class="cal-legend">
-      <span class="lg cat-festival">festival</span><span class="lg cat-fireworks">fireworks</span>
-      <span class="lg cat-illumination">illumination</span><span class="lg cat-convention">convention</span>
-      <span class="lg cat-seasonal">seasonal</span><span class="lg cat-nature">nature</span>
-      <span class="lg cat-holiday">holiday</span><span class="lg cat-personal">mine</span>
-    </p>
+    <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
+    <div class="cal-layout">
+      <div id="calView" aria-live="polite"></div>
+      <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
+    </div>
   </section>
 
   <!-- ============ LOTTERY / TIMED-RELEASE TRACKER ============ -->

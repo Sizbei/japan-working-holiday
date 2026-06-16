@@ -1,7 +1,9 @@
 'use strict';
-// Editable calendar. Merges baked events (tips.json, read-only) with the user's own
-// events (localStorage). Month grid + agenda views, click-a-day to add, edit/delete,
-// tag-filtered .ics export + Google Calendar links, and .ics import.
+// Editable calendar — enhanced month grid + side deadline panel.
+// Merges baked events (tips.json, read-only) with user events (localStorage, CRUD).
+// Grid cells show a density meter + ticket glyph; the legend doubles as a category
+// filter; the side panel lists this month's book-by deadlines; clicking a day opens
+// a popover. Tag-filtered .ics/Google export + .ics import.
 
 import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
@@ -9,33 +11,33 @@ import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 
 let DATA = null;
-let viewY = 2026, viewM = 5;     // June 2026 (0-indexed month)
+let viewY = 2026, viewM = 5;
 let mode = 'month';
 let TODAY = '2026-06-15';
+let hiddenCats = new Set();
+let popEl = null, popCleanup = null;
 
 const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
+const SPAN_CAP = 10;
 
 function loadUser() { return get(KEYS.events, []) || []; }
 function saveUser(a) { set(KEYS.events, a); changed(); }
 function changed() { document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
 
-function bakedEvents() {
-  return (DATA.calendar || []).map(e => ({ ...e, source: 'baked' }));
-}
+function bakedEvents() { return (DATA.calendar || []).map(e => ({ ...e, source: 'baked' })); }
 export function allEvents() {
-  return [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))]
-    .filter(e => parseISO(e.date));
+  return [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))].filter(e => parseISO(e.date));
 }
-const SPAN_CAP = 10; // events longer than this render only on their start day in the grid
+function catOf(e) { return e.category || 'personal'; }
+function visible(e) { return !hiddenCats.has(catOf(e)); }
+
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
+    if (!visible(e)) return false;
     const s = e.date.slice(0, 10);
     const en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : '';
     if (!en) return s === iso;
-    if (capLong) {
-      const span = daysBetween(s, en);
-      if (span !== null && span > SPAN_CAP) return s === iso;  // long season → opening day only
-    }
+    if (capLong) { const span = daysBetween(s, en); if (span !== null && span > SPAN_CAP) return s === iso; }
     return iso >= s && iso <= en;
   });
 }
@@ -43,18 +45,19 @@ function eventsOn(iso, capLong = false) {
 export function mountCalendar(data, today) {
   DATA = data;
   TODAY = today || nowISO();
+  hiddenCats = new Set(get(KEYS.calFilters, []) || []);
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   wireToolbar();
+  buildLegend();
   render();
+  document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
 }
 
 function wireToolbar() {
-  $('#calPrev')?.addEventListener('click', () => { shift(-1); });
-  $('#calNext')?.addEventListener('click', () => { shift(1); });
-  $('#calToday')?.addEventListener('click', () => {
-    const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render();
-  });
+  $('#calPrev')?.addEventListener('click', () => shift(-1));
+  $('#calNext')?.addEventListener('click', () => shift(1));
+  $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render(); });
   $('#calModeMonth')?.addEventListener('click', () => { mode = 'month'; render(); });
   $('#calModeAgenda')?.addEventListener('click', () => { mode = 'agenda'; render(); });
   $('#calAdd')?.addEventListener('click', () => openModal(null, TODAY));
@@ -62,26 +65,50 @@ function wireToolbar() {
   $('#calImportBtn')?.addEventListener('click', () => $('#calImport').click());
   $('#calImport')?.addEventListener('change', onImport);
 }
-function shift(d) {
-  viewM += d;
-  while (viewM < 0) { viewM += 12; viewY--; }
-  while (viewM > 11) { viewM -= 12; viewY++; }
-  render();
+function shift(d) { viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render(); }
+
+// ---- legend doubles as category filter (built from categories actually present) ----
+function buildLegend() {
+  const el = $('#calLegend');
+  if (!el) return;
+  const present = [...new Set(allEvents().map(catOf))].sort();
+  el.innerHTML = present.map(c =>
+    `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}">${esc(c)}</button>`
+  ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
+  $$('#calLegend .lg').forEach(b => b.addEventListener('click', () => {
+    const c = b.dataset.cat;
+    if (hiddenCats.has(c)) hiddenCats.delete(c); else hiddenCats.add(c);
+    persistFilters(); buildLegend(); render();
+  }));
+  $('#lgAll')?.addEventListener('click', () => {
+    if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
+    persistFilters(); buildLegend(); render();
+  });
 }
+function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 
 function render() {
+  dismissPopover();
   $('#calModeMonth')?.classList.toggle('active', mode === 'month');
   $('#calModeAgenda')?.classList.toggle('active', mode === 'agenda');
-  const label = $('#calLabel');
-  if (label) label.textContent = `${MONTHS[viewM]} ${viewY}`;
-  const view = $('#calView');
-  if (!view) return;
-  view.innerHTML = mode === 'month' ? monthHTML() : agendaHTML();
-  wireCells();
+  const label = $('#calLabel'); if (label) label.textContent = `${MONTHS[viewM]} ${viewY}`;
+  const view = $('#calView'); if (!view) return;
+  const panel = $('#calPanel');
+  if (mode === 'month') {
+    view.innerHTML = monthHTML();
+    if (panel) { panel.hidden = false; panel.innerHTML = panelHTML(); wirePanel(); }
+    wireCells();
+  } else {
+    view.innerHTML = agendaHTML();
+    if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate
+    wireAgenda();
+  }
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
+
+function densityClass(n) { return n >= 5 ? 3 : n >= 3 ? 2 : 1; }
 
 function monthHTML() {
   const first = new Date(Date.UTC(viewY, viewM, 1));
@@ -89,59 +116,135 @@ function monthHTML() {
   const days = new Date(Date.UTC(viewY, viewM + 1, 0)).getUTCDate();
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   let cells = '';
-  for (let i = 0; i < startDow; i++) cells += `<div class="cal-cell empty"></div>`;
+  for (let i = 0; i < startDow; i++) cells += `<div class="cal-cell empty" aria-hidden="true"></div>`;
   for (let d = 1; d <= days; d++) {
     const date = iso(viewY, viewM, d);
     const evs = eventsOn(date, true);
     const isToday = date === TODAY;
-    const chips = evs.slice(0, 4).map(e => {
-      const ongoing = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' →' : '';
-      return `<button class="cal-chip cat-${esc(e.category || 'personal')}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${esc(e.title)}${ongoing}</button>`;
+    const hasBook = evs.some(e => e.bookBy);
+    const seasonStart = evs.find(e => e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP);
+    const topCat = (evs[0] && catOf(evs[0])) || 'personal';
+    const meter = evs.length
+      ? `<span class="cal-meter cat-${esc(topCat)}" title="${evs.length} event${evs.length === 1 ? '' : 's'}">${'<i></i>'.repeat(densityClass(evs.length))}</span>` : '';
+    const ticket = hasBook ? `<span class="cal-ticket" title="has a booking deadline">🎟</span>` : '';
+    const chips = evs.slice(0, 3).map(e => {
+      const ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' →' : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${esc(e.title)}${ong}</button>`;
     }).join('');
-    const more = evs.length > 4 ? `<span class="cal-more">+${evs.length - 4}</span>` : '';
-    cells += `<div class="cal-cell ${isToday ? 'today' : ''}" data-day="${date}" tabindex="0" role="button" aria-label="${date}, ${evs.length} events">
-      <span class="cal-date">${d}</span>${chips}${more}</div>`;
+    const more = evs.length > 3 ? `<span class="cal-more">+${evs.length - 3} more</span>` : '';
+    cells += `<div class="cal-cell ${isToday ? 'today' : ''} ${seasonStart ? 'season-start' : ''}" ${seasonStart ? `style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${date}" tabindex="0" role="button" aria-label="${date}, ${evs.length} events">
+      <span class="cal-row"><span class="cal-date">${d}</span><span class="cal-cluster">${ticket}${meter}</span></span>
+      ${chips}${more}</div>`;
   }
-  return `<div class="cal-grid">
-    ${dows.map(d => `<div class="cal-dow">${d}</div>`).join('')}
-    ${cells}</div>`;
+  return `<div class="cal-grid">${dows.map(x => `<div class="cal-dow">${x}</div>`).join('')}${cells}</div>`;
+}
+
+// ---- side panel: this month's book-by deadlines + a "happening" tally ----
+function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0 || d <= 3) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
+function panelHTML() {
+  const monthKey = `${viewY}-${pad(viewM + 1)}`;
+  const evs = allEvents().filter(visible);
+  // deadlines: events with bookBy in or before the visible month, whose event date is still upcoming
+  const deadlines = evs.filter(e => e.bookBy && /^\d{4}-\d{2}-\d{2}$/.test(e.bookBy) && e.bookBy.slice(0, 7) <= monthKey && (e.endDate || e.date).slice(0, 10) >= TODAY)
+    .sort((a, b) => a.bookBy.localeCompare(b.bookBy));
+  const inMonth = evs.filter(e => {
+    const s = e.date.slice(0, 7), en = (e.endDate || e.date).slice(0, 7);
+    return s <= monthKey && en >= monthKey;
+  });
+  const tally = {};
+  inMonth.forEach(e => { tally[catOf(e)] = (tally[catOf(e)] || 0) + 1; });
+  const dl = deadlines.length ? deadlines.map(e => {
+    const sev = sevOf(e.bookBy), days = daysBetween(TODAY, e.bookBy);
+    const badge = days < 0 ? 'overdue' : `${days}d`;
+    return `<button class="cp-deadline" data-ev="${esc(e.id)}">
+      <span class="cp-dot sev-${sev}"></span>
+      <span class="cp-body"><span class="cp-title">${esc(e.title)}</span>
+        <span class="cp-sub">book by ${esc(fmtShort(e.bookBy))}</span></span>
+      <span class="cp-badge sev-${sev}">${esc(badge)}</span></button>`;
+  }).join('') : `<p class="cp-empty">No book-by deadlines through ${MONTHS[viewM]} — you're clear. 🎏</p>`;
+  const tallyHTML = Object.keys(tally).sort((a, b) => tally[b] - tally[a]).map(c =>
+    `<div class="cp-tally"><span class="cp-bar cat-${esc(c)}" style="width:${Math.min(tally[c] * 10, 120)}px"></span><span class="cp-tlabel">${esc(c)} ${tally[c]}</span></div>`).join('');
+  return `<h3 class="cp-head">Deadlines through ${MONTHS[viewM]} <span class="cp-count">${deadlines.length}</span></h3>
+    <div class="cp-list">${dl}</div>
+    <hr class="cp-hr">
+    <h3 class="cp-head">Happening in ${MONTHS[viewM]}</h3>
+    <div class="cp-tallies">${tallyHTML || '<p class="cp-empty">Nothing this month.</p>'}</div>`;
+}
+function wirePanel() {
+  $$('#calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
+    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openDetail(ev);
+  }));
+  // auto-scroll the first upcoming (non-overdue) deadline into view
+  const next = $('#calPanel .cp-deadline .cp-dot.sev-due-soon, #calPanel .cp-deadline .cp-dot.sev-upcoming');
+  if (next) next.closest('.cp-deadline').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 
 function agendaHTML() {
-  const upcoming = allEvents()
-    .filter(e => (e.endDate || e.date).slice(0, 10) >= TODAY)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(0, 60);
-  if (!upcoming.length) return `<div class="empty">No upcoming events.</div>`;
-  let lastMonth = '';
+  const upcoming = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY)
+    .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
+  if (!upcoming.length) return `<div class="empty">No upcoming events in the selected categories.</div>`;
+  let last = '';
   return `<div class="agenda">${upcoming.map(e => {
     const mk = e.date.slice(0, 7);
-    const head = mk !== lastMonth ? (lastMonth = mk, `<div class="agenda-month">${MONTHS[+e.date.slice(5, 7) - 1]} ${e.date.slice(0, 4)}</div>`) : '';
-    return head + `<button class="agenda-row" data-ev="${esc(e.id)}">
-      <span class="agenda-date cat-${esc(e.category || 'personal')}">${esc(fmtShort(e.date))}</span>
+    const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+e.date.slice(5, 7) - 1]} ${e.date.slice(0, 4)}</div>`) : '';
+    return head + `<div class="agenda-row" data-ev="${esc(e.id)}" tabindex="0" role="button">
+      <span class="agenda-date cat-${esc(catOf(e))}">${esc(fmtShort(e.date))}</span>
       <span class="agenda-body"><span class="agenda-title">${esc(e.title)}</span>
-      ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
-      ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
-      <span class="agenda-cat">${esc(e.category || '')}</span></button>`;
+        ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
+        ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
+      <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" title="Add to Google Calendar" data-stop>+G</a></div>`;
   }).join('')}</div>`;
 }
-
-function wireCells() {
-  $$('#calView .cal-cell[data-day]').forEach(c => {
-    c.addEventListener('click', (e) => {
-      if (e.target.closest('.cal-chip')) return;
-      openModal(null, c.dataset.day);
-    });
-    c.addEventListener('keydown', (e) => { if (e.key === 'Enter') openModal(null, c.dataset.day); });
+function wireAgenda() {
+  $$('#calView .agenda-row').forEach(r => {
+    const open = (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openDetail(ev); };
+    r.addEventListener('click', open);
+    r.addEventListener('keydown', (e) => { if (e.key === 'Enter') open(e); });
   });
-  $$('#calView [data-ev]').forEach(b => b.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const ev = allEvents().find(x => x.id === b.dataset.ev);
-    if (ev) openDetail(ev);
-  }));
 }
 
-// ---- event detail (baked = read-only, user = editable) ----
+// ---- day popover ----
+function wireCells() {
+  $$('#calView .cal-cell[data-day]').forEach(c => {
+    c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const ev = allEvents().find(x => x.id === e.target.closest('.cal-chip').dataset.ev); if (ev) openDetail(ev); return; } dayPopover(c.dataset.day, c); });
+    c.addEventListener('keydown', (e) => { if (e.key === 'Enter') dayPopover(c.dataset.day, c); });
+  });
+}
+function dismissPopover() {
+  if (popCleanup) { popCleanup(); popCleanup = null; }
+  if (popEl) { popEl.remove(); popEl = null; }
+}
+function dayPopover(date, anchor) {
+  dismissPopover();
+  const evs = eventsOn(date);
+  const rows = evs.length ? evs.map(e => `
+    <div class="pop-row">
+      <span class="pop-sw cat-${esc(catOf(e))}"></span>
+      <span class="pop-body"><button class="pop-open" data-ev="${esc(e.id)}">${esc(e.title)}</button>
+        ${e.bookBy ? `<span class="pop-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
+      <a class="pop-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" title="Add to Google Calendar">+G</a>
+    </div>`).join('') : `<p class="pop-empty">Nothing booked this day.</p>`;
+  popEl = document.createElement('div');
+  popEl.className = 'cal-pop';
+  popEl.setAttribute('role', 'dialog');
+  popEl.innerHTML = `<div class="pop-head">${esc(fmtDate(date))}</div>${rows}
+    <button class="pop-add" data-add="${esc(date)}">+ Add your own event</button>`;
+  document.body.appendChild(popEl);
+  const r = anchor.getBoundingClientRect();
+  const top = window.scrollY + r.bottom + 6, left = Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - popEl.offsetWidth - 12);
+  const flipUp = r.bottom + popEl.offsetHeight + 12 > window.innerHeight;
+  popEl.style.top = (flipUp ? window.scrollY + r.top - popEl.offsetHeight - 6 : top) + 'px';
+  popEl.style.left = Math.max(window.scrollX + 8, left) + 'px';
+  popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openDetail(ev); }));
+  popEl.querySelector('.pop-add').addEventListener('click', () => { dismissPopover(); openModal(null, date); });
+  const onDoc = (e) => { if (popEl && !popEl.contains(e.target) && e.target !== anchor) dismissPopover(); };
+  const onKey = (e) => { if (e.key === 'Escape') dismissPopover(); };
+  const onScroll = () => dismissPopover();
+  setTimeout(() => { document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); }, 0);
+  popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
+}
+
+// ---- detail (baked read-only, user editable) ----
 function openDetail(ev) {
   if (ev.source === 'user') return openModal(ev);
   const body = `
@@ -169,10 +272,11 @@ function srcline(s) {
   return arr.length ? `<p class="modal-src">${arr.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener">source ${i + 1} ↗</a>`).join('')}</p>` : '';
 }
 
-// ---- add/edit modal (user events) ----
+// ---- add/edit modal ----
 function openModal(ev, presetDate) {
   const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: '', time: '', category: 'personal', note: '' };
   const opts = CATS.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
+  const gbtn = ev ? `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener">+ Google</a>` : '';
   const body = `
     <h3 class="modal-title">${ev ? 'Edit event' : 'Add event'}</h3>
     <form id="evForm" class="modal-form">
@@ -188,53 +292,42 @@ function openModal(ev, presetDate) {
       <label>Note<textarea name="note" rows="3">${esc(e.note || '')}</textarea></label>
       <div class="modal-actions">
         ${ev ? '<button type="button" class="btn danger" id="mdDel">Delete</button>' : ''}
+        ${gbtn}
         <button type="submit" class="btn primary">${ev ? 'Save' : 'Add'}</button>
       </div>
     </form>`;
   const ov = showModal(body);
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
-    const fd = new FormData(sub.target);
-    const obj = Object.fromEntries(fd.entries());
+    const obj = Object.fromEntries(new FormData(sub.target).entries());
     if (!obj.title.trim() || !obj.date) return;
     const u = loadUser();
-    if (ev && ev.id) {
-      const i = u.findIndex(x => x.id === ev.id);
-      if (i >= 0) u[i] = { ...u[i], ...obj };
-    } else {
-      u.push({ id: 'u' + Date.now(), ...obj });
-    }
+    if (ev && ev.id) { const i = u.findIndex(x => x.id === ev.id); if (i >= 0) u[i] = { ...u[i], ...obj }; }
+    else u.push({ id: 'u' + Date.now(), ...obj });
     saveUser(u); closeModal(ov); render();
   });
-  ov.querySelector('#mdDel')?.addEventListener('click', () => {
-    saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); render();
-  });
+  ov.querySelector('#mdDel')?.addEventListener('click', () => { saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); render(); });
 }
 
-// ---- export (tag-filtered) ----
+// ---- bulk add: tag-filtered .ics + Google import how-to ----
 function openExport() {
-  const present = [...new Set(allEvents().map(e => e.category || 'personal'))].sort();
-  const checks = present.map(c =>
-    `<label class="exp-tag"><input type="checkbox" value="${esc(c)}" checked> ${esc(c)}</label>`).join('');
+  const present = [...new Set(allEvents().map(catOf))].sort();
+  const checks = present.map(c => `<label class="exp-tag"><input type="checkbox" value="${esc(c)}" checked> ${esc(c)}</label>`).join('');
   const body = `
-    <h3 class="modal-title">Export calendar</h3>
-    <p class="modal-line">Pick the tags to export — only these events go into the file/links.</p>
+    <h3 class="modal-title">Add to my calendar</h3>
+    <p class="modal-line">Pick the tags, then download an <b>.ics</b> — import it into Google, Apple, or Outlook Calendar (one-time, with everything in it).</p>
     <div class="exp-tags">${checks}</div>
     <div class="modal-actions">
       <button class="btn" id="expAll">Toggle all</button>
       <button class="btn primary" id="expIcs">Download .ics</button>
     </div>
-    <p class="modal-hint">Import the .ics into Google/Apple Calendar, or open a single event with “+ Google Calendar” from its detail view.</p>`;
+    <p class="modal-hint"><b>Google Calendar:</b> Settings → Import &amp; export → Import the .ics. Or open any single event and hit “+ Google Calendar”. (Two-way sync would need a backend — out of scope for this private, no-server planner.)</p>`;
   const ov = showModal(body);
   const picked = () => $$('.exp-tags input:checked', ov).map(i => i.value);
-  ov.querySelector('#expAll').addEventListener('click', () => {
-    const boxes = $$('.exp-tags input', ov);
-    const allOn = boxes.every(b => b.checked);
-    boxes.forEach(b => b.checked = !allOn);
-  });
+  ov.querySelector('#expAll').addEventListener('click', () => { const bx = $$('.exp-tags input', ov); const on = bx.every(b => b.checked); bx.forEach(b => b.checked = !on); });
   ov.querySelector('#expIcs').addEventListener('click', () => {
     const sel = new Set(picked());
-    const evs = allEvents().filter(e => sel.has(e.category || 'personal'));
+    const evs = allEvents().filter(e => sel.has(catOf(e)));
     if (!evs.length) { alert('Pick at least one tag.'); return; }
     download(`my-year-in-japan-${[...sel].join('-')}.ics`, toICS(evs, 'My Year in Japan'));
     closeModal(ov);
@@ -247,11 +340,8 @@ function download(name, text) {
   document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
 }
-
-// ---- import ----
 function onImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
     const parsed = parseICS(reader.result);
@@ -261,21 +351,19 @@ function onImport(e) {
     parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
     saveUser(u); render();
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value = '';
 }
 
 // ---- modal shell ----
 function showModal(html) {
   const ov = document.createElement('div');
   ov.className = 'modal-overlay';
-  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-x" aria-label="Close">✕</button>${html}</div>`;
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><button class="modal-x" aria-label="Close">✕</button>${html}</div>`;
   document.body.appendChild(ov);
   ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov); });
   ov.querySelector('.modal-x').addEventListener('click', () => closeModal(ov));
-  document.addEventListener('keydown', escClose);
-  function escClose(e) { if (e.key === 'Escape') { closeModal(ov); document.removeEventListener('keydown', escClose); } }
+  const onKey = (e) => { if (e.key === 'Escape') { closeModal(ov); document.removeEventListener('keydown', onKey); } };
+  document.addEventListener('keydown', onKey);
   setTimeout(() => ov.querySelector('input,select,textarea,button')?.focus(), 30);
   return ov;
 }

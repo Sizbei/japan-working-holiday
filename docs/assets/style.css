@@ -1050,3 +1050,26 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 .map-places{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.25rem; }
 .map-places a{ font-size:.84rem; color: var(--ink); text-decoration:none; }
 .map-places a:hover{ color: var(--indigo-ink); text-decoration:underline; }
+
+/* interactive map (#/map) — add-place + Leaflet canvas */
+#mapAdd{ position: relative; max-width: 520px; margin-bottom: var(--s4); }
+#placeSearch{ width:100%; font-family: var(--mono); font-size:.82rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
+#placeSearch:focus{ outline:none; box-shadow: var(--ring); }
+.place-sug{ list-style:none; margin:.3rem 0 0; padding:0; position:absolute; left:0; right:0; z-index: 40; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); overflow:hidden; }
+.place-sug:empty{ display:none; }
+.place-sug li{ border-bottom:1px solid var(--line); }
+.place-sug button{ width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:.5rem .7rem; font-size:.8rem; color: var(--ink); }
+.place-sug button:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
+.sug-msg{ padding:.5rem .7rem; font-size:.78rem; color: var(--ink-soft); }
+.map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: var(--bg-sunk); }
+.map-canvas.failed::after{ content:'Map offline — use the neighbourhood index below.'; display:grid; place-items:center; height:100%; color: var(--ink-soft); font-size:.85rem; }
+.map-hint{ font-size:.78rem; color: var(--ink-soft); margin:.6rem 0 var(--s6); }
+.leaflet-popup-content .pin-pop{ font-family: var(--sans); }
+.pin-addr{ color: var(--ink-soft); font-size:.78rem; margin:.2rem 0; }
+.pin-rem{ color: var(--warn-ink); font-size:.74rem; font-weight:700; }
+.pin-acts{ display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.4rem; align-items:center; }
+.pin-acts button, .pin-acts a{ font-family: var(--mono); font-size:.68rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius:6px; padding:.25rem .45rem; cursor:pointer; text-decoration:none; }
+.pin-acts button:hover, .pin-acts a:hover{ border-color: var(--indigo); }
+.leaflet-marker-icon{ animation: pinDrop var(--t-spring); }
+@keyframes pinDrop{ 0%{ transform: translateY(-16px); opacity:0; } 100%{ transform: none; opacity:1; } }
+@media (prefers-reduced-motion: reduce){ .leaflet-marker-icon{ animation: none; } }

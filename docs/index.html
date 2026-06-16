@@ -306,8 +306,12 @@
   <section id="map">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">地図</span><h2>My Tokyo Map</h2></div>
     <p class="lede">Every place in here, grouped by neighbourhood — tap any spot to open it in Google Maps (opens the Maps app on your phone). The embed below is central Tokyo for orientation.</p>
-    <iframe class="map-frame" title="Central Tokyo map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=139.6500%2C35.6300%2C139.8200%2C35.7450&layer=mapnik"></iframe>
-    <p class="map-osm"><a href="https://www.openstreetmap.org/#map=12/35.69/139.73" target="_blank" rel="noopener">View larger map ↗</a></p>
+    <div id="mapAdd">
+      <input type="search" id="placeSearch" placeholder="ADD A PLACE // search an address or name…" aria-label="Add a place" autocomplete="off">
+      <ul id="placeSug" class="place-sug" aria-live="polite"></ul>
+    </div>
+    <div id="mapCanvas" class="map-canvas" role="application" aria-label="Interactive map"></div>
+    <p class="map-hint">Tap a pin to add it to your calendar or set a reminder (it shows in your notifications). The map needs a connection — the neighbourhood index below always works offline.</p>
     <div id="mapList"></div>
   </section>
   </div><!-- /view-map -->

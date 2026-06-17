@@ -9,6 +9,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
+import { alertModal, confirmModal } from './lib/modal.js';
 import { makeMovable } from './dnd.js';
 
 let DATA = null;
@@ -369,7 +370,7 @@ function openExport() {
   ov.querySelector('#expIcs').addEventListener('click', () => {
     const sel = new Set(picked());
     const evs = allEvents().filter(e => sel.has(catOf(e)));
-    if (!evs.length) { alert('Pick at least one tag.'); return; }
+    if (!evs.length) { alertModal('Pick at least one tag.'); return; }
     download(`my-year-in-japan-${[...sel].join('-')}.ics`, toICS(evs, 'My Year in Japan'));
     closeModal(ov);
   });
@@ -384,10 +385,10 @@ function download(name, text) {
 function onImport(e) {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     const parsed = parseICS(reader.result);
-    if (!parsed.length) { alert('No events found in that .ics file.'); return; }
-    if (!confirm(`Import ${parsed.length} event(s) into your calendar?`)) return;
+    if (!parsed.length) { alertModal('No events found in that .ics file.'); return; }
+    if (!await confirmModal(`Import ${parsed.length} event(s) into your calendar?`, { ok: 'Import' })) return;
     const u = loadUser();
     parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
     saveUser(u);   // jwh:data-changed → render()

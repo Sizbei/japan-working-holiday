@@ -9,6 +9,7 @@ import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
 import { placeById, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
+import { askDate, alertModal, confirmModal } from './lib/modal.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -381,21 +382,28 @@ function wireChecklist() {
     renderChecklist();                 // re-render so dependent locks update
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   }));
-  $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', () => {
+  $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', async () => {
     const id = btn.dataset.due;
     const due = loadDue();
-    const current = due[id] || '';
-    const v = prompt('Due date (YYYY-MM-DD), or blank to clear:', current);
-    if (v === null) return;
-    if (v.trim() === '') delete due[id]; else if (/^\d{4}-\d{2}-\d{2}$/.test(v.trim())) due[id] = v.trim();
-    else { alert('Use YYYY-MM-DD format.'); return; }
+    const v = await askDate('Due date (blank to clear):', { value: due[id] || '' });
+    if (v === null) return;                                  // cancelled
+    if (v.trim() === '') delete due[id];
+    else if (/^\d{4}-\d{2}-\d{2}$/.test(v.trim())) due[id] = v.trim();
+    else { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
     saveDue(due);
-    renderChecklist();
+    renderChecklist();                 // direct render refreshes dependency locks now; the dispatch only refreshes the dashboard/bell (no jwh:data-changed→renderChecklist listener exists, so no double-render)
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   }));
+  wireReset();
+}
+// #checkReset lives OUTSIDE #checkPhases, so renderChecklist() doesn't replace it — wire it ONCE
+let resetWired = false;
+function wireReset() {
   const reset = $('#checkReset');
-  if (reset) reset.addEventListener('click', () => {
-    if (!confirm('Reset all checkmarks?')) return;
+  if (!reset || resetWired) return;
+  resetWired = true;
+  reset.addEventListener('click', async () => {
+    if (!await confirmModal('Reset all checkmarks?', { ok: 'Reset', danger: true })) return;
     saveChecks({});
     renderChecklist();
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));

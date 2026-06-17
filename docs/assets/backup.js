@@ -3,6 +3,8 @@
 // lives in this browser's localStorage and nowhere else. A cleared cache or a new phone
 // would lose it. This exports all of it to a file and restores it anywhere.
 
+import { confirmModal } from './lib/modal.js';
+
 const PREFIX = 'jwh-';
 
 function collect() {
@@ -28,14 +30,14 @@ function download() {
 
 function restore(file, statusEl) {
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const parsed = JSON.parse(reader.result);
       const data = (parsed && parsed.data && typeof parsed.data === 'object') ? parsed.data : null;
       if (!data) throw new Error('unrecognised backup file');
       const keys = Object.keys(data).filter(k => k.startsWith(PREFIX) && typeof data[k] === 'string');
       if (!keys.length) throw new Error('no trip data in this file');
-      if (!confirm(`Restore ${keys.length} saved items? This replaces the trip data on THIS device.`)) return;
+      if (!await confirmModal(`Restore ${keys.length} items? This replaces the trip data on THIS device.`, { ok: 'Restore', danger: true })) return;
       keys.forEach(k => localStorage.setItem(k, data[k]));
       if (statusEl) statusEl.textContent = `Restored ${keys.length} items — reloading…`;
       setTimeout(() => location.reload(), 600);

@@ -29,9 +29,17 @@ export function parseRoute(hash) {
 
 let current = null;
 
+// per-route document title so browser tabs + history entries read like real pages
+const TITLES = {
+  dashboard: 'Dashboard', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
+  explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day',
+};
+const SITE = 'My Year in Japan';
+
 function activate(route, { scroll = true } = {}) {
   const target = document.getElementById('view-' + route);
   if (!target) return;
+  document.title = TITLES[route] ? `${TITLES[route]} · ${SITE}` : SITE;
   transitionView(() => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('is-active'));
     target.classList.add('is-active');

@@ -1468,3 +1468,9 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 
 /* event/place emoji in the map area index */
 .map-emoji{ display: inline-block; width: 1.3em; text-align: center; margin-right: .15rem; }
+
+/* checklist 100% celebration (peak-end moment) — reduced-motion users get only the toast */
+.confetti{ position: fixed; inset: 0; pointer-events: none; z-index: 80; overflow: hidden; }
+.confetti i{ position: absolute; top: -14px; width: 8px; height: 13px; border-radius: 1px; opacity: .92;
+  animation: confetti-fall 2.3s cubic-bezier(.3,.6,.4,1) forwards; }
+@keyframes confetti-fall{ to{ transform: translateY(108vh) rotate(740deg); opacity: .95; } }

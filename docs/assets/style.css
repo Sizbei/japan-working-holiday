@@ -116,7 +116,10 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* Readability v2: lift the root from the browser default (16px) to 17px so every rem-based
+   size + spacing scales up ~6% uniformly — calmer, more legible, without touching each rule. */
+html { scroll-behavior: smooth; font-size: 106.25%; }
+@media (max-width: 400px) { html { font-size: 100%; } }   /* don't overflow the narrowest phones */
 
 /* ---- a11y utilities ---- */
 .sr-only {
@@ -1336,3 +1339,106 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* non-colour cue for active single-select chips (WCAG 1.4.1 — not colour alone) */
 .chip.active{ font-weight:700; box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 55%, transparent); }
+
+/* ============================================================
+   READABILITY v2 — "calmer, keep the soul"
+   Bigger comfortable type, more breathing room, AA contrast,
+   smart per-page reading width. Retro accents (hinomaru, serif
+   headings, pixel countdown, small mono tags) stay; the heavy
+   uppercase-mono chrome on nav + section headings is dialled
+   back to readable sans. Appended so it overrides cleanly.
+   ============================================================ */
+
+/* --- prose comfort: looser leading on body copy --- */
+body { line-height: 1.7; }
+.finding .f-why, .card2 .c-detail, .ci-note, .lede, .mt-card, .top-card .t-reason,
+.modal-note, .pin-pop, .room-card p { line-height: 1.65; }
+
+/* --- calmer primary navigation: readable sans, larger target, not shouty mono --- */
+.route-nav a{
+  font-family: var(--sans); text-transform: none; letter-spacing: .005em;
+  font-size: .92rem; padding: .5rem 1rem;
+}
+.route-nav{ gap: .3rem; padding: .5rem var(--gutter); }
+
+/* --- calmer section/widget headings: sentence-case sans, clearer hierarchy --- */
+.widget-h, .trk-h, .cp-head, .mt-eyebrow{
+  font-family: var(--sans); text-transform: none; letter-spacing: .01em;
+}
+.widget-h, .trk-h{ font-size: .9rem; font-weight: 700; color: var(--ink-soft); }
+.mt-eyebrow{ font-size: .72rem; letter-spacing: .04em; }
+
+/* --- lift the smallest text off the floor (was .58–.68rem ≈ 9–11px) --- */
+.kind-tag{ font-size: .7rem; }
+.badge{ font-size: .72rem; }
+.top-card .t-domain{ font-size: .72rem; }
+.cd-label{ font-size: .64rem; }
+
+/* --- more generous cards + section rhythm (spacing = the premium pixel) --- */
+.card2{ padding: var(--s5); }
+.block{ padding: var(--s8); margin-bottom: var(--s8); }
+.grid{ gap: var(--s5); }
+@media (max-width: 559px){ .block{ padding: var(--s5); } }
+
+/* --- "behave like regular pages": smart per-page reading width ---
+   Reading-heavy routes get a comfortable measure; tool routes (calendar,
+   map, plan, rooms) and the dashboard stay full-width. */
+html.js-router #view-deadlines,
+html.js-router #view-checklist{ max-width: 780px; margin-inline: auto; }
+html.js-router #view-explore{ max-width: 1000px; margin-inline: auto; }   /* keep card grids, just rein in the line length */
+#view-deadlines .block, #view-checklist .block{ background: transparent; border: none; box-shadow: none; padding: 0; }
+
+/* each route reads as its own page: a touch of top breathing room under the sticky nav */
+html.js-router .view.is-active{ padding-top: var(--s2); }
+
+/* --- subtler CRT so it textures rather than distracts over denser text --- */
+:root{ --crt-opacity: .03; }
+[data-theme="dark"]{ --crt-opacity: .04; }
+
+/* --- gesture affordance: swipe hint + page-edge feedback (mobile) --- */
+@media (max-width: 768px){
+  html.js-router #main{ touch-action: pan-y; }   /* let the horizontal-swipe handler claim x */
+}
+.swipe-peek{ will-change: transform; }
+
+/* ============================================================
+   GESTURES — long-press action menu + keyboard-shortcut help
+   ============================================================ */
+.lp-menu{
+  position: fixed; z-index: 60; min-width: 180px;
+  background: var(--bg-elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--s1);
+  animation: lp-in var(--dur-2) var(--ease-out);
+}
+@keyframes lp-in{ from{ opacity: 0; transform: scale(.96); } to{ opacity: 1; transform: scale(1); } }
+.lp-item{
+  display: block; width: 100%; text-align: left; background: none; border: none;
+  font: inherit; color: var(--ink); padding: .6rem .7rem; border-radius: var(--r-sm); cursor: pointer;
+}
+.lp-item:hover, .lp-item:focus-visible{ background: var(--bg-sunk); outline: none; }
+
+.kbd-help{
+  position: fixed; inset: 0; z-index: 70; display: grid; place-items: center;
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: lp-in var(--dur-2) var(--ease-out);
+}
+.kh-panel{
+  background: var(--bg-elevated); border: 1px solid var(--line-strong); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg); padding: var(--s6); width: min(420px, 92vw);
+}
+.kh-title{ font-family: var(--serif); font-size: 1.3rem; margin: 0 0 var(--s4); }
+.kh-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2) var(--s4); margin-bottom: var(--s3); }
+.kh-row{ display: flex; align-items: center; gap: .5rem; font-size: .92rem; color: var(--ink-soft); margin: .2rem 0; }
+.kh-row span{ color: var(--ink); }
+.kbd-help kbd{
+  font-family: var(--mono); font-size: .8rem; min-width: 1.6rem; text-align: center;
+  background: var(--bg-sunk); border: 1px solid var(--line-strong); border-bottom-width: 2px;
+  border-radius: var(--r-xs); padding: .12rem .35rem; color: var(--ink);
+}
+.kh-hint{ font-size: .82rem; color: var(--ink-faint); margin: var(--s3) 0 var(--s4); }
+.kh-close{
+  display: block; width: 100%; padding: .6rem; border: 1px solid var(--line-strong);
+  background: var(--bg-soft); color: var(--ink); border-radius: var(--r-md); cursor: pointer; font: inherit; font-weight: 700;
+}
+.kh-close:hover{ background: var(--bg-sunk); }
+@media (prefers-reduced-motion: reduce){ .lp-menu, .kbd-help{ animation: none; } }

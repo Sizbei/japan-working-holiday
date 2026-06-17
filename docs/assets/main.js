@@ -14,6 +14,7 @@ import { mountEventSearch } from './eventsearch.js';
 import { mountLang } from './lang.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
+import { mountGestures } from './gestures.js';
 import { initKonami } from './konami.js';
 import { stagger } from './motion.js';
 import { nowISO } from './lib/dates.js';
@@ -53,6 +54,7 @@ function boot() {
       mountLang();                   // EN/日本語 chrome toggle + hover-dictionary
       mountBackup();                 // export/import all device-local trip data
       initRouter();                  // hash-router SPA: split views, animated transitions
+      mountGestures();               // swipe between pages, keyboard shortcuts, long-press menus
       initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode
       stagger($$('.hero > *'), { y: 14, step: 60 });   // signature hero entrance, once
     })

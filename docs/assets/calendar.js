@@ -76,6 +76,7 @@ export function mountCalendar(data, today) {
   buildLegend();
   render();
   document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
+  document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
 }
 
 function wireToolbar() {

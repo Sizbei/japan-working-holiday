@@ -32,7 +32,9 @@ export function mountGestures() {
 /* ----------------------------------------------------------------- swipe between pages */
 // Horizontal swipe on the main content moves to the adjacent route. Ignores gestures that
 // begin inside something that scrolls/pans horizontally (map, agenda, chip rails, inputs).
-const NO_SWIPE = '.leaflet-container, .cal-agenda, .plan-days, .map-side, input, textarea, select, .modal-overlay, [data-no-swipe]';
+// don't hijack horizontal drags that belong to the calendar grid, drag handles, rails, the
+// map, or form fields — only the page background swipes between routes.
+const NO_SWIPE = '.leaflet-container, .cal-agenda, .cal-cell, .cal-chip, .plan-days, .stop-list, .map-side, .map-slist, .dnd-handle, .dnd-movable, input, textarea, select, .modal-overlay, [data-no-swipe]';
 
 function wireSwipe() {
   const main = document.getElementById('main');

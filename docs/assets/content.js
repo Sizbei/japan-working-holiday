@@ -245,7 +245,20 @@ function renderDomains() {
     </section>`;
   }).join('');
   wrap.setAttribute('aria-busy', 'false');
-  if (!any) wrap.innerHTML = `<div class="empty">No tips match your search/filter.</div>`;
+  if (!any) {
+    const filtered = !!query || activeConf !== 'all';
+    wrap.innerHTML = `<div class="empty empty-state">
+      <div class="empty-emoji" aria-hidden="true">🔍</div>
+      <p class="empty-h">${filtered ? 'No tips match your filters.' : 'No tips here yet.'}</p>
+      ${filtered ? '<button type="button" class="empty-action" id="domainsClear">Clear filters</button>' : ''}
+    </div>`;
+    $('#domainsClear')?.addEventListener('click', () => {
+      query = ''; activeConf = 'all';
+      const s = $('#search'); if (s) s.value = '';
+      $$('#confFilters .chip').forEach(c => { const on = c.dataset.conf === 'all'; c.classList.toggle('active', on); c.setAttribute('aria-pressed', String(on)); });
+      renderDomains();
+    });
+  }
 }
 function wireControls() {
   const s = $('#search');

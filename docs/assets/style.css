@@ -1474,3 +1474,14 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 .confetti i{ position: absolute; top: -14px; width: 8px; height: 13px; border-radius: 1px; opacity: .92;
   animation: confetti-fall 2.3s cubic-bezier(.3,.6,.4,1) forwards; }
 @keyframes confetti-fall{ to{ transform: translateY(108vh) rotate(740deg); opacity: .95; } }
+
+/* polished empty states — icon + human copy + a way out (design-principles: blank reads as broken) */
+.empty-state{ display:flex; flex-direction:column; align-items:center; gap:.5rem; text-align:center;
+  padding: var(--s8) var(--s4); color: var(--ink-soft); }
+.empty-state .empty-emoji{ font-size:2rem; opacity:.85; }
+.empty-state .empty-h{ margin:0; font-weight:700; color: var(--ink); }
+.empty-state .empty-sub{ margin:0; font-size:.88rem; max-width:40ch; }
+.empty-state .empty-action{ margin-top:.3rem; background: var(--indigo); color: var(--on-accent); border:none;
+  padding:.5rem 1rem; border-radius: var(--r-pill); font:inherit; font-weight:700; cursor:pointer; transition: transform var(--t-hover), filter var(--t-hover); }
+.empty-state .empty-action:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+.empty-state .empty-action:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }

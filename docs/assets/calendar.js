@@ -218,7 +218,14 @@ function wirePanel() {
 function agendaHTML() {
   const upcoming = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY)
     .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
-  if (!upcoming.length) return `<div class="empty">No upcoming events in the selected categories.</div>`;
+  if (!upcoming.length) {
+    const hidden = hiddenCats.size > 0;
+    return `<div class="empty empty-state">
+      <div class="empty-emoji" aria-hidden="true">📭</div>
+      <p class="empty-h">No upcoming events${hidden ? ' in the shown categories' : ''}.</p>
+      ${hidden ? '<p class="empty-sub">Some categories are filtered out — tap a greyed legend chip above to show them.</p>' : ''}
+    </div>`;
+  }
   let last = '';
   return `<div class="agenda">${upcoming.map(e => {
     const mk = e.date.slice(0, 7);

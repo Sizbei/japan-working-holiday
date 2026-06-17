@@ -27,6 +27,7 @@ export function mountGestures() {
   wireSwipe();
   wireKeyboard();
   wireLongPress();
+  document.getElementById('kbdHelp')?.addEventListener('click', () => toggleHelp());   // discoverable trigger for the ? overlay
 }
 
 /* ----------------------------------------------------------------- swipe between pages */

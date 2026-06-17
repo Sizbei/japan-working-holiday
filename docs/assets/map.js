@@ -165,7 +165,8 @@ function loadScript(src, ok, err, integrity) { const s = document.createElement(
 function ensureLeaflet() {
   if (leafletReady || leafletTried) return;
   leafletTried = true;
-  const fail = () => { leafletTried = false; const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline / integrity-fail → link index stands; retry next visit
+  const canvas = $('#mapCanvas'); if (canvas) canvas.classList.add('loading');   // spinner while the lazy CDN scripts arrive (blank canvas reads as broken)
+  const fail = () => { leafletTried = false; const e = $('#mapCanvas'); if (e) { e.classList.remove('loading'); e.classList.add('failed'); } };  // offline / integrity-fail → link index stands; retry next visit
   if (window.L && window.L.markerClusterGroup) { initMap(); return; }
   loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', SRI.leafletCss);
   loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css', SRI.mcCss);
@@ -189,6 +190,7 @@ function onMapShown(tries = 0) {
 function initMap() {
   const el = $('#mapCanvas');
   if (!el || map || !window.L) return;
+  el.classList.remove('loading');
   map = L.map(el, { scrollWheelZoom: false }).setView([35.69, 139.73], 12);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
   pinLayer = window.L.markerClusterGroup

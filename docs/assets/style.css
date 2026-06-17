@@ -462,6 +462,13 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .cd-num{ font-size: 1.05rem; font-weight: 900; }
 .topbar-right{ display: flex; align-items: center; gap: .4rem; }
 .topbar .theme-toggle{ position: static; top: auto; right: auto; }
+/* keyboard-shortcuts trigger — discoverable affordance for the ? overlay (desktop/pointer only) */
+.kbd-trigger{ background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
+  width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;
+  transition: transform .15s ease, border-color .15s ease, color .15s ease; }
+.kbd-trigger:hover{ transform: translateY(-1px); border-color: var(--indigo); color: var(--ink); }
+.kbd-trigger:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+@media (hover: none), (max-width: 560px){ .kbd-trigger{ display: none; } }   /* touch uses swipe, not keyboard */
 
 /* ---- Notifications bell + panel ---- */
 .bell-wrap{ position: relative; }
@@ -1092,6 +1099,12 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .sug-msg{ padding:.5rem .7rem; font-size:.78rem; color: var(--ink-soft); }
 .map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: var(--bg-sunk); }
 .map-canvas.failed::after{ content:'Map offline — use the neighbourhood index below.'; display:grid; place-items:center; height:100%; color: var(--ink-soft); font-size:.85rem; }
+/* loading state — spinner while Leaflet lazy-loads (a blank canvas reads as broken) */
+.map-canvas.loading::after{ content:'Loading map…'; position:absolute; inset:0; display:grid; place-items:end center; padding-bottom:2.4rem; color: var(--ink-soft); font-size:.85rem; }
+.map-canvas.loading::before{ content:''; position:absolute; top:calc(50% - 14px); left:calc(50% - 14px); width:28px; height:28px; z-index:1;
+  border:3px solid var(--line-strong); border-top-color: var(--indigo); border-radius:50%; animation: mapSpin .8s linear infinite; }
+@keyframes mapSpin{ to{ transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .map-canvas.loading::before{ animation: none; border-top-color: var(--line-strong); } }
 .map-hint{ font-size:.78rem; color: var(--ink-soft); margin:.6rem 0 var(--s6); }
 .leaflet-popup-content .pin-pop{ font-family: var(--sans); }
 .pin-addr{ color: var(--ink-soft); font-size:.78rem; margin:.2rem 0; }

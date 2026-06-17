@@ -2,7 +2,7 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v55';
+const CACHE = 'jwh-v56';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/calendar.js',
@@ -25,7 +25,11 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request)
+    // cache:'reload' bypasses the BROWSER http-cache so network-first truly hits the network —
+    // otherwise a deploy can be shadowed by the browser's own cached copy (GH Pages sends
+    // max-age on assets), and "updates always land when online" silently fails. The SW's own
+    // CACHE (updated below) remains the offline fallback.
+    fetch(e.request, { cache: 'reload' })
       .then(resp => {
         // only cache a clean 200 — never poison the offline cache with a 4xx/5xx/redirect/partial
         if (resp && resp.ok && resp.status === 200 && resp.type !== 'opaque') {

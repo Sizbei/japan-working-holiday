@@ -256,13 +256,22 @@ function wireReschedule() {
     onMove: (id, day) => {
       const ev = allEvents().find(x => x.id === id);
       if (!ev) return;
+      if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
       if (ev.source === 'user') {
         saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span
-      } else {                                  // baked event → store a date override (tips.json stays untouched)
-        saveOverrides({ ...loadOverrides(), [id]: day });
+        syncPlaceDate(id, day);                   // a linked "Visit:" place must follow its event's new date
+      } else {                                    // baked event → store a date override (tips.json stays untouched)
+        const orig = (DATA.calendar || []).find(c => c.id === id);
+        if (orig && day === (orig.date || '').slice(0, 10)) { const { [id]: _d, ...o } = loadOverrides(); saveOverrides(o); }   // back to researched date → drop the override
+        else saveOverrides({ ...loadOverrides(), [id]: day });
       }
     },
   });
+}
+// keep a place's stored date in step when its linked calendar event is rescheduled (place↔event parity)
+function syncPlaceDate(eventId, day) {
+  const linked = loadPlaces().find(p => p.eventId === eventId);
+  if (linked) patchPlace(linked.id, linked.remindDate ? { remindDate: day } : { date: day });
 }
 
 function dismissPopover() {
@@ -379,7 +388,9 @@ function openModal(ev, presetDate) {
     const u = (ev && ev.id)
       ? loadUser().map(x => x.id === ev.id ? { ...x, ...obj } : x)
       : [...loadUser(), { id: 'u' + Date.now(), ...obj }];
-    saveUser(u); closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
+    saveUser(u);
+    if (ev && ev.id && obj.date !== (ev.date || '').slice(0, 10)) syncPlaceDate(ev.id, obj.date);   // a linked place follows the edited date
+    closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
   });
   ov.querySelector('#mdDel')?.addEventListener('click', () => {
     const linked = loadPlaces().find(p => p.eventId === ev.id);   // clear the back-ref on any place that linked this event

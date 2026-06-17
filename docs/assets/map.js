@@ -276,19 +276,24 @@ export function drawRoute(stops) {
   ensureLeaflet();
   const go = () => {
     if (!map || !window.L) return;
+    const all = stops || [];
+    // keep each stop's FULL-list index so pin numbers match the itinerary even when some stops have no coords
+    const pts = all.map((s, i) => ({ s, n: i + 1 })).filter(({ s }) => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
+    if (!pts.length) { alertModal('These stops have no map location yet — set a pin or pick a place with coordinates.'); return; }   // don't clear a prior route or recenter on nothing
     if (!routeLayer) routeLayer = L.layerGroup().addTo(map);
     routeLayer.clearLayers();
-    const pts = (stops || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
-    pts.forEach((s, i) => {
-      const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(i + 1))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000 });
-      m.bindPopup(`<div class="pin-pop"><b>${esc(String(i + 1))}. ${esc(s.name)}</b></div>`);
+    pts.forEach(({ s, n }) => {
+      const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(n))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000 });
+      m.bindPopup(`<div class="pin-pop"><b>${esc(String(n))}. ${esc(s.name)}</b></div>`);
       routeLayer.addLayer(m);
     });
     if (pts.length > 1) {
-      const line = L.polyline(pts.map(s => [s.lat, s.lng]), { color: '#5a3fb5', weight: 3, opacity: .85, dashArray: pts.some(s => s.coordKind === 'approx') ? '6 7' : null });
+      const line = L.polyline(pts.map(({ s }) => [s.lat, s.lng]), { color: '#5a3fb5', weight: 3, opacity: .85, dashArray: pts.some(({ s }) => s.coordKind === 'approx') ? '6 7' : null });
       routeLayer.addLayer(line);
       map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 15, animate: !prefersReducedMotion() });
-    } else if (pts.length === 1) { map.setView([pts[0].lat, pts[0].lng], 14, { animate: !prefersReducedMotion() }); }
+    } else { map.setView([pts[0].s.lat, pts[0].s.lng], 14, { animate: !prefersReducedMotion() }); }
+    const dropped = all.length - pts.length;
+    announce(dropped ? `${dropped} stop${dropped > 1 ? 's have' : ' has'} no map location and ${dropped > 1 ? 'are' : 'is'} not shown.` : 'Route drawn.');
   };
   if (leafletReady) go(); else setTimeout(go, 900);
 }

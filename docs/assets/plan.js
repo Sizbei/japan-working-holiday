@@ -55,6 +55,7 @@ function railDates(plans) {
 }
 function renderRail() {
   const rail = $('#planDays'); if (!rail) return;
+  const railHadFocus = rail.contains(document.activeElement);
   const today = nowISO();
   const plans = loadPlans();   // read the plans blob ONCE, not per chip (N+1 → 1)
   const isPlanned = (d) => { const p = plans[d]; return !!(p && p.stops && p.stops.length); };
@@ -67,12 +68,38 @@ function renderRail() {
   }).join('') + `<label class="plan-pick">+ date<input type="date" id="planPick" aria-label="Jump to any date"></label>`;
   rail.querySelectorAll('.plan-chip').forEach(b => b.addEventListener('click', () => { activeDate = b.dataset.date; renderRail(); render(); scrollActiveIntoView(); }));
   $('#planPick')?.addEventListener('change', (e) => { if (e.target.value) { activeDate = e.target.value; renderRail(); render(); } });
+  if (railHadFocus) $('#planDays .plan-chip.active')?.focus();   // keep keyboard focus on the selected day across the rebuild
 }
 function scrollActiveIntoView() { $('#planDays .plan-chip.active')?.scrollIntoView({ inline: 'center', block: 'nearest' }); }
 
 // ---- the day ----
+// identify the focused stop control so render() can restore it after the innerHTML rebuild
+// (skip 'note' — its change fires on blur, so focus is already leaving)
+function captureBodyFocus(body) {
+  const a = document.activeElement;
+  if (!a || !body.contains(a)) return null;
+  if (a.dataset?.act) return { act: a.dataset.act };
+  if (a.classList?.contains('stop-grab')) return { id: a.dataset.id, grab: true };
+  if (a.dataset?.edit && a.dataset.edit !== 'note') return { id: a.dataset.id, edit: a.dataset.edit };
+  return null;
+}
+function restoreBodyFocus(body, f) {
+  if (!f) return;
+  const cs = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
+  if (f.act) { body.querySelector(`[data-act="${cs(f.act)}"]`)?.focus(); return; }
+  if (f.grab && f.id) { body.querySelector(`.stop[data-id="${cs(f.id)}"] .stop-grab`)?.focus(); return; }
+  if (!f.id || !f.edit) return;
+  let el = body.querySelector(`[data-id="${cs(f.id)}"][data-edit="${cs(f.edit)}"]`);
+  if (el && el.disabled) {   // ▲/▼ became disabled at an end → fall back to the sibling stepper, then the grab
+    const other = f.edit === 'up' ? 'down' : f.edit === 'down' ? 'up' : null;
+    const sib = other && body.querySelector(`[data-id="${cs(f.id)}"][data-edit="${cs(other)}"]`);
+    el = (sib && !sib.disabled) ? sib : body.querySelector(`.stop[data-id="${cs(f.id)}"] .stop-grab`);
+  }
+  el?.focus();
+}
 function render() {
   const body = $('#planBody'); if (!body) return;
+  const focus = captureBodyFocus(body);
   const plan = getPlan(activeDate);
   const stops = plan ? plan.stops : [];
   if (!stops.length) {
@@ -80,6 +107,7 @@ function render() {
       <p class="plan-empty-h">No plan for <b>${esc(fmtShort(activeDate))}</b> yet.</p>
       <p>Add your first stop — pull from your saved pins, the catalogue, upcoming events, or type your own.</p>
       <button type="button" class="plan-add" data-act="add">＋ Add a stop</button></div>`;
+    restoreBodyFocus(body, focus);
     return;
   }
   const rows = stops.map((s, i) => stopRow(s, i, stops)).join('');
@@ -99,6 +127,7 @@ function render() {
       <button type="button" class="plan-btn" data-act="addcal">＋ Add to calendar</button>
     </div>`;
   wireSortable();
+  restoreBodyFocus(body, focus);
 }
 
 function stopRow(s, i, stops) {
@@ -134,7 +163,8 @@ function endTime(start, dur) {
   const [h, m] = start.split(':').map(Number);
   if (isNaN(h)) return '';
   const t = h * 60 + m + (dur || 0);
-  return String(Math.floor(t / 60) % 24).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+  const nextDay = Math.floor(t / 60) >= 24 ? ' +1' : '';   // flag a plan that runs past midnight
+  return String(Math.floor(t / 60) % 24).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0') + nextDay;
 }
 
 // ---- interactions (delegated on #planBody) ----

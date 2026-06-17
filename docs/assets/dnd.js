@@ -15,6 +15,18 @@ export function reorderIds(ids, dragId, targetId, after = false) {
   return out;
 }
 
+// shared sr-only live region — every keyboard reorder step is announced (not just the drop)
+let liveRegion = null;
+function announce(msg) {
+  if (!liveRegion) {
+    liveRegion = document.createElement('div');
+    liveRegion.className = 'sr-only'; liveRegion.setAttribute('aria-live', 'polite'); liveRegion.setAttribute('role', 'status');
+    document.body.appendChild(liveRegion);
+  }
+  liveRegion.textContent = '';            // force re-announce even if text repeats
+  setTimeout(() => { if (liveRegion) liveRegion.textContent = msg; }, 30);
+}
+
 let liveToast = null;
 function toast(msg, undoFn) {
   if (liveToast) liveToast.remove();
@@ -69,24 +81,32 @@ export function makeSortable(container, opts) {
     handle.setAttribute('tabindex', '0');
     handle.setAttribute('role', 'button');
     handle.setAttribute('aria-label', `Reorder ${label} — press Space to grab, arrows to move`);
+    let originBefore = null;   // the sibling el sat before at grab time — for Escape restore
     handle.addEventListener('keydown', (e) => {
       const el = handle.closest(itemSelector);
       if (!el) return;
       const grabbed = el.classList.contains('dnd-grabbed');
+      // next/prev sibling MATCHING itemSelector — skip interleaved non-items (e.g. plan.js .leg rows)
+      const matchSib = (up) => { let s = up ? el.previousElementSibling : el.nextElementSibling; while (s && !s.matches(itemSelector)) s = up ? s.previousElementSibling : s.nextElementSibling; return s; };
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        if (grabbed) { el.classList.remove('dnd-grabbed'); el.removeAttribute('aria-grabbed'); onReorder(orderIds()); toast(`Moved ${label}.`); }
-        else { el.classList.add('dnd-grabbed'); el.setAttribute('aria-grabbed', 'true'); }
+        if (grabbed) { el.classList.remove('dnd-grabbed'); el.removeAttribute('aria-grabbed'); originBefore = null; onReorder(orderIds()); announce(`${label} dropped.`); }
+        else { originBefore = el.nextElementSibling; el.classList.add('dnd-grabbed'); el.setAttribute('aria-grabbed', 'true'); announce(`${label} grabbed. Use up and down arrows to move, Space to drop, Escape to cancel.`); }
       } else if (grabbed && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
         e.preventDefault();
-        const sib = e.key === 'ArrowUp' ? el.previousElementSibling : el.nextElementSibling;
-        if (sib && sib.matches(itemSelector)) {
+        const sib = matchSib(e.key === 'ArrowUp');
+        if (sib) {
           if (e.key === 'ArrowUp') container.insertBefore(el, sib);
           else container.insertBefore(sib, el);
           handle.focus();
+          const list = items(); announce(`${label} moved to position ${list.indexOf(el) + 1} of ${list.length}.`);
         }
       } else if (grabbed && e.key === 'Escape') {
-        el.classList.remove('dnd-grabbed'); el.removeAttribute('aria-grabbed');
+        e.preventDefault();
+        container.insertBefore(el, originBefore);   // restore to the pre-grab position
+        originBefore = null;
+        el.classList.remove('dnd-grabbed'); el.removeAttribute('aria-grabbed'); handle.focus();
+        announce(`${label} move cancelled.`);
       }
     });
   });
@@ -104,10 +124,15 @@ export function makeMovable(container, opts) {
     el.addEventListener('pointerdown', (e) => {
       if (e.button != null && e.button !== 0) return;
       const id = idOf(el);
+      const sx = e.clientX, sy = e.clientY;
       let dropTarget = null, moved = false;
       const onMv = (ev) => {
+        if (!moved) {
+          if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 6) return;   // ignore tap jitter — only a real drag reschedules
+          moved = true;
+        }
         ev.preventDefault();                 // only now (real drag) — a plain tap still opens the event
-        moved = true; el.classList.add('dnd-dragging');
+        el.classList.add('dnd-dragging');
         container.querySelectorAll(targetSelector).forEach(t => t.classList.remove('dnd-over'));
         const under = document.elementFromPoint(ev.clientX, ev.clientY);
         dropTarget = under && under.closest(targetSelector);

@@ -1273,6 +1273,21 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .pk-adhoc{ color: var(--indigo-ink); font-weight:700; justify-content:flex-start; }
 .pk-empty{ color: var(--ink-soft); font-size:.8rem; padding:.6rem .2rem; }
 
+/* language toggle + hover-dictionary */
+.lang-toggle{ display:inline-grid; place-items:center; min-width:34px; height:34px; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); cursor:pointer; font-family: var(--mono); font-weight:700; font-size:.82rem; }
+.lang-toggle:hover{ border-color: var(--indigo); }
+.jp[tabindex], [data-jp]{ cursor: help; }
+.jp[tabindex]:hover, [data-jp]:hover{ text-decoration: underline dotted; text-underline-offset: 3px; }
+.jp-dict{ position:fixed; z-index:1200; max-width:260px; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding:.5rem .65rem; opacity:0; transform: translateY(-3px); pointer-events:none; transition: opacity var(--t-base), transform var(--t-base); }
+.jp-dict.show{ opacity:1; transform:none; pointer-events:auto; }
+.jd-word{ font-weight:700; font-size:1rem; }
+.jd-read{ font-family: var(--mono); font-size:.74rem; color: var(--indigo-ink); margin:.1rem 0; }
+.jd-mean{ font-size:.82rem; color: var(--ink); }
+.jd-load{ color: var(--ink-soft); font-style:italic; }
+.jd-link{ display:inline-block; margin-top:.35rem; font-family: var(--mono); font-size:.7rem; font-weight:700; color: var(--indigo-ink); text-decoration:none; }
+.jd-link:hover{ text-decoration:underline; }
+@media (prefers-reduced-motion: reduce){ .jp-dict{ transition:none; } }
+
 /* event search (calendar page) */
 .cal-search{ position: relative; margin: var(--s2) 0 var(--s3); }
 #calSearch{ width:100%; max-width:520px; font-family: var(--mono); font-size:.8rem; padding:.55rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }

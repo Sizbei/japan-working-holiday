@@ -16,6 +16,7 @@ export const KEYS = {
   dismissed: 'jwh-notif-dismissed-v1',
   checklist: 'jwh-checklist-v1',
   theme: 'jwh-theme',
+  lang: 'jwh-lang',
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
 };

@@ -42,15 +42,15 @@ export function renderContent(data, today) {
 function wireCollapsibleCards() {
   const ex = $('#view-explore');
   if (!ex) return;
-  const toggle = (card) => { const on = card.classList.toggle('expanded'); card.setAttribute('aria-expanded', String(on)); };
+  const toggle = (card) => {
+    const on = card.classList.toggle('expanded');
+    card.querySelector('.c-disclosure')?.setAttribute('aria-expanded', String(on));   // state lives on the button
+  };
   ex.addEventListener('click', (e) => {
-    if (e.target.closest('button, a')) return;               // links/buttons (e.g. ★ Tabetai) inside don't toggle
-    const card = e.target.closest('.card2.collapsible'); if (card) toggle(card);
-  });
-  ex.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('.card2.collapsible'); if (!card || e.target.closest('button, a')) return;
-    e.preventDefault(); toggle(card);
+    const disc = e.target.closest('.c-disclosure');                          // the real disclosure button (keyboard handles Enter/Space natively)
+    if (disc) { const card = disc.closest('.card2.collapsible'); if (card) toggle(card); return; }
+    if (e.target.closest('button, a')) return;                               // other controls (★ Tabetai, links) don't toggle
+    const card = e.target.closest('.card2.collapsible'); if (card) toggle(card);   // click anywhere else on the card still expands (mouse convenience)
   });
 }
 
@@ -102,17 +102,24 @@ function metaPills(item) {
   if (item.price_or_cost) out.push(`<span class="pill price">${esc(item.price_or_cost)}</span>`);
   return out.join('');
 }
+let cardSeq = 0;
 function contentCard(item, withStar) {
   const tier = (item.tier || 'n/a').toLowerCase();
   const hasBody = !!(item.detail || item.how_or_when || (item.sources && item.sources.length));
   const star = withStar
     ? `<button type="button" class="tabetai-star" data-tb="${esc(catId('restaurants', item.name))}" data-name="${esc(item.name)}" data-area="${esc(item.area_or_park || '')}" aria-pressed="false" aria-label="Tabetai — want to eat ${esc(item.name)}" title="Tabetai (want to eat) — saves to your map &amp; list">☆</button>`
     : '';
+  // disclosure pattern: a real <button> owns the expand (valid ARIA) instead of role=button on the
+  // container wrapping the star/links as descendants. The star is a SIBLING of the button.
+  const bodyId = hasBody ? 'cbody-' + (++cardSeq) : '';
+  const head = hasBody
+    ? `<button type="button" class="c-name c-disclosure" aria-expanded="false" aria-controls="${bodyId}">${esc(item.name)}<span class="c-chev" aria-hidden="true">▾</span></button>`
+    : `<span class="c-name">${esc(item.name)}</span>`;
   return `
-    <article class="card2 tier-${esc(tier)} ${hasBody ? 'collapsible' : ''}" data-tier="${esc(tier)}" ${hasBody ? 'tabindex="0" role="button" aria-expanded="false"' : ''}>
-      <div class="c-top"><span class="c-name">${esc(item.name)}</span>${star}${hasBody ? '<span class="c-chev" aria-hidden="true">▾</span>' : ''}</div>
+    <article class="card2 tier-${esc(tier)} ${hasBody ? 'collapsible' : ''}" data-tier="${esc(tier)}">
+      <div class="c-top">${head}${star}</div>
       <div class="c-meta">${metaPills(item)}</div>
-      ${hasBody ? `<div class="c-body">
+      ${hasBody ? `<div class="c-body" id="${bodyId}">
         ${item.detail ? `<div class="c-detail">${esc(item.detail)}</div>` : ''}
         ${item.how_or_when ? `<div class="c-detail"><b>↳</b> ${esc(item.how_or_when)}</div>` : ''}
         ${srcLinks(item.sources)}

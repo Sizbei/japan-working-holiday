@@ -168,8 +168,8 @@ function monthHTML() {
       return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${esc(e.title)}${ong}</button>`;
     }).join('');
     const more = evs.length > 3 ? `<span class="cal-more">+${evs.length - 3} more</span>` : '';
-    cells += `<div class="cal-cell ${isToday ? 'today' : ''} ${seasonStart ? 'season-start' : ''}" ${seasonStart ? `style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${date}" tabindex="0" role="button" aria-label="${date}, ${evs.length} events">
-      <span class="cal-row"><span class="cal-date">${d}</span><span class="cal-cluster">${ticket}${meter}</span></span>
+    cells += `<div class="cal-cell ${isToday ? 'today' : ''} ${seasonStart ? 'season-start' : ''}" ${seasonStart ? `style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${date}">
+      <span class="cal-row"><button type="button" class="cal-date" data-day="${date}" aria-label="${date}, ${evs.length} event${evs.length === 1 ? '' : 's'}">${d}</button><span class="cal-cluster">${ticket}${meter}</span></span>
       ${chips}${more}</div>`;
   }
   return `<div class="cal-grid">${dows.map(x => `<div class="cal-dow">${x}</div>`).join('')}${cells}</div>`;
@@ -223,27 +223,28 @@ function agendaHTML() {
   return `<div class="agenda">${upcoming.map(e => {
     const mk = e.date.slice(0, 7);
     const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+e.date.slice(5, 7) - 1]} ${e.date.slice(0, 4)}</div>`) : '';
-    return head + `<div class="agenda-row" data-ev="${esc(e.id)}" tabindex="0" role="button">
+    return head + `<div class="agenda-row" data-ev="${esc(e.id)}">
       <span class="agenda-date cat-${esc(catOf(e))}">${esc(fmtShort(e.date))}</span>
-      <span class="agenda-body"><span class="agenda-title">${esc(e.title)}</span>
+      <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
         ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
         ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
       <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;
   }).join('')}</div>`;
 }
 function wireAgenda() {
+  // the .agenda-title button is the keyboard trigger (native Enter/Space); its click bubbles to the
+  // row. A mouse click anywhere on the row (except the +G link) also opens the detail.
   $$('#calView .agenda-row').forEach(r => {
-    const open = (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openDetail(ev); };
-    r.addEventListener('click', open);
-    r.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[data-stop]')) { e.preventDefault(); open(e); } });
+    r.addEventListener('click', (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openDetail(ev); });
   });
 }
 
 // ---- day popover ----
 function wireCells() {
   $$('#calView .cal-cell[data-day]').forEach(c => {
+    // the .cal-date button is the keyboard-focusable trigger; its click bubbles here. A chip click
+    // opens the event; any other click on the cell (the date button or empty space) opens the day popover.
     c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const ev = allEvents().find(x => x.id === e.target.closest('.cal-chip').dataset.ev); if (ev) openDetail(ev); return; } dayPopover(c.dataset.day, c); });
-    c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dayPopover(c.dataset.day, c); } });   // role=button must take Space too (and not scroll)
   });
 }
 // drag a USER event chip onto another day to reschedule (baked events are fixed)

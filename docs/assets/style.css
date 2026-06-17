@@ -544,7 +544,10 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .cal-cell:hover{ border-color: var(--indigo); }
 .cal-cell.empty{ background: transparent; border:none; cursor: default; }
 .cal-cell.today{ border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red); }
-.cal-date{ font-size:.78rem; font-weight:700; color: var(--ink-soft); }
+/* date is a real button (opens the day popover; keyboard-native) styled to look like the number */
+.cal-date{ background:none; border:none; padding:0; margin:0; font:inherit; cursor:pointer; line-height:1;
+  font-size:.78rem; font-weight:700; color: var(--ink-soft); }
+.cal-date:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .cal-cell.today .cal-date{ color: var(--red); }
 .cal-chip{ display:block; width:100%; text-align:left; border:none; cursor:pointer; color:#fff;
   font-size:.66rem; font-weight:600; line-height:1.25; padding:1px 5px; border-radius:5px;
@@ -567,7 +570,10 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .agenda-row:hover{ border-color: var(--indigo); }
 .agenda-date{ font-size:.72rem; font-weight:700; color:#fff; padding:2px 8px; border-radius:6px; white-space:nowrap; }
 .agenda-body{ display:flex; flex-direction:column; flex:1; min-width:0; }
-.agenda-title{ font-weight:600; font-size:.9rem; }
+/* title is a real button (opens the event; keyboard-native) styled like plain text */
+.agenda-title{ background:none; border:none; padding:0; margin:0; font:inherit; color:inherit; text-align:left; cursor:pointer;
+  font-weight:600; font-size:.9rem; }
+.agenda-title:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .agenda-area,.agenda-book{ font-size:.74rem; color: var(--ink-soft); }
 .agenda-book{ color: var(--warn-ink); font-weight:700; }
 .agenda-cat{ font-size:.7rem; color: var(--ink-soft); }
@@ -1043,6 +1049,10 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 /* collapsible Explore cards (compact → click to expand) */
 .card2.collapsible{ cursor: pointer; }
 .c-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }
+/* the disclosure button looks like the title but is a real button (valid ARIA, keyboard-native) */
+.c-disclosure{ background:none; border:none; padding:0; margin:0; font:inherit; color:inherit; text-align:left; cursor:pointer;
+  flex:1; display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }
+.c-disclosure:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .c-chev{ color: var(--ink-faint); flex:none; transition: transform var(--t-hover); font-size:.8rem; margin-top:.15rem; }
 .card2.collapsible.expanded .c-chev{ transform: rotate(180deg); }
 .card2.collapsible .c-body{ display:none; margin-top:.5rem; }

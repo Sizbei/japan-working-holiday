@@ -149,7 +149,29 @@ h1 .en{ display:block; font-family:'Newsreader',serif; font-style:italic; font-w
 .detail .acts .pri{ background:var(--vermilion); color:var(--paper); border-color:var(--vermilion) }
 .detail .acts .pri:hover{ filter:brightness(1.08); color:var(--paper) }
 
+/* ── cross-highlight (index ↔ map) ── */
+.pin.hot .seal{ transform:scale(1.2) rotate(-6deg); box-shadow:0 0 0 6px color-mix(in srgb,var(--vermilion) 16%,transparent), 0 6px 16px -3px color-mix(in srgb,var(--vermilion) 50%,transparent) }
+.pin.hot .lab{ opacity:1 }
+.ix.hot{ background:color-mix(in srgb,var(--wash) 75%,transparent); box-shadow:inset 2px 0 0 var(--c) }
+.pin.dim,.ix.dim{ opacity:.16; transition:opacity .25s } .ix.dim{ pointer-events:none }
+
+/* ── hanko "visited" stamp ── */
+.stamp{ position:absolute; left:50%; top:50%; width:30px; height:30px; border-radius:50%; border:2px solid var(--vermilion-2);
+  color:var(--vermilion-2); display:grid; place-items:center; font-family:'Shippori Mincho',serif; font-weight:800; font-size:.8rem;
+  transform:translate(-50%,-50%) scale(2) rotate(-14deg); opacity:0; pointer-events:none; z-index:4;
+  background:color-mix(in srgb,var(--paper) 20%,transparent); animation:stamp .5s cubic-bezier(.5,1.7,.5,1) forwards }
+@keyframes stamp{ 0%{opacity:0;transform:translate(-50%,-50%) scale(2) rotate(-14deg)} 55%{opacity:1;transform:translate(-50%,-50%) scale(.9) rotate(-7deg)} 70%{transform:translate(-50%,-50%) scale(1.05) rotate(-7deg)} 100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-7deg)} }
+.splat{ position:absolute; left:50%; top:50%; width:4px; height:4px; border-radius:50%; background:var(--vermilion-2); pointer-events:none; z-index:4;
+  transform:translate(-50%,-50%); animation:splat .55s ease-out forwards }
+@keyframes splat{ from{opacity:.8; transform:translate(-50%,-50%)} to{opacity:0; transform:translate(calc(-50% + var(--sx)),calc(-50% + var(--sy)))} }
+
+/* ── compass + seasonal caption ── */
+.plate svg.compass{ position:absolute; left:auto; bottom:auto; right:4%; top:5%; width:38px; height:38px; opacity:.5; z-index:2 }
+.mapfig{ margin:0 } .cap{ font-family:'Newsreader',serif; font-style:italic; font-size:.92rem; color:var(--ink-faint); margin-top:.7rem; padding-left:.1rem }
+.cap::before{ content:"〜 "; color:var(--vermilion); font-style:normal }
+
 @media(prefers-reduced-motion:reduce){ *{animation:none!important; transition-duration:.001ms!important} .draw{stroke-dashoffset:0} }
+@media(max-width:899px){ .masthead{ align-items:flex-start } .dateline{ text-align:left } }
 </style>
 </head>
 <body>
@@ -173,14 +195,17 @@ h1 .en{ display:block; font-family:'Newsreader',serif; font-style:italic; font-w
   <p class="lede">A hand-kept map of the year — where to <em>eat</em>, dig for <em>records</em>, ship code at 2am, and find the way <em>home</em>. Tap a seal to plan a visit.</p>
 
   <div class="toolrow">
-    <input class="search" placeholder="search a place, or add one to the map…">
+    <input class="search" id="sumiSearch" placeholder="search a place, or add one to the map…">
     <button class="ghost" data-act="drop">＋ Drop a pin</button>
     <button class="ghost" data-act="fit">⤢ Fit all</button>
   </div>
   <div class="legend" id="legend"></div>
 
   <div class="grid">
-    <div class="plate" id="plate"></div>
+    <figure class="mapfig">
+      <div class="plate" id="plate"></div>
+      <figcaption class="cap" id="cap">梅雨 — the rainy season has come; the pins bloom anyway.</figcaption>
+    </figure>
     <div class="index">
       <h2>Index <span class="ct" id="ix-ct"></span></h2>
       <div id="ixlist"></div>
@@ -222,13 +247,13 @@ function mapSVG(){return `<svg viewBox="0 0 100 80" preserveAspectRatio="xMidYMi
     <path class="ink-river dry" d="M-4 55 C 22 47, 34 67, 56 59 S 96 45, 106 53"/>
   </g>
   <g class="ink-blot"><ellipse cx="34" cy="30" rx="9" ry="7"/><ellipse cx="74" cy="36" rx="12" ry="9"/><ellipse cx="24" cy="50" rx="6" ry="5"/></g>
-  <circle class="seal-mark" cx="80" cy="20" r="5"/><circle class="seal-mark" cx="80" cy="20" r="2"/>
-  <text class="ink-name" x="34" y="18" font-size="5">渋谷</text>
-  <text class="ink-name" x="56" y="16" font-size="5">新宿</text>
-  <text class="ink-name" x="78" y="68" font-size="5">豊洲</text>
-  <text class="ink-name s" x="18" y="72">MEGURO</text>
+  <text class="ink-name" x="15" y="10" font-size="4.2">渋谷</text>
+  <text class="ink-name" x="47" y="9" font-size="4.2">新宿</text>
+  <text class="ink-name" x="80" y="10" font-size="4.2">上野</text>
 </svg>
-<div class="margin-jp">私の一年・東京地図</div>
+<svg class="compass" viewBox="0 0 40 40"><g fill="none" stroke="var(--vermilion)" stroke-width="1" opacity=".8">
+  <circle cx="20" cy="21" r="13"/><path d="M20 8 L22.5 21 L20 34 L17.5 21 Z" fill="var(--vermilion)" stroke="none" opacity=".7"/></g>
+  <text x="20" y="6" fill="var(--vermilion)" font-size="6" text-anchor="middle" font-family="serif" font-weight="700">北</text></svg>
 <div class="corner-seal">京</div>`;}
 
 const plate=document.getElementById('plate'), ixlist=document.getElementById('ixlist');
@@ -245,9 +270,39 @@ function render(){
     <span class="no">${String(i+1).padStart(2,'0')}</span><span class="sm">${p.jp}</span>
     <span class="nm">${p.n}<small>${p.a}</small></span><span class="vd">済</span></div>`).join('');
   document.querySelector('.sheet').classList.add('in');
-  plate.querySelectorAll('.pin').forEach(b=>b.addEventListener('click',()=>openDetail(+b.dataset.i)));
-  ixlist.querySelectorAll('.ix').forEach(b=>b.addEventListener('click',()=>openDetail(+b.dataset.i)));
+  // cross-highlight: hovering/focusing a place anywhere lights its counterpart
+  const sync=(i,on)=>{ plate.querySelector(`.pin[data-i="${i}"]`)?.classList.toggle('hot',on); ixlist.querySelector(`.ix[data-i="${i}"]`)?.classList.toggle('hot',on); };
+  plate.querySelectorAll('.pin').forEach(b=>{const i=+b.dataset.i;
+    b.addEventListener('click',()=>openDetail(i)); ['mouseenter','focus'].forEach(e=>b.addEventListener(e,()=>sync(i,true))); ['mouseleave','blur'].forEach(e=>b.addEventListener(e,()=>sync(i,false)));});
+  ixlist.querySelectorAll('.ix').forEach(b=>{const i=+b.dataset.i;
+    b.addEventListener('click',()=>openDetail(i)); b.addEventListener('mouseenter',()=>sync(i,true)); b.addEventListener('mouseleave',()=>sync(i,false));});
   legend.querySelectorAll('.lg').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.c; off.has(c)?off.delete(c):off.add(c); render();}));
+  applySearch();
+}
+function updateCounts(){
+  const visited=PLACES.filter(p=>p.vis).length;
+  document.getElementById('ix-ct').textContent=`${PLACES.length} 景 · ${visited} visited`;
+}
+function applySearch(){
+  const q=(document.getElementById('sumiSearch')?.value||'').trim().toLowerCase();
+  PLACES.forEach((p,i)=>{ const hit=!q || (p.n+' '+p.a).toLowerCase().includes(q);
+    plate.querySelector(`.pin[data-i="${i}"]`)?.classList.toggle('hide', !hit && !off.has(p.c) ? true : (off.has(p.c)));
+    ixlist.querySelector(`.ix[data-i="${i}"]`)?.classList.toggle('dim', !hit);
+  });
+}
+// press a red 済 hanko onto the seal, with an ink splatter
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function stampVisited(i){
+  const p=PLACES[i]; if(p.vis) return; p.vis=1;
+  const pin=plate.querySelector(`.pin[data-i="${i}"]`);
+  ixlist.querySelector(`.ix[data-i="${i}"]`)?.classList.add('visited');
+  updateCounts();
+  if(!pin) return;
+  if(reduced){ pin.classList.add('visited'); return; }
+  const st=document.createElement('span'); st.className='stamp'; st.textContent='済'; pin.appendChild(st);
+  for(let k=0;k<7;k++){ const d=document.createElement('span'); d.className='splat'; const a=k/7*6.283;
+    d.style.setProperty('--sx',(Math.cos(a)*20).toFixed(1)+'px'); d.style.setProperty('--sy',(Math.sin(a)*20).toFixed(1)+'px'); pin.appendChild(d); }
+  setTimeout(()=>{ pin.classList.add('visited'); pin.querySelectorAll('.stamp,.splat').forEach(e=>e.remove()); }, 560);
 }
 function openDetail(i){
   const p=PLACES[i];
@@ -256,8 +311,8 @@ function openDetail(i){
   detail.innerHTML=`<div class="top"><span class="sm" style="border-color:${p.c};color:${p.fav?'var(--paper)':p.c};background:${p.fav?p.c:'transparent'}">${p.jp}</span>
       <div><h3>${p.fav?'⛩ ':''}${p.n}</h3><div class="a">${p.a}${p.vis?' · 済 visited':''}</div></div></div>
     <div class="est">${p.fav?'Your base — directions start here while you plan.':'≈ 22 minutes from home, by train.'}</div>
-    <div class="acts"><button class="pri" style="background:${p.c};border-color:${p.c}">🧭 Directions</button><button>${p.vis?'済 Visited':'✓ Visited'}</button><button>✎ Note</button><button>★ Pin</button></div>`;
-  detail.querySelectorAll('button').forEach(b=>b.addEventListener('click',close));
+    <div class="acts"><button class="pri" style="background:${p.c};border-color:${p.c}">🧭 Directions</button><button data-act="visited">${p.vis?'済 Visited':'✓ Visited'}</button><button>✎ Note</button><button>★ Pin</button></div>`;
+  detail.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.act==='visited') stampVisited(i); close(); }));
 }
 function close(){ detail.classList.remove('on'); backdrop.classList.remove('on'); }
 backdrop.onclick=close; addEventListener('keydown',e=>{if(e.key==='Escape')close()});
@@ -267,6 +322,7 @@ document.getElementById('sheet').addEventListener('click',e=>{const b=e.target.c
 document.getElementById('paper').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   document.querySelectorAll('#paper button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
   document.documentElement.dataset.paper=b.dataset.p;});
+document.getElementById('sumiSearch').addEventListener('input',applySearch);
 render();
 </script>
 </body>

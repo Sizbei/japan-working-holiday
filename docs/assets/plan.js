@@ -20,7 +20,8 @@ import {
   loadPlans, getPlan, hasPlan, newStop, planToEvents,
   upsertStop, removeStop, patchStop, reorderStops,
 } from './lib/dayplan.js';
-import { makeSortable, reorderIds } from './dnd.js';
+import { makeSortable } from './dnd.js';
+import { alertModal } from './lib/modal.js';
 
 let DATA = null, activeDate = '';
 
@@ -249,7 +250,7 @@ function addToCalendar() {
   u.push(evs[0]); set(KEYS.events, u);
   document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   announce('Added the day to your calendar');
-  alert('Added this day to your calendar — see it on the Calendar page.');
+  alertModal('Added this day to your calendar — see it on the Calendar page.');
 }
 
 // wire the change-event listener once at module init (delegated)

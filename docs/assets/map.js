@@ -16,6 +16,7 @@ import {
   loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, catId, slug,
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
+import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let armed = false, openPlaceId = null, allBounds = [];
@@ -138,15 +139,15 @@ function initMap() {
   el.classList.add('ready');
   renderPins();
 }
-function onKeydown(e) {
+async function onKeydown(e) {
   if (e.key !== 'Backspace' && e.key !== 'Delete') return;
   const t = e.target;
   if (t && ((t.matches && t.matches('input,textarea,select,[contenteditable]')) || t.isContentEditable)) return;
   if (!openPlaceId) return;
-  const p = placeById(openPlaceId);
+  const id = openPlaceId, p = placeById(id);
   if (!p || p.locked) return;
   e.preventDefault();
-  if (confirm(`Delete "${p.name}"?`)) { deletePlace(openPlaceId); map.closePopup(); }
+  if (await confirmModal(`Delete “${p.name}”?`, { ok: 'Delete', danger: true })) { deletePlace(id); map.closePopup(); }
 }
 
 // ====================================================================== pins
@@ -292,11 +293,11 @@ function saveCatalogue(id) {
     source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', fav: true, coordKind: 'approx', visited: false });
   if (map) map.closePopup();
 }
-function planVisit(id) {
+async function planVisit(id) {
   const pt = placesModel().find(x => x.id === id);
   if (!pt) return;
   const existing = placeById(id) || placeByName(pt.name);
-  const date = prompt(`Plan a visit to "${pt.name}" on (YYYY-MM-DD):`, (DATA.meta?.arrival_date || '2026-06-30'));
+  const date = await askDate(`Plan a visit to “${pt.name}” on:`, { value: existing?.date || (DATA.meta?.arrival_date || '2026-06-30') });
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
   const d = date.trim();
   if (existing?.eventId) removeEvent(existing.eventId);   // clear the old event so we don't orphan it
@@ -306,44 +307,44 @@ function planVisit(id) {
     source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', coordKind: 'approx', date: d, remindDate: d, eventId: eid });
   if (map) map.closePopup();
 }
-function dropPin(latlng) {
-  const name = prompt('Name this pin:', '');
-  if (!name || !name.trim()) return;
+async function dropPin(latlng) {
+  const name = await askText('Name this pin:', { ok: 'Drop pin' });
+  if (!name) { toggleArm(false); return; }
   toggleArm(false);
-  upsertPlace({ id: 'p' + Date.now(), name: name.trim(), address: '', lat: +latlng.lat.toFixed(6), lng: +latlng.lng.toFixed(6),
+  upsertPlace({ id: 'p' + Date.now(), name, address: '', lat: +latlng.lat.toFixed(6), lng: +latlng.lng.toFixed(6),
     category: 'personal', source: 'drop', coordKind: 'exact' });   // dispatches → renders synchronously
-  setTimeout(() => focusPlace(placeByName(name.trim())?.id), 50);
+  setTimeout(() => focusPlace(placeByName(name)?.id), 50);
 }
-function addToCalendar(p) {
-  const date = prompt(`Add "${p.name}" to the calendar on (YYYY-MM-DD):`, (DATA.meta?.arrival_date || '2026-06-30'));
+async function addToCalendar(p) {
+  const date = await askDate(`Add “${p.name}” to the calendar on:`, { value: p.date || (DATA.meta?.arrival_date || '2026-06-30') });
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
   if (p.eventId) removeEvent(p.eventId);
   const eid = pushEvent('Visit: ' + p.name, date.trim(), p.address);
   patchPlace(p.id, { date: date.trim(), eventId: eid });
   if (map) map.closePopup(); change();
 }
-function setReminder(p) {
-  const date = prompt(`Remind me about "${p.name}" on (YYYY-MM-DD) — shows in notifications:`, p.remindDate || '');
+async function setReminder(p) {
+  const date = await askText(`Remind me about “${p.name}” on (blank to clear) — shows in notifications:`, { type: 'date', value: p.remindDate || '', ok: 'Set', min: '2026-01-01', max: '2027-12-31' });
   if (date === null) return;
   const d = date.trim();
-  if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) { alert('Use YYYY-MM-DD.'); return; }
+  if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
   if (p.eventId) removeEvent(p.eventId);
   const eid = d ? pushEvent('⏰ ' + p.name, d, p.address) : '';
   patchPlace(p.id, { remindDate: d, eventId: eid });
   if (map) map.closePopup(); change();
 }
-function setExact(p) {
-  const q = prompt(`Search an address for "${p.name}" (or paste "lat, lng"):`, p.address || '');
+async function setExact(p) {
+  const q = await askText(`Address for “${p.name}” (or paste "lat, lng"):`, { value: p.address || '', ok: 'Find' });
   if (!q) return;
   const m = q.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
   if (m) { patchPlace(p.id, { lat: +m[1], lng: +m[2], coordKind: 'exact' }); if (map) map.closePopup(); change(); return; }
-  // else geocode via Nominatim (one-shot)
-  fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } })
-    .then(r => r.ok ? r.json() : []).then(d => {
-      if (!d.length) { alert('No match — try a different address or "lat, lng".'); return; }
-      patchPlace(p.id, { lat: +d[0].lat, lng: +d[0].lon, address: d[0].display_name, coordKind: 'exact' });
-      if (map) map.closePopup(); change();
-    }).catch(() => alert('Geocoding unavailable.'));
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+    const d = r.ok ? await r.json() : [];
+    if (!d.length) { alertModal('No match — try a different address or "lat, lng".'); return; }
+    patchPlace(p.id, { lat: +d[0].lat, lng: +d[0].lon, address: d[0].display_name, coordKind: 'exact' });
+    if (map) map.closePopup(); change();
+  } catch { alertModal('Geocoding unavailable.'); }
 }
 function removeEvent(id) { set(KEYS.events, (get(KEYS.events, []) || []).filter(x => x.id !== id)); }
 
@@ -401,7 +402,7 @@ function renderSaved() {
   wrap.innerHTML = `<h3 class="map-side-h">Your pins <span class="map-count">${places.length}</span></h3>
     <ul class="map-slist dense-list">${places.map(row).join('')}</ul>`;
   wrap.querySelectorAll('.map-sgo').forEach(b => b.addEventListener('click', () => focusPlace(b.dataset.pid)));
-  wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { if (confirm('Delete this pin?') && !deletePlace(b.dataset.del)) alert('This pin is locked — unlock it first.'); }));
+  wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => { if (await confirmModal('Delete this pin?', { ok: 'Delete', danger: true }) && !deletePlace(b.dataset.del)) alertModal('This pin is locked — unlock it first.'); }));
 }
 
 // ====================================================================== offline link index

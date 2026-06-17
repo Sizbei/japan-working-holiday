@@ -1272,6 +1272,18 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .pk-adhoc{ color: var(--indigo-ink); font-weight:700; justify-content:flex-start; }
 .pk-empty{ color: var(--ink-soft); font-size:.8rem; padding:.6rem .2rem; }
 
+/* themed Promise-based dialogs (lib/modal.js) */
+.app-modal{ position:fixed; inset:0; z-index:1100; background: color-mix(in srgb, #000 50%, transparent); display:grid; place-items:center; padding: var(--s4); }
+.app-modal-card{ width:100%; max-width:400px; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--s5); }
+.app-modal-title{ font-size:1rem; line-height:1.4; margin:0 0 var(--s4); color: var(--ink); }
+.app-modal-input{ width:100%; font-family: var(--mono); font-size:.9rem; padding:.55rem .7rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); margin-bottom: var(--s4); }
+.app-modal-input:focus{ outline:none; box-shadow: var(--ring); }
+.app-modal-acts{ display:flex; justify-content:flex-end; gap:.5rem; }
+.am-btn{ font-family: var(--mono); font-weight:700; font-size:.8rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.5rem .9rem; cursor:pointer; min-height:40px; }
+.am-btn:hover{ border-color: var(--indigo); }
+.am-primary{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+.am-danger{ background: var(--red); border-color: var(--red); }
+
 /* day-plan route line markers on the map */
 .jwh-route-pin{ display:grid; place-items:center; }
 .jwh-route-pin b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background:#5a3fb5; color:#fff; font-family: var(--mono); font-size:.72rem; font-weight:700; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.5); }

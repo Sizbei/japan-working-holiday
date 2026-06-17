@@ -258,6 +258,7 @@ function dayPopover(date, anchor) {
   popEl = document.createElement('div');
   popEl.className = 'cal-pop';
   popEl.setAttribute('role', 'dialog');
+  popEl.setAttribute('aria-label', 'Events on ' + fmtDate(date));
   popEl.innerHTML = `<div class="pop-head">${esc(fmtDate(date))}</div>${rows}
     <button class="pop-add" data-add="${esc(date)}">+ Add your own event</button>`;
   document.body.appendChild(popEl);
@@ -269,9 +270,9 @@ function dayPopover(date, anchor) {
   popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openDetail(ev); }));
   popEl.querySelector('.pop-add').addEventListener('click', () => { dismissPopover(); openModal(null, date); });
   const onDoc = (e) => { if (popEl && !popEl.contains(e.target) && e.target !== anchor) dismissPopover(); };
-  const onKey = (e) => { if (e.key === 'Escape') dismissPopover(); };
+  const onKey = (e) => { if (e.key === 'Escape') { dismissPopover(); anchor.focus?.(); } };   // Esc returns focus to the day cell
   const onScroll = () => dismissPopover();
-  setTimeout(() => { document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); }, 0);
+  setTimeout(() => { document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus(); }, 0);
   popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
 }
 
@@ -390,15 +391,25 @@ function onImport(e) {
 
 // ---- modal shell ----
 function showModal(html) {
+  const prev = document.activeElement;
   const ov = document.createElement('div');
   ov.className = 'modal-overlay';
-  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><button type="button" class="modal-x" aria-label="Close">✕</button>${html}</div>`;
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle" tabindex="-1"><button type="button" class="modal-x" aria-label="Close">✕</button>${html}</div>`;
   document.body.appendChild(ov);
-  ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov); });
-  ov.querySelector('.modal-x').addEventListener('click', () => closeModal(ov));
-  const onKey = (e) => { if (e.key === 'Escape') { closeModal(ov); document.removeEventListener('keydown', onKey); } };
-  document.addEventListener('keydown', onKey);
-  setTimeout(() => ov.querySelector('input,select,textarea,button')?.focus(), 30);
+  const h = ov.querySelector('h2, h3, .modal-title'); if (h && !h.id) h.id = 'calModalTitle';   // label the dialog
+  const focusables = () => [...ov.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled && el.offsetParent !== null);
+  const restore = () => { if (prev && prev.focus) prev.focus(); };
+  ov.addEventListener('click', (e) => { if (e.target === ov) { closeModal(ov); restore(); } });
+  ov.querySelector('.modal-x').addEventListener('click', () => { closeModal(ov); restore(); });
+  ov.addEventListener('keydown', (e) => {     // listener lives on ov (focus is trapped inside) → auto-cleans on close
+    if (e.key === 'Escape') { closeModal(ov); restore(); return; }
+    if (e.key !== 'Tab') return;
+    const f = focusables(); if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  setTimeout(() => (ov.querySelector('.modal input,.modal select,.modal textarea') || focusables()[0])?.focus(), 30);
   return ov;
 }
 function closeModal(ov) { ov.classList.add('out'); setTimeout(() => ov.remove(), 180); }

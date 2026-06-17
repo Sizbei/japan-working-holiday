@@ -21,7 +21,7 @@ import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
 import { nowISO } from './lib/dates.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
-let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false;
+let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false, pinsShown = false;
 const markersById = new Map();
 
 function gmaps(query) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query + ' Tokyo'); }
@@ -182,7 +182,9 @@ function onMapShown(tries = 0) {
   const el = $('#mapCanvas');
   if (el && el.offsetParent !== null && el.offsetWidth > 0) {
     map.invalidateSize();
-    if (pinsDirty) { pinsDirty = false; renderPins(); }
+    // force one render the first time the canvas has real size — markercluster places
+    // nothing if initMap's renderPins() ran while the SPA container was still 0×0
+    if (pinsDirty || !pinsShown) { pinsDirty = false; pinsShown = true; renderPins(); }
   } else if (tries < 25) {
     setTimeout(() => onMapShown(tries + 1), 40);
   }
@@ -211,7 +213,7 @@ function initMap() {
   document.addEventListener('keydown', onKeydown);
   leafletReady = true;
   el.classList.add('ready');
-  renderPins();
+  onMapShown();   // poll for real canvas size, then invalidateSize + place pins (cold-start: scripts finished after the route reveal)
 }
 async function onKeydown(e) {
   if (e.key !== 'Backspace' && e.key !== 'Delete') return;

@@ -92,5 +92,6 @@ function openGuide() {
   });
 
   document.addEventListener('keydown', onKey, true);
-  setTimeout(() => $('.guide-x', ov)?.focus(), 20);
+  const panel = ov;   // capture locally — closeGuide() may null the module-level `ov` before this fires
+  setTimeout(() => { if (panel.isConnected) panel.querySelector('.guide-x')?.focus(); }, 20);
 }

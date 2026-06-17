@@ -1122,8 +1122,12 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .jwh-pin-dot:hover{ transform: scale(1.25); }
 .jwh-pin.pulse .jwh-pin-dot{ animation: pinPulse 1.8s ease-in-out infinite; }
 @keyframes pinPulse{ 0%,100%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 0 color-mix(in srgb, var(--red) 55%, transparent); } 50%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 9px transparent; } }
-[data-theme="dark"] .leaflet-tile{ filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.9); }
-[data-theme="dark"] .leaflet-container{ background: #15151c; }
+/* "Tokyo at night": invert the bright OSM raster, then warm it to amber/sodium-lamp
+   rather than the default cold grey. sepia()+saturate() inject warmth; a small +hue-rotate
+   biases the remaining colour toward amber. Markers/popups live in sibling Leaflet panes
+   (.leaflet-marker-pane / .leaflet-popup-pane), NOT .leaflet-tile, so they stay legible. */
+[data-theme="dark"] .leaflet-tile{ filter: invert(1) hue-rotate(186deg) brightness(.82) contrast(.92) sepia(.45) saturate(1.5) hue-rotate(8deg); }
+[data-theme="dark"] .leaflet-container{ background: #181410; }
 .map-add-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
 .map-add-row #placeSearch{ flex:1; min-width:200px; }
 #placeDate{ font-family: var(--mono); font-size:.78rem; padding:.5rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
@@ -1165,6 +1169,14 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .map-chip.cat-mine .map-chip-dot{ background: var(--gold, #d8a200); }
 .map-arealbl{ font-family: var(--mono); font-size:.68rem; color: var(--ink-soft); display:inline-flex; align-items:center; gap:.4rem; }
 .map-arealbl select{ font-family: var(--mono); font-size:.72rem; padding:.3rem .5rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
+/* local text filter — narrows already-loaded pins (distinct from #placeSearch add-place box) */
+.map-find{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); padding:.18rem .55rem; transition: border-color var(--t-hover); }
+.map-find:focus-within{ border-color: var(--indigo); box-shadow: var(--ring); }
+.map-find-ic{ font-size:.72rem; opacity:.7; }
+.map-find input{ font-family: var(--mono); font-size:.72rem; border:0; background:transparent; color: var(--ink); width:9rem; min-width:6rem; }
+.map-find input:focus{ outline:none; }
+.map-find input::placeholder{ color: var(--ink-soft); opacity:.8; }
+.map-find-count{ font-family: var(--mono); font-size:.66rem; color: var(--ink-soft); }
 
 /* side-by-side: map + (your pins / index) column on desktop */
 .map-split{ display:grid; grid-template-columns: 1fr; gap: var(--s5); }
@@ -1200,11 +1212,50 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .jwh-pin.fav .jwh-pin-dot{ box-shadow:0 0 0 2px var(--gold, #d8a200), 0 1px 5px rgba(0,0,0,.45); }
 .jwh-pin-star{ position:absolute; top:-7px; right:-7px; font-size:.6rem; color: var(--gold, #d8a200); -webkit-text-stroke:.5px rgba(0,0,0,.4); }
 .jwh-pin-lock{ position:absolute; top:-7px; right:-7px; font-size:.5rem; }
+/* home base (Map v2 §1a): a torii ⛩️ over a ringed dot — ranks above ★/🔒 */
+.jwh-pin.home .jwh-pin-dot{ box-shadow:0 0 0 2px var(--red), 0 1px 5px rgba(0,0,0,.45); }
+.jwh-pin-home{ position:absolute; top:-9px; right:-8px; font-size:.72rem; line-height:1; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
 .jwh-pin--hl .jwh-pin-dot{ transform: scale(1.5); box-shadow:0 0 0 3px var(--indigo); }
 .pin-approx{ font-size:.7rem; color: var(--ink-soft); margin:.15rem 0; }
-/* non-colour channel: glyph letter inside the dot */
-.jwh-pin-dot::after{ content: attr(data-g); position:absolute; inset:0; display:grid; place-items:center; font-size:9px; font-weight:700; color:#fff; text-shadow:0 0 1px rgba(0,0,0,.7); font-family: var(--mono); }
+/* home-base popup bits (Map v2 §1a/1c) */
+.pin-fromhome{ font-size:.72rem; color: var(--ink-soft); margin:.15rem 0; }
+.pin-fromhome::before{ content:'⛩️ '; }
+.pin-hint{ font-size:.7rem; color: var(--warn-ink); margin:.15rem 0; }
+.pin-homebadge{ font-family: var(--mono); font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color: var(--red); border:1px solid color-mix(in srgb, var(--red) 50%, transparent); border-radius: var(--r-pill); padding:.05rem .35rem; vertical-align:middle; }
+.map-srow.is-home .map-sicon{ filter: drop-shadow(0 0 2px var(--red)); }
+/* non-colour channel: glyph letter inside the dot (ASCII letters: F/M/★ etc). */
+.jwh-pin-dot::after{ content: attr(data-g); position:absolute; inset:0; display:grid; place-items:center; font-size:9px; font-weight:700; line-height:1; color:#fff; text-shadow:0 0 1px rgba(0,0,0,.7); font-family: var(--mono); }
 .jwh-pin-dot{ position:relative; }
+/* Map v2 §2c — emoji-glyph sizing fix: a colour emoji (custom or the home torii) needs more
+   room and no white fill/shadow (those clip + grey a colour glyph). The dot widens to fit. */
+.jwh-pin-dot.has-emoji::after{ font-family: var(--sans); font-size:14px; inset:-6px; color:transparent; text-shadow:none; }
+/* Map v2 §2a — visited: muted dot + a red hanko "済" stamp overlaid on the marker */
+.jwh-pin.visited .jwh-pin-dot{ filter: grayscale(.55) brightness(.9); opacity:.78; }
+.jwh-pin-hanko{ position:absolute; bottom:-8px; right:-8px; width:15px; height:15px; display:grid; place-items:center;
+  font-size:8px; font-weight:700; line-height:1; color: var(--red); background: #fff;
+  border:1.5px solid var(--red); border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.4); transform: rotate(-12deg); }
+/* a multi-char kaomoji is too wide for the dot → a chip label beside the pin */
+.jwh-pin-kao{ position:absolute; left:14px; top:-2px; white-space:nowrap; font-family: var(--mono); font-size:.62rem; font-weight:700;
+  color: var(--ink); background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-pill); padding:.02rem .3rem; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+/* sidebar visited treatment: muted row + a small hanko after the name */
+.map-srow.is-visited .map-sname{ color: var(--ink-soft); }
+.map-srow.is-visited .map-sicon{ opacity:.7; }
+.map-shanko{ display:inline-grid; place-items:center; width:14px; height:14px; vertical-align:-2px;
+  font-size:7px; font-weight:700; color: var(--red); border:1px solid var(--red); border-radius:50%; transform: rotate(-12deg); }
+/* popup bits: note text + a visited 済 marker by the title */
+.pin-note{ font-size:.8rem; }
+.pin-visited{ font-weight:700; color: var(--red); }
+/* Map v2 §2c — curated emoji chip set in the pin editor */
+.pin-emojis{ display:flex; flex-wrap:wrap; gap:.22rem; margin:.4rem 0 .1rem; }
+.pin-emoji{ font-family: var(--sans); font-size:.92rem; line-height:1; min-width:1.9rem; height:1.9rem; display:inline-grid; place-items:center;
+  border:1px solid var(--line); background: var(--bg-soft); border-radius:6px; cursor:pointer; padding:0 .3rem; }
+.pin-emoji:hover{ border-color: var(--indigo); }
+.pin-emoji.on{ border-color: var(--indigo); background: color-mix(in srgb, var(--indigo) 14%, var(--bg-soft)); box-shadow:0 0 0 1px var(--indigo) inset; }
+.pin-emoji-reset{ font-family: var(--mono); color: var(--ink-soft); }
+/* Map v2 §2d — header stats line */
+.map-stats{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); flex-basis:100%; }
+/* milestone flourish — a torii drop centred over the confetti */
+.map-flourish-torii{ position:fixed; left:50%; top:38%; transform:translate(-50%,-50%); font-size:3.2rem; animation: pinDrop var(--t-spring); filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
 .tabetai-star{ background:none; border:none; cursor:pointer; font-size:1rem; line-height:1; padding:0 .2rem; color: var(--ink-soft); }
 .tabetai-star.on{ color: var(--gold, #d8a200); }
 .tabetai-star:focus-visible{ outline:2px solid var(--indigo); border-radius:4px; }
@@ -1230,7 +1281,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 }
 @media (hover: none){
   .map-fit, .map-ic, .map-chip, .map-sgo, .tabetai-star{ min-height:44px; }
-  .map-arealbl select, .place-sug button{ min-height:44px; }
+  .map-arealbl select, .place-sug button, .map-find{ min-height:44px; }
   .pin-acts button, .pin-acts a{ min-height:40px; }
   .plan-chip, .plan-btn, .plan-add, .dur-btn, .mv, .stop-del, .pk-item{ min-height:44px; }
 }
@@ -1257,6 +1308,8 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .leg{ display:flex; align-items:center; gap:.5rem; margin:.1rem 0 .1rem 1.3rem; font-family: var(--mono); font-size:.7rem; color: var(--ink-soft); }
 .leg::before{ content:''; width:2px; height:18px; background: var(--line); margin-left:8px; }
 .leg.fuzzy span{ border-bottom:1px dashed var(--line); }
+.leg-dir{ font-family: var(--mono); font-size:.66rem; font-weight:700; color: var(--indigo); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:.05rem .35rem; white-space:nowrap; }
+.leg-dir:hover{ border-color: var(--indigo); }
 .stop{ display:flex; align-items:flex-start; gap:.5rem; background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-md); padding:.6rem .7rem; margin:.15rem 0; }
 .stop.dnd-dragging{ opacity:.6; pointer-events:none; }
 .stop-grab{ cursor:grab; background:none; border:none; color: var(--ink-soft); font-size:1rem; padding:.1rem .2rem; touch-action:none; }
@@ -1282,7 +1335,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .plan-actions{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
 .plan-add{ font-family: var(--mono); font-weight:700; font-size:.78rem; background: var(--indigo); color: var(--on-accent); border:none; border-radius: var(--r-sm); padding:.5rem .9rem; cursor:pointer; }
 .plan-add:hover{ filter:brightness(1.08); }
-.plan-btn{ font-family: var(--mono); font-weight:700; font-size:.74rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.5rem .8rem; cursor:pointer; transition: border-color var(--t-hover); }
+.plan-btn{ display:inline-flex; align-items:center; font-family: var(--mono); font-weight:700; font-size:.74rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.5rem .8rem; cursor:pointer; text-decoration:none; transition: border-color var(--t-hover); }
 .plan-btn:hover{ border-color: var(--indigo); }
 
 /* add-stop modal */
@@ -1474,6 +1527,90 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 .confetti i{ position: absolute; top: -14px; width: 8px; height: 13px; border-radius: 1px; opacity: .92;
   animation: confetti-fall 2.3s cubic-bezier(.3,.6,.4,1) forwards; }
 @keyframes confetti-fall{ to{ transform: translateY(108vh) rotate(740deg); opacity: .95; } }
+
+/* ============================================================
+   EASTER EGGS — hidden delights. All particle layers are
+   pointer-events:none and aria-hidden; movement is dropped
+   under prefers-reduced-motion (block below). See easter.js.
+   ============================================================ */
+
+/* sakura petals drifting down the page (sakura season + tap flavour) */
+.egg-petals{ position: fixed; inset: 0; pointer-events: none; z-index: 79; overflow: hidden; }
+.egg-petals i{ position: absolute; top: -16px; width: 11px; height: 11px;
+  border-radius: 60% 0 60% 0; opacity: .85;
+  animation: egg-petal-fall 7s linear infinite; }
+@keyframes egg-petal-fall{
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: .85; }
+  100% { transform: translateY(108vh) translateX(40px) rotate(420deg); opacity: .2; }
+}
+
+/* a radial sparkle/sakura burst from a point (tap-hinomaru, floating emoji) */
+.egg-burst{ position: fixed; inset: 0; pointer-events: none; z-index: 81; overflow: visible; }
+.egg-burst i{ position: absolute; font-size: 1.1rem; line-height: 1; will-change: transform, opacity;
+  animation: egg-burst-out .9s cubic-bezier(.22,1,.36,1) forwards; }
+@keyframes egg-burst-out{
+  0%   { transform: translate(0, 0) scale(.4); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--dx, 0), var(--dy, -40px)) scale(1); opacity: 0; }
+}
+
+/* brief "matrix" katakana rain (magic word) */
+.egg-rain{ position: fixed; inset: 0; pointer-events: none; z-index: 81; overflow: hidden;
+  font-family: var(--mono, monospace); }
+.egg-rain span{ position: absolute; top: -120%; white-space: pre; text-align: center;
+  font-size: .95rem; line-height: 1.05; color: var(--matcha, #1e8e3e);
+  text-shadow: 0 0 6px rgba(30,142,62,.6); opacity: .9;
+  animation: egg-rain-fall 1.8s linear forwards; }
+@keyframes egg-rain-fall{ to{ transform: translateY(230%); opacity: 0; } }
+
+/* secret card (long-press brand) — a small focus-trapped dialog */
+.egg-secret{ position: fixed; inset: 0; z-index: 84; display: grid; place-items: center;
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: lp-in var(--dur-2) var(--ease-out); padding: var(--s4); }
+.egg-secret-card{ position: relative; background: var(--bg-elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: min(420px, 94vw);
+  padding: var(--s6); text-align: center; }
+.egg-secret-x{ position: absolute; top: .6rem; right: .6rem; background: none; border: none; cursor: pointer;
+  font-size: 1.05rem; color: var(--ink-soft); line-height: 1; padding: .2rem; }
+.egg-secret-x:hover{ color: var(--ink); }
+.egg-secret-x:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: var(--r-xs); }
+.egg-secret-title{ font-family: var(--serif); font-size: 1.3rem; margin: 0 0 var(--s3); color: var(--ink); }
+.egg-secret-body{ margin: 0; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+
+/* mini-synth overlay (type "synth") — a row of playable keys */
+.egg-synth{ position: fixed; inset: 0; z-index: 84; display: grid; place-items: center;
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: lp-in var(--dur-2) var(--ease-out); padding: var(--s4); }
+.egg-synth-card{ position: relative; background: var(--bg-elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: min(440px, 96vw); padding: var(--s6); }
+.egg-synth-x{ position: absolute; top: .6rem; right: .6rem; background: none; border: none; cursor: pointer;
+  font-size: 1.05rem; color: var(--ink-soft); line-height: 1; padding: .2rem; }
+.egg-synth-x:hover{ color: var(--ink); }
+.egg-synth-x:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: var(--r-xs); }
+.egg-synth-title{ margin: 0 0 var(--s4); font-size: .82rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-soft); }
+.egg-synth-keys{ display: flex; gap: 4px; justify-content: center; }
+.egg-synth-key{ flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  min-height: 96px; padding: .6rem .2rem; background: var(--bg-soft); border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm); color: var(--ink); cursor: pointer; font: inherit;
+  transition: transform var(--t-hover), background var(--t-hover); justify-content: flex-end; }
+.egg-synth-key:hover{ background: var(--bg-elevated); transform: translateY(-1px); }
+.egg-synth-key:active{ background: var(--indigo); color: var(--on-accent); }
+.egg-synth-key:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+.egg-synth-note{ font-weight: 700; font-size: 1rem; }
+.egg-synth-hint{ font-size: .72rem; color: var(--ink-soft); }
+
+/* 2am JST night-owl — a transient warm-CRT nod on <html> (set/removed by easter.js) */
+html[data-nightowl] body{ transition: filter var(--t-base); filter: sepia(.12) saturate(1.06) brightness(1.02); }
+html[data-nightowl] .crt::before{ opacity: calc(var(--crt-opacity, .05) + .03); }
+
+/* movement off under reduced motion — keep the dialogs usable (they just appear), drop drifting/raining particles */
+@media (prefers-reduced-motion: reduce){
+  .egg-petals, .egg-rain{ display: none; }
+  .egg-burst i{ animation: none; opacity: 0; }
+  html[data-nightowl] body{ filter: none; }
+}
 
 /* polished empty states — icon + human copy + a way out (design-principles: blank reads as broken) */
 .empty-state{ display:flex; flex-direction:column; align-items:center; gap:.5rem; text-align:center;

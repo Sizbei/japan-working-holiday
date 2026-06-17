@@ -19,6 +19,7 @@ export const KEYS = {
   lang: 'jwh-lang',
   reduceMotion: 'jwh-reduce-motion',
   celebrations: 'jwh-celebrations',
+  sound: 'jwh-sound',
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
 };

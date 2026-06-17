@@ -2,13 +2,13 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v48';
+const CACHE = 'jwh-v49';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/calendar.js',
-  'assets/dashboard.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/dnd.js', 'assets/dashboard-mytokyo.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/lang.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js',
+  'assets/dashboard.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/dnd.js', 'assets/dashboard-mytokyo.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/lang.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js',
   'assets/lib/dom.js', 'assets/lib/store.js', 'assets/lib/dates.js',
-  'assets/lib/notify.js', 'assets/lib/ics.js', 'assets/lib/places.js', 'assets/lib/geo.js', 'assets/lib/transit.js', 'assets/lib/dayplan.js', 'assets/lib/modal.js',
+  'assets/lib/notify.js', 'assets/lib/ics.js', 'assets/lib/places.js', 'assets/lib/geo.js', 'assets/lib/transit.js', 'assets/lib/dayplan.js', 'assets/lib/modal.js', 'assets/lib/directions.js', 'assets/lib/audio.js', 'assets/lib/placestats.js',
 ];
 
 self.addEventListener('install', (e) => {

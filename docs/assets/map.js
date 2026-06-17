@@ -10,11 +10,13 @@
 // fav/locked pins live on a separate un-clustered layer (pinTop) so they're always visible.
 
 import { $, esc } from './lib/dom.js';
-import { KEYS, get, set } from './lib/store.js';
+import { KEYS, get, set, getRaw } from './lib/store.js';
 import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
-import { haversineKm } from './lib/transit.js';
+import { haversineKm, estimateMinutes, format as fmtMins } from './lib/transit.js';
+import { directionsUrl } from './lib/directions.js';
+import { placesVisitedStats } from './lib/placestats.js';
 import {
-  loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, toggleFav, catId, slug,
+  loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, toggleFav, setHomeBase, catId, slug,
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
@@ -23,11 +25,43 @@ import { nowISO } from './lib/dates.js';
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false, pinsShown = false;
 const markersById = new Map();
+// milestone latches (per session) — a flourish fires only on CROSSING, not on every re-render
+let hitAllAreas = false, hitTenVisited = false, statsPrimed = false;
 
 function gmaps(query) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query + ' Tokyo'); }
 function dedupe(arr) { const seen = new Set(); return arr.filter(p => { const k = (p.name || '').toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }); }
 function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; const diff = (Date.parse(d) - Date.now()) / 86400000; return diff >= -1 && diff <= 45; }
 const todayISO = () => nowISO();   // local date, consistent with the rest of the app (not UTC)
+const ARRIVAL = '2026-06-30';      // land NRT — before this, device location is wrong, so route from home
+
+// the single home base (or null). Lookup is just a flag on a user place (spec §1a).
+function homeBase() { return loadPlaces().find(p => p.home) || null; }
+// Directions origin: home-base coords while planning (today < arrival), else omitted so the
+// native Maps app uses live device location. null when no real coord is available.
+function dirOrigin() {
+  if (todayISO() >= ARRIVAL) return null;
+  const h = homeBase();
+  return (h && typeof h.lat === 'number' && typeof h.lng === 'number' && !isNaN(h.lat) && !isNaN(h.lng))
+    ? { lat: h.lat, lng: h.lng } : null;
+}
+// destination for a pin: real coords beat a jittered approx centroid (a name searches better)
+function dirDest(pt) {
+  return (pt.coordKind === 'exact' && typeof pt.lat === 'number' && typeof pt.lng === 'number' && !isNaN(pt.lat) && !isNaN(pt.lng))
+    ? { lat: pt.lat, lng: pt.lng } : (pt.name + ' ' + (pt.area || '')).trim();
+}
+function directionsHref(pt) { return directionsUrl({ from: dirOrigin(), to: dirDest(pt) }); }
+// before arrival with no home base, directions can't use a real origin — nudge the user
+function dirHint() {
+  return (todayISO() < ARRIVAL && !homeBase())
+    ? `<div class="pin-hint">Set a 🏠 home base for accurate directions while planning.</div>` : '';
+}
+// honest neighbourhood-level "≈N min from home (est.)" reusing the area-level estimator.
+// Returns a popup HTML fragment (or '' when no home base / the home pin itself).
+function fromHomeLine(pt) {
+  const h = homeBase(); if (!h || h.id === pt.id) return '';
+  const mins = estimateMinutes(h.area || h.address || '', pt.area || pt.address || '', DATA.areaGeo);
+  return `<div class="pin-fromhome">${esc(fmtMins(mins))} from home (est.)</div>`;
+}
 
 // ---- filter state (persisted) ----
 const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet' };
@@ -37,13 +71,26 @@ const EVENT_EMOJI = { festival: '🎏', fireworks: '🎆', illumination: '✨', 
 // emoji by source pillar — shown beside catalogue places in the area index
 const PILLAR_EMOJI = { music: '🎵', geek: '🕹️', building: '🏙️', restaurants: '🍜', livemusic: '🎤', activities: '🎡', disney: '🏰', meetups: '👥' };
 const eventEmoji = (cat) => EVENT_EMOJI[cat] || '📅';
+// curated, tappable pin-glyph palette (Map v2 §2c) — NOT free-form entry. Single-glyph
+// emoji/symbols render inside the dot; the kaomoji are multi-char and render as a label
+// beside the pin (see glyphFor / divIcon). '' resets to the category default.
+const EMOJI_CHIPS = ['🍜', '🎵', '🕹️', '🏯', '⛩️', '🎏', '🐱', '☕', '🍣', '🗼', '♨', '〒', '(・∀・)', '╰(°▽°)╯'];
+// a chip is a "kaomoji label" (renders beside the pin) when it's more than one visual glyph
+const isKaomoji = (g) => !!g && [...g].length > 2;
 const FILTER_CATS = [
   { key: 'event', label: 'Events' }, { key: 'music', label: 'Music' }, { key: 'food', label: 'Food' },
   { key: 'geek', label: 'Geek' }, { key: 'build', label: 'Buildings' }, { key: 'meet', label: 'Meetups' },
   { key: 'disney', label: 'Disney' }, { key: 'stay', label: 'Stays' }, { key: 'mine', label: 'Yours' },
 ];
-function filters() { return { hidden: [], area: 'all', ...(get(KEYS.mapFilters, {}) || {}) }; }
+function filters() { return { hidden: [], area: 'all', text: '', ...(get(KEYS.mapFilters, {}) || {}) }; }
 function setFilters(f) { set(KEYS.mapFilters, f); }
+// local text filter (Map v2 §3) — narrows ALREADY-loaded pins by name/area, no network.
+// Distinct from #placeSearch (which geocodes + adds a place). Empty string = no narrowing.
+function matchesText(pt, q) {
+  if (!q) return true;
+  const hay = ((pt.name || '') + ' ' + (pt.area || '') + ' ' + (pt.group || '')).toLowerCase();
+  return hay.includes(q);
+}
 function bucketOf(pt) {
   if (pt.kind === 'user') return 'mine';
   if (pt.kind === 'event') return 'event';
@@ -57,6 +104,7 @@ export function mountMap(data) {
   renderIndex();                                  // offline-safe link index — ALWAYS
   renderSaved();                                  // your-pins sidebar (works without Leaflet too)
   renderFilters();
+  renderStats(true);                              // header "visited X of Y" line (prime latches; no flourish on boot)
   wireAddPlace();
   $('#mapFit')?.addEventListener('click', fitAllPins);
   $('#mapDrop')?.addEventListener('click', toggleArm);
@@ -69,9 +117,51 @@ export function mountMap(data) {
   });
   // off the map route, just mark pins dirty — defer the expensive 200+-marker rebuild until the map is next shown
   document.addEventListener('jwh:data-changed', () => {
+    renderStats();   // cheap, pure-counter line — keep it fresh even off the map route
     if (mapActive) { renderSaved(); if (leafletReady) renderPins(); }
     else { pinsDirty = true; }
   });
+}
+
+// header stats line + visited milestones (Map v2 §2d). Injected into #mapTools (the markup
+// is owned by index.html; this owns the live span). `prime` seeds the milestone latches on
+// first render so an already-met milestone doesn't fire a flourish on page load.
+function renderStats(prime = false) {
+  const host = $('#mapTools'); if (!host) return;
+  let el = $('#mapStats');
+  if (!el) { el = document.createElement('span'); el.id = 'mapStats'; el.className = 'map-stats'; el.setAttribute('aria-live', 'polite'); host.appendChild(el); }
+  const s = placesVisitedStats(loadPlaces(), areaOf);
+  el.textContent = s.total
+    ? `You’ve been to ${s.visited} of ${s.total} saved place${s.total === 1 ? '' : 's'} · ${s.areasVisited} of ${s.areasTotal} neighbourhood${s.areasTotal === 1 ? '' : 's'}`
+    : '';
+  const allAreas = s.areasTotal > 0 && s.areasVisited === s.areasTotal;
+  const tenVisited = s.visited >= 10;
+  if (prime || !statsPrimed) { hitAllAreas = allAreas; hitTenVisited = tenVisited; statsPrimed = true; return; }
+  // fire only on the up-crossing edge; honour the Celebrations setting + reduced motion
+  if ((allAreas && !hitAllAreas) || (tenVisited && !hitTenVisited)) milestoneFlourish();
+  hitAllAreas = allAreas; hitTenVisited = tenVisited;
+}
+// a small confetti + torii flourish — reuses the .confetti styling from the celebration infra
+function milestoneFlourish() {
+  if (getRaw(KEYS.celebrations, '') === 'off') return;   // user disabled celebrations in Settings
+  announce('Milestone reached — places visited!');
+  if (prefersReducedMotion()) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti map-flourish'; wrap.setAttribute('aria-hidden', 'true');
+  const colors = ['#bc002d', '#223a70', '#b8860b', '#1e8e3e', '#a8228d'];
+  for (let i = 0; i < 32; i++) {
+    const p = document.createElement('i');
+    p.style.left = Math.round((i / 32) * 100) + '%';
+    p.style.background = colors[i % colors.length];
+    p.style.animationDelay = (i % 12) * 40 + 'ms';
+    p.style.transform = `translateY(0) rotate(${i * 37}deg)`;
+    wrap.appendChild(p);
+  }
+  const torii = document.createElement('b');
+  torii.className = 'map-flourish-torii'; torii.textContent = '⛩️';
+  wrap.appendChild(torii);
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 2600);
 }
 
 // nearest neighbourhood bucket for an exact-coord pin, so the area filter matches its real
@@ -229,19 +319,40 @@ async function onKeydown(e) {
 // ====================================================================== pins
 function divIcon(pt) {
   const cat = (pt.cat || 'personal').toLowerCase();
+  const isHome = pt.kind === 'user' && pt.home;
+  const visited = pt.kind === 'user' && pt.visited;
   const cls = ['jwh-pin'];
   if (pt.pulse) cls.push('pulse');
+  if (isHome) cls.push('home');
+  if (visited) cls.push('visited');
   if (pt.kind === 'user' && pt.fav) cls.push('fav');
   if (pt.kind === 'user' && pt.locked) cls.push('locked');
-  const badge = (pt.kind === 'user' && pt.fav) ? '<b class="jwh-pin-star">★</b>' : (pt.kind === 'user' && pt.locked ? '<b class="jwh-pin-lock">🔒</b>' : '');
-  return L.divIcon({ className: cls.join(' '), html: `<i class="jwh-pin-dot cat-${esc(cat)}" data-g="${esc(glyphFor(pt))}"></i>${badge}`, iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10] });
+  // home base ranks above the ★ fav / 🔒 lock badge it already carries
+  const badge = isHome ? '<b class="jwh-pin-home">⛩️</b>'
+    : (pt.kind === 'user' && pt.fav) ? '<b class="jwh-pin-star">★</b>'
+    : (pt.kind === 'user' && pt.locked ? '<b class="jwh-pin-lock">🔒</b>' : '');
+  // visited → a red hanko (済) stamp overlay; a custom kaomoji renders as a label beside the pin
+  const stamp = visited ? '<b class="jwh-pin-hanko" aria-hidden="true">済</b>' : '';
+  const kao = (!isHome && pt.kind === 'user' && isKaomoji(pt.emoji)) ? `<b class="jwh-pin-kao">${esc(pt.emoji)}</b>` : '';
+  // a colour-emoji glyph (home torii or a single-glyph custom pick) needs the widened dot
+  const g = glyphFor(pt);
+  const dotCls = 'jwh-pin-dot cat-' + esc(cat) + (isHome || (pt.kind === 'user' && pt.emoji && !isKaomoji(pt.emoji)) ? ' has-emoji' : '');
+  return L.divIcon({ className: cls.join(' '), html: `<i class="${dotCls}" data-g="${esc(g)}"></i>${badge}${stamp}${kao}`, iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -10] });
 }
-function glyphFor(pt) { const b = bucketOf(pt); return ({ event: 'E', music: '♪', food: 'F', geek: 'G', build: 'B', meet: 'M', disney: 'D', stay: 'H', mine: '★' })[b] || '•'; }
+// the glyph shown INSIDE the dot: home torii > a single-glyph custom emoji > the category letter.
+// A multi-char kaomoji is NOT placed in the dot (it would clip) — it's a label (see divIcon).
+function glyphFor(pt) {
+  if (pt.kind === 'user' && pt.home) return '⛩️';
+  if (pt.kind === 'user' && pt.emoji && !isKaomoji(pt.emoji)) return pt.emoji;
+  const b = bucketOf(pt);
+  return ({ event: 'E', music: '♪', food: 'F', geek: 'G', build: 'B', meet: 'M', disney: 'D', stay: 'H', mine: '★' })[b] || '•';
+}
 
 function renderPins() {
   if (!pinLayer || !window.L) return;
   pinLayer.clearLayers(); pinTop.clearLayers(); markersById.clear();
   const f = filters();
+  const q = (f.text || '').trim().toLowerCase();
   const bounds = [];
   let shown = 0, total = 0;
   placesModel().forEach(pt => {
@@ -249,6 +360,7 @@ function renderPins() {
     total++;
     if (f.hidden.includes(bucketOf(pt))) return;
     if (f.area !== 'all' && pt.group !== f.area) return;
+    if (!matchesText(pt, q)) return;
     shown++;
     const top = pt.kind === 'user' && (pt.fav || pt.locked);
     const m = L.marker([pt.lat, pt.lng], { icon: divIcon(pt), riseOnHover: true });
@@ -260,6 +372,7 @@ function renderPins() {
   });
   allBounds = bounds;
   const el = $('#mapCount'); if (el) el.textContent = total ? `showing ${shown} of ${total}` : '';
+  updateFindCount();   // keep the text-filter match count in sync after any re-render
 }
 
 function fitAllPins() {
@@ -319,21 +432,40 @@ function cataloguePopup(pt) {
     ${pt.area ? `<div class="pin-addr">${esc(pt.area)}</div>` : ''}
     ${pt.date ? `<div class="pin-rem">📅 ${esc(pt.date)}</div>` : ''}
     ${approxNote(pt)}
+    ${fromHomeLine(pt)}
     <div class="pin-acts">
       <a href="${esc(gmaps(pt.name + ' ' + (pt.area || '')))}" target="_blank" rel="noopener noreferrer">Maps ↗</a>
+      <a href="${esc(directionsHref(pt))}" target="_blank" rel="noopener noreferrer">🧭 Directions</a>
       ${pt.kind === 'catalogue' ? `<button type="button" data-act="save" data-id="${esc(pt.id)}">${saved ? '★ Saved' : (isFood ? '⭐ Tabetai' : '★ Save')}</button>` : ''}
       <button type="button" data-act="plan" data-id="${esc(pt.id)}">📅 Plan a visit</button>
     </div></div>`;
 }
+// curated tappable glyph palette + a "category default" reset (Map v2 §2c). Not a free-form
+// picker — selection writes pt.emoji. The currently-set chip is aria-pressed.
+function emojiChips(p) {
+  const chips = EMOJI_CHIPS.map(g =>
+    `<button type="button" class="pin-emoji${p.emoji === g ? ' on' : ''}" data-uact="emoji" data-g="${esc(g)}" aria-pressed="${p.emoji === g ? 'true' : 'false'}" aria-label="Use ${esc(g)} as the pin glyph">${esc(g)}</button>`).join('');
+  return `<div class="pin-emojis" role="group" aria-label="Pin glyph">
+    ${chips}
+    <button type="button" class="pin-emoji pin-emoji-reset${p.emoji ? '' : ' on'}" data-uact="emoji" data-g="" aria-pressed="${p.emoji ? 'false' : 'true'}" aria-label="Reset to the category default glyph" title="Category default">↺</button>
+  </div>`;
+}
 function userPopup(p) {
   const safeLink = (p.link && /^https:\/\//i.test(p.link)) ? p.link : '';
   return `<div class="pin-pop">
-    <b>${esc(p.name)}</b>
+    <b>${p.home ? '<span aria-hidden="true">⛩️</span> ' : ''}${esc(p.name)}${p.home ? ' <span class="pin-homebadge">home base</span>' : ''}${p.visited ? ' <span class="pin-visited" aria-label="Visited">済</span>' : ''}</b>
     ${p.address ? `<div class="pin-addr">${esc(p.address)}</div>` : ''}
-    ${p.note ? `<div>${esc(p.note)}</div>` : ''}
+    ${p.note ? `<div class="pin-note">${esc(p.note)}</div>` : ''}
     ${p.remindDate ? `<div class="pin-rem">⏰ ${esc(p.remindDate)}</div>` : ''}
     ${approxNote(p)}
+    ${fromHomeLine(p)}
+    ${dirHint()}
+    ${emojiChips(p)}
     <div class="pin-acts">
+      <a href="${esc(directionsHref(p))}" target="_blank" rel="noopener noreferrer">🧭 Directions</a>
+      <button type="button" data-uact="visited" aria-pressed="${p.visited ? 'true' : 'false'}">${p.visited ? '済 Visited' : '✓ Visited'}</button>
+      <button type="button" data-uact="note">✎ Note</button>
+      <button type="button" data-uact="home" aria-pressed="${p.home ? 'true' : 'false'}">${p.home ? '⛩️ Home base' : '🏠 Set as home base'}</button>
       <button type="button" data-uact="fav" aria-pressed="${p.fav ? 'true' : 'false'}">${p.fav ? '★' : '☆'} ${p.fav ? 'Pinned' : 'Pin'}</button>
       <button type="button" data-uact="lock" aria-pressed="${p.locked ? 'true' : 'false'}">${p.locked ? '🔒' : '🔓'}</button>
       <button type="button" data-uact="cal">📅</button>
@@ -344,15 +476,26 @@ function userPopup(p) {
     </div></div>`;
 }
 function wireUserPopup(p) {
-  const pop = document.querySelector('.leaflet-popup .pin-acts');
+  // scope to the whole popup card — the emoji chips live in .pin-emojis, the rest in .pin-acts
+  const pop = document.querySelector('.leaflet-popup .pin-pop');
   if (!pop) return;
-  const on = (sel, fn) => pop.querySelector(`[data-uact="${sel}"]`)?.addEventListener('click', fn);
+  const on = (sel, fn) => pop.querySelector(`.pin-acts [data-uact="${sel}"]`)?.addEventListener('click', fn);
+  // setHomeBase is a self-dispatching writer (enforces the single-home invariant in one
+  // write + ONE change) — do NOT also call change() here, or it double-dispatches.
+  on('home', () => { if (!p.home) setHomeBase(p.id); if (map) map.closePopup(); });
+  on('visited', () => { patchPlace(p.id, { visited: !p.visited }); if (map) map.closePopup(); change(); });
+  on('note', () => editNote(p));
   on('fav', () => { patchPlace(p.id, { fav: !p.fav }); map.closePopup(); change(); });
   on('lock', () => { patchPlace(p.id, { locked: !p.locked }); map.closePopup(); change(); });
   on('cal', () => addToCalendar(p));
   on('rem', () => setReminder(p));
   on('exact', () => setExact(p));
   on('del', async () => { if (await confirmModal(`Delete “${p.name}”?`, { ok: 'Delete', danger: true }) && deletePlace(p.id) && map) map.closePopup(); });
+  // emoji chips — a curated tappable set; each writes pt.emoji ('' resets to category default)
+  pop.querySelector('.pin-emojis')?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-uact="emoji"]'); if (!b) return;
+    patchPlace(p.id, { emoji: b.dataset.g }); if (map) map.closePopup(); change();
+  });
 }
 
 // ====================================================================== actions
@@ -404,6 +547,13 @@ async function addToCalendar(p) {
   const eid = pushEvent('Visit: ' + p.name, date.trim(), p.address);
   patchPlace(p.id, { date: date.trim(), eventId: eid, remindDate: '' });   // one event slot per place — clear the stale reminder
   if (map) map.closePopup(); change();
+}
+// free-text note editor (Map v2 §2b) — prefilled with the current note, prompt nudges
+// useful day-of info. No hours schema; one patchPlace + one change().
+async function editNote(p) {
+  const note = await askText(`Note for “${p.name}” — hours, closed days, cash-only?`, { value: p.note || '', placeholder: 'e.g. closed Tue · cash only · last order 21:00', ok: 'Save note' });
+  if (note === null) return;   // cancelled — leave the existing note untouched
+  patchPlace(p.id, { note }); if (map) map.closePopup(); change();
 }
 async function setReminder(p) {
   const date = await askText(`Remind me about “${p.name}” on (blank to clear) — shows in notifications:`, { type: 'date', value: p.remindDate || '', ok: 'Set', min: '2026-01-01', max: '2027-12-31' });
@@ -462,7 +612,12 @@ function renderFilters() {
     <div class="map-chiprow" role="group" aria-label="Filter pins by category">
       ${FILTER_CATS.map(c => `<button type="button" class="map-chip cat-${esc(c.key)}" data-cat="${esc(c.key)}" aria-pressed="${f.hidden.includes(c.key) ? 'false' : 'true'}"><span class="map-chip-dot"></span>${esc(c.label)}</button>`).join('')}
     </div>
-    <label class="map-arealbl">Area <select id="mapArea">${areaOpts}</select></label>`;
+    <label class="map-arealbl">Area <select id="mapArea">${areaOpts}</select></label>
+    <label class="map-find" title="Narrow the pins already on the map by name or area">
+      <span class="map-find-ic" aria-hidden="true">🔎</span>
+      <input id="mapFind" type="search" inputmode="search" autocomplete="off" placeholder="Filter pins…" aria-label="Filter shown pins by name or area" value="${esc(f.text || '')}">
+    </label>
+    <span id="mapFindCount" class="map-find-count" aria-live="polite"></span>`;
   wrap.querySelector('.map-chiprow').addEventListener('click', (e) => {
     const b = e.target.closest('[data-cat]'); if (!b) return;
     const f2 = filters(); const k = b.dataset.cat;
@@ -473,6 +628,27 @@ function renderFilters() {
   wrap.querySelector('#mapArea').addEventListener('change', (e) => {
     const f2 = filters(); f2.area = e.target.value; setFilters(f2); if (leafletReady) renderPins();
   });
+  // text filter: narrow shown pins locally + zoom-to-fit the matches with a live count.
+  // Reuses the existing renderPins() filter path — no parallel render.
+  const find = wrap.querySelector('#mapFind');
+  find.addEventListener('input', () => {
+    const f2 = filters(); f2.text = find.value; setFilters(f2);
+    if (leafletReady) { renderPins(); fitFiltered(); }
+    updateFindCount();
+  });
+  updateFindCount();
+}
+// live "N of M shown" beside the text filter; also zoom-fits to the matched pins so a
+// search for "shibuya" actually flies there. Only fits while a query is active (no jolt
+// when the box is cleared) — clearing restores all pins (renderPins) without moving the map.
+function updateFindCount() {
+  const el = $('#mapFindCount'); if (!el) return;
+  const q = (filters().text || '').trim();
+  el.textContent = (q && leafletReady) ? `${allBounds.length} match${allBounds.length === 1 ? '' : 'es'}` : '';
+}
+function fitFiltered() {
+  if (!map || !(filters().text || '').trim() || !allBounds.length) return;
+  map.fitBounds(allBounds, { padding: [40, 40], maxZoom: 16, animate: !prefersReducedMotion() });
 }
 
 // ====================================================================== your-pins sidebar
@@ -484,16 +660,17 @@ function renderSaved() {
   const places = loadPlaces();
   if (!places.length) { wrap.innerHTML = `<h3 class="map-side-h">Your pins</h3><p class="map-empty">No saved pins yet — search a place above, ⭐ a restaurant, or “Drop a pin”.</p>`; return; }
   const row = (p) => {
-    const icon = CAT_GLYPH[p.source === 'tabetai' ? 'food' : (p.fav ? 'mine' : (p.category || 'personal'))] || '📍';
+    // custom emoji (single-glyph or kaomoji) wins over the category default in the sidebar too
+    const icon = p.home ? '⛩️' : (p.emoji || CAT_GLYPH[p.source === 'tabetai' ? 'food' : (p.fav ? 'mine' : (p.category || 'personal'))] || '📍');
     const links = [
       (p.date || p.eventId) ? `<a href="#/calendar" class="map-ic" title="On your calendar" aria-label="Open calendar">📅</a>` : '',
       (p.link && /^https:\/\//i.test(p.link)) ? `<a href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" class="map-ic" title="Ticket / booking" aria-label="Open ticket link">🎟️</a>` : '',
       `<a href="#/checklist" class="map-ic" title="Your checklist" aria-label="Open checklist">✓</a>`,
     ].join('');
-    return `<li class="map-srow${p.fav ? ' is-fav' : ''}" data-pid="${esc(p.id)}">
-      <button type="button" class="map-sgo" data-pid="${esc(p.id)}" aria-label="Show ${esc(p.name)} on map" title="Show on map">
-        <span class="map-sicon" aria-hidden="true">${icon}</span>
-        <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}</span>
+    return `<li class="map-srow${p.fav ? ' is-fav' : ''}${p.home ? ' is-home' : ''}${p.visited ? ' is-visited' : ''}" data-pid="${esc(p.id)}">
+      <button type="button" class="map-sgo" data-pid="${esc(p.id)}" aria-label="Show ${esc(p.name)} on map${p.visited ? ' (visited)' : ''}" title="Show on map">
+        <span class="map-sicon" aria-hidden="true">${esc(icon)}</span>
+        <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}${p.visited ? ' <span class="map-shanko" aria-hidden="true">済</span>' : ''}</span>
       </button>
       <span class="map-slinks">${links}
         <button type="button" class="map-ic" data-fav="${esc(p.id)}" aria-pressed="${p.fav ? 'true' : 'false'}" aria-label="${p.fav ? 'Unpin' : 'Pin'} ${esc(p.name)}" title="${p.fav ? 'Pinned — always visible' : 'Pin — always visible'}">${p.fav ? '★' : '☆'}</button>

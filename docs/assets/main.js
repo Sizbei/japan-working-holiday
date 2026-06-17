@@ -17,6 +17,7 @@ import { initRouter } from './router.js';
 import { mountGestures } from './gestures.js';
 import { mountGuide } from './guide.js';
 import { initKonami } from './konami.js';
+import { mountEaster } from './easter.js';
 import { stagger } from './motion.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
@@ -58,6 +59,7 @@ function boot() {
       mountGestures();               // swipe between pages, keyboard shortcuts, long-press menus
       mountGuide();                  // ⚙ Guide & Settings overlay (tutorial + theme/arcade/reduce-motion toggles)
       initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode
+      mountEaster();                 // hidden interactions + seasonal/2am eggs + mini-synth + console art
       stagger($$('.hero > *'), { y: 14, step: 60 });   // signature hero entrance, once
     })
     .catch(err => {

@@ -4,6 +4,7 @@
 
 import { KEYS, getRaw, setRaw } from './lib/store.js';
 import { dndToast } from './dnd.js';
+import { blip } from './lib/audio.js';
 
 const SEQ = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 
@@ -17,9 +18,10 @@ export function initKonami() {
   });
 }
 
-function unlock() {
+export function unlock() {
   const on = document.documentElement.dataset.arcade === 'on';
   document.documentElement.dataset.arcade = on ? '' : 'on';
   setRaw(KEYS.arcade, on ? '' : 'on');
+  try { blip(on ? 'select' : '1up'); } catch {}   // sound-gated inside audio.js
   try { dndToast(on ? 'ARCADE MODE OFF' : '1UP — ARCADE MODE'); } catch {}
 }

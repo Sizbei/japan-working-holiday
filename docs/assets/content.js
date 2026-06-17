@@ -10,6 +10,7 @@ import { makeSortable, dndToast } from './dnd.js';
 import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
+import { blip } from './lib/audio.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -484,6 +485,7 @@ function updateProgress() {
 }
 function celebrate() {
   if (getRaw(KEYS.celebrations, '') === 'off') return;   // user disabled celebrations in Settings
+  blip('1up');                                           // sound-gated inside audio.js (no-op unless Sound on)
   dndToast('🎉 Checklist complete — you’re ready for Japan!');
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const wrap = document.createElement('div');

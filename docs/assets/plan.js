@@ -15,6 +15,7 @@ import { legLabel, totalTransit, areaCount } from './lib/transit.js';
 import { loadPlaces } from './lib/places.js';
 import { placesModel, drawRoute, clearRoute } from './map.js';
 import { toICS, gcalUrl } from './lib/ics.js';
+import { directionsUrl, waypointsUrl } from './lib/directions.js';
 import { KEYS, get, set } from './lib/store.js';
 import {
   loadPlans, getPlan, hasPlan, newStop, planToEvents,
@@ -26,6 +27,7 @@ import { alertModal } from './lib/modal.js';
 let DATA = null, activeDate = '';
 
 const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };   // UTC-pure calendar add (no timezone off-by-one)
+const hasCoord = (s) => s && typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng);
 
 export function mountPlan(data) {
   DATA = data;
@@ -114,6 +116,9 @@ function render() {
   const rows = stops.map((s, i) => stopRow(s, i, stops)).join('');
   const mins = totalTransit(stops, DATA.areaGeo);
   const pace = stops.length >= 5 ? `<span class="plan-pace">⚠ ${stops.length} stops — that's a full day; consider trimming.</span>` : '';
+  // whole-day directions: one Google waypoints link (drops coordless stops, caps at the
+  // 9-point limit). Only render when ≥2 stops have real coords.
+  const dayDir = waypointsUrl(stops);
   body.innerHTML = `
     <div class="plan-foot-top">
       <span class="plan-summary">${stops.length} stop${stops.length > 1 ? 's' : ''} · ≈${mins} min between · ${areaCount(stops)} area${areaCount(stops) > 1 ? 's' : ''}</span>
@@ -123,6 +128,7 @@ function render() {
     <div class="plan-actions">
       <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>
       <button type="button" class="plan-btn" data-act="map">🗺 Show route on map</button>
+      ${dayDir.url ? `<a class="plan-btn" href="${esc(dayDir.url)}" target="_blank" rel="noopener noreferrer">🧭 Directions for the day</a>` : ''}
       <button type="button" class="plan-btn" data-act="ics">⬇ .ics</button>
       <button type="button" class="plan-btn" data-act="gcal">📅 Google</button>
       <button type="button" class="plan-btn" data-act="addcal">＋ Add to calendar</button>
@@ -133,7 +139,11 @@ function render() {
 
 function stopRow(s, i, stops) {
   const leg = i > 0 ? legLabel(stops[i - 1], s, DATA.areaGeo) : null;
-  const legHTML = leg ? `<li class="leg${leg.fuzzy ? ' fuzzy' : ''}" role="presentation"><span>${esc(leg.text)}</span></li>` : '';
+  // per-leg Directions handoff — only when BOTH adjacent stops have real coords (a jittered
+  // approx centroid isn't a route endpoint); keyless deep-link, opens the native Maps app.
+  const legDir = (leg && hasCoord(stops[i - 1]) && hasCoord(s))
+    ? ` <a class="leg-dir" href="${esc(directionsUrl({ from: { lat: stops[i - 1].lat, lng: stops[i - 1].lng }, to: { lat: s.lat, lng: s.lng } }))}" target="_blank" rel="noopener noreferrer" aria-label="Directions from ${esc(stops[i - 1].name)} to ${esc(s.name)}">🧭 Directions</a>` : '';
+  const legHTML = leg ? `<li class="leg${leg.fuzzy ? ' fuzzy' : ''}" role="presentation"><span>${esc(leg.text)}</span>${legDir}</li>` : '';
   const end = s.startTime ? endTime(s.startTime, s.durationMin) : '';
   return `${legHTML}
     <li class="stop" data-id="${esc(s.id)}">

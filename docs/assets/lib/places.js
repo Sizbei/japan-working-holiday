@@ -19,7 +19,7 @@ import { KEYS, get, set } from './store.js';
 // ---- pure helpers (unit-tested in Node; no localStorage/document) ----
 export function normalize(p) {
   return {
-    source: 'drop', fav: false, locked: false, visited: false,
+    source: 'drop', fav: false, locked: false, visited: false, emoji: '', home: false,
     coordKind: (typeof p.lat === 'number' && !isNaN(p.lat)) ? 'exact' : 'approx',
     note: '', link: '', date: '', remindDate: '', eventId: '', category: 'personal',
     ...p,
@@ -59,6 +59,13 @@ export function deletePlace(id) {
   if (removed.eventId) set(KEYS.events, (get(KEYS.events, []) || []).filter(e => e.id !== removed.eventId));
   dispatchChanged();
   return true;
+}
+// single-home invariant in ONE write: clear `home` on every other place, set it on `id`,
+// then exactly one dispatch. No-ops (one re-render still) if `id` isn't a saved place.
+export function setHomeBase(id) {
+  const arr = loadPlaces().map(p => p.home || p.id === id ? { ...p, home: p.id === id } : p);
+  savePlaces(arr);
+  dispatchChanged();
 }
 export function toggleFav(id) { const p = placeById(id); if (p) patchPlace(id, { fav: !p.fav }), dispatchChanged(); }
 export function toggleLock(id) { const p = placeById(id); if (p) patchPlace(id, { locked: !p.locked }), dispatchChanged(); }

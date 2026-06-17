@@ -43,6 +43,7 @@
   --c-imported:#6b6b6b;     --c-imported-ink:#6b6b6b;
   /* ============ TYPE ============ */
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --serif-jp: 'Shippori Mincho', 'Newsreader', serif;   /* editorial Japanese serif for the masthead kickers */
   --sans:  'Zen Kaku Gothic New', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fs-2xs: .6875rem; --fs-xs: .75rem; --fs-sm: .8125rem;
   --fs-base: clamp(.9375rem, .9rem + .18vw, 1rem);
@@ -305,7 +306,7 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 @media (min-width: 768px) { .intro { font-size: 1.3rem; } }
 
 /* section intro blurb (first-person) */
-.lede { color: var(--ink-soft); font-size: .98rem; margin: -.5rem 0 var(--s6); max-width: 65ch; }
+.lede { color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 1.02rem; margin: -.5rem 0 var(--s6); max-width: 64ch; }
 
 /* pillar banner headings — bigger, more presence */
 .pillar-head {
@@ -313,9 +314,9 @@ main { padding: var(--s6) var(--s4) var(--s12); }
   margin: var(--s12) 0 var(--s4); padding-bottom: var(--s3);
   border-bottom: 2px solid var(--line); position: relative;
 }
-.pillar-head .jp { font-family: var(--sans); font-weight: 900; color: var(--red); font-size: 1rem; letter-spacing: .15em; }
+.pillar-head .jp { font-family: var(--serif-jp); font-weight: 600; color: var(--red); font-size: 1.15rem; letter-spacing: .08em; }
 .pillar-head h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0; letter-spacing: -.02em; }
-.pillar-head::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 64px; height: 2px; background: var(--red); }
+.pillar-head::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 82px; height: 2px; background: var(--red); }
 
 /* ---- responsive card grids (maximize area) ---- */
 .grid { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
@@ -1680,11 +1681,7 @@ html[data-reduce-motion="on"] *::after{
    the existing theme tokens (cream + vermilion + serif), so it
    stays light/dark/arcade-safe and fully usable. Not a rewrite.
    ============================================================ */
-/* masthead → editorial */
-#view-map .pillar-head .jp{ font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.05rem; letter-spacing: .1em; }
-#view-map .lede{ font-family: var(--serif); font-style: italic; max-width: 62ch; }
-/* a thin vermilion rule already sits under .pillar-head::after — lengthen it on the map */
-#view-map .pillar-head::after{ width: 92px; }
+/* masthead editorial treatment is now site-wide (base .pillar-head/.lede) */
 
 /* the canvas reads like a mounted plate */
 #view-map .map-canvas{ box-shadow: 0 26px 52px -32px rgba(60,30,10,.42), inset 0 0 0 1px color-mix(in srgb, var(--red) 12%, transparent); }
@@ -1702,3 +1699,11 @@ html[data-reduce-motion="on"] *::after{
   padding-bottom: .4rem; margin-bottom: .55rem; border-bottom: 1.5px solid color-mix(in srgb, var(--red) 50%, var(--line)); }
 #view-map .map-sname{ font-family: var(--serif); font-size: 1rem; }
 #view-map .map-area a{ font-family: var(--serif); font-weight: 600; text-transform: none; letter-spacing: 0; font-size: .92rem; }
+
+/* deepened "Your pins" index — number + body(name/meta), editorial (serif name · mono meta) */
+.map-sgo{ align-items: flex-start; }
+.map-sno{ font-family: var(--mono); font-size:.64rem; color: var(--ink-faint); flex:none; width:1.5rem; text-align:right; padding-top:.12rem; }
+.map-sbody{ display:flex; flex-direction:column; min-width:0; line-height:1.2; }
+.map-smeta{ font-family: var(--mono); font-size:.62rem; text-transform:uppercase; letter-spacing:.03em; color: var(--ink-faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.map-srow.is-home .map-smeta{ color: var(--red); }
+.map-srow.is-visited .map-smeta{ opacity:.7; }

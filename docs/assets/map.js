@@ -661,7 +661,15 @@ function renderSaved() {
     ? (a.dataset.fav ? ['fav', a.dataset.fav] : a.dataset.del ? ['del', a.dataset.del] : ['pid', a.dataset.pid]) : null;
   const places = loadPlaces();
   if (!places.length) { wrap.innerHTML = `<h3 class="map-side-h">Your pins</h3><p class="map-empty">No saved pins yet — search a place above, ⭐ a restaurant, or “Drop a pin”.</p>`; return; }
-  const row = (p) => {
+  const home = homeBase();
+  // editorial index meta: neighbourhood + (when a home base exists) "≈N min from home"
+  const metaFor = (p) => {
+    if (p.home) return 'home base';
+    const area = areaOf(p.address || p.area || '');
+    const mins = (home && (p.area || p.address)) ? ` · ${fmtMins(estimateMinutes(home.area || home.address || '', p.area || p.address || '', DATA.areaGeo))} from home` : '';
+    return area + mins;
+  };
+  const row = (p, i) => {
     // custom emoji (single-glyph or kaomoji) wins over the category default in the sidebar too
     const icon = p.home ? '⛩️' : (p.emoji || CAT_GLYPH[p.source === 'tabetai' ? 'food' : (p.fav ? 'mine' : (p.category || 'personal'))] || '📍');
     const links = [
@@ -671,8 +679,12 @@ function renderSaved() {
     ].join('');
     return `<li class="map-srow${p.fav ? ' is-fav' : ''}${p.home ? ' is-home' : ''}${p.visited ? ' is-visited' : ''}" data-pid="${esc(p.id)}">
       <button type="button" class="map-sgo" data-pid="${esc(p.id)}" aria-label="Show ${esc(p.name)} on map${p.visited ? ' (visited)' : ''}" title="Show on map">
+        <span class="map-sno" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
         <span class="map-sicon" aria-hidden="true">${esc(icon)}</span>
-        <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}${p.visited ? ' <span class="map-shanko" aria-hidden="true">済</span>' : ''}</span>
+        <span class="map-sbody">
+          <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}${p.visited ? ' <span class="map-shanko" aria-hidden="true">済</span>' : ''}</span>
+          <span class="map-smeta">${esc(metaFor(p))}</span>
+        </span>
       </button>
       <span class="map-slinks">${links}
         <button type="button" class="map-ic" data-fav="${esc(p.id)}" aria-pressed="${p.fav ? 'true' : 'false'}" aria-label="${p.fav ? 'Unpin' : 'Pin'} ${esc(p.name)}" title="${p.fav ? 'Pinned — always visible' : 'Pin — always visible'}">${p.fav ? '★' : '☆'}</button>
@@ -680,7 +692,7 @@ function renderSaved() {
       </span></li>`;
   };
   wrap.innerHTML = `<h3 class="map-side-h">Your pins <span class="map-count">${places.length}</span></h3>
-    <ul class="map-slist dense-list">${places.map(row).join('')}</ul>`;
+    <ul class="map-slist dense-list">${places.map((p, i) => row(p, i)).join('')}</ul>`;
   wrap.querySelectorAll('.map-sgo').forEach(b => b.addEventListener('click', () => focusPlace(b.dataset.pid)));
   wrap.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => toggleFav(b.dataset.fav)));
   wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => { if (await confirmModal('Delete this pin?', { ok: 'Delete', danger: true }) && !deletePlace(b.dataset.del)) alertModal('This pin is locked — unlock it first.'); }));

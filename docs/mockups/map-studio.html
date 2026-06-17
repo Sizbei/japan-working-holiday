@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Tokyo Map — design studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Space+Mono:wght@400;700&family=DotGothic16&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════════════
+   MY TOKYO MAP — design studio. Three committed, distinct directions for the
+   map page, hand-built (SVG maps, no Leaflet) so the craft is fully controlled.
+   Switch with the segmented control. Each view commits to its own world.
+   ════════════════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{ --shell:#0e0e12; --shell-ink:#e9e6df; --shell-soft:#8a8678; }
+html,body{height:100%}
+body{ background:var(--shell); color:var(--shell-ink); font-family:'Zen Kaku Gothic New',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+
+/* ── studio frame ── */
+.studio{ position:fixed; inset:0; display:flex; flex-direction:column; }
+.topbar{ display:flex; align-items:center; gap:1.2rem; padding:.7rem 1.3rem; flex-wrap:wrap;
+  background:linear-gradient(180deg,#15151b,#0e0e12); border-bottom:1px solid #24242e; z-index:50; }
+.mark{ display:flex; align-items:center; gap:.6rem; font-family:'Space Mono',monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--shell-soft); }
+.mark b{ color:#fff; font-weight:700 } .mark .o{ width:11px;height:11px;border-radius:50%;background:#e4322f;box-shadow:0 0 12px #e4322f88 }
+.seg{ display:flex; gap:2px; background:#0a0a0e; border:1px solid #26262f; border-radius:11px; padding:3px; }
+.seg button{ background:none; border:none; color:var(--shell-soft); font-family:inherit; font-weight:700; font-size:.8rem; cursor:pointer;
+  padding:.5rem .95rem; border-radius:8px; display:flex; flex-direction:column; align-items:flex-start; line-height:1.1; transition:color .25s, background .25s; }
+.seg button .jp{ font-size:.62rem; opacity:.55; font-weight:400; margin-top:2px; letter-spacing:.1em }
+.seg button.on{ background:#1d1d26; color:#fff; box-shadow:inset 0 0 0 1px #34343f }
+.seg button:not(.on):hover{ color:#cfcabf }
+.tagline{ margin-left:auto; font-size:.74rem; color:var(--shell-soft); font-style:italic; font-family:'Newsreader',serif; }
+.frame{ position:relative; flex:1; overflow:hidden; }
+.view{ position:absolute; inset:0; overflow:auto; opacity:0; pointer-events:none; transition:opacity .5s cubic-bezier(.22,1,.36,1); }
+.view.on{ opacity:1; pointer-events:auto; }
+
+/* shared pin label + detail bits reused per view via scoped vars */
+.pin{ position:absolute; transform:translate(-50%,-50%); cursor:pointer; border:none; background:none; }
+.pin .lab{ position:absolute; left:50%; bottom:calc(100% + 6px); transform:translateX(-50%); white-space:nowrap; opacity:0; transition:opacity .18s; pointer-events:none; font-size:.66rem; font-weight:700; padding:2px 7px; border-radius:6px; }
+.pin:hover .lab,.pin:focus-visible .lab{ opacity:1 }
+
+/* ══════════════════════════════ VIEW 1 · SUMI-E (editorial, washi, ink) ══ */
+#v-sumi{ background:#f4efe3;
+  background-image:radial-gradient(120% 80% at 70% -10%, #fbf7ec, #f1ead9 55%, #e8dfc9);
+  color:#23201a; }
+#v-sumi .grain{ position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E"); }
+#v-sumi .wrap{ position:relative; max-width:1180px; margin:0 auto; padding:2.4rem clamp(1.2rem,4vw,3rem) 4rem; }
+#v-sumi .kicker{ font-family:'Yuji Syuku',serif; font-size:1.1rem; color:#a4122a; letter-spacing:.3em; }
+#v-sumi h1{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:clamp(2.4rem,6vw,4.2rem); line-height:.98; letter-spacing:-.01em; margin:.2rem 0 .1rem; }
+#v-sumi h1 .en{ display:block; font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:.34em; color:#7a7363; letter-spacing:0; margin-top:.4rem }
+#v-sumi .sub{ max-width:46ch; color:#6a6354; font-size:1rem; line-height:1.6; margin:.7rem 0 1.6rem; font-family:'Newsreader',serif; }
+#v-sumi .tools{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:1rem }
+#v-sumi .search{ flex:1; min-width:220px; border:none; border-bottom:1.5px solid #c9bfa6; background:none; font:inherit; font-size:.95rem; padding:.5rem .2rem; color:#23201a; }
+#v-sumi .search::placeholder{ color:#a89e85; font-style:italic; font-family:'Newsreader',serif }
+#v-sumi .ghost{ font-family:'Space Mono',monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; border:1px solid #c9bfa6; background:none; color:#5a5345; padding:.5rem .8rem; border-radius:2px; cursor:pointer; transition:all .2s }
+#v-sumi .ghost:hover{ background:#23201a; color:#f4efe3; border-color:#23201a }
+#v-sumi .legend{ display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem; font-family:'Space Mono',monospace; font-size:.7rem; color:#7a7363 }
+#v-sumi .legend span{ display:flex; align-items:center; gap:.4rem } #v-sumi .legend i{ width:9px;height:9px;border-radius:50%;background:var(--c) }
+#v-sumi .canvas{ position:relative; border:1px solid #d8cdb3; border-radius:3px; overflow:hidden; box-shadow:0 30px 60px -30px rgba(60,40,20,.4); aspect-ratio:16/10; background:#f6f1e6 }
+#v-sumi .seal-pin .seal{ width:34px;height:34px;border-radius:50%; border:2px solid #a4122a; color:#a4122a; background:rgba(244,239,227,.7);
+  display:grid; place-items:center; font-family:'Shippori Mincho',serif; font-weight:800; font-size:.9rem; box-shadow:0 4px 10px rgba(120,20,30,.18); backdrop-filter:blur(1px); transition:transform .25s cubic-bezier(.34,1.56,.64,1) }
+#v-sumi .seal-pin.fav .seal{ background:#a4122a; color:#f4efe3 }
+#v-sumi .seal-pin:hover .seal{ transform:scale(1.12) rotate(-4deg) }
+#v-sumi .pin .lab{ background:#23201a; color:#f4efe3; font-family:'Space Mono',monospace; font-weight:400 }
+#v-sumi.in .seal-pin{ animation:inkrise .6s cubic-bezier(.22,1,.36,1) both; animation-delay:var(--d) }
+@keyframes inkrise{ from{opacity:0; transform:translate(-50%,-35%) scale(.7); filter:blur(3px)} to{opacity:1; transform:translate(-50%,-50%) scale(1); filter:none} }
+#v-sumi.in h1,#v-sumi.in .kicker,#v-sumi.in .sub,#v-sumi.in .tools,#v-sumi.in .legend{ animation:rise .7s cubic-bezier(.22,1,.36,1) both }
+#v-sumi.in .kicker{animation-delay:.02s} #v-sumi.in h1{animation-delay:.08s} #v-sumi.in .sub{animation-delay:.16s} #v-sumi.in .tools{animation-delay:.22s} #v-sumi.in .legend{animation-delay:.26s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════ VIEW 2 · YORU (neon Tokyo night) ════════ */
+#v-yoru{ background:#070910;
+  background-image:radial-gradient(90% 60% at 80% 0%, #16223f 0%, #0b0f1c 45%, #060810 100%); color:#dfe6f5; }
+#v-yoru .wrap{ position:relative; max-width:1180px; margin:0 auto; padding:2.4rem clamp(1.2rem,4vw,3rem) 4rem }
+#v-yoru .kicker{ font-family:'Space Mono',monospace; letter-spacing:.4em; text-transform:uppercase; font-size:.72rem; color:#5cd2e6; text-shadow:0 0 14px #5cd2e677 }
+#v-yoru h1{ font-family:'Zen Kaku Gothic New',sans-serif; font-weight:900; font-size:clamp(2.3rem,6vw,4rem); letter-spacing:-.02em; line-height:1; margin:.4rem 0 .2rem;
+  background:linear-gradient(180deg,#fff,#b9c6e6); -webkit-background-clip:text; background-clip:text; color:transparent; }
+#v-yoru h1 .accent{ color:#ff4d8d; -webkit-text-fill-color:#ff4d8d; text-shadow:0 0 24px #ff4d8d88 }
+#v-yoru .sub{ max-width:46ch; color:#8e9bbd; font-size:.98rem; line-height:1.6; margin:.6rem 0 1.5rem }
+#v-yoru .tools{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:1rem }
+#v-yoru .search{ flex:1; min-width:220px; border:1px solid #243456; background:rgba(13,20,38,.6); backdrop-filter:blur(8px); font:inherit; font-size:.92rem; padding:.65rem .9rem; border-radius:999px; color:#dfe6f5 }
+#v-yoru .search::placeholder{ color:#5e6c91; font-family:'Space Mono',monospace; font-size:.82rem }
+#v-yoru .neon{ font-family:'Space Mono',monospace; font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; border:1px solid #ff4d8d; color:#ff8db8; background:rgba(255,77,141,.06); padding:.6rem .9rem; border-radius:999px; cursor:pointer; transition:all .2s; box-shadow:0 0 0 0 #ff4d8d00 }
+#v-yoru .neon:hover{ box-shadow:0 0 18px #ff4d8d55; background:rgba(255,77,141,.14) }
+#v-yoru .legend{ display:flex; flex-wrap:wrap; gap:.9rem; margin-bottom:1.2rem; font-family:'Space Mono',monospace; font-size:.68rem; color:#7e8cb0 }
+#v-yoru .legend span{display:flex;align-items:center;gap:.4rem} #v-yoru .legend i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+#v-yoru .canvas{ position:relative; border:1px solid #1b2a44; border-radius:16px; overflow:hidden; aspect-ratio:16/10; background:#070b16;
+  box-shadow:0 40px 80px -40px #000, inset 0 0 80px #0a1024 }
+#v-yoru .lantern{ width:18px;height:24px;border-radius:46% 46% 50% 50%/40% 40% 60% 60%; background:var(--c);
+  box-shadow:0 0 18px var(--c), 0 0 34px color-mix(in srgb,var(--c) 50%,transparent); position:relative; transition:transform .25s }
+#v-yoru .lantern::before{content:"";position:absolute;left:50%;top:-5px;transform:translateX(-50%);width:2px;height:5px;background:#3a4a6a}
+#v-yoru .pin.fav .lantern{ box-shadow:0 0 24px #ffd76a,0 0 44px #ffd76a99; background:#ffd76a }
+#v-yoru .pin:hover .lantern{ transform:scale(1.25) translateY(-2px) }
+#v-yoru .pin .ring{ position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--c); opacity:.0; animation:halo 2.6s ease-out infinite }
+@keyframes halo{0%{opacity:.5;transform:scale(.5)}100%{opacity:0;transform:scale(2.2)}}
+#v-yoru .pin .lab{ background:rgba(8,12,24,.9); color:#dfe6f5; border:1px solid #25365e; font-family:'Space Mono',monospace; font-weight:400 }
+#v-yoru.in .pin{ animation:flick .5s ease both; animation-delay:var(--d) }
+@keyframes flick{0%{opacity:0}40%{opacity:.3}55%{opacity:1}60%{opacity:.4}100%{opacity:1}}
+#v-yoru.in h1,#v-yoru.in .kicker,#v-yoru.in .sub,#v-yoru.in .tools,#v-yoru.in .legend{animation:rise .7s cubic-bezier(.22,1,.36,1) both}
+#v-yoru.in .kicker{animation-delay:.02s}#v-yoru.in h1{animation-delay:.08s}#v-yoru.in .sub{animation-delay:.16s}#v-yoru.in .tools{animation-delay:.22s}#v-yoru.in .legend{animation-delay:.26s}
+
+/* ══════════════════════════════ VIEW 3 · FAMICOM (8-bit overworld) ══════ */
+#v-fami{ background:#1a1c2c; image-rendering:pixelated; color:#e8e6d8;
+  font-family:'DotGothic16','Zen Kaku Gothic New',sans-serif; }
+#v-fami .wrap{ position:relative; max-width:1000px; margin:0 auto; padding:2rem clamp(1rem,3vw,2rem) 4rem }
+#v-fami .hud{ border:3px solid #e8e6d8; border-radius:4px; background:#202234; box-shadow:6px 6px 0 #000a; padding:1rem 1.1rem; }
+#v-fami .kicker{ color:#f7d51d; font-size:.85rem; letter-spacing:.08em }
+#v-fami h1{ font-size:clamp(1.7rem,5vw,2.6rem); line-height:1; margin:.2rem 0 .5rem; text-shadow:3px 3px 0 #000 }
+#v-fami .sub{ color:#a8a6c0; font-size:.82rem; line-height:1.5; margin-bottom:.8rem }
+#v-fami .tools{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-bottom:.7rem }
+#v-fami .search{ flex:1; min-width:200px; border:2px solid #4a4d6e; background:#15172a; font:inherit; font-size:.8rem; padding:.5rem .7rem; color:#e8e6d8 }
+#v-fami .search::placeholder{ color:#6a6d92 }
+#v-fami .ab{ font-family:inherit; font-size:.78rem; border:2px solid #e8e6d8; background:#e4322f; color:#fff; padding:.45rem .7rem; cursor:pointer; box-shadow:3px 3px 0 #000; text-transform:uppercase }
+#v-fami .ab.b{ background:#3a6de4 } #v-fami .ab:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 #000 }
+#v-fami .legend{ display:flex; flex-wrap:wrap; gap:.7rem; margin:.6rem 0 1rem; font-size:.64rem; color:#a8a6c0 }
+#v-fami .legend span{display:flex;align-items:center;gap:.3rem} #v-fami .legend i{width:10px;height:10px;background:var(--c)}
+#v-fami .canvas{ position:relative; border:3px solid #e8e6d8; border-radius:2px; overflow:hidden; aspect-ratio:16/10; box-shadow:6px 6px 0 #000a }
+#v-fami .canvas::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;background:repeating-linear-gradient(to bottom,#000 0 2px,transparent 2px 4px)}
+#v-fami .sprite{ width:22px;height:22px;background:var(--c); border:2px solid #000; box-shadow:2px 2px 0 #0008; display:grid; place-items:center; font-size:.72rem; image-rendering:pixelated }
+#v-fami .pin.fav .sprite{ background:#f7d51d }
+#v-fami .pin .lab{ background:#000; color:#f7d51d; border:2px solid #f7d51d; font-family:inherit; font-weight:400; border-radius:0 }
+#v-fami.in .pin{ animation:hopin .4s steps(4) both; animation-delay:var(--d) }
+@keyframes hopin{from{opacity:0;transform:translate(-50%,-120%)}to{opacity:1;transform:translate(-50%,-50%)}}
+#v-fami .pin .sprite{ animation:bob 1.4s steps(2) infinite }
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+#v-fami.in .hud{ animation:rise .6s steps(6) both }
+
+/* ── shared detail card (per-view skinned) ── */
+.detail{ position:fixed; z-index:60; width:min(320px,90vw); opacity:0; pointer-events:none; transform:translateY(10px) scale(.97);
+  transition:opacity .24s cubic-bezier(.22,1,.36,1), transform .28s cubic-bezier(.34,1.56,.64,1); }
+.detail.on{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1) }
+.detail .card{ padding:1.1rem 1.2rem }
+.detail h3{ font-size:1.3rem; margin-bottom:.1rem } .detail .a{ font-size:.82rem; opacity:.7; margin-bottom:.5rem }
+.detail .est{ font-size:.8rem; opacity:.85; margin-bottom:.8rem } .detail .acts{ display:flex; flex-wrap:wrap; gap:.4rem }
+.detail .acts button{ font:inherit; font-size:.74rem; cursor:pointer; padding:.45rem .65rem; border-radius:8px; border:1px solid currentColor; background:none; color:inherit }
+.detail[data-skin=sumi] .card{ background:#f4efe3; color:#23201a; border:1px solid #d8cdb3; border-radius:3px; box-shadow:0 30px 60px -25px rgba(60,40,20,.5); font-family:'Newsreader',serif }
+.detail[data-skin=sumi] h3{ font-family:'Shippori Mincho',serif; font-weight:800 }
+.detail[data-skin=sumi] .acts button{ border-radius:2px; font-family:'Space Mono',monospace; font-size:.68rem; text-transform:uppercase }
+.detail[data-skin=sumi] .acts .pri{ background:#a4122a; color:#f4efe3; border-color:#a4122a }
+.detail[data-skin=yoru] .card{ background:rgba(10,15,30,.86); backdrop-filter:blur(14px) saturate(1.3); color:#dfe6f5; border:1px solid #25365e; border-radius:16px; box-shadow:0 30px 70px -25px #000, 0 0 40px #1a2a50 }
+.detail[data-skin=yoru] h3{ font-weight:900 } .detail[data-skin=yoru] .acts .pri{ background:#ff4d8d; border-color:#ff4d8d; color:#fff; box-shadow:0 0 16px #ff4d8d66 }
+.detail[data-skin=fami]{ width:min(360px,92vw) } .detail[data-skin=fami] .card{ background:#202234; color:#e8e6d8; border:3px solid #e8e6d8; box-shadow:6px 6px 0 #000a; font-family:'DotGothic16',sans-serif }
+.detail[data-skin=fami] .acts button{ border-radius:0; border-width:2px; box-shadow:2px 2px 0 #000 } .detail[data-skin=fami] .acts .pri{ background:#e4322f; color:#fff }
+.backdrop{ position:fixed; inset:0; z-index:59; background:rgba(0,0,0,.3); opacity:0; pointer-events:none; transition:opacity .25s }
+.backdrop.on{ opacity:1; pointer-events:auto }
+
+@media(prefers-reduced-motion:reduce){ *{animation-duration:.001ms!important; transition-duration:.001ms!important} .pin .ring,.detail .est~*{} #v-yoru .pin .ring{display:none} }
+</style>
+</head>
+<body>
+<div class="studio">
+  <div class="topbar">
+    <span class="mark"><span class="o"></span> <b>MY TOKYO MAP</b> · studio</span>
+    <div class="seg" id="seg">
+      <button class="on" data-v="sumi">墨 Sumi-e<span class="jp">editorial · ink</span></button>
+      <button data-v="yoru">夜 Yoru<span class="jp">neon · night</span></button>
+      <button data-v="fami">8 Famicom<span class="jp">retro · overworld</span></button>
+    </div>
+    <span class="tagline" id="tagline">Three worlds for the same map — pick one, or mix.</span>
+  </div>
+  <div class="frame" id="frame"></div>
+</div>
+<div class="backdrop" id="backdrop"></div>
+<div class="detail" id="detail"><div class="card"></div></div>
+
+<script>
+const PLACES=[
+  {n:'Five G',jp:'音',a:'Harajuku',c:'#5a3fb5',x:30,y:40,fav:1,g:'🎵'},
+  {n:'Super Potato',jp:'遊',a:'Akihabara',c:'#167530',x:64,y:30,g:'🕹️'},
+  {n:'Ramen Nagi',jp:'麺',a:'Shibuya',c:'#a85716',x:24,y:64,g:'🍜'},
+  {n:'teamLab',jp:'光',a:'Toyosu',c:'#c43459',x:80,y:68,g:'✦'},
+  {n:'Home',jp:'家',a:'Nakano',c:'#3a5ba0',x:16,y:32,fav:1,g:'⛩'},
+  {n:'Disk Union',jp:'盤',a:'Shinjuku',c:'#5a3fb5',x:40,y:24,g:'🎵'},
+  {n:'Bit Valley',jp:'働',a:'Shibuya',c:'#3f51d6',x:30,y:52,g:'🏙'},
+  {n:'Comiket',jp:'祭',a:'Ariake',c:'#c43459',x:84,y:54,g:'祭'},
+  {n:'Mikawaya',jp:'食',a:'Asakusa',c:'#a85716',x:72,y:20,g:'🍣'},
+  {n:'Roppongi HQ',jp:'集',a:'Roppongi',c:'#a8228d',x:54,y:60,g:'👥'},
+  {n:'Broadway',jp:'萌',a:'Nakano',c:'#167530',x:18,y:44,g:'🕹️'},
+  {n:'Maisen',jp:'豚',a:'Omotesando',c:'#a85716',x:46,y:46,g:'🍱'},
+];
+const FILTERS=[['#5a3fb5','Music'],['#167530','Geek'],['#a85716','Food'],['#c43459','Events'],['#3f51d6','Build'],['#a8228d','Meet']];
+
+/* ── per-view SVG maps (hand-drawn, intentional) ── */
+const MAPS={
+ sumi:`<svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+   <rect width="160" height="100" fill="#f6f1e6"/>
+   <g stroke="#c2b79b" stroke-width=".4" fill="none" opacity=".7">
+     <path d="M0 28 H160 M0 56 H160 M0 80 H160 M34 0 V100 M72 0 V100 M110 0 V100"/></g>
+   <path d="M-5 70 C 30 60, 45 84, 80 74 S 130 58, 168 66" stroke="#9bb0bd" stroke-width="6" fill="none" stroke-linecap="round" opacity=".55"/>
+   <path d="M-5 71 C 30 61, 45 85, 80 75 S 130 59, 168 67" stroke="#cbd7dd" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/>
+   <g fill="#b9ad90" opacity=".5"><circle cx="44" cy="34" r="10"/><circle cx="96" cy="40" r="14"/><circle cx="30" cy="60" r="8"/><circle cx="120" cy="68" r="11"/></g>
+   <g fill="#a4122a" opacity=".9" font-family="serif" font-size="5" font-weight="700">
+     <text x="40" y="20">渋谷</text><text x="98" y="22">秋葉原</text><text x="22" y="90">目黒</text><text x="120" y="90">豊洲</text></g>
+   <circle cx="80" cy="50" r="2.4" fill="#a4122a"/></svg>`,
+ yoru:`<svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+   <defs><filter id="gl"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+   <rect width="160" height="100" fill="#070b16"/>
+   <g filter="url(#gl)" fill="none" stroke-linecap="round">
+     <path d="M0 30 H160" stroke="#1c5e8c" stroke-width="1.4" opacity=".8"/>
+     <path d="M0 58 H160" stroke="#7a2b6e" stroke-width="1.4" opacity=".7"/>
+     <path d="M34 0 V100" stroke="#1c5e8c" stroke-width="1.4" opacity=".7"/>
+     <path d="M72 0 V100" stroke="#2a7fa8" stroke-width="1.6" opacity=".9"/>
+     <path d="M110 0 V100" stroke="#7a2b6e" stroke-width="1.4" opacity=".7"/>
+     <path d="M-5 72 C 30 62, 45 86, 80 76 S 130 60, 168 68" stroke="#2bd4e6" stroke-width="2" opacity=".7"/></g>
+   <g fill="#5cd2e6"><circle cx="72" cy="30" r="1.6"/><circle cx="34" cy="58" r="1.4"/><circle cx="110" cy="30" r="1.4"/></g>
+   <g opacity=".5"><circle cx="42" cy="36" r="20" fill="#16243f"/><circle cx="100" cy="44" r="26" fill="#1f1530"/><circle cx="120" cy="70" r="18" fill="#102a3a"/></g></svg>`,
+ fami:`<svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" shape-rendering="crispEdges">
+   <rect width="160" height="100" fill="#5aa85a"/>
+   <g fill="#4e964e">${Array.from({length:200},(_,i)=>`<rect x="${(i%20)*8}" y="${Math.floor(i/20)*8}" width="4" height="4" opacity="${(i*7%3)?0:.5}"/>`).join('')}</g>
+   <rect x="0" y="62" width="160" height="38" fill="#3a78c8"/>
+   <g fill="#2f63aa">${Array.from({length:60},(_,i)=>`<rect x="${(i%20)*8}" y="${62+Math.floor(i/20)*8}" width="4" height="4"/>`).join('')}</g>
+   <g fill="#c8a05a"><rect x="0" y="46" width="160" height="6"/><rect x="68" y="0" width="6" height="100"/></g>
+   <g fill="#7ac87a"><rect x="36" y="20" width="14" height="14"/><rect x="96" y="26" width="18" height="14"/></g>
+   <g fill="#2a8a2a"><rect x="20" y="30" width="4" height="6"/><rect x="50" y="14" width="4" height="6"/><rect x="130" y="40" width="4" height="6"/></g></svg>`
+};
+
+const frame=document.getElementById('frame');
+const detail=document.getElementById('detail'), backdrop=document.getElementById('backdrop');
+let view='sumi';
+
+const TAG={sumi:'Ink-wash washi · serif · the gallery cut.',yoru:'Tokyo after midnight · neon glow · the 2am cut.',fami:'8-bit overworld · sprites · the arcade cut.'};
+const PINCLASS={sumi:'seal-pin',yoru:'',fami:''};
+function pinInner(v,p){
+  if(v==='sumi') return `<span class="seal" style="--c:${p.c}">${p.jp}</span>`;
+  if(v==='yoru') return `<span class="ring" style="--c:${p.c}"></span><span class="lantern" style="--c:${p.c}"></span>`;
+  return `<span class="sprite" style="--c:${p.c}">${p.g}</span>`;
+}
+function render(v){
+  view=v;
+  const pins=PLACES.map((p,i)=>`<button class="pin ${PINCLASS[v]} ${p.fav?'fav':''}" style="left:${p.x}%;top:${p.y}%;--d:${i*45}ms" data-i="${i}" aria-label="${p.n}">
+    ${pinInner(v,p)}<span class="lab">${p.n}</span></button>`).join('');
+  const legend=FILTERS.map(([c,l])=>`<span style="--c:${c}"><i></i>${l}</span>`).join('');
+  const shells={
+   sumi:`<div id="v-sumi" class="view"><div class="grain"></div><div class="wrap">
+     <div class="kicker">東京地図</div>
+     <h1>My Tokyo Map<span class="en">every place, brushed onto the city</span></h1>
+     <p class="sub">A hand-kept map of the year — where to eat, dig for records, ship code at 2am, and find your way home. Tap a seal to plan a visit.</p>
+     <div class="tools"><input class="search" placeholder="search a place, or add one…"><button class="ghost">＋ Drop a pin</button><button class="ghost">⤢ Fit all</button></div>
+     <div class="legend">${legend}</div>
+     <div class="canvas">${MAPS.sumi}${pins}</div></div></div>`,
+   yoru:`<div id="v-yoru" class="view"><div class="wrap">
+     <div class="kicker">TOKYO · 02:00</div>
+     <h1>My Tokyo <span class="accent">Map</span></h1>
+     <p class="sub">The city after midnight — record bars in Shimokita, ramen in Shibuya, the long train home. Every pin a lantern you've lit.</p>
+     <div class="tools"><input class="search" placeholder="SEARCH // address or name"><button class="neon">＋ DROP A PIN</button><button class="neon">⤢ FIT ALL</button></div>
+     <div class="legend">${legend}</div>
+     <div class="canvas">${MAPS.yoru}${pins}</div></div></div>`,
+   fami:`<div id="v-fami" class="view"><div class="wrap"><div class="hud">
+     <div class="kicker">★ WORLD 1 — TOKYO</div>
+     <h1>MY TOKYO MAP</h1>
+     <p class="sub">Press a sprite to open it. Collect all the places. ⛩ marks your home base.</p>
+     <div class="tools"><input class="search" placeholder="ADD A PLACE…"><button class="ab">Ａ DROP</button><button class="ab b">Ｂ FIT</button></div>
+     <div class="legend">${legend}</div>
+     <div class="canvas">${MAPS.fami}${pins}</div></div></div></div>`
+  };
+  frame.innerHTML=shells[v];
+  const el=frame.querySelector('.view');
+  requestAnimationFrame(()=>{ el.classList.add('on'); el.classList.add('in'); });
+  el.querySelectorAll('.pin').forEach(b=>b.addEventListener('click',()=>openDetail(+b.dataset.i)));
+  document.getElementById('tagline').textContent=TAG[v];
+}
+function openDetail(i){
+  const p=PLACES[i];
+  detail.dataset.skin=view;
+  detail.querySelector('.card').innerHTML=`<h3>${p.fav?'⛩ ':''}${p.n}</h3><div class="a">${p.a}${p.fav?' · home base':''}</div>
+    <div class="est">${p.fav?'Your base — routes start here while you plan.':'≈ 22 min from home · transit'}</div>
+    <div class="acts"><button class="pri">🧭 Directions</button><button>✓ Visited</button><button>✎ Note</button><button>★</button></div>`;
+  detail.style.left='50%'; detail.style.top='auto'; detail.style.bottom='3vh'; detail.style.transform='translateX(-50%)';
+  detail.classList.add('on'); backdrop.classList.add('on');
+  detail.querySelectorAll('button').forEach(b=>b.addEventListener('click',close));
+}
+function close(){ detail.classList.remove('on'); backdrop.classList.remove('on'); }
+backdrop.onclick=close; addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+document.getElementById('seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');close();render(b.dataset.v);});
+render('sumi');
+</script>
+</body>
+</html>

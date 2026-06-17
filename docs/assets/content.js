@@ -74,6 +74,15 @@ function wireDiscoverFilter() {
       $$('#view-explore .grid .card2').forEach(card => { card.style.display = ''; });   // clear any search/area-hidden
       applyTierFilter();                                                                // re-assert the restaurant tier filter (don't stomp it)
     }
+    // empty-state when an active filter hides everything
+    const filtering = q || area !== 'all' || sec !== 'all';
+    const anyVisible = $$('#view-explore .grid .card2').some(c => c.style.display !== 'none');
+    let note = $('#discoverEmpty');
+    if (filtering && !anyVisible) {
+      if (!note) { note = document.createElement('p'); note.id = 'discoverEmpty'; note.className = 'discover-empty'; bar.insertAdjacentElement('afterend', note); }
+      note.textContent = `No matches${q ? ` for “${search.value.trim()}”` : ''}${area !== 'all' ? ` in ${area}` : ''} — try All areas or clear the search.`;
+      note.hidden = false;
+    } else if (note) { note.hidden = true; }
   };
   search?.addEventListener('input', apply);
   $$('#discInterest .chip, #discArea .chip').forEach(c => c.addEventListener('click', () => {

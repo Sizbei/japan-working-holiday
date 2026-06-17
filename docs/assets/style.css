@@ -102,6 +102,7 @@
   --ink:#ece9e2; --ink-soft:#b3aea4; --ink-faint:#9a9388; --line:#2e2e3a; --line-strong:#3c3c4a;
   --red:#ff4d6d; --red-soft:#ff6f88; --indigo:#8fb0ff; --indigo-soft:#6e8fe0; --gold:#e0b34a;
   --red-ink:#ff6b81; --indigo-ink:#8fb0ff; --gold-ink:#e0b34a;
+  --on-accent:#15151c;   /* dark-mode accents are LIGHT (indigo/red/green) → dark text for WCAG-AA (≥6:1) */
   --ok-fill:#2ea24a; --ok-ink:#6bd98e; --warn-fill:#d77f30; --warn-ink:#e0913f; --bad-fill:#e3567a; --bad-ink:#ff6b88;
   --c-festival-ink:#f08aa6; --c-fireworks-ink:#b598f0; --c-illumination-ink:#6fb4e8;
   --c-convention-ink:#5cc678; --c-seasonal-ink:#e0b34a; --c-nature-ink:#74c267;
@@ -1320,6 +1321,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .am-btn:hover{ border-color: var(--indigo); }
 .am-primary{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
 .am-danger{ background: var(--red); border-color: var(--red); }
+@media (hover: none){ .lang-toggle{ min-height:44px; min-width:44px; } .am-btn, .plan-sheet-x, .np-x{ min-height:44px; } }
 
 /* day-plan route line markers on the map */
 .jwh-route-pin{ display:grid; place-items:center; }

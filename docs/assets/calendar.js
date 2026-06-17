@@ -390,9 +390,10 @@ function onImport(e) {
     if (!parsed.length) { alertModal('No events found in that .ics file.'); return; }
     if (!await confirmModal(`Import ${parsed.length} event(s) into your calendar?`, { ok: 'Import' })) return;
     const u = loadUser();
-    parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
+    parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, endDate: p.endDate || '', category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
     saveUser(u);   // jwh:data-changed → render()
   };
+  reader.onerror = () => alertModal('Could not read that .ics file.');
   reader.readAsText(file); e.target.value = '';
 }
 

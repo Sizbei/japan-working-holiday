@@ -54,9 +54,19 @@ export function parseICS(text) {
     const dt = body.match(/(?:^|\n)DTSTART[^:\n]*:(\d{8})/i);
     if (!dt) continue;
     const iso = `${dt[1].slice(0, 4)}-${dt[1].slice(4, 6)}-${dt[1].slice(6, 8)}`;
+    // DTEND on an all-day VEVENT is EXCLUSIVE (the day after the last) — subtract 1 to recover endDate
+    let endIso = '';
+    const de = body.match(/(?:^|\n)DTEND[^:\n]*:(\d{8})/i);
+    if (de) {
+      const d = new Date(Date.UTC(+de[1].slice(0, 4), +de[1].slice(4, 6) - 1, +de[1].slice(6, 8)));
+      d.setUTCDate(d.getUTCDate() - 1);
+      const back = d.toISOString().slice(0, 10);
+      if (back > iso) endIso = back;
+    }
     out.push({
       title: get('SUMMARY') || '(untitled)',
       date: iso,
+      endDate: endIso,
       note: get('DESCRIPTION'),
       area: get('LOCATION'),
       category: (get('CATEGORIES') || 'imported').toLowerCase(),

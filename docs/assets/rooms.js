@@ -24,7 +24,7 @@ function card(r) {
     <ul class="room-meta">
       <li><b>Move-in</b> ${esc(r.moveIn)}</li>
       <li><b>Fees</b> ${esc(r.fees)} · <b>Initial</b> ${esc(r.oneTime)}</li>
-      <li><b>Room</b> ${esc(r.roomType)} · ${esc(r.gender)}</li>
+      <li><b>Room</b> ${esc(r.roomType)}${r.gender ? ' · ' + esc(r.gender) : ''}</li>
       <li><b>Requirements</b> ${esc((r.requirements || []).join(' · '))}</li>
       <li><b>Contact</b> ${esc(r.contact)}</li>
     </ul>
@@ -46,6 +46,10 @@ function render() {
 function updateCount() {
   const n = $$('#roomsGrid .room-card').filter(c => c.style.display !== 'none').length;
   const el = $('#roomCount'); if (el) el.textContent = `${n} option${n === 1 ? '' : 's'}`;
+  const grid = $('#roomsGrid');
+  let empty = grid?.querySelector('.room-empty');
+  if (n === 0 && grid && !empty) { empty = document.createElement('p'); empty.className = 'room-empty'; empty.textContent = 'No rooms match these filters — clear a filter or search a different area.'; grid.appendChild(empty); }
+  else if (n > 0 && empty) empty.remove();
 }
 
 function wire() {

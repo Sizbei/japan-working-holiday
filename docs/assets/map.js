@@ -13,7 +13,7 @@ import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
 import {
-  loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, catId, slug,
+  loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, toggleFav, catId, slug,
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
@@ -396,12 +396,14 @@ function renderSaved() {
         <span class="map-sname">${esc(p.name)}${p.coordKind === 'approx' ? ' <span class="map-approx" aria-hidden="true">≈</span>' : ''}</span>
       </button>
       <span class="map-slinks">${links}
+        <button type="button" class="map-ic" data-fav="${esc(p.id)}" aria-pressed="${p.fav ? 'true' : 'false'}" aria-label="${p.fav ? 'Unpin' : 'Pin'} ${esc(p.name)}" title="${p.fav ? 'Pinned — always visible' : 'Pin — always visible'}">${p.fav ? '★' : '☆'}</button>
         <button type="button" class="map-ic" data-del="${esc(p.id)}" aria-label="Delete ${esc(p.name)}"${p.locked ? ' disabled title="locked"' : ''}>✕</button>
       </span></li>`;
   };
   wrap.innerHTML = `<h3 class="map-side-h">Your pins <span class="map-count">${places.length}</span></h3>
     <ul class="map-slist dense-list">${places.map(row).join('')}</ul>`;
   wrap.querySelectorAll('.map-sgo').forEach(b => b.addEventListener('click', () => focusPlace(b.dataset.pid)));
+  wrap.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => toggleFav(b.dataset.fav)));
   wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => { if (await confirmModal('Delete this pin?', { ok: 'Delete', danger: true }) && !deletePlace(b.dataset.del)) alertModal('This pin is locked — unlock it first.'); }));
 }
 

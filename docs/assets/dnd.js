@@ -4,8 +4,6 @@
 // cancel). The engine NEVER persists DOM directly: it computes the new id order and
 // calls onReorder(ids) — the surface persists to localStorage and its renderer rebuilds.
 
-import { prefersReducedMotion } from './motion.js';
-
 // pure: move an item by id before/after a target id (exported for tests)
 export function reorderIds(ids, dragId, targetId, after = false) {
   if (dragId === targetId) return ids.slice();

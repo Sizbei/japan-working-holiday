@@ -47,7 +47,9 @@ function bakedEvents() {
 let _evCache = null;   // memoized for one render pass (eventsOn is called ~once per day cell)
 export function allEvents() {
   if (_evCache) return _evCache;
-  _evCache = [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))].filter(e => parseISO(e.date));
+  const user = loadUser().map(e => ({ ...e, source: 'user' }));
+  const copied = new Set(user.map(e => e.copyOf).filter(Boolean));   // "Copy to my events" takes over the baked original — hide it to avoid a duplicate chip
+  _evCache = [...bakedEvents().filter(e => !copied.has(e.id)), ...user].filter(e => parseISO(e.date));
   return _evCache;
 }
 function catOf(e) { return e.category || 'personal'; }
@@ -327,15 +329,15 @@ function openDetail(ev) {
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
-  ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov); });
+  ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov, { rerender: true }); });
   ov.querySelector('#mdPlan')?.addEventListener('click', () => {
     const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
     upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));
-    closeModal(ov); alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
+    closeModal(ov, { rerender: true }); alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
   });
   ov.querySelector('#mdCopy')?.addEventListener('click', () => {
-    saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '' }]);
-    closeModal(ov);   // jwh:data-changed → render() (single path)
+    saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
+    closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
   });
 }
 function srcline(s) {
@@ -346,7 +348,9 @@ function srcline(s) {
 // ---- add/edit modal ----
 function openModal(ev, presetDate) {
   const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: '', time: '', category: 'personal', note: '' };
-  const opts = CATS.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
+  // preserve a non-standard (e.g. imported .ics) category instead of silently rewriting it to the first option
+  const cats = (e.category && !CATS.includes(e.category)) ? [e.category, ...CATS] : CATS;
+  const opts = cats.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
   const gbtn = ev ? `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer">+ Google</a>` : '';
   const body = `
     <h3 class="modal-title">${ev ? 'Edit event' : 'Add event'}</h3>
@@ -371,16 +375,17 @@ function openModal(ev, presetDate) {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());
     if (!obj.title.trim() || !obj.date) return;
+    if (obj.endDate && obj.endDate < obj.date) { alertModal('End date can’t be before the start date.'); return; }   // else the event is invisible on the grid but counts in alerts
     const u = (ev && ev.id)
       ? loadUser().map(x => x.id === ev.id ? { ...x, ...obj } : x)
       : [...loadUser(), { id: 'u' + Date.now(), ...obj }];
-    saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
+    saveUser(u); closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
   });
   ov.querySelector('#mdDel')?.addEventListener('click', () => {
     const linked = loadPlaces().find(p => p.eventId === ev.id);   // clear the back-ref on any place that linked this event
     if (linked) patchPlace(linked.id, { eventId: '', date: '', remindDate: '' });
     saveUser(loadUser().filter(x => x.id !== ev.id));
-    closeModal(ov);
+    closeModal(ov, { rerender: true });
   });
 }
 
@@ -450,6 +455,12 @@ function showModal(html) {
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
   setTimeout(() => (ov.querySelector('.modal input,.modal select,.modal textarea') || focusables()[0])?.focus(), 30);
+  ov._restore = restore;   // commit paths call closeModal(ov, { rerender }) which restores focus
   return ov;
 }
-function closeModal(ov) { ov.classList.add('out'); setTimeout(() => ov.remove(), 180); }
+// rerender:true → the trigger element is destroyed by render(); send focus to the stable toolbar +Add button instead
+function closeModal(ov, opts) {
+  ov.classList.add('out'); setTimeout(() => ov.remove(), 180);
+  if (opts && opts.rerender) $('#calAdd')?.focus();
+  else ov._restore?.();
+}

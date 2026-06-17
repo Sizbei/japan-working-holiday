@@ -46,7 +46,15 @@ function setupWidgetDnD() {
   });
 }
 
+function gcDismissed() {
+  // drop dismissed ids whose encoded @date is in the past (and legacy bare ids that can no longer match)
+  const d = get(KEYS.dismissed, []) || [];
+  const keep = d.filter(id => { const at = String(id).lastIndexOf('@'); return at >= 0 && String(id).slice(at + 1) >= TODAY; });
+  if (keep.length !== d.length) set(KEYS.dismissed, keep);
+}
+
 function refresh() {
+  gcDismissed();
   const alerts = computeAlerts(buildItems(), TODAY, get(KEYS.dismissed, []) || []);
   renderBadge(alerts);
   renderPanel(alerts);
@@ -62,19 +70,20 @@ function dismiss(id) {
 function buildItems() {
   const checks = get(KEYS.checklist, {}) || {};
   const items = [];
+  // dismiss ids encode the date (@when) so re-setting a date yields a FRESH, non-dismissed alert
   (DATA.timeSensitive || []).forEach((t, i) => {
-    if (t.dueBy) items.push({ id: 'ts-' + i, title: t.item, when: t.dueBy, kind: 'deadline', detail: t.action });
+    if (t.dueBy) items.push({ id: 'ts-' + i + '@' + t.dueBy, title: t.item, when: t.dueBy, kind: 'deadline', detail: t.action });
   });
   (DATA.bookByTimeline || []).forEach((b) =>
-    items.push({ id: b.id, title: b.what, when: b.when, kind: 'book', detail: b.action }));
+    items.push({ id: b.id + '@' + b.when, title: b.what, when: b.when, kind: 'book', detail: b.action }));
   const userDue = get(KEYS.due, {}) || {};
   checklistItems(DATA).forEach(it => {           // only YOUR added due dates notify (baked deadlines already live in timeSensitive/bookBy)
-    if (userDue[it.id] && !checks[it.id]) items.push({ id: 'ck-' + it.id, title: it.task, when: userDue[it.id], kind: 'task', detail: it.note });
+    if (userDue[it.id] && !checks[it.id]) items.push({ id: 'ck-' + it.id + '@' + userDue[it.id], title: it.task, when: userDue[it.id], kind: 'task', detail: it.note });
   });
   allEvents().forEach(e => {
     const start = e.date.slice(0, 10);
-    if (start >= TODAY) items.push({ id: 'ev-' + e.id, title: e.title, when: start, kind: 'event', detail: e.area }); // future starts only — not already-running seasons
-    if (e.bookBy && e.source === 'user') items.push({ id: 'bk-' + e.id, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });   // baked book-by already covered by bookByTimeline — don't double-count
+    if (start >= TODAY) items.push({ id: 'ev-' + e.id + '@' + start, title: e.title, when: start, kind: 'event', detail: e.area }); // future starts only — not already-running seasons
+    if (e.bookBy && e.source === 'user') items.push({ id: 'bk-' + e.id + '@' + e.bookBy, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });   // baked book-by already covered by bookByTimeline — don't double-count
   });
   return items;
 }

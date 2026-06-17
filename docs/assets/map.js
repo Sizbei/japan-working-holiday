@@ -12,6 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
+import { haversineKm } from './lib/transit.js';
 import {
   loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, toggleFav, catId, slug,
 } from './lib/places.js';
@@ -68,6 +69,19 @@ export function mountMap(data) {
   });
 }
 
+// nearest neighbourhood bucket for an exact-coord pin, so the area filter matches its real
+// location (not a text guess). Falls back to 'Around Tokyo' beyond a sane radius.
+function nearestArea(lat, lng) {
+  const geo = DATA.areaGeo || {};
+  let best = 'Around Tokyo', bestKm = 8;   // ~8km: past this, "nearest" is meaningless in Tokyo
+  AREA_ORDER.forEach(a => {
+    const c = geo[a]; if (!c || a === 'Around Tokyo') return;
+    const km = haversineKm({ lat, lng }, c);
+    if (km < bestKm) { bestKm = km; best = a; }
+  });
+  return best;
+}
+
 // ====================================================================== the unified model
 // Every map point with a STABLE id, shared by pins + list + sidebar (parity + sync).
 // Exported so the Plan-a-Day add-stop picker reuses the same unified point list.
@@ -79,8 +93,14 @@ export function placesModel() {
   const users = loadPlaces();
   users.forEach(p => seenName.add((p.name || '').toLowerCase().trim()));
   // 1) user-saved places (exact or approx) — always included. Derive `group` so the
-  // neighbourhood filter doesn't hide every personal pin (areaOf → 'Around Tokyo' fallback).
-  users.forEach(p => { out.push({ ...p, kind: 'user', cat: p.category || 'personal', group: areaOf(p.address || p.area || '') }); seenId.add(p.id); });
+  // neighbourhood filter doesn't hide every personal pin. For exact-coord pins (a dropped/
+  // geocoded pin with no address text) bucket by the NEAREST area centroid, not text.
+  users.forEach(p => {
+    const group = (p.coordKind === 'exact' && typeof p.lat === 'number' && typeof p.lng === 'number')
+      ? nearestArea(p.lat, p.lng)
+      : areaOf(p.address || p.area || '');
+    out.push({ ...p, kind: 'user', cat: p.category || 'personal', group }); seenId.add(p.id);
+  });
   // 2) upcoming dated events
   (DATA.calendar || []).forEach(e => {
     if (!e.area || !e.date || e.date < today || e.category === 'holiday') return;
@@ -97,7 +117,7 @@ export function placesModel() {
     if (/^(Visit: |⏰ )/.test(e.title || '') || String(e.id).startsWith('plan:')) return;
     const nm = (e.title || '').toLowerCase().trim();
     if (!nm || seenName.has(nm)) return; seenName.add(nm);
-    const area = e.area || e.note || '';
+    const area = e.area || '';   // a free-text note is NOT a location — don't snap the pin to a word it happens to contain
     const c = centroid(DATA.areaGeo, areaOf(area)), j = jitter(e.title);
     out.push({ id: 'uevt:' + e.id, kind: 'event', name: e.title, area, group: areaOf(area),
       lat: c.lat + j.dy, lng: c.lng + j.dx, cat: e.category || 'personal', coordKind: 'approx', date: e.date, pulse: isSoon(e.date) });
@@ -347,18 +367,20 @@ async function planVisit(id) {
   const d = date.trim();
   if (existing?.eventId) removeEvent(existing.eventId);   // clear the old event so we don't orphan it
   const eid = pushEvent('Visit: ' + pt.name, d, pt.area || '');
-  if (existing) { patchPlace(existing.id, { date: d, remindDate: d, eventId: eid }); change(); }
+  // a visit's "Visit:" event IS its reminder — don't also set remindDate (that made clear-reminder delete the visit)
+  if (existing) { patchPlace(existing.id, { date: d, remindDate: '', eventId: eid }); change(); }
   else upsertPlace({ id, name: pt.name, address: pt.area || '', lat: pt.lat, lng: pt.lng, category: pt.cat,
-    source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', coordKind: 'approx', date: d, remindDate: d, eventId: eid });
+    source: pt.pillar === 'restaurants' ? 'tabetai' : 'catalogue', coordKind: 'approx', date: d, remindDate: '', eventId: eid });
   if (map) map.closePopup();
 }
 async function dropPin(latlng) {
   const name = await askText('Name this pin:', { ok: 'Drop pin' });
   if (!name) { toggleArm(false); return; }
   toggleArm(false);
-  upsertPlace({ id: 'p' + Date.now(), name, address: '', lat: +latlng.lat.toFixed(6), lng: +latlng.lng.toFixed(6),
+  const pid = 'p' + Date.now();
+  upsertPlace({ id: pid, name, address: '', lat: +latlng.lat.toFixed(6), lng: +latlng.lng.toFixed(6),
     category: 'personal', source: 'drop', coordKind: 'exact' });   // dispatches → renders synchronously
-  setTimeout(() => focusPlace(placeByName(name)?.id), 50);
+  setTimeout(() => focusPlace(pid), 50);   // focus by the id we just created (name may collide with an existing place)
 }
 async function addToCalendar(p) {
   const date = await askDate(`Add “${p.name}” to the calendar on:`, { value: p.date || (DATA.meta?.arrival_date || '2026-06-30') });
@@ -375,6 +397,7 @@ async function setReminder(p) {
   if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
   if (!d) {                                  // clearing a reminder — the shared event slot may hold a VISIT; never destroy that
     if (!p.remindDate) { if (map) map.closePopup(); return; }   // nothing to clear; leave a planned visit intact
+    if (p.date) { patchPlace(p.id, { remindDate: '' }); if (map) map.closePopup(); change(); return; }   // a planned visit owns the event — keep it
     if (p.eventId) removeEvent(p.eventId);
     patchPlace(p.id, { remindDate: '', eventId: '' });
     if (map) map.closePopup(); change(); return;
@@ -393,13 +416,15 @@ async function setExact(p) {
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) { alertModal('Those coordinates are out of range.'); return; }
     patchPlace(p.id, { lat, lng, coordKind: 'exact' }); if (map) map.closePopup(); change(); return;
   }
+  const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 4000);   // never hang on a stalled request
   try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' }, signal: ctrl.signal });
     const d = r.ok ? await r.json() : [];
     if (!d.length) { alertModal('No match — try a different address or "lat, lng".'); return; }
     patchPlace(p.id, { lat: +d[0].lat, lng: +d[0].lon, address: d[0].display_name, coordKind: 'exact' });
     if (map) map.closePopup(); change();
   } catch { alertModal('Geocoding unavailable.'); }
+  finally { clearTimeout(to); }
 }
 // SILENT writers — pushEvent/removeEvent do NOT dispatch; every caller follows with change()
 // or upsertPlace() (which dispatches), so exactly one jwh:data-changed fires per action.
@@ -490,9 +515,10 @@ function wireAddPlace() {
     clearTimeout(timer);
     const q = input.value.trim();
     if (q.length < 3) { sug.innerHTML = ''; return; }
-    timer = setTimeout(async () => {
+    const run = async () => {
       const now = Date.now();
-      if (now - lastReq < 1100) return;
+      const wait = 1100 - (now - lastReq);
+      if (wait > 0) { timer = setTimeout(run, wait); return; }   // reschedule instead of dropping the follow-up query
       lastReq = now;
       if (controller) controller.abort();
       controller = new AbortController();
@@ -504,7 +530,8 @@ function wireAddPlace() {
           `<li><button type="button" data-lat="${esc(String(d.lat))}" data-lng="${esc(String(d.lon))}" data-name="${esc(d.display_name.split(',')[0])}" data-addr="${esc(d.display_name)}">${esc(d.display_name)}</button></li>`).join('')
           : '<li class="sug-msg">No matches</li>';
       } catch (e) { if (e.name !== 'AbortError') sug.innerHTML = '<li class="sug-msg">Search unavailable (offline?)</li>'; }
-    }, 450);
+    };
+    timer = setTimeout(run, 450);
   });
   sug.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-lat]'); if (!b) return;
@@ -512,7 +539,7 @@ function wireAddPlace() {
     const date = (dateEl?.value || '').trim();
     const id = 'p' + Date.now();
     const rec = { id, name: b.dataset.name, address: b.dataset.addr, lat: +b.dataset.lat, lng: +b.dataset.lng, category: 'personal', source: 'searched', coordKind: 'exact' };
-    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) { rec.date = date; rec.remindDate = date; rec.eventId = pushEvent('Visit: ' + rec.name, date, rec.address); }
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) { rec.date = date; rec.remindDate = ''; rec.eventId = pushEvent('Visit: ' + rec.name, date, rec.address); }
     upsertPlace(rec);
     input.value = ''; sug.innerHTML = ''; if (dateEl) dateEl.value = '';
     ensureLeaflet();

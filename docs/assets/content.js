@@ -7,7 +7,7 @@ import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
-import { placeById, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
+import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
 
@@ -129,8 +129,9 @@ function renderPillar(key, sel, placeholder) {
 
 // ---- Tabetai (want-to-eat): ★ a restaurant -> a source:'tabetai' place (map pin + saved list) ----
 function syncStars(grid) {
+  const favs = new Map(loadPlaces().map(p => [p.id, !!p.fav]));   // one read+parse per sync (was one per star)
   grid.querySelectorAll('.tabetai-star').forEach(b => {
-    const on = !!placeById(b.dataset.tb);
+    const on = favs.get(b.dataset.tb) === true;                  // ★ reflects the FAV flag, not mere existence (a planned visit is a place but not a star)
     b.textContent = on ? '★' : '☆';
     b.classList.toggle('on', on);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -143,9 +144,11 @@ function wireTabetai(grid) {
     if (!b) return;
     e.stopPropagation();                                     // don't toggle the card's expand
     const id = b.dataset.tb, existing = placeById(id);
-    if (existing) {
+    if (existing && existing.fav) {                          // currently starred → unstar
       if (existing.date || existing.eventId || existing.locked) { patchPlace(id, { fav: false }); dispatchChanged(); }  // keep a planned/locked visit, just un-pin (patchPlace is silent → dispatch)
       else deletePlace(id);                                  // plain want-to-eat -> remove (dispatches)
+    } else if (existing) {                                   // exists but unstarred (e.g. a planned visit) → re-star (toggles both ways)
+      patchPlace(id, { fav: true }); dispatchChanged();
     } else {
       const c = approxCoord(DATA.areaGeo, b.dataset.area, b.dataset.name);
       upsertPlace({ id, name: b.dataset.name, address: b.dataset.area, lat: c.lat, lng: c.lng, category: 'food', source: 'tabetai', fav: true, coordKind: 'approx', visited: false });
@@ -347,11 +350,13 @@ function renderChecklist(today) {
   const due = loadDue();
   const order = loadCheckOrder();
   const now = today || nowISO();
+  const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
+  const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
   wrap.innerHTML = phases.map((p, pi) => `
     <div class="phase-block">
       <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
       <ul class="check-list" data-phase="${pi}">
-        ${orderItems(p.items || [], order[pi]).map(it => checkItemHTML(it, state, due, now)).join('')}
+        ${orderItems(p.items || [], order[pi]).map(it => checkItemHTML(it, state, due, now, knownIds)).join('')}
       </ul>
     </div>`).join('');
   const prog = $('#checkProgress');
@@ -362,14 +367,27 @@ function renderChecklist(today) {
     idOf: el => el.dataset.id,
     onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
   }));
+  if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }
-function checkItemHTML(it, state, due, now) {
+// identify the focused checklist control so renderChecklist() can restore it after the rebuild
+function captureCheckFocus() {
+  const a = document.activeElement, wrap = $('#checkPhases');
+  if (!a || !wrap || !wrap.contains(a)) return null;
+  const esc2 = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
+  if (a.dataset.cid) return `input[data-cid="${esc2(a.dataset.cid)}"]`;
+  if (a.dataset.due) return `.ci-due[data-due="${esc2(a.dataset.due)}"]`;
+  const li = a.closest?.('.check-item');
+  if (li && a.classList.contains('dnd-handle')) return `.check-item[data-id="${esc2(li.dataset.id)}"] .dnd-handle`;
+  return null;
+}
+function checkItemHTML(it, state, due, now, knownIds) {
   const id = it.id;
   const checked = state[id] ? 'checked' : '';
   const kind = (it.kind || 'experience').toLowerCase();
   const reqs = it.requires || [];
-  const locked = reqs.some(r => !state[r]) && !state[id];
+  // ignore prereqs that don't exist in the checklist (typo / removed item) — else the item locks forever
+  const locked = reqs.some(r => (!knownIds || knownIds.has(r)) && !state[r]) && !state[id];
   const eff = due[id] || it.dueBy || '';
   const st = eff ? windowStatus(eff, now) : 'none';
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';

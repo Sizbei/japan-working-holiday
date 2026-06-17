@@ -78,8 +78,9 @@ export function placesModel() {
   const seenId = new Set();
   const users = loadPlaces();
   users.forEach(p => seenName.add((p.name || '').toLowerCase().trim()));
-  // 1) user-saved places (exact or approx) — always included
-  users.forEach(p => { out.push({ ...p, kind: 'user', cat: p.category || 'personal' }); seenId.add(p.id); });
+  // 1) user-saved places (exact or approx) — always included. Derive `group` so the
+  // neighbourhood filter doesn't hide every personal pin (areaOf → 'Around Tokyo' fallback).
+  users.forEach(p => { out.push({ ...p, kind: 'user', cat: p.category || 'personal', group: areaOf(p.address || p.area || '') }); seenId.add(p.id); });
   // 2) upcoming dated events
   (DATA.calendar || []).forEach(e => {
     if (!e.area || !e.date || e.date < today || e.category === 'holiday') return;
@@ -364,7 +365,7 @@ async function addToCalendar(p) {
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date.trim())) return;
   if (p.eventId) removeEvent(p.eventId);
   const eid = pushEvent('Visit: ' + p.name, date.trim(), p.address);
-  patchPlace(p.id, { date: date.trim(), eventId: eid });
+  patchPlace(p.id, { date: date.trim(), eventId: eid, remindDate: '' });   // one event slot per place — clear the stale reminder
   if (map) map.closePopup(); change();
 }
 async function setReminder(p) {
@@ -374,7 +375,7 @@ async function setReminder(p) {
   if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
   if (p.eventId) removeEvent(p.eventId);
   const eid = d ? pushEvent('⏰ ' + p.name, d, p.address) : '';
-  patchPlace(p.id, { remindDate: d, eventId: eid });
+  patchPlace(p.id, { remindDate: d, eventId: eid, date: '' });   // one event slot per place — clear the stale visit date
   if (map) map.closePopup(); change();
 }
 async function setExact(p) {

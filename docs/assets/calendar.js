@@ -30,10 +30,17 @@ function changed() { document.dispatchEvent(new CustomEvent('jwh:data-changed'))
 
 function loadOverrides() { return get(KEYS.eventOverrides, {}) || {}; }
 function saveOverrides(o) { set(KEYS.eventOverrides, o); changed(); }
+const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+// shift endDate by the same delta the start moved, so a multi-day event keeps its span
+function shiftEnd(oldStart, newStart, endDate) {
+  if (!endDate) return '';
+  const delta = daysBetween(oldStart.slice(0, 10), newStart);
+  return delta == null ? '' : addDaysISO(endDate.slice(0, 10), delta);
+}
 function bakedEvents() {
   const ov = loadOverrides();
   return (DATA.calendar || []).map(e => ov[e.id]
-    ? { ...e, date: ov[e.id], endDate: '', source: 'baked', moved: true }
+    ? { ...e, date: ov[e.id], endDate: shiftEnd(e.date, ov[e.id], e.endDate), source: 'baked', moved: true }
     : { ...e, source: 'baked' });
 }
 let _evCache = null;   // memoized for one render pass (eventsOn is called ~once per day cell)
@@ -221,7 +228,7 @@ function wireAgenda() {
   $$('#calView .agenda-row').forEach(r => {
     const open = (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openDetail(ev); };
     r.addEventListener('click', open);
-    r.addEventListener('keydown', (e) => { if (e.key === 'Enter') open(e); });
+    r.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[data-stop]')) { e.preventDefault(); open(e); } });
   });
 }
 
@@ -229,7 +236,7 @@ function wireAgenda() {
 function wireCells() {
   $$('#calView .cal-cell[data-day]').forEach(c => {
     c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const ev = allEvents().find(x => x.id === e.target.closest('.cal-chip').dataset.ev); if (ev) openDetail(ev); return; } dayPopover(c.dataset.day, c); });
-    c.addEventListener('keydown', (e) => { if (e.key === 'Enter') dayPopover(c.dataset.day, c); });
+    c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dayPopover(c.dataset.day, c); } });   // role=button must take Space too (and not scroll)
   });
 }
 // drag a USER event chip onto another day to reschedule (baked events are fixed)
@@ -245,7 +252,7 @@ function wireReschedule() {
       const ev = allEvents().find(x => x.id === id);
       if (!ev) return;
       if (ev.source === 'user') {
-        saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: '' } : x));
+        saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span
       } else {                                  // baked event → store a date override (tips.json stays untouched)
         saveOverrides({ ...loadOverrides(), [id]: day });
       }

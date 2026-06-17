@@ -85,9 +85,10 @@ function wireDiscoverFilter() {
     } else if (note) { note.hidden = true; }
   };
   search?.addEventListener('input', apply);
+  $$('#discInterest .chip, #discArea .chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false'));
   $$('#discInterest .chip, #discArea .chip').forEach(c => c.addEventListener('click', () => {
-    [...c.parentElement.querySelectorAll('.chip')].forEach(x => x.classList.remove('active'));
-    c.classList.add('active'); apply();
+    [...c.parentElement.querySelectorAll('.chip')].forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+    c.classList.add('active'); c.setAttribute('aria-pressed', 'true'); apply();
   }));
 }
 
@@ -236,9 +237,10 @@ function renderDomains() {
 function wireControls() {
   const s = $('#search');
   if (s) s.addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); renderDomains(); });
+  $$('#confFilters .chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false'));
   $$('#confFilters .chip').forEach(chip => chip.addEventListener('click', () => {
-    $$('#confFilters .chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
+    $$('#confFilters .chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+    chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true');
     activeConf = chip.dataset.conf;
     renderDomains();
   }));
@@ -248,9 +250,10 @@ function applyTierFilter() {
   $$('#restaurantsGrid .card2').forEach(card => { card.style.display = (t === 'all' || card.dataset.tier === t) ? '' : 'none'; });
 }
 function wireTierFilter() {
+  $$('#tierFilters .chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false'));
   $$('#tierFilters .chip').forEach(chip => chip.addEventListener('click', () => {
-    $$('#tierFilters .chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
+    $$('#tierFilters .chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+    chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true');
     applyTierFilter();
   }));
 }
@@ -276,9 +279,9 @@ function initBrew() {
     e.preventDefault();
     const val = input.value.trim();
     if (!val) return;
-    const ideas = loadIdeas();
-    ideas.unshift({ id: 'i' + (ideas.length ? +(ideas[0].id.slice(1)) + 1 : 1) + '-' + ideas.length, text: val });
-    saveIdeas(ideas);
+    // collision-proof id (the old id.slice(1)+ideas.length scheme produced NaN/duplicate keys
+    // since ids contain a hyphen → wrong-card deletes + lost reorders)
+    saveIdeas([{ id: 'i' + Date.now() + '-' + Math.random().toString(36).slice(2, 7), text: val }, ...loadIdeas()]);
     input.value = '';
     renderIdeas();
   });
@@ -291,7 +294,7 @@ function renderIdeas() {
   if (!ideas.length) { list.innerHTML = `<li class="brew-empty">No idea cards yet — add one above.</li>`; return; }
   list.innerHTML = ideas.map(i => `
     <li class="brew-card" data-id="${esc(i.id)}">
-      <button type="button" class="dnd-handle" aria-hidden="true" tabindex="-1">⠿</button>
+      <button type="button" class="dnd-handle">⠿</button>
       <span>${esc(i.text)}</span>
       <button type="button" data-del="${esc(i.id)}" aria-label="Delete idea">✕</button>
     </li>`).join('');

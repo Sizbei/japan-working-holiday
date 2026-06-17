@@ -74,7 +74,7 @@ function buildItems() {
   allEvents().forEach(e => {
     const start = e.date.slice(0, 10);
     if (start >= TODAY) items.push({ id: 'ev-' + e.id, title: e.title, when: start, kind: 'event', detail: e.area }); // future starts only — not already-running seasons
-    if (e.bookBy) items.push({ id: 'bk-' + e.id, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });
+    if (e.bookBy && e.source === 'user') items.push({ id: 'bk-' + e.id, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });   // baked book-by already covered by bookByTimeline — don't double-count
   });
   return items;
 }
@@ -191,7 +191,7 @@ function fill(sel, list) {
   if (!el) return;
   const body = list.length
     ? `<ul>${list.slice(0, 5).map(a => `<li class="sev-${a.severity}">
-        <a href="#/${a.kind === 'event' ? 'calendar' : a.kind === 'book' ? 'deadlines' : 'checklist'}">
+        <a href="#/${a.kind === 'event' ? 'calendar' : (a.kind === 'book' || a.kind === 'deadline') ? 'deadlines' : 'checklist'}">
         <span class="w-when">${esc(fmtShort(a.when))}</span> ${esc(clip(a.title, 52))}</a></li>`).join('')}</ul>`
     : `<p class="w-empty">Nothing due soon</p>`;
   el.querySelector('.widget-body').innerHTML = body;

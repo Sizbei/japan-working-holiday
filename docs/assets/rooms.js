@@ -69,9 +69,10 @@ function wire() {
     updateCount();
   };
   $('#roomSearch')?.addEventListener('input', apply);
+  $$('#roomTier .chip, #roomTypeF .chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false'));
   $$('#roomTier .chip, #roomTypeF .chip').forEach(ch => ch.addEventListener('click', () => {
-    [...ch.parentElement.querySelectorAll('.chip')].forEach(x => x.classList.remove('active'));
-    ch.classList.add('active'); apply();
+    [...ch.parentElement.querySelectorAll('.chip')].forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+    ch.classList.add('active'); ch.setAttribute('aria-pressed', 'true'); apply();
   }));
   $('#roomNoKey')?.addEventListener('click', () => { const on = $('#roomNoKey').classList.toggle('active'); $('#roomNoKey').setAttribute('aria-pressed', on ? 'true' : 'false'); apply(); });
 }

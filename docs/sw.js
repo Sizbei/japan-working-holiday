@@ -2,7 +2,7 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v32';
+const CACHE = 'jwh-v33';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/calendar.js',
@@ -26,7 +26,14 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
   e.respondWith(
     fetch(e.request)
-      .then(resp => { const copy = resp.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); return resp; })
+      .then(resp => {
+        // only cache a clean 200 — never poison the offline cache with a 4xx/5xx/redirect/partial
+        if (resp && resp.ok && resp.status === 200 && resp.type !== 'opaque') {
+          const copy = resp.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});   // .put rejects on 206 — swallow
+        }
+        return resp;
+      })
       .catch(() => caches.match(e.request).then(c => c || caches.match('index.html')))
   );
 });

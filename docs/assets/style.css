@@ -1333,3 +1333,6 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* filter empty-states */
 .discover-empty, .room-empty{ grid-column: 1 / -1; font-size:.85rem; color: var(--ink-soft); padding: var(--s4); text-align:center; background: var(--bg-soft); border:1px dashed var(--line); border-radius: var(--r-md); }
+
+/* non-colour cue for active single-select chips (WCAG 1.4.1 — not colour alone) */
+.chip.active{ font-weight:700; box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 55%, transparent); }

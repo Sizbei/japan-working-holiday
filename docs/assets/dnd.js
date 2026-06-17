@@ -32,7 +32,7 @@ function toast(msg, undoFn) {
   if (liveToast) liveToast.remove();
   const t = document.createElement('div');
   t.className = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
-  t.innerHTML = `<span>${msg}</span>`;
+  const sp = document.createElement('span'); sp.textContent = msg; t.appendChild(sp);   // textContent, not innerHTML — safe for any caller
   if (undoFn) { const b = document.createElement('button'); b.textContent = 'Undo'; b.onclick = () => { undoFn(); t.remove(); }; t.appendChild(b); }
   document.body.appendChild(t);
   liveToast = t;

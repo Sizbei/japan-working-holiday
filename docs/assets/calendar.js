@@ -52,6 +52,12 @@ export function allEvents() {
   _evCache = [...bakedEvents().filter(e => !copied.has(e.id)), ...user].filter(e => parseISO(e.date));
   return _evCache;
 }
+// Invalidate the memo on ANY mutation, order-independently: this listener is registered at
+// module-eval (import) time — before any mount() — so it runs before dashboard/calendar
+// re-read allEvents(), regardless of listener registration order. (Every event writer —
+// calendar saveUser/saveOverrides, map pushEvent/removeEvent, plan, deletePlace — dispatches
+// jwh:data-changed.) render() still nulls it too, as belt-and-suspenders.
+document.addEventListener('jwh:data-changed', () => { _evCache = null; });
 function catOf(e) { return e.category || 'personal'; }
 function visible(e) { return !hiddenCats.has(catOf(e)); }
 

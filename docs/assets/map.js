@@ -129,7 +129,7 @@ export function mountMap(data) {
 function renderStats(prime = false) {
   const host = $('#mapTools'); if (!host) return;
   let el = $('#mapStats');
-  if (!el) { el = document.createElement('span'); el.id = 'mapStats'; el.className = 'map-stats'; el.setAttribute('aria-live', 'polite'); host.appendChild(el); }
+  if (!el) { el = document.createElement('span'); el.id = 'mapStats'; el.className = 'map-stats'; el.setAttribute('aria-live', 'polite'); el.setAttribute('aria-atomic', 'true'); host.appendChild(el); }
   const s = placesVisitedStats(loadPlaces(), areaOf);
   el.textContent = s.total
     ? `You’ve been to ${s.visited} of ${s.total} saved place${s.total === 1 ? '' : 's'} · ${s.areasVisited} of ${s.areasTotal} neighbourhood${s.areasTotal === 1 ? '' : 's'}`
@@ -463,9 +463,9 @@ function userPopup(p) {
     ${emojiChips(p)}
     <div class="pin-acts">
       <a href="${esc(directionsHref(p))}" target="_blank" rel="noopener noreferrer">🧭 Directions</a>
-      <button type="button" data-uact="visited" aria-pressed="${p.visited ? 'true' : 'false'}">${p.visited ? '済 Visited' : '✓ Visited'}</button>
+      <button type="button" data-uact="visited" aria-pressed="${p.visited ? 'true' : 'false'}" aria-label="${p.visited ? 'Mark as not visited' : 'Mark as visited'}">${p.visited ? '済 Visited' : '✓ Visited'}</button>
       <button type="button" data-uact="note">✎ Note</button>
-      <button type="button" data-uact="home" aria-pressed="${p.home ? 'true' : 'false'}">${p.home ? '⛩️ Home base' : '🏠 Set as home base'}</button>
+      <button type="button" data-uact="home" aria-pressed="${p.home ? 'true' : 'false'}" aria-label="${p.home ? 'Unset home base' : 'Set as home base'}">${p.home ? '⛩️ Unset home base' : '🏠 Set as home base'}</button>
       <button type="button" data-uact="fav" aria-pressed="${p.fav ? 'true' : 'false'}">${p.fav ? '★' : '☆'} ${p.fav ? 'Pinned' : 'Pin'}</button>
       <button type="button" data-uact="lock" aria-pressed="${p.locked ? 'true' : 'false'}">${p.locked ? '🔒' : '🔓'}</button>
       <button type="button" data-uact="cal">📅</button>
@@ -482,7 +482,7 @@ function wireUserPopup(p) {
   const on = (sel, fn) => pop.querySelector(`.pin-acts [data-uact="${sel}"]`)?.addEventListener('click', fn);
   // setHomeBase is a self-dispatching writer (enforces the single-home invariant in one
   // write + ONE change) — do NOT also call change() here, or it double-dispatches.
-  on('home', () => { if (!p.home) setHomeBase(p.id); if (map) map.closePopup(); });
+  on('home', () => { if (p.home) { patchPlace(p.id, { home: false }); change(); } else setHomeBase(p.id); if (map) map.closePopup(); });   // true toggle: set, or un-designate
   on('visited', () => { patchPlace(p.id, { visited: !p.visited }); if (map) map.closePopup(); change(); });
   on('note', () => editNote(p));
   on('fav', () => { patchPlace(p.id, { fav: !p.fav }); map.closePopup(); change(); });
@@ -586,7 +586,9 @@ async function setExact(p) {
     const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' }, signal: ctrl.signal });
     const d = r.ok ? await r.json() : [];
     if (!d.length) { alertModal('No match — try a different address or "lat, lng".'); return; }
-    patchPlace(p.id, { lat: +d[0].lat, lng: +d[0].lon, address: d[0].display_name, coordKind: 'exact' });
+    const glat = +d[0].lat, glng = +d[0].lon;   // validate the API result before persisting (don't store NaN/out-of-range)
+    if (isNaN(glat) || isNaN(glng) || glat < -90 || glat > 90 || glng < -180 || glng > 180) { alertModal('Geocoding returned invalid coordinates.'); return; }
+    patchPlace(p.id, { lat: glat, lng: glng, address: d[0].display_name, coordKind: 'exact' });
     if (map) map.closePopup(); change();
   } catch { alertModal('Geocoding unavailable.'); }
   finally { clearTimeout(to); }
@@ -702,7 +704,7 @@ function renderIndex() {
   wrap.innerHTML = `<h3 class="map-side-h">All places by area</h3>` + AREA_ORDER.filter(k => groups[k]).map(k => `
     <details class="map-group" open>
       <summary class="map-area"><a href="${esc(gmaps(k))}" target="_blank" rel="noopener noreferrer">📍 ${esc(k)}</a> <span class="map-count">${dedupe(groups[k]).length}</span></summary>
-      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener noreferrer"><span class="map-emoji" aria-hidden="true">${p.emoji || '📍'}</span> ${esc(p.name)}</a></li>`).join('')}</ul>
+      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener noreferrer"><span class="map-emoji" aria-hidden="true">${esc(p.emoji || '📍')}</span> ${esc(p.name)}</a></li>`).join('')}</ul>
     </details>`).join('');
 }
 

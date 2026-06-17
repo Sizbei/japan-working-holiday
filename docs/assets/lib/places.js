@@ -67,7 +67,7 @@ export function setHomeBase(id) {
   savePlaces(arr);
   dispatchChanged();
 }
-export function toggleFav(id) { const p = placeById(id); if (p) patchPlace(id, { fav: !p.fav }), dispatchChanged(); }
-export function toggleLock(id) { const p = placeById(id); if (p) patchPlace(id, { locked: !p.locked }), dispatchChanged(); }
+export function toggleFav(id) { const p = placeById(id); if (p) { patchPlace(id, { fav: !p.fav }); dispatchChanged(); } }
+export function toggleLock(id) { const p = placeById(id); if (p) { patchPlace(id, { locked: !p.locked }); dispatchChanged(); } }
 
 export function dispatchChanged() { try { document.dispatchEvent(new CustomEvent('jwh:data-changed')); } catch { /* Node */ } }

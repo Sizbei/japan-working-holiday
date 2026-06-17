@@ -183,3 +183,34 @@ test('dayplan removeStopIn isolates other dates; planToEvents → one all-day ev
   assert.ok(evs[0].note.includes('10:00 X'));
   assert.equal(planToEvents({ date: 'd', stops: [] }).length, 0);        // empty → no event
 });
+
+import { readFileSync } from 'node:fs';
+import { setPlanMetaIn } from '../docs/assets/lib/dayplan.js';
+
+test('lang parity: every .jp accent in index.html has a glossary entry', () => {
+  const html = readFileSync(new URL('../docs/index.html', import.meta.url), 'utf8');
+  const lang = readFileSync(new URL('../docs/assets/lang.js', import.meta.url), 'utf8');
+  const accents = [...html.matchAll(/class="jp"[^>]*>([^<]+)</g)].map(m => m[1].trim());
+  const missing = [...new Set(accents)].filter(a => !lang.includes(`'${a}'`));
+  assert.deepEqual(missing, [], `JP accents missing from the hover-dictionary glossary: ${missing.join(', ')}`);
+});
+
+test('routes parity: every ROUTES entry has a #view-<route> section and a nav link', () => {
+  const html = readFileSync(new URL('../docs/index.html', import.meta.url), 'utf8');
+  const router = readFileSync(new URL('../docs/assets/router.js', import.meta.url), 'utf8');
+  const routes = router.match(/export const ROUTES = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map(s => s.replace(/'/g, ''));
+  const missingView = routes.filter(r => !html.includes(`id="view-${r}"`));
+  const missingNav = routes.filter(r => !html.includes(`data-route="${r}"`));
+  assert.deepEqual(missingView, [], `routes with no view section: ${missingView}`);
+  assert.deepEqual(missingNav, [], `routes with no nav link: ${missingNav}`);
+});
+
+test('dayplan patchStopIn updates one field immutably; setPlanMetaIn sets title', () => {
+  const plans = { d: { date: 'd', title: '', stops: [{ id: 'a', durationMin: 60 }, { id: 'b', durationMin: 60 }] } };
+  const p2 = patchStopIn(plans, 'd', 'a', { durationMin: 90 });
+  assert.equal(p2.d.stops[0].durationMin, 90);
+  assert.equal(p2.d.stops[1].durationMin, 60);
+  assert.equal(plans.d.stops[0].durationMin, 60);            // input unchanged (immutable)
+  const p3 = setPlanMetaIn(plans, 'd', { title: 'Akihabara day' });
+  assert.equal(p3.d.title, 'Akihabara day');
+});

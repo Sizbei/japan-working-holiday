@@ -511,6 +511,7 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .widget-body li.sev-upcoming{ border-color: var(--indigo); }
 .w-when{ font-weight:700; color: var(--indigo); }
 .w-empty{ font-size:.83rem; color: var(--ink-soft); margin:.2rem 0; }
+.w-plan-date{ font-family: var(--mono); font-size:.7rem; font-weight:700; color: var(--indigo-ink); text-transform:uppercase; letter-spacing:.04em; margin:0 0 .3rem; }
 .w-prog{ display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
 .w-bar{ flex:1; height:8px; background: var(--line); border-radius:999px; overflow:hidden; }
 .w-bar i{ display:block; height:100%; background: linear-gradient(90deg,var(--red),var(--gold)); }

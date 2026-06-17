@@ -4,12 +4,13 @@
 // and calendar events, then drives the bell badge, the dropdown, and the widgets.
 
 import { $, $$, esc } from './lib/dom.js';
-import { KEYS, get, set } from './lib/store.js';
+import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
 import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
 import { makeSortable } from './dnd.js';
+import { loadPlans } from './lib/dayplan.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -164,6 +165,21 @@ function renderWidgets(alerts) {
   fill('#wEvents', alerts.filter(a => a.kind === 'event'));
   fill('#wBookBy', alerts.filter(a => a.kind === 'book'));
   renderProgress();
+  renderPlanWidget();
+}
+// today's day plan if it exists, else the next upcoming one (plan ↔ dashboard parity)
+function renderPlanWidget() {
+  const el = $('#wPlan');
+  if (!el) return;
+  const plans = loadPlans();
+  const date = Object.keys(plans).filter(d => plans[d] && plans[d].stops && plans[d].stops.length && d >= TODAY).sort()[0];
+  const plan = date ? plans[date] : null;
+  const body = plan
+    ? `<p class="w-plan-date">${date === TODAY ? 'Today' : esc(fmtShort(date))}</p>
+       <ul>${plan.stops.slice(0, 5).map(s => `<li><a href="#/plan"><span class="w-when">${s.startTime ? esc(s.startTime) : '·'}</span> ${esc(clip(s.name, 48))}</a></li>`).join('')}</ul>
+       <a class="w-link" href="#/plan">Open plan →</a>`
+    : `<p class="w-empty">No day planned yet — <a href="#/plan">plan a day →</a></p>`;
+  el.querySelector('.widget-body').innerHTML = body;
 }
 function fill(sel, list) {
   const el = $(sel);
@@ -190,7 +206,7 @@ function renderProgress() {
 
 // ---- theme (owns the top-bar toggle) ----
 function initTheme() {
-  const saved = localStorage.getItem(KEYS.theme);
+  const saved = getRaw(KEYS.theme, '');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const theme = (saved === 'dark' || saved === 'light') ? saved : (prefersDark ? 'dark' : 'light');
   document.documentElement.dataset.theme = theme;
@@ -198,7 +214,7 @@ function initTheme() {
   $('#themeToggle')?.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    localStorage.setItem(KEYS.theme, next);
+    setRaw(KEYS.theme, next);
     updateToggle(next);
   });
 }

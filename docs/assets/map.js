@@ -58,7 +58,8 @@ export function mountMap(data) {
 
 // ====================================================================== the unified model
 // Every map point with a STABLE id, shared by pins + list + sidebar (parity + sync).
-function placesModel() {
+// Exported so the Plan-a-Day add-stop picker reuses the same unified point list.
+export function placesModel() {
   const today = todayISO();
   const out = [];
   const seenName = new Set();

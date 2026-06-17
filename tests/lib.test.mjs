@@ -130,3 +130,56 @@ test('deleteFrom honours the lock and reports the removed record', () => {
   assert.equal(blocked.arr.length, 2);           // locked → unchanged
   assert.equal(blocked.removed, null);
 });
+
+import { haversineKm, estimateMinutes, format, totalTransit, areaCount } from '../docs/assets/lib/transit.js';
+import { newStop, upsertStopIn, removeStopIn, patchStopIn, reorderStopsIn, planToEvents } from '../docs/assets/lib/dayplan.js';
+
+const GEO = { Shinjuku: { lat: 35.69376, lng: 139.70363 }, Shibuya: { lat: 35.66337, lng: 139.6965 },
+  Nakano: { lat: 35.70862, lng: 139.66294 }, 'Around Tokyo': { lat: 35.68, lng: 139.74 } };
+
+test('haversineKm: Shinjuku→Shibuya ≈ 3.4km', () => {
+  const d = haversineKm(GEO.Shinjuku, GEO.Shibuya);
+  assert.ok(d > 3 && d < 4, `got ${d}`);
+});
+test('estimateMinutes: same area → 10, override pair honoured, scales with distance', () => {
+  assert.equal(estimateMinutes('Shibuya', 'Shibuya', GEO), 10);
+  assert.equal(estimateMinutes('Nakano', 'Shinjuku', GEO), 16);          // express-corridor override
+  assert.ok(estimateMinutes('Shinjuku', 'Shibuya', GEO) > 10);
+});
+test('format floors at ≈10 and rounds to 5-min buckets', () => {
+  assert.equal(format(7), '≈10 min');
+  assert.equal(format(23), '≈25 min');
+  assert.equal(format(10), '≈10 min');
+});
+test('totalTransit + areaCount over a stop list', () => {
+  const stops = [{ area: 'Shibuya' }, { area: 'Shibuya' }, { area: 'Shinjuku' }];
+  assert.equal(areaCount(stops), 2);
+  assert.ok(totalTransit(stops, GEO) >= 10);
+});
+
+test('dayplan upsertStopIn adds then updates by id (immutable)', () => {
+  const s = newStop({ id: 'a', name: 'Disk Union', area: 'Shimokitazawa' });
+  let plans = upsertStopIn({}, '2026-07-04', s);
+  assert.equal(plans['2026-07-04'].stops.length, 1);
+  plans = upsertStopIn(plans, '2026-07-04', { id: 'a', startTime: '13:00' });
+  assert.equal(plans['2026-07-04'].stops.length, 1);                     // updated, not appended
+  assert.equal(plans['2026-07-04'].stops[0].startTime, '13:00');
+  assert.equal(plans['2026-07-04'].stops[0].name, 'Disk Union');         // snapshot preserved
+});
+test('dayplan reorderStopsIn reorders and keeps unlisted stops', () => {
+  let plans = { d: { date: 'd', stops: [{ id: 'a' }, { id: 'b' }, { id: 'c' }] } };
+  plans = reorderStopsIn(plans, 'd', ['c', 'a', 'b']);
+  assert.deepEqual(plans.d.stops.map(s => s.id), ['c', 'a', 'b']);
+});
+test('dayplan removeStopIn isolates other dates; planToEvents → one all-day event', () => {
+  const plans = { d1: { date: 'd1', stops: [{ id: 'x', name: 'X', area: 'Shibuya', startTime: '10:00' }] },
+                  d2: { date: 'd2', stops: [{ id: 'y', name: 'Y' }] } };
+  const after = removeStopIn(plans, 'd1', 'x');
+  assert.equal(after.d1.stops.length, 0);
+  assert.equal(after.d2.stops.length, 1);                                // untouched
+  const evs = planToEvents({ date: 'd1', title: '', stops: plans.d1.stops });
+  assert.equal(evs.length, 1);
+  assert.equal(evs[0].id, 'plan:d1');
+  assert.ok(evs[0].note.includes('10:00 X'));
+  assert.equal(planToEvents({ date: 'd', stops: [] }).length, 0);        // empty → no event
+});

@@ -8,6 +8,7 @@ export const KEYS = {
   eventOverrides: 'jwh-event-overrides-v1',
   places: 'jwh-places-v1',
   mapFilters: 'jwh-mapfilters-v1',
+  dayPlans: 'jwh-dayplans-v1',
   checkOrder: 'jwh-checkorder-v1',
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',

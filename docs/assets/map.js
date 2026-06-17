@@ -373,9 +373,15 @@ async function setReminder(p) {
   if (date === null) return;
   const d = date.trim();
   if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
-  if (p.eventId) removeEvent(p.eventId);
-  const eid = d ? pushEvent('⏰ ' + p.name, d, p.address) : '';
-  patchPlace(p.id, { remindDate: d, eventId: eid, date: '' });   // one event slot per place — clear the stale visit date
+  if (!d) {                                  // clearing a reminder — the shared event slot may hold a VISIT; never destroy that
+    if (!p.remindDate) { if (map) map.closePopup(); return; }   // nothing to clear; leave a planned visit intact
+    if (p.eventId) removeEvent(p.eventId);
+    patchPlace(p.id, { remindDate: '', eventId: '' });
+    if (map) map.closePopup(); change(); return;
+  }
+  if (p.eventId) removeEvent(p.eventId);      // setting a reminder replaces whatever the slot held (visit or prior reminder)
+  const eid = pushEvent('⏰ ' + p.name, d, p.address);
+  patchPlace(p.id, { remindDate: d, eventId: eid, date: '' });
   if (map) map.closePopup(); change();
 }
 async function setExact(p) {

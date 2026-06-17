@@ -22,7 +22,17 @@ export const KEYS = {
 };
 
 export function get(key, fallback) {
-  try { const v = localStorage.getItem(key); return v == null ? fallback : JSON.parse(v); }
+  try {
+    const v = localStorage.getItem(key);
+    if (v == null) return fallback;
+    const parsed = JSON.parse(v);
+    // type-guard against a corrupted/wrong-typed value (e.g. a bad backup restore) bricking a
+    // consumer that does .map()/Object.keys() — when the caller passes a typed fallback, enforce it
+    if (Array.isArray(fallback) && !Array.isArray(parsed)) return fallback;
+    if (fallback && typeof fallback === 'object' && !Array.isArray(fallback)
+      && (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed))) return fallback;
+    return parsed;
+  }
   catch { return fallback; }
 }
 export function set(key, val) {

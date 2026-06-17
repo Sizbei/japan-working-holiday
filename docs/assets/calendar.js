@@ -357,7 +357,6 @@ function openModal(ev, presetDate) {
         <label>End (optional)<input name="endDate" type="date" value="${esc((e.endDate || '').slice(0, 10))}"></label>
       </div>
       <div class="row2">
-        <label>Time<input name="time" type="time" value="${esc(e.time || '')}"></label>
         <label>Category<select name="category">${opts}</select></label>
       </div>
       <label>Note<textarea name="note" rows="3">${esc(e.note || '')}</textarea></label>

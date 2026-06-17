@@ -11,28 +11,35 @@ A personal, password-gated **trip-planning dashboard** for a working-holiday yea
 The page is ES modules + `fetch`es `data/tips.json`, so it MUST be served over HTTP (`file://` fails):
 
 ```bash
-cd docs && python3 -m http.server 8000   # then http://localhost:8000  (password: lkjjapan)
-node --test                              # unit tests for the pure lib/ modules (zero deps)
+cd docs && python3 -m http.server 8000          # serve at http://localhost:8000  (password: lkjjapan)
+node --test tests/lib.test.mjs                  # unit tests — run from the repo ROOT (zero deps)
 python3 -m json.tool docs/data/tips.json > /dev/null   # validate the data
 ```
 
-There is no bundler/linter. "Verify" = `node --test` green + serve locally + page renders with no console errors.
+There is no bundler/linter. "Verify" = `node --test tests/lib.test.mjs` green + serve locally + page renders with no console errors.
+
+**Browser-testing gotcha:** the app is a **hash router**, so navigating between `index.html#/a` and `index.html#/b` does NOT reload the document — it keeps running the JS/CSS from first load. To pick up code/CSS changes in an already-open tab, hard-reload, or load a URL with a unique cache-bust query (`index.html?v=N#/route`). Auth for testing: `localStorage['jwh-auth-v1'] = 'ok'` (literal `'ok'`, not `'true'`).
 
 **Service worker gotcha:** `docs/sw.js` caches the app. It's network-first (fresh when online), but if a change doesn't show, hard-clear: in DevTools Application → unregister SW + clear cache, or bump `CACHE` in `sw.js`.
 
 ## Architecture
 
-Still **data-driven from one file**: `docs/data/tips.json` is the single source of truth — adding content = editing JSON, never code. The JS reads it and renders. Modules under `docs/assets/`:
+Still **data-driven from one file**: `docs/data/tips.json` is the single source of truth — adding content = editing JSON, never code. The JS reads it and renders. It's a **hash-router SPA** with **8 routes** (`#/dashboard|calendar|deadlines|checklist|explore|rooms|map|plan`). Modules under `docs/assets/`:
 
-- `main.js` — boot: `gate → fetch tips.json → mount calendar, tracker, content, dashboard → build TOC → register SW`.
-- `lib/` — **pure, unit-tested** logic (import-safe in Node): `dates.js` (countdown/window math), `notify.js` (`computeAlerts` severity bucketing), `ics.js` (`.ics` generate/parse + Google Calendar URLs), plus `dom.js` (`$/$$/esc`) and `store.js` (versioned localStorage `KEYS`).
+- `main.js` — boot: `gate → fetch tips.json → mount all features → initRouter → mountGestures → mountGuide → register SW`.
+- `router.js` — the SPA hash router. Toggles `.is-active` on `#view-<route>`, animates view swaps (`motion.js` View Transitions), moves focus to the view heading, sets a **per-route `document.title`**, dispatches `jwh:route`. `ROUTES` is exported.
+- `lib/` — **pure, unit-tested** logic (import-safe in Node): `dates.js` (countdown/window math), `notify.js` (`computeAlerts`), `ics.js` (`.ics` generate/parse + GCal URLs), `places.js` (saved-place CRUD), `geo.js` (neighbourhood centroids), `transit.js` (haversine/leg estimates), `dayplan.js` (itinerary store), `modal.js` (focus-trapped dialog promises), plus `dom.js` (`$/$$/esc`) and `store.js` (versioned localStorage `KEYS`).
 - `gate.js` — password overlay (`lkjjapan`). **Obfuscation, not security** — the password is in the JS and the repo is public; it only stops a shoulder-surfer. Remembered via `jwh-auth-v1`.
-- `dashboard.js` — top bar (theme, live countdown, **top-right notifications bell + panel**) and home widgets. `buildItems()` assembles ONE alert stream from `timeSensitive` deadlines + `bookByTimeline` + future calendar events + **user-set** checklist due dates, then `computeAlerts` ranks them.
-- `calendar.js` — editable month/agenda calendar. Merges **baked** events (`tips.json.calendar`, read-only) with **user** events (`jwh-events-v1`, full CRUD via modal). Tag-filtered `.ics` export + per-event Google Calendar links; `.ics` import.
-- `tracker.js` — lottery / timed-release drops (Ghibli 10:00 JST, Disney 60-day, sumo) + dated booking windows mined from `bookByTimeline`.
-- `content.js` — domains (searchable + confidence filter), pillar grids, brew scratchpad, and the **dependency-aware checklist** (items lock until their `requires[]` prereqs are checked; per-item due dates feed the bell).
+- `dashboard.js` — top bar (theme, live countdown, **top-right notifications bell + panel**) and home widgets. `buildItems()` assembles ONE alert stream (deadlines + book-by + future events + user checklist due dates), `computeAlerts` ranks them. Dismiss ids encode `@date` so re-setting a date un-suppresses. `dashboard-mytokyo.js` is the interests band.
+- `calendar.js` — editable month/agenda calendar. Merges **baked** events (`tips.json.calendar`, read-only) with **user** events (`jwh-events-v1`, full CRUD). Tag-filtered `.ics` export, per-event GCal links, `.ics` import. Day cells/agenda rows use a real `<button>` trigger (the date / the title), NOT `role=button` containers. `eventsearch.js` is the search box on this page.
+- `content.js` — domains (searchable + confidence filter), pillar grids, brew scratchpad, and the **dependency-aware checklist** (items lock until `requires[]` prereqs are checked; per-item due dates feed the bell; 100% fires a confetti/toast celebration). Explore cards are a disclosure pattern (a `.c-disclosure` button), with the Tabetai ★ as a sibling.
+- `map.js` — **Leaflet 1.9.4 + markercluster** (lazy-loaded from unpkg with SRI, only on `#/map`, never precached). Pins from saved places + upcoming events + catalogue; OSM tiles, Nominatim geocoding. `placesModel()` is the shared point list (also used by the plan picker). Cold-start: `onMapShown()` polls for real canvas size before placing pins.
+- `plan.js` — day-itinerary planner (`#/plan`); `rooms.js` — share-house finder (`#/rooms`).
+- `gestures.js` — swipe between adjacent routes (touch), keyboard shortcuts (`1–8`, `[`/`]`, `?`), long-press quick-action menus (calendar days / explore cards / checklist rows).
+- `guide.js` — the **⚙ Guide & Settings overlay** (a tutorial + theme/arcade/reduce-motion toggles). NOT a route.
+- `lang.js` (あ JP-chrome toggle + hover dictionary), `backup.js` (export/import all device-local data — atomic replace), `tracker.js` (lottery/timed drops), `konami.js` (arcade mode), `dnd.js` (framework-free drag/reorder with keyboard support), `motion.js` (transitions).
 
-A `jwh:data-changed` CustomEvent is dispatched on any user mutation (checklist, due date, calendar) so the dashboard re-derives alerts/widgets.
+A `jwh:data-changed` CustomEvent is dispatched on any user mutation (checklist, due date, calendar, places, day plans) so the dashboard/map/plan re-derive. `jwh:route` fires on navigation; `jwh:cal-quickadd`/`jwh:plan-goto` wire long-press actions into calendar/plan.
 
 ### Data model (`tips.json`)
 Built by `/tmp/bake.py`-style transform from the research workflow output. Key arrays: `calendar[]` (baked events, color by `category`), `bookByTimeline[]` ("act by X"), `timeSensitive[]` (hard deadlines w/ `dueBy`), `checklist[]` (phased; items carry `id`, optional `requires[]`, `dueBy`), the pillar arrays (`music/geek/building/meetups/restaurants/disney/activities` as content cards with `tier`), `top10[]`, `domains[]` (the searchable findings, with `confidence`), `sources[]`.
@@ -46,6 +53,8 @@ Built by `/tmp/bake.py`-style transform from the research workflow output. Key a
 - **Every dynamic string through `esc()`** before `innerHTML`.
 - **Calendar events spanning >10 days** render only on their start day in the month grid (see `SPAN_CAP` in `calendar.js`) — otherwise season-long events flood every cell.
 - **Notifications fire only on curated deadlines/book-by + due dates the user sets** — not every baked checklist `dueBy` (those would double-count and flood the bell).
-- **localStorage keys** (all `-v1`, in `lib/store.js`): `jwh-auth-v1`, `jwh-events-v1`, `jwh-calfilters-v1`, `jwh-due-v1`, `jwh-notif-dismissed-v1`, `jwh-checklist-v1`, `jwh-theme`, `jwh-brew-notes-v1`, `jwh-brew-ideas-v1`. Bump the `-v1` suffix if a stored shape changes.
+- **localStorage keys** (in `lib/store.js` `KEYS`): `jwh-auth-v1`, `jwh-events-v1`, `jwh-calfilters-v1`, `jwh-event-overrides-v1` (baked-event reschedules), `jwh-places-v1`, `jwh-mapfilters-v1`, `jwh-dayplans-v1`, `jwh-checkorder-v1`, `jwh-widgetorder-v1`, `jwh-arcade-v1`, `jwh-due-v1`, `jwh-notif-dismissed-v1`, `jwh-checklist-v1`, `jwh-theme`, `jwh-lang`, `jwh-reduce-motion`, `jwh-brew-notes-v1`, `jwh-brew-ideas-v1`. Bump the `-v1` suffix if a stored shape changes. `store.get()` type-guards against a corrupted/wrong-typed value bricking boot.
+- **Service worker:** bump `CACHE` in `docs/sw.js` (currently `jwh-v47`) on any asset change, and add new `assets/*.js` to its `ASSETS` precache list. It's network-first.
+- **Accessibility:** prefer real focusable controls (`<button>`) over `role="button"` containers; restore keyboard focus across `innerHTML` rebuilds (calendar/checklist/plan/map sidebar all do); the user-set "Reduce motion" toggle adds `html[data-reduce-motion="on"]` which kills animations.
 - **Calendar data flow is single-path:** user mutations call `saveUser()` → dispatches `jwh:data-changed` → `calendar.render()` + `dashboard.refresh()` both listen. Do NOT also call `render()` at the mutation site (causes a double render). `render()` must never dispatch `jwh:data-changed` (infinite loop). The calendar has a sticky legend-as-filter, a side deadline panel (month mode only), and a day-click popover whose listeners are cleaned up in `dismissPopover()`.
 - **Data confidence:** every researched item carries `confidence` (high/medium/low). 2026–2027 dates are estimates flagged medium/low with "verify closer" — don't present them as certain.

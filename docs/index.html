@@ -53,6 +53,7 @@
   <a href="#/explore" data-route="explore">Explore</a>
   <a href="#/rooms" data-route="rooms">Rooms</a>
   <a href="#/map" data-route="map">Map</a>
+  <a href="#/plan" data-route="plan">Plan a Day</a>
 </nav>
 
 <main id="main">
@@ -330,6 +331,16 @@
     <p class="map-hint">Your ★ pins stay always-visible (never hidden in a cluster); catalogue &amp; event pins sit at <em>neighbourhood level</em> (the ≈ mark) — open any to plan a visit, ⭐ Tabetai a restaurant, or “set exact”. Backspace deletes the open pin. The map needs a connection; the index always works offline.</p>
   </section>
   </div><!-- /view-map -->
+
+  <div class="view" id="view-plan" data-route="plan">
+  <section id="plan">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">一日</span><h2>Plan a Day</h2></div>
+    <p class="lede">Build one day at a time — add stops from your saved pins, the catalogue, or events; drag to reorder; see rough travel time between each. Export the day to your calendar when it's set.</p>
+    <div id="planDays" class="plan-days" role="tablist" aria-label="Pick a day to plan"></div>
+    <div id="planBody"></div>
+    <span id="planLive" class="sr-only" role="status" aria-live="polite"></span>
+  </section>
+  </div><!-- /view-plan -->
 </main>
 
 <footer>

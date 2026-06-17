@@ -9,6 +9,7 @@ import { mountDashboard } from './dashboard.js';
 import { mountMyTokyo } from './dashboard-mytokyo.js';
 import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
+import { mountPlan } from './plan.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
 import { initKonami } from './konami.js';
@@ -34,6 +35,7 @@ function boot() {
       mountMyTokyo(data);            // surface my interests at the top of the dashboard
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)
+      mountPlan(data);               // day itinerary planner (#/plan)
       mountBackup();                 // export/import all device-local trip data
       initRouter();                  // hash-router SPA: split views, animated transitions
       initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode

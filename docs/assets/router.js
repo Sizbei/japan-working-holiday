@@ -5,7 +5,7 @@
 
 import { transitionView, prefersReducedMotion } from './motion.js';
 
-export const ROUTES = ['dashboard', 'calendar', 'deadlines', 'checklist', 'explore', 'rooms', 'map'];
+export const ROUTES = ['dashboard', 'calendar', 'deadlines', 'checklist', 'explore', 'rooms', 'map', 'plan'];
 
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {

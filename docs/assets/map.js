@@ -17,7 +17,7 @@ import {
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
 
-let DATA = null, map = null, pinLayer = null, pinTop = null, leafletReady = false, leafletTried = false;
+let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let armed = false, openPlaceId = null, allBounds = [];
 const markersById = new Map();
 
@@ -202,6 +202,29 @@ function focusPlace(id) {
   if (leafletReady) go(); else setTimeout(go, 900);   // allow lazy Leaflet to finish on first map visit
 }
 function announce(msg) { const el = $('#mapLive'); if (el) el.textContent = msg; }
+
+// ---- day-plan route line (numbered stops + polyline), called from plan.js ----
+export function drawRoute(stops) {
+  ensureLeaflet();
+  const go = () => {
+    if (!map || !window.L) return;
+    if (!routeLayer) routeLayer = L.layerGroup().addTo(map);
+    routeLayer.clearLayers();
+    const pts = (stops || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
+    pts.forEach((s, i) => {
+      const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(i + 1))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000 });
+      m.bindPopup(`<div class="pin-pop"><b>${esc(String(i + 1))}. ${esc(s.name)}</b></div>`);
+      routeLayer.addLayer(m);
+    });
+    if (pts.length > 1) {
+      const line = L.polyline(pts.map(s => [s.lat, s.lng]), { color: '#5a3fb5', weight: 3, opacity: .85, dashArray: pts.some(s => s.coordKind === 'approx') ? '6 7' : null });
+      routeLayer.addLayer(line);
+      map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 15, animate: !prefersReducedMotion() });
+    } else if (pts.length === 1) { map.setView([pts[0].lat, pts[0].lng], 14, { animate: !prefersReducedMotion() }); }
+  };
+  if (leafletReady) go(); else setTimeout(go, 900);
+}
+export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); }
 
 // ====================================================================== popups
 const approxNote = (pt) => pt.coordKind === 'approx' ? `<div class="pin-approx">≈ neighbourhood location</div>` : '';

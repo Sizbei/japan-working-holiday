@@ -93,7 +93,7 @@
     <div class="cal-toolbar">
       <div class="cal-nav">
         <button id="calPrev" class="cal-btn" aria-label="Previous month">‹</button>
-        <span id="calLabel" class="cal-label">—</span>
+        <span id="calLabel" class="cal-label" role="status" aria-live="polite" aria-atomic="true">—</span>
         <button id="calNext" class="cal-btn" aria-label="Next month">›</button>
         <button id="calToday" class="cal-btn text">Today</button>
       </div>
@@ -110,7 +110,8 @@
     </div>
     <div class="cal-search">
       <input type="search" id="calSearch" placeholder="SEARCH EVENTS // fireworks, Akihabara, festival…" aria-label="Search all events" autocomplete="off">
-      <ul id="calSearchResults" class="cal-search-results"></ul>
+      <ul id="calSearchResults" class="cal-search-results" aria-label="Event search results"></ul>
+      <span id="calSearchStatus" class="sr-only" role="status" aria-live="polite"></span>
     </div>
     <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
@@ -182,7 +183,7 @@
     <p class="lede">Think out loud — ideas, things to look up, places I hear about. Autosaves on this device; nothing leaves the browser.</p>
     <div class="brew-wrap">
       <div class="brew-pad">
-        <div class="brew-bar"><span class="brew-label">Scratchpad</span><span class="brew-saved" id="brewSaved">saved</span></div>
+        <div class="brew-bar"><span class="brew-label">Scratchpad</span><span class="brew-saved" id="brewSaved" role="status" aria-live="polite">saved</span></div>
         <textarea id="brewNotes" placeholder="Brain-dump here… it autosaves."></textarea>
       </div>
       <div class="brew-ideas">
@@ -294,7 +295,7 @@
   <div class="view" id="view-rooms" data-route="rooms">
   <section id="rooms">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">部屋探し</span><h2>Find a Room</h2></div>
-    <p class="lede">Foreigner-friendly share houses &amp; apartments — no key money, no guarantor, book from abroad. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count"></span></p>
+    <p class="lede">Foreigner-friendly share houses &amp; apartments — no key money, no guarantor, book from abroad. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count" role="status" aria-live="polite"></span></p>
     <div id="roomFilters">
       <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · ¥50k · dorm…" aria-label="Filter rooms">
       <div class="filters" id="roomTier" role="group" aria-label="Budget">

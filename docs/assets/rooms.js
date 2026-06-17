@@ -48,7 +48,7 @@ function updateCount() {
   const el = $('#roomCount'); if (el) el.textContent = `${n} option${n === 1 ? '' : 's'}`;
   const grid = $('#roomsGrid');
   let empty = grid?.querySelector('.room-empty');
-  if (n === 0 && grid && !empty) { empty = document.createElement('p'); empty.className = 'room-empty'; empty.textContent = 'No rooms match these filters — clear a filter or search a different area.'; grid.appendChild(empty); }
+  if (n === 0 && grid && !empty) { empty = document.createElement('p'); empty.className = 'room-empty'; empty.setAttribute('role', 'status'); empty.setAttribute('aria-live', 'polite'); empty.textContent = 'No rooms match these filters — clear a filter or search a different area.'; grid.appendChild(empty); }
   else if (n > 0 && empty) empty.remove();
 }
 

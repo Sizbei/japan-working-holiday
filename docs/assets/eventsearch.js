@@ -17,9 +17,10 @@ export function mountEventSearch(data) {
   DATA = data;
   const input = $('#calSearch'), results = $('#calSearchResults');
   if (!input || !results) return;
+  const status = $('#calSearchStatus');
   const render = () => {
     const q = input.value.trim().toLowerCase();
-    if (q.length < 2) { results.innerHTML = ''; results.classList.remove('open'); return; }
+    if (q.length < 2) { results.innerHTML = ''; results.classList.remove('open'); if (status) status.textContent = ''; return; }
     const matches = allEvents()
       .filter(e => `${e.title} ${e.area || ''} ${e.category || ''} ${e.why || ''}`.toLowerCase().includes(q))
       .sort((a, b) => a.date.localeCompare(b.date))
@@ -27,6 +28,7 @@ export function mountEventSearch(data) {
     results.classList.add('open');
     results.innerHTML = matches.length ? matches.map(rowHTML).join('')
       : `<li class="cs-empty">No events match “${esc(q)}”.</li>`;
+    if (status) status.textContent = matches.length ? `${matches.length} event${matches.length > 1 ? 's' : ''} found` : `No events match ${q}`;
   };
   input.addEventListener('input', render);
   results.addEventListener('click', (e) => {
@@ -54,6 +56,8 @@ function rowHTML(e) {
 
 function addToPlan(d) {
   upsertStop(d.date, newStop({ name: d.title, area: d.area, lat: +d.lat, lng: +d.lng, coordKind: 'approx', seed: Math.random() }));
+  const msg = `Added “${d.title}” to your plan for ${fmtShort(d.date)}.`;
   const live = $('#calSearchResults');
-  if (live) { const note = document.createElement('li'); note.className = 'cs-note'; note.textContent = `Added “${d.title}” to your plan for ${fmtShort(d.date)}.`; live.prepend(note); setTimeout(() => note.remove(), 3500); }
+  if (live) { const note = document.createElement('li'); note.className = 'cs-note'; note.textContent = msg; live.prepend(note); setTimeout(() => note.remove(), 3500); }
+  const status = $('#calSearchStatus'); if (status) status.textContent = msg;   // speak the confirmation
 }

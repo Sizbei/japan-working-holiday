@@ -468,6 +468,9 @@ function renderFilters() {
 // ====================================================================== your-pins sidebar
 function renderSaved() {
   const wrap = $('#mapSaved'); if (!wrap) return;
+  const a = document.activeElement;   // preserve keyboard focus across the rebuild (pin/unpin is chainable)
+  const focus = (a && wrap.contains(a) && (a.dataset.fav || a.dataset.del || a.dataset.pid))
+    ? (a.dataset.fav ? ['fav', a.dataset.fav] : a.dataset.del ? ['del', a.dataset.del] : ['pid', a.dataset.pid]) : null;
   const places = loadPlaces();
   if (!places.length) { wrap.innerHTML = `<h3 class="map-side-h">Your pins</h3><p class="map-empty">No saved pins yet — search a place above, ⭐ a restaurant, or “Drop a pin”.</p>`; return; }
   const row = (p) => {
@@ -492,6 +495,11 @@ function renderSaved() {
   wrap.querySelectorAll('.map-sgo').forEach(b => b.addEventListener('click', () => focusPlace(b.dataset.pid)));
   wrap.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => toggleFav(b.dataset.fav)));
   wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => { if (await confirmModal('Delete this pin?', { ok: 'Delete', danger: true }) && !deletePlace(b.dataset.del)) alertModal('This pin is locked — unlock it first.'); }));
+  if (focus) {
+    const cs = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
+    const sel = focus[0] === 'pid' ? `.map-sgo[data-pid="${cs(focus[1])}"]` : `[data-${focus[0]}="${cs(focus[1])}"]`;
+    wrap.querySelector(sel)?.focus();
+  }
 }
 
 // ====================================================================== offline link index

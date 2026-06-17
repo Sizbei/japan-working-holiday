@@ -59,10 +59,13 @@ export function parseICS(text) {
     let endIso = '';
     const de = body.match(/(?:^|\n)DTEND[^:\n]*:(\d{8})/i);
     if (de) {
-      const d = new Date(Date.UTC(+de[1].slice(0, 4), +de[1].slice(4, 6) - 1, +de[1].slice(6, 8)));
-      d.setUTCDate(d.getUTCDate() - 1);
-      const back = d.toISOString().slice(0, 10);
-      if (back > iso) endIso = back;
+      const deIso = `${de[1].slice(0, 4)}-${de[1].slice(4, 6)}-${de[1].slice(6, 8)}`;
+      if (/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(deIso)) {   // reject impossible DTEND before Date math rolls it over (e.g. 20260145)
+        const d = new Date(Date.UTC(+de[1].slice(0, 4), +de[1].slice(4, 6) - 1, +de[1].slice(6, 8)));
+        d.setUTCDate(d.getUTCDate() - 1);
+        const back = d.toISOString().slice(0, 10);
+        if (back > iso) endIso = back;
+      }
     }
     out.push({
       title: get('SUMMARY') || '(untitled)',

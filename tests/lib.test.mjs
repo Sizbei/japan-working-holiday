@@ -70,6 +70,14 @@ test('multi-day event end date is exclusive next-day', () => {
   assert.match(ics, /DTEND;VALUE=DATE:20260817/);
 });
 
+test('parseICS rejects an impossible DTEND instead of rolling it over', () => {
+  const ics = 'BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nSUMMARY:Bad end\r\nDTSTART;VALUE=DATE:20260110\r\nDTEND;VALUE=DATE:20260145\r\nEND:VEVENT\r\nEND:VCALENDAR';
+  const back = parseICS(ics);
+  assert.equal(back.length, 1);
+  assert.equal(back[0].date, '2026-01-10');
+  assert.equal(back[0].endDate, '');   // impossible end dropped → single-day
+});
+
 test('gcalUrl builds a template link', () => {
   const u = gcalUrl({ title: 'teamLab', date: '2026-07-10', area: 'Toyosu' });
   assert.match(u, /calendar\.google\.com/);

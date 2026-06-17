@@ -122,9 +122,10 @@ function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 function render() {
   _evCache = null;   // invalidate the per-render event cache (data may have changed since last render)
   dismissPopover();
-  $('#calModeMonth')?.classList.toggle('active', mode === 'month');
-  $('#calModeAgenda')?.classList.toggle('active', mode === 'agenda');
-  const label = $('#calLabel'); if (label) label.textContent = `${MONTHS[viewM]} ${viewY}`;
+  const mEl = $('#calModeMonth'), aEl = $('#calModeAgenda');
+  mEl?.classList.toggle('active', mode === 'month'); mEl?.setAttribute('aria-pressed', String(mode === 'month'));
+  aEl?.classList.toggle('active', mode === 'agenda'); aEl?.setAttribute('aria-pressed', String(mode === 'agenda'));
+  const label = $('#calLabel'); if (label) label.textContent = mode === 'agenda' ? `Agenda — from ${MONTHS[viewM]} ${viewY}` : `${MONTHS[viewM]} ${viewY}`;
   const view = $('#calView'); if (!view) return;
   const panel = $('#calPanel');
   if (mode === 'month') {

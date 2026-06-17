@@ -37,8 +37,15 @@ function restore(file, statusEl) {
       if (!data) throw new Error('unrecognised backup file');
       const keys = Object.keys(data).filter(k => k.startsWith(PREFIX) && typeof data[k] === 'string');
       if (!keys.length) throw new Error('no trip data in this file');
-      if (!await confirmModal(`Restore ${keys.length} items? This replaces the trip data on THIS device.`, { ok: 'Restore', danger: true })) return;
-      keys.forEach(k => localStorage.setItem(k, data[k]));
+      if (!await confirmModal(`Restore ${keys.length} items? This REPLACES the trip data on this device (your login and theme are kept).`, { ok: 'Restore', danger: true })) return;
+      // atomic replace: drop any existing jwh- key not in the backup, else the two stores desync
+      // (e.g. a place.eventId pointing at an event the backup didn't have). Keep auth + theme local.
+      const KEEP = new Set(['jwh-auth-v1', 'jwh-theme']);
+      const incoming = new Set(keys);
+      const existing = [];
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(PREFIX)) existing.push(k); }
+      existing.forEach(k => { if (!incoming.has(k) && !KEEP.has(k)) localStorage.removeItem(k); });
+      keys.forEach(k => { if (!KEEP.has(k)) localStorage.setItem(k, data[k]); });
       if (statusEl) statusEl.textContent = `Restored ${keys.length} items — reloading…`;
       setTimeout(() => location.reload(), 600);
     } catch (e) {

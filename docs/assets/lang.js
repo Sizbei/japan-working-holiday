@@ -35,7 +35,7 @@ const GLOSSARY = {
   '食べ歩き': { r: 'tabe-aruki', m: 'food-walking (eating around)' },
 };
 
-let pop = null, hideTimer = null, lastWord = '';
+let pop = null, hideTimer = null, lastWord = '', curEl = null;
 
 export function mountLang() {
   injectToggle();
@@ -71,13 +71,20 @@ function wireDictionary() {
   document.addEventListener('focusin', (e) => { const t = e.target.closest('.jp, [data-jp]'); if (t) showFor(t); });
   document.addEventListener('focusout', (e) => { if (e.target.closest('.jp, [data-jp]')) scheduleHide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideNow(); });
-  // make the decorative .jp accents reachable by keyboard for the lookup
-  $$('.jp').forEach(el => { if (!el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '0'); el.removeAttribute('aria-hidden'); } });
+  // make the decorative .jp accents reachable by keyboard for the lookup — as named buttons, not anonymous tab stops
+  $$('.jp').forEach(el => {
+    if (el.hasAttribute('tabindex')) return;
+    const word = (el.textContent || '').trim();
+    el.setAttribute('tabindex', '0');
+    el.removeAttribute('aria-hidden');
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `Define ${word}`);
+  });
 }
 function ensurePop() {
   if (pop) return pop;
   pop = document.createElement('div');
-  pop.className = 'jp-dict'; pop.setAttribute('role', 'tooltip');
+  pop.className = 'jp-dict'; pop.id = 'jpDictPop'; pop.setAttribute('role', 'tooltip');
   pop.addEventListener('mouseover', () => clearTimeout(hideTimer));
   pop.addEventListener('mouseout', scheduleHide);
   document.body.appendChild(pop);
@@ -93,6 +100,8 @@ function showFor(el) {
   p.innerHTML = render(word, g ? g.r : '', g ? g.m : (g === undefined ? '…' : ''), !g);
   position(p, el);
   p.classList.add('show');
+  if (curEl && curEl !== el) curEl.removeAttribute('aria-describedby');
+  curEl = el; el.setAttribute('aria-describedby', 'jpDictPop');      // link the tooltip to its trigger while shown
   if (!g) lookup(word, p, el);                                       // enrich unknown words via the API
 }
 function render(word, reading, meaning, loading) {
@@ -112,6 +121,7 @@ async function lookup(word, p, el) {
     clearTimeout(to);
     if (lastWord !== word) return;                                   // user moved on
     const data = r.ok ? await r.json() : null;
+    if (lastWord !== word) return;                                   // re-check after the json() await — don't clobber a newer word's gloss
     const w = data && data.words && data.words[0];
     const reading = w?.reading ? [w.reading.kana, w.reading.kanji].filter(Boolean).join(' · ') : '';
     const gloss = w?.senses?.[0]?.glosses?.join(', ') || '';
@@ -133,4 +143,4 @@ function position(p, el) {
   p.style.visibility = ''; p.style.display = '';
 }
 function scheduleHide() { clearTimeout(hideTimer); hideTimer = setTimeout(hideNow, 220); }
-function hideNow() { if (pop) pop.classList.remove('show'); lastWord = ''; }
+function hideNow() { if (pop) pop.classList.remove('show'); lastWord = ''; if (curEl) { curEl.removeAttribute('aria-describedby'); curEl = null; } }

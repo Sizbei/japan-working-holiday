@@ -64,22 +64,25 @@ function wireDiscoverFilter() {
     const q = (search?.value || '').trim().toLowerCase();
     const sec = $('#discInterest .chip.active')?.dataset.sec || 'all';
     const area = $('#discArea .chip.active')?.dataset.area || 'all';
+    const tier = $('#tierFilters .chip.active')?.dataset.tier || 'all';
     Object.entries(SECMAP).forEach(([k, sel]) => { const el = $(sel); if (el) el.style.display = (sec === 'all' || sec === k) ? '' : 'none'; });
     if (q || area !== 'all') {
       $$('#view-explore .grid .card2').forEach(card => {
         const txt = card.textContent.toLowerCase();
-        card.style.display = ((!q || txt.includes(q)) && (area === 'all' || txt.includes(area))) ? '' : 'none';
+        let show = (!q || txt.includes(q)) && (area === 'all' || txt.includes(area));
+        if (show && card.closest('#restaurantsGrid')) show = (tier === 'all' || card.dataset.tier === tier);   // don't override the active tier chips
+        card.style.display = show ? '' : 'none';
       });
     } else {
       $$('#view-explore .grid .card2').forEach(card => { card.style.display = ''; });   // clear any search/area-hidden
       applyTierFilter();                                                                // re-assert the restaurant tier filter (don't stomp it)
     }
-    // empty-state when an active filter hides everything
+    // empty-state when an active filter hides everything (ignore cards in interest-hidden sections)
     const filtering = q || area !== 'all' || sec !== 'all';
-    const anyVisible = $$('#view-explore .grid .card2').some(c => c.style.display !== 'none');
+    const anyVisible = $$('#view-explore .grid .card2').some(c => c.style.display !== 'none' && c.closest('section')?.style.display !== 'none');
     let note = $('#discoverEmpty');
     if (filtering && !anyVisible) {
-      if (!note) { note = document.createElement('p'); note.id = 'discoverEmpty'; note.className = 'discover-empty'; bar.insertAdjacentElement('afterend', note); }
+      if (!note) { note = document.createElement('p'); note.id = 'discoverEmpty'; note.className = 'discover-empty'; note.setAttribute('role', 'status'); note.setAttribute('aria-live', 'polite'); bar.insertAdjacentElement('afterend', note); }
       note.textContent = `No matches${q ? ` for “${search.value.trim()}”` : ''}${area !== 'all' ? ` in ${area}` : ''} — try All areas or clear the search.`;
       note.hidden = false;
     } else if (note) { note.hidden = true; }
@@ -250,7 +253,14 @@ function wireControls() {
 }
 function applyTierFilter() {
   const t = $('#tierFilters .chip.active')?.dataset.tier || 'all';
-  $$('#restaurantsGrid .card2').forEach(card => { card.style.display = (t === 'all' || card.dataset.tier === t) ? '' : 'none'; });
+  const q = ($('#discSearch')?.value || '').trim().toLowerCase();   // also honour an active search so a tier click doesn't un-hide searched-out cards
+  const area = $('#discArea .chip.active')?.dataset.area || 'all';
+  $$('#restaurantsGrid .card2').forEach(card => {
+    const tierOk = t === 'all' || card.dataset.tier === t;
+    const txt = (q || area !== 'all') ? card.textContent.toLowerCase() : '';
+    const searchOk = (!q || txt.includes(q)) && (area === 'all' || txt.includes(area));
+    card.style.display = (tierOk && searchOk) ? '' : 'none';
+  });
 }
 function wireTierFilter() {
   $$('#tierFilters .chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false'));

@@ -11,6 +11,7 @@ import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
 import { makeSortable } from './dnd.js';
 import { loadPlans } from './lib/dayplan.js';
+import { isGoing } from './lib/going.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -180,6 +181,21 @@ function renderWidgets(alerts) {
   fill('#wBookBy', alerts.filter(a => a.kind === 'book'));
   renderProgress();
   renderPlanWidget();
+  renderGoingWidget();
+}
+// curated "events I'm going to" — the ones the user has marked ✓ Going (not the auto upcoming stream)
+function renderGoingWidget() {
+  const el = $('#wGoing');
+  if (!el) return;
+  const going = allEvents().filter(e => isGoing(e.id)).sort((a, b) => a.date.localeCompare(b.date));
+  const body = going.length
+    ? `<ul>${going.slice(0, 6).map(e => {
+        const c = countdown(e.date.slice(0, 10), TODAY);
+        const when = c.phase === 'arrived' ? esc(fmtShort(e.date)) : `in ${c.days}d`;
+        return `<li><a href="#/calendar"><span class="w-when">${esc(when)}</span> ${esc(clip(e.title, 46))}</a></li>`;
+      }).join('')}</ul>`
+    : `<p class="w-empty">Nothing locked in yet — open an event and tap <b>✓ Going</b>.</p>`;
+  el.querySelector('.widget-body').innerHTML = body;
 }
 // today's day plan if it exists, else the next upcoming one (plan ↔ dashboard parity)
 function renderPlanWidget() {

@@ -12,6 +12,7 @@ import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
 import { upsertStop, newStop } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
+import { isGoing, toggleGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable } from './dnd.js';
 
@@ -348,12 +349,14 @@ function openDetail(ev) {
     ${srcline(ev.sources)}
     ${ev.moved ? '<p class="modal-line">↩ You rescheduled this from its researched date.</p>' : ''}
     <div class="modal-actions">
+      <button class="btn ${isGoing(ev.id) ? 'primary' : ''}" id="mdGoing" aria-pressed="${isGoing(ev.id) ? 'true' : 'false'}">${isGoing(ev.id) ? '✓ Going' : '＋ Going'}</button>
       ${ev.moved ? '<button class="btn" id="mdReset">↺ Reset date</button>' : ''}
       <button class="btn" id="mdPlan">＋ Add to day plan</button>
       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
+  ov.querySelector('#mdGoing')?.addEventListener('click', () => { toggleGoing(ev.id); closeModal(ov, { rerender: true }); });   // dispatches jwh:data-changed → dashboard "Going to" widget updates
   ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov, { rerender: true }); });
   ov.querySelector('#mdPlan')?.addEventListener('click', () => {
     const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
@@ -390,12 +393,14 @@ function openModal(ev, presetDate) {
       </div>
       <label>Note<textarea name="note" rows="3">${esc(e.note || '')}</textarea></label>
       <div class="modal-actions">
+        ${ev && ev.id ? `<button type="button" class="btn ${isGoing(ev.id) ? 'primary' : ''}" id="mdGoingU" aria-pressed="${isGoing(ev.id) ? 'true' : 'false'}">${isGoing(ev.id) ? '✓ Going' : '＋ Going'}</button>` : ''}
         ${ev ? '<button type="button" class="btn danger" id="mdDel">Delete</button>' : ''}
         ${gbtn}
         <button type="submit" class="btn primary">${ev ? 'Save' : 'Add'}</button>
       </div>
     </form>`;
   const ov = showModal(body);
+  ov.querySelector('#mdGoingU')?.addEventListener('click', () => { toggleGoing(ev.id); closeModal(ov, { rerender: true }); });
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());

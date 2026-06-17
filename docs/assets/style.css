@@ -1442,3 +1442,6 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 }
 .kh-close:hover{ background: var(--bg-sunk); }
 @media (prefers-reduced-motion: reduce){ .lp-menu, .kbd-help{ animation: none; } }
+
+/* event/place emoji in the map area index */
+.map-emoji{ display: inline-block; width: 1.3em; text-align: center; margin-right: .15rem; }

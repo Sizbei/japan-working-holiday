@@ -32,6 +32,11 @@ const todayISO = () => nowISO();   // local date, consistent with the rest of th
 // ---- filter state (persisted) ----
 const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet' };
 const CAT_GLYPH = { music: '🎵', geek: '🕹️', build: '🏙️', food: '🍜', meet: '👥', disney: '🏰', seasonal: '🎏', personal: '📍', stay: '🏠', event: '📅', mine: '⭐' };
+// emoji by calendar category (events) — shown beside event names in lists + popups
+const EVENT_EMOJI = { festival: '🎏', fireworks: '🎆', illumination: '✨', convention: '🎫', seasonal: '🍡', nature: '🌿', holiday: '🎌', food: '🍜', disney: '🏰', music: '🎵', personal: '📌', imported: '📅' };
+// emoji by source pillar — shown beside catalogue places in the area index
+const PILLAR_EMOJI = { music: '🎵', geek: '🕹️', building: '🏙️', restaurants: '🍜', livemusic: '🎤', activities: '🎡', disney: '🏰', meetups: '👥' };
+const eventEmoji = (cat) => EVENT_EMOJI[cat] || '📅';
 const FILTER_CATS = [
   { key: 'event', label: 'Events' }, { key: 'music', label: 'Music' }, { key: 'food', label: 'Food' },
   { key: 'geek', label: 'Geek' }, { key: 'build', label: 'Buildings' }, { key: 'meet', label: 'Meetups' },
@@ -305,7 +310,8 @@ function popupFor(pt) { return pt.kind === 'user' ? userPopup(pt) : cataloguePop
 function cataloguePopup(pt) {
   const saved = !!placeById(pt.id);
   const isFood = pt.cat === 'food';
-  return `<div class="pin-pop"><b>${esc(pt.name)}</b>
+  const emoji = pt.kind === 'event' ? eventEmoji(pt.cat) : (CAT_GLYPH[bucketOf(pt)] || '📍');
+  return `<div class="pin-pop"><b><span aria-hidden="true">${emoji}</span> ${esc(pt.name)}</b>
     ${pt.area ? `<div class="pin-addr">${esc(pt.area)}</div>` : ''}
     ${pt.date ? `<div class="pin-rem">📅 ${esc(pt.date)}</div>` : ''}
     ${approxNote(pt)}
@@ -506,16 +512,16 @@ function renderSaved() {
 function renderIndex() {
   const wrap = $('#mapList'); if (!wrap) return;
   const places = [];
-  const add = (arr) => (arr || []).forEach(i => { const area = i.area || i.area_or_park || ''; if (i.name) places.push({ name: i.name, area, group: areaOf(area) }); });
-  ['music', 'geek', 'building', 'restaurants', 'livemusic', 'activities', 'disney', 'meetups'].forEach(k => add(DATA[k]));
-  (DATA.rooms || []).forEach(r => places.push({ name: r.name, area: r.area, group: areaOf(r.area) }));
-  (DATA.calendar || []).forEach(e => { if (e.area && e.category !== 'holiday') places.push({ name: e.title, area: e.area, group: areaOf(e.area) }); });
+  const add = (arr, emoji) => (arr || []).forEach(i => { const area = i.area || i.area_or_park || ''; if (i.name) places.push({ name: i.name, area, group: areaOf(area), emoji }); });
+  ['music', 'geek', 'building', 'restaurants', 'livemusic', 'activities', 'disney', 'meetups'].forEach(k => add(DATA[k], PILLAR_EMOJI[k] || '📍'));
+  (DATA.rooms || []).forEach(r => places.push({ name: r.name, area: r.area, group: areaOf(r.area), emoji: '🏠' }));
+  (DATA.calendar || []).forEach(e => { if (e.area && e.category !== 'holiday') places.push({ name: e.title, area: e.area, group: areaOf(e.area), emoji: eventEmoji(e.category) }); });
   const groups = {};
   places.forEach(p => { (groups[p.group] = groups[p.group] || []).push(p); });
   wrap.innerHTML = `<h3 class="map-side-h">All places by area</h3>` + AREA_ORDER.filter(k => groups[k]).map(k => `
     <details class="map-group" open>
       <summary class="map-area"><a href="${esc(gmaps(k))}" target="_blank" rel="noopener noreferrer">📍 ${esc(k)}</a> <span class="map-count">${dedupe(groups[k]).length}</span></summary>
-      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a></li>`).join('')}</ul>
+      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener noreferrer"><span class="map-emoji" aria-hidden="true">${p.emoji || '📍'}</span> ${esc(p.name)}</a></li>`).join('')}</ul>
     </details>`).join('');
 }
 

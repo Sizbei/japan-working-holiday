@@ -57,7 +57,8 @@ function wire() {
     $$('#roomsGrid .room-card').forEach(c => {
       const okQ = !q || c.textContent.toLowerCase().includes(q);
       const okTier = tier === 'all' || c.dataset.tier === tier;
-      const okRoom = room === 'all' || c.dataset.room === room || c.dataset.room === 'both';
+      const okRoom = room === 'all' || c.dataset.room === room || c.dataset.room === 'both'
+        || (room === 'private' && c.dataset.room === 'private-apartment');
       const okKey = !noKey || c.dataset.nokey === 'true';
       c.style.display = (okQ && okTier && okRoom && okKey) ? '' : 'none';
     });
@@ -68,5 +69,5 @@ function wire() {
     [...ch.parentElement.querySelectorAll('.chip')].forEach(x => x.classList.remove('active'));
     ch.classList.add('active'); apply();
   }));
-  $('#roomNoKey')?.addEventListener('click', () => { $('#roomNoKey').classList.toggle('active'); apply(); });
+  $('#roomNoKey')?.addEventListener('click', () => { const on = $('#roomNoKey').classList.toggle('active'); $('#roomNoKey').setAttribute('aria-pressed', on ? 'true' : 'false'); apply(); });
 }

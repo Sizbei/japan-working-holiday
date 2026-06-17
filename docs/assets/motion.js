@@ -23,7 +23,7 @@ export function transitionView(updateFn) {
 }
 
 // Entrance stagger for a list of elements (hero, card grids).
-export function stagger(els, { y = 10, step = 38, dur = 240 } = {}) {
+export function stagger(els, { y = 10, step = 50, dur = 240 } = {}) {
   if (prefersReducedMotion() || !els || !els.length) return;
   [...els].forEach((el, i) => {
     el.animate(

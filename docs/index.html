@@ -298,7 +298,7 @@
         <button class="chip" data-room="private" type="button">Private</button>
         <button class="chip" data-room="dorm" type="button">Dorm</button>
       </div>
-      <button class="chip toggle" id="roomNoKey" type="button">No key money</button>
+      <button class="chip toggle" id="roomNoKey" type="button" aria-pressed="false">No key money</button>
     </div>
     <div class="grid" id="roomsGrid"></div>
   </section>
@@ -310,7 +310,7 @@
     <div id="mapAdd">
       <div class="map-add-row">
         <input type="search" id="placeSearch" placeholder="ADD A PLACE // search an address or name…" aria-label="Add a place" autocomplete="off">
-        <input type="date" id="placeDate" aria-label="Optional date — also adds it to your calendar" title="Optional date — also adds it to your calendar &amp; notifications">
+        <input type="date" id="placeDate" min="2026-01-01" max="2027-12-31" aria-label="Optional date — also adds it to your calendar" title="Optional date — also adds it to your calendar &amp; notifications">
       </div>
       <ul id="placeSug" class="place-sug" aria-live="polite"></ul>
     </div>

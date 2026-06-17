@@ -11,7 +11,7 @@ import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
 import { makeSortable } from './dnd.js';
 
-let DATA = null, TODAY = '2026-06-15';
+let DATA = null, TODAY = nowISO();
 
 export function mountDashboard(data, today) {
   DATA = data;
@@ -170,9 +170,9 @@ function fill(sel, list) {
   if (!el) return;
   const body = list.length
     ? `<ul>${list.slice(0, 5).map(a => `<li class="sev-${a.severity}">
-        <a href="#${a.kind === 'event' ? 'calendarSection' : a.kind === 'book' ? 'trackerSection' : 'checklist'}">
+        <a href="#/${a.kind === 'event' ? 'calendar' : a.kind === 'book' ? 'deadlines' : 'checklist'}">
         <span class="w-when">${esc(fmtShort(a.when))}</span> ${esc(clip(a.title, 52))}</a></li>`).join('')}</ul>`
-    : `<p class="w-empty">NO TARGETS IN RANGE</p>`;
+    : `<p class="w-empty">Nothing due soon</p>`;
   el.querySelector('.widget-body').innerHTML = body;
 }
 function renderProgress() {
@@ -185,7 +185,7 @@ function renderProgress() {
   el.querySelector('.widget-body').innerHTML = `
     <div class="w-prog"><div class="w-bar"><i style="width:${pct}%"></i></div>
     <span class="w-pct">${pct}% · ${done}/${all.length}</span></div>
-    <a class="w-link" href="#checklist">Open checklist →</a>`;
+    <a class="w-link" href="#/checklist">Open checklist →</a>`;
 }
 
 // ---- theme (owns the top-bar toggle) ----

@@ -149,7 +149,7 @@ function monthHTML() {
 }
 
 // ---- side panel: this month's book-by deadlines + a "happening" tally ----
-function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0 || d <= 3) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
+function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 3) return 'due-soon'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
 function panelHTML() {
   const monthKey = `${viewY}-${pad(viewM + 1)}`;
   const evs = allEvents().filter(visible);
@@ -392,7 +392,7 @@ function onImport(e) {
 function showModal(html) {
   const ov = document.createElement('div');
   ov.className = 'modal-overlay';
-  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><button class="modal-x" aria-label="Close">✕</button>${html}</div>`;
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><button type="button" class="modal-x" aria-label="Close">✕</button>${html}</div>`;
   document.body.appendChild(ov);
   ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov); });
   ov.querySelector('.modal-x').addEventListener('click', () => closeModal(ov));

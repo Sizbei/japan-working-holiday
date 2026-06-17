@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map page — animated mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Space+Mono:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Standalone mockup — NOT part of the app. Three animated design
+   directions for the Map page, switchable for side-by-side compare.
+   Faked map (CSS) + positioned pins so animations aren't tied to Leaflet.
+   ============================================================ */
+:root{
+  --bg:#f7f4ee; --bg-soft:#fffdf8; --bg-sunk:#efe9dd; --bg-elev:#fff;
+  --ink:#1a1a22; --ink-soft:#595550; --line:#e4ddd0; --line-strong:#d4cbb8;
+  --red:#bc002d; --indigo:#223a70; --gold:#b8860b;
+  --c-event:#c43459; --c-music:#5a3fb5; --c-food:#a85716; --c-geek:#167530;
+  --c-build:#3f51d6; --c-meet:#a85716; --c-stay:#3a5ba0; --c-fav:#b8860b;
+  --serif:'Newsreader',Georgia,serif; --sans:'Zen Kaku Gothic New',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace; --pixel:'DotGothic16',var(--sans);
+  --shadow:0 1px 2px rgba(30,20,10,.05),0 8px 24px rgba(30,20,10,.07);
+  --shadow-lg:0 4px 12px rgba(30,20,10,.08),0 18px 48px rgba(30,20,10,.14);
+  --ease:cubic-bezier(.22,1,.36,1); --spring:cubic-bezier(.34,1.56,.64,1);
+  --r:14px;
+}
+[data-theme=dark]{
+  --bg:#14141a; --bg-soft:#1d1d26; --bg-sunk:#15151c; --bg-elev:#262631;
+  --ink:#ece9e2; --ink-soft:#b3aea4; --line:#2e2e3a; --line-strong:#3c3c4a;
+  --red:#ff4d6d; --indigo:#8fb0ff; --gold:#e0b34a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 30px rgba(0,0,0,.45);
+  --shadow-lg:0 6px 18px rgba(0,0,0,.45),0 24px 60px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);transition:background .4s,color .4s}
+
+/* ---- chrome: title bar + variant switcher ---- */
+.bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  padding:.6rem 1.1rem;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(1.3) blur(8px);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:.5rem}
+.brand .sun{width:14px;height:14px;border-radius:50%;background:var(--red)}
+.tabs{display:flex;gap:.3rem;background:var(--bg-sunk);padding:.25rem;border-radius:999px}
+.tab{border:none;background:none;font:inherit;font-weight:700;font-size:.82rem;color:var(--ink-soft);
+  padding:.4rem .9rem;border-radius:999px;cursor:pointer;transition:color .2s}
+.tab .vlabel{opacity:.6;font-weight:400;margin-left:.35rem;font-size:.72rem}
+.tab.active{background:var(--bg-elev);color:var(--ink);box-shadow:var(--shadow)}
+.spacer{flex:1}
+.iconbtn{border:1px solid var(--line);background:var(--bg-soft);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:1rem}
+.hint{font-size:.74rem;color:var(--ink-soft);width:100%;margin:.2rem 0 0}
+
+/* ---- stage ---- */
+#stage{max-width:1180px;margin:0 auto;padding:1.4rem 1.1rem 4rem}
+.pg-head{display:flex;align-items:baseline;gap:.6rem;margin:.4rem 0 1rem}
+.pg-head .jp{font-family:var(--pixel);color:var(--red);font-size:1rem;letter-spacing:.08em}
+.pg-head h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,4vw,2.4rem);margin:0;letter-spacing:-.01em}
+.lede{color:var(--ink-soft);font-size:.92rem;margin:0 0 1rem;max-width:60ch}
+
+.toolrow{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.7rem}
+.field{flex:1;min-width:200px;display:flex;gap:.4rem}
+.field input{flex:1;font:inherit;font-size:.85rem;padding:.55rem .8rem;border:1px solid var(--line-strong);border-radius:999px;background:var(--bg-soft);color:var(--ink)}
+.btn{font:inherit;font-weight:700;font-size:.8rem;border:1px solid var(--line-strong);background:var(--bg-soft);color:var(--ink);
+  padding:.5rem .85rem;border-radius:999px;cursor:pointer;transition:transform .12s var(--ease),background .15s,border-color .15s}
+.btn:hover{border-color:var(--indigo);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}
+.stat{font-size:.78rem;color:var(--ink-soft);margin-left:auto}
+
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.chip{font:inherit;font-size:.76rem;font-weight:700;border:1px solid var(--line);background:var(--bg-soft);color:var(--ink-soft);
+  padding:.32rem .7rem;border-radius:999px;cursor:pointer;transition:all .18s var(--ease);display:inline-flex;gap:.3rem;align-items:center}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed=true]{color:#fff;background:var(--c,var(--indigo));border-color:transparent;box-shadow:var(--shadow)}
+.chip[aria-pressed=true] .dot{background:#fff}
+
+/* ---- map + sidebar layout ---- */
+.split{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:860px){.split{grid-template-columns:1.7fr 1fr}}
+.map{position:relative;height:460px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);
+  background:
+    radial-gradient(120% 90% at 30% 20%,#eef2ec, #e6ece4 40%, #dfe7e6 70%, #d6e0e2),
+    var(--bg-sunk)}
+[data-theme=dark] .map{background:radial-gradient(120% 90% at 30% 20%,#1c2230,#1a2030 45%,#181d2a 75%,#141821)}
+/* faux roads / river */
+.map::before{content:"";position:absolute;inset:0;opacity:.5;
+  background:
+    linear-gradient(90deg,transparent 0 8%,rgba(120,130,140,.18) 8% 8.6%,transparent 8.6%),
+    linear-gradient(0deg,transparent 0 28%,rgba(120,130,140,.16) 28% 28.5%,transparent 28.5%),
+    linear-gradient(115deg,transparent 0 44%,rgba(90,160,200,.28) 44% 47%,transparent 47%),
+    repeating-linear-gradient(0deg,transparent 0 38px,rgba(120,130,140,.07) 38px 39px),
+    repeating-linear-gradient(90deg,transparent 0 38px,rgba(120,130,140,.07) 38px 39px)}
+.map-attr{position:absolute;right:6px;bottom:5px;font-size:.6rem;color:var(--ink-soft);opacity:.6;background:color-mix(in srgb,var(--bg) 70%,transparent);padding:1px 5px;border-radius:5px}
+
+.pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;border:none;background:none;padding:0;
+  --c:var(--indigo);will-change:transform}
+.pin .head{width:30px;height:30px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);
+  background:var(--c);box-shadow:0 4px 10px rgba(0,0,0,.28);display:grid;place-items:center;border:2px solid #fff}
+[data-theme=dark] .pin .head{border-color:#0d0d12}
+.pin .glyph{transform:rotate(-45deg);font-size:.8rem;line-height:1}
+.pin .label{position:absolute;left:50%;top:-8px;transform:translate(-50%,-100%);white-space:nowrap;font-size:.66rem;font-weight:700;
+  background:var(--bg-elev);color:var(--ink);padding:1px 6px;border-radius:6px;box-shadow:var(--shadow);opacity:0;transition:opacity .15s;pointer-events:none}
+.pin:hover .label,.pin:focus-visible .label{opacity:1}
+.pin.fav .head{background:var(--c-fav)}
+.pin .ring{position:absolute;left:50%;top:30%;width:30px;height:30px;border-radius:50%;transform:translate(-50%,-50%);
+  border:2px solid var(--c);opacity:0}
+
+/* sidebar */
+.side{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--r);padding:.9rem;box-shadow:var(--shadow)}
+.side h3{font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;font-size:.74rem;color:var(--ink-soft);margin:0 0 .6rem}
+.srow{display:flex;align-items:center;gap:.55rem;padding:.5rem .4rem;border-radius:9px;cursor:pointer;transition:background .15s}
+.srow:hover{background:var(--bg-sunk)}
+.srow .si{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:var(--c);color:#fff;font-size:.8rem;flex:none}
+.srow .sn{font-weight:600;font-size:.86rem}
+.srow .sa{font-size:.72rem;color:var(--ink-soft)}
+
+/* ---- detail popover (variant A/B) ---- */
+.detail{position:fixed;z-index:40;background:var(--bg-elev);border:1px solid var(--line-strong);border-radius:var(--r);
+  box-shadow:var(--shadow-lg);width:min(300px,86vw);padding:1rem;opacity:0;pointer-events:none}
+.detail.open{opacity:1;pointer-events:auto}
+.detail .dh{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.detail .dh .si{width:30px;height:30px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center}
+.detail h4{margin:0;font-family:var(--serif);font-size:1.15rem;font-weight:600}
+.detail .da{font-size:.78rem;color:var(--ink-soft)}
+.detail .acts{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+.detail .acts .btn{font-size:.74rem;padding:.4rem .6rem}
+.backdrop{position:fixed;inset:0;z-index:39;background:rgba(20,14,8,.28);opacity:0;pointer-events:none;transition:opacity .2s}
+.backdrop.open{opacity:1;pointer-events:auto}
+
+/* ============================================================
+   VARIANT A — "Calm"  (soft fades, gentle drop, 50ms stagger)
+   ============================================================ */
+[data-variant=a] .pin{animation:dropA .5s var(--ease) both;animation-delay:var(--d)}
+@keyframes dropA{from{opacity:0;transform:translate(-50%,-130%)}to{opacity:1;transform:translate(-50%,-100%)}}
+[data-variant=a] .pin:hover .head,[data-variant=a] .pin:focus-visible .head{transform:rotate(45deg) scale(1.12)}
+[data-variant=a] .pin .head{transition:transform .18s var(--ease)}
+.detail[data-variant=a]{transform:translateY(8px) scale(.96);transition:opacity .22s var(--ease),transform .22s var(--ease)}
+.detail[data-variant=a].open{transform:translateY(0) scale(1)}
+[data-variant=a] .srow{animation:fadeA .4s var(--ease) both;animation-delay:var(--d)}
+@keyframes fadeA{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+
+/* ============================================================
+   VARIANT B — "Arcade"  (spring bounce, pixel pins, CRT scanlines)
+   ============================================================ */
+[data-variant=b]{--r:8px}
+[data-variant=b] .pg-head h1{font-family:var(--pixel);font-size:clamp(1.5rem,4vw,2rem);letter-spacing:.04em}
+[data-variant=b] .map::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.06;
+  background:repeating-linear-gradient(to bottom,transparent 0 2px,#000 2px 3px)}
+[data-variant=b] .pin .head{border-radius:3px;image-rendering:pixelated;border-width:3px;box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+[data-variant=b] .pin{animation:dropB .5s var(--spring) both;animation-delay:var(--d)}
+@keyframes dropB{0%{opacity:0;transform:translate(-50%,-200%) scale(.4)}70%{opacity:1}100%{opacity:1;transform:translate(-50%,-100%) scale(1)}}
+[data-variant=b] .pin:hover .head,[data-variant=b] .pin:focus-visible .head{animation:wiggleB .4s var(--spring)}
+@keyframes wiggleB{0%,100%{transform:rotate(45deg)}30%{transform:rotate(45deg) scale(1.25) translateY(-3px)}}
+[data-variant=b] .chip{border-width:2px;border-radius:6px;font-family:var(--mono);text-transform:uppercase;font-size:.7rem}
+[data-variant=b] .chip[aria-pressed=true]{box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+[data-variant=b] .btn{font-family:var(--mono);text-transform:uppercase;border-radius:6px;border-width:2px}
+[data-variant=b] .btn.primary{box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.detail[data-variant=b]{border-width:2px;border-radius:8px;transform:scale(.3) translateY(20px);transition:opacity .25s,transform .35s var(--spring)}
+.detail[data-variant=b].open{transform:scale(1) translateY(0)}
+.detail[data-variant=b] h4{font-family:var(--pixel)}
+[data-variant=b] .pin .ring{animation:ringB 1.6s ease-out infinite}
+@keyframes ringB{0%{opacity:.5;transform:translate(-50%,-50%) scale(.6)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}}
+[data-variant=b] .srow{animation:dropB .45s var(--spring) both;animation-delay:var(--d)}
+
+/* ============================================================
+   VARIANT C — "Immersive"  (full-bleed map, glass controls, bottom sheet)
+   ============================================================ */
+[data-variant=c] .split{grid-template-columns:1fr;gap:0}
+[data-variant=c] .map{height:min(72vh,640px)}
+[data-variant=c] .toolrow,[data-variant=c] .chips{position:relative;z-index:5}
+[data-variant=c] .float{position:absolute;z-index:6;left:12px;right:12px;top:12px;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;
+  background:color-mix(in srgb,var(--bg-elev) 62%,transparent);backdrop-filter:blur(10px) saturate(1.3);
+  border:1px solid color-mix(in srgb,var(--line-strong) 60%,transparent);border-radius:14px;padding:.55rem .6rem}
+[data-variant=c] .side{display:none}
+[data-variant=c] .pin .head{border-radius:50%;width:18px;height:18px;transform:none;border-width:3px}
+[data-variant=c] .pin .glyph{display:none}
+[data-variant=c] .pin{animation:popC .45s var(--spring) both;animation-delay:var(--d)}
+@keyframes popC{from{opacity:0;transform:translate(-50%,-100%) scale(0)}to{opacity:1;transform:translate(-50%,-100%) scale(1)}}
+[data-variant=c] .pin .ring{top:0;animation:pulseC 2.2s ease-out infinite}
+@keyframes pulseC{0%{opacity:.55;transform:translate(-50%,-50%) scale(.5)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
+[data-variant=c] .pin:hover .head,[data-variant=c] .pin:focus-visible .head{transform:scale(1.4)}
+[data-variant=c] .pin .head{transition:transform .2s var(--spring)}
+/* bottom sheet */
+.detail[data-variant=c]{left:50%!important;top:auto!important;bottom:0;transform:translate(-50%,110%);
+  width:min(520px,100%);border-radius:18px 18px 0 0;border-bottom:none;transition:transform .34s var(--spring),opacity .2s}
+.detail[data-variant=c].open{transform:translate(-50%,0)}
+.detail[data-variant=c]::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:var(--line-strong)}
+
+/* ---- shared float container hidden unless variant C ---- */
+.float{display:none}
+[data-variant=c] .float{display:flex}
+[data-variant=c] .toolrow.main,[data-variant=c] .chips.main{display:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .pin .ring{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="brand"><span class="sun"></span> Map · mockups</span>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-v="a">Calm<span class="vlabel">soft</span></button>
+    <button class="tab" data-v="b">Arcade<span class="vlabel">retro</span></button>
+    <button class="tab" data-v="c">Immersive<span class="vlabel">app</span></button>
+  </div>
+  <span class="spacer"></span>
+  <button class="iconbtn" id="theme" title="Toggle theme">🌙</button>
+  <p class="hint">Switch tabs to compare · tap a pin for its detail · toggle a filter · hover a pin · “Drop a pin” to see the add animation · 🌙 dark mode</p>
+</div>
+
+<div id="stage"></div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="detail" id="detail" role="dialog" aria-modal="true"></div>
+
+<script>
+/* shared pin/place data (fake) */
+const CATS={event:'--c-event',music:'--c-music',food:'--c-food',geek:'--c-geek',build:'--c-build',meet:'--c-meet',stay:'--c-stay'};
+const GLYPH={event:'📅',music:'🎵',food:'🍜',geek:'🕹️',build:'🏙️',meet:'👥',stay:'🏠'};
+const PLACES=[
+  {n:'Five G synths',a:'Harajuku',c:'music',x:33,y:38,fav:1},
+  {n:'Super Potato',a:'Akihabara',c:'geek',x:62,y:30},
+  {n:'Ramen Nagi',a:'Shibuya',c:'food',x:26,y:62},
+  {n:'teamLab',a:'Toyosu',c:'event',x:78,y:66},
+  {n:'Home base',a:'Nakano',c:'stay',x:18,y:30,fav:1},
+  {n:'Disk Union',a:'Shinjuku',c:'music',x:40,y:24},
+  {n:'Tech cafe',a:'Shibuya',c:'build',x:30,y:50},
+  {n:'Comiket',a:'Ariake',c:'event',x:82,y:54},
+  {n:'Mikawaya',a:'Asakusa',c:'food',x:70,y:20},
+  {n:'Meetup HQ',a:'Roppongi',c:'meet',x:52,y:58},
+  {n:'Nakano Broadway',a:'Nakano',c:'geek',x:20,y:42},
+  {n:'Tonkatsu Maisen',a:'Omotesando',c:'food',x:44,y:46},
+];
+const FILTERS=[['event','Events'],['music','Music'],['food','Food'],['geek','Geek'],['build','Buildings'],['meet','Meetups'],['stay','Stays']];
+
+const stage=document.getElementById('stage');
+const detail=document.getElementById('detail');
+const backdrop=document.getElementById('backdrop');
+let variant='a', hidden=new Set();
+
+function pinHTML(p,i){
+  const c=`var(${CATS[p.c]})`;
+  return `<button class="pin ${p.fav?'fav':''}" style="left:${p.x}%;top:${p.y}%;--c:${c};--d:${i*50}ms" data-i="${i}" aria-label="${p.n}">
+    <span class="ring"></span>
+    <span class="head"><span class="glyph">${GLYPH[p.c]}</span></span>
+    <span class="label">${p.n}</span>
+  </button>`;
+}
+function render(){
+  const pins=PLACES.map((p,i)=>hidden.has(p.c)?'':pinHTML(p,i)).join('');
+  const chips=FILTERS.map(([k,l])=>`<button class="chip" data-cat="${k}" aria-pressed="${hidden.has(k)?'false':'true'}" style="--c:var(${CATS[k]})"><span class="dot"></span>${l}</button>`).join('');
+  const tools=`<div class="field"><input placeholder="ADD A PLACE // search an address or name…"><input type="date" style="flex:0 0 auto;max-width:150px"></div>
+    <button class="btn" data-act="drop">＋ Drop a pin</button><button class="btn" data-act="fit">⤢ Fit all</button>
+    <span class="stat">showing ${PLACES.length-PLACES.filter(p=>hidden.has(p.c)).length} of ${PLACES.length}</span>`;
+  const side=`<div class="side"><h3>Your pins</h3>${PLACES.map((p,i)=>`<div class="srow" data-i="${i}" style="--c:var(${CATS[p.c]});--d:${i*45}ms"><span class="si">${GLYPH[p.c]}</span><div><div class="sn">${p.fav?'⭐ ':''}${p.n}</div><div class="sa">${p.a}</div></div></div>`).join('')}</div>`;
+  stage.innerHTML=`<div data-variant="${variant}">
+    <div class="pg-head"><span class="jp">地図</span><h1>My Tokyo Map</h1></div>
+    <p class="lede">Every place pinned by neighbourhood — tap a pin to plan a visit, get directions, or mark it visited.</p>
+    <div class="toolrow main">${tools}</div>
+    <div class="chips main">${chips}</div>
+    <div class="split">
+      <div class="map">
+        <div class="float">${tools}${chips}</div>
+        ${pins}
+        <span class="map-attr">© OpenStreetMap · mockup</span>
+      </div>
+      ${side}
+    </div>
+  </div>`;
+  wire();
+}
+function wire(){
+  stage.querySelectorAll('.pin,.srow').forEach(el=>el.addEventListener('click',()=>openDetail(+el.dataset.i,el)));
+  stage.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+    const k=ch.dataset.cat; hidden.has(k)?hidden.delete(k):hidden.add(k); render();
+  }));
+  stage.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.act==='drop')dropPin(); else if(b.dataset.act==='fit')render(); // re-render = re-stagger ("fit" flourish)
+  }));
+}
+function openDetail(i,anchor){
+  const p=PLACES[i]; const c=`var(${CATS[p.c]})`;
+  detail.dataset.variant=variant;   // scope the detail's variant animation (it lives outside #stage)
+  detail.style.setProperty('--c',c);
+  detail.innerHTML=`<div class="dh"><span class="si" style="background:${c}">${GLYPH[p.c]}</span>
+      <div><h4>${p.fav?'⭐ ':''}${p.n}</h4><div class="da">${p.a}${p.c==='stay'?' · 🏠 home base':''}</div></div></div>
+    <div class="da">${p.c==='stay'?'Your base — directions route from here while you plan.':'≈ 22 min from home (est.)'}</div>
+    <div class="acts">
+      <button class="btn primary">🧭 Directions</button>
+      <button class="btn">✓ Visited</button>
+      <button class="btn">✎ Note</button>
+      <button class="btn">⭐</button>
+    </div>`;
+  // position near the anchor for A/B (C is a bottom sheet via CSS)
+  if(variant!=='c'){
+    const r=anchor.getBoundingClientRect();
+    let left=r.left+r.width/2-150; left=Math.max(10,Math.min(left,innerWidth-310));
+    let top=r.bottom+10; if(top+260>innerHeight) top=r.top-270;
+    detail.style.left=Math.max(10,left)+'px'; detail.style.top=Math.max(10,top)+'px';
+  }
+  detail.classList.add('open'); backdrop.classList.add('open');
+  detail.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',close));
+}
+function close(){detail.classList.remove('open');backdrop.classList.remove('open');}
+backdrop.addEventListener('click',close);
+addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+
+function dropPin(){
+  // demo: add a temporary pin with the variant's drop animation
+  const i=PLACES.length; const np={n:'New pin',a:'dropped',c:'event',x:48+Math.round((Math.sin(i)*18)),y:40+Math.round((Math.cos(i*2)*14))};
+  PLACES.push(np); render();
+  setTimeout(()=>{ // focus it briefly
+    const el=stage.querySelector(`.pin[data-i="${i}"]`); if(el){el.querySelector('.head').style.outline='2px solid var(--indigo)';}
+  },520);
+}
+
+document.getElementById('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t)return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  variant=t.dataset.v; close(); render();
+});
+document.getElementById('theme').addEventListener('click',()=>{
+  const d=document.documentElement; d.dataset.theme=d.dataset.theme==='dark'?'light':'dark';
+  document.getElementById('theme').textContent=d.dataset.theme==='dark'?'☀️':'🌙';
+});
+render();
+</script>
+</body>
+</html>

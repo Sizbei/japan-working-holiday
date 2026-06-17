@@ -10,9 +10,13 @@ export function isUnlocked() {
   return getRaw(KEYS.auth, '') === 'ok';
 }
 
+const SHELL = '.topbar, .route-nav, header.hero, main, footer';
+function setShellInert(on) { document.querySelectorAll(SHELL).forEach(el => { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }); }
+
 export function mountGate(onUnlock) {
   if (isUnlocked()) { onUnlock(); return; }
   document.documentElement.classList.add('gated');
+  setShellInert(true);   // make the gated content non-interactive + AT-hidden while the overlay is up
   const ov = document.createElement('div');
   ov.className = 'gate';
   ov.innerHTML = `
@@ -36,6 +40,7 @@ export function mountGate(onUnlock) {
     if (input.value === PASSWORD) {
       setRaw(KEYS.auth, 'ok');
       document.documentElement.classList.remove('gated');
+      setShellInert(false);
       ov.classList.add('gate-out');
       setTimeout(() => ov.remove(), 280);
       onUnlock();

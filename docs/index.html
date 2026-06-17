@@ -110,11 +110,11 @@
     </div>
     <div class="cal-search">
       <input type="search" id="calSearch" placeholder="SEARCH EVENTS // fireworks, Akihabara, festival…" aria-label="Search all events" autocomplete="off">
-      <ul id="calSearchResults" class="cal-search-results" aria-live="polite"></ul>
+      <ul id="calSearchResults" class="cal-search-results"></ul>
     </div>
     <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
-      <div id="calView" aria-live="polite"></div>
+      <div id="calView"></div>
       <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
     </div>
   </section>
@@ -174,7 +174,7 @@
       <button class="chip" data-conf="low">Low · verify</button>
     </div>
   </section>
-  <div id="domains" aria-live="polite" aria-busy="true"></div>
+  <div id="domains" aria-busy="true"></div>
 
   <!-- ============ BRAINSTORM / BREW ============ -->
   <section id="brew">
@@ -346,7 +346,7 @@
   <section id="plan">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">一日</span><h2>Plan a Day</h2></div>
     <p class="lede">Build one day at a time — add stops from your saved pins, the catalogue, or events; drag to reorder; see rough travel time between each. Export the day to your calendar when it's set.</p>
-    <div id="planDays" class="plan-days" role="tablist" aria-label="Pick a day to plan"></div>
+    <div id="planDays" class="plan-days" role="group" aria-label="Pick a day to plan"></div>
     <div id="planBody"></div>
     <span id="planLive" class="sr-only" role="status" aria-live="polite"></span>
   </section>

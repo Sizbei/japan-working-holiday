@@ -54,6 +54,7 @@ export function parseICS(text) {
     const dt = body.match(/(?:^|\n)DTSTART[^:\n]*:(\d{8})/i);
     if (!dt) continue;
     const iso = `${dt[1].slice(0, 4)}-${dt[1].slice(4, 6)}-${dt[1].slice(6, 8)}`;
+    if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(iso)) continue;   // reject impossible dates (e.g. 9999-99-99)
     // DTEND on an all-day VEVENT is EXCLUSIVE (the day after the last) — subtract 1 to recover endDate
     let endIso = '';
     const de = body.match(/(?:^|\n)DTEND[^:\n]*:(\d{8})/i);

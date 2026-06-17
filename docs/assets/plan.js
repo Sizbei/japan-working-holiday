@@ -61,7 +61,7 @@ function renderRail() {
   rail.innerHTML = railDates(plans).map(d => {
     const planned = isPlanned(d);
     const isToday = d === today;
-    return `<button type="button" role="tab" class="plan-chip${d === activeDate ? ' active' : ''}${planned ? ' has-plan' : ''}" data-date="${esc(d)}" aria-selected="${d === activeDate ? 'true' : 'false'}" aria-label="${esc(fmtShort(d))}${isToday ? ', today' : ''}${planned ? ', has a plan' : ''}">
+    return `<button type="button" class="plan-chip${d === activeDate ? ' active' : ''}${planned ? ' has-plan' : ''}" data-date="${esc(d)}" aria-pressed="${d === activeDate ? 'true' : 'false'}" aria-label="${esc(fmtShort(d))}${isToday ? ', today' : ''}${planned ? ', has a plan' : ''}">
       <span class="plan-chip-d" aria-hidden="true">${esc(fmtShort(d))}</span>${isToday ? '<span class="plan-chip-tag" aria-hidden="true">today</span>' : ''}${planned ? '<span class="plan-chip-dot" aria-hidden="true"></span>' : ''}
     </button>`;
   }).join('') + `<label class="plan-pick">+ date<input type="date" id="planPick" aria-label="Jump to any date"></label>`;
@@ -148,7 +148,15 @@ function onBodyClick(e) {
   if (act === 'ics') return downloadICS();
   if (act === 'gcal') { const evs = planToEvents(plan); if (evs[0]) window.open(gcalUrl(evs[0]), '_blank', 'noopener'); return; }
   if (act === 'addcal') return addToCalendar();
-  if (edit === 'del') { announce('Removed stop'); return removeStop(activeDate, id); }
+  if (edit === 'del') {
+    const cur = getPlan(activeDate);
+    if (cur && cur.stops.length === 1 && cur.stops[0].id === id) {   // last stop → also drop the linked 'plan:DATE' calendar event so it isn't orphaned
+      set(KEYS.events, (get(KEYS.events, []) || []).filter(ev => ev.id !== 'plan:' + activeDate));
+    }
+    removeStop(activeDate, id);   // one dispatch re-renders plan + calendar
+    announce('Removed stop');
+    return;
+  }
   if (edit === 'up' || edit === 'down') return moveStop(id, edit);
   if (edit === 'dur-' || edit === 'dur+') return bumpDuration(id, edit === 'dur+' ? 15 : -15);
 }
@@ -170,7 +178,9 @@ function moveStop(id, dir) {
 }
 function bumpDuration(id, delta) {
   const s = getPlan(activeDate).stops.find(x => x.id === id); if (!s) return;
-  patchStop(activeDate, id, { durationMin: Math.max(15, (s.durationMin || 60) + delta) });
+  const next = Math.max(15, (s.durationMin || 60) + delta);
+  patchStop(activeDate, id, { durationMin: next });
+  announce(`${s.name}: ${next} minutes`);   // the per-row aria-live node is recreated on render; announce via the stable region
 }
 function wireSortable() {
   const ol = $('#planBody .stop-list'); if (!ol) return;
@@ -191,10 +201,10 @@ function openPicker() {
       <input type="search" id="pkFilter" placeholder="filter places…" aria-label="Filter places" autocomplete="off">
       <button type="button" class="plan-sheet-x" data-x aria-label="Close">✕</button>
     </div>
-    <div class="plan-tabs" role="tablist">
-      <button type="button" class="pk-tab active" data-src="saved" aria-selected="true">★ Saved</button>
-      <button type="button" class="pk-tab" data-src="catalogue" aria-selected="false">Catalogue</button>
-      <button type="button" class="pk-tab" data-src="event" aria-selected="false">Events</button>
+    <div class="plan-tabs" role="group" aria-label="Stop source">
+      <button type="button" class="pk-tab active" data-src="saved" aria-pressed="true">★ Saved</button>
+      <button type="button" class="pk-tab" data-src="catalogue" aria-pressed="false">Catalogue</button>
+      <button type="button" class="pk-tab" data-src="event" aria-pressed="false">Events</button>
     </div>
     <ul class="pk-list" id="pkList" aria-live="polite"></ul>
   </div>`;
@@ -229,7 +239,7 @@ function openPicker() {
   ov.addEventListener('click', (e) => {
     if (e.target === ov || e.target.closest('[data-x]')) return close();
     const tab = e.target.closest('.pk-tab');
-    if (tab) { src = tab.dataset.src; ov.querySelectorAll('.pk-tab').forEach(t => { const on = t === tab; t.classList.toggle('active', on); t.setAttribute('aria-selected', on); }); draw(); return; }
+    if (tab) { src = tab.dataset.src; ov.querySelectorAll('.pk-tab').forEach(t => { const on = t === tab; t.classList.toggle('active', on); t.setAttribute('aria-pressed', String(on)); }); draw(); return; }
     const adhoc = e.target.closest('[data-adhoc]');
     if (adhoc) { addAdhoc(adhoc.dataset.adhoc); close(); return; }
     const item = e.target.closest('.pk-item');

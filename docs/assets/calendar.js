@@ -11,6 +11,7 @@ import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
 import { upsertStop, newStop } from './lib/dayplan.js';
+import { loadPlaces, patchPlace } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable } from './dnd.js';
 
@@ -106,10 +107,12 @@ function buildLegend() {
     const c = b.dataset.cat;
     if (hiddenCats.has(c)) hiddenCats.delete(c); else hiddenCats.add(c);
     persistFilters(); buildLegend(); render();
+    $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus();   // buildLegend replaced the button → restore keyboard focus
   }));
   $('#lgAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
     persistFilters(); buildLegend(); render();
+    $('#lgAll')?.focus();
   });
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
@@ -374,7 +377,12 @@ function openModal(ev, presetDate) {
       : [...loadUser(), { id: 'u' + Date.now(), ...obj }];
     saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
   });
-  ov.querySelector('#mdDel')?.addEventListener('click', () => { saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); });
+  ov.querySelector('#mdDel')?.addEventListener('click', () => {
+    const linked = loadPlaces().find(p => p.eventId === ev.id);   // clear the back-ref on any place that linked this event
+    if (linked) patchPlace(linked.id, { eventId: '', date: '', remindDate: '' });
+    saveUser(loadUser().filter(x => x.id !== ev.id));
+    closeModal(ov);
+  });
 }
 
 // ---- bulk add: tag-filtered .ics + Google import how-to ----

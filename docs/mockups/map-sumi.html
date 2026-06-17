@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-paper="kinari">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Tokyo Map — 墨絵 sumi-e</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════════════
+   MY TOKYO MAP — 墨絵 (sumi-e). The refined cut. Ink-wash brushwork, washi
+   paper, hanko-seal pins, an editorial index. Two paper treatments to compare:
+   kinari (cream day) and aizome (indigo night). Hand-built SVG ink map.
+   ════════════════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#f3ede0; --paper-2:#f7f2e7; --wash:#ece3d0;
+  --ink:#221f18; --ink-2:#6c6454; --ink-faint:#9a8f78;
+  --line:#d6cab0; --rule:#cabd9f;
+  --vermilion:#a4122a; --vermilion-2:#c33;
+  --river:#9fb3bd; --river-core:#c8d6db; --ward:#bdb091; --blot:#c4b896;
+}
+[data-paper=aizome]{
+  --paper:#141d2e; --paper-2:#18233a; --wash:#0f1626;
+  --ink:#e7e2d2; --ink-2:#9fb0c8; --ink-faint:#6a7a96;
+  --line:#2a3850; --rule:#33425e;
+  --vermilion:#e6604f; --vermilion-2:#ff7a66;
+  --river:#2f4f63; --river-core:#4f8aa6; --ward:#33425e; --blot:#1d2c44;
+}
+html,body{height:100%}
+body{ background:var(--paper); color:var(--ink); font-family:'Zen Kaku Gothic New',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; transition:background .6s, color .6s; }
+/* paper grain */
+body::before{ content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.55; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E"); }
+[data-paper=aizome] body::before{ mix-blend-mode:screen; opacity:.35 }
+
+/* ── slim control bar ── */
+.bar{ position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+  padding:.55rem clamp(1rem,4vw,3rem); border-bottom:1px solid var(--line); background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(6px); }
+.bar .b-mark{ font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2) }
+.bar .b-mark b{ color:var(--ink) }
+.toggle{ margin-left:auto; display:flex; gap:.2rem; border:1px solid var(--line); border-radius:2px; padding:2px }
+.toggle button{ background:none; border:none; cursor:pointer; font-family:'Shippori Mincho',serif; font-weight:600; font-size:.76rem; color:var(--ink-2);
+  padding:.32rem .7rem; border-radius:1px; transition:all .3s }
+.toggle button.on{ background:var(--ink); color:var(--paper) }
+.toggle button .en{ font-family:'Space Mono',monospace; font-size:.6rem; text-transform:uppercase; letter-spacing:.06em; opacity:.6; margin-left:.35rem }
+
+/* ── layout ── */
+.sheet{ position:relative; z-index:2; max-width:1240px; margin:0 auto; padding:2.6rem clamp(1.2rem,4vw,3rem) 5rem; }
+.masthead{ display:flex; align-items:flex-end; justify-content:space-between; gap:1.5rem; border-bottom:2px solid var(--ink); padding-bottom:1rem; flex-wrap:wrap }
+.kicker{ font-family:'Yuji Syuku',serif; font-size:1.15rem; color:var(--vermilion); letter-spacing:.28em; line-height:1 }
+h1{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:clamp(2.6rem,7vw,5rem); line-height:.92; letter-spacing:-.01em; margin:.35rem 0 0 }
+h1 .en{ display:block; font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:.26em; color:var(--ink-2); letter-spacing:0; margin-top:.5rem }
+.dateline{ font-family:'Space Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-faint); text-align:right; line-height:1.7 }
+.dateline b{ color:var(--ink-2) }
+.lede{ font-family:'Newsreader',serif; font-size:clamp(1.05rem,2vw,1.3rem); line-height:1.55; color:var(--ink-2); max-width:54ch; margin:1.2rem 0 1.6rem }
+.lede em{ color:var(--vermilion); font-style:italic }
+
+.toolrow{ display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; margin-bottom:1rem }
+.search{ flex:1; min-width:240px; border:none; border-bottom:1.5px solid var(--rule); background:none; font-family:'Newsreader',serif; font-size:1.05rem; padding:.5rem .1rem; color:var(--ink) }
+.search::placeholder{ color:var(--ink-faint); font-style:italic } .search:focus{ outline:none; border-color:var(--ink) }
+.ghost{ font-family:'Space Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; border:1px solid var(--rule); background:none; color:var(--ink-2); padding:.55rem .85rem; cursor:pointer; transition:all .25s }
+.ghost:hover{ background:var(--ink); color:var(--paper); border-color:var(--ink) }
+
+.legend{ display:flex; flex-wrap:wrap; gap:.2rem 1.1rem; margin-bottom:1.4rem }
+.lg{ font-family:'Space Mono',monospace; font-size:.7rem; color:var(--ink-2); background:none; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:.45rem; padding:.2rem 0; transition:opacity .2s }
+.lg i{ width:10px; height:10px; border-radius:50%; background:var(--c); box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent) }
+.lg.off{ opacity:.32; text-decoration:line-through }
+
+.grid{ display:grid; grid-template-columns:1fr; gap:1.6rem }
+@media(min-width:900px){ .grid{ grid-template-columns:1.62fr 1fr } }
+
+/* ── the ink map ── */
+.plate{ position:relative; border:1px solid var(--line); background:var(--paper-2);
+  box-shadow:0 40px 70px -38px rgba(40,28,12,.45); aspect-ratio:5/4; overflow:hidden; }
+[data-paper=aizome] .plate{ box-shadow:0 40px 80px -40px #000 }
+.plate svg{ position:absolute; inset:0; width:100%; height:100% }
+.ink-grid{ stroke:var(--line); stroke-width:.3; opacity:.55 }
+.ink-river{ fill:none; stroke-linecap:round; stroke-linejoin:round }
+.ink-river.wide{ stroke:var(--river); stroke-width:7; opacity:.5 }
+.ink-river.core{ stroke:var(--river-core); stroke-width:2.6; opacity:.75 }
+.ink-river.dry{ stroke:var(--river); stroke-width:1; opacity:.4; stroke-dasharray:1 3 }
+.ink-ward{ fill:none; stroke:var(--ward); stroke-width:.7; opacity:.6; stroke-linecap:round }
+.ink-blot{ fill:var(--blot); opacity:.42 }
+.ink-name{ fill:var(--vermilion); font-family:'Shippori Mincho',serif; font-weight:700; opacity:.85 }
+.ink-name.s{ fill:var(--ink-2); opacity:.5; font-size:3px; font-family:'Space Mono',monospace }
+.seal-mark{ fill:none; stroke:var(--vermilion); stroke-width:.8; opacity:.8 }
+.draw{ stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw 1.6s cubic-bezier(.22,1,.36,1) .2s forwards }
+@keyframes draw{ to{ stroke-dashoffset:0 } }
+.margin-jp{ position:absolute; top:6%; right:3%; writing-mode:vertical-rl; font-family:'Yuji Syuku',serif; font-size:1.1rem; letter-spacing:.3em; color:var(--ink-faint); opacity:.6 }
+.corner-seal{ position:absolute; left:4%; bottom:5%; width:46px; height:46px; border:2px solid var(--vermilion); color:var(--vermilion);
+  display:grid; place-items:center; font-family:'Shippori Mincho',serif; font-weight:800; font-size:1.5rem; transform:rotate(-4deg); opacity:.85;
+  background:color-mix(in srgb,var(--paper) 30%,transparent) }
+
+/* ── seal pins ── */
+.pin{ position:absolute; transform:translate(-50%,-50%); border:none; background:none; cursor:pointer; z-index:3 }
+.seal{ width:36px; height:36px; border-radius:50%; border:2px solid var(--vermilion); color:var(--vermilion);
+  background:color-mix(in srgb,var(--paper) 62%,transparent); backdrop-filter:blur(1px);
+  display:grid; place-items:center; font-family:'Shippori Mincho',serif; font-weight:800; font-size:.95rem;
+  box-shadow:0 5px 12px -3px color-mix(in srgb,var(--vermilion) 40%,transparent); transition:transform .3s cubic-bezier(.34,1.56,.64,1) }
+.pin.fav .seal{ background:var(--vermilion); color:var(--paper); box-shadow:0 6px 16px -3px color-mix(in srgb,var(--vermilion) 60%,transparent) }
+.pin.visited .seal{ opacity:.5; filter:grayscale(.4) }
+.pin.visited::after{ content:""; position:absolute; left:50%; top:50%; width:46px; height:1.5px; background:var(--ink-2); transform:translate(-50%,-50%) rotate(-20deg); opacity:.6 }
+.pin:hover .seal,.pin:focus-visible .seal{ transform:scale(1.14) rotate(-5deg) }
+.pin .lab{ position:absolute; left:50%; bottom:calc(100% + 7px); transform:translateX(-50%); white-space:nowrap; opacity:0; transition:opacity .18s;
+  font-family:'Space Mono',monospace; font-size:.64rem; background:var(--ink); color:var(--paper); padding:2px 7px; pointer-events:none }
+.pin:hover .lab,.pin:focus-visible .lab{ opacity:1 }
+.pin.hide{ opacity:0; pointer-events:none; transition:opacity .3s }
+.in .pin{ animation:inkrise .7s cubic-bezier(.22,1,.36,1) both; animation-delay:var(--d) }
+@keyframes inkrise{ from{opacity:0; transform:translate(-50%,-32%) scale(.6); filter:blur(4px)} to{opacity:1; transform:translate(-50%,-50%) scale(1); filter:none} }
+
+/* ── editorial index (plate list) ── */
+.index h2{ font-family:'Shippori Mincho',serif; font-weight:700; font-size:1.05rem; letter-spacing:.02em; padding-bottom:.5rem; border-bottom:1px solid var(--rule); display:flex; justify-content:space-between; align-items:baseline }
+.index h2 .ct{ font-family:'Space Mono',monospace; font-size:.66rem; color:var(--ink-faint); font-weight:400; text-transform:uppercase; letter-spacing:.08em }
+.ix{ display:flex; align-items:center; gap:.8rem; padding:.6rem .2rem; border-bottom:1px solid var(--line); cursor:pointer; transition:background .2s }
+.ix:hover{ background:color-mix(in srgb,var(--wash) 60%,transparent) }
+.ix .no{ font-family:'Space Mono',monospace; font-size:.66rem; color:var(--ink-faint); width:1.6rem }
+.ix .sm{ width:24px; height:24px; border-radius:50%; border:1.5px solid var(--c); color:var(--c); display:grid; place-items:center; font-family:'Shippori Mincho',serif; font-weight:700; font-size:.7rem; flex:none }
+.ix.fav .sm{ background:var(--c); color:var(--paper) }
+.ix .nm{ font-family:'Newsreader',serif; font-size:1rem; font-weight:500; flex:1 }
+.ix .nm small{ display:block; font-family:'Space Mono',monospace; font-size:.62rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; font-weight:400 }
+.ix .vd{ font-family:'Shippori Mincho',serif; color:var(--vermilion); font-size:.85rem; opacity:0 }
+.ix.visited .vd{ opacity:1 } .ix.visited .nm{ color:var(--ink-2) }
+.in .ix{ animation:rise .6s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(var(--d) + .2s) }
+@keyframes rise{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+.in .kicker,.in h1,.in .lede,.in .toolrow,.in .legend{ animation:rise .8s cubic-bezier(.22,1,.36,1) both }
+.in h1{animation-delay:.06s}.in .lede{animation-delay:.14s}.in .toolrow{animation-delay:.2s}.in .legend{animation-delay:.24s}
+
+/* ── detail card (washi) ── */
+.backdrop{ position:fixed; inset:0; z-index:40; background:color-mix(in srgb,var(--ink) 30%,transparent); opacity:0; pointer-events:none; transition:opacity .3s }
+.backdrop.on{ opacity:1; pointer-events:auto }
+.detail{ position:fixed; z-index:41; left:50%; bottom:4vh; transform:translateX(-50%) translateY(14px); width:min(360px,92vw); opacity:0; pointer-events:none;
+  background:var(--paper-2); border:1px solid var(--line); box-shadow:0 40px 70px -30px rgba(40,28,12,.6);
+  transition:opacity .26s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.34,1.56,.64,1); }
+[data-paper=aizome] .detail{ box-shadow:0 40px 80px -30px #000 }
+.detail.on{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0) }
+.detail .top{ display:flex; gap:.8rem; align-items:center; padding:1.1rem 1.2rem .6rem }
+.detail .sm{ width:40px;height:40px;border-radius:50%;border:2px solid var(--vermilion);color:var(--vermilion);display:grid;place-items:center;font-family:'Shippori Mincho',serif;font-weight:800;font-size:1.1rem;flex:none }
+.detail.fav .sm{ background:var(--vermilion); color:var(--paper) }
+.detail h3{ font-family:'Shippori Mincho',serif; font-weight:700; font-size:1.4rem; line-height:1 }
+.detail .a{ font-family:'Space Mono',monospace; font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); margin-top:.25rem }
+.detail .est{ font-family:'Newsreader',serif; font-style:italic; color:var(--ink-2); font-size:.95rem; padding:0 1.2rem .3rem }
+.detail .acts{ display:flex; flex-wrap:wrap; gap:.45rem; padding:.7rem 1.2rem 1.1rem }
+.detail .acts button{ font-family:'Space Mono',monospace; font-size:.66rem; text-transform:uppercase; letter-spacing:.05em; border:1px solid var(--rule); background:none; color:var(--ink-2); padding:.5rem .7rem; cursor:pointer; transition:all .2s }
+.detail .acts button:hover{ border-color:var(--ink); color:var(--ink) }
+.detail .acts .pri{ background:var(--vermilion); color:var(--paper); border-color:var(--vermilion) }
+.detail .acts .pri:hover{ filter:brightness(1.08); color:var(--paper) }
+
+@media(prefers-reduced-motion:reduce){ *{animation:none!important; transition-duration:.001ms!important} .draw{stroke-dashoffset:0} }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="b-mark"><b>MY TOKYO MAP</b> · 墨絵 sumi-e</span>
+  <div class="toggle" id="paper">
+    <button class="on" data-p="kinari">生成<span class="en">day</span></button>
+    <button data-p="aizome">藍染<span class="en">night</span></button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="masthead">
+    <div>
+      <div class="kicker">東京・私の一年</div>
+      <h1>My Tokyo Map<span class="en">every place, brushed onto the city</span></h1>
+    </div>
+    <div class="dateline">EST. <b>2026</b><br>NRT → TOKYO<br>十二景 · <b id="dl-ct">12 PLACES</b></div>
+  </div>
+
+  <p class="lede">A hand-kept map of the year — where to <em>eat</em>, dig for <em>records</em>, ship code at 2am, and find the way <em>home</em>. Tap a seal to plan a visit.</p>
+
+  <div class="toolrow">
+    <input class="search" placeholder="search a place, or add one to the map…">
+    <button class="ghost" data-act="drop">＋ Drop a pin</button>
+    <button class="ghost" data-act="fit">⤢ Fit all</button>
+  </div>
+  <div class="legend" id="legend"></div>
+
+  <div class="grid">
+    <div class="plate" id="plate"></div>
+    <div class="index">
+      <h2>Index <span class="ct" id="ix-ct"></span></h2>
+      <div id="ixlist"></div>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="detail" id="detail"></div>
+
+<script>
+const PLACES=[
+  {n:'Five G',jp:'音',a:'Harajuku · synths',c:'#7a3fb5',x:30,y:38,fav:1,vis:1},
+  {n:'Super Potato',jp:'遊',a:'Akihabara · retro games',c:'#1f7a3a',x:64,y:28},
+  {n:'Ramen Nagi',jp:'麺',a:'Shibuya · ramen',c:'#a85716',x:24,y:62,vis:1},
+  {n:'teamLab',jp:'光',a:'Toyosu · art',c:'#c43459',x:80,y:66},
+  {n:'Home base',jp:'家',a:'Nakano · home',c:'#3a5ba0',x:15,y:30,fav:1},
+  {n:'Disk Union',jp:'盤',a:'Shinjuku · records',c:'#7a3fb5',x:42,y:22},
+  {n:'Bit Valley',jp:'働',a:'Shibuya · coworking',c:'#3f51d6',x:31,y:50},
+  {n:'Comiket',jp:'祭',a:'Ariake · convention',c:'#c43459',x:84,y:52},
+  {n:'Mikawaya',jp:'食',a:'Asakusa · tempura',c:'#a85716',x:72,y:18,vis:1},
+  {n:'Roppongi HQ',jp:'集',a:'Roppongi · meetup',c:'#a8228d',x:54,y:58},
+  {n:'Broadway',jp:'萌',a:'Nakano · anime',c:'#1f7a3a',x:18,y:44},
+  {n:'Maisen',jp:'豚',a:'Omotesando · tonkatsu',c:'#a85716',x:46,y:46},
+];
+const CATS=[['#7a3fb5','Music'],['#1f7a3a','Geek'],['#a85716','Food'],['#c43459','Events'],['#3f51d6','Build'],['#a8228d','Meet']];
+const off=new Set();
+
+/* hand-brushed ink map */
+function mapSVG(){return `<svg viewBox="0 0 100 80" preserveAspectRatio="xMidYMid slice">
+  <defs><filter id="brush" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4"/></filter></defs>
+  <g class="ink-grid">${[16,32,48,64].map(y=>`<line x1="0" y1="${y}" x2="100" y2="${y}"/>`).join('')}${[25,50,75].map(x=>`<line x1="${x}" y1="0" x2="${x}" y2="80"/>`).join('')}</g>
+  <g filter="url(#brush)">
+    <g class="ink-ward"><path d="M22 12 C 30 22, 28 34, 38 40"/><path d="M60 10 C 56 26, 70 30, 66 46"/><path d="M40 52 C 52 56, 58 64, 74 60"/></g>
+    <path class="ink-river wide draw" style="--len:160" d="M-4 56 C 22 48, 34 68, 56 60 S 96 46, 106 54"/>
+    <path class="ink-river core draw" style="--len:160" d="M-4 57 C 22 49, 34 69, 56 61 S 96 47, 106 55"/>
+    <path class="ink-river dry" d="M-4 55 C 22 47, 34 67, 56 59 S 96 45, 106 53"/>
+  </g>
+  <g class="ink-blot"><ellipse cx="34" cy="30" rx="9" ry="7"/><ellipse cx="74" cy="36" rx="12" ry="9"/><ellipse cx="24" cy="50" rx="6" ry="5"/></g>
+  <circle class="seal-mark" cx="80" cy="20" r="5"/><circle class="seal-mark" cx="80" cy="20" r="2"/>
+  <text class="ink-name" x="34" y="18" font-size="5">渋谷</text>
+  <text class="ink-name" x="56" y="16" font-size="5">新宿</text>
+  <text class="ink-name" x="78" y="68" font-size="5">豊洲</text>
+  <text class="ink-name s" x="18" y="72">MEGURO</text>
+</svg>
+<div class="margin-jp">私の一年・東京地図</div>
+<div class="corner-seal">京</div>`;}
+
+const plate=document.getElementById('plate'), ixlist=document.getElementById('ixlist');
+const legend=document.getElementById('legend'), detail=document.getElementById('detail'), backdrop=document.getElementById('backdrop');
+
+function render(){
+  const vis=PLACES.filter(p=>!off.has(p.c)).length, visited=PLACES.filter(p=>p.vis).length;
+  plate.innerHTML=mapSVG()+PLACES.map((p,i)=>`<button class="pin ${p.fav?'fav':''} ${p.vis?'visited':''} ${off.has(p.c)?'hide':''}" style="left:${p.x}%;top:${p.y}%;--d:${i*55}ms" data-i="${i}" aria-label="${p.n}">
+    <span class="seal" style="--vermilion:${p.c}">${p.jp}</span><span class="lab">${p.n}</span></button>`).join('');
+  legend.innerHTML=CATS.map(([c,l])=>`<button class="lg ${off.has(c)?'off':''}" data-c="${c}" style="--c:${c}"><i></i>${l}</button>`).join('');
+  document.getElementById('ix-ct').textContent=`${PLACES.length} 景 · ${visited} visited`;
+  document.getElementById('dl-ct').textContent=`${PLACES.length} PLACES`;
+  ixlist.innerHTML=PLACES.map((p,i)=>`<div class="ix ${p.fav?'fav':''} ${p.vis?'visited':''}" data-i="${i}" style="--c:${p.c};--d:${i*45}ms">
+    <span class="no">${String(i+1).padStart(2,'0')}</span><span class="sm">${p.jp}</span>
+    <span class="nm">${p.n}<small>${p.a}</small></span><span class="vd">済</span></div>`).join('');
+  document.querySelector('.sheet').classList.add('in');
+  plate.querySelectorAll('.pin').forEach(b=>b.addEventListener('click',()=>openDetail(+b.dataset.i)));
+  ixlist.querySelectorAll('.ix').forEach(b=>b.addEventListener('click',()=>openDetail(+b.dataset.i)));
+  legend.querySelectorAll('.lg').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.c; off.has(c)?off.delete(c):off.add(c); render();}));
+}
+function openDetail(i){
+  const p=PLACES[i];
+  detail.className='detail'+(p.fav?' fav':'')+' on'; backdrop.classList.add('on');
+  detail.style.setProperty('--vermilion',p.c);
+  detail.innerHTML=`<div class="top"><span class="sm" style="border-color:${p.c};color:${p.fav?'var(--paper)':p.c};background:${p.fav?p.c:'transparent'}">${p.jp}</span>
+      <div><h3>${p.fav?'⛩ ':''}${p.n}</h3><div class="a">${p.a}${p.vis?' · 済 visited':''}</div></div></div>
+    <div class="est">${p.fav?'Your base — directions start here while you plan.':'≈ 22 minutes from home, by train.'}</div>
+    <div class="acts"><button class="pri" style="background:${p.c};border-color:${p.c}">🧭 Directions</button><button>${p.vis?'済 Visited':'✓ Visited'}</button><button>✎ Note</button><button>★ Pin</button></div>`;
+  detail.querySelectorAll('button').forEach(b=>b.addEventListener('click',close));
+}
+function close(){ detail.classList.remove('on'); backdrop.classList.remove('on'); }
+backdrop.onclick=close; addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+document.getElementById('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;
+  if(b.dataset.act==='drop'){PLACES.push({n:'New seal',jp:'新',a:'dropped',c:'#a4122a',x:48,y:42});}
+  document.querySelector('.sheet').classList.remove('in'); render();});
+document.getElementById('paper').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#paper button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  document.documentElement.dataset.paper=b.dataset.p;});
+render();
+</script>
+</body>
+</html>

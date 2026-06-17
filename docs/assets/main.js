@@ -19,6 +19,12 @@ import { stagger } from './motion.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
 
+// Clickjacking defense: a static host can't send X-Frame-Options and frame-ancestors is
+// ignored in a <meta> CSP, so bust out of any (cross-origin) frame before rendering.
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location; } catch { document.documentElement.style.display = 'none'; }
+}
+
 mountGate(boot);
 
 function boot() {

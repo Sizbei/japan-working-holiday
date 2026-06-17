@@ -30,8 +30,8 @@ function card(r) {
     </ul>
     <p class="room-note">${esc(r.note)}</p>
     <div class="room-links">
-      <a class="btn primary" href="${esc(r.listingUrl)}" target="_blank" rel="noopener">Browse listings ↗</a>
-      <a class="btn ghost" href="${esc(r.providerUrl)}" target="_blank" rel="noopener">${esc(r.provider)} ↗</a>
+      <a class="btn primary" href="${esc(r.listingUrl)}" target="_blank" rel="noopener noreferrer">Browse listings ↗</a>
+      <a class="btn ghost" href="${esc(r.providerUrl)}" target="_blank" rel="noopener noreferrer">${esc(r.provider)} ↗</a>
     </div>
   </article>`;
 }

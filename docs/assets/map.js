@@ -113,18 +113,28 @@ export function placesModel() {
 }
 
 // ====================================================================== Leaflet bootstrap
-function loadCSS(href) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); }
-function loadScript(src, ok, err) { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = err; document.head.appendChild(s); }
+// Pinned Subresource-Integrity hashes (sha384, computed from the immutable @version files).
+// A tampered/hijacked unpkg asset fails the integrity check → onerror → the offline link
+// index stands alone. crossOrigin='anonymous' is required for SRI to be enforced.
+const SRI = {
+  leafletCss: 'sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H',
+  leafletJs: 'sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH',
+  mcCss: 'sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV',
+  mcDefCss: 'sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+',
+  mcJs: 'sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr',
+};
+function loadCSS(href, integrity) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; if (integrity) { l.integrity = integrity; l.crossOrigin = 'anonymous'; } document.head.appendChild(l); }
+function loadScript(src, ok, err, integrity) { const s = document.createElement('script'); s.src = src; if (integrity) { s.integrity = integrity; s.crossOrigin = 'anonymous'; } s.onload = ok; s.onerror = err; document.head.appendChild(s); }
 function ensureLeaflet() {
   if (leafletReady || leafletTried) return;
   leafletTried = true;
-  const fail = () => { leafletTried = false; const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline → link index stands; retry next visit
+  const fail = () => { leafletTried = false; const e = $('#mapCanvas'); if (e) e.classList.add('failed'); };  // offline / integrity-fail → link index stands; retry next visit
   if (window.L && window.L.markerClusterGroup) { initMap(); return; }
-  loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
-  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css');
-  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css');
+  loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', SRI.leafletCss);
+  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css', SRI.mcCss);
+  loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css', SRI.mcDefCss);
   loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-    () => loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js', initMap, fail), fail);
+    () => loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js', initMap, fail, SRI.mcJs), fail, SRI.leafletJs);
 }
 function initMap() {
   const el = $('#mapCanvas');
@@ -250,7 +260,7 @@ function cataloguePopup(pt) {
     ${pt.date ? `<div class="pin-rem">📅 ${esc(pt.date)}</div>` : ''}
     ${approxNote(pt)}
     <div class="pin-acts">
-      <a href="${esc(gmaps(pt.name + ' ' + (pt.area || '')))}" target="_blank" rel="noopener">Maps ↗</a>
+      <a href="${esc(gmaps(pt.name + ' ' + (pt.area || '')))}" target="_blank" rel="noopener noreferrer">Maps ↗</a>
       ${pt.kind === 'catalogue' ? `<button type="button" data-act="save" data-id="${esc(pt.id)}">${saved ? '★ Saved' : (isFood ? '⭐ Tabetai' : '★ Save')}</button>` : ''}
       <button type="button" data-act="plan" data-id="${esc(pt.id)}">📅 Plan a visit</button>
     </div></div>`;
@@ -269,7 +279,7 @@ function userPopup(p) {
       <button type="button" data-uact="cal">📅</button>
       <button type="button" data-uact="rem">⏰</button>
       ${p.coordKind === 'approx' ? `<button type="button" data-uact="exact">📍 set exact</button>` : ''}
-      ${safeLink ? `<a href="${esc(safeLink)}" target="_blank" rel="noopener">🎟 ticket ↗</a>` : ''}
+      ${safeLink ? `<a href="${esc(safeLink)}" target="_blank" rel="noopener noreferrer">🎟 ticket ↗</a>` : ''}
       <button type="button" data-uact="del" aria-label="Delete place"${p.locked ? ' disabled title="unlock to delete"' : ''}>✕</button>
     </div></div>`;
 }
@@ -347,7 +357,11 @@ async function setExact(p) {
   const q = await askText(`Address for “${p.name}” (or paste "lat, lng"):`, { value: p.address || '', ok: 'Find' });
   if (!q) return;
   const m = q.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
-  if (m) { patchPlace(p.id, { lat: +m[1], lng: +m[2], coordKind: 'exact' }); if (map) map.closePopup(); change(); return; }
+  if (m) {
+    const lat = +m[1], lng = +m[2];
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) { alertModal('Those coordinates are out of range.'); return; }
+    patchPlace(p.id, { lat, lng, coordKind: 'exact' }); if (map) map.closePopup(); change(); return;
+  }
   try {
     const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
     const d = r.ok ? await r.json() : [];
@@ -399,7 +413,7 @@ function renderSaved() {
     const icon = CAT_GLYPH[p.source === 'tabetai' ? 'food' : (p.fav ? 'mine' : (p.category || 'personal'))] || '📍';
     const links = [
       (p.date || p.eventId) ? `<a href="#/calendar" class="map-ic" title="On your calendar" aria-label="Open calendar">📅</a>` : '',
-      (p.link && /^https:\/\//i.test(p.link)) ? `<a href="${esc(p.link)}" target="_blank" rel="noopener" class="map-ic" title="Ticket / booking" aria-label="Open ticket link">🎟️</a>` : '',
+      (p.link && /^https:\/\//i.test(p.link)) ? `<a href="${esc(p.link)}" target="_blank" rel="noopener noreferrer" class="map-ic" title="Ticket / booking" aria-label="Open ticket link">🎟️</a>` : '',
       `<a href="#/checklist" class="map-ic" title="Your checklist" aria-label="Open checklist">✓</a>`,
     ].join('');
     return `<li class="map-srow${p.fav ? ' is-fav' : ''}" data-pid="${esc(p.id)}">
@@ -431,8 +445,8 @@ function renderIndex() {
   places.forEach(p => { (groups[p.group] = groups[p.group] || []).push(p); });
   wrap.innerHTML = `<h3 class="map-side-h">All places by area</h3>` + AREA_ORDER.filter(k => groups[k]).map(k => `
     <details class="map-group" open>
-      <summary class="map-area"><a href="${esc(gmaps(k))}" target="_blank" rel="noopener">📍 ${esc(k)}</a> <span class="map-count">${dedupe(groups[k]).length}</span></summary>
-      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener">${esc(p.name)}</a></li>`).join('')}</ul>
+      <summary class="map-area"><a href="${esc(gmaps(k))}" target="_blank" rel="noopener noreferrer">📍 ${esc(k)}</a> <span class="map-count">${dedupe(groups[k]).length}</span></summary>
+      <ul class="map-places dense-list">${dedupe(groups[k]).map(p => `<li><a href="${esc(gmaps(p.name + ' ' + (p.area || '')))}" target="_blank" rel="noopener noreferrer">${esc(p.name)}</a></li>`).join('')}</ul>
     </details>`).join('');
 }
 

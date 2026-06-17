@@ -210,7 +210,7 @@ function agendaHTML() {
       <span class="agenda-body"><span class="agenda-title">${esc(e.title)}</span>
         ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
         ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
-      <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" title="Add to Google Calendar" data-stop>+G</a></div>`;
+      <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;
   }).join('')}</div>`;
 }
 function wireAgenda() {
@@ -261,7 +261,7 @@ function dayPopover(date, anchor) {
       <span class="pop-sw cat-${esc(catOf(e))}"></span>
       <span class="pop-body"><button class="pop-open" data-ev="${esc(e.id)}">${esc(e.title)}</button>
         ${e.bookBy ? `<span class="pop-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
-      <a class="pop-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" title="Add to Google Calendar">+G</a>
+      <a class="pop-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar">+G</a>
     </div>`).join('') : `<p class="pop-empty">Nothing booked this day.</p>`;
   popEl = document.createElement('div');
   popEl.className = 'cal-pop';
@@ -309,7 +309,7 @@ function openDetail(ev) {
     <div class="modal-actions">
       ${ev.moved ? '<button class="btn" id="mdReset">↺ Reset date</button>' : ''}
       <button class="btn" id="mdPlan">＋ Add to day plan</button>
-      <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener">+ Google Calendar</a>
+      <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
@@ -326,14 +326,14 @@ function openDetail(ev) {
 }
 function srcline(s) {
   const arr = (s || []).filter(Boolean);
-  return arr.length ? `<p class="modal-src">${arr.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener">source ${i + 1} ↗</a>`).join('')}</p>` : '';
+  return arr.length ? `<p class="modal-src">${arr.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">source ${i + 1} ↗</a>`).join('')}</p>` : '';
 }
 
 // ---- add/edit modal ----
 function openModal(ev, presetDate) {
   const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: '', time: '', category: 'personal', note: '' };
   const opts = CATS.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
-  const gbtn = ev ? `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener">+ Google</a>` : '';
+  const gbtn = ev ? `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer">+ Google</a>` : '';
   const body = `
     <h3 class="modal-title">${ev ? 'Edit event' : 'Add event'}</h3>
     <form id="evForm" class="modal-form">

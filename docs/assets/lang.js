@@ -99,7 +99,7 @@ function render(word, reading, meaning, loading) {
   return `<div class="jd-word">${esc(word)}</div>
     ${reading ? `<div class="jd-read">${esc(reading)}</div>` : ''}
     <div class="jd-mean">${loading ? '<span class="jd-load">looking up…</span>' : esc(meaning || '')}</div>
-    <a class="jd-link" href="https://jisho.org/search/${encodeURIComponent(word)}" target="_blank" rel="noopener">Jisho ↗</a>`;
+    <a class="jd-link" href="https://jisho.org/search/${encodeURIComponent(word)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a>`;
 }
 async function lookup(word, p, el) {
   try {

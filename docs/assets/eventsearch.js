@@ -48,7 +48,7 @@ function rowHTML(e) {
     </div>
     <span class="cs-acts">
       <button type="button" class="cs-ic" data-plan="1" data-date="${esc(e.date)}" data-title="${esc(e.title)}" data-area="${esc(e.area || '')}" data-lat="${esc(String(c.lat))}" data-lng="${esc(String(c.lng))}" title="Add to a day plan" aria-label="Add ${esc(e.title)} to a day plan">＋📋</button>
-      <a class="cs-ic" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" title="Add to Google Calendar" aria-label="Add to Google Calendar">+G</a>
+      <a class="cs-ic" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" aria-label="Add to Google Calendar">+G</a>
     </span></li>`;
 }
 

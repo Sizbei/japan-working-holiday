@@ -27,12 +27,12 @@ export function mountTracker(data) {
       <div class="trk-when">${esc(d.when)}</div>
       <div class="trk-title">${esc(d.title)}</div>
       <div class="trk-detail">${esc(d.detail)}</div>
-      <a class="trk-link" href="${esc(d.url)}" target="_blank" rel="noopener">official ↗</a>
+      <a class="trk-link" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">official ↗</a>
     </div>`).join('');
 
   const datedHTML = dated.map(b => {
     const ev = { title: b.what, date: (b.when && /^\d{4}-\d{2}-\d{2}$/.test(b.when)) ? b.when : '', note: b.action };
-    const add = ev.date ? `<a class="trk-link" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener">+ reminder</a>` : '';
+    const add = ev.date ? `<a class="trk-link" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ reminder</a>` : '';
     return `<div class="trk-card">
       <div class="trk-when">${b.when && /^\d{4}-\d{2}-\d{2}$/.test(b.when) ? esc(fmtShort(b.when)) : esc(b.when || 'TBD')}${b.leadTime ? ` · ${esc(b.leadTime)}` : ''}</div>
       <div class="trk-title">${esc(b.what)}</div>

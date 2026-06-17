@@ -184,7 +184,7 @@ function renderSources() {
   const sec = $('#sourcesSection');
   if (!list.length) { if (sec) sec.style.display = 'none'; return; }
   $('#sourcesList').innerHTML = list.map(u =>
-    `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a></li>`).join('');
+    `<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a></li>`).join('');
 }
 
 // ---- searchable domains ----

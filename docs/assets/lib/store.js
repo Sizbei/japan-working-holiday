@@ -26,7 +26,8 @@ export function get(key, fallback) {
   catch { return fallback; }
 }
 export function set(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; }
+  try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+  catch { try { document.dispatchEvent(new CustomEvent('jwh:storage-full')); } catch { /* Node */ } return false; }   // quota → global warning
 }
 export function getRaw(key, fallback = '') {
   try { const v = localStorage.getItem(key); return v == null ? fallback : v; } catch { return fallback; }

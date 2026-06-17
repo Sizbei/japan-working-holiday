@@ -17,15 +17,16 @@ import {
 } from './lib/places.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
+import { nowISO } from './lib/dates.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
-let armed = false, openPlaceId = null, allBounds = [];
+let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false;
 const markersById = new Map();
 
 function gmaps(query) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query + ' Tokyo'); }
 function dedupe(arr) { const seen = new Set(); return arr.filter(p => { const k = (p.name || '').toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }); }
 function isSoon(d) { if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false; const diff = (Date.parse(d) - Date.now()) / 86400000; return diff >= -1 && diff <= 45; }
-const todayISO = () => new Date().toISOString().slice(0, 10);
+const todayISO = () => nowISO();   // local date, consistent with the rest of the app (not UTC)
 
 // ---- filter state (persisted) ----
 const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet' };
@@ -53,8 +54,18 @@ export function mountMap(data) {
   wireAddPlace();
   $('#mapFit')?.addEventListener('click', fitAllPins);
   $('#mapDrop')?.addEventListener('click', toggleArm);
-  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'map') ensureLeaflet(); });
-  document.addEventListener('jwh:data-changed', () => { renderSaved(); if (leafletReady) renderPins(); });
+  document.addEventListener('jwh:route', (e) => {
+    mapActive = e.detail?.route === 'map';
+    if (!mapActive) return;
+    ensureLeaflet();
+    renderSaved();
+    if (leafletReady) onMapShown();   // re-measure + catch up once the SPA actually reveals the container
+  });
+  // off the map route, just mark pins dirty — defer the expensive 200+-marker rebuild until the map is next shown
+  document.addEventListener('jwh:data-changed', () => {
+    if (mapActive) { renderSaved(); if (leafletReady) renderPins(); }
+    else { pinsDirty = true; }
+  });
 }
 
 // ====================================================================== the unified model
@@ -135,6 +146,19 @@ function ensureLeaflet() {
   loadCSS('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css', SRI.mcDefCss);
   loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
     () => loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js', initMap, fail, SRI.mcJs), fail, SRI.leafletJs);
+}
+// The hash router fires jwh:route BEFORE the view is laid out (display:none→block), so a
+// Leaflet map measured then reads 0×0 and markercluster renders nothing. Poll until the
+// canvas is actually visible, then invalidateSize() (+ renderPins once if off-route edits queued).
+function onMapShown(tries = 0) {
+  if (!mapActive || !leafletReady) return;
+  const el = $('#mapCanvas');
+  if (el && el.offsetParent !== null && el.offsetWidth > 0) {
+    map.invalidateSize();
+    if (pinsDirty) { pinsDirty = false; renderPins(); }
+  } else if (tries < 25) {
+    setTimeout(() => onMapShown(tries + 1), 40);
+  }
 }
 function initMap() {
   const el = $('#mapCanvas');

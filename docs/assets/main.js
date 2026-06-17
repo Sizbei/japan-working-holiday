@@ -25,6 +25,11 @@ if (window.top !== window.self) {
   try { window.top.location = window.self.location; } catch { document.documentElement.style.display = 'none'; }
 }
 
+// surface localStorage quota errors (otherwise saves fail silently → data loss)
+document.addEventListener('jwh:storage-full', () => {
+  import('./lib/modal.js').then(m => m.alertModal('Could not save — this browser’s storage may be full. Back up your data, then clear old items.'));
+});
+
 mountGate(boot);
 
 function boot() {

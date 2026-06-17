@@ -36,8 +36,11 @@ function bakedEvents() {
     ? { ...e, date: ov[e.id], endDate: '', source: 'baked', moved: true }
     : { ...e, source: 'baked' });
 }
+let _evCache = null;   // memoized for one render pass (eventsOn is called ~once per day cell)
 export function allEvents() {
-  return [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))].filter(e => parseISO(e.date));
+  if (_evCache) return _evCache;
+  _evCache = [...bakedEvents(), ...loadUser().map(e => ({ ...e, source: 'user' }))].filter(e => parseISO(e.date));
+  return _evCache;
 }
 function catOf(e) { return e.category || 'personal'; }
 function visible(e) { return !hiddenCats.has(catOf(e)); }
@@ -56,7 +59,7 @@ function eventsOn(iso, capLong = false) {
 export function mountCalendar(data, today) {
   DATA = data;
   TODAY = today || nowISO();
-  hiddenCats = new Set(get(KEYS.calFilters, []) || []);
+  const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   wireToolbar();
@@ -105,6 +108,7 @@ function buildLegend() {
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 
 function render() {
+  _evCache = null;   // invalidate the per-render event cache (data may have changed since last render)
   dismissPopover();
   $('#calModeMonth')?.classList.toggle('active', mode === 'month');
   $('#calModeAgenda')?.classList.toggle('active', mode === 'agenda');

@@ -68,7 +68,7 @@ export function planToEvents(plan) {
 
 // ---- storage-bound wrappers ----
 export function loadPlans() { return get(KEYS.dayPlans, {}) || {}; }
-export function savePlans(plans) { set(KEYS.dayPlans, plans); dispatchChanged(); }
+export function savePlans(plans) { if (set(KEYS.dayPlans, plans)) dispatchChanged(); }   // skip re-render on quota fail (would read stale LS → edit appears to vanish)
 export function getPlan(date) { const p = loadPlans()[date]; return p ? normalizePlan(date, p) : null; }
 export function hasPlan(date) { const p = loadPlans()[date]; return !!(p && p.stops && p.stops.length); }
 

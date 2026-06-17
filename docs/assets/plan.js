@@ -25,7 +25,7 @@ import { alertModal } from './lib/modal.js';
 
 let DATA = null, activeDate = '';
 
-const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };   // UTC-pure calendar add (no timezone off-by-one)
 
 export function mountPlan(data) {
   DATA = data;
@@ -43,21 +43,23 @@ export function mountPlan(data) {
 function firstPlanned() { const ks = Object.keys(loadPlans()).filter(k => hasPlan(k)).sort(); return ks[0] || ''; }
 
 // ---- day-chip rail: today→arrival+30, plus any planned dates ----
-function railDates() {
+function railDates(plans) {
   const today = nowISO();
   const arrival = (DATA.meta && DATA.meta.arrival_date) || '2026-06-30';
   const start = today < arrival ? today : arrival;
   const set = new Set();
   for (let i = 0; i <= 44; i++) set.add(addDaysISO(start, i));
-  Object.keys(loadPlans()).forEach(d => set.add(d));
+  Object.keys(plans).forEach(d => set.add(d));
   set.add(activeDate);
   return [...set].sort();
 }
 function renderRail() {
   const rail = $('#planDays'); if (!rail) return;
   const today = nowISO();
-  rail.innerHTML = railDates().map(d => {
-    const planned = hasPlan(d);
+  const plans = loadPlans();   // read the plans blob ONCE, not per chip (N+1 → 1)
+  const isPlanned = (d) => { const p = plans[d]; return !!(p && p.stops && p.stops.length); };
+  rail.innerHTML = railDates(plans).map(d => {
+    const planned = isPlanned(d);
     const isToday = d === today;
     return `<button type="button" role="tab" class="plan-chip${d === activeDate ? ' active' : ''}${planned ? ' has-plan' : ''}" data-date="${esc(d)}" aria-selected="${d === activeDate ? 'true' : 'false'}" aria-label="${esc(fmtShort(d))}${isToday ? ', today' : ''}${planned ? ', has a plan' : ''}">
       <span class="plan-chip-d" aria-hidden="true">${esc(fmtShort(d))}</span>${isToday ? '<span class="plan-chip-tag" aria-hidden="true">today</span>' : ''}${planned ? '<span class="plan-chip-dot" aria-hidden="true"></span>' : ''}

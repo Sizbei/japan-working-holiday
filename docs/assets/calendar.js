@@ -10,6 +10,8 @@ import { KEYS, get, set } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
+import { upsertStop, newStop } from './lib/dayplan.js';
+import { approxCoord } from './lib/geo.js';
 import { makeMovable } from './dnd.js';
 
 let DATA = null;
@@ -239,10 +241,9 @@ function wireReschedule() {
       const ev = allEvents().find(x => x.id === id);
       if (!ev) return;
       if (ev.source === 'user') {
-        const u = loadUser(); const i = u.findIndex(x => x.id === id);
-        if (i >= 0) { u[i] = { ...u[i], date: day, endDate: '' }; saveUser(u); }
+        saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: '' } : x));
       } else {                                  // baked event → store a date override (tips.json stays untouched)
-        const o = loadOverrides(); o[id] = day; saveOverrides(o);
+        saveOverrides({ ...loadOverrides(), [id]: day });
       }
     },
   });
@@ -265,6 +266,7 @@ function dayPopover(date, anchor) {
   popEl = document.createElement('div');
   popEl.className = 'cal-pop';
   popEl.setAttribute('role', 'dialog');
+  popEl.setAttribute('aria-modal', 'true');
   popEl.setAttribute('aria-label', 'Events on ' + fmtDate(date));
   popEl.innerHTML = `<div class="pop-head">${esc(fmtDate(date))}</div>${rows}
     <button class="pop-add" data-add="${esc(date)}">+ Add your own event</button>`;
@@ -277,7 +279,15 @@ function dayPopover(date, anchor) {
   popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openDetail(ev); }));
   popEl.querySelector('.pop-add').addEventListener('click', () => { dismissPopover(); openModal(null, date); });
   const onDoc = (e) => { if (popEl && !popEl.contains(e.target) && e.target !== anchor) dismissPopover(); };
-  const onKey = (e) => { if (e.key === 'Escape') { dismissPopover(); anchor.focus?.(); } };   // Esc returns focus to the day cell
+  const onKey = (e) => {
+    if (e.key === 'Escape') { dismissPopover(); anchor.focus?.(); return; }   // Esc returns focus to the day cell
+    if (e.key !== 'Tab' || !popEl) return;
+    const f = [...popEl.querySelectorAll('button,[href]')].filter(el => el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
   const onScroll = () => dismissPopover();
   setTimeout(() => { document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus(); }, 0);
   popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
@@ -298,15 +308,20 @@ function openDetail(ev) {
     ${ev.moved ? '<p class="modal-line">↩ You rescheduled this from its researched date.</p>' : ''}
     <div class="modal-actions">
       ${ev.moved ? '<button class="btn" id="mdReset">↺ Reset date</button>' : ''}
+      <button class="btn" id="mdPlan">＋ Add to day plan</button>
       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener">+ Google Calendar</a>
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
-  ov.querySelector('#mdReset')?.addEventListener('click', () => { const o = loadOverrides(); delete o[ev.id]; saveOverrides(o); closeModal(ov); });
+  ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov); });
+  ov.querySelector('#mdPlan')?.addEventListener('click', () => {
+    const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
+    upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));
+    closeModal(ov); alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
+  });
   ov.querySelector('#mdCopy')?.addEventListener('click', () => {
-    const u = loadUser();
-    u.push({ id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '' });
-    saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
+    saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '' }]);
+    closeModal(ov);   // jwh:data-changed → render() (single path)
   });
 }
 function srcline(s) {
@@ -343,9 +358,9 @@ function openModal(ev, presetDate) {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());
     if (!obj.title.trim() || !obj.date) return;
-    const u = loadUser();
-    if (ev && ev.id) { const i = u.findIndex(x => x.id === ev.id); if (i >= 0) u[i] = { ...u[i], ...obj }; }
-    else u.push({ id: 'u' + Date.now(), ...obj });
+    const u = (ev && ev.id)
+      ? loadUser().map(x => x.id === ev.id ? { ...x, ...obj } : x)
+      : [...loadUser(), { id: 'u' + Date.now(), ...obj }];
     saveUser(u); closeModal(ov);   // jwh:data-changed → render() (single path)
   });
   ov.querySelector('#mdDel')?.addEventListener('click', () => { saveUser(loadUser().filter(x => x.id !== ev.id)); closeModal(ov); });
@@ -389,9 +404,8 @@ function onImport(e) {
     const parsed = parseICS(reader.result);
     if (!parsed.length) { alertModal('No events found in that .ics file.'); return; }
     if (!await confirmModal(`Import ${parsed.length} event(s) into your calendar?`, { ok: 'Import' })) return;
-    const u = loadUser();
-    parsed.forEach((p, i) => u.push({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, endDate: p.endDate || '', category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
-    saveUser(u);   // jwh:data-changed → render()
+    const added = parsed.map((p, i) => ({ id: 'u' + Date.now() + '-' + i, title: p.title, date: p.date, endDate: p.endDate || '', category: p.category || 'imported', note: p.note || '', area: p.area || '' }));
+    saveUser([...loadUser(), ...added]);   // jwh:data-changed → render()
   };
   reader.onerror = () => alertModal('Could not read that .ics file.');
   reader.readAsText(file); e.target.value = '';

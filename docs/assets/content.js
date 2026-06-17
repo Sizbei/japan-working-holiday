@@ -376,7 +376,7 @@ function checkItemHTML(it, state, due, now) {
 }
 function wireChecklist() {
   $$('#checkPhases input[type=checkbox]').forEach(cb => cb.addEventListener('change', () => {
-    const state = loadChecks();
+    const state = { ...loadChecks() };
     if (cb.checked) state[cb.dataset.cid] = true; else delete state[cb.dataset.cid];
     saveChecks(state);
     renderChecklist();                 // re-render so dependent locks update
@@ -384,7 +384,7 @@ function wireChecklist() {
   }));
   $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', async () => {
     const id = btn.dataset.due;
-    const due = loadDue();
+    const due = { ...loadDue() };
     const v = await askDate('Due date (blank to clear):', { value: due[id] || '' });
     if (v === null) return;                                  // cancelled
     if (v.trim() === '') delete due[id];

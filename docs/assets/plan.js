@@ -59,8 +59,8 @@ function renderRail() {
   rail.innerHTML = railDates().map(d => {
     const planned = hasPlan(d);
     const isToday = d === today;
-    return `<button type="button" role="tab" class="plan-chip${d === activeDate ? ' active' : ''}${planned ? ' has-plan' : ''}" data-date="${esc(d)}" aria-selected="${d === activeDate ? 'true' : 'false'}">
-      <span class="plan-chip-d">${esc(fmtShort(d))}</span>${isToday ? '<span class="plan-chip-tag">today</span>' : ''}${planned ? '<span class="plan-chip-dot" aria-label="has a plan"></span>' : ''}
+    return `<button type="button" role="tab" class="plan-chip${d === activeDate ? ' active' : ''}${planned ? ' has-plan' : ''}" data-date="${esc(d)}" aria-selected="${d === activeDate ? 'true' : 'false'}" aria-label="${esc(fmtShort(d))}${isToday ? ', today' : ''}${planned ? ', has a plan' : ''}">
+      <span class="plan-chip-d" aria-hidden="true">${esc(fmtShort(d))}</span>${isToday ? '<span class="plan-chip-tag" aria-hidden="true">today</span>' : ''}${planned ? '<span class="plan-chip-dot" aria-hidden="true"></span>' : ''}
     </button>`;
   }).join('') + `<label class="plan-pick">+ date<input type="date" id="planPick" aria-label="Jump to any date"></label>`;
   rail.querySelectorAll('.plan-chip').forEach(b => b.addEventListener('click', () => { activeDate = b.dataset.date; renderRail(); render(); scrollActiveIntoView(); }));

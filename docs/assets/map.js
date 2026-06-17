@@ -78,6 +78,18 @@ export function placesModel() {
     out.push({ id: 'evt:' + slug(e.title), kind: 'event', name: e.title, area: e.area, group: areaOf(e.area),
       lat: c.lat + j.dy, lng: c.lng + j.dx, cat: e.category || 'festival', coordKind: 'approx', date: e.date, pulse: isSoon(e.date) });
   });
+  // 2b) user-CREATED calendar events → map + plan picker parity. Skip the auto-spawned
+  // Visit:/⏰/plan: events that merely mirror a place (the place is already pinned).
+  (get(KEYS.events, []) || []).forEach(e => {
+    if (!e.date || e.date < today) return;
+    if (/^(Visit: |⏰ )/.test(e.title || '') || String(e.id).startsWith('plan:')) return;
+    const nm = (e.title || '').toLowerCase().trim();
+    if (!nm || seenName.has(nm)) return; seenName.add(nm);
+    const area = e.area || e.note || '';
+    const c = centroid(DATA.areaGeo, areaOf(area)), j = jitter(e.title);
+    out.push({ id: 'uevt:' + e.id, kind: 'event', name: e.title, area, group: areaOf(area),
+      lat: c.lat + j.dy, lng: c.lng + j.dx, cat: e.category || 'personal', coordKind: 'approx', date: e.date, pulse: isSoon(e.date) });
+  });
   // 3) baked catalogue (carry pillar for a stable catId that reconciles with a favourite)
   Object.keys(SRC_CAT).forEach(pillar => (DATA[pillar] || []).forEach(i => {
     if (!i.name) return;
@@ -276,9 +288,7 @@ function wireUserPopup(p) {
 // ====================================================================== actions
 function pushEvent(title, date, note) {
   const id = 'u' + Date.now();
-  const u = get(KEYS.events, []) || [];
-  u.push({ id, title, date, endDate: '', category: 'personal', note: note || '' });
-  set(KEYS.events, u);
+  set(KEYS.events, [...(get(KEYS.events, []) || []), { id, title, date, endDate: '', category: 'personal', note: note || '' }]);
   return id;
 }
 function change() { document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
@@ -346,6 +356,8 @@ async function setExact(p) {
     if (map) map.closePopup(); change();
   } catch { alertModal('Geocoding unavailable.'); }
 }
+// SILENT writers — pushEvent/removeEvent do NOT dispatch; every caller follows with change()
+// or upsertPlace() (which dispatches), so exactly one jwh:data-changed fires per action.
 function removeEvent(id) { set(KEYS.events, (get(KEYS.events, []) || []).filter(x => x.id !== id)); }
 
 function toggleArm(force) {

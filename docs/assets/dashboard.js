@@ -93,14 +93,19 @@ function renderCountdown() {
 function wireBell() {
   const bell = $('#notifBell'), panel = $('#notifPanel');
   if (!bell || !panel) return;
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'Notifications');
+  const close = (restoreFocus) => { panel.hidden = true; bell.setAttribute('aria-expanded', 'false'); if (restoreFocus) bell.focus(); };
   bell.addEventListener('click', (e) => {
     e.stopPropagation();
     panel.hidden = !panel.hidden;
     bell.setAttribute('aria-expanded', String(!panel.hidden));
+    if (!panel.hidden) setTimeout(() => panel.querySelector('button, a, [tabindex]')?.focus(), 20);   // move focus in
   });
   document.addEventListener('click', (e) => {
-    if (!panel.hidden && !panel.contains(e.target) && e.target !== bell) panel.hidden = true;
+    if (!panel.hidden && !panel.contains(e.target) && e.target !== bell) close(false);
   });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) close(true); });   // Esc closes + returns focus to the bell
 }
 function renderBadge(alerts) {
   const badge = $('#notifBadge');

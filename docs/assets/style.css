@@ -737,11 +737,12 @@ html.gated{ overflow: hidden; }
 @media (max-width: 820px){
   .cal-layout{ grid-template-columns: 1fr; }
   .cal-panel{ position: static; order:-1; max-height:none; }
-  .cal-legend{ top: 2.7rem; }
+  .cal-legend{ top: calc(var(--header-h) + var(--nav-h)); }   /* route-nav still sticky at top on tablets */
 }
 @media (max-width: 560px){
   .cal-meter i{ width:4px; height:4px; }
   .cal-ticket{ font-size:.55rem; }
+  .cal-legend{ top: var(--header-h); }   /* route-nav becomes a fixed bottom bar here */
 }
 
 /* ---- single reduced-motion contract (tokens collapse to instant; callbacks still fire) ---- */

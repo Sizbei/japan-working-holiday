@@ -270,7 +270,7 @@ function wireUserPopup(p) {
   on('cal', () => addToCalendar(p));
   on('rem', () => setReminder(p));
   on('exact', () => setExact(p));
-  on('del', () => { if (deletePlace(p.id)) map.closePopup(); });
+  on('del', async () => { if (await confirmModal(`Delete “${p.name}”?`, { ok: 'Delete', danger: true }) && deletePlace(p.id) && map) map.closePopup(); });
 }
 
 // ====================================================================== actions

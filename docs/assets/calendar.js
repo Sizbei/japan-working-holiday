@@ -149,7 +149,7 @@ function monthHTML() {
 }
 
 // ---- side panel: this month's book-by deadlines + a "happening" tally ----
-function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 3) return 'due-soon'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
+function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
 function panelHTML() {
   const monthKey = `${viewY}-${pad(viewM + 1)}`;
   const evs = allEvents().filter(visible);

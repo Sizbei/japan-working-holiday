@@ -140,9 +140,11 @@ function onBodyClick(e) {
   const b = e.target.closest('[data-act],[data-edit]'); if (!b) return;
   const act = b.dataset.act, edit = b.dataset.edit, id = b.dataset.id;
   if (act === 'add') return openPicker();
-  if (act === 'map') { drawRoute(getPlan(activeDate).stops); location.hash = '#/map'; return; }
+  const plan = getPlan(activeDate);                    // every action below needs a plan with stops
+  if ((act && act !== 'add') || edit) { if (!plan?.stops?.length) return; }
+  if (act === 'map') { drawRoute(plan.stops); location.hash = '#/map'; return; }
   if (act === 'ics') return downloadICS();
-  if (act === 'gcal') { const evs = planToEvents(getPlan(activeDate)); if (evs[0]) window.open(gcalUrl(evs[0]), '_blank', 'noopener'); return; }
+  if (act === 'gcal') { const evs = planToEvents(plan); if (evs[0]) window.open(gcalUrl(evs[0]), '_blank', 'noopener'); return; }
   if (act === 'addcal') return addToCalendar();
   if (edit === 'del') { announce('Removed stop'); return removeStop(activeDate, id); }
   if (edit === 'up' || edit === 'down') return moveStop(id, edit);
@@ -211,9 +213,17 @@ function openPicker() {
     $('#pkList').innerHTML = (rows || '') + adhoc || `<li class="pk-empty">No matches — type a name to add a custom stop.</li>`;
   };
   draw();
-  const close = () => { ov.remove(); document.removeEventListener('keydown', onKey); if (prev?.focus) prev.focus(); };
-  const onKey = (e) => { if (e.key === 'Escape') close(); };
-  document.addEventListener('keydown', onKey);
+  const close = () => { ov.remove(); document.removeEventListener('keydown', onKey, true); if (prev?.focus) prev.focus(); };
+  const focusables = () => [...ov.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled && el.offsetParent !== null);
+  const onKey = (e) => {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = focusables(); if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  document.addEventListener('keydown', onKey, true);
   ov.addEventListener('click', (e) => {
     if (e.target === ov || e.target.closest('[data-x]')) return close();
     const tab = e.target.closest('.pk-tab');

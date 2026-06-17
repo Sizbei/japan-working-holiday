@@ -18,6 +18,7 @@ export const KEYS = {
   theme: 'jwh-theme',
   lang: 'jwh-lang',
   reduceMotion: 'jwh-reduce-motion',
+  celebrations: 'jwh-celebrations',
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
 };

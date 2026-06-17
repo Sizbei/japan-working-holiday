@@ -43,6 +43,7 @@ function openGuide() {
   const dark = document.documentElement.dataset.theme === 'dark';
   const arcade = document.documentElement.dataset.arcade === 'on';
   const reduce = document.documentElement.dataset.reduceMotion === 'on';
+  const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   ov = document.createElement('div');
   ov.className = 'guide-overlay';
   ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'guideTitle');
@@ -67,6 +68,7 @@ function openGuide() {
       ${row('setTheme', 'Dark mode', 'Easier on the eyes at night', dark)}
       ${row('setArcade', 'Arcade mode', 'Extra retro CRT glow &amp; pixel flair', arcade)}
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
+      ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
     </section>
   </div>`;
   document.body.appendChild(ov);
@@ -89,6 +91,11 @@ function openGuide() {
     document.documentElement.dataset.reduceMotion = on ? '' : 'on';
     setRaw(KEYS.reduceMotion, on ? '' : 'on');
     setSwitch('setReduce', !on);
+  });
+  $('#setCelebrate', ov)?.addEventListener('click', () => {
+    const on = getRaw(KEYS.celebrations, '') !== 'off';        // currently on?
+    setRaw(KEYS.celebrations, on ? 'off' : 'on');
+    setSwitch('setCelebrate', !on);
   });
 
   document.addEventListener('keydown', onKey, true);

@@ -483,6 +483,7 @@ function updateProgress() {
   lastPct = pct;
 }
 function celebrate() {
+  if (getRaw(KEYS.celebrations, '') === 'off') return;   // user disabled celebrations in Settings
   dndToast('🎉 Checklist complete — you’re ready for Japan!');
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const wrap = document.createElement('div');

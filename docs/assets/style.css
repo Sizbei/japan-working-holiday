@@ -1673,3 +1673,32 @@ html[data-reduce-motion="on"] *::after{
   animation-duration: .001ms !important; animation-iteration-count: 1 !important;
   transition-duration: .001ms !important; scroll-behavior: auto !important;
 }
+
+/* ============================================================
+   SUMI-E vibe — scoped to the Map page (#view-map) only.
+   Editorial washi/ink touches over the functional map, built on
+   the existing theme tokens (cream + vermilion + serif), so it
+   stays light/dark/arcade-safe and fully usable. Not a rewrite.
+   ============================================================ */
+/* masthead → editorial */
+#view-map .pillar-head .jp{ font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.05rem; letter-spacing: .1em; }
+#view-map .lede{ font-family: var(--serif); font-style: italic; max-width: 62ch; }
+/* a thin vermilion rule already sits under .pillar-head::after — lengthen it on the map */
+#view-map .pillar-head::after{ width: 92px; }
+
+/* the canvas reads like a mounted plate */
+#view-map .map-canvas{ box-shadow: 0 26px 52px -32px rgba(60,30,10,.42), inset 0 0 0 1px color-mix(in srgb, var(--red) 12%, transparent); }
+[data-theme="dark"] #view-map .map-canvas{ box-shadow: 0 26px 52px -28px #000, inset 0 0 0 1px color-mix(in srgb, var(--red) 18%, transparent); }
+
+/* pins → a faint vermilion "stamped seal" ring on plain pins; warm washi bezel.
+   keep the category-colour fill for legibility, and don't touch fav/home/visited rings. */
+#view-map .jwh-pin-dot{ border-color: color-mix(in srgb, var(--bg-soft) 78%, #fff); }
+#view-map .jwh-pin:not(.fav):not(.home):not(.visited) .jwh-pin-dot::before{
+  content:""; position:absolute; inset:-3px; border-radius:50%; pointer-events:none;
+  border:1px solid color-mix(in srgb, var(--red) 38%, transparent); }
+
+/* "Your pins" + neighbourhood index → editorial index list */
+#view-map .map-side-h{ font-family: var(--serif); font-weight: 600; font-size: 1.02rem; text-transform: none; letter-spacing: 0;
+  padding-bottom: .4rem; margin-bottom: .55rem; border-bottom: 1.5px solid color-mix(in srgb, var(--red) 50%, var(--line)); }
+#view-map .map-sname{ font-family: var(--serif); font-size: 1rem; }
+#view-map .map-area a{ font-family: var(--serif); font-weight: 600; text-transform: none; letter-spacing: 0; font-size: .92rem; }

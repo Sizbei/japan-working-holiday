@@ -102,6 +102,10 @@
         <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
       </div>
     </div>
+    <div class="cal-search">
+      <input type="search" id="calSearch" placeholder="SEARCH EVENTS // fireworks, Akihabara, festival…" aria-label="Search all events" autocomplete="off">
+      <ul id="calSearchResults" class="cal-search-results" aria-live="polite"></ul>
+    </div>
     <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
       <div id="calView" aria-live="polite"></div>

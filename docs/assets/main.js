@@ -10,6 +10,7 @@ import { mountMyTokyo } from './dashboard-mytokyo.js';
 import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
 import { mountPlan } from './plan.js';
+import { mountEventSearch } from './eventsearch.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
 import { initKonami } from './konami.js';
@@ -36,6 +37,7 @@ function boot() {
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)
       mountPlan(data);               // day itinerary planner (#/plan)
+      mountEventSearch(data);        // search all events on the calendar page
       mountBackup();                 // export/import all device-local trip data
       initRouter();                  // hash-router SPA: split views, animated transitions
       initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode

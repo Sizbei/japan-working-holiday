@@ -75,6 +75,12 @@ function wireToolbar() {
 }
 function shift(d) { viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render(); }
 
+// jump the month view to a given ISO date (used by event search)
+export function goToDate(iso) {
+  const t = parseISO(iso); if (!t) return;
+  viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; render();
+}
+
 // ---- legend doubles as category filter (built from categories actually present) ----
 function buildLegend() {
   const el = $('#calLegend');

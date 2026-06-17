@@ -1273,6 +1273,26 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .pk-adhoc{ color: var(--indigo-ink); font-weight:700; justify-content:flex-start; }
 .pk-empty{ color: var(--ink-soft); font-size:.8rem; padding:.6rem .2rem; }
 
+/* event search (calendar page) */
+.cal-search{ position: relative; margin: var(--s2) 0 var(--s3); }
+#calSearch{ width:100%; max-width:520px; font-family: var(--mono); font-size:.8rem; padding:.55rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
+#calSearch:focus{ outline:none; box-shadow: var(--ring); }
+.cal-search-results{ list-style:none; margin:.3rem 0 0; padding:0; max-width:520px; }
+.cal-search-results.open{ background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); overflow:hidden; max-height:360px; overflow-y:auto; }
+.cs-row{ display:flex; align-items:center; gap:.5rem; padding:.4rem .6rem; border-bottom:1px solid var(--line); }
+.cs-row:last-child{ border-bottom:none; }
+.cs-sw{ width:9px; height:9px; border-radius:50%; flex-shrink:0; background: var(--c-personal); }
+.cs-main{ flex:1; min-width:0; }
+.cs-title{ display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer; color: var(--ink); font-weight:600; font-size:.85rem; padding:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cs-title:hover{ color: var(--indigo-ink); text-decoration:underline; }
+.cs-meta{ font-family: var(--mono); font-size:.7rem; color: var(--ink-soft); }
+.cs-acts{ display:flex; gap:.2rem; flex-shrink:0; }
+.cs-ic{ display:inline-grid; place-items:center; min-width:34px; height:30px; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); font-family: var(--mono); font-size:.68rem; font-weight:700; cursor:pointer; text-decoration:none; }
+.cs-ic:hover{ border-color: var(--indigo); }
+.cs-empty, .cs-note{ padding:.5rem .6rem; font-size:.78rem; color: var(--ink-soft); }
+.cs-note{ color: var(--ok-ink); font-weight:700; }
+@media (hover: none){ .cs-ic{ min-height:44px; } }
+
 /* themed Promise-based dialogs (lib/modal.js) */
 .app-modal{ position:fixed; inset:0; z-index:1100; background: color-mix(in srgb, #000 50%, transparent); display:grid; place-items:center; padding: var(--s4); }
 .app-modal-card{ width:100%; max-width:400px; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--s5); }

@@ -5,7 +5,7 @@
 
 import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
-import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
+import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
 import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
@@ -24,6 +24,7 @@ export function renderContent(data, today) {
   renderSources();
   renderDomains();
   initBrew();
+  renderCheckTools();
   renderChecklist(today);
   renderPillar('activities', '#activitiesGrid', 'Researching the seasonal calendar…');
   renderPillar('restaurants', '#restaurantsGrid', 'Hunting down the best eats…');
@@ -347,6 +348,23 @@ function renderIdeas() {
 function loadChecks() { return get(KEYS.checklist, {}) || {}; }
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }
+// checklist focus controls (reduce the 74-item yearlong list to what's actionable now)
+function checkView() { return getRaw(KEYS.checkView, 'phase'); }     // 'phase' | 'soon'
+function hideDone() { return getRaw(KEYS.checkHideDone, '') === 'on'; }
+function loadPriority() { const a = get(KEYS.checkPriority, []); return new Set(Array.isArray(a) ? a : []); }
+function savePriority(ids) { set(KEYS.checkPriority, [...ids]); }
+function renderCheckTools() {
+  const el = $('#checkTools'); if (!el) return;
+  const view = checkView(), hd = hideDone();
+  el.innerHTML = `
+    <div class="ct-views" role="group" aria-label="Checklist view">
+      <button type="button" class="ct-chip ${view === 'phase' ? 'on' : ''}" data-view="phase" aria-pressed="${view === 'phase'}">All phases</button>
+      <button type="button" class="ct-chip ${view === 'soon' ? 'on' : ''}" data-view="soon" aria-pressed="${view === 'soon'}">Due soon · 30 days</button>
+    </div>
+    <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>`;
+  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { setRaw(KEYS.checkView, b.dataset.view); renderCheckTools(); renderChecklist(); }));
+  el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); });
+}
 function saveDue(s) { set(KEYS.due, s); }
 
 // flat list of every checklist item (used by the dashboard for alerts)
@@ -381,23 +399,47 @@ function renderChecklist(today) {
   const due = loadDue();
   const order = loadCheckOrder();
   const now = today || nowISO();
+  const prio = loadPriority();
+  const view = checkView(), hd = hideDone();
   const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
   const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
-  wrap.innerHTML = phases.map((p, pi) => `
-    <div class="phase-block">
-      <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
-      <ul class="check-list" data-phase="${pi}">
-        ${orderItems(p.items || [], order[pi]).map(it => checkItemHTML(it, state, due, now, knownIds)).join('')}
-      </ul>
-    </div>`).join('');
+
+  if (view === 'soon') {
+    // a flat list of what's actually pressing: undone items due within 30 days (or overdue),
+    // plus anything you've flagged ⚑ — sorted flag-first, then soonest due.
+    const items = checklistItems(DATA).filter(it => {
+      if (state[it.id]) return false;                       // done → not pressing
+      if (prio.has(it.id)) return true;                     // flagged → always
+      const eff = it.effectiveDue; if (!eff) return false;  // undated → not "due soon"
+      const d = daysBetween(now, eff); return d !== null && d <= 30;   // overdue or within 30d
+    }).sort((a, b) => {
+      const pa = prio.has(a.id) ? 0 : 1, pb = prio.has(b.id) ? 0 : 1;
+      if (pa !== pb) return pa - pb;
+      return (a.effectiveDue || '9999').localeCompare(b.effectiveDue || '9999');
+    });
+    wrap.innerHTML = items.length
+      ? `<ul class="check-list check-soon">${items.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true })).join('')}</ul>`
+      : `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">🎏</div><p class="empty-h">Nothing due in the next 30 days.</p><p class="empty-sub">You're clear — switch to “All phases” to plan further ahead, or flag ⚑ items to pin them here.</p></div>`;
+  } else {
+    wrap.innerHTML = phases.map((p, pi) => {
+      const its = orderItems(p.items || [], order[pi]).filter(it => !(hd && state[it.id]));
+      if (!its.length) return '';                           // skip a phase that's fully done/hidden
+      return `<div class="phase-block">
+        <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
+        <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+      </div>`;
+    }).join('');
+  }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
   wireChecklist();
-  $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
-    itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
-    idOf: el => el.dataset.id,
-    onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
-  }));
+  if (view === 'phase' && !hd) {   // dnd reorder only in the full grouped view (reordering a filtered/flat list is meaningless)
+    $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
+      itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
+      idOf: el => el.dataset.id,
+      onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
+    }));
+  }
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }
@@ -408,11 +450,12 @@ function captureCheckFocus() {
   const esc2 = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
   if (a.dataset.cid) return `input[data-cid="${esc2(a.dataset.cid)}"]`;
   if (a.dataset.due) return `.ci-due[data-due="${esc2(a.dataset.due)}"]`;
+  if (a.dataset.flag) return `.ci-flag[data-flag="${esc2(a.dataset.flag)}"]`;
   const li = a.closest?.('.check-item');
   if (li && a.classList.contains('dnd-handle')) return `.check-item[data-id="${esc2(li.dataset.id)}"] .dnd-handle`;
   return null;
 }
-function checkItemHTML(it, state, due, now, knownIds) {
+function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const id = it.id;
   const checked = state[id] ? 'checked' : '';
   const kind = (it.kind || 'experience').toLowerCase();
@@ -422,16 +465,19 @@ function checkItemHTML(it, state, due, now, knownIds) {
   const eff = due[id] || it.dueBy || '';
   const st = eff ? windowStatus(eff, now) : 'none';
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';
+  const flagged = !!(opts.prio && opts.prio.has(id));
+  const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
   return `
-    <li class="check-item ${locked ? 'locked' : ''}" data-id="${esc(id)}">
-      <button type="button" class="dnd-handle" aria-label="Reorder task" tabindex="0">⠿</button>
+    <li class="check-item ${locked ? 'locked' : ''}${flagged ? ' flagged' : ''}" data-id="${esc(id)}">
+      ${opts.drag ? '<button type="button" class="dnd-handle" aria-label="Reorder task" tabindex="0">⠿</button>' : ''}
       <input type="checkbox" id="cb-${esc(id)}" data-cid="${esc(id)}" ${checked} ${locked ? 'disabled' : ''}
              aria-label="${esc(it.task)}">
       <label class="ci-body" for="cb-${esc(id)}">
-        <span class="ci-task">${esc(it.task)}<span class="kind-tag kind-${esc(kind)}">${esc(kind)}</span>${dueTag}${locked ? '<span class="lock">🔒 do prerequisite first</span>' : ''}</span>
+        <span class="ci-task">${esc(it.task)}<span class="kind-tag kind-${esc(kind)}">${esc(kind)}</span>${phaseTag}${dueTag}${locked ? '<span class="lock">🔒 do prerequisite first</span>' : ''}</span>
         ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
         ${srcLinks(it.sources, 'ci-src')}
       </label>
+      <button type="button" class="ci-flag${flagged ? ' on' : ''}" data-flag="${esc(id)}" aria-pressed="${flagged ? 'true' : 'false'}" aria-label="${flagged ? 'Remove priority' : 'Mark as priority'}" title="Priority">⚑</button>
       <button type="button" class="ci-due" data-due="${esc(id)}" title="Set a due date" aria-label="Set due date">📅</button>
     </li>`;
 }
@@ -442,6 +488,11 @@ function wireChecklist() {
     saveChecks(state);
     renderChecklist();                 // re-render so dependent locks update
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  }));
+  $$('#checkPhases .ci-flag').forEach(btn => btn.addEventListener('click', () => {
+    const id = btn.dataset.flag, p = loadPriority();
+    p.has(id) ? p.delete(id) : p.add(id); savePriority(p);
+    renderChecklist();   // re-render: flag state + (in Due-soon) the item's position/inclusion
   }));
   $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', async () => {
     const id = btn.dataset.due;
@@ -472,13 +523,15 @@ function wireReset() {
 }
 let lastPct = null;
 function updateProgress() {
-  const boxes = $$('#checkPhases input[type=checkbox]');
-  if (!boxes.length) return;
-  const done = boxes.filter(b => b.checked).length;
-  const pct = Math.round((done / boxes.length) * 100);
+  // count ALL checklist items (not just the ones the current view renders — Due-soon/Hide-done filter)
+  const all = checklistItems(DATA);
+  if (!all.length) return;
+  const checks = loadChecks();
+  const done = all.filter(it => checks[it.id]).length;
+  const pct = Math.round((done / all.length) * 100);
   const bar = $('#checkBar'), pctEl = $('#checkPct');
   if (bar) bar.style.width = pct + '%';
-  if (pctEl) pctEl.textContent = `${pct}% · ${done}/${boxes.length}`;
+  if (pctEl) pctEl.textContent = `${pct}% · ${done}/${all.length}`;
   // peak-end moment: celebrate the transition to 100% (not on first load if already complete)
   if (pct === 100 && lastPct !== null && lastPct < 100) celebrate();
   lastPct = pct;

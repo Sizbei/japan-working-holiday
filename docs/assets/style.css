@@ -1485,3 +1485,54 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
   padding:.5rem 1rem; border-radius: var(--r-pill); font:inherit; font-weight:700; cursor:pointer; transition: transform var(--t-hover), filter var(--t-hover); }
 .empty-state .empty-action:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 .empty-state .empty-action:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
+
+/* ============================================================
+   GUIDE & SETTINGS overlay (⚙) + the reduce-motion override
+   ============================================================ */
+.guide-trigger{ background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
+  width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;
+  transition: transform .15s ease, border-color .15s ease, color .15s ease; }
+.guide-trigger:hover{ transform: translateY(-1px) rotate(30deg); border-color: var(--indigo); color: var(--ink); }
+.guide-trigger:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+.guide-overlay{ position: fixed; inset: 0; z-index: 72; display: grid; place-items: center;
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: lp-in var(--dur-2) var(--ease-out); padding: var(--s4); }
+.guide-panel{ position: relative; background: var(--bg-elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: min(560px, 96vw);
+  max-height: 88vh; overflow-y: auto; padding: var(--s6); }
+.guide-x{ position: absolute; top: .7rem; right: .7rem; background: none; border: none; cursor: pointer;
+  font-size: 1.1rem; color: var(--ink-soft); line-height: 1; padding: .2rem; }
+.guide-x:hover{ color: var(--ink); }
+.guide-x:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: var(--r-xs); }
+.guide-title{ font-family: var(--serif); font-size: 1.5rem; margin: 0 0 var(--s4); }
+.guide-sec{ margin-bottom: var(--s5); }
+.guide-h{ font-family: var(--sans); font-size: .82rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--indigo); margin: 0 0 var(--s3); }
+.guide-list{ margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: .5rem; }
+.guide-list li{ font-size: .92rem; line-height: 1.55; color: var(--ink); }
+.guide-list b{ font-weight: 700; }
+
+.set-row{ display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+  padding: .7rem 0; border-top: 1px solid var(--line); }
+.set-row:first-of-type{ border-top: none; }
+.set-text{ display: flex; flex-direction: column; }
+.set-label{ font-weight: 700; }
+.set-sub{ font-size: .82rem; color: var(--ink-soft); }
+.set-switch{ flex: none; width: 46px; height: 26px; border-radius: 999px; border: 1px solid var(--line-strong);
+  background: var(--bg-sunk); cursor: pointer; position: relative; transition: background var(--t-base); padding: 0; }
+.set-knob{ position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; box-shadow: var(--shadow-sm); transition: transform var(--t-base); }
+.set-switch[aria-checked="true"]{ background: var(--indigo); border-color: var(--indigo); }
+.set-switch[aria-checked="true"] .set-knob{ transform: translateX(20px); }
+.set-switch:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+@media (max-width: 560px){ .guide-trigger{ width: 34px; height: 34px; } }
+
+/* user-set "Reduce motion" — an app-level override of every animation/transition */
+html[data-reduce-motion="on"] *,
+html[data-reduce-motion="on"] *::before,
+html[data-reduce-motion="on"] *::after{
+  animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important; scroll-behavior: auto !important;
+}

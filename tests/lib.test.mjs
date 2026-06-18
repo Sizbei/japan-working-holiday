@@ -354,3 +354,11 @@ test('home-layout parity: every layout has a label, a CSS rule, and the settings
   // 4. the persisted key exists in the store
   assert.ok(store.includes('homeLayout:'), 'store.js KEYS must define homeLayout');
 });
+
+test('route-title parity: every route has a TITLES entry (drives the sr-only h1)', () => {
+  const router = readFileSync(new URL('../docs/assets/router.js', import.meta.url), 'utf8');
+  const routes = router.match(/export const ROUTES = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map(s => s.replace(/'/g, ''));
+  const titlesBlock = router.match(/const TITLES = \{([\s\S]*?)\}/)[1];
+  const missing = routes.filter(r => !new RegExp(`\\b${r}:`).test(titlesBlock));
+  assert.deepEqual(missing, [], `routes missing a TITLES entry: ${missing}`);
+});

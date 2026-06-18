@@ -825,11 +825,9 @@ html.js-router .view { display: none; }
 html.js-router .view.is-active { display: block; }
 
 .route-nav {
-  position: sticky; top: var(--header-h); z-index: 20;
-  display: flex; gap: .25rem; justify-content: center; flex-wrap: wrap; align-items: center;
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  -webkit-backdrop-filter: saturate(1.3) blur(8px);
-  backdrop-filter: saturate(1.3) blur(8px);
+  position: static; z-index: 20;
+  display: flex; gap: .15rem; justify-content: flex-start; flex-wrap: wrap; align-items: center;
+  background: var(--bg);
   padding: .4rem var(--gutter); border-bottom: 1px solid var(--line);
 }
 .route-nav a {
@@ -837,9 +835,10 @@ html.js-router .view.is-active { display: block; }
   text-decoration: none; padding: .45rem .9rem; border-radius: var(--r-pill);
   transition: background var(--t-hover), color var(--t-hover), transform var(--t-hover);
 }
-.route-nav a:hover { color: var(--ink); background: var(--bg-soft); }
+.route-nav a:hover { color: var(--ink); }
 .route-nav a:active { transform: scale(var(--press-scale)); }
-.route-nav a[aria-current="page"] { color: var(--on-accent); background: var(--red); }
+.route-nav a[aria-current="page"] { color: var(--ink); font-weight: 800; }
+.route-nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* stable regions keep their own snapshot — only the active view cross-fades */
 .topbar    { view-transition-name: jwh-topbar; }

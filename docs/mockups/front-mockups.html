@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Front page mocks · Sumi-e ink · My Year in Japan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SUMI-E INK — front-page mocks. Three compositions, one vibe.
+   Palette: kinari paper · sumi ink · aizome indigo · shu seal.
+   ============================================================ */
+:root{
+  --kinari:#ece2cf;          /* unbleached paper            */
+  --kinari-2:#e4d8c0;        /* deeper paper for depth      */
+  --washi:#f3ecdc;           /* raised surfaces             */
+  --sumi:#1c1714;            /* ink black                   */
+  --sumi-soft:#42382e;       /* soft ink (body)             */
+  --sumi-faint:#6f6151;      /* faint ink (meta)            */
+  --aizome:#2c3e5c;          /* indigo                      */
+  --aizome-ink:#3a5687;      /* lighter indigo accent       */
+  --shu:#b6391f;             /* vermilion seal              */
+  --shu-deep:#8f2c17;
+  --kin:#a9824a;             /* faint gold                  */
+  --line:rgba(28,23,20,.16);
+  --line-soft:rgba(28,23,20,.09);
+  --ease:cubic-bezier(.23,1,.32,1);
+  --ease-move:cubic-bezier(.77,0,.175,1);
+  --serif:"Shippori Mincho",serif;
+  --serif-en:"Newsreader",Georgia,serif;
+  --sans:"Zen Kaku Gothic New",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--kinari); color:var(--sumi);
+  font-family:var(--serif-en); line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+/* paper grain + a faint ink-wash field bleeding from the top-right */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 92% -8%, rgba(44,62,92,.16), transparent 46%),
+    radial-gradient(90% 70% at 8% 108%, rgba(182,57,31,.07), transparent 50%);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;
+}
+.stage{position:relative; z-index:1}
+
+/* ---------- variant switcher (chrome, not part of the mock) ---------- */
+.switch{
+  position:fixed; z-index:50; top:14px; left:50%; transform:translateX(-50%);
+  display:flex; gap:4px; padding:5px; border-radius:999px;
+  background:rgba(243,236,220,.86); backdrop-filter:blur(10px) saturate(1.2);
+  border:1px solid var(--line); box-shadow:0 6px 26px rgba(28,23,20,.18);
+}
+.switch button{
+  font-family:var(--serif); font-weight:600; font-size:.82rem; letter-spacing:.02em;
+  border:none; background:transparent; color:var(--sumi-faint); cursor:pointer;
+  padding:.5rem .95rem; border-radius:999px; transition:all .18s var(--ease); white-space:nowrap;
+}
+.switch button .jp{font-size:.92em; margin-right:.35em}
+.switch button:hover{color:var(--sumi)}
+.switch button[aria-pressed=true]{background:var(--sumi); color:var(--washi); box-shadow:0 2px 10px rgba(28,23,20,.3)}
+.switch-tag{position:fixed; z-index:50; bottom:14px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sumi-faint); background:rgba(243,236,220,.7); padding:.4rem .8rem; border-radius:999px; border:1px solid var(--line-soft)}
+
+/* ---------- shared ink primitives ---------- */
+.kicker{font-family:var(--serif); font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+  font-size:.7rem; color:var(--shu)}
+.brand-jp{font-family:var(--serif); color:var(--aizome)}
+/* hanko — the vermilion personal seal */
+.hanko{
+  display:inline-grid; place-items:center; width:74px; height:74px; flex:0 0 auto;
+  color:#f6ede0; font-family:var(--serif); font-weight:800; line-height:1; font-size:1.5rem;
+  background:
+    linear-gradient(135deg, var(--shu), var(--shu-deep));
+  border-radius:10px; transform:rotate(-4deg);
+  box-shadow:inset 0 0 0 3px rgba(246,237,224,.32), 0 4px 14px rgba(143,44,23,.34);
+  position:relative; writing-mode:vertical-rl; letter-spacing:.06em;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='r'%3E%3CfeTurbulence baseFrequency='.06' numOctaves='3'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='5'/%3E%3C/filter%3E%3Crect width='100' height='100' rx='12' filter='url(%23r)'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='r'%3E%3CfeTurbulence baseFrequency='.06' numOctaves='3'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='5'/%3E%3C/filter%3E%3Crect width='100' height='100' rx='12' filter='url(%23r)'/%3E%3C/svg%3E");
+}
+.hanko.sm{width:52px; height:52px; font-size:1.05rem; border-radius:8px}
+
+/* ink-wash sun disc */
+.sun-ink{position:absolute; border-radius:50%;
+  background:radial-gradient(circle at 38% 36%, rgba(182,57,31,.9), rgba(182,57,31,.66) 46%, rgba(143,44,23,.2) 72%, transparent 78%);
+  filter:blur(.4px); pointer-events:none}
+
+/* count numerals */
+.count{font-family:var(--mono); font-weight:700; line-height:.86; color:var(--sumi);
+  font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.count .unit{font-family:var(--serif); font-weight:600; letter-spacing:.04em}
+
+/* generic ink card */
+.ink-card{background:var(--washi); border:1px solid var(--line-soft); border-radius:13px;
+  padding:1.15rem 1.25rem; box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 10px 26px -18px rgba(28,23,20,.5);
+  transition:transform .26s var(--ease), box-shadow .26s var(--ease), border-color .26s var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .ink-card:hover{transform:translateY(-3px); border-color:var(--line); box-shadow:0 18px 36px -22px rgba(28,23,20,.6)}
+}
+.card-h{display:flex; align-items:baseline; gap:.5rem; margin:0 0 .65rem; font-family:var(--serif);
+  font-weight:700; font-size:.82rem; letter-spacing:.04em; color:var(--sumi)}
+.card-h .jp{font-size:.78rem; color:var(--aizome); font-weight:600; margin-left:auto; letter-spacing:.08em}
+.row{display:flex; align-items:baseline; gap:.6rem; padding:.4rem 0; border-bottom:1px dotted var(--line-soft)}
+.row:last-child{border-bottom:0}
+.row .d{font-family:var(--mono); font-size:.68rem; color:var(--shu); font-weight:700; min-width:3.4em}
+.row .t{font-family:var(--serif-en); font-size:.92rem; color:var(--sumi-soft); flex:1}
+.row .when{font-family:var(--mono); font-size:.62rem; color:var(--sumi-faint)}
+
+.pill{display:inline-flex; align-items:center; gap:.35em; font-family:var(--sans); font-size:.74rem;
+  padding:.32rem .7rem; border-radius:999px; background:rgba(44,62,92,.08); color:var(--aizome);
+  border:1px solid rgba(44,62,92,.16); transition:all .2s var(--ease)}
+@media (hover:hover) and (pointer:fine){ .pill:hover{background:var(--aizome); color:var(--washi); transform:translateY(-2px)} }
+
+/* progress meter */
+.meter{height:7px; border-radius:99px; background:rgba(28,23,20,.1); overflow:hidden}
+.meter i{display:block; height:100%; border-radius:99px;
+  background:linear-gradient(90deg, var(--aizome), var(--aizome-ink)); transition:width 1s var(--ease)}
+
+/* nav (ink underline) */
+.inknav{display:flex; flex-wrap:wrap; gap:.2rem}
+.inknav a{font-family:var(--serif); font-size:.86rem; color:var(--sumi-soft); text-decoration:none;
+  padding:.45rem .7rem; position:relative; transition:color .2s var(--ease)}
+.inknav a .jp{color:var(--sumi-faint); font-size:.78em; margin-right:.3em; transition:color .2s var(--ease)}
+.inknav a::after{content:""; position:absolute; left:.7rem; right:.7rem; bottom:.28rem; height:2px;
+  background:var(--shu); transform:scaleX(0); transform-origin:left; transition:transform .28s var(--ease-move)}
+.inknav a:hover{color:var(--sumi)} .inknav a:hover .jp{color:var(--shu)}
+.inknav a:hover::after{transform:scaleX(1)}
+.inknav a.cur{color:var(--sumi)} .inknav a.cur::after{transform:scaleX(1)}
+
+/* ---------- entrance ---------- */
+@keyframes rise{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
+@keyframes inkin{from{opacity:0; filter:blur(8px); transform:scale(.97)} to{opacity:1; filter:blur(0); transform:none}}
+.v[hidden]{display:none}
+.v.on .anim{animation:rise .6s var(--ease) both}
+.v.on .anim2{animation:inkin .9s var(--ease) both}
+.v.on [data-d]{animation:rise .55s var(--ease) both}
+.v.on [data-d="1"]{animation-delay:.05s}.v.on [data-d="2"]{animation-delay:.1s}
+.v.on [data-d="3"]{animation-delay:.15s}.v.on [data-d="4"]{animation-delay:.2s}
+.v.on [data-d="5"]{animation-delay:.25s}.v.on [data-d="6"]{animation-delay:.3s}
+.v.on [data-d="7"]{animation-delay:.35s}.v.on [data-d="8"]{animation-delay:.4s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+.wrap{max-width:1080px; margin:0 auto; padding:92px 26px 110px}
+
+/* ============================================================
+   A · 掛物 KAKEMONO — hanging scroll, countdown is the hero
+   ============================================================ */
+#A .scroll-top{display:grid; grid-template-columns:auto 1fr; gap:1.6rem; align-items:start}
+#A .tate{writing-mode:vertical-rl; font-family:var(--serif); font-weight:700; font-size:1.5rem;
+  letter-spacing:.32em; color:var(--sumi); height:100%; padding-top:.4rem;
+  border-left:2px solid var(--line); padding-left:.4rem}
+#A .tate small{font-family:var(--mono); font-size:.6rem; letter-spacing:.2em; color:var(--shu); writing-mode:horizontal-tb}
+#A .hero{position:relative; padding:1.2rem 0 .4rem; min-height:300px}
+#A .hero .sun-ink{width:340px; height:340px; right:-30px; top:-40px; opacity:.9}
+#A .hero .kicker{margin:0 0 .5rem}
+#A .hero h1{font-family:var(--serif); font-weight:800; font-size:clamp(2.1rem,5vw,3.2rem);
+  line-height:1.04; margin:.1rem 0 .2rem; letter-spacing:-.01em}
+#A .hero .sub{font-family:var(--serif-en); font-style:italic; font-size:1.06rem; color:var(--sumi-soft); max-width:42ch; margin:.4rem 0 0}
+#A .bignum{display:flex; align-items:flex-end; gap:1rem; margin:1.3rem 0 .2rem}
+#A .bignum .count{font-size:clamp(4.4rem,15vw,8.6rem)}
+#A .bignum .meta{padding-bottom:1.1rem}
+#A .bignum .unit{display:block; font-family:var(--serif); font-size:1.15rem; color:var(--sumi); letter-spacing:.05em}
+#A .bignum .date{font-family:var(--mono); font-size:.72rem; color:var(--sumi-faint); margin-top:.2rem; letter-spacing:.08em}
+#A .rule{height:1px; background:linear-gradient(90deg, var(--line), transparent); margin:2.6rem 0 1.8rem}
+#A .chap-h{font-family:var(--serif); font-weight:700; letter-spacing:.04em; font-size:1rem; margin:0 0 1rem; display:flex; align-items:baseline; gap:.6rem}
+#A .chap-h .jp{color:var(--aizome); font-size:.9rem} #A .chap-h .ln{flex:1; height:1px; background:var(--line-soft)}
+#A .mt-row{display:flex; flex-wrap:wrap; gap:.55rem; margin-bottom:2.4rem}
+#A .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:1.1rem}
+
+/* ============================================================
+   B · 縁側 ENGAWA — veranda split, joy left / function right
+   ============================================================ */
+#B .split{display:grid; grid-template-columns:1.05fr .95fr; gap:2.4rem; align-items:stretch}
+#B .left{position:relative}
+#B .left .sun-ink{width:230px; height:230px; left:-44px; top:-54px; opacity:.8}
+#B .left .top{display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem}
+#B .left h1{font-family:var(--serif); font-weight:800; font-size:clamp(1.9rem,4vw,2.7rem); line-height:1.05; margin:0}
+#B .left .brand-jp{display:block; font-size:.92rem; letter-spacing:.16em; margin-bottom:.15rem}
+#B .left .sub{font-family:var(--serif-en); font-style:italic; color:var(--sumi-soft); font-size:1.02rem; max-width:34ch; margin:.2rem 0 1.7rem}
+#B .countbox{display:flex; align-items:flex-end; gap:.9rem; padding:1.3rem 0 1.5rem; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+#B .countbox .count{font-size:clamp(3.4rem,9vw,5.6rem)}
+#B .countbox .lab{padding-bottom:.7rem}
+#B .countbox .lab b{display:block; font-family:var(--serif); font-size:1rem; color:var(--sumi)}
+#B .countbox .lab span{font-family:var(--mono); font-size:.66rem; color:var(--sumi-faint); letter-spacing:.06em}
+#B .left .mt{margin-top:1.5rem}
+#B .left .mt .lab{font-family:var(--serif); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sumi-faint); margin:0 0 .7rem}
+#B .left .mt-row{display:flex; flex-wrap:wrap; gap:.5rem}
+#B .right{display:flex; flex-direction:column; gap:1.05rem}
+#B .today-tag{font-family:var(--serif); font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  font-size:.72rem; color:var(--shu); display:flex; align-items:center; gap:.6rem; margin:.2rem 0 .1rem}
+#B .today-tag .ln{flex:1; height:1px; background:var(--line-soft)}
+
+/* ============================================================
+   C · 弁当 BENTO — zen centerpiece + tight tile grid
+   ============================================================ */
+#C{text-align:center}
+#C .center{position:relative; padding:1.4rem 0 2.2rem}
+#C .center .sun-ink{width:280px; height:280px; left:50%; top:-46px; transform:translateX(-50%); opacity:.5}
+#C .seal{margin:0 auto 1.1rem; display:flex; justify-content:center}
+#C h1{font-family:var(--serif); font-weight:800; font-size:clamp(1.9rem,4.4vw,2.8rem); margin:.2rem 0 .1rem; letter-spacing:-.01em}
+#C .brand-jp{font-size:1rem; letter-spacing:.2em}
+#C .sub{font-family:var(--serif-en); font-style:italic; color:var(--sumi-soft); font-size:1.04rem; margin:.5rem auto 0; max-width:46ch}
+#C .bignum{display:inline-flex; align-items:flex-end; gap:.8rem; margin:1.5rem 0 .3rem}
+#C .bignum .count{font-size:clamp(3.6rem,11vw,6.4rem)}
+#C .bignum .lab{padding-bottom:.8rem; text-align:left}
+#C .bignum .lab b{display:block; font-family:var(--serif); font-size:1rem}
+#C .bignum .lab span{font-family:var(--mono); font-size:.64rem; color:var(--sumi-faint); letter-spacing:.06em}
+#C .mt-scroll{display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:1rem auto 2.4rem; max-width:760px}
+#C .bento{display:grid; gap:1rem; text-align:left;
+  grid-template-columns:repeat(6,1fr); grid-auto-rows:minmax(118px,auto)}
+#C .bento .ink-card{display:flex; flex-direction:column}
+#C .b-wide{grid-column:span 3} #C .b-tall{grid-column:span 2; grid-row:span 2}
+#C .b-3{grid-column:span 2} #C .b-2{grid-column:span 2} #C .b-4{grid-column:span 4}
+#C .bento .big{font-family:var(--mono); font-weight:700; font-size:1.9rem; color:var(--sumi); line-height:1; margin-top:auto}
+#C .bento .big small{font-family:var(--serif); font-size:.8rem; color:var(--sumi-faint); font-weight:600}
+
+@media (max-width:860px){
+  #B .split{grid-template-columns:1fr}
+  #C .bento{grid-template-columns:repeat(2,1fr)}
+  #C .b-wide,#C .b-tall,#C .b-3,#C .b-2,#C .b-4{grid-column:span 2; grid-row:auto}
+  #A .scroll-top{grid-template-columns:1fr} #A .tate{writing-mode:horizontal-tb; border-left:0; border-bottom:2px solid var(--line); padding:0 0 .5rem}
+}
+@media (max-width:560px){ #C .bento{grid-template-columns:1fr} #C .b-wide,#C .b-tall,#C .b-3,#C .b-2,#C .b-4{grid-column:span 1} }
+</style>
+</head>
+<body>
+
+<div class="switch" role="tablist" aria-label="Front-page composition">
+  <button role="tab" data-v="A" aria-pressed="true"><span class="jp">掛物</span>Kakemono</button>
+  <button role="tab" data-v="B" aria-pressed="false"><span class="jp">縁側</span>Engawa</button>
+  <button role="tab" data-v="C" aria-pressed="false"><span class="jp">弁当</span>Bento</button>
+</div>
+<div class="switch-tag" id="tag">A · hanging scroll — the countdown is the hero · press 1·2·3</div>
+
+<div class="stage">
+
+<!-- ============ A · KAKEMONO ============ -->
+<section class="v on" id="A">
+  <div class="wrap">
+    <div class="scroll-top">
+      <div class="tate anim2">私の一年<br><small>2026—2027</small></div>
+      <div class="hero">
+        <div class="sun-ink anim2"></div>
+        <p class="kicker anim" data-d="1">My save file · Tokyo</p>
+        <h1 class="anim" data-d="2">My Year<br>in Japan</h1>
+        <p class="sub anim" data-d="3">Synths in Ochanomizu, Super Potato afternoons, listening bars, and meetups where I bring a build to show — plus the paperwork that keeps me here.</p>
+        <div class="bignum anim" data-d="4">
+          <span class="count" data-count>13</span>
+          <div class="meta">
+            <span class="unit">days until I land</span>
+            <span class="date">NRT · 2026-06-30 · 14:55</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <h2 class="chap-h anim" data-d="5"><span class="jp">私の東京</span>My Tokyo<span class="ln"></span></h2>
+    <div class="mt-row anim" data-d="5">
+      <span class="pill">🎹 Synth runs · Ochanomizu</span>
+      <span class="pill">🕹️ Super Potato</span>
+      <span class="pill">🎧 Listening bars</span>
+      <span class="pill">🛠️ Meetups · bring a build</span>
+      <span class="pill">🎮 Arcades</span>
+      <span class="pill">📺 Anime &amp; games</span>
+    </div>
+
+    <h2 class="chap-h anim" data-d="6"><span class="jp">今やること</span>On deck<span class="ln"></span></h2>
+    <div class="grid">
+      <div class="ink-card anim" data-d="6">
+        <h3 class="card-h">Next deadlines <span class="jp">締切</span></h3>
+        <div class="row"><span class="d">JUL</span><span class="t">Visa COE — act by</span><span class="when">~6 wk</span></div>
+        <div class="row"><span class="d">JUL</span><span class="t">Open Japan bank account</span><span class="when">on arrival</span></div>
+        <div class="row"><span class="d">AUG</span><span class="t">Pension / residence card</span><span class="when">~9 wk</span></div>
+      </div>
+      <div class="ink-card anim" data-d="7">
+        <h3 class="card-h">Going to <span class="jp">参加予定</span></h3>
+        <div class="row"><span class="d">SEP 19</span><span class="t">Ultra Japan 2026 · Odaiba</span><span class="when">in 94d</span></div>
+        <div class="row"><span class="d">JUL 26</span><span class="t">Sumida fireworks</span><span class="when">in 39d</span></div>
+      </div>
+      <div class="ink-card anim" data-d="8">
+        <h3 class="card-h">Checklist <span class="jp">進捗</span></h3>
+        <p style="margin:.1rem 0 .7rem; font-family:var(--mono); font-size:1.5rem; color:var(--sumi)">12<small style="font-size:.9rem; color:var(--sumi-faint)"> / 47</small></p>
+        <div class="meter"><i style="width:26%"></i></div>
+        <p style="margin:.6rem 0 0; font-size:.82rem; color:var(--sumi-faint)">3 due in the next 30 days</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ B · ENGAWA ============ -->
+<section class="v" id="B" hidden>
+  <div class="wrap">
+    <div class="split">
+      <div class="left">
+        <div class="sun-ink anim2"></div>
+        <div class="top anim" data-d="1">
+          <span class="hanko">私年</span>
+          <div>
+            <span class="brand-jp">私の一年</span>
+            <h1>My Year in Japan</h1>
+          </div>
+        </div>
+        <p class="sub anim" data-d="2">My save file for a year in Tokyo — the good stuff up top, the visa-and-bank paperwork handled below. Everything saves on this device.</p>
+        <div class="countbox anim" data-d="3">
+          <span class="count" data-count>13</span>
+          <div class="lab"><b>days until I land</b><span>NRT · 2026-06-30</span></div>
+        </div>
+        <div class="mt anim" data-d="4">
+          <p class="lab">My Tokyo · 私の東京</p>
+          <div class="mt-row">
+            <span class="pill">🎹 Synth runs</span>
+            <span class="pill">🕹️ Super Potato</span>
+            <span class="pill">🎧 Listening bars</span>
+            <span class="pill">🛠️ Meetups</span>
+            <span class="pill">🎮 Arcades</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <p class="today-tag anim" data-d="2">Needs me <span class="ln"></span> 今日</p>
+        <div class="ink-card anim" data-d="3">
+          <h3 class="card-h">Next deadlines <span class="jp">締切</span></h3>
+          <div class="row"><span class="d">JUL</span><span class="t">Visa COE — act by</span><span class="when">~6 wk</span></div>
+          <div class="row"><span class="d">JUL</span><span class="t">Open Japan bank account</span><span class="when">arrival</span></div>
+          <div class="row"><span class="d">AUG</span><span class="t">Pension / residence card</span><span class="when">~9 wk</span></div>
+        </div>
+        <div class="ink-card anim" data-d="4">
+          <h3 class="card-h">Book-by &amp; going <span class="jp">参加予定</span></h3>
+          <div class="row"><span class="d">SEP 19</span><span class="t">Ultra Japan — tickets live now</span><span class="when">book</span></div>
+          <div class="row"><span class="d">JUL 26</span><span class="t">Sumida fireworks</span><span class="when">in 39d</span></div>
+        </div>
+        <div class="ink-card anim" data-d="5">
+          <h3 class="card-h">Checklist <span class="jp">進捗</span></h3>
+          <div style="display:flex; align-items:flex-end; gap:1rem">
+            <p style="margin:0; font-family:var(--mono); font-size:1.7rem; color:var(--sumi)">12<small style="font-size:.85rem; color:var(--sumi-faint)"> / 47</small></p>
+            <div style="flex:1"><div class="meter"><i style="width:26%"></i></div>
+            <p style="margin:.5rem 0 0; font-size:.78rem; color:var(--sumi-faint)">3 due in 30 days · next: register address</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ C · BENTO ============ -->
+<section class="v" id="C" hidden>
+  <div class="wrap">
+    <div class="center">
+      <div class="sun-ink anim2"></div>
+      <div class="seal anim" data-d="1"><span class="hanko sm">私年</span></div>
+      <span class="brand-jp anim" data-d="1">私の一年</span>
+      <h1 class="anim" data-d="2">My Year in Japan</h1>
+      <p class="sub anim" data-d="2">Synths, arcades, shipping code at 2am JST — and the paperwork that keeps me here.</p>
+      <div class="bignum anim" data-d="3">
+        <span class="count" data-count>13</span>
+        <div class="lab"><b>days until I land</b><span>NRT · 2026-06-30</span></div>
+      </div>
+    </div>
+
+    <div class="mt-scroll anim" data-d="4">
+      <span class="pill">🎹 Synth runs</span>
+      <span class="pill">🕹️ Super Potato</span>
+      <span class="pill">🎧 Listening bars</span>
+      <span class="pill">🛠️ Meetups</span>
+      <span class="pill">🎮 Arcades</span>
+      <span class="pill">📺 Anime &amp; games</span>
+    </div>
+
+    <div class="bento">
+      <div class="ink-card b-tall anim" data-d="5">
+        <h3 class="card-h">Next deadlines <span class="jp">締切</span></h3>
+        <div class="row"><span class="d">JUL</span><span class="t">Visa COE — act by</span></div>
+        <div class="row"><span class="d">JUL</span><span class="t">Bank account</span></div>
+        <div class="row"><span class="d">AUG</span><span class="t">Pension / residence</span></div>
+        <div class="row"><span class="d">SEP</span><span class="t">Health insurance</span></div>
+      </div>
+      <div class="ink-card b-wide anim" data-d="5">
+        <h3 class="card-h">Going to <span class="jp">参加予定</span></h3>
+        <div class="row"><span class="d">SEP 19</span><span class="t">Ultra Japan 2026 · Odaiba</span><span class="when">in 94d</span></div>
+        <div class="row"><span class="d">JUL 26</span><span class="t">Sumida fireworks</span><span class="when">in 39d</span></div>
+      </div>
+      <div class="ink-card b-3 anim" data-d="6">
+        <h3 class="card-h">Checklist <span class="jp">進捗</span></h3>
+        <span class="big">26%<small> · 12/47</small></span>
+        <div class="meter" style="margin-top:.6rem"><i style="width:26%"></i></div>
+      </div>
+      <div class="ink-card b-3 anim" data-d="6">
+        <h3 class="card-h">Day plan <span class="jp">一日</span></h3>
+        <span class="big" style="font-size:1.15rem; font-family:var(--serif); margin-top:.4rem">Akihabara crawl</span>
+        <p style="margin:.4rem 0 0; font-size:.8rem; color:var(--sumi-faint)">4 stops · Super Potato → listening bar</p>
+      </div>
+      <div class="ink-card b-2 anim" data-d="7">
+        <h3 class="card-h">Book-by <span class="jp">先行</span></h3>
+        <div class="row"><span class="d">NOW</span><span class="t">Ultra tickets</span></div>
+      </div>
+      <div class="ink-card b-4 anim" data-d="7">
+        <h3 class="card-h">Upcoming <span class="jp">予定</span></h3>
+        <div class="row"><span class="d">JUL 7</span><span class="t">Tanabata · Zōjō-ji</span><span class="when">in 20d</span></div>
+        <div class="row"><span class="d">AUG 2</span><span class="t">Asakusa Samba</span><span class="when">in 46d</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /stage -->
+
+<script>
+const ARRIVAL = new Date('2026-06-30T14:55:00+09:00');
+function tick(){
+  const now = new Date();
+  const days = Math.max(0, Math.ceil((ARRIVAL - now)/86400000));
+  document.querySelectorAll('[data-count]').forEach(el=>el.textContent = days);
+}
+tick(); setInterval(tick, 60000);
+
+const TAGS = {
+  A:'A · hanging scroll — the countdown is the hero · press 1·2·3',
+  B:'B · veranda split — joy on the left, what-needs-me on the right · press 1·2·3',
+  C:'C · bento — a calm centerpiece over a tile grid · press 1·2·3',
+};
+function show(v){
+  document.querySelectorAll('.v').forEach(s=>{ const on = s.id===v; s.hidden=!on; s.classList.toggle('on',on); });
+  document.querySelectorAll('.switch button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===v));
+  document.getElementById('tag').textContent = TAGS[v];
+  // retrigger entrance
+  const sec = document.getElementById(v); sec.classList.remove('on'); void sec.offsetWidth; sec.classList.add('on');
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('.switch button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+addEventListener('keydown',e=>{ if(e.key==='1')show('A'); if(e.key==='2')show('B'); if(e.key==='3')show('C'); });
+</script>
+</body>
+</html>

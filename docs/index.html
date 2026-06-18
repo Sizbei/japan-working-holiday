@@ -30,7 +30,7 @@
 <!-- Top bar: countdown (left) · notifications bell + theme (top-right) -->
 <div class="topbar">
   <a class="topbar-brand" href="#main"><span class="tb-sun" aria-hidden="true"></span> <span data-i18n="brand">My Year in Japan</span></a>
-  <span class="countdown" id="countdown" role="status" aria-live="polite"></span>
+  <span class="countdown" id="countdown" aria-hidden="true"></span>
   <div class="topbar-right">
     <div class="bell-wrap">
       <button id="notifBell" class="bell" type="button" aria-label="Notifications" aria-expanded="false" aria-haspopup="true">
@@ -66,25 +66,40 @@
 
 <main id="main">
   <div class="view" id="view-dashboard" data-route="dashboard">
-  <p class="intro">
-    My save file for a year in Tokyo. The good stuff up top — Ochanomizu synth runs, Super Potato
-    afternoons, listening bars, and meetups where I bring a build to show. The <em>visa, bank, and
-    pension paperwork</em> lives below, sourced and handled. Everything saves right here on this device.
-  </p>
 
+  <!-- ===== HERO: the countdown is the hero (spec A·Kakemono) ===== -->
+  <section class="dash-hero" aria-labelledby="heroTitleH">
+    <div class="scroll-rail" aria-hidden="true">私の一年<small>2026—2027</small></div>
+    <div class="dash-hero-main">
+      <div class="sun-ink" aria-hidden="true"></div>
+      <p class="dash-kicker">My save file · Tokyo</p>
+      <h2 id="heroTitleH" class="dash-h1">My Year<br>in Japan</h2>
+      <p class="dash-sub">Synths in Ochanomizu, Super Potato afternoons, listening bars, and meetups where I bring a build to show — plus the paperwork that keeps me here.</p>
+      <div class="hero-count" id="heroCount" role="status" aria-live="polite">
+        <span class="hc-num count">—</span>
+        <span class="hc-meta"><span class="hc-unit"></span><span class="hc-date">NRT · 2026-06-30</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEEDS ME: promoted essentials (spec B·Engawa strip) ===== -->
+  <section class="needs-me" aria-label="What needs me">
+    <div class="widget" id="wDeadlines"><h3 class="widget-h"><span aria-hidden="true">⚖️</span> Next deadlines</h3><div class="widget-body"></div></div>
+    <div class="widget" id="wGoing"><h3 class="widget-h"><span aria-hidden="true">🎫</span> Going to</h3><div class="widget-body"></div></div>
+    <div class="widget" id="wProgress"><h3 class="widget-h"><span aria-hidden="true">✅</span> Checklist</h3><div class="widget-body"></div></div>
+  </section>
+
+  <!-- ===== MY TOKYO (kept, re-skinned via CSS) ===== -->
   <section id="myTokyo" aria-labelledby="myTokyoH">
-    <div class="mt-head"><span class="mt-mark" aria-hidden="true"></span><h2 id="myTokyoH">MY TOKYO</h2></div>
+    <div class="mt-head"><span class="mt-mark" aria-hidden="true"></span><h2 id="myTokyoH">My Tokyo</h2></div>
     <div class="mt-grid" id="myTokyoGrid"></div>
   </section>
 
-  <!-- ============ DASHBOARD HOME ============ -->
-  <section id="dashHome" class="dash">
-    <div class="widget" id="wGoing"><h3 class="widget-h"><span aria-hidden="true">🎫</span> Going to</h3><div class="widget-body"></div></div>
-    <div class="widget" id="wDeadlines"><h3 class="widget-h"><span aria-hidden="true">⚖️</span> Next deadlines</h3><div class="widget-body"></div></div>
-    <div class="widget" id="wEvents"><h3 class="widget-h"><span aria-hidden="true">📅</span> Upcoming events</h3><div class="widget-body"></div></div>
-    <div class="widget" id="wBookBy"><h3 class="widget-h"><span aria-hidden="true">🎟️</span> Book-by alerts</h3><div class="widget-body"></div></div>
-    <div class="widget" id="wProgress"><h3 class="widget-h"><span aria-hidden="true">✅</span> Checklist</h3><div class="widget-body"></div></div>
-    <div class="widget" id="wPlan"><h3 class="widget-h"><span aria-hidden="true">🗺️</span> Your day plan</h3><div class="widget-body"></div></div>
+  <!-- ===== TEASERS: demoted content, one line each ===== -->
+  <section class="dash-teasers" aria-label="More">
+    <div class="teaser" id="tBookBy"><span class="teaser-h"><span aria-hidden="true">🎟️</span> Book-by</span><div class="teaser-body"></div></div>
+    <div class="teaser" id="tEvents"><span class="teaser-h"><span aria-hidden="true">📅</span> Upcoming</span><div class="teaser-body"></div></div>
+    <div class="teaser" id="tPlan"><span class="teaser-h"><span aria-hidden="true">🗺️</span> Day plan</span><div class="teaser-body"></div></div>
   </section>
 
   </div><!-- /view-dashboard -->

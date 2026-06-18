@@ -1769,3 +1769,71 @@ html[data-reduce-motion="on"] *::after{
 }
 /* a softer hairline used by the dashboard ink surfaces */
 #view-dashboard{ --line-faint: color-mix(in srgb, var(--line) 60%, transparent); }
+
+/* ---- hero ---- */
+#view-dashboard{ padding-top: var(--s4); }
+#view-dashboard .dash-hero{
+  position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.6rem;
+  align-items: start; border-radius: var(--r-md); padding: 1.6rem 1.4rem 1.8rem; overflow: hidden;
+  border: 1px solid var(--line-faint);
+}
+#view-dashboard .scroll-rail{
+  writing-mode: vertical-rl; font-family: var(--serif-jp); font-weight: 700; font-size: 1.4rem;
+  letter-spacing: .3em; color: var(--ink); border-left: 2px solid var(--line); padding-left: .4rem;
+  display: flex; flex-direction: column; gap: .6rem;
+}
+#view-dashboard .scroll-rail small{ writing-mode: horizontal-tb; font-family: var(--mono); font-size: .58rem; letter-spacing: .18em; color: var(--shu); }
+#view-dashboard .dash-hero-main{ position: relative; z-index: 1; }
+#view-dashboard .sun-ink{
+  position: absolute; z-index: 0; width: 320px; height: 320px; right: -40px; top: -60px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, color-mix(in srgb, var(--shu) 78%, transparent), color-mix(in srgb, var(--shu) 30%, transparent) 55%, transparent 74%);
+  pointer-events: none;
+}
+#view-dashboard .dash-kicker{ font-family: var(--serif-jp); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: .72rem; color: var(--shu); margin: 0 0 .4rem; }
+#view-dashboard .dash-h1{ font-family: var(--serif-jp); font-weight: 800; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.05; margin: 0 0 .35rem; letter-spacing: -.01em; }
+#view-dashboard .dash-sub{ font-family: var(--serif); font-style: italic; font-size: 1.04rem; color: var(--ink-soft); max-width: 44ch; margin: 0; }
+#view-dashboard .hero-count{ display: flex; align-items: flex-end; gap: 1rem; margin-top: 1.3rem; }
+#view-dashboard .hc-num{ font-family: var(--mono); font-weight: 700; font-size: clamp(4rem, 14vw, 8rem); line-height: .86; letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+#view-dashboard .hero-count.arrived .hc-num{ color: var(--shu); }
+#view-dashboard .hc-meta{ display: flex; flex-direction: column; padding-bottom: 1rem; }
+#view-dashboard .hc-unit{ font-family: var(--serif-jp); font-size: 1.1rem; color: var(--ink); letter-spacing: .04em; }
+#view-dashboard .hc-date{ font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); letter-spacing: .06em; margin-top: .2rem; }
+
+/* ---- needs-me strip ---- */
+#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+#view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
+
+/* ---- my tokyo re-skin (CSS-only over existing .mt-card markup) ---- */
+#view-dashboard #myTokyo{ margin-top: var(--s6); }
+#view-dashboard .mt-card{ border-radius: var(--r-md); border: 1px solid var(--line-faint); }
+#view-dashboard .mt-eyebrow{ color: var(--shu); }
+
+/* ---- teasers ---- */
+#view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+#view-dashboard .teaser{ border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: .9rem 1rem; }
+#view-dashboard .teaser-h{ display: block; font-family: var(--mono); font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: .4rem; }
+#view-dashboard .teaser-body a{ font-family: var(--serif); font-size: .92rem; color: var(--ink); text-decoration: none; display: flex; justify-content: space-between; gap: .5rem; align-items: baseline; }
+#view-dashboard .teaser-go{ color: var(--shu); }
+@media (hover: hover) and (pointer: fine){ #view-dashboard .teaser:hover{ border-color: var(--line); } #view-dashboard .teaser:hover .teaser-body a{ color: var(--shu); } }
+
+/* ---- entrance (respect reduced motion) ---- */
+@keyframes dashRise{ from{ opacity: 0; transform: translateY(16px); } to{ opacity: 1; transform: none; } }
+#view-dashboard.is-active .dash-hero{ animation: dashRise .6s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .needs-me .widget{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .needs-me .widget:nth-child(2){ animation-delay: .05s; }
+#view-dashboard.is-active .needs-me .widget:nth-child(3){ animation-delay: .1s; }
+#view-dashboard.is-active .dash-teasers .teaser{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-child(2){ animation-delay: .05s; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-child(3){ animation-delay: .1s; }
+html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
+
+/* ---- responsive ---- */
+@media (max-width: 860px){
+  #view-dashboard .dash-hero{ grid-template-columns: 1fr; }
+  #view-dashboard .scroll-rail{ writing-mode: horizontal-tb; flex-direction: row; align-items: baseline; gap: 1rem; border-left: 0; border-bottom: 2px solid var(--line); padding: 0 0 .5rem; }
+  #view-dashboard .needs-me{ grid-template-columns: 1fr; }
+  #view-dashboard .dash-teasers{ grid-template-columns: 1fr; }
+}
+@media (max-width: 560px){
+  #view-dashboard .sun-ink{ width: 220px; height: 220px; right: -50px; }
+}

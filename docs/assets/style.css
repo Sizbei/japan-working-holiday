@@ -901,7 +901,7 @@ html.js-router .view.is-active { display: block; }
 .gate-mark{ width: 44px; height: 44px; }
 
 /* mono chrome (uppercase, tracked). Prose (.intro/.lede/h2 serif) untouched. */
-.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head, .mt-eyebrow{
+.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head{
   font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em;
 }
 .kind-tag, .trk-when, .w-when, .cp-badge, .due-tag, th, .badge, .phase-block .window, .agenda-cat, .cd-label{
@@ -931,17 +931,6 @@ html.js-router .view.is-active { display: block; }
 @media (hover: hover){ .crt:hover::before{ opacity: var(--crt-opacity); } }
 [data-arcade="on"] .crt::before{ opacity: var(--crt-opacity); }
 
-/* MY TOKYO dashboard band */
-#myTokyo{ max-width: var(--maxw); margin: 0 auto var(--s8); padding: 0 var(--gutter); }
-.mt-head{ display: flex; align-items: center; gap: .6rem; margin-bottom: var(--s4); }
-.mt-mark{ width: 22px; height: 22px; background: var(--hinomaru) center/contain no-repeat; display: inline-block; flex: none; }
-#myTokyoH{ font-family: var(--pixel); font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); letter-spacing: .06em; margin: 0; }
-.mt-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s4); }
-.mt-card{ text-decoration: none; color: var(--ink); display: block; }
-.mt-eyebrow{ display: block; font-size: .64rem; letter-spacing: .1em; margin-bottom: .3rem; }
-.mt-card.cat-gear .mt-eyebrow, .mt-card.cat-listen .mt-eyebrow{ color: var(--c-music-ink); }
-.mt-card.cat-arcade .mt-eyebrow{ color: var(--c-geek); }
-.mt-card.cat-build .mt-eyebrow{ color: var(--c-build); }
 
 /* per-pillar accents — my interests visually outrank logistics */
 #music .pillar-head::after{ background: var(--c-music); }
@@ -1392,7 +1381,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* --- prose comfort: looser leading on body copy --- */
 body { line-height: 1.7; }
-.finding .f-why, .card2 .c-detail, .ci-note, .lede, .mt-card, .top-card .t-reason,
+.finding .f-why, .card2 .c-detail, .ci-note, .lede, .top-card .t-reason,
 .modal-note, .pin-pop, .room-card p { line-height: 1.65; }
 
 /* --- calmer primary navigation: readable sans, larger target, not shouty mono --- */
@@ -1403,11 +1392,10 @@ body { line-height: 1.7; }
 .route-nav{ gap: .3rem; padding: .5rem var(--gutter); }
 
 /* --- calmer section/widget headings: sentence-case sans, clearer hierarchy --- */
-.widget-h, .trk-h, .cp-head, .mt-eyebrow{
+.widget-h, .trk-h, .cp-head{
   font-family: var(--sans); text-transform: none; letter-spacing: .01em;
 }
 .widget-h, .trk-h{ font-size: .9rem; font-weight: 700; color: var(--ink-soft); }
-.mt-eyebrow{ font-size: .72rem; letter-spacing: .04em; }
 
 /* --- lift the smallest text off the floor (was .58–.68rem ≈ 9–11px) --- */
 .kind-tag{ font-size: .7rem; }
@@ -1725,7 +1713,6 @@ html[data-reduce-motion="on"] *::after{
 }
 #view-dashboard .dash-hero,
 #view-dashboard .needs-me .widget,
-#view-dashboard .mt-card,
 #view-dashboard .teaser{
   background: color-mix(in srgb, var(--bg-soft) 80%, var(--ink-paper));
 }
@@ -1765,10 +1752,6 @@ html[data-reduce-motion="on"] *::after{
 #view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
 #view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
 
-/* ---- my tokyo re-skin (CSS-only over existing .mt-card markup) ---- */
-#view-dashboard #myTokyo{ margin-top: var(--s6); }
-#view-dashboard .mt-card{ border-radius: var(--r-md); border: 1px solid var(--line-faint); }
-#view-dashboard .mt-eyebrow{ color: var(--shu); }
 
 /* ---- teasers ---- */
 #view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
@@ -1829,17 +1812,14 @@ html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
 html[data-home="engawa"] #view-dashboard{
   display: grid; align-items: start;
   grid-template-columns: 1.05fr .95fr;
-  grid-template-areas: "hero needs" "tokyo tokyo" "teasers teasers";
+  grid-template-areas: "hero needs" "teasers teasers";
   column-gap: var(--s5); row-gap: var(--s5);
 }
 html[data-home="engawa"] #view-dashboard > .dash-hero{ grid-area: hero; }
 html[data-home="engawa"] #view-dashboard > .needs-me{ grid-area: needs; grid-template-columns: 1fr; margin-top: 0; }
-/* #myTokyo ships with `max-width + margin:0 auto`; on a grid item the auto margins
-   disable stretch (it collapses to content width + centers). Reset so it fills the row. */
-html[data-home="engawa"] #view-dashboard > #myTokyo{ grid-area: tokyo; margin: 0; max-width: none; padding: 0; }
 html[data-home="engawa"] #view-dashboard > .dash-teasers{ grid-area: teasers; margin-top: 0; }
 @media (max-width: 860px){
-  html[data-home="engawa"] #view-dashboard{ grid-template-columns: 1fr; grid-template-areas: "hero" "needs" "tokyo" "teasers"; }
+  html[data-home="engawa"] #view-dashboard{ grid-template-columns: 1fr; grid-template-areas: "hero" "needs" "teasers"; }
 }
 
 /* --- 弁当 BENTO: centered hero over a tile grid --- */
@@ -1853,7 +1833,6 @@ html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: repeat
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: span 6; }
-html[data-home="bento"] #view-dashboard #myTokyo .mt-head{ justify-content: center; }
 @media (max-width: 860px){
   html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: 1fr; }
   /* reset the bento spans at matching (:nth-of-type) specificity, else they force implicit columns */

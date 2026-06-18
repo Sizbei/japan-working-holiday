@@ -7,7 +7,6 @@ import { mountCalendar } from './calendar.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
-import { mountMyTokyo } from './dashboard-mytokyo.js';
 import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
 import { mountPlan } from './plan.js';
@@ -49,7 +48,6 @@ function boot() {
       mountTracker(data);
       renderContent(data, today);
       mountDashboard(data, today);   // reads calendar + content, so mount last
-      mountMyTokyo(data);            // surface my interests at the top of the dashboard
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)
       mountPlan(data);               // day itinerary planner (#/plan)

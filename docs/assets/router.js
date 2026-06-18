@@ -40,6 +40,8 @@ function activate(route, { scroll = true } = {}) {
   const target = document.getElementById('view-' + route);
   if (!target) return;
   document.title = TITLES[route] ? `${TITLES[route]} · ${SITE}` : SITE;
+  const rh = document.getElementById('routeH1');
+  if (rh) { rh.hidden = route === 'dashboard'; rh.textContent = TITLES[route] || SITE; }
   transitionView(() => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('is-active'));
     target.classList.add('is-active');

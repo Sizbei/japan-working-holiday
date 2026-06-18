@@ -164,10 +164,6 @@ body {
 }
 
 /* ---- Hero ---- */
-.hero {
-  position: relative; text-align: center; padding: 5rem 1.5rem 3rem;
-  max-width: var(--maxw); margin: 0 auto; z-index: 1;
-}
 .theme-toggle {
   position: absolute; top: 1.25rem; right: 1.25rem;
   background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink);
@@ -175,24 +171,12 @@ body {
   box-shadow: var(--shadow); transition: transform .2s;
 }
 .theme-toggle:hover { transform: scale(1.08) rotate(-12deg); }
-.hero-mark { display: flex; justify-content: center; margin-bottom: 1.5rem; }
 .sun {
   display: block; width: 64px; height: 64px; border-radius: 50%;
   background: var(--red);
   box-shadow: 0 0 0 0 rgba(188,0,45,.4); animation: pulse 3.5s ease-in-out infinite;
 }
 @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(188,0,45,.35); } 50% { box-shadow: 0 0 0 18px rgba(188,0,45,0); } }
-.hero-kicker { font-size: .8rem; letter-spacing: .35em; text-transform: uppercase; color: var(--indigo); margin: 0 0 .5rem; font-weight: 700; }
-.hero h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.4rem, 7vw, 4rem); margin: 0; letter-spacing: -.02em; line-height: 1.05; }
-.hero-sub { font-size: 1.15rem; color: var(--ink-soft); margin: .75rem 0 0; }
-.hero-status {
-  display: inline-block; margin-top: 1.25rem; padding: .5rem 1rem; border-radius: 100px;
-  background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--gold-ink);
-  font-size: .85rem; font-weight: 500; border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
-}
-.hero-status:empty { display: none; }
-.hero-meta { margin-top: 1.5rem; font-size: .85rem; color: var(--ink-soft); }
-.hero-meta .dot { margin: 0 .5rem; opacity: .5; }
 
 /* ---- TOC ---- */
 .toc {
@@ -285,7 +269,6 @@ footer { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid va
 .disclaimer { font-size: .78rem; opacity: .8; max-width: 540px; margin: .75rem auto 0; }
 
 @media (max-width: 600px) {
-  .hero { padding-top: 3.5rem; }
   .block { padding: 1.25rem; }
   .controls { flex-direction: column; align-items: stretch; }
 }
@@ -383,7 +366,6 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 
 /* mobile niceties */
 @media (max-width: 559px) {
-  .hero { padding-top: 3rem; }
   /* TOC wraps to multiple rows on narrow screens, so a fixed sticky offset
      would collide with it — keep the progress bar in flow instead. */
   .check-progress { position: static; top: auto; gap: var(--s2); padding: var(--s2) var(--s3); }
@@ -843,11 +825,9 @@ html.js-router .view { display: none; }
 html.js-router .view.is-active { display: block; }
 
 .route-nav {
-  position: sticky; top: var(--header-h); z-index: 20;
-  display: flex; gap: .25rem; justify-content: center; flex-wrap: wrap; align-items: center;
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  -webkit-backdrop-filter: saturate(1.3) blur(8px);
-  backdrop-filter: saturate(1.3) blur(8px);
+  position: static; z-index: 20;
+  display: flex; gap: .15rem; justify-content: flex-start; flex-wrap: wrap; align-items: center;
+  background: var(--bg);
   padding: .4rem var(--gutter); border-bottom: 1px solid var(--line);
 }
 .route-nav a {
@@ -855,17 +835,14 @@ html.js-router .view.is-active { display: block; }
   text-decoration: none; padding: .45rem .9rem; border-radius: var(--r-pill);
   transition: background var(--t-hover), color var(--t-hover), transform var(--t-hover);
 }
-.route-nav a:hover { color: var(--ink); background: var(--bg-soft); }
+.route-nav a:hover { color: var(--ink); }
 .route-nav a:active { transform: scale(var(--press-scale)); }
-.route-nav a[aria-current="page"] { color: var(--on-accent); background: var(--red); }
-
-/* hero is now a persistent header — trim it so it doesn't dominate every route */
-.hero { padding: 2.75rem var(--gutter) 1.75rem; }
+.route-nav a[aria-current="page"] { color: var(--ink); font-weight: 800; }
+.route-nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* stable regions keep their own snapshot — only the active view cross-fades */
 .topbar    { view-transition-name: jwh-topbar; }
 .route-nav { view-transition-name: jwh-routenav; }
-.hero      { view-transition-name: jwh-hero; }
 ::view-transition-old(root), ::view-transition-new(root) {
   animation-duration: var(--dur-2); animation-timing-function: var(--ease-out);
 }
@@ -920,19 +897,16 @@ html.js-router .view.is-active { display: block; }
   background: var(--hinomaru) center/contain no-repeat !important;
   border-radius: 0 !important; border: none !important; box-shadow: none !important;
 }
-.hero-mark .sun{ width: 60px; height: 60px; animation: none; }
 .tb-sun{ width: 15px; height: 15px; }
 .gate-mark{ width: 44px; height: 44px; }
 
 /* mono chrome (uppercase, tracked). Prose (.intro/.lede/h2 serif) untouched. */
-.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head, .mt-eyebrow{
+.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head{
   font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em;
 }
 .kind-tag, .trk-when, .w-when, .cp-badge, .due-tag, th, .badge, .phase-block .window, .agenda-cat, .cd-label{
   font-family: var(--mono); letter-spacing: .02em;
 }
-.hero-kicker{ font-family: var(--pixel); letter-spacing: .16em; font-size: 1.05rem; }
-
 /* score countdown — recessed LCD plate, pixel digits, mono label */
 .countdown{
   font-family: var(--mono);
@@ -957,17 +931,6 @@ html.js-router .view.is-active { display: block; }
 @media (hover: hover){ .crt:hover::before{ opacity: var(--crt-opacity); } }
 [data-arcade="on"] .crt::before{ opacity: var(--crt-opacity); }
 
-/* MY TOKYO dashboard band */
-#myTokyo{ max-width: var(--maxw); margin: 0 auto var(--s8); padding: 0 var(--gutter); }
-.mt-head{ display: flex; align-items: center; gap: .6rem; margin-bottom: var(--s4); }
-.mt-mark{ width: 22px; height: 22px; background: var(--hinomaru) center/contain no-repeat; display: inline-block; flex: none; }
-#myTokyoH{ font-family: var(--pixel); font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); letter-spacing: .06em; margin: 0; }
-.mt-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s4); }
-.mt-card{ text-decoration: none; color: var(--ink); display: block; }
-.mt-eyebrow{ display: block; font-size: .64rem; letter-spacing: .1em; margin-bottom: .3rem; }
-.mt-card.cat-gear .mt-eyebrow, .mt-card.cat-listen .mt-eyebrow{ color: var(--c-music-ink); }
-.mt-card.cat-arcade .mt-eyebrow{ color: var(--c-geek); }
-.mt-card.cat-build .mt-eyebrow{ color: var(--c-build); }
 
 /* per-pillar accents — my interests visually outrank logistics */
 #music .pillar-head::after{ background: var(--c-music); }
@@ -1002,10 +965,6 @@ html.js-router .view.is-active { display: block; }
   .route-nav a{ flex: 1; text-align: center; font-size: .58rem; padding: .45rem .15rem; border-radius: var(--r-sm); }
   .route-nav a[aria-current="page"]{ background: transparent; color: var(--red); }
   #main{ padding-bottom: 3.5rem; }   /* clear the bottom bar */
-  /* tighter hero so MY TOKYO is reachable without a full-screen scroll */
-  .hero{ padding: 1.4rem var(--gutter) .9rem; }
-  .hero-mark .sun{ width: 44px; height: 44px; }
-  .hero-kicker{ font-size: .9rem; }
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1422,7 +1381,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* --- prose comfort: looser leading on body copy --- */
 body { line-height: 1.7; }
-.finding .f-why, .card2 .c-detail, .ci-note, .lede, .mt-card, .top-card .t-reason,
+.finding .f-why, .card2 .c-detail, .ci-note, .lede, .top-card .t-reason,
 .modal-note, .pin-pop, .room-card p { line-height: 1.65; }
 
 /* --- calmer primary navigation: readable sans, larger target, not shouty mono --- */
@@ -1433,11 +1392,10 @@ body { line-height: 1.7; }
 .route-nav{ gap: .3rem; padding: .5rem var(--gutter); }
 
 /* --- calmer section/widget headings: sentence-case sans, clearer hierarchy --- */
-.widget-h, .trk-h, .cp-head, .mt-eyebrow{
+.widget-h, .trk-h, .cp-head{
   font-family: var(--sans); text-transform: none; letter-spacing: .01em;
 }
 .widget-h, .trk-h{ font-size: .9rem; font-weight: 700; color: var(--ink-soft); }
-.mt-eyebrow{ font-size: .72rem; letter-spacing: .04em; }
 
 /* --- lift the smallest text off the floor (was .58–.68rem ≈ 9–11px) --- */
 .kind-tag{ font-size: .7rem; }
@@ -1755,7 +1713,6 @@ html[data-reduce-motion="on"] *::after{
 }
 #view-dashboard .dash-hero,
 #view-dashboard .needs-me .widget,
-#view-dashboard .mt-card,
 #view-dashboard .teaser{
   background: color-mix(in srgb, var(--bg-soft) 80%, var(--ink-paper));
 }
@@ -1795,10 +1752,6 @@ html[data-reduce-motion="on"] *::after{
 #view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
 #view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
 
-/* ---- my tokyo re-skin (CSS-only over existing .mt-card markup) ---- */
-#view-dashboard #myTokyo{ margin-top: var(--s6); }
-#view-dashboard .mt-card{ border-radius: var(--r-md); border: 1px solid var(--line-faint); }
-#view-dashboard .mt-eyebrow{ color: var(--shu); }
 
 /* ---- teasers ---- */
 #view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
@@ -1841,10 +1794,6 @@ html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 @media (hover: hover) and (pointer: fine){ .route-nav a:hover::after{ transform: scaleX(1); } }
 html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
 
-/* On the dashboard the bespoke ink hero IS the hero, so hide the global masthead
-   there to avoid a duplicate "My Year in Japan" title. Other routes keep the masthead. */
-html:has(#view-dashboard.is-active) header.hero{ display: none; }
-
 /* ============================================================
    HOME LAYOUT THEMES — same dashboard DOM, three compositions,
    chosen in Settings via html[data-home]. (lib/homelayout.js)
@@ -1863,17 +1812,14 @@ html:has(#view-dashboard.is-active) header.hero{ display: none; }
 html[data-home="engawa"] #view-dashboard{
   display: grid; align-items: start;
   grid-template-columns: 1.05fr .95fr;
-  grid-template-areas: "hero needs" "tokyo tokyo" "teasers teasers";
+  grid-template-areas: "hero needs" "teasers teasers";
   column-gap: var(--s5); row-gap: var(--s5);
 }
 html[data-home="engawa"] #view-dashboard > .dash-hero{ grid-area: hero; }
 html[data-home="engawa"] #view-dashboard > .needs-me{ grid-area: needs; grid-template-columns: 1fr; margin-top: 0; }
-/* #myTokyo ships with `max-width + margin:0 auto`; on a grid item the auto margins
-   disable stretch (it collapses to content width + centers). Reset so it fills the row. */
-html[data-home="engawa"] #view-dashboard > #myTokyo{ grid-area: tokyo; margin: 0; max-width: none; padding: 0; }
 html[data-home="engawa"] #view-dashboard > .dash-teasers{ grid-area: teasers; margin-top: 0; }
 @media (max-width: 860px){
-  html[data-home="engawa"] #view-dashboard{ grid-template-columns: 1fr; grid-template-areas: "hero" "needs" "tokyo" "teasers"; }
+  html[data-home="engawa"] #view-dashboard{ grid-template-columns: 1fr; grid-template-areas: "hero" "needs" "teasers"; }
 }
 
 /* --- 弁当 BENTO: centered hero over a tile grid --- */
@@ -1887,7 +1833,6 @@ html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: repeat
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: span 6; }
-html[data-home="bento"] #view-dashboard #myTokyo .mt-head{ justify-content: center; }
 @media (max-width: 860px){
   html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: 1fr; }
   /* reset the bento spans at matching (:nth-of-type) specificity, else they force implicit columns */

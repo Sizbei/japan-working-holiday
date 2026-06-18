@@ -44,14 +44,6 @@
   </div>
 </div>
 
-<header class="hero">
-  <div class="hero-mark" aria-hidden="true"><span class="sun"></span></div>
-  <p class="hero-kicker" lang="ja" aria-hidden="true">私の一年 · ワーキングホリデー</p>
-  <h1 id="heroTitle">My Year in Japan</h1>
-  <p class="hero-sub" id="heroSub">Synths, arcades, shipping code at 2am JST — plus the paperwork that keeps me here.</p>
-  <div class="hero-meta"><span id="metaArrival"></span></div>
-</header>
-
 <nav class="route-nav" id="routeNav" aria-label="Primary navigation">
   <a href="#/dashboard" data-route="dashboard" data-i18n="dashboard">Dashboard</a>
   <a href="#/calendar" data-route="calendar" data-i18n="calendar">Calendar</a>
@@ -65,6 +57,7 @@
 </nav>
 
 <main id="main">
+  <h1 id="routeH1" class="sr-only"></h1>
   <div class="view" id="view-dashboard" data-route="dashboard">
 
   <!-- ===== HERO: the countdown is the hero (spec A·Kakemono) ===== -->
@@ -88,12 +81,6 @@
     <div class="widget" id="wDeadlines"><h3 class="widget-h"><span aria-hidden="true">⚖️</span> Next deadlines</h3><div class="widget-body"></div></div>
     <div class="widget" id="wGoing"><h3 class="widget-h"><span aria-hidden="true">🎫</span> Going to</h3><div class="widget-body"></div></div>
     <div class="widget" id="wProgress"><h3 class="widget-h"><span aria-hidden="true">✅</span> Checklist</h3><div class="widget-body"></div></div>
-  </section>
-
-  <!-- ===== MY TOKYO (kept, re-skinned via CSS) ===== -->
-  <section id="myTokyo" aria-labelledby="myTokyoH">
-    <div class="mt-head"><span class="mt-mark" aria-hidden="true"></span><h2 id="myTokyoH">My Tokyo</h2></div>
-    <div class="mt-grid" id="myTokyoGrid"></div>
   </section>
 
   <!-- ===== TEASERS: demoted content, one line each ===== -->

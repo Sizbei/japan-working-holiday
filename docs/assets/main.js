@@ -7,7 +7,6 @@ import { mountCalendar } from './calendar.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
-import { mountMyTokyo } from './dashboard-mytokyo.js';
 import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
 import { mountPlan } from './plan.js';
@@ -43,15 +42,12 @@ function boot() {
     .then(data => {
       const today = nowISO();
       const m = data.meta || {};
-      setText('#heroSub', m.subtitle || '');
-      setText('#metaArrival', m.arrival_date ? `Arrival: ${m.arrival_date}` : '');
       setText('#footGen', m.generated || '');
       mountCalendar(data, today);
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
       mountTracker(data);
       renderContent(data, today);
       mountDashboard(data, today);   // reads calendar + content, so mount last
-      mountMyTokyo(data);            // surface my interests at the top of the dashboard
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)
       mountPlan(data);               // day itinerary planner (#/plan)

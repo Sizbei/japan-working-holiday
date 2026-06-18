@@ -612,6 +612,54 @@
       "confidence": "high"
     },
     {
+      "id": "mus-electrox-2027",
+      "title": "electrox 2027 (indoor NYE EDM festival)",
+      "date": "2026-12-31",
+      "endDate": "",
+      "category": "music",
+      "area": "Makuhari Messe, Chiba (Kaihimmakuhari Stn, ~40 min from Tokyo Stn)",
+      "cost": "~¥12,000–16,000+ 1-day",
+      "bookBy": "",
+      "bookingNotes": "Japan's marquee indoor New-Year EDM festival; line-up + exact 2026→27 dates drop ~autumn — verify closer on the official site.",
+      "why": "Big-room/mainstage EDM under one roof to ring in the new year out of the cold — the indoor commercial counterpart to summer's Ultra.",
+      "sources": [
+        "https://www.electrox.jp/"
+      ],
+      "confidence": "low"
+    },
+    {
+      "id": "mus-rainbow-disco-club-2027",
+      "title": "Rainbow Disco Club (RDC) 2027",
+      "date": "2027-05-02",
+      "endDate": "2027-05-04",
+      "category": "music",
+      "area": "East Izu, Shizuoka — Tenshi-no-Sato outdoor park (~2.5–3 hr from Tokyo)",
+      "cost": "~¥18,000–28,000 multi-day + lodging/camping",
+      "bookBy": "",
+      "bookingNotes": "Golden Week (early May); house/techno/disco. Early-bird tickets sell out — verify 2027 dates closer.",
+      "why": "Tokyo heads' favourite OUTDOOR house/techno/disco festival — deep, tasteful, scenic. The non-commercial counterpoint to Ultra.",
+      "sources": [
+        "https://rainbowdiscoclub.com/"
+      ],
+      "confidence": "low"
+    },
+    {
+      "id": "mus-s2o-japan-2027",
+      "title": "S2O Japan Songkran Music Festival (water EDM)",
+      "date": "2027-05-01",
+      "endDate": "2027-05-02",
+      "category": "music",
+      "area": "Tokyo area — venue varies year to year (recent eds. around Odaiba); check official",
+      "cost": "~¥13,000–18,000 1-day",
+      "bookBy": "",
+      "bookingNotes": "Thai-style water + EDM festival, typically early May — you WILL get soaked. Dates/venue vary — verify closer.",
+      "why": "A soaking-wet big-stage EDM party — pure sunny spectacle if you want a ridiculous dance day.",
+      "sources": [
+        "https://s2ojapan.com/"
+      ],
+      "confidence": "low"
+    },
+    {
       "id": "mus-ffkt-2026-formerly-taicoclub",
       "title": "FFKT 2026 (formerly Taicoclub)",
       "date": "2026-09-26",

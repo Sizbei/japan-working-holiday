@@ -5,7 +5,7 @@
 
 import { transitionView, prefersReducedMotion } from './motion.js';
 
-export const ROUTES = ['dashboard', 'calendar', 'deadlines', 'checklist', 'explore', 'rooms', 'map', 'plan'];
+export const ROUTES = ['dashboard', 'calendar', 'going', 'deadlines', 'checklist', 'explore', 'rooms', 'map', 'plan'];
 
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {
@@ -31,7 +31,7 @@ let current = null;
 
 // per-route document title so browser tabs + history entries read like real pages
 const TITLES = {
-  dashboard: 'Dashboard', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
+  dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', deadlines: 'Deadlines', checklist: 'Checklist',
   explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day',
 };
 const SITE = 'My Year in Japan';

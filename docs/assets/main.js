@@ -4,6 +4,7 @@
 import { mountGate } from './gate.js';
 import { renderContent } from './content.js';
 import { mountCalendar } from './calendar.js';
+import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
 import { mountMyTokyo } from './dashboard-mytokyo.js';
@@ -45,6 +46,7 @@ function boot() {
       setText('#metaArrival', m.arrival_date ? `Arrival: ${m.arrival_date}` : '');
       setText('#footGen', m.generated || '');
       mountCalendar(data, today);
+      mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
       mountTracker(data);
       renderContent(data, today);
       mountDashboard(data, today);   // reads calendar + content, so mount last

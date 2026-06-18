@@ -16,7 +16,7 @@ const LANG_KEY = KEYS.lang;
 // UI chrome strings (keyed by data-i18n)
 const I18N = {
   brand: '私の一年', dashboard: 'ダッシュボード', calendar: 'カレンダー', checklist: 'チェックリスト',
-  deadlines: '締め切り', explore: 'さがす', rooms: '部屋', map: '地図', plan: 'プラン',
+  deadlines: '締め切り', explore: 'さがす', rooms: '部屋', map: '地図', plan: 'プラン', going: '参加予定',
 };
 // JP term → reading + gloss (covers the app's own Japanese; Jotoba enriches anything else)
 const GLOSSARY = {
@@ -25,6 +25,7 @@ const GLOSSARY = {
   'ダッシュボード': { r: 'dasshubōdo', m: 'dashboard' }, 'カレンダー': { r: 'karendā', m: 'calendar' },
   'チェックリスト': { r: 'chekkurisuto', m: 'checklist' }, '締め切り': { r: 'しめきり · shimekiri', m: 'deadline' },
   'さがす': { r: 'sagasu', m: 'to search / look for' }, '部屋': { r: 'へや · heya', m: 'room' },
+  '参加予定': { r: 'さんかよてい · sanka yotei', m: 'planned attendance — events you’re going to' },
   '地図': { r: 'ちず · chizu', m: 'map' }, 'プラン': { r: 'puran', m: 'plan (itinerary)' },
   '一日': { r: 'いちにち · ichinichi', m: 'one day' }, '一年の計画': { r: 'ichinen no keikaku', m: 'a year’s plan' },
   '夜の音楽': { r: 'yoru no ongaku', m: 'night music / nightlife' }, '音楽の街': { r: 'ongaku no machi', m: 'music town' },

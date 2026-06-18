@@ -1729,3 +1729,25 @@ html[data-reduce-motion="on"] *::after{
 /* Due-soon flat view: show each item's phase as a small label */
 .ci-phase{ font-family:var(--mono); font-size:.6rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); border:1px solid var(--line); border-radius:var(--r-pill); padding:.05rem .45rem; margin-left:.4rem; vertical-align:middle; white-space:nowrap; }
 .check-soon .check-item{ border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); border-radius:0; }
+
+/* "Going To" page (#/going) — a row list of events the user marked ✓ Going */
+.going-list{ display:flex; flex-direction:column; gap:.6rem; margin-top: var(--s4); }
+.going-row{ display:flex; align-items:stretch; gap:.85rem; padding:.7rem .8rem; border:1px solid var(--line);
+  border-radius:var(--r-md); background: var(--bg-elevated); transition: border-color var(--t-hover), transform var(--t-hover); }
+.going-row:hover{ border-color: color-mix(in srgb, var(--indigo) 40%, var(--line)); }
+.going-date{ flex:0 0 auto; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+  min-width:6.5rem; padding:.35rem .6rem; border-radius:var(--r-sm); color:#fff; line-height:1.2; }
+.going-date b{ font-family:var(--mono); font-size:.82rem; font-weight:700; }
+.going-when{ font-size:.66rem; opacity:.9; margin-top:.1rem; }
+.going-main{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:.2rem; justify-content:center; }
+.going-title{ font-weight:700; color: var(--ink); }
+.going-area{ font-size:.82rem; color: var(--ink-soft); }
+.going-cat{ align-self:flex-start; margin-top:.15rem; font-size:.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.04em; color:#fff; padding:.08rem .5rem; border-radius:var(--r-pill); }
+.going-acts{ flex:0 0 auto; display:flex; flex-direction:column; gap:.35rem; align-items:center; justify-content:center; }
+.going-ic{ display:inline-flex; align-items:center; justify-content:center; min-width:32px; min-height:32px;
+  border:1px solid var(--line); border-radius:var(--r-sm); background: var(--bg-soft); color: var(--ink-soft);
+  font-size:.78rem; font-weight:700; text-decoration:none; cursor:pointer; transition: all var(--t-hover); }
+.going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
+.going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
+.going-upcoming.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }

@@ -55,6 +55,7 @@
 <nav class="route-nav" id="routeNav" aria-label="Primary navigation">
   <a href="#/dashboard" data-route="dashboard" data-i18n="dashboard">Dashboard</a>
   <a href="#/calendar" data-route="calendar" data-i18n="calendar">Calendar</a>
+  <a href="#/going" data-route="going" data-i18n="going">Going</a>
   <a href="#/checklist" data-route="checklist" data-i18n="checklist">Checklist</a>
   <a href="#/deadlines" data-route="deadlines" data-i18n="deadlines">Deadlines</a>
   <a href="#/explore" data-route="explore" data-i18n="explore">Explore</a>
@@ -124,6 +125,15 @@
   </section>
 
   </div><!-- /view-calendar -->
+
+  <div class="view" id="view-going" data-route="going">
+  <section id="going">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">参加予定</span><h2>Going To</h2></div>
+    <p class="lede">Events you've locked in. Open any event on the <a href="#/calendar">Calendar</a> and tap <b>✓ Going</b> to add it here. <span id="goingCount"></span></p>
+    <div class="chips" id="goingFilters"></div>
+    <div id="goingList" class="going-list"></div>
+  </section>
+  </div><!-- /view-going -->
 
   <div class="view" id="view-deadlines" data-route="deadlines">
   <!-- ============ LOTTERY / TIMED-RELEASE TRACKER ============ -->

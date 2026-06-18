@@ -322,3 +322,35 @@ test('seasonalEgg: landing day, sakura, new year, night-owl, else null', () => {
   assert.equal(seasonalEgg(jst(2027, 5, 1, 12)), null);       // ordinary noon
   assert.equal(seasonalEgg('not a date'), null);
 });
+
+import { HOME_LAYOUTS, DEFAULT_HOME_LAYOUT, HOME_LAYOUT_LABELS, normalizeHomeLayout } from '../docs/assets/lib/homelayout.js';
+
+test('normalizeHomeLayout: valid passes through, junk/empty → default', () => {
+  for (const l of HOME_LAYOUTS) assert.equal(normalizeHomeLayout(l), l);
+  assert.equal(normalizeHomeLayout(''), DEFAULT_HOME_LAYOUT);
+  assert.equal(normalizeHomeLayout('nonsense'), DEFAULT_HOME_LAYOUT);
+  assert.equal(normalizeHomeLayout(undefined), DEFAULT_HOME_LAYOUT);
+  assert.ok(HOME_LAYOUTS.includes(DEFAULT_HOME_LAYOUT));      // default must itself be a valid layout
+});
+
+test('home-layout parity: every layout has a label, a CSS rule, and the settings control + store stay in sync', () => {
+  const css = readFileSync(new URL('../docs/assets/style.css', import.meta.url), 'utf8');
+  const guide = readFileSync(new URL('../docs/assets/guide.js', import.meta.url), 'utf8');
+  const store = readFileSync(new URL('../docs/assets/lib/store.js', import.meta.url), 'utf8');
+
+  // 1. every layout has a human label for the segmented control
+  const noLabel = HOME_LAYOUTS.filter(l => !HOME_LAYOUT_LABELS[l]);
+  assert.deepEqual(noLabel, [], `layouts missing a label: ${noLabel}`);
+
+  // 2. the base layout (default) needs no [data-home] override; every OTHER layout must have CSS
+  const needCss = HOME_LAYOUTS.filter(l => l !== DEFAULT_HOME_LAYOUT);
+  const missingCss = needCss.filter(l => !css.includes(`[data-home="${l}"]`));
+  assert.deepEqual(missingCss, [], `layouts with no CSS rule: ${missingCss}`);
+
+  // 3. the settings control is DERIVED from the canonical list (guide imports it) — can't drift
+  assert.ok(guide.includes("from './lib/homelayout.js'"), 'guide.js must import the canonical layout list');
+  assert.ok(guide.includes('HOME_LAYOUTS'), 'guide.js must build its control from HOME_LAYOUTS');
+
+  // 4. the persisted key exists in the store
+  assert.ok(store.includes('homeLayout:'), 'store.js KEYS must define homeLayout');
+});

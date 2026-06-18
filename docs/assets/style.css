@@ -1844,3 +1844,54 @@ html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
 /* On the dashboard the bespoke ink hero IS the hero, so hide the global masthead
    there to avoid a duplicate "My Year in Japan" title. Other routes keep the masthead. */
 html:has(#view-dashboard.is-active) header.hero{ display: none; }
+
+/* ============================================================
+   HOME LAYOUT THEMES — same dashboard DOM, three compositions,
+   chosen in Settings via html[data-home]. (lib/homelayout.js)
+   Base CSS above = "kakemono" (the default scroll). These blocks
+   only override layout for the other two.
+   ============================================================ */
+
+/* --- Settings segmented control --- */
+.set-seg{ display: inline-flex; gap: 2px; padding: 3px; background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-pill); }
+.set-seg .seg-btn{ font-family: var(--sans); font-size: .78rem; border: none; background: transparent; color: var(--ink-soft); padding: .35rem .75rem; border-radius: var(--r-pill); cursor: pointer; min-height: 32px; transition: color .18s, background .18s, box-shadow .18s; }
+.set-seg .seg-btn:hover{ color: var(--ink); }
+.set-seg .seg-btn[aria-checked="true"]{ background: var(--bg-soft); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(28,23,20,.16); }
+.set-seg .seg-btn:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+/* --- 縁側 ENGAWA: hero + needs-me side by side, My Tokyo & teasers full-width below --- */
+html[data-home="engawa"] #view-dashboard{
+  display: grid; align-items: start;
+  grid-template-columns: 1.05fr .95fr;
+  grid-template-areas: "hero needs" "tokyo tokyo" "teasers teasers";
+  column-gap: var(--s5); row-gap: var(--s5);
+}
+html[data-home="engawa"] #view-dashboard > .dash-hero{ grid-area: hero; }
+html[data-home="engawa"] #view-dashboard > .needs-me{ grid-area: needs; grid-template-columns: 1fr; margin-top: 0; }
+/* #myTokyo ships with `max-width + margin:0 auto`; on a grid item the auto margins
+   disable stretch (it collapses to content width + centers). Reset so it fills the row. */
+html[data-home="engawa"] #view-dashboard > #myTokyo{ grid-area: tokyo; margin: 0; max-width: none; padding: 0; }
+html[data-home="engawa"] #view-dashboard > .dash-teasers{ grid-area: teasers; margin-top: 0; }
+@media (max-width: 860px){
+  html[data-home="engawa"] #view-dashboard{ grid-template-columns: 1fr; grid-template-areas: "hero" "needs" "tokyo" "teasers"; }
+}
+
+/* --- 弁当 BENTO: centered hero over a tile grid --- */
+html[data-home="bento"] #view-dashboard .dash-hero{ grid-template-columns: 1fr; text-align: center; }
+html[data-home="bento"] #view-dashboard .scroll-rail{ display: none; }
+html[data-home="bento"] #view-dashboard .dash-hero-main{ display: flex; flex-direction: column; align-items: center; }
+html[data-home="bento"] #view-dashboard .dash-sub{ margin-left: auto; margin-right: auto; }
+html[data-home="bento"] #view-dashboard .hero-count{ justify-content: center; }
+html[data-home="bento"] #view-dashboard .sun-ink{ left: 50%; right: auto; transform: translateX(-50%); }
+html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: repeat(6, 1fr); }
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1){ grid-column: span 3; }
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2){ grid-column: span 3; }
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: span 6; }
+html[data-home="bento"] #view-dashboard #myTokyo .mt-head{ justify-content: center; }
+@media (max-width: 860px){
+  html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: 1fr; }
+  /* reset the bento spans at matching (:nth-of-type) specificity, else they force implicit columns */
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1),
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2),
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: auto; }
+}

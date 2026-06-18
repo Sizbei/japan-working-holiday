@@ -5,10 +5,18 @@
 
 import { $, $$ } from './lib/dom.js';
 import { KEYS, getRaw, setRaw } from './lib/store.js';
+import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/homelayout.js';
+
+// Reflect the persisted home-layout theme onto <html data-home>. Exported so main.js can call
+// it as early as possible in boot (before the dashboard paints) to avoid a layout flash.
+export function applyHomeLayout() {
+  document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
+}
 
 export function mountGuide() {
-  // apply persisted reduce-motion on boot (theme + arcade are restored by their own modules)
+  // apply persisted reduce-motion + home layout on boot (theme + arcade are restored by their own modules)
   if (getRaw(KEYS.reduceMotion, '') === 'on') document.documentElement.dataset.reduceMotion = 'on';
+  applyHomeLayout();
   $('#guideBtn')?.addEventListener('click', () => openGuide());
 }
 
@@ -45,6 +53,7 @@ function openGuide() {
   const reduce = document.documentElement.dataset.reduceMotion === 'on';
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
+  const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
   ov = document.createElement('div');
   ov.className = 'guide-overlay';
   ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'guideTitle');
@@ -66,6 +75,12 @@ function openGuide() {
 
     <section class="guide-sec">
       <h3 class="guide-h">Settings</h3>
+      <div class="set-row">
+        <div class="set-text"><span class="set-label">Home layout</span><span class="set-sub">How the Dashboard arranges itself</span></div>
+        <div class="set-seg" role="radiogroup" aria-label="Home layout">
+          ${HOME_LAYOUTS.map(l => `<button type="button" class="seg-btn" role="radio" data-home-opt="${l}" aria-checked="${l === homeLayout ? 'true' : 'false'}">${HOME_LAYOUT_LABELS[l]}</button>`).join('')}
+        </div>
+      </div>
       ${row('setTheme', 'Dark mode', 'Easier on the eyes at night', dark)}
       ${row('setArcade', 'Arcade mode', 'Extra retro CRT glow &amp; pixel flair', arcade)}
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
@@ -104,6 +119,12 @@ function openGuide() {
     setRaw(KEYS.sound, on ? 'off' : 'on');
     setSwitch('setSound', !on);
   });
+  $$('.set-seg [data-home-opt]', ov).forEach(b => b.addEventListener('click', () => {
+    const v = normalizeHomeLayout(b.dataset.homeOpt);
+    setRaw(KEYS.homeLayout, v);
+    applyHomeLayout();                                         // live: reflects onto <html data-home> immediately
+    $$('.set-seg [data-home-opt]', ov).forEach(x => x.setAttribute('aria-checked', x.dataset.homeOpt === v ? 'true' : 'false'));
+  }));
 
   document.addEventListener('keydown', onKey, true);
   const panel = ov;   // capture locally — closeGuide() may null the module-level `ov` before this fires

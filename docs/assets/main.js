@@ -16,7 +16,7 @@ import { mountLang } from './lang.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
 import { mountGestures } from './gestures.js';
-import { mountGuide } from './guide.js';
+import { mountGuide, applyHomeLayout } from './guide.js';
 import { initKonami } from './konami.js';
 import { mountEaster } from './easter.js';
 import { stagger } from './motion.js';
@@ -37,6 +37,7 @@ document.addEventListener('jwh:storage-full', () => {
 mountGate(boot);
 
 function boot() {
+  applyHomeLayout();   // set <html data-home> before the dashboard paints (avoids a layout flash)
   fetch('data/tips.json', { cache: 'no-store' })
     .then(r => { if (!r.ok) throw new Error('Failed to load tips.json'); return r.json(); })
     .then(data => {

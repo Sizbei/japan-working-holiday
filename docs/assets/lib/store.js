@@ -24,6 +24,7 @@ export const KEYS = {
   reduceMotion: 'jwh-reduce-motion',
   celebrations: 'jwh-celebrations',
   sound: 'jwh-sound',
+  homeLayout: 'jwh-home-layout-v1',
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
 };

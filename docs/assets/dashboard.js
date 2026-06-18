@@ -19,6 +19,7 @@ export function mountDashboard(data, today) {
   TODAY = today || nowISO();
   initTheme();
   renderCountdown();
+  setInterval(renderCountdown, 60000);   // roll the countdown over at midnight without a reload (spec §6)
   wireBell();
   refresh();
   document.addEventListener('jwh:data-changed', refresh);
@@ -67,22 +68,29 @@ function buildItems() {
 }
 
 // ---- countdown: hero numeral (canonical) + small topbar copy ----
+// Recomputes "today" each call so the minute-timer (mountDashboard) rolls the count over at midnight.
 function renderCountdown() {
-  const c = countdown(DATA.meta?.arrival_date || '2026-06-30', TODAY);
+  const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
   const arrived = c.phase === 'arrived';
   // topbar (decorative, aria-hidden in markup)
   const el = $('#countdown');
   if (el) {
     const unit = arrived ? (c.days === 1 ? 'DAY IN' : 'DAYS IN') : (c.days === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
-    el.innerHTML = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
+    const html = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
+    if (el.innerHTML !== html) el.innerHTML = html;
     el.classList.toggle('arrived', arrived);
   }
-  // hero (the live region)
+  // hero (the aria-live region) — only mutate when the day count actually changes, so the
+  // minute-timer never re-announces the same number to screen readers.
   const hero = $('#heroCount');
   if (hero) {
-    const unit = arrived ? (c.days === 1 ? 'day in Japan' : 'days in Japan') : (c.days === 1 ? 'day until I land' : 'days until I land');
-    hero.querySelector('.hc-num').textContent = c.days ?? '';
-    hero.querySelector('.hc-unit').textContent = unit;
+    const num = String(c.days ?? '');
+    const numEl = hero.querySelector('.hc-num');
+    if (numEl.textContent !== num) {
+      const unit = arrived ? (c.days === 1 ? 'day in Japan' : 'days in Japan') : (c.days === 1 ? 'day until I land' : 'days until I land');
+      numEl.textContent = num;
+      hero.querySelector('.hc-unit').textContent = unit;
+    }
     hero.classList.toggle('arrived', arrived);
   }
 }

@@ -299,14 +299,6 @@ footer { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid va
 main { padding: var(--s6) var(--s4) var(--s12); }
 @media (min-width: 768px) { main { padding: var(--s8) var(--s6) calc(var(--s12) * 1.5); } }
 
-/* personal intro voice */
-.intro {
-  font-family: var(--serif); font-size: 1.15rem; line-height: 1.8; color: var(--ink);
-  max-width: 70ch; margin: 0 auto var(--s8); text-align: center;
-}
-.intro em { color: var(--red); font-style: italic; }
-@media (min-width: 768px) { .intro { font-size: 1.3rem; } }
-
 /* section intro blurb (first-person) */
 .lede { color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 1.02rem; margin: -.5rem 0 var(--s6); max-width: 64ch; }
 
@@ -1812,7 +1804,8 @@ html[data-reduce-motion="on"] *::after{
 #view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
 #view-dashboard .teaser{ border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: .9rem 1rem; }
 #view-dashboard .teaser-h{ display: block; font-family: var(--mono); font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: .4rem; }
-#view-dashboard .teaser-body a{ font-family: var(--serif); font-size: .92rem; color: var(--ink); text-decoration: none; display: flex; justify-content: space-between; gap: .5rem; align-items: baseline; }
+#view-dashboard .teaser-body a{ font-family: var(--serif); font-size: .92rem; color: var(--ink); text-decoration: none; display: flex; justify-content: space-between; gap: .5rem; align-items: center; min-height: 44px; }
+#view-dashboard .teaser-body a:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 3px; border-radius: var(--r-sm); }
 #view-dashboard .teaser-go{ color: var(--shu); }
 @media (hover: hover) and (pointer: fine){ #view-dashboard .teaser:hover{ border-color: var(--line); } #view-dashboard .teaser:hover .teaser-body a{ color: var(--shu); } }
 
@@ -1820,11 +1813,11 @@ html[data-reduce-motion="on"] *::after{
 @keyframes dashRise{ from{ opacity: 0; transform: translateY(16px); } to{ opacity: 1; transform: none; } }
 #view-dashboard.is-active .dash-hero{ animation: dashRise .6s cubic-bezier(.23,1,.32,1) both; }
 #view-dashboard.is-active .needs-me .widget{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
-#view-dashboard.is-active .needs-me .widget:nth-child(2){ animation-delay: .05s; }
-#view-dashboard.is-active .needs-me .widget:nth-child(3){ animation-delay: .1s; }
+#view-dashboard.is-active .needs-me .widget:nth-of-type(2){ animation-delay: .05s; }
+#view-dashboard.is-active .needs-me .widget:nth-of-type(3){ animation-delay: .1s; }
 #view-dashboard.is-active .dash-teasers .teaser{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
-#view-dashboard.is-active .dash-teasers .teaser:nth-child(2){ animation-delay: .05s; }
-#view-dashboard.is-active .dash-teasers .teaser:nth-child(3){ animation-delay: .1s; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-of-type(2){ animation-delay: .05s; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-of-type(3){ animation-delay: .1s; }
 html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 
 /* ---- responsive ---- */

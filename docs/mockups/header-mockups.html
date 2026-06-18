@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inner-page top chrome — mocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Shippori+Mincho:wght@600;700;800&family=Space+Mono:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+/* Real site tokens (light) so the mock reads true to the app */
+:root{
+  --bg:#f7f4ee; --bg-soft:#fffdf8; --bg-sunk:#efe9dc;
+  --ink:#1c1714; --ink-soft:#6f6151; --ink-faint:#9a9388;
+  --line:#e4ddd0; --line-faint:rgba(28,23,20,.10);
+  --red:#b6391f; --red-deep:#8f2c17; --indigo:#2c3e5c;
+  --serif:"Newsreader",Georgia,serif; --serif-jp:"Shippori Mincho",serif;
+  --mono:"Space Mono",ui-monospace,monospace; --pixel:"DotGothic16",sans-serif;
+  --gutter:26px; --maxw:1080px;
+  --ease:cubic-bezier(.23,1,.32,1); --ease-move:cubic-bezier(.77,0,.175,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 92% -10%, rgba(44,62,92,.10), transparent 50%)}
+.stage{position:relative;z-index:1}
+
+/* switcher chrome */
+.switch{position:fixed;z-index:50;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:5px;
+  border-radius:999px;background:rgba(255,253,248,.9);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 6px 22px rgba(28,23,20,.16)}
+.switch button{font-family:var(--serif);font-weight:600;font-size:.82rem;border:none;background:transparent;color:var(--ink-soft);
+  cursor:pointer;padding:.45rem .9rem;border-radius:999px;transition:all .18s var(--ease)}
+.switch button[aria-pressed=true]{background:var(--ink);color:var(--bg-soft)}
+.tag{position:fixed;z-index:50;bottom:12px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);background:rgba(255,253,248,.8);padding:.4rem .8rem;border-radius:999px;border:1px solid var(--line-faint)}
+
+/* ---- shared topbar (identical across variants — unchanged from the app) ---- */
+.topbar{display:flex;align-items:center;gap:1rem;padding:.7rem var(--gutter);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:.5rem;font-family:var(--pixel);font-size:.92rem;letter-spacing:.12em;color:var(--ink);text-decoration:none}
+.brand .sun{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#d24632,#b6391f);box-shadow:0 0 0 2px rgba(182,57,31,.18)}
+.cd{font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--ink);background:var(--bg-sunk);border:1px solid var(--line);border-radius:8px;padding:.3rem .6rem;letter-spacing:.04em}
+.cd b{color:var(--red)}
+.tb-right{margin-left:auto;display:flex;gap:.5rem;align-items:center;color:var(--ink-soft);font-size:1rem}
+.tb-right span{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--bg-soft)}
+
+/* ---- page content stub (a calendar-ish top, same in all variants) ---- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
+.page-body{padding-bottom:80px}
+.cal-toolbar{display:flex;align-items:center;gap:.6rem;margin-top:1.4rem}
+.cal-toolbar .nav-btn{width:34px;height:34px;border:1px solid var(--line);background:var(--bg-soft);border-radius:8px;cursor:pointer;color:var(--ink-soft)}
+.cal-toolbar .month{font-family:var(--serif);font-weight:600;font-size:1.2rem;min-width:9rem;text-align:center}
+.cal-toolbar .today{font-family:var(--serif);border:1px solid var(--line);background:var(--bg-soft);border-radius:8px;padding:.4rem .8rem;cursor:pointer}
+.cal-toolbar .seg{margin-left:auto;display:flex;gap:.4rem}
+.cal-toolbar .seg button{font-family:var(--serif);border:1px solid var(--line);background:var(--bg-soft);border-radius:8px;padding:.4rem .8rem;cursor:pointer}
+.cal-toolbar .seg .on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.cal-toolbar .seg .add{background:var(--red);color:#fff;border-color:var(--red)}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:1rem}
+.cell{aspect-ratio:1.4;border:1px solid var(--line-faint);border-radius:8px;background:var(--bg-soft);padding:.4rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint)}
+.cell.hl{box-shadow:inset 0 0 0 2px var(--red)}
+.cell .ev{margin-top:.3rem;font-family:var(--serif);font-size:.62rem;color:#fff;background:var(--indigo);border-radius:4px;padding:1px 4px;display:inline-block}
+
+/* ============================================================
+   THREE NAV TREATMENTS — the masthead is GONE in all of them.
+   ============================================================ */
+
+/* shared nav base */
+.nav{display:flex;gap:.1rem;flex-wrap:wrap}
+.nav a{font-family:var(--serif);font-size:.95rem;color:var(--ink-soft);text-decoration:none;padding:.5rem .8rem;border-radius:8px;position:relative;transition:color .18s var(--ease),background .18s var(--ease)}
+.nav a:hover{color:var(--ink)}
+
+/* page heading (the new lead) */
+.phead .kick{font-family:var(--serif-jp);font-weight:700;color:var(--red);font-size:.9rem;letter-spacing:.1em}
+.phead h1{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,3.4vw,2.7rem);letter-spacing:-.02em;margin:.1rem 0 0;line-height:1.05}
+.phead .lede{font-family:var(--serif);font-style:italic;color:var(--ink-soft);margin:.5rem 0 0;max-width:60ch}
+.phead .rule{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:1rem 0 0}
+
+/* ---------- A · CLEAN CENTERED ---------- */
+#A .navwrap{border-bottom:1px solid var(--line)}
+#A .nav{justify-content:center;padding:.7rem 0}
+#A .nav a.cur{background:var(--red);color:#fff}
+#A .phead{text-align:center;padding-top:2rem}
+#A .phead .lede{margin-left:auto;margin-right:auto}
+#A .phead .rule{margin-left:auto;margin-right:auto;max-width:200px;background:var(--line)}
+
+/* ---------- B · EDITORIAL LEFT ---------- */
+#B .navwrap{border-bottom:1px solid var(--line)}
+#B .nav{justify-content:flex-start;padding:.7rem 0;gap:.2rem}
+#B .nav a::after{content:"";position:absolute;left:.8rem;right:.8rem;bottom:.3rem;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease-move)}
+#B .nav a:hover::after{transform:scaleX(1)}
+#B .nav a.cur{color:var(--ink);font-weight:600}
+#B .nav a.cur::after{transform:scaleX(1)}
+#B .phead{padding-top:2.2rem}
+#B .phead .top{display:flex;align-items:baseline;gap:.8rem}
+#B .phead .top .rule-i{flex:1;height:1px;background:var(--line-faint)}
+
+/* ---------- C · TAB BAR (band) ---------- */
+#C .navwrap{background:var(--bg-sunk);border-bottom:1px solid var(--line)}
+#C .nav{justify-content:flex-start;padding:.2rem 0}
+#C .nav a{padding:.7rem .85rem;border-radius:0;border-bottom:2px solid transparent;color:var(--ink-soft)}
+#C .nav a:hover{color:var(--ink)}
+#C .nav a.cur{color:var(--ink);border-bottom-color:var(--red);font-weight:600}
+#C .phead{padding-top:2rem;display:flex;align-items:flex-end;gap:.9rem}
+#C .phead .meta{margin-left:auto;font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);letter-spacing:.04em;padding-bottom:.4rem}
+
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.v[hidden]{display:none}
+.v.on .page-body, .v.on .navwrap{animation:fade .4s var(--ease) both}
+.v.on .page-body{animation-delay:.05s}
+</style>
+</head>
+<body>
+<div class="switch" role="tablist">
+  <button data-v="A" aria-pressed="true">A · Clean</button>
+  <button data-v="B" aria-pressed="false">B · Editorial</button>
+  <button data-v="C" aria-pressed="false">C · Tab bar</button>
+</div>
+<div class="tag" id="tag">A · centered nav, page heading centered — closest to today's nav · press 1·2·3</div>
+
+<div class="stage">
+
+<!-- shared topbar template injected by JS per variant for simplicity -->
+<section class="v on" id="A">
+  <div class="topbar">
+    <a class="brand" href="#"><span class="sun"></span> MY YEAR IN JAPAN</a>
+    <span class="cd"><b>12</b> DAYS TO NRT</span>
+    <div class="tb-right"><span>あ</span><span>🔔</span><span>⌨</span><span>🌙</span><span>⚙</span></div>
+  </div>
+  <div class="navwrap"><div class="wrap"><nav class="nav">
+    <a href="#">Dashboard</a><a href="#" class="cur">Calendar</a><a href="#">Going</a><a href="#">Checklist</a><a href="#">Deadlines</a><a href="#">Explore</a><a href="#">Rooms</a><a href="#">Map</a><a href="#">Plan a Day</a>
+  </nav></div></div>
+  <div class="wrap page-body">
+    <div class="phead">
+      <div class="kick">カレンダー</div>
+      <h1>My Calendar</h1>
+      <p class="lede">Researched events are baked in; click any day to add your own.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="cal-toolbar">
+      <button class="nav-btn">‹</button><div class="month">June 2026</div><button class="nav-btn">›</button>
+      <button class="today">Today</button>
+      <div class="seg"><button class="on">Month</button><button>Agenda</button><button class="add">+ Add</button><button>Import</button><button>Export</button></div>
+    </div>
+    <div class="grid7" id="gridA"></div>
+  </div>
+</section>
+
+<section class="v" id="B" hidden>
+  <div class="topbar">
+    <a class="brand" href="#"><span class="sun"></span> MY YEAR IN JAPAN</a>
+    <span class="cd"><b>12</b> DAYS TO NRT</span>
+    <div class="tb-right"><span>あ</span><span>🔔</span><span>⌨</span><span>🌙</span><span>⚙</span></div>
+  </div>
+  <div class="navwrap"><div class="wrap"><nav class="nav">
+    <a href="#">Dashboard</a><a href="#" class="cur">Calendar</a><a href="#">Going</a><a href="#">Checklist</a><a href="#">Deadlines</a><a href="#">Explore</a><a href="#">Rooms</a><a href="#">Map</a><a href="#">Plan a Day</a>
+  </nav></div></div>
+  <div class="wrap page-body">
+    <div class="phead">
+      <div class="top"><span class="kick">カレンダー</span><span class="rule-i"></span></div>
+      <h1>My Calendar</h1>
+      <p class="lede">Researched events are baked in (colour-coded by type); click any day to add your own. Edit, import an .ics, or export just the tags you want.</p>
+    </div>
+    <div class="cal-toolbar">
+      <button class="nav-btn">‹</button><div class="month">June 2026</div><button class="nav-btn">›</button>
+      <button class="today">Today</button>
+      <div class="seg"><button class="on">Month</button><button>Agenda</button><button class="add">+ Add</button><button>Import</button><button>Export</button></div>
+    </div>
+    <div class="grid7" id="gridB"></div>
+  </div>
+</section>
+
+<section class="v" id="C" hidden>
+  <div class="topbar">
+    <a class="brand" href="#"><span class="sun"></span> MY YEAR IN JAPAN</a>
+    <span class="cd"><b>12</b> DAYS TO NRT</span>
+    <div class="tb-right"><span>あ</span><span>🔔</span><span>⌨</span><span>🌙</span><span>⚙</span></div>
+  </div>
+  <div class="navwrap"><div class="wrap"><nav class="nav">
+    <a href="#">Dashboard</a><a href="#" class="cur">Calendar</a><a href="#">Going</a><a href="#">Checklist</a><a href="#">Deadlines</a><a href="#">Explore</a><a href="#">Rooms</a><a href="#">Map</a><a href="#">Plan a Day</a>
+  </nav></div></div>
+  <div class="wrap page-body">
+    <div class="phead">
+      <div><div class="kick">カレンダー</div><h1>My Calendar</h1></div>
+      <span class="meta">12 events · land NRT 2026-06-30</span>
+    </div>
+    <div class="cal-toolbar">
+      <button class="nav-btn">‹</button><div class="month">June 2026</div><button class="nav-btn">›</button>
+      <button class="today">Today</button>
+      <div class="seg"><button class="on">Month</button><button>Agenda</button><button class="add">+ Add</button><button>Import</button><button>Export</button></div>
+    </div>
+    <div class="grid7" id="gridC"></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+// fill a couple weeks of day cells with a sample event
+function fill(id){
+  const g=document.getElementById(id); if(!g) return;
+  let h='';
+  for(let i=1;i<=21;i++){
+    const ev = (i===15)?'<span class="ev">Fireworks</span>':(i===19)?'<span class="ev">Ultra Japan</span>':'';
+    h+=`<div class="cell ${i===12?'hl':''}">${i}${ev}</div>`;
+  }
+  g.innerHTML=h;
+}
+['gridA','gridB','gridC'].forEach(fill);
+
+const TAGS={
+  A:'A · centered nav, page heading centered — closest to today\'s nav · press 1·2·3',
+  B:'B · left-aligned nav with ink underline, editorial left page heading · press 1·2·3',
+  C:'C · tab-bar nav on a band, compact page heading + meta · press 1·2·3',
+};
+function show(v){
+  document.querySelectorAll('.v').forEach(s=>{const on=s.id===v;s.hidden=!on;s.classList.toggle('on',on)});
+  document.querySelectorAll('.switch button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  document.getElementById('tag').textContent=TAGS[v];
+  const sec=document.getElementById(v);sec.classList.remove('on');void sec.offsetWidth;sec.classList.add('on');
+  scrollTo(0,0);
+}
+document.querySelectorAll('.switch button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+addEventListener('keydown',e=>{if(e.key==='1')show('A');if(e.key==='2')show('B');if(e.key==='3')show('C')});
+</script>
+</body>
+</html>

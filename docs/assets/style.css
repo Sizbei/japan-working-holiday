@@ -18,6 +18,8 @@
   --indigo:        #223a70;
   --indigo-soft:   #3a5ba0;
   --gold:          #b8860b;
+  --shu:#b6391f;            /* vermilion seal — Sumi-e accent */
+  --shu-deep:#8f2c17;
   /* ============ COLOR — brand (ink / text-safe) ============ */
   --red-ink:       #bc002d;
   --indigo-ink:    #223a70;
@@ -296,14 +298,6 @@ footer { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid va
 /* wider main, more breathing room */
 main { padding: var(--s6) var(--s4) var(--s12); }
 @media (min-width: 768px) { main { padding: var(--s8) var(--s6) calc(var(--s12) * 1.5); } }
-
-/* personal intro voice */
-.intro {
-  font-family: var(--serif); font-size: 1.15rem; line-height: 1.8; color: var(--ink);
-  max-width: 70ch; margin: 0 auto var(--s8); text-align: center;
-}
-.intro em { color: var(--red); font-style: italic; }
-@media (min-width: 768px) { .intro { font-size: 1.3rem; } }
 
 /* section intro blurb (first-person) */
 .lede { color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 1.02rem; margin: -.5rem 0 var(--s6); max-width: 64ch; }
@@ -1751,3 +1745,102 @@ html[data-reduce-motion="on"] *::after{
 .going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
 .going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .going-upcoming.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
+
+/* ============================================================
+   FRONT PAGE — Sumi-e ink, scoped to #view-dashboard only.
+   (spec: specs/2026-06-17-front-page-design.md)
+   ============================================================ */
+#view-dashboard{
+  --ink-paper: color-mix(in srgb, var(--bg) 86%, #e9dcc2);   /* warmer kinari paper, theme-aware */
+}
+#view-dashboard .dash-hero,
+#view-dashboard .needs-me .widget,
+#view-dashboard .mt-card,
+#view-dashboard .teaser{
+  background: color-mix(in srgb, var(--bg-soft) 80%, var(--ink-paper));
+}
+/* a softer hairline used by the dashboard ink surfaces */
+#view-dashboard{ --line-faint: color-mix(in srgb, var(--line) 60%, transparent); }
+
+/* ---- hero ---- */
+#view-dashboard{ padding-top: var(--s4); }
+#view-dashboard .dash-hero{
+  position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.6rem;
+  align-items: start; border-radius: var(--r-md); padding: 1.6rem 1.4rem 1.8rem; overflow: hidden;
+  border: 1px solid var(--line-faint);
+}
+#view-dashboard .scroll-rail{
+  writing-mode: vertical-rl; font-family: var(--serif-jp); font-weight: 700; font-size: 1.4rem;
+  letter-spacing: .3em; color: var(--ink); border-left: 2px solid var(--line); padding-left: .4rem;
+  display: flex; flex-direction: column; gap: .6rem;
+}
+#view-dashboard .scroll-rail small{ writing-mode: horizontal-tb; font-family: var(--mono); font-size: .58rem; letter-spacing: .18em; color: var(--shu); }
+#view-dashboard .dash-hero-main{ position: relative; z-index: 1; }
+#view-dashboard .sun-ink{
+  position: absolute; z-index: 0; width: 320px; height: 320px; right: -40px; top: -60px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, color-mix(in srgb, var(--shu) 78%, transparent), color-mix(in srgb, var(--shu) 30%, transparent) 55%, transparent 74%);
+  pointer-events: none;
+}
+#view-dashboard .dash-kicker{ font-family: var(--serif-jp); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: .72rem; color: var(--shu); margin: 0 0 .4rem; }
+#view-dashboard .dash-h1{ font-family: var(--serif-jp); font-weight: 800; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.05; margin: 0 0 .35rem; letter-spacing: -.01em; }
+#view-dashboard .dash-sub{ font-family: var(--serif); font-style: italic; font-size: 1.04rem; color: var(--ink-soft); max-width: 44ch; margin: 0; }
+#view-dashboard .hero-count{ display: flex; align-items: flex-end; gap: 1rem; margin-top: 1.3rem; }
+#view-dashboard .hc-num{ font-family: var(--mono); font-weight: 700; font-size: clamp(4rem, 14vw, 8rem); line-height: .86; letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+#view-dashboard .hero-count.arrived .hc-num{ color: var(--shu); }
+#view-dashboard .hc-meta{ display: flex; flex-direction: column; padding-bottom: 1rem; }
+#view-dashboard .hc-unit{ font-family: var(--serif-jp); font-size: 1.1rem; color: var(--ink); letter-spacing: .04em; }
+#view-dashboard .hc-date{ font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); letter-spacing: .06em; margin-top: .2rem; }
+
+/* ---- needs-me strip ---- */
+#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+#view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
+
+/* ---- my tokyo re-skin (CSS-only over existing .mt-card markup) ---- */
+#view-dashboard #myTokyo{ margin-top: var(--s6); }
+#view-dashboard .mt-card{ border-radius: var(--r-md); border: 1px solid var(--line-faint); }
+#view-dashboard .mt-eyebrow{ color: var(--shu); }
+
+/* ---- teasers ---- */
+#view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+#view-dashboard .teaser{ border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: .9rem 1rem; }
+#view-dashboard .teaser-h{ display: block; font-family: var(--mono); font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: .4rem; }
+#view-dashboard .teaser-body a{ font-family: var(--serif); font-size: .92rem; color: var(--ink); text-decoration: none; display: flex; justify-content: space-between; gap: .5rem; align-items: center; min-height: 44px; }
+#view-dashboard .teaser-body a:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 3px; border-radius: var(--r-sm); }
+#view-dashboard .teaser-go{ color: var(--shu); }
+@media (hover: hover) and (pointer: fine){ #view-dashboard .teaser:hover{ border-color: var(--line); } #view-dashboard .teaser:hover .teaser-body a{ color: var(--shu); } }
+
+/* ---- entrance (respect reduced motion) ---- */
+@keyframes dashRise{ from{ opacity: 0; transform: translateY(16px); } to{ opacity: 1; transform: none; } }
+#view-dashboard.is-active .dash-hero{ animation: dashRise .6s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .needs-me .widget{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .needs-me .widget:nth-of-type(2){ animation-delay: .05s; }
+#view-dashboard.is-active .needs-me .widget:nth-of-type(3){ animation-delay: .1s; }
+#view-dashboard.is-active .dash-teasers .teaser{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-of-type(2){ animation-delay: .05s; }
+#view-dashboard.is-active .dash-teasers .teaser:nth-of-type(3){ animation-delay: .1s; }
+html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
+
+/* ---- responsive ---- */
+@media (max-width: 860px){
+  #view-dashboard .dash-hero{ grid-template-columns: 1fr; }
+  #view-dashboard .scroll-rail{ writing-mode: horizontal-tb; flex-direction: row; align-items: baseline; gap: 1rem; border-left: 0; border-bottom: 2px solid var(--line); padding: 0 0 .5rem; }
+  #view-dashboard .needs-me{ grid-template-columns: 1fr; }
+  #view-dashboard .dash-teasers{ grid-template-columns: 1fr; }
+}
+@media (max-width: 560px){
+  #view-dashboard .sun-ink{ width: 220px; height: 220px; right: -50px; }
+}
+
+/* ---- light ink consistency pass on shared chrome (all routes) ---- */
+.route-nav a{ position: relative; }
+.route-nav a::after{
+  content: ""; position: absolute; left: .8rem; right: .8rem; bottom: .35rem; height: 2px;
+  background: var(--shu); transform: scaleX(0); transform-origin: left;
+  transition: transform .28s cubic-bezier(.77,0,.175,1);
+}
+@media (hover: hover) and (pointer: fine){ .route-nav a:hover::after{ transform: scaleX(1); } }
+html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
+
+/* On the dashboard the bespoke ink hero IS the hero, so hide the global masthead
+   there to avoid a duplicate "My Year in Japan" title. Other routes keep the masthead. */
+html:has(#view-dashboard.is-active) header.hero{ display: none; }

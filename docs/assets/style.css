@@ -1837,3 +1837,13 @@ html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 @media (max-width: 560px){
   #view-dashboard .sun-ink{ width: 220px; height: 220px; right: -50px; }
 }
+
+/* ---- light ink consistency pass on shared chrome (all routes) ---- */
+.route-nav a{ position: relative; }
+.route-nav a::after{
+  content: ""; position: absolute; left: .8rem; right: .8rem; bottom: .35rem; height: 2px;
+  background: var(--shu); transform: scaleX(0); transform-origin: left;
+  transition: transform .28s cubic-bezier(.77,0,.175,1);
+}
+@media (hover: hover) and (pointer: fine){ .route-nav a:hover::after{ transform: scaleX(1); } }
+html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }

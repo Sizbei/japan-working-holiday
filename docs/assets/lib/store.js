@@ -27,6 +27,7 @@ export const KEYS = {
   homeLayout: 'jwh-home-layout-v1',
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
+  rooms: 'jwh-rooms-v1',
 };
 
 export function get(key, fallback) {

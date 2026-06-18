@@ -18,6 +18,8 @@
   --indigo:        #223a70;
   --indigo-soft:   #3a5ba0;
   --gold:          #b8860b;
+  --shu:#b6391f;            /* vermilion seal — Sumi-e accent */
+  --shu-deep:#8f2c17;
   /* ============ COLOR — brand (ink / text-safe) ============ */
   --red-ink:       #bc002d;
   --indigo-ink:    #223a70;
@@ -1751,3 +1753,19 @@ html[data-reduce-motion="on"] *::after{
 .going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
 .going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .going-upcoming.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
+
+/* ============================================================
+   FRONT PAGE — Sumi-e ink, scoped to #view-dashboard only.
+   (spec: specs/2026-06-17-front-page-design.md)
+   ============================================================ */
+#view-dashboard{
+  --ink-paper: color-mix(in srgb, var(--bg) 86%, #e9dcc2);   /* warmer kinari paper, theme-aware */
+}
+#view-dashboard .dash-hero,
+#view-dashboard .needs-me .widget,
+#view-dashboard .mt-card,
+#view-dashboard .teaser{
+  background: color-mix(in srgb, var(--bg-soft) 80%, var(--ink-paper));
+}
+/* a softer hairline used by the dashboard ink surfaces */
+#view-dashboard{ --line-faint: color-mix(in srgb, var(--line) 60%, transparent); }

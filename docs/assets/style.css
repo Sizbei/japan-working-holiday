@@ -164,10 +164,6 @@ body {
 }
 
 /* ---- Hero ---- */
-.hero {
-  position: relative; text-align: center; padding: 5rem 1.5rem 3rem;
-  max-width: var(--maxw); margin: 0 auto; z-index: 1;
-}
 .theme-toggle {
   position: absolute; top: 1.25rem; right: 1.25rem;
   background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink);
@@ -175,24 +171,12 @@ body {
   box-shadow: var(--shadow); transition: transform .2s;
 }
 .theme-toggle:hover { transform: scale(1.08) rotate(-12deg); }
-.hero-mark { display: flex; justify-content: center; margin-bottom: 1.5rem; }
 .sun {
   display: block; width: 64px; height: 64px; border-radius: 50%;
   background: var(--red);
   box-shadow: 0 0 0 0 rgba(188,0,45,.4); animation: pulse 3.5s ease-in-out infinite;
 }
 @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(188,0,45,.35); } 50% { box-shadow: 0 0 0 18px rgba(188,0,45,0); } }
-.hero-kicker { font-size: .8rem; letter-spacing: .35em; text-transform: uppercase; color: var(--indigo); margin: 0 0 .5rem; font-weight: 700; }
-.hero h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.4rem, 7vw, 4rem); margin: 0; letter-spacing: -.02em; line-height: 1.05; }
-.hero-sub { font-size: 1.15rem; color: var(--ink-soft); margin: .75rem 0 0; }
-.hero-status {
-  display: inline-block; margin-top: 1.25rem; padding: .5rem 1rem; border-radius: 100px;
-  background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--gold-ink);
-  font-size: .85rem; font-weight: 500; border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
-}
-.hero-status:empty { display: none; }
-.hero-meta { margin-top: 1.5rem; font-size: .85rem; color: var(--ink-soft); }
-.hero-meta .dot { margin: 0 .5rem; opacity: .5; }
 
 /* ---- TOC ---- */
 .toc {
@@ -285,7 +269,6 @@ footer { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid va
 .disclaimer { font-size: .78rem; opacity: .8; max-width: 540px; margin: .75rem auto 0; }
 
 @media (max-width: 600px) {
-  .hero { padding-top: 3.5rem; }
   .block { padding: 1.25rem; }
   .controls { flex-direction: column; align-items: stretch; }
 }
@@ -383,7 +366,6 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 
 /* mobile niceties */
 @media (max-width: 559px) {
-  .hero { padding-top: 3rem; }
   /* TOC wraps to multiple rows on narrow screens, so a fixed sticky offset
      would collide with it — keep the progress bar in flow instead. */
   .check-progress { position: static; top: auto; gap: var(--s2); padding: var(--s2) var(--s3); }
@@ -859,13 +841,9 @@ html.js-router .view.is-active { display: block; }
 .route-nav a:active { transform: scale(var(--press-scale)); }
 .route-nav a[aria-current="page"] { color: var(--on-accent); background: var(--red); }
 
-/* hero is now a persistent header — trim it so it doesn't dominate every route */
-.hero { padding: 2.75rem var(--gutter) 1.75rem; }
-
 /* stable regions keep their own snapshot — only the active view cross-fades */
 .topbar    { view-transition-name: jwh-topbar; }
 .route-nav { view-transition-name: jwh-routenav; }
-.hero      { view-transition-name: jwh-hero; }
 ::view-transition-old(root), ::view-transition-new(root) {
   animation-duration: var(--dur-2); animation-timing-function: var(--ease-out);
 }
@@ -920,7 +898,6 @@ html.js-router .view.is-active { display: block; }
   background: var(--hinomaru) center/contain no-repeat !important;
   border-radius: 0 !important; border: none !important; box-shadow: none !important;
 }
-.hero-mark .sun{ width: 60px; height: 60px; animation: none; }
 .tb-sun{ width: 15px; height: 15px; }
 .gate-mark{ width: 44px; height: 44px; }
 
@@ -931,8 +908,6 @@ html.js-router .view.is-active { display: block; }
 .kind-tag, .trk-when, .w-when, .cp-badge, .due-tag, th, .badge, .phase-block .window, .agenda-cat, .cd-label{
   font-family: var(--mono); letter-spacing: .02em;
 }
-.hero-kicker{ font-family: var(--pixel); letter-spacing: .16em; font-size: 1.05rem; }
-
 /* score countdown — recessed LCD plate, pixel digits, mono label */
 .countdown{
   font-family: var(--mono);
@@ -1002,10 +977,6 @@ html.js-router .view.is-active { display: block; }
   .route-nav a{ flex: 1; text-align: center; font-size: .58rem; padding: .45rem .15rem; border-radius: var(--r-sm); }
   .route-nav a[aria-current="page"]{ background: transparent; color: var(--red); }
   #main{ padding-bottom: 3.5rem; }   /* clear the bottom bar */
-  /* tighter hero so MY TOKYO is reachable without a full-screen scroll */
-  .hero{ padding: 1.4rem var(--gutter) .9rem; }
-  .hero-mark .sun{ width: 44px; height: 44px; }
-  .hero-kicker{ font-size: .9rem; }
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1840,10 +1811,6 @@ html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 }
 @media (hover: hover) and (pointer: fine){ .route-nav a:hover::after{ transform: scaleX(1); } }
 html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
-
-/* On the dashboard the bespoke ink hero IS the hero, so hide the global masthead
-   there to avoid a duplicate "My Year in Japan" title. Other routes keep the masthead. */
-html:has(#view-dashboard.is-active) header.hero{ display: none; }
 
 /* ============================================================
    HOME LAYOUT THEMES — same dashboard DOM, three compositions,

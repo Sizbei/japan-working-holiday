@@ -43,8 +43,6 @@ function boot() {
     .then(data => {
       const today = nowISO();
       const m = data.meta || {};
-      setText('#heroSub', m.subtitle || '');
-      setText('#metaArrival', m.arrival_date ? `Arrival: ${m.arrival_date}` : '');
       setText('#footGen', m.generated || '');
       mountCalendar(data, today);
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going

@@ -9,7 +9,6 @@ import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
 import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
-import { makeSortable } from './dnd.js';
 import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';
 
@@ -21,30 +20,8 @@ export function mountDashboard(data, today) {
   initTheme();
   renderCountdown();
   wireBell();
-  setupWidgetDnD();
   refresh();
   document.addEventListener('jwh:data-changed', refresh);
-}
-
-function setupWidgetDnD() {
-  const dash = $('#dashHome');
-  if (!dash) return;
-  dash.querySelectorAll('.widget').forEach(w => {
-    w.dataset.id = w.id;
-    if (!w.querySelector(':scope > .dnd-handle')) {   // sibling of the heading, NOT inside it (keeps the h3 accessible name clean)
-      const b = document.createElement('button');
-      b.className = 'dnd-handle'; b.type = 'button'; b.textContent = '⠿';
-      b.setAttribute('aria-label', `Reorder ${w.id.replace('w', '')} widget`);
-      w.insertBefore(b, w.firstChild);
-    }
-  });
-  const order = get(KEYS.widgetOrder, null);
-  if (order && order.length) order.forEach(id => { const w = document.getElementById(id); if (w) dash.appendChild(w); });
-  makeSortable(dash, {
-    itemSelector: '.widget', handleSelector: '.dnd-handle', label: 'widget',
-    idOf: el => el.dataset.id,
-    onReorder: (ids) => set(KEYS.widgetOrder, ids),
-  });
 }
 
 function gcDismissed() {
@@ -89,14 +66,25 @@ function buildItems() {
   return items;
 }
 
-// ---- countdown ribbon ----
+// ---- countdown: hero numeral (canonical) + small topbar copy ----
 function renderCountdown() {
-  const el = $('#countdown');
-  if (!el) return;
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', TODAY);
-  const unit = c.phase === 'arrived' ? (c.days === 1 ? 'DAY IN' : 'DAYS IN') : (c.days === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
-  el.innerHTML = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
-  el.classList.toggle('arrived', c.phase === 'arrived');
+  const arrived = c.phase === 'arrived';
+  // topbar (decorative, aria-hidden in markup)
+  const el = $('#countdown');
+  if (el) {
+    const unit = arrived ? (c.days === 1 ? 'DAY IN' : 'DAYS IN') : (c.days === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
+    el.innerHTML = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
+    el.classList.toggle('arrived', arrived);
+  }
+  // hero (the live region)
+  const hero = $('#heroCount');
+  if (hero) {
+    const unit = arrived ? (c.days === 1 ? 'day in Japan' : 'days in Japan') : (c.days === 1 ? 'day until I land' : 'days until I land');
+    hero.querySelector('.hc-num').textContent = c.days ?? '';
+    hero.querySelector('.hc-unit').textContent = unit;
+    hero.classList.toggle('arrived', arrived);
+  }
 }
 
 // ---- bell + panel ----
@@ -174,14 +162,26 @@ function renderPanel(alerts) {
   });
 }
 
-// ---- home widgets ----
+// ---- home: promoted "needs me" cards + demoted teasers ----
 function renderWidgets(alerts) {
-  fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'));
-  fill('#wEvents', alerts.filter(a => a.kind === 'event'));
-  fill('#wBookBy', alerts.filter(a => a.kind === 'book'));
+  fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'), 3);
   renderProgress();
-  renderPlanWidget();
   renderGoingWidget();
+  renderTeasers(alerts);
+}
+function renderTeasers(alerts) {
+  const book = alerts.find(a => a.kind === 'book');
+  teaser('#tBookBy', book ? `${fmtShort(book.when)} · ${clip(book.title, 38)}` : 'Nothing to book yet', '#/deadlines');
+  const ev = alerts.find(a => a.kind === 'event');
+  teaser('#tEvents', ev ? `${fmtShort(ev.when)} · ${clip(ev.title, 38)}` : 'No upcoming events', '#/calendar');
+  const plans = loadPlans();
+  const date = Object.keys(plans).filter(d => plans[d] && plans[d].stops && plans[d].stops.length && d >= TODAY).sort()[0];
+  teaser('#tPlan', date ? `${date === TODAY ? 'Today' : fmtShort(date)} · ${plans[date].stops.length} stop${plans[date].stops.length === 1 ? '' : 's'}` : 'Plan a day', '#/plan');
+}
+function teaser(sel, text, route) {
+  const el = $(sel);
+  if (!el) return;
+  el.querySelector('.teaser-body').innerHTML = `<a href="${route}">${esc(text)} <span class="teaser-go" aria-hidden="true">→</span></a>`;
 }
 // curated "events I'm going to" — the ones the user has marked ✓ Going (not the auto upcoming stream)
 function renderGoingWidget() {
@@ -189,7 +189,7 @@ function renderGoingWidget() {
   if (!el) return;
   const going = allEvents().filter(e => isGoing(e.id)).sort((a, b) => a.date.localeCompare(b.date));
   const body = going.length
-    ? `<ul>${going.slice(0, 6).map(e => {
+    ? `<ul>${going.slice(0, 2).map(e => {
         const c = countdown(e.date.slice(0, 10), TODAY);
         const when = c.phase === 'arrived' ? esc(fmtShort(e.date)) : `in ${c.days}d`;
         return `<li><a href="#/calendar"><span class="w-when">${esc(when)}</span> ${esc(clip(e.title, 46))}</a></li>`;
@@ -197,25 +197,11 @@ function renderGoingWidget() {
     : `<p class="w-empty">Nothing locked in yet — open an event and tap <b>✓ Going</b>.</p>`;
   el.querySelector('.widget-body').innerHTML = body;
 }
-// today's day plan if it exists, else the next upcoming one (plan ↔ dashboard parity)
-function renderPlanWidget() {
-  const el = $('#wPlan');
-  if (!el) return;
-  const plans = loadPlans();
-  const date = Object.keys(plans).filter(d => plans[d] && plans[d].stops && plans[d].stops.length && d >= TODAY).sort()[0];
-  const plan = date ? plans[date] : null;
-  const body = plan
-    ? `<p class="w-plan-date">${date === TODAY ? 'Today' : esc(fmtShort(date))}</p>
-       <ul>${plan.stops.slice(0, 5).map(s => `<li><a href="#/plan"><span class="w-when">${s.startTime ? esc(s.startTime) : '·'}</span> ${esc(clip(s.name, 48))}</a></li>`).join('')}</ul>
-       <a class="w-link" href="#/plan">Open plan →</a>`
-    : `<p class="w-empty">No day planned yet — <a href="#/plan">plan a day →</a></p>`;
-  el.querySelector('.widget-body').innerHTML = body;
-}
-function fill(sel, list) {
+function fill(sel, list, max = 5) {
   const el = $(sel);
   if (!el) return;
   const body = list.length
-    ? `<ul>${list.slice(0, 5).map(a => `<li class="sev-${a.severity}">
+    ? `<ul>${list.slice(0, max).map(a => `<li class="sev-${a.severity}">
         <a href="#/${a.kind === 'event' ? 'calendar' : (a.kind === 'book' || a.kind === 'deadline') ? 'deadlines' : 'checklist'}">
         <span class="w-when">${esc(fmtShort(a.when))}</span> ${esc(clip(a.title, 52))}</a></li>`).join('')}</ul>`
     : `<p class="w-empty">Nothing due soon</p>`;

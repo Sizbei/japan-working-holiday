@@ -1847,3 +1847,7 @@ html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 }
 @media (hover: hover) and (pointer: fine){ .route-nav a:hover::after{ transform: scaleX(1); } }
 html[data-reduce-motion="on"] .route-nav a::after{ transition: none; }
+
+/* On the dashboard the bespoke ink hero IS the hero, so hide the global masthead
+   there to avoid a duplicate "My Year in Japan" title. Other routes keep the masthead. */
+html:has(#view-dashboard.is-active) header.hero{ display: none; }

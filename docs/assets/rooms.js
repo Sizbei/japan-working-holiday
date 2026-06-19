@@ -193,6 +193,8 @@ function updateSummary(n, status) {
 }
 
 // ---- compare (UI-only selection; ≤4) ----
+// Selection persists across filter changes (cart model): a room you picked stays in the drawer
+// even if a later filter hides its card. Reads from the full ROOMS list, not the filtered subset.
 function renderDrawer() {
   const bar = $('#roomCompareBar'); if (!bar) return;
   if (compareSet.size === 0) { bar.hidden = true; bar.innerHTML = ''; return; }
@@ -228,7 +230,7 @@ function openCompare() {
   ].join('');
   const links = `<tr><th>Links</th>${rows.map(r => `<td><a href="${esc(r.listingUrl)}" target="_blank" rel="noopener noreferrer">listings ↗</a></td>`).join('')}</tr>`;
   const table = `<div class="rc-table-wrap"><table class="rc-table"><thead>${head}</thead><tbody>${body}${links}</tbody></table></div>`;
-  showModal('Compare rooms', table, { wide: true });
+  showModal('Compare rooms', table, { wide: true });   // every cell above is esc()'d → safe to inject raw
 }
 
 function updateBudgetLabel() {

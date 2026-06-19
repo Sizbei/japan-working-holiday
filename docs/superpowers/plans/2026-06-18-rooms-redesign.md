@@ -163,7 +163,7 @@ const LINE_DICT = [
   ['Shibuya', /shibuya/i],
   ['Shinjuku', /shinjuku/i],
   ['Ikebukuro', /ikebukuro/i],
-  ['Itabashi', /itabashi|oyama/i],
+  ['Itabashi', /itabashi|\boyama\b/i],   // \b so "Oyamadai" (Setagaya) isn't mis-tagged Itabashi
   ['Toshima/Bunkyo', /toshima|bunkyo|otsuka|gokokuji|sugamo|komagome|kagurazaka|shiinamachi/i],
   ['Minato', /minato|roppongi|azabu|hiroo|aoyama/i],
   ['Asakusa/Kuramae', /asakusa|kuramae/i],
@@ -173,16 +173,19 @@ const LINE_DICT = [
 
 export const LINE_LABELS = LINE_DICT.map(([label]) => label);
 
-// All ¥ amounts in a string, supporting the "¥54k" shorthand. Returns number[] (may be empty).
+// All ¥ amounts in a string, supporting the "¥54k" shorthand and ranges where only the first
+// operand carries the ¥ ("¥45,000–95,000"). Returns number[] (may be empty).
 export function yenAmounts(str) {
   const out = [];
-  const re = /¥\s*([\d,]+)\s*(k)?/gi;
+  const re = /¥\s*([\d,]+)\s*(k)?(?:\s*[–-]\s*([\d,]+)\s*(k)?)?/gi;
   let m;
   while ((m = re.exec(String(str || '')))) {
     let n = parseInt(m[1].replace(/,/g, ''), 10);
-    if (!Number.isFinite(n)) continue;
-    if (m[2]) n *= 1000;            // "¥54k" → 54000
-    out.push(n);
+    if (Number.isFinite(n)) { if (m[2]) n *= 1000; out.push(n); }   // "¥54k" → 54000
+    if (m[3] != null) {                                            // range 2nd operand
+      let n2 = parseInt(m[3].replace(/,/g, ''), 10);
+      if (Number.isFinite(n2)) { if (m[4]) n2 *= 1000; out.push(n2); }
+    }
   }
   return out;
 }
@@ -252,9 +255,12 @@ export function womenOnly(room) {
     || /women-only/i.test(`${room.name || ''} ${room.area || ''}`);
 }
 
+// requirements may be authored as a non-array by mistake; coerce so callers never throw.
+const reqs = (room) => Array.isArray(room.requirements) ? room.requirements : [];
+
 export function searchBlob(room) {
-  return [room.name, room.provider, room.area, room.station, room.note,
-    (room.requirements || []).join(' ')].join(' ').toLowerCase();
+  return [room.name, room.provider, room.area, room.station, room.note, room.roomType, room.gender,
+    reqs(room).join(' ')].join(' ').toLowerCase();
 }
 
 // Map each room to a copy with derived fields. Run once, on first render. Does not mutate input.
@@ -301,7 +307,7 @@ In `docs/index.html`, replace the current `#roomFilters` div and the grid line (
 
 ```html
     <div id="roomFilters">
-      <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · ¥50k · dorm…" aria-label="Filter rooms">
+      <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · oakhouse · dorm…" aria-label="Filter rooms">
       <label class="room-budget" for="roomBudget">Budget <output id="roomBudgetVal">Any</output>
         <input type="range" id="roomBudget" min="30000" max="200000" step="5000" value="200000" aria-label="Maximum monthly rent">
       </label>

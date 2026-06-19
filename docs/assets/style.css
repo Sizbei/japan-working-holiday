@@ -1032,13 +1032,14 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 .rc-chip{ font-family: var(--mono); font-size:.7rem; background: var(--bg); border:1px solid var(--line); border-radius: var(--r-pill); padding:.2rem .5rem; display:inline-flex; align-items:center; gap:.3rem; }
 .rc-x{ border:none; background:none; color: var(--ink-soft); cursor:pointer; font-size:.95rem; line-height:1; padding:0; }
 .rc-acts{ display:flex; gap:.5rem; }
-.app-modal-wide{ max-width: min(680px, 94vw); }
+.app-modal-card.app-modal-wide{ max-width: min(680px, 94vw); }   /* beat base .app-modal-card{max-width:400px} on specificity, not source order — was clipped on mobile */
 .app-modal-body{ margin-bottom: var(--s4); }
 .rc-table-wrap{ overflow-x:auto; }
 .rc-table{ border-collapse:collapse; width:100%; font-size:.8rem; }
 .rc-table th, .rc-table td{ border:1px solid var(--line); padding:.4rem .55rem; text-align:left; vertical-align:top; }
 .rc-table thead th{ font-family: var(--mono); font-size:.72rem; color: var(--indigo-ink); }
 .rc-table tbody th{ font-family: var(--mono); font-size:.66rem; text-transform:uppercase; letter-spacing:.03em; color: var(--ink-soft); white-space:nowrap; }
+.rc-table tbody td{ color: var(--ink); font-weight:400; white-space:normal; }   /* override the global td:nth-child(2) red/nowrap leak */
 
 /* collapsible Explore cards (compact → click to expand) */
 .card2.collapsible{ cursor: pointer; }

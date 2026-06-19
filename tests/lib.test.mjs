@@ -450,3 +450,32 @@ test('enrich: adds derived fields, leaves the source object untouched (immutable
   assert.equal(out[0]._blob.includes('mixed'), true);     // gender searchable
   assert.equal(src[0]._allIn, undefined);
 });
+
+// Regressions found by running enrich() over the real 44-record dataset (adversarial review).
+test('parseYen: "k" only multiplies a true ¥54k shorthand, never the "k" in a following word', () => {
+  assert.equal(parseYen('~¥30,000 key money + cleaning (varies by house)'), 30000);   // was 30,000,000
+  assert.equal(parseYen('avg ~¥54k'), 54000);
+  assert.equal(parseYen('¥50k+ rooms'), 50000);
+  assert.deepEqual(yenAmounts('¥40k–95k'), [40000, 95000]);
+});
+
+test('parseRent: discount/avg/maintenance figures after the "/mo" marker do not become the floor', () => {
+  assert.deepEqual(parseRent('Share house from ~¥75,000 / mo (opening discount up to ¥7,000/mo off for first 3 months)'),
+    { monthlyMin: 75000, monthlyMax: 75000, unit: 'mo' });
+  assert.deepEqual(parseRent('¥77,000–79,000 / mo (avg ~¥54k across Social Apt portfolio; this building higher-end)'),
+    { monthlyMin: 77000, monthlyMax: 79000, unit: 'mo' });
+  assert.deepEqual(parseRent('~¥19,000–67,000+ / mo (studios cluster ¥24,800–41,000) + maintenance ~¥15,000/mo'),
+    { monthlyMin: 19000, monthlyMax: 67000, unit: 'mo' });
+});
+
+test('noGuarantor: catches "No Japanese guarantor"/"no-guarantor", rejects company-required phrasings', () => {
+  assert.equal(noGuarantor({ requirements: ['Passport', 'No Japanese guarantor required'] }), true);
+  assert.equal(noGuarantor({ requirements: ['No-guarantor listings filterable directly'] }), true);
+  assert.equal(noGuarantor({ requirements: ['Guarantor company (they arrange)'] }), false);
+  assert.equal(noGuarantor({ requirements: ['No personal Japanese guarantor — a guarantor company (hosho) is used'] }), false);
+});
+
+test('bookFromAbroad: explicit "after arrival only / not bookable from abroad" overrides an "apply online"', () => {
+  assert.equal(bookFromAbroad({ moveIn: 'After arrival only — not bookable from abroad', requirements: ['Apply online at a UR center'] }), false);
+  assert.equal(bookFromAbroad({ moveIn: 'Rolling — apply online from abroad', requirements: [] }), true);
+});

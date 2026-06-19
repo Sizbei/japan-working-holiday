@@ -26,9 +26,11 @@ export const LINE_LABELS = LINE_DICT.map(([label]) => label);
 
 // All ¥ amounts in a string, supporting the "¥54k" shorthand and ranges where only the first
 // operand carries the ¥ ("¥45,000–95,000"). Returns number[] (may be empty).
+// The "k" must be glued to the digits and not start a word, so "¥30,000 key money" is NOT read
+// as ¥30,000k (30 million) — only a true "¥54k" shorthand multiplies.
 export function yenAmounts(str) {
   const out = [];
-  const re = /¥\s*([\d,]+)\s*(k)?(?:\s*[–-]\s*([\d,]+)\s*(k)?)?/gi;
+  const re = /¥\s*([\d,]+)(k(?![a-z]))?(?:\s*[–-]\s*([\d,]+)(k(?![a-z]))?)?/gi;
   let m;
   while ((m = re.exec(String(str || '')))) {
     let n = parseInt(m[1].replace(/,/g, ''), 10);
@@ -56,8 +58,12 @@ export function parseYen(str) {
 // Monthly rent range from the free-text rent string. Nightly rates are ×30 (flagged unit:'night').
 export function parseRent(rentStr) {
   const s = String(rentStr || '');
-  const amts = yenAmounts(s);
   const unit = /night|nightly/i.test(s) ? 'night' : 'mo';
+  // Only read amounts BEFORE the first "/mo" or "/night" rate marker, so trailing discount/avg/
+  // maintenance figures ("(opening discount ¥7,000/mo off)", "(avg ~¥54k)", "+ maintenance ¥15,000/mo")
+  // can't masquerade as the rent floor. No marker → fall back to the whole string.
+  const marker = s.match(/\/\s*(?:mo|month|night)/i);
+  const amts = yenAmounts(marker ? s.slice(0, marker.index) : s);
   if (!amts.length) return { monthlyMin: null, monthlyMax: null, unit };
   let lo = Math.min(...amts), hi = Math.max(...amts);
   if (unit === 'night') { lo *= 30; hi *= 30; }
@@ -102,12 +108,16 @@ const reqs = (room) => Array.isArray(room.requirements) ? room.requirements : []
 
 export function bookFromAbroad(room) {
   const hay = `${room.moveIn || ''} ${reqs(room).join(' ')}`;
+  if (/after arrival only|not bookable from abroad|on arrival only/i.test(hay)) return false;  // explicit negation wins
   return /abroad|before arrival|apply online/i.test(hay);
 }
 
 export function noGuarantor(room) {
   const hay = `${reqs(room).join(' ')} ${room.oneTime || ''}`;
-  return /no guarantor/i.test(hay);
+  // Catches "No guarantor", "No-guarantor", and the common "No Japanese guarantor" phrasing, but
+  // not "guarantor company required" (no leading "no") or "no personal Japanese guarantor" (a
+  // company is still used — "personal" between "no" and "guarantor" blocks the match).
+  return /no[- ]?(?:japanese )?guarantor/i.test(hay);
 }
 
 export function womenOnly(room) {

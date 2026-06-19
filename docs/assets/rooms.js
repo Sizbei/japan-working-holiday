@@ -113,7 +113,10 @@ function sortRooms(arr, sort) {
 // ---- card ----
 function transitText(r) {
   const st = (r.station || '').trim();
-  if (!st || /^various\b|^filter\b/i.test(st)) return 'Citywide — many houses';
+  if (!st) return 'Citywide — many houses';
+  // Genericize only a bare "Various"/"Filter…" with no authored detail; keep any "— …", "e.g.", or
+  // "(…)" nuance (e.g. "Various — many danchi are a bus ride from the nearest station").
+  if (/^(various|filter)\b/i.test(st) && !/[—(]|e\.g\./i.test(st)) return 'Citywide — many houses';
   return st;
 }
 function flagBadges(r) {
@@ -139,7 +142,7 @@ function card(r, status) {
     <div class="room-actions">
       <button type="button" class="room-act${s.saved ? ' on' : ''}" data-act="save" aria-pressed="${s.saved ? 'true' : 'false'}">${s.saved ? '★ Saved' : '☆ Save'}</button>
       <button type="button" class="room-act${s.contacted ? ' on' : ''}" data-act="contacted" aria-pressed="${s.contacted ? 'true' : 'false'}">${s.contacted ? '✓ Contacted' : 'Contacted?'}</button>
-      <label class="room-compare"><input type="checkbox" data-act="compare"${compareSet.has(r.id) ? ' checked' : ''}${!compareSet.has(r.id) && compareSet.size >= 4 ? ' disabled' : ''}> Compare</label>
+      <label class="room-compare"><input type="checkbox" data-act="compare"${compareSet.has(r.id) ? ' checked' : ''}${!compareSet.has(r.id) && compareSet.size >= 4 ? ' disabled title="Comparing 4 already — remove one to add this"' : ''}> Compare</label>
     </div>
     <details class="room-note-wrap"${s.note ? ' open' : ''}>
       <summary>Note</summary>
@@ -240,8 +243,11 @@ function updateBudgetLabel() {
 
 // ---- wiring (bound once; the grid is rebuilt each render so card actions use delegation) ----
 function wireControls() {
-  $('#roomSearch')?.addEventListener('input', debounce(render, 150));
-  $('#roomBudget')?.addEventListener('input', () => { updateBudgetLabel(); render(); });
+  const renderSoon = debounce(render, 150);
+  $('#roomSearch')?.addEventListener('input', renderSoon);
+  // label updates live; the filter/render (and its #roomCount aria-live announce) is debounced so a
+  // slider drag doesn't fire a render + screen-reader announcement on every tick.
+  $('#roomBudget')?.addEventListener('input', () => { updateBudgetLabel(); renderSoon(); });
   $('#roomSort')?.addEventListener('change', render);
   $$('#roomTypeF .chip').forEach(ch => ch.addEventListener('click', () => {
     $$('#roomTypeF .chip').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });

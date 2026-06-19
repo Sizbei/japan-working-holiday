@@ -66,7 +66,7 @@
   --maxw-prose: 68ch;
   --gutter: clamp(1rem, 4vw, 1.5rem);
   --header-h: 3.25rem;
-  --nav-h: 2.9rem;   /* route-nav height — secondary sticky bars offset below it */
+  --nav-h: 3.65rem;   /* route-nav rendered height (incl. padding @106.25% root) — secondary sticky bars (cal-legend, check-progress) offset below the now-sticky nav */
   --sticky-gap: var(--s2);
   /* ============ RADII ============ */
   --r-xs: 6px; --r-sm: 9px; --r-md: 12px; --r-lg: 16px; --r-xl: 18px; --r-2xl: 22px; --r-pill: 999px;
@@ -825,8 +825,8 @@ html.js-router .view { display: none; }
 html.js-router .view.is-active { display: block; }
 
 .route-nav {
-  position: static; z-index: 20;
-  display: flex; gap: .15rem; justify-content: flex-start; flex-wrap: wrap; align-items: center;
+  position: sticky; top: var(--header-h); z-index: 40;   /* sticks flush under the sticky topbar; keeps the cal-legend offset (header-h + nav-h) correct */
+  display: flex; gap: .15rem; justify-content: center; flex-wrap: wrap; align-items: center;
   background: var(--bg);
   padding: .4rem var(--gutter); border-bottom: 1px solid var(--line);
 }

@@ -315,21 +315,34 @@
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">部屋探し</span><h2>Find a Room</h2></div>
     <p class="lede">Foreigner-friendly share houses &amp; apartments — no key money, no guarantor, book from abroad. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count" role="status" aria-live="polite"></span></p>
     <div id="roomFilters">
-      <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · ¥50k · dorm…" aria-label="Filter rooms">
-      <div class="filters" id="roomTier" role="group" aria-label="Budget">
-        <button class="chip active" data-tier="all" type="button">Any budget</button>
-        <button class="chip" data-tier="budget" type="button">Budget</button>
-        <button class="chip" data-tier="mid" type="button">Mid</button>
-        <button class="chip" data-tier="splurge" type="button">Splurge</button>
-      </div>
+      <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · oakhouse · dorm…" aria-label="Filter rooms">
+      <label class="room-budget" for="roomBudget">Budget <output id="roomBudgetVal">Any</output>
+        <input type="range" id="roomBudget" min="30000" max="200000" step="5000" value="200000" aria-label="Maximum monthly rent">
+      </label>
+      <label class="room-sort" for="roomSort">Sort
+        <select id="roomSort" aria-label="Sort rooms">
+          <option value="newcomer">Newcomer-friendly</option>
+          <option value="rent">Rent (low→high)</option>
+          <option value="movein">Move-in cost (low→high)</option>
+          <option value="soonest">Move-in soonest</option>
+        </select>
+      </label>
       <div class="filters" id="roomTypeF" role="group" aria-label="Room type">
-        <button class="chip active" data-room="all" type="button">Any room</button>
-        <button class="chip" data-room="private" type="button">Private</button>
-        <button class="chip" data-room="dorm" type="button">Dorm</button>
+        <button class="chip active" data-room="all" type="button" aria-pressed="true">Any room</button>
+        <button class="chip" data-room="private" type="button" aria-pressed="false">Private</button>
+        <button class="chip" data-room="dorm" type="button" aria-pressed="false">Dorm</button>
       </div>
-      <button class="chip toggle" id="roomNoKey" type="button" aria-pressed="false">No key money</button>
+      <div class="filters" id="roomLines" role="group" aria-label="Area / line"></div>
+      <div class="filters" id="roomToggles" role="group" aria-label="Filters">
+        <button class="chip toggle" id="roomNoKey" type="button" aria-pressed="false">No key money</button>
+        <button class="chip toggle" id="roomNoGuar" type="button" aria-pressed="false">No guarantor</button>
+        <button class="chip toggle" id="roomAbroad" type="button" aria-pressed="false">Book from abroad</button>
+        <button class="chip toggle" id="roomWomen" type="button" aria-pressed="false">Women-only</button>
+        <button class="chip toggle" id="roomSavedOnly" type="button" aria-pressed="false">★ Saved</button>
+      </div>
     </div>
     <div class="grid" id="roomsGrid"></div>
+    <div id="roomCompareBar" class="room-compare-bar" hidden role="region" aria-label="Compare selection"></div>
   </section>
   </div><!-- /view-rooms -->
   <div class="view" id="view-map" data-route="map">

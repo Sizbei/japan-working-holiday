@@ -362,3 +362,120 @@ test('route-title parity: every route has a TITLES entry (drives the sr-only h1)
   const missing = routes.filter(r => !new RegExp(`\\b${r}:`).test(titlesBlock));
   assert.deepEqual(missing, [], `routes missing a TITLES entry: ${missing}`);
 });
+
+import {
+  yenAmounts, parseYen, parseRent, depositYen, moveInEstimate, monthlyAllIn,
+  lineTokens, bookFromAbroad, noGuarantor, womenOnly, searchBlob, enrich, LINE_LABELS,
+} from '../docs/assets/lib/rooms.js';
+
+test('parseRent: ranges, compound dorm/private, /night ×30, ¥k shorthand, junk→null', () => {
+  assert.deepEqual(parseRent('¥45,000–95,000 / mo'), { monthlyMin: 45000, monthlyMax: 95000, unit: 'mo' });
+  assert.deepEqual(parseRent('Dorm ¥40,000–60,000 · private ¥60,000–95,000 / mo'),
+    { monthlyMin: 40000, monthlyMax: 95000, unit: 'mo' });
+  assert.deepEqual(parseRent('¥3,000–6,000 / night'), { monthlyMin: 90000, monthlyMax: 180000, unit: 'night' });
+  assert.deepEqual(parseRent('Share ¥50k+ · 1K apt ¥70,000–120,000 / mo'),
+    { monthlyMin: 50000, monthlyMax: 120000, unit: 'mo' });
+  assert.deepEqual(parseRent('From ¥40,000 / mo'), { monthlyMin: 40000, monthlyMax: 40000, unit: 'mo' });
+  assert.deepEqual(parseRent('Per house'), { monthlyMin: null, monthlyMax: null, unit: 'mo' });
+});
+
+test('parseYen / yenAmounts: first amount, ¥0, none→null, k-shorthand', () => {
+  assert.equal(parseYen('~¥30,000 contract'), 30000);
+  assert.equal(parseYen('¥0'), 0);
+  assert.equal(parseYen('Included'), null);
+  assert.deepEqual(yenAmounts('¥10,000–22,000 utilities/mo'), [10000, 22000]);
+  assert.deepEqual(yenAmounts('avg ~¥54k'), [54000]);
+});
+
+test('moveInEstimate: first month + oneTime + deposit; months×rent; unknown→null', () => {
+  assert.deepEqual(
+    moveInEstimate({ rent: '¥45,000–95,000 / mo', oneTime: '~¥30,000 contract', deposit: 'Low' }),
+    { total: 75000, isEstimate: true });
+  assert.deepEqual(
+    moveInEstimate({ rent: '¥60,000–80,000 / mo', oneTime: '~¥30,000', deposit: '~1 month' }),
+    { total: 150000, isEstimate: true });
+  assert.deepEqual(
+    moveInEstimate({ rent: '¥50,000–90,000 / mo', oneTime: 'No key money', deposit: '¥20,000 (¥10,000 non-refundable)' }),
+    { total: 70000, isEstimate: true });
+  assert.deepEqual(moveInEstimate({ rent: 'Per house', oneTime: 'Low', deposit: 'Low' }),
+    { total: null, isEstimate: true });
+});
+
+test('depositYen: ¥ amount wins; ¥0 is zero (not falsy-skipped); months×rent; junk→0', () => {
+  assert.equal(depositYen({ deposit: '¥20,000 (¥10,000 non-refundable)' }, 60000), 20000);
+  assert.equal(depositYen({ deposit: '¥0' }, 60000), 0);
+  assert.equal(depositYen({ deposit: '~2–3 months' }, 60000), 120000);   // low end ×rent
+  assert.equal(depositYen({ deposit: 'Low' }, 60000), 0);
+  assert.equal(depositYen({ deposit: '~1 month' }, null), 0);            // unknown rent → 0
+});
+
+test('monthlyAllIn: rent floor + first fee amount; fees included → rent alone; junk→null', () => {
+  assert.equal(monthlyAllIn({ rent: '¥45,000–95,000 / mo', fees: '¥10,000–22,000 utilities/mo' }), 55000);
+  assert.equal(monthlyAllIn({ rent: '¥55,000–80,000 / mo', fees: 'Utilities included' }), 55000);
+  assert.equal(monthlyAllIn({ rent: 'Per house', fees: '~¥15,000' }), null);
+});
+
+test('lineTokens: dictionary match over station + area', () => {
+  assert.deepEqual(lineTokens({ station: 'Various', area: 'Nakano, Koenji, Oji, Kuramae' }).sort(),
+    ['Asakusa/Kuramae', 'Koenji', 'Nakano'].sort());
+  assert.ok(lineTokens({ station: 'Koenji (JR Chuo/Sobu)', area: 'Koenji / Suginami (Chuo line)' }).includes('Chuo line'));
+  assert.deepEqual(lineTokens({ station: 'Filter', area: 'All Tokyo' }), []);
+  assert.ok(Array.isArray(LINE_LABELS) && LINE_LABELS.length > 0);
+});
+
+test('flag derivations: bookFromAbroad / noGuarantor / womenOnly', () => {
+  assert.equal(bookFromAbroad({ moveIn: 'Rolling — book from abroad', requirements: [] }), true);
+  assert.equal(bookFromAbroad({ moveIn: 'Viewings encouraged', requirements: ['Visa'] }), false);
+  assert.equal(noGuarantor({ requirements: ['No guarantor needed'] }), true);
+  assert.equal(noGuarantor({ requirements: ['Guarantor company (they arrange)'] }), false);
+  assert.equal(womenOnly({ gender: 'women-only' }), true);
+  assert.equal(womenOnly({ gender: 'mixed (some women-only rooms)' }), false);
+});
+
+test('enrich: adds derived fields, leaves the source object untouched (immutable)', () => {
+  const src = [{ id: 'x', name: 'X House', provider: 'P', area: 'Nakano', station: 'Various',
+    rent: '¥45,000–95,000 / mo', fees: '~¥10,000', oneTime: '~¥30,000', deposit: 'Low',
+    roomType: 'private', gender: 'mixed', noKeyMoney: true, moveIn: 'Rolling — apply online from abroad',
+    requirements: ['No guarantor'], note: 'nice' }];
+  const out = enrich(src);
+  assert.equal(out[0]._allIn, 55000);
+  assert.equal(out[0]._moveIn.total, 75000);
+  assert.deepEqual(out[0]._price, { monthlyMin: 45000, monthlyMax: 95000, unit: 'mo' });
+  assert.ok(out[0]._lines.includes('Nakano'));
+  assert.equal(out[0]._bookAbroad, true);
+  assert.equal(out[0]._noGuarantor, true);
+  assert.equal(out[0]._women, false);
+  assert.equal(out[0]._blob.includes('nakano'), true);
+  assert.equal(out[0]._blob.includes('private'), true);   // roomType searchable
+  assert.equal(out[0]._blob.includes('mixed'), true);     // gender searchable
+  assert.equal(src[0]._allIn, undefined);
+});
+
+// Regressions found by running enrich() over the real 44-record dataset (adversarial review).
+test('parseYen: "k" only multiplies a true ¥54k shorthand, never the "k" in a following word', () => {
+  assert.equal(parseYen('~¥30,000 key money + cleaning (varies by house)'), 30000);   // was 30,000,000
+  assert.equal(parseYen('avg ~¥54k'), 54000);
+  assert.equal(parseYen('¥50k+ rooms'), 50000);
+  assert.deepEqual(yenAmounts('¥40k–95k'), [40000, 95000]);
+});
+
+test('parseRent: discount/avg/maintenance figures after the "/mo" marker do not become the floor', () => {
+  assert.deepEqual(parseRent('Share house from ~¥75,000 / mo (opening discount up to ¥7,000/mo off for first 3 months)'),
+    { monthlyMin: 75000, monthlyMax: 75000, unit: 'mo' });
+  assert.deepEqual(parseRent('¥77,000–79,000 / mo (avg ~¥54k across Social Apt portfolio; this building higher-end)'),
+    { monthlyMin: 77000, monthlyMax: 79000, unit: 'mo' });
+  assert.deepEqual(parseRent('~¥19,000–67,000+ / mo (studios cluster ¥24,800–41,000) + maintenance ~¥15,000/mo'),
+    { monthlyMin: 19000, monthlyMax: 67000, unit: 'mo' });
+});
+
+test('noGuarantor: catches "No Japanese guarantor"/"no-guarantor", rejects company-required phrasings', () => {
+  assert.equal(noGuarantor({ requirements: ['Passport', 'No Japanese guarantor required'] }), true);
+  assert.equal(noGuarantor({ requirements: ['No-guarantor listings filterable directly'] }), true);
+  assert.equal(noGuarantor({ requirements: ['Guarantor company (they arrange)'] }), false);
+  assert.equal(noGuarantor({ requirements: ['No personal Japanese guarantor — a guarantor company (hosho) is used'] }), false);
+});
+
+test('bookFromAbroad: explicit "after arrival only / not bookable from abroad" overrides an "apply online"', () => {
+  assert.equal(bookFromAbroad({ moveIn: 'After arrival only — not bookable from abroad', requirements: ['Apply online at a UR center'] }), false);
+  assert.equal(bookFromAbroad({ moveIn: 'Rolling — apply online from abroad', requirements: [] }), true);
+});

@@ -62,7 +62,7 @@
   --s5: 1.25rem; --s6: 1.5rem;  --s8: 2rem;    --s10: 2.5rem;
   --s12: 3rem;   --s16: 4rem;   --s20: 5rem;
   /* ============ LAYOUT ============ */
-  --maxw: 1100px;
+  --maxw: 1280px;   /* content column — wide enough to fill desktop/laptop screens so the centered body doesn't read as a narrow strip under the full-width chrome */
   --maxw-prose: 68ch;
   --gutter: clamp(1rem, 4vw, 1.5rem);
   --header-h: 3.25rem;

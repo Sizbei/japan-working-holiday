@@ -1007,6 +1007,13 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 .room-links{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.4rem; }
 .room-links .btn{ font-size:.78rem; padding:.4rem .7rem; }
 
+/* Rooms redesign — controls */
+.room-budget, .room-sort{ display:flex; align-items:center; gap:.4rem; font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); }
+.room-budget output{ min-width:5.5rem; color: var(--indigo-ink); font-weight:700; }
+#roomBudget{ accent-color: var(--indigo); }
+.room-sort select{ font:inherit; padding:.25rem .4rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); }
+#roomLines{ gap:.3rem; }
+
 /* collapsible Explore cards (compact → click to expand) */
 .card2.collapsible{ cursor: pointer; }
 .c-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }

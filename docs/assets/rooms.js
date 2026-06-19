@@ -11,6 +11,7 @@ import { enrich, LINE_LABELS } from './lib/rooms.js';
 let DATA = null;
 let ROOMS = [];
 let rendered = false;
+const noteTimers = new Map();   // per-room debounced note saves (module-scope so a toggle can flush them)
 
 const yen = (n) => '¥' + Number(n).toLocaleString('en-US');
 const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
@@ -18,9 +19,19 @@ const isOn = (sel) => !!$(sel)?.classList.contains('active');
 
 // ---- status store (saved / contacted / note per room id) ----
 function allStatus() { return get(KEYS.rooms, {}); }
-function statusOf(id) { return allStatus()[id] || {}; }
 function writeStatus(mutator) { const all = { ...allStatus() }; mutator(all); set(KEYS.rooms, all); }
 function tidy(all, id, cur) { if (Object.keys(cur).length) all[id] = cur; else delete all[id]; }
+
+// Persist any in-flight (debounced) note edits NOW — call before a render that rebuilds the grid,
+// so the rebuilt textarea reads the just-typed text instead of a stale value.
+function flushNotes() {
+  noteTimers.forEach((t, id) => {
+    clearTimeout(t);
+    const ta = document.querySelector(`.room-card[data-id="${CSS.escape(id)}"] .room-note-edit`);
+    if (ta) saveNote(id, ta.value);
+  });
+  noteTimers.clear();
+}
 
 function toggleStatus(id, key) {
   writeStatus(all => { const cur = { ...(all[id] || {}) }; if (cur[key]) delete cur[key]; else cur[key] = true; tidy(all, id, cur); });
@@ -73,7 +84,7 @@ function readFilters() {
   };
 }
 
-function matches(r, f) {
+function matches(r, f, status) {
   if (f.q && !r._blob.includes(f.q)) return false;
   if (f.ceiling !== Infinity && r._price.monthlyMin != null && r._price.monthlyMin > f.ceiling) return false;
   if (f.room === 'private' && !(r.roomType === 'private' || r.roomType === 'private-apartment' || r.roomType === 'both')) return false;
@@ -83,7 +94,7 @@ function matches(r, f) {
   if (f.noGuar && !r._noGuarantor) return false;
   if (f.abroad && !r._bookAbroad) return false;
   if (f.women && !r._women) return false;
-  if (f.savedOnly && !statusOf(r.id).saved) return false;
+  if (f.savedOnly && !(status[r.id] && status[r.id].saved)) return false;
   return true;
 }
 
@@ -111,8 +122,8 @@ function flagBadges(r) {
   if (r._women) out.push('WOMEN-ONLY');
   return out.map(x => `<span class="room-flag">${esc(x)}</span>`).join('');
 }
-function card(r) {
-  const s = statusOf(r.id);
+function card(r, status) {
+  const s = status[r.id] || {};
   const allIn = r._allIn != null ? `~${yen(r._allIn)}/mo all-in` : 'Rent varies';
   const moveIn = r._moveIn.total != null ? `~${yen(r._moveIn.total)} move-in` : 'Move-in varies';
   const badges = flagBadges(r);
@@ -138,25 +149,41 @@ function card(r) {
   </article>`;
 }
 
+// Keyboard-focus continuity across the grid rebuild (matches the calendar/checklist convention).
+function focusKey() {
+  const a = document.activeElement;
+  const grid = $('#roomsGrid');
+  if (!a || !grid || !grid.contains(a) || !a.dataset.act) return null;
+  const id = a.closest('.room-card')?.dataset.id;
+  return id ? { id, act: a.dataset.act } : null;
+}
+function restoreFocus(key) {
+  if (!key) return;
+  const grid = $('#roomsGrid'); if (!grid) return;
+  grid.querySelector(`.room-card[data-id="${CSS.escape(key.id)}"] [data-act="${key.act}"]`)?.focus();
+}
+
 // ---- render ----
 function render() {
   const grid = $('#roomsGrid'); if (!grid) return;
   const f = readFilters();
-  const subset = sortRooms(ROOMS.filter(r => matches(r, f)), f.sort);
-  grid.innerHTML = subset.map(card).join('');
+  const status = allStatus();                       // read once per render (not per room)
+  const key = focusKey();                            // capture focus before the rebuild
+  const subset = sortRooms(ROOMS.filter(r => matches(r, f, status)), f.sort);
+  grid.innerHTML = subset.map(r => card(r, status)).join('');
   if (!subset.length) {
     const p = document.createElement('p');
     p.className = 'room-empty'; p.setAttribute('role', 'status'); p.setAttribute('aria-live', 'polite');
     p.textContent = 'No rooms match these filters — clear a filter or raise the budget.';
     grid.appendChild(p);
   }
-  updateSummary(subset.length);
+  restoreFocus(key);
+  updateSummary(subset.length, status);
 }
-function updateSummary(n) {
-  const all = allStatus();
-  const ids = Object.keys(all);
-  const saved = ids.filter(k => all[k].saved).length;
-  const contacted = ids.filter(k => all[k].contacted).length;
+function updateSummary(n, status) {
+  const ids = Object.keys(status);
+  const saved = ids.filter(k => status[k].saved).length;
+  const contacted = ids.filter(k => status[k].contacted).length;
   const el = $('#roomCount');
   if (el) el.textContent = `${n} of ${ROOMS.length} · ${saved} saved · ${contacted} contacted`;
 }
@@ -184,9 +211,9 @@ function wireControls() {
   grid?.addEventListener('click', (e) => {
     const btn = e.target.closest('.room-act'); if (!btn) return;
     const id = btn.closest('.room-card')?.dataset.id; if (!id) return;
+    flushNotes();   // persist any in-flight note edit before the rebuild reads from the store
     toggleStatus(id, btn.dataset.act === 'save' ? 'saved' : 'contacted');
   });
-  const noteTimers = new Map();
   grid?.addEventListener('input', (e) => {
     const ta = e.target.closest('.room-note-edit'); if (!ta) return;
     const id = ta.closest('.room-card')?.dataset.id; if (!id) return;

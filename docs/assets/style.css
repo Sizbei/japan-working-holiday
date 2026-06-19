@@ -1024,6 +1024,22 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 .room-note-wrap > summary::-webkit-details-marker{ display:none; }
 .room-note-edit{ width:100%; margin-top:.3rem; font:inherit; font-size:.8rem; padding:.4rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); resize:vertical; }
 
+/* Rooms redesign — compare */
+.room-compare{ font-family: var(--mono); font-size:.7rem; color: var(--ink-soft); display:inline-flex; align-items:center; gap:.25rem; cursor:pointer; }
+.room-compare input:disabled{ cursor:not-allowed; }
+.room-compare-bar{ position:sticky; bottom:0; z-index:5; display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:space-between; margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); }
+.rc-chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
+.rc-chip{ font-family: var(--mono); font-size:.7rem; background: var(--bg); border:1px solid var(--line); border-radius: var(--r-pill); padding:.2rem .5rem; display:inline-flex; align-items:center; gap:.3rem; }
+.rc-x{ border:none; background:none; color: var(--ink-soft); cursor:pointer; font-size:.95rem; line-height:1; padding:0; }
+.rc-acts{ display:flex; gap:.5rem; }
+.app-modal-wide{ max-width: min(680px, 94vw); }
+.app-modal-body{ margin-bottom: var(--s4); }
+.rc-table-wrap{ overflow-x:auto; }
+.rc-table{ border-collapse:collapse; width:100%; font-size:.8rem; }
+.rc-table th, .rc-table td{ border:1px solid var(--line); padding:.4rem .55rem; text-align:left; vertical-align:top; }
+.rc-table thead th{ font-family: var(--mono); font-size:.72rem; color: var(--indigo-ink); }
+.rc-table tbody th{ font-family: var(--mono); font-size:.66rem; text-transform:uppercase; letter-spacing:.03em; color: var(--ink-soft); white-space:nowrap; }
+
 /* collapsible Explore cards (compact → click to expand) */
 .card2.collapsible{ cursor: pointer; }
 .c-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }

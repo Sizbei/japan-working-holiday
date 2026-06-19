@@ -74,3 +74,18 @@ export function askText(label, { value = '', placeholder = '', ok = 'Save', type
   });
 }
 export const askDate = (label, opts = {}) => askText(label, { type: 'date', ok: 'Set', min: '2026-01-01', max: '2027-12-31', ...opts });
+
+// Generic content dialog: titled, focus-trapped, with a single Close button. `bodyHTML` MUST be
+// pre-esc()'d by the caller. Resolves (undefined) when dismissed. Used by the rooms compare table.
+export function showModal(titleText, bodyHTML, { closeLabel = 'Close', wide = false } = {}) {
+  return openDialog(`
+    <h2 id="amTitle" class="app-modal-title">${esc(titleText)}</h2>
+    <div class="app-modal-body">${bodyHTML}</div>
+    <div class="app-modal-acts"><button type="button" class="am-btn am-primary" data-ok>${esc(closeLabel)}</button></div>`, {
+    onMount: (card, done) => {
+      if (wide) card.classList.add('app-modal-wide');
+      card.querySelector('[data-ok]').addEventListener('click', () => done(true));
+    },
+    initialFocus: '[data-ok]',
+  }).then(() => undefined);
+}

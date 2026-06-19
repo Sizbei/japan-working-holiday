@@ -7,11 +7,13 @@
 import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { enrich, LINE_LABELS } from './lib/rooms.js';
+import { showModal } from './lib/modal.js';
 
 let DATA = null;
 let ROOMS = [];
 let rendered = false;
 const noteTimers = new Map();   // per-room debounced note saves (module-scope so a toggle can flush them)
+const compareSet = new Set();   // room ids selected for compare (max 4); UI-only, not persisted
 
 const yen = (n) => '¥' + Number(n).toLocaleString('en-US');
 const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
@@ -137,6 +139,7 @@ function card(r, status) {
     <div class="room-actions">
       <button type="button" class="room-act${s.saved ? ' on' : ''}" data-act="save" aria-pressed="${s.saved ? 'true' : 'false'}">${s.saved ? '★ Saved' : '☆ Save'}</button>
       <button type="button" class="room-act${s.contacted ? ' on' : ''}" data-act="contacted" aria-pressed="${s.contacted ? 'true' : 'false'}">${s.contacted ? '✓ Contacted' : 'Contacted?'}</button>
+      <label class="room-compare"><input type="checkbox" data-act="compare"${compareSet.has(r.id) ? ' checked' : ''}${!compareSet.has(r.id) && compareSet.size >= 4 ? ' disabled' : ''}> Compare</label>
     </div>
     <details class="room-note-wrap"${s.note ? ' open' : ''}>
       <summary>Note</summary>
@@ -179,6 +182,7 @@ function render() {
   }
   restoreFocus(key);
   updateSummary(subset.length, status);
+  renderDrawer();
 }
 function updateSummary(n, status) {
   const ids = Object.keys(status);
@@ -186,6 +190,45 @@ function updateSummary(n, status) {
   const contacted = ids.filter(k => status[k].contacted).length;
   const el = $('#roomCount');
   if (el) el.textContent = `${n} of ${ROOMS.length} · ${saved} saved · ${contacted} contacted`;
+}
+
+// ---- compare (UI-only selection; ≤4) ----
+function renderDrawer() {
+  const bar = $('#roomCompareBar'); if (!bar) return;
+  if (compareSet.size === 0) { bar.hidden = true; bar.innerHTML = ''; return; }
+  const chips = [...compareSet].map(id => {
+    const r = ROOMS.find(x => x.id === id); const nm = r ? r.name : id;
+    return `<span class="rc-chip">${esc(nm)} <button type="button" class="rc-x" data-rm="${esc(id)}" aria-label="Remove ${esc(nm)}">×</button></span>`;
+  }).join('');
+  bar.hidden = false;
+  bar.innerHTML = `<div class="rc-chips">${chips}</div>
+    <div class="rc-acts">
+      <button type="button" class="btn primary" id="rcCompare"${compareSet.size < 2 ? ' disabled' : ''}>Compare (${compareSet.size}) →</button>
+      <button type="button" class="btn ghost" id="rcClear">Clear</button>
+    </div>`;
+  $('#rcCompare')?.addEventListener('click', openCompare);
+  $('#rcClear')?.addEventListener('click', () => { compareSet.clear(); render(); });
+  bar.querySelectorAll('.rc-x').forEach(b => b.addEventListener('click', () => { compareSet.delete(b.dataset.rm); render(); }));
+}
+
+function openCompare() {
+  const rows = [...compareSet].map(id => ROOMS.find(r => r.id === id)).filter(Boolean);
+  if (rows.length < 2) return;
+  const head = `<tr><th></th>${rows.map(r => `<th>${esc(r.name)}</th>`).join('')}</tr>`;
+  const line = (label, fn) => `<tr><th>${esc(label)}</th>${rows.map(r => `<td>${esc(fn(r))}</td>`).join('')}</tr>`;
+  const body = [
+    line('Rent (all-in)', r => r._allIn != null ? `~${yen(r._allIn)}/mo` : r.rent),
+    line('Move-in (est)', r => r._moveIn.total != null ? `~${yen(r._moveIn.total)}` : '—'),
+    line('Fees', r => r.fees),
+    line('Deposit', r => r.deposit),
+    line('Room type', r => r.roomType + (r.gender ? ` · ${r.gender}` : '')),
+    line('Requirements', r => (r.requirements || []).join(' · ')),
+    line('Transit', r => transitText(r)),
+    line('Move-in', r => r.moveIn),
+  ].join('');
+  const links = `<tr><th>Links</th>${rows.map(r => `<td><a href="${esc(r.listingUrl)}" target="_blank" rel="noopener noreferrer">listings ↗</a></td>`).join('')}</tr>`;
+  const table = `<div class="rc-table-wrap"><table class="rc-table"><thead>${head}</thead><tbody>${body}${links}</tbody></table></div>`;
+  showModal('Compare rooms', table, { wide: true });
 }
 
 function updateBudgetLabel() {
@@ -213,6 +256,12 @@ function wireControls() {
     const id = btn.closest('.room-card')?.dataset.id; if (!id) return;
     flushNotes();   // persist any in-flight note edit before the rebuild reads from the store
     toggleStatus(id, btn.dataset.act === 'save' ? 'saved' : 'contacted');
+  });
+  grid?.addEventListener('change', (e) => {
+    const cb = e.target.closest('input[data-act="compare"]'); if (!cb) return;
+    const id = cb.closest('.room-card')?.dataset.id; if (!id) return;
+    if (cb.checked) { if (compareSet.size < 4) compareSet.add(id); } else compareSet.delete(id);
+    render();   // rebuild reflects checked + disables the rest at the cap, and refreshes the drawer
   });
   grid?.addEventListener('input', (e) => {
     const ta = e.target.closest('.room-note-edit'); if (!ta) return;

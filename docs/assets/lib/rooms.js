@@ -14,7 +14,7 @@ const LINE_DICT = [
   ['Shibuya', /shibuya/i],
   ['Shinjuku', /shinjuku/i],
   ['Ikebukuro', /ikebukuro/i],
-  ['Itabashi', /itabashi|oyama/i],
+  ['Itabashi', /itabashi|\boyama\b/i],
   ['Toshima/Bunkyo', /toshima|bunkyo|otsuka|gokokuji|sugamo|komagome|kagurazaka|shiinamachi/i],
   ['Minato', /minato|roppongi|azabu|hiroo|aoyama/i],
   ['Asakusa/Kuramae', /asakusa|kuramae/i],
@@ -69,7 +69,7 @@ export function depositYen(room, monthlyMin) {
   const s = String(room.deposit || '');
   const yen = parseYen(s);
   if (yen != null) return yen;                                 // "¥20,000", "¥0"
-  const mo = s.match(/(\d+)\s*(?:[–-]\s*\d+\s*)?month/i);      // "1 month", "~2–3 months", "0–1 month"
+  const mo = s.match(/(\d+)\s*(?:[–-]\s*\d+\s*)?month/i);      // "1 month", "~2–3 months" (takes the low end), "0–1 month"
   if (mo && monthlyMin != null) return parseInt(mo[1], 10) * monthlyMin;
   return 0;                                                    // "Low", "None", "Varies", ""
 }
@@ -97,13 +97,16 @@ export function lineTokens(room) {
   return LINE_DICT.filter(([, re]) => re.test(hay)).map(([label]) => label);
 }
 
+// requirements may be authored as a non-array by mistake; coerce to an array so callers never throw.
+const reqs = (room) => Array.isArray(room.requirements) ? room.requirements : [];
+
 export function bookFromAbroad(room) {
-  const hay = `${room.moveIn || ''} ${(room.requirements || []).join(' ')}`;
+  const hay = `${room.moveIn || ''} ${reqs(room).join(' ')}`;
   return /abroad|before arrival|apply online/i.test(hay);
 }
 
 export function noGuarantor(room) {
-  const hay = `${(room.requirements || []).join(' ')} ${room.oneTime || ''}`;
+  const hay = `${reqs(room).join(' ')} ${room.oneTime || ''}`;
   return /no guarantor/i.test(hay);
 }
 
@@ -113,8 +116,8 @@ export function womenOnly(room) {
 }
 
 export function searchBlob(room) {
-  return [room.name, room.provider, room.area, room.station, room.note,
-    (room.requirements || []).join(' ')].join(' ').toLowerCase();
+  return [room.name, room.provider, room.area, room.station, room.note, room.roomType, room.gender,
+    reqs(room).join(' ')].join(' ').toLowerCase();
 }
 
 // Map each room to a copy with derived fields. Run once, on first render. Does not mutate input.

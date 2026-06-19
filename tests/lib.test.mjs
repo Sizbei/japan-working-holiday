@@ -401,6 +401,14 @@ test('moveInEstimate: first month + oneTime + deposit; months×rent; unknown→n
     { total: null, isEstimate: true });
 });
 
+test('depositYen: ¥ amount wins; ¥0 is zero (not falsy-skipped); months×rent; junk→0', () => {
+  assert.equal(depositYen({ deposit: '¥20,000 (¥10,000 non-refundable)' }, 60000), 20000);
+  assert.equal(depositYen({ deposit: '¥0' }, 60000), 0);
+  assert.equal(depositYen({ deposit: '~2–3 months' }, 60000), 120000);   // low end ×rent
+  assert.equal(depositYen({ deposit: 'Low' }, 60000), 0);
+  assert.equal(depositYen({ deposit: '~1 month' }, null), 0);            // unknown rent → 0
+});
+
 test('monthlyAllIn: rent floor + first fee amount; fees included → rent alone; junk→null', () => {
   assert.equal(monthlyAllIn({ rent: '¥45,000–95,000 / mo', fees: '¥10,000–22,000 utilities/mo' }), 55000);
   assert.equal(monthlyAllIn({ rent: '¥55,000–80,000 / mo', fees: 'Utilities included' }), 55000);
@@ -438,5 +446,7 @@ test('enrich: adds derived fields, leaves the source object untouched (immutable
   assert.equal(out[0]._noGuarantor, true);
   assert.equal(out[0]._women, false);
   assert.equal(out[0]._blob.includes('nakano'), true);
+  assert.equal(out[0]._blob.includes('private'), true);   // roomType searchable
+  assert.equal(out[0]._blob.includes('mixed'), true);     // gender searchable
   assert.equal(src[0]._allIn, undefined);
 });

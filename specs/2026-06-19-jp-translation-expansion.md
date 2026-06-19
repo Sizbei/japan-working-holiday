@@ -45,9 +45,9 @@ export const GLOSSARY = {
 - **Missing-key contract (fail-safe):** if a `data-i18n` key is absent from `STRINGS`, the element keeps English (the existing `else` branch restores `data-en`). The drift test (§8) prevents accidental gaps.
 - Stop flipping `document.documentElement.lang` to `ja` (see §7).
 
-### 3.3 Re-apply hook for JS-rendered tracker headings
+### 3.3 JS-rendered tracker headings — no hook needed
 
-`lang.js` exports `applyCurrentLang()` (applies the persisted language to all current `[data-i18n]` in the DOM). `tracker.js` calls it at the end of its render, after injecting its `innerHTML` (the 2 `<h3>` carry `data-i18n`). This is the only render site touched.
+`mountTracker` renders **synchronously at boot (`main.js:48`), before `mountLang` (`main.js:55`)**, so the 2 tracker `<h3>`s are already in the DOM when the one-time `applyLang` runs and get caught like any static element. `tracker.js` only needs the 2 `data-i18n` attributes added to its template — no `applyCurrentLang` export, no re-apply hook. (Tracker has no `jwh:data-changed` listener, so it never re-renders to lose the swap.)
 
 ## 4. Key naming scheme
 
@@ -180,4 +180,4 @@ Carry over the existing entries; normalize every reading to the `かな · romaj
 ## 13. Files touched
 
 - **Create:** `docs/assets/i18n.js`, `tests/i18n.test.mjs`
-- **Modify:** `docs/assets/lang.js` (import module, innerHTML path for 2 ledes, per-element `lang`, no `data-jp` on ledes, `applyCurrentLang` export, header comment), `docs/index.html` (~50 `data-i18n` attrs + 2 `data-i18n-html`; migrate nav keys to `nav.*`), `docs/assets/tracker.js` (`data-i18n` on 2 `<h3>` + call `applyCurrentLang()`), `docs/sw.js` (CACHE bump + precache `assets/i18n.js`), `CLAUDE.md` (lang.js note).
+- **Modify:** `docs/assets/lang.js` (import module, innerHTML path for 2 ledes, per-element `lang`, `data-jp` only on nav+brand, header comment), `docs/index.html` (~50 `data-i18n` attrs + 2 `data-i18n-html`; migrate nav keys to `nav.*`; wrap emoji-prefixed widget/teaser heading text in a `<span data-i18n>`), `docs/assets/tracker.js` (`data-i18n` on 2 `<h3>` only), `docs/sw.js` (CACHE bump + precache `assets/i18n.js`), `CLAUDE.md` (lang.js note). `main.js` is **not** touched.

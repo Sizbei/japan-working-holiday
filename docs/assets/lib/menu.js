@@ -64,6 +64,7 @@ export function openMenu(items, x, y, opts = {}) {
     it?.run?.();
   });
   setTimeout(() => {
+    if (!menuEl) return;   // closed (via an action or route change) before this deferred setup ran — don't re-add listeners or deref null
     document.addEventListener('pointerdown', onAway, true);
     window.addEventListener('scroll', closeMenu, true);
     window.addEventListener('resize', closeMenu);

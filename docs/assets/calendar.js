@@ -16,6 +16,7 @@ import { isGoing, toggleGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
+import { openMenu } from './lib/menu.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
@@ -85,6 +86,22 @@ export function mountCalendar(data, today) {
   render();
   document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
   document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
+  // right-click an event → context menu (delegated on document: the day popover lives on <body>,
+  // outside #calView, so a view-scoped listener would miss its .pop-open events).
+  document.addEventListener('contextmenu', (e) => {
+    const items = getEventMenu(e.target);
+    if (!items) return;                       // not an event → native menu
+    e.preventDefault();
+    openMenu(items, e.clientX, e.clientY, { label: 'Event actions' });
+  });
+  // keyboard: ContextMenu key / Shift+F10 on a focused event trigger opens the menu anchored to it.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
+    const items = getEventMenu(document.activeElement);
+    if (!items) return;                       // focus isn't on an event trigger (so inputs are naturally excluded)
+    e.preventDefault();
+    openMenu(items, 0, 0, { anchor: document.activeElement, label: 'Event actions' });
+  });
 }
 
 function wireToolbar() {

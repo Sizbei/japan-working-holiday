@@ -7,6 +7,7 @@
 import { ROUTES } from './router.js';
 import { prefersReducedMotion } from './motion.js';
 import { openMenu, closeMenu } from './lib/menu.js';
+import { getEventMenu } from './calendar.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -156,6 +157,8 @@ function wireLongPress() {
 
 // Map a pressed element to its quick-action target + items.
 function resolveTarget(node) {
+  const evItems = getEventMenu(node);        // an event chip/row/popover/deadline → its menu
+  if (evItems) return { items: evItems };    // MUST precede the cell check: a chip is inside a day cell
   const cell = node.closest?.('.cal-cell[data-day]');
   if (cell) {
     const date = cell.dataset.day;

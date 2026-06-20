@@ -126,7 +126,7 @@ Proper nouns kept as-is. Review and adjust any wording before implementation.
 | `head.calendar` | My Calendar | 私のカレンダー |
 | `head.going` | Going To | 参加予定 |
 | `head.tracker` | Lottery & Timed-Release Drops | 抽選・先行販売 |
-| `head.timesensitive` | Time-Sensitive — anchored to June 30, 2026 arrival | 要・期限管理 — 2026年6月30日の到着を基準に |
+| `head.timesensitive` | Time-Sensitive — anchored to June 30, 2026 arrival | 要・期限管理 — 2026年6月30日の到着を軸に |
 | `head.topmoves` | Highest-Value Moves | 最優先アクション |
 | `head.checklist` | My Yearlong Checklist | 一年間のチェックリスト |
 | `head.brew` | Brainstorm & Brew | アイデア出し |
@@ -157,7 +157,7 @@ Proper nouns kept as-is. Review and adjust any wording before implementation.
 | `lede.activities` | 花見、花火、紅葉、イルミネーション、祭り、そして行ってみたい日帰り旅行。 |
 | `lede.restaurants` | ¥400 のチェーン丼から、予約してでも行きたい贅沢まで。予算で絞り込めます。 |
 | `lede.disney` | 両パークの外せない定番、プレミアアクセス／スタンバイの仕組み、ファンタジースプリングス、そして予算を溶かさずに楽しむコツ。 |
-| `lede.building` | バンクーバーより16時間先でリリース。集中したい時は広尾の図書館、スタートアップに繋がるなら CIC Tokyo、合間はワークカフェ。自分のスタンドアップが、誰かの真夜中。 |
+| `lede.building` | バンクーバーより16時間先でリリースしてる。集中したい時は広尾の図書館、スタートアップに繋がるなら CIC Tokyo、通話の合間はワークカフェ。自分のスタンドアップが、誰かの真夜中。 |
 | `lede.music` | 巡礼リスト：御茶ノ水のギターストリート、ヴィンテージポリの Five G、シンセ／機材店、掘るならディスクユニオン、足を運ぶ価値のあるリスニングバー。平日に行くのがおすすめ — いい店ほど小さいから。 |
 | `lede.geek` | 拠点は秋葉原。カセットならスーパーポテト、クレーンゲームは GiGO、ディープな掘り出しは中野ブロードウェイ。午後まるごと確保して、現金を忘れずに。 |
 | `lede.meetups` | 自分の仲間たち。デモナイトは Tokyo Indies や AI Tinkerers、それ以外は Connpass／Doorkeeper、そして大型イベント — コミケ、TGS、AnimeJapan — があれば。粗くてもいいから作ったものを持って行こう。 |

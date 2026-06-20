@@ -1,40 +1,17 @@
 'use strict';
-// Japanese option + hover-dictionary. Two independent aids for a Japanese learner:
-//  1) An EN / 日本語 toggle that swaps the UI CHROME (nav, brand) via a small static map —
-//     instant, offline, no build step. The researched CONTENT stays English (it's reference
-//     data); this is a language-practice layer over the navigation, not a full translation.
-//  2) Hover/focus any Japanese word (the .jp accents, or the translated nav in JP mode) to
-//     see its reading + meaning. Source order: a bundled GLOSSARY (instant, offline) →
-//     a live lookup via Jotoba (open dictionary API, CORS-ok) → a Jisho deep-link fallback.
+// Japanese option + hover-dictionary. Two aids for a Japanese learner:
+//  1) An EN / 日本語 toggle that translates the static UI FRAME — brand, nav, section/widget
+//     headings, and the lede intros — from STRINGS (docs/assets/i18n.js). Researched CARD
+//     content (from tips.json) stays English by design.
+//  2) Hover/focus any Japanese word (the .jp accents, or the translated nav in JP mode) to see
+//     its reading + meaning: bundled GLOSSARY (instant, offline) → Jotoba API → Jisho deep-link.
 //     Contained like Leaflet/Nominatim: hover-only, time-boxed, never blocks, fails safe.
 
 import { $, $$, esc } from './lib/dom.js';
 import { getRaw, setRaw, KEYS } from './lib/store.js';
+import { STRINGS, GLOSSARY } from './i18n.js';
 
 const LANG_KEY = KEYS.lang;
-
-// UI chrome strings (keyed by data-i18n)
-const I18N = {
-  brand: '私の一年', dashboard: 'ダッシュボード', calendar: 'カレンダー', checklist: 'チェックリスト',
-  deadlines: '締め切り', explore: 'さがす', rooms: '部屋', map: '地図', plan: 'プラン', going: '参加予定',
-};
-// JP term → reading + gloss (covers the app's own Japanese; Jotoba enriches anything else)
-const GLOSSARY = {
-  '私の一年': { r: 'watashi no ichinen', m: 'my one year' },
-  'ワーキングホリデー': { r: 'wākingu horidē', m: 'working holiday' },
-  'ダッシュボード': { r: 'dasshubōdo', m: 'dashboard' }, 'カレンダー': { r: 'karendā', m: 'calendar' },
-  'チェックリスト': { r: 'chekkurisuto', m: 'checklist' }, '締め切り': { r: 'しめきり · shimekiri', m: 'deadline' },
-  'さがす': { r: 'sagasu', m: 'to search / look for' }, '部屋': { r: 'へや · heya', m: 'room' },
-  '参加予定': { r: 'さんかよてい · sanka yotei', m: 'planned attendance — events you’re going to' },
-  '地図': { r: 'ちず · chizu', m: 'map' }, 'プラン': { r: 'puran', m: 'plan (itinerary)' },
-  '一日': { r: 'いちにち · ichinichi', m: 'one day' }, '一年の計画': { r: 'ichinen no keikaku', m: 'a year’s plan' },
-  '夜の音楽': { r: 'yoru no ongaku', m: 'night music / nightlife' }, '音楽の街': { r: 'ongaku no machi', m: 'music town' },
-  '部屋探し': { r: 'heya-sagashi', m: 'room hunting' }, '東京で創る': { r: 'Tōkyō de tsukuru', m: 'building in Tokyo' },
-  '考える場所': { r: 'kangaeru basho', m: 'a place to think' }, '四季の楽しみ': { r: 'shiki no tanoshimi', m: 'enjoying the four seasons' },
-  '抽選・先行販売': { r: 'chūsen · senkō hanbai', m: 'lottery / advance sale' }, '東京ディズニー': { r: 'Tōkyō Dizunī', m: 'Tokyo Disney' },
-  '集まり・イベント': { r: 'atsumari · ibento', m: 'meetups & events' }, 'ゲーム・アニメ・技術': { r: 'gēmu · anime · gijutsu', m: 'games · anime · tech' },
-  '食べ歩き': { r: 'tabe-aruki', m: 'food-walking (eating around)' },
-};
 
 let pop = null, hideTimer = null, lastWord = '', curEl = null;
 
@@ -55,14 +32,28 @@ function injectToggle() {
 }
 function applyLang(lang) {
   setRaw(LANG_KEY, lang);
-  document.documentElement.lang = lang === 'ja' ? 'ja' : 'en';
-  const btn = $('#langToggle'); if (btn) { btn.textContent = lang === 'ja' ? 'A' : 'あ'; btn.setAttribute('aria-pressed', lang === 'ja' ? 'true' : 'false'); btn.title = lang === 'ja' ? 'Switch to English' : '日本語に切り替え'; }
+  const ja = lang === 'ja';
+  const btn = $('#langToggle');
+  if (btn) { btn.textContent = ja ? 'A' : 'あ'; btn.setAttribute('aria-pressed', ja ? 'true' : 'false'); btn.title = ja ? 'Switch to English' : '日本語に切り替え'; }
+  let swappedHtml = false;
   $$('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (el.dataset.en == null) el.dataset.en = el.textContent;     // remember the English once
-    if (lang === 'ja' && I18N[key]) { el.textContent = I18N[key]; el.setAttribute('data-jp', '1'); }
-    else { el.textContent = el.dataset.en; el.removeAttribute('data-jp'); }
+    const isHtml = el.hasAttribute('data-i18n-html');
+    if (el.dataset.en == null) el.dataset.en = isHtml ? el.innerHTML : el.textContent;   // remember English once
+    const dict = el.matches('[data-route]') || key === 'brand';                          // only nav + brand feed the hover dictionary
+    if (ja && STRINGS[key]) {
+      if (isHtml) { el.innerHTML = STRINGS[key]; swappedHtml = true; } else { el.textContent = STRINGS[key]; }
+      el.lang = 'ja';
+      if (dict) el.setAttribute('data-jp', '1'); else el.removeAttribute('data-jp');
+    } else {
+      if (isHtml) el.innerHTML = el.dataset.en; else el.textContent = el.dataset.en;
+      el.lang = 'en';
+      el.removeAttribute('data-jp');
+    }
   });
+  // ledes swapped via innerHTML re-create empty #goingCount/#roomCount; nudge their owners to repaint.
+  // Safe: applyLang is never invoked from a jwh:data-changed handler, so this cannot loop.
+  if (swappedHtml) document.dispatchEvent(new CustomEvent('jwh:data-changed'));
 }
 
 // ---------- hover / focus dictionary ----------

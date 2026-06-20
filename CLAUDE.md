@@ -37,7 +37,7 @@ Still **data-driven from one file**: `docs/data/tips.json` is the single source 
 - `plan.js` — day-itinerary planner (`#/plan`); `rooms.js` — share-house finder (`#/rooms`).
 - `gestures.js` — swipe between adjacent routes (touch), keyboard shortcuts (`1–8`, `[`/`]`, `?`), long-press quick-action menus (calendar days / explore cards / checklist rows).
 - `guide.js` — the **⚙ Guide & Settings overlay** (a tutorial + theme/arcade/reduce-motion toggles). NOT a route.
-- `lang.js` (あ JP-chrome toggle + hover dictionary), `backup.js` (export/import all device-local data — atomic replace), `tracker.js` (lottery/timed drops), `konami.js` (arcade mode), `dnd.js` (framework-free drag/reorder with keyboard support), `motion.js` (transitions).
+- `lang.js` (あ EN/日本語 toggle: translates the static **frame** — brand, nav, section/widget/tracker headings, lede intros — from `assets/i18n.js`; researched **card** content stays English. Plus the hover dictionary: GLOSSARY → Jotoba → Jisho), `backup.js` (export/import all device-local data — atomic replace), `tracker.js` (lottery/timed drops), `konami.js` (arcade mode), `dnd.js` (framework-free drag/reorder with keyboard support), `motion.js` (transitions).
 
 A `jwh:data-changed` CustomEvent is dispatched on any user mutation (checklist, due date, calendar, places, day plans) so the dashboard/map/plan re-derive. `jwh:route` fires on navigation; `jwh:cal-quickadd`/`jwh:plan-goto` wire long-press actions into calendar/plan.
 

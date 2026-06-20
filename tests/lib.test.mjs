@@ -197,9 +197,9 @@ import { setPlanMetaIn } from '../docs/assets/lib/dayplan.js';
 
 test('lang parity: every .jp accent in index.html has a glossary entry', () => {
   const html = readFileSync(new URL('../docs/index.html', import.meta.url), 'utf8');
-  const lang = readFileSync(new URL('../docs/assets/lang.js', import.meta.url), 'utf8');
+  const i18n = readFileSync(new URL('../docs/assets/i18n.js', import.meta.url), 'utf8');   // GLOSSARY moved here from lang.js
   const accents = [...html.matchAll(/class="jp"[^>]*>([^<]+)</g)].map(m => m[1].trim());
-  const missing = [...new Set(accents)].filter(a => !lang.includes(`'${a}'`));
+  const missing = [...new Set(accents)].filter(a => !i18n.includes(`'${a}'`));
   assert.deepEqual(missing, [], `JP accents missing from the hover-dictionary glossary: ${missing.join(', ')}`);
 });
 

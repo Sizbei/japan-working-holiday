@@ -1479,6 +1479,9 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
   font: inherit; color: var(--ink); padding: .6rem .7rem; border-radius: var(--r-sm); cursor: pointer;
 }
 .lp-item:hover, .lp-item:focus-visible{ background: var(--bg-sunk); outline: none; }
+.lp-sep{ height: 1px; margin: 4px 8px; background: var(--line); }
+.lp-item-danger{ color: var(--red); }
+.lp-item-danger:hover, .lp-item-danger:focus-visible{ background: color-mix(in srgb, var(--red) 12%, transparent); }
 
 .kbd-help{
   position: fixed; inset: 0; z-index: 70; display: grid; place-items: center;

@@ -6,7 +6,7 @@
 
 import { ROUTES } from './router.js';
 import { prefersReducedMotion } from './motion.js';
-import { openMenu, closeMenu } from './lib/menu.js';
+import { openMenu } from './lib/menu.js';
 import { getEventMenu } from './calendar.js';
 
 const PAGE_LABEL = {

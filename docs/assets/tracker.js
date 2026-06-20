@@ -40,6 +40,6 @@ export function mountTracker(data) {
   }).join('');
 
   wrap.innerHTML = `
-    <div class="trk-group"><h3 class="trk-h">Fixed timed-release rules</h3><div class="trk-grid">${recurring}</div></div>
-    ${dated.length ? `<div class="trk-group"><h3 class="trk-h">Dated booking windows</h3><div class="trk-grid">${datedHTML}</div></div>` : ''}`;
+    <div class="trk-group"><h3 class="trk-h" data-i18n="head.tracker.fixed">Fixed timed-release rules</h3><div class="trk-grid">${recurring}</div></div>
+    ${dated.length ? `<div class="trk-group"><h3 class="trk-h" data-i18n="head.tracker.dated">Dated booking windows</h3><div class="trk-grid">${datedHTML}</div></div>` : ''}`;
 }

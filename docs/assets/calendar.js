@@ -15,6 +15,8 @@ import { loadPlaces, patchPlace } from './lib/places.js';
 import { isGoing, toggleGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable } from './dnd.js';
+import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
+import { openMenu } from './lib/menu.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
@@ -84,6 +86,22 @@ export function mountCalendar(data, today) {
   render();
   document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
   document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
+  // right-click an event → context menu (delegated on document: the day popover lives on <body>,
+  // outside #calView, so a view-scoped listener would miss its .pop-open events).
+  document.addEventListener('contextmenu', (e) => {
+    const items = getEventMenu(e.target);
+    if (!items) return;                       // not an event → native menu
+    e.preventDefault();
+    openMenu(items, e.clientX, e.clientY, { label: 'Event actions' });
+  });
+  // keyboard: ContextMenu key / Shift+F10 on a focused event trigger opens the menu anchored to it.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
+    const items = getEventMenu(document.activeElement);
+    if (!items) return;                       // focus isn't on an event trigger (so inputs are naturally excluded)
+    e.preventDefault();
+    openMenu(items, 0, 0, { anchor: document.activeElement, label: 'Event actions' });
+  });
 }
 
 function wireToolbar() {
@@ -356,17 +374,50 @@ function openDetail(ev) {
       <button class="btn" id="mdCopy">Copy to my events</button>
     </div>`;
   const ov = showModal(body);
-  ov.querySelector('#mdGoing')?.addEventListener('click', () => { toggleGoing(ev.id); closeModal(ov, { rerender: true }); });   // dispatches jwh:data-changed → dashboard "Going to" widget updates
+  ov.querySelector('#mdGoing')?.addEventListener('click', () => { toggleGoingEv(ev); closeModal(ov, { rerender: true }); });
   ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov, { rerender: true }); });
-  ov.querySelector('#mdPlan')?.addEventListener('click', () => {
-    const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
-    upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));
-    closeModal(ov, { rerender: true }); alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
-  });
-  ov.querySelector('#mdCopy')?.addEventListener('click', () => {
-    saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
-    closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
-  });
+  ov.querySelector('#mdPlan')?.addEventListener('click', () => { addEventToPlan(ev); closeModal(ov, { rerender: true }); });
+  ov.querySelector('#mdCopy')?.addEventListener('click', () => { copyBakedToUser(ev); closeModal(ov, { rerender: true }); });
+}
+
+// ---- shared event actions (used by both the modal handlers and the context menu) ----
+function toggleGoingEv(ev) { toggleGoing(ev.id); }                     // toggleGoing dispatches
+function addEventToPlan(ev) {
+  const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
+  upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));   // upsertStop → dispatch
+  alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
+}
+function copyBakedToUser(ev) {
+  saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
+}
+function deleteUserEvent(id) {
+  const linked = loadPlaces().find(p => p.eventId === id);     // clear the back-ref on any place that linked this event
+  if (linked) patchPlace(linked.id, { eventId: '', date: '', remindDate: '' });
+  saveUser(loadUser().filter(x => x.id !== id));               // saveUser dispatches once
+}
+function focusAdd() { $('#calAdd')?.focus(); }                 // after a mutating menu action, render destroys the trigger
+
+// Map an event object to concrete menu items (label + run). Spec (labels/order/danger) is pure (lib/calevents).
+function eventMenuItems(ev) {
+  const RUN = {
+    open: () => openDetail(ev),
+    edit: () => openModal(ev),
+    duplicate: () => { saveUser([...loadUser(), duplicateUserEvent(ev, 'u' + Date.now())]); focusAdd(); },
+    plan: () => addEventToPlan(ev),
+    gcal: () => window.open(gcalUrl(ev), '_blank', 'noopener'),
+    going: () => { toggleGoingEv(ev); focusAdd(); },
+    copy: () => { copyBakedToUser(ev); focusAdd(); },
+    delete: () => { deleteUserEvent(ev.id); focusAdd(); },
+  };
+  return eventMenuSpec(ev, { isGoing: isGoing(ev.id) }).map(it => it.sep ? { sep: true } : { label: it.label, danger: it.danger, run: RUN[it.key] });
+}
+
+// Resolve a DOM node to event menu items, or null if it's not an event trigger. Exported for gestures.js.
+export function getEventMenu(node) {
+  const trig = node?.closest?.('.cal-chip[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev]');
+  if (!trig) return null;
+  const ev = allEvents().find(x => x.id === trig.dataset.ev);
+  return ev ? eventMenuItems(ev) : null;
 }
 function srcline(s) {
   const arr = (s || []).filter(Boolean);
@@ -400,7 +451,7 @@ function openModal(ev, presetDate) {
       </div>
     </form>`;
   const ov = showModal(body);
-  ov.querySelector('#mdGoingU')?.addEventListener('click', () => { toggleGoing(ev.id); closeModal(ov, { rerender: true }); });
+  ov.querySelector('#mdGoingU')?.addEventListener('click', () => { toggleGoingEv(ev); closeModal(ov, { rerender: true }); });
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());
@@ -413,12 +464,7 @@ function openModal(ev, presetDate) {
     if (ev && ev.id && obj.date !== (ev.date || '').slice(0, 10)) syncPlaceDate(ev.id, obj.date);   // a linked place follows the edited date
     closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
   });
-  ov.querySelector('#mdDel')?.addEventListener('click', () => {
-    const linked = loadPlaces().find(p => p.eventId === ev.id);   // clear the back-ref on any place that linked this event
-    if (linked) patchPlace(linked.id, { eventId: '', date: '', remindDate: '' });
-    saveUser(loadUser().filter(x => x.id !== ev.id));
-    closeModal(ov, { rerender: true });
-  });
+  ov.querySelector('#mdDel')?.addEventListener('click', () => { deleteUserEvent(ev.id); closeModal(ov, { rerender: true }); });
 }
 
 // ---- bulk add: tag-filtered .ics + Google import how-to ----

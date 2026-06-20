@@ -6,6 +6,8 @@
 
 import { ROUTES } from './router.js';
 import { prefersReducedMotion } from './motion.js';
+import { openMenu } from './lib/menu.js';
+import { getEventMenu } from './calendar.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -138,7 +140,7 @@ function wireLongPress() {
     cancel();
     timer = setTimeout(() => {
       fired = true;
-      openMenu(target.items, e.clientX, e.clientY);
+      openMenu(target.items, e.clientX, e.clientY, { onClose: () => { fired = false; } });
     }, 480);
   }, true);
   document.addEventListener('pointermove', (e) => {
@@ -155,6 +157,8 @@ function wireLongPress() {
 
 // Map a pressed element to its quick-action target + items.
 function resolveTarget(node) {
+  const evItems = getEventMenu(node);        // an event chip/row/popover/deadline → its menu
+  if (evItems) return { items: evItems };    // MUST precede the cell check: a chip is inside a day cell
   const cell = node.closest?.('.cal-cell[data-day]');
   if (cell) {
     const date = cell.dataset.day;
@@ -181,28 +185,4 @@ function resolveTarget(node) {
     if (items.length) return { items };
   }
   return null;
-}
-
-let menuEl = null;
-function closeMenu() { if (menuEl) { menuEl.remove(); menuEl = null; document.removeEventListener('pointerdown', onAway, true); } }
-function onAway(e) { if (menuEl && !menuEl.contains(e.target)) closeMenu(); }
-function openMenu(items, x, y) {
-  closeMenu();
-  if (navigator.vibrate) { try { navigator.vibrate(8); } catch {} }   // haptic tick on supporting devices
-  menuEl = document.createElement('div');
-  menuEl.className = 'lp-menu';
-  menuEl.setAttribute('role', 'menu');
-  menuEl.innerHTML = items.map((it, i) => `<button type="button" class="lp-item" role="menuitem" data-i="${i}">${it.label}</button>`).join('');
-  document.body.appendChild(menuEl);
-  // position near the press, flipped to stay on-screen
-  const w = menuEl.offsetWidth, h = menuEl.offsetHeight;
-  let left = Math.min(x, window.innerWidth - w - 10);
-  let top = y + 8; if (top + h > window.innerHeight - 10) top = y - h - 8;
-  menuEl.style.left = Math.max(10, left) + 'px'; menuEl.style.top = Math.max(10, top) + 'px';
-  menuEl.addEventListener('click', (e) => {
-    const b = e.target.closest('.lp-item'); if (!b) return;
-    const it = items[+b.dataset.i]; closeMenu(); it?.run?.();
-  });
-  setTimeout(() => { document.addEventListener('pointerdown', onAway, true); menuEl.querySelector('.lp-item')?.focus(); }, 0);
-  document.addEventListener('keydown', function onKey(e) { if (e.key === 'Escape') { closeMenu(); document.removeEventListener('keydown', onKey); } });
 }

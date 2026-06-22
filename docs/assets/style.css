@@ -2015,6 +2015,28 @@ html[data-reduce-motion="on"] .ql-reveal { transition: none; }
 .list-empty-add:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
 .list-empty-add .lea-q { color: var(--indigo); }
 
+/* Variant B — two pills (🔍 Search + ＋ Add), each expanding in place. Reuses .ql-field / .ql-sel.
+   Both pills sit on one row; the search input grows horizontally, the add composer slides down. */
+.quickline .lc-pills { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.lc-pill { display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .9rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); font: inherit; font-weight: 700; font-size: .82rem; cursor: pointer; white-space: nowrap; transition: background .2s, border-color .2s; }
+.lc-pill:hover { border-color: color-mix(in srgb, var(--indigo) 45%, var(--line)); }
+.lc-pill.is-on { background: color-mix(in srgb, var(--indigo) 10%, var(--bg-soft)); border-color: color-mix(in srgb, var(--indigo) 50%, var(--line)); color: var(--indigo); }
+.lc-pill:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.lc-pill .lc-gx { font-size: .9rem; line-height: 1; }
+/* expandable search: grows in width (collapsed = max-width 0, hidden) */
+.lc-search-wrap { overflow: hidden; max-width: 0; opacity: 0; margin-top: 0; transition: max-width .28s ease, opacity .2s ease, margin-top .2s ease; }
+.lc-search-wrap.is-open { max-width: 560px; opacity: 1; margin-top: .55rem; }
+html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
+/* inline add composer: a single .ql-field-style row of [text] [select] [Add] [✕] */
+.lc-add-wrap.is-open { margin-top: .55rem; }
+.lc-composer { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .4rem .5rem .4rem .7rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); }
+.lc-composer:focus-within { border-color: var(--indigo); box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 16%, transparent); }
+.lc-add-input { flex: 1 1 9rem; padding: .5rem .25rem; }
+.lc-add-go { white-space: nowrap; }
+.lc-miniclose { flex: 0 0 auto; padding: .35rem .55rem; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--ink-soft); font: inherit; font-size: .9rem; line-height: 1; cursor: pointer; transition: color .15s; }
+.lc-miniclose:hover { color: var(--red); }
+.lc-miniclose:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
 @media (max-width: 760px) { .pack-item { padding: var(--s4) var(--s3); } .pack-name { font-size: .92rem; } }
 
 /* ---- Phrasebook (#/phrases) ---- */

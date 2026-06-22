@@ -16,6 +16,7 @@ export const KEYS = {
   due: 'jwh-due-v1',
   dismissed: 'jwh-notif-dismissed-v1',
   checklist: 'jwh-checklist-v1',
+  checklistCustom: 'jwh-checklist-custom-v1',
   checkView: 'jwh-check-view-v1',
   checkHideDone: 'jwh-check-hidedone-v1',
   checkPriority: 'jwh-check-priority-v1',

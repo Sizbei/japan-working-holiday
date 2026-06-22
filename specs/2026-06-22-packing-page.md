@@ -16,7 +16,7 @@ New route `packing`, same new-page pattern as Budget:
 - `router.js`: add `'packing'` to `ROUTES` **and** `packing: 'Packing'` to `TITLES` (the two MUST stay in sync — a route without a `TITLES` entry yields an undefined `document.title`).
 - `index.html`: nav link (`data-i18n="nav.packing"`) + `<div class="view" id="view-packing"><section id="packing">` with `.pillar-head` (jp accent `荷造り`, `<h2 data-i18n="head.packing">`), a `.lede`, a progress bar (`#packBar`/`#packPct` mirroring `#checkBar`/`#checkPct`), and a list container `#packList`.
 - `main.js`: `mountPacking(data)` near the other mounts.
-- `lib/store.js` `KEYS`: `packing: 'jwh-packing-v1'`, `packCustom: 'jwh-pack-custom-v1'`.
+- `lib/store.js` `KEYS`: `packing: 'jwh-packing-v1'` (checked map), `packCustom: 'jwh-pack-custom-v1'` (custom items), `packOrder: 'jwh-pack-order-v1'` (per-category reorder), `packHideDone: 'jwh-pack-hidedone-v1'`. (Collapse state uses the shared `KEYS.collapse` from the accordion spec.)
 - `sw.js`: precache `assets/packing.js` (+ `assets/lib/packing.js` if a pure helper lands), bump `CACHE`.
 - `i18n.js`: `nav.packing` (荷造り), `head.packing`, `lede.packing`.
 
@@ -51,10 +51,16 @@ The render is DOM glue (like `content.js` checklist). The genuinely pure, testab
 
 CATEGORY_ORDER = `['Documents','Money','Electronics','Clothing','Health','Day-one bag','Misc']`.
 
-## 5. UI (`packing.js`)
+## 5. UI (`packing.js`) — "super checklist" (Rich)
 
-- **Progress bar** at top: `${pct}% · ${done}/${total}` (reuse the checklist's bar markup/CSS).
-- **Grouped sections** by category (fixed order); each item is a real `<label><input type=checkbox>…</label>` row (checkbox is the focusable control, matching the project's a11y rule — real controls, not `role=button`). A baked item with a `note` renders it as a second-line sub-text (like a checklist item's note); a `confidence:"low"` item renders a `.badge.low` "verify" badge (the same class/treatment as `content.js` domain findings). Custom items show a remove (×). Baked item ids follow `pk-<slug>`, custom ids `pku<ts>`.
+A genuinely full-featured checklist. Controls at top: **collapse-all/expand-all**, **hide-done** toggle (mirrors the yearlong checklist's), and a **progress bar** `${pct}% · ${done}/${total}` (reuse `#checkBar`/`#checkPct` markup/CSS as `#packBar`/`#packPct`).
+
+- **Collapsible category sections (animated accordion):** each category is an `.acc` section (see `2026-06-22-collapsible-accordion.md`) — header = category name + an `.acc-count` `done/total` for that category + chevron; panel = the item rows. After render, call `mountAccordion($('#packList'), { allToggle: '#packCollapseAll' })`. Collapse ids: `pack-cat-<slug>`.
+- **Item rows:** a real `<label><input type=checkbox>…</label>` (checkbox is the focusable control — real controls, not `role=button`), preceded by a `.dnd-handle` for reordering. A baked item's `note` renders as a second-line sub-text (like a checklist note); a `confidence:"low"` item renders a `.badge.low` "verify" badge (same class as `content.js` domain findings). Custom items show a remove (×). Baked ids `pk-<slug>`, custom ids `pku<ts>`.
+- **Drag-reorder within a category:** `makeSortable` per category list (handle `.dnd-handle`, `idOf: el=>el.dataset.id`), persisting order to `jwh-pack-order-v1` keyed by category — exactly the checklist's reorder pattern. Reorder only within a category (items don't move between categories).
+- **Hide-done:** a toggle (`jwh-pack-hidedone-v1`, `'on'`/`''`) that filters checked items out of the rows (and drag is disabled while hiding-done, matching the checklist). Per-category `.acc-count` and the overall progress still reflect the true totals.
+- **Add item:** input + category `<select>` + Add (like the brew "idea cards" add); appends to `jwh-pack-custom-v1` (`pku<ts>`), into the chosen category.
+- Adding a **custom category** is out of scope (v1 uses the fixed CATEGORY_ORDER); custom items pick from existing categories.
 - **Add item:** an input + category select + Add (like the brew "idea cards" add). Appends to `jwh-pack-custom-v1` with a fresh `pku<ts>` id.
 - **Remove a custom item:** delete it from `jwh-pack-custom-v1` **and** delete its id from the `jwh-packing-v1` checked map (no orphaned checked entries). Baked items are not removable (just left unchecked).
 - Checking/adding/removing saves to localStorage and **re-renders the packing view directly** (+ updates progress). It does **NOT** dispatch `jwh:data-changed` — nothing else derives from packing (per the single-path convention; same reasoning as Budget).
@@ -70,7 +76,8 @@ CATEGORY_ORDER = `['Documents','Money','Electronics','Clothing','Health','Day-on
 ## 7. Files
 
 - **Create:** `assets/packing.js`, `assets/lib/packing.js`, `assets/celebrate.js` (extracted shared celebration), `tests/packing.test.mjs`.
-- **Modify:** `index.html` (nav + view + progress bar), `router.js` (ROUTES+TITLES), `main.js` (mount), `lib/store.js` (KEYS ×2), `data/tips.json` (`packing[]`), `assets/content.js` (import `celebrate` from the new module; remove its private copy), `assets/i18n.js` (nav/head/lede.packing), `sw.js` (precache `assets/packing.js` + `assets/lib/packing.js` + `assets/celebrate.js`, CACHE bump). Optionally `gestures.js` (long-press parity — deferred).
+- **Reuse:** `assets/collapse.js` (`mountAccordion`), `assets/dnd.js` (`makeSortable`), `assets/celebrate.js`.
+- **Modify:** `index.html` (nav + view + controls: progress bar, collapse-all, hide-done), `router.js` (ROUTES+TITLES), `main.js` (mount), `lib/store.js` (KEYS ×4 + shared `collapse`), `data/tips.json` (`packing[]`), `assets/content.js` (import `celebrate` from the new module; remove its private copy), `assets/style.css` (packing rows/badges if not covered by checklist CSS), `assets/i18n.js` (nav/head/lede.packing), `sw.js` (precache `assets/packing.js` + `assets/lib/packing.js` + `assets/celebrate.js` + `assets/collapse.js`, CACHE bump). Optionally `gestures.js` (long-press parity — deferred).
 
 ## 8. Out of scope
 

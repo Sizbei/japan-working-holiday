@@ -78,7 +78,7 @@ All pure, no DOM, importable in Node. Guards: non-numeric/negative inputs coerce
 
 - **Summary band** (top, sticky-ish): big numbers — *To land: ¥X · Monthly burn: ¥Y · Net/mo: ±¥Z · Runway: N months* (or "sustainable"). Color the net/runway (green sustainable, amber tight <6 mo, red <3 mo).
 - **Inputs:** Savings and Monthly income as number inputs (¥), debounced-save.
-- **Two lists:** One-time costs and Monthly costs. Each line: label + an editable amount (number input) + a remove (×) for the line; a `＋ Add line` per group (label + amount). Editing/removing/adding writes to `jwh-budget-v1` and re-renders the summary.
+- **Two collapsible groups (animated accordion):** One-time costs and Monthly costs are each an `.acc` section (see `2026-06-22-collapsible-accordion.md`) — header = group name + an `.acc-count` group subtotal (e.g. `¥234,000`) + chevron; panel = the line items. After render, call `mountAccordion($('#budgetGroups'))`. Collapse ids: `budget-onetime`, `budget-monthly`. Each line: label + an editable amount (number input) + a remove (×); a `＋ Add line` per group (label + amount). Editing/removing/adding writes to `jwh-budget-v1` and re-renders (summary + group subtotals).
 - **Reset to defaults** button (confirm via existing `confirmModal`).
 - Every dynamic string through `esc()`. Number inputs validated (≥0, integer yen).
 - Mutations save to localStorage and **re-render the budget view directly** (call the local `render()` after a save). They do **NOT** dispatch `jwh:data-changed` — nothing else derives from the budget yet, and dispatching would trigger needless no-op re-renders in the dashboard/calendar/map/plan listeners. (Per the single-path convention: dispatch only when another module consumes the change.)
@@ -95,7 +95,8 @@ None required for v1. (A future dashboard "runway" widget is out of scope; when 
 ## 8. Files
 
 - **Create:** `assets/budget.js`, `assets/lib/budget.js`, `tests/budget.test.mjs`.
-- **Modify:** `index.html` (nav + view), `router.js` (ROUTES+TITLES), `main.js` (mount), `lib/store.js` (KEYS), `data/tips.json` (`budget` block), `assets/i18n.js` (nav/head/lede.budget), `sw.js` (precache + CACHE).
+- **Reuse:** `assets/collapse.js` (`mountAccordion`).
+- **Modify:** `index.html` (nav + view + `#budgetGroups`), `router.js` (ROUTES+TITLES), `main.js` (mount), `lib/store.js` (KEYS `budget` + shared `collapse`), `data/tips.json` (`budget` block), `assets/i18n.js` (nav/head/lede.budget), `sw.js` (precache `assets/budget.js` + `assets/lib/budget.js` + `assets/collapse.js`, CACHE bump).
 
 ## 9. Out of scope
 

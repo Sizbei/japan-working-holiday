@@ -182,7 +182,10 @@
       <div class="bar"><i id="checkBar"></i></div>
       <button class="reset" id="checkReset" type="button">reset</button>
     </div>
-    <input type="search" id="checkSearch" class="list-search" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off">
+    <div class="list-search-x" data-search-x>
+      <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search checklist" aria-controls="checkSearch">🔍</button>
+      <input type="search" id="checkSearch" class="lsx-input" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off" tabindex="-1">
+    </div>
     <form id="checkAddForm" class="pack-add" autocomplete="off">
       <input type="text" id="checkAddInput" placeholder="Add your own task…" aria-label="New checklist task" maxlength="120">
       <select id="checkAddPhase" aria-label="Phase"></select>
@@ -203,7 +206,10 @@
       <span class="pct" id="packPct" role="status" aria-live="polite">0%</span>
       <div class="bar"><i id="packBar"></i></div>
     </div>
-    <input type="search" id="packSearch" class="list-search" placeholder="Search items…" aria-label="Search packing list" autocomplete="off">
+    <div class="list-search-x" data-search-x>
+      <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search packing list" aria-controls="packSearch">🔍</button>
+      <input type="search" id="packSearch" class="lsx-input" placeholder="Search items…" aria-label="Search packing list" autocomplete="off" tabindex="-1">
+    </div>
     <form id="packAddForm" class="pack-add" autocomplete="off">
       <input type="text" id="packAddInput" placeholder="Add your own item…" aria-label="New packing item" maxlength="120">
       <select id="packAddCat" aria-label="Category"></select>

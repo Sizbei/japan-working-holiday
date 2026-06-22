@@ -1963,10 +1963,17 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .pack-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
 .pack-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
 .pack-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
-/* live search/filter on the checklist + packing list pages */
-.list-search { display: block; width: 100%; box-sizing: border-box; margin: var(--s3) 0; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
-.list-search::placeholder { color: var(--ink-soft); }
-.list-search:focus { outline: 2px solid var(--indigo); border-color: transparent; }
+/* expandable 🔍 search on the checklist + packing list pages — a compact icon that grows into an input */
+.list-search-x { display: inline-flex; align-items: center; gap: 0; margin: var(--s3) 0; max-width: 100%; }
+.lsx-toggle { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; flex-shrink: 0; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font-size: 1rem; line-height: 1; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.lsx-toggle:hover { color: var(--ink); }
+.lsx-toggle[aria-expanded="true"] { color: var(--ink); border-color: var(--indigo); }
+.lsx-toggle:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.lsx-input { width: 0; min-width: 0; padding: 0; border: 1px solid transparent; border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); opacity: 0; overflow: hidden; transition: width .22s ease, opacity .18s ease, padding .22s ease, margin .22s ease; }
+.lsx-input::placeholder { color: var(--ink-soft); }
+.list-search-x.is-open .lsx-input { width: 220px; max-width: calc(100vw - 6rem); padding: .5rem .8rem; margin-left: .4rem; opacity: 1; border-color: var(--line); }
+.list-search-x.is-open .lsx-input:focus { outline: 2px solid var(--indigo); border-color: transparent; }
+html[data-reduce-motion="on"] .lsx-input { transition: none; }
 .empty.list-empty { padding: 2rem 1rem; }
 
 .pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }

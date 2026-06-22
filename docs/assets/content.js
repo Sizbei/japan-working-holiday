@@ -3,7 +3,7 @@
 // searchable domains, brew scratchpad, the dependency-aware checklist (with due
 // dates), the pillar grids, and sources. Fed entirely by tips.json.
 
-import { $, $$, esc, srcLinks } from './lib/dom.js';
+import { $, $$, esc, srcLinks, wireExpandableSearch } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
 import { makeSortable } from './dnd.js';
@@ -404,6 +404,7 @@ function wireCheckSearch() {
   if (!search || search.dataset.wired) return;
   search.dataset.wired = '1';
   search.addEventListener('input', () => { checkSearchQ = search.value.trim().toLowerCase(); renderChecklist(); });
+  wireExpandableSearch(search, () => { checkSearchQ = ''; renderChecklist(); });
 }
 
 function renderChecklist(today) {

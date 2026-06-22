@@ -5,7 +5,7 @@
 //
 // Pure grouping/progress math lives in lib/packing.js; this file is DOM glue.
 
-import { $, $$, esc } from './lib/dom.js';
+import { $, $$, esc, wireExpandableSearch } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { slug } from './lib/places.js';
 import { makeSortable } from './dnd.js';
@@ -77,6 +77,7 @@ function wireControls() {
   if (search && !search.dataset.wired) {
     search.dataset.wired = '1';
     search.addEventListener('input', () => { searchQ = search.value.trim().toLowerCase(); render(); });
+    wireExpandableSearch(search, () => { searchQ = ''; render(); });
   }
   // hide-done toggle
   const hd = $('#packHideDone');

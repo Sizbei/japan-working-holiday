@@ -633,6 +633,13 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .ci-due:hover{ opacity:1; }
 .check-del{ background:none; border:none; color: var(--ink-soft); cursor:pointer; font-size:.85rem; line-height:1; padding:.1rem .35rem; border-radius:8px; flex-shrink:0; }
 .check-del:hover{ color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+.check-edit{ background:none; border:none; color: var(--ink-soft); cursor:pointer; font-size:.85rem; line-height:1; padding:.1rem .35rem; border-radius:8px; flex-shrink:0; }
+.check-edit:hover{ color: var(--indigo); background: color-mix(in srgb, var(--indigo) 12%, transparent); }
+/* shared inline rename input (checklist + packing) */
+.ci-edit-input, .pack-edit-input{ flex:1 1 auto; min-width:0; font:inherit; font-weight:600;
+  padding:.2rem .4rem; border:1px solid var(--indigo); border-radius:8px;
+  background: var(--bg-soft); color: var(--ink); }
+.ci-edit-input:focus, .pack-edit-input:focus{ outline:2px solid var(--indigo); outline-offset:1px; }
 .ci-src{ display:block; margin-top:.2rem; }
 .ci-src a{ font-size:.7rem; color: var(--indigo); margin-right:.5rem; }
 
@@ -1995,6 +2002,8 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .pack-note { display: block; font-size: .85rem; color: var(--ink-soft); margin-top: .15rem; }
 .pack-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
 .pack-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+.pack-edit { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
+.pack-edit:hover { color: var(--indigo); background: color-mix(in srgb, var(--indigo) 12%, transparent); }
 .pack-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
 /* slim control row above the checklist / packing list: [🔍 search] [＋ Add] [⊟ collapse] [☐ hide done] */
 .list-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); }

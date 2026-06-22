@@ -28,6 +28,7 @@ export const KEYS = {
   brewNotes: 'jwh-brew-notes-v1',
   brewIdeas: 'jwh-brew-ideas-v1',
   rooms: 'jwh-rooms-v1',
+  collapse: 'jwh-collapse-v1',
 };
 
 export function get(key, fallback) {

@@ -333,6 +333,25 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .phase-block { margin-bottom: var(--s8); }
 .phase-block h3 { font-family: var(--serif); font-size: 1.4rem; margin: 0 0 var(--s1); display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
 .phase-block .window { font-size: .8rem; color: var(--red); font-weight: 600; }
+
+/* ---- shared animated accordion (checklist phases, budget, packing) ---- */
+.acc { margin-bottom: var(--s8); }
+.acc-head {
+  display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap;
+  width: 100%; margin: 0 0 var(--s1); padding: var(--s1) 0;
+  background: none; border: 0; cursor: pointer; text-align: left;
+  font-family: var(--serif); font-size: 1.4rem; color: inherit;
+}
+.acc-head:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: 6px; }
+.acc-chevron { display: inline-block; flex-shrink: 0; font-size: 1.1rem; line-height: 1; transition: transform var(--t-base); }
+.acc.is-collapsed .acc-chevron { transform: rotate(-90deg); }   /* › → points right when collapsed */
+.acc-count { font-size: .8rem; color: var(--red); font-weight: 600; }
+.acc-panel { display: grid; grid-template-rows: 1fr; transition: grid-template-rows var(--t-base); }
+.acc.is-collapsed .acc-panel { grid-template-rows: 0fr; }
+.acc-panel > .acc-inner { overflow: hidden; min-height: 0; }
+.acc.is-collapsed .acc-inner { pointer-events: none; }   /* belt-and-suspenders vs dnd elementFromPoint (no inert) */
+html[data-reduce-motion="on"] .acc-panel,
+html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the reduce-motion toggle */
 .check-list { list-style: none; margin: var(--s3) 0 0; padding: 0; }
 .check-item { display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); border-radius: 12px; border: 1px solid transparent; transition: background .15s; cursor: pointer; }
 .check-item:hover { background: var(--bg-soft); }

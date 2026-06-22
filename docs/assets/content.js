@@ -492,13 +492,16 @@ function renderChecklist(today) {
       }
     }
     wrap.innerHTML = (searching && !html)
-      ? `<div class="empty list-empty">No tasks match “${esc(checkSearchQ)}”.</div>`
+      ? `<div class="empty list-empty">No matches for “${esc(checkSearchQ)}”.<br>
+          <button type="button" class="list-empty-add" id="checkEmptyAdd">＋ Add “<span class="lea-q">${esc(checkSearchQ)}</span>”</button>
+        </div>`
       : html;
   }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
   wireCheckSearch();
   wireAddItem();
+  wireCheckEmptyAdd();
   wireChecklist();
   if (view === 'phase' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
@@ -632,6 +635,27 @@ function wireAddItem() {
       document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh the dashboard teaser/bell
     });
   }
+}
+// Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
+// Re-rendered with the list, so (re)bind each render. Opens the ＋ Add composer pre-filled
+// with the query, focuses the phase select, and clears the search.
+function wireCheckEmptyAdd() {
+  const btn = $('#checkEmptyAdd');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const search = $('#checkSearch'), input = $('#checkAddInput'), toggle = $('#checkAddToggle'), sel = $('#checkAddPhase');
+    const q = (search?.value || checkSearchQ).trim();
+    if (toggle && toggle.getAttribute('aria-expanded') !== 'true') toggle.click();   // expand the composer
+    if (input) input.value = q;                                                       // pre-fill the query
+    if (search) {                                                                     // clear + collapse the search pill
+      search.value = '';
+      const stoggle = search.closest('.list-search-x')?.querySelector('[data-search-toggle]');
+      if (search.closest('.list-search-x')?.classList.contains('is-open')) stoggle?.click();
+    }
+    checkSearchQ = '';
+    renderChecklist();                                                                // drop the empty state, restore the list
+    sel?.focus();                                                                     // land on the phase picker
+  });
 }
 let lastPct = null;
 function updateProgress() {

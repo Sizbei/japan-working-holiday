@@ -173,9 +173,12 @@ function render() {
     </section>`;
   }).join('');
 
-  wrap.innerHTML = sections || `<div class="empty list-empty">No items match “${esc(searchQ)}”.</div>`;
+  wrap.innerHTML = sections || `<div class="empty list-empty">No matches for “${esc(searchQ)}”.<br>
+      <button type="button" class="list-empty-add" id="packEmptyAdd">＋ Add “<span class="lea-q">${esc(searchQ)}</span>”</button>
+    </div>`;
 
   wireRows();
+  wirePackEmptyAdd();
   // drag-reorder per category — only when fully unfiltered (no drag over a hidden/searched view)
   if (drag) {
     $$('#packList .pack-list').forEach(ul => makeSortable(ul, {
@@ -189,6 +192,28 @@ function render() {
   mountAccordion(wrap, { allToggle: $('#packCollapseAll'), forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress(items);
+}
+
+// Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
+// Re-rendered with the list, so (re)bind each render. Opens the ＋ Add composer pre-filled
+// with the query, focuses the category select, and clears the search.
+function wirePackEmptyAdd() {
+  const btn = $('#packEmptyAdd');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const search = $('#packSearch'), input = $('#packAddInput'), toggle = $('#packAddToggle'), sel = $('#packAddCat');
+    const q = (search?.value || searchQ).trim();
+    if (toggle && toggle.getAttribute('aria-expanded') !== 'true') toggle.click();   // expand the composer
+    if (input) input.value = q;                                                       // pre-fill the query
+    if (search) {                                                                     // clear + collapse the search pill
+      search.value = '';
+      const stoggle = search.closest('.list-search-x')?.querySelector('[data-search-toggle]');
+      if (search.closest('.list-search-x')?.classList.contains('is-open')) stoggle?.click();
+    }
+    searchQ = '';
+    render();                                                                         // drop the empty state, restore the list
+    sel?.focus();                                                                     // land on the category picker
+  });
 }
 
 function wireRows() {

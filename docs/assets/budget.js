@@ -11,7 +11,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import { confirmModal } from './lib/modal.js';
 import { mountAccordion } from './collapse.js';
-import { effectiveLines, sum, summary, fmtYen } from './lib/budget.js';
+import { effectiveLines, sum, summary, fmtYen, fmtCad } from './lib/budget.js';
 
 // hardcoded fallback if tips.json has no budget block (defensive — UI must still mount)
 const FALLBACK = { currency: 'JPY', oneTime: [], monthly: [] };
@@ -46,13 +46,15 @@ function wireInputs() {
       const s = load();
       s.savings = clampInt($('#budgetSavings')?.value);
       s.monthlyIncome = clampInt($('#budgetIncome')?.value);
+      s.cadRate = clampRate($('#budgetCadRate')?.value);   // yen-per-1-CAD; 0/blank → CAD twins hidden
       save(s);
       renderSummary();
     }, 250);
   };
-  const sav = $('#budgetSavings'), inc = $('#budgetIncome');
+  const sav = $('#budgetSavings'), inc = $('#budgetIncome'), cad = $('#budgetCadRate');
   if (sav && !sav.dataset.wired) { sav.dataset.wired = '1'; sav.addEventListener('input', debounced); }
   if (inc && !inc.dataset.wired) { inc.dataset.wired = '1'; inc.addEventListener('input', debounced); }
+  if (cad && !cad.dataset.wired) { cad.dataset.wired = '1'; cad.addEventListener('input', debounced); }
 }
 
 function wireReset() {
@@ -68,6 +70,8 @@ function wireReset() {
 
 // coerce a number-input string to a non-negative integer yen (no eval; mirrors lib coerce)
 function clampInt(v) { return Math.max(0, Math.round(+v || 0)); }
+// coerce the CAD rate (yen-per-1-CAD): blank/≤0/non-finite → 0 (off). fmtCad re-guards anyway.
+function clampRate(v) { const n = +v; return n > 0 ? n : 0; }
 
 // ---- summary band ----
 function renderSummary() {
@@ -84,18 +88,26 @@ function renderSummary() {
   const netSign = s.monthlyNet > 0 ? '+' : (s.monthlyNet < 0 ? '−' : '±');
   const netAbs = fmtYen(Math.abs(s.monthlyNet));
 
+  // optional CAD twin under each yen figure — only when a positive rate is set (fmtCad → '' otherwise).
+  const rate = clampRate(load().cadRate);
+  const cad = (yen) => { const t = fmtCad(yen, rate); return t ? `<span class="bdg-cad">≈ ${esc(t)}</span>` : ''; };
+  const netCad = (() => { const t = fmtCad(Math.abs(s.monthlyNet), rate); return t ? `<span class="bdg-cad">≈ ${esc(netSign + t)}</span>` : ''; })();
+
   band.innerHTML = `
     <div class="bdg-stat">
       <span class="bdg-stat-label">To land</span>
       <span class="bdg-stat-num">${esc(fmtYen(s.toLand))}</span>
+      ${cad(s.toLand)}
     </div>
     <div class="bdg-stat">
       <span class="bdg-stat-label">Monthly burn</span>
       <span class="bdg-stat-num">${esc(fmtYen(s.monthlyTotal))}</span>
+      ${cad(s.monthlyTotal)}
     </div>
     <div class="bdg-stat bdg-${esc(tone)}">
       <span class="bdg-stat-label">Net / mo</span>
       <span class="bdg-stat-num">${esc(netSign + netAbs)}</span>
+      ${netCad}
     </div>
     <div class="bdg-stat bdg-${esc(tone)}">
       <span class="bdg-stat-label">Runway</span>
@@ -104,6 +116,7 @@ function renderSummary() {
     <div class="bdg-stat bdg-after">
       <span class="bdg-stat-label">After setup</span>
       <span class="bdg-stat-num">${esc(fmtYen(s.afterLanding))}</span>
+      ${cad(s.afterLanding)}
     </div>`;
 }
 
@@ -160,9 +173,10 @@ function render() {
   if (!wrap) return;
   // reflect saved savings/income into the inputs (e.g. after a reset)
   const state = load();
-  const sav = $('#budgetSavings'), inc = $('#budgetIncome');
+  const sav = $('#budgetSavings'), inc = $('#budgetIncome'), cad = $('#budgetCadRate');
   if (sav && document.activeElement !== sav) sav.value = state.savings != null ? clampInt(state.savings) : '';
   if (inc && document.activeElement !== inc) inc.value = state.monthlyIncome != null ? clampInt(state.monthlyIncome) : '';
+  if (cad && document.activeElement !== cad) cad.value = clampRate(state.cadRate) > 0 ? clampRate(state.cadRate) : '';
 
   wrap.innerHTML = GROUPS.map(groupHTML).join('');
   wireRows();

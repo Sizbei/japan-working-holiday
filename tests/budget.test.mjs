@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { effectiveLines, sum, summary, fmtYen } from '../docs/assets/lib/budget.js';
+import { effectiveLines, sum, summary, fmtYen, fmtCad } from '../docs/assets/lib/budget.js';
 
 const BAKED = {
   currency: 'JPY',
@@ -28,6 +28,23 @@ test('fmtYen formats large numbers with commas', () => {
 });
 test('fmtYen rounds non-integers', () => {
   assert.equal(fmtYen(99.6), '¥100');
+});
+
+// ---- fmtCad ----
+test('fmtCad: rate 0 / blank / NaN / negative → empty string (guard inside)', () => {
+  assert.equal(fmtCad(234000, 0), '');
+  assert.equal(fmtCad(234000, ''), '');
+  assert.equal(fmtCad(234000, NaN), '');
+  assert.equal(fmtCad(234000, -108), '');
+  assert.equal(fmtCad(234000, undefined), '');
+});
+test('fmtCad: normal rate converts and formats with commas', () => {
+  assert.equal(fmtCad(234000, 108), 'C$2,167');   // 2166.67 → 2167
+});
+test('fmtCad: rounds to nearest dollar', () => {
+  assert.equal(fmtCad(108, 108), 'C$1');
+  assert.equal(fmtCad(162, 108), 'C$2');           // 1.5 → 2
+  assert.equal(fmtCad(0, 108), 'C$0');
 });
 
 // ---- effectiveLines ----

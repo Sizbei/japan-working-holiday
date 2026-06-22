@@ -1938,6 +1938,7 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .bdg-stat { flex: 1; min-width: 8rem; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3) var(--s4); display: flex; flex-direction: column; gap: .15rem; }
 .bdg-stat-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); font-weight: 700; }
 .bdg-stat-num { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.bdg-cad { font-size: .78rem; font-weight: 700; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 .bdg-stat.bdg-good .bdg-stat-num { color: var(--ok-ink); }
 .bdg-stat.bdg-warn .bdg-stat-num { color: var(--warn-ink); }
 .bdg-stat.bdg-bad .bdg-stat-num { color: var(--bad-ink); }

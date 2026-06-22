@@ -12,6 +12,13 @@ function coerce(x) { return Math.max(0, Math.round(+x || 0)); }
 // "¥1,234,567" — display formatter OWNED here (lib/rooms.js only parses yen).
 export function fmtYen(n) { return '¥' + Math.round(+n || 0).toLocaleString('en-US'); }
 
+// "C$2,167" — CAD twin of a yen figure. The rate≤0 / non-finite → '' guard lives INSIDE so a
+// divide-by-zero / Infinity / NaN can never render. rate is yen-per-1-CAD (e.g. 108).
+export function fmtCad(yen, rate) {
+  if (!(rate > 0)) return '';
+  return 'C$' + Math.round(yen / rate).toLocaleString('en-US');
+}
+
 // the effective line list for one group: baked (override ?? default, minus hidden) ++ custom.
 // state is default-destructured so {} / partial / null pieces can't throw.
 export function effectiveLines(baked, state, group) {
@@ -45,7 +52,9 @@ export function sum(lines) {
 }
 
 export function summary(baked, state) {
-  const { savings = 0, monthlyIncome = 0 } = state || {};
+  // cadRate (yen-per-1-CAD) is destructured here for a single default home; the page reads it to
+  // drive optional CAD twins via fmtCad. 0/blank → CAD hidden.
+  const { savings = 0, monthlyIncome = 0, cadRate = 0 } = state || {};
   const sav = coerce(savings);
   const income = coerce(monthlyIncome);
 

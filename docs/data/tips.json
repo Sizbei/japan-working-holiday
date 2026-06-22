@@ -3049,6 +3049,33 @@
     { "id": "ph-work-contact", "cat": "Work/meetup", "jp": "連絡先を交換しませんか", "read": "れんらくさきをこうかんしませんか · renrakusaki o kōkan shimasen ka", "en": "Shall we exchange contacts?" },
     { "id": "ph-work-thanks-today", "cat": "Work/meetup", "jp": "今日はありがとうございました", "read": "きょうはありがとうございました · kyō wa arigatō gozaimashita", "en": "Thank you for today" }
   ],
+  "emergency": {
+    "numbers": [
+      { "label": "Police", "num": "110", "note": "Crime, theft, accidents, a lost or stolen residence card. Free from any phone.", "confidence": "high" },
+      { "label": "Fire / Ambulance", "num": "119", "note": "Say 火事 (kaji, fire) or 救急車 (kyūkyūsha, ambulance). Free; the operator may have limited English — keep your address handy.", "confidence": "high" },
+      { "label": "Coast Guard", "num": "118", "note": "Sea and coastal emergencies, accidents on the water.", "confidence": "high" },
+      { "label": "Japan Helpline (English, 24h)", "num": "0570-000-911", "note": "Free English-language emergency support line. Not a substitute for 110/119 in a life-threatening emergency.", "confidence": "medium" }
+    ],
+    "contacts": [
+      { "label": "Embassy of Canada to Japan (Tokyo)", "detail": "+81-3-5412-6200 · 7-3-38 Akasaka, Minato-ku, Tokyo 107-8503", "note": "Verify current number before relying on it. After-hours emergencies for Canadians: Emergency Watch and Response Centre, Ottawa +1-613-996-8885 (call collect).", "confidence": "medium" },
+      { "label": "Lost / stolen residence card (在留カード)", "detail": "Report to Police (110) for the theft report, then re-apply at Immigration (出入国在留管理庁) within 14 days.", "note": "You must carry the card at all times; replacing it needs the police report number.", "confidence": "high" }
+    ],
+    "carry": [
+      "在留カード (residence card) — carry it ALWAYS; it is the law and your legal photo ID in Japan.",
+      "Health insurance card (国民健康保険証, NHI) once you have enrolled at the ward office.",
+      "Passport (or a copy) when the residence card is not yet issued.",
+      "A note (paper + phone) with your home address in Japanese, your blood type, and any allergies or medications.",
+      "A small amount of cash — many clinics, koban (police boxes), and small shops are cash-only."
+    ],
+    "phrases": [
+      { "jp": "助けてください", "read": "たすけてください · tasukete kudasai", "en": "Please help." },
+      { "jp": "救急車を呼んでください", "read": "きゅうきゅうしゃをよんでください · kyūkyūsha o yonde kudasai", "en": "Please call an ambulance." },
+      { "jp": "警察を呼んでください", "read": "けいさつをよんでください · keisatsu o yonde kudasai", "en": "Please call the police." },
+      { "jp": "アレルギーがあります", "read": "アレルギーがあります · arerugī ga arimasu", "en": "I have allergies." },
+      { "jp": "道に迷いました", "read": "みちにまよいました · michi ni mayoimashita", "en": "I'm lost." },
+      { "jp": "英語を話せる人はいますか", "read": "えいごをはなせるひとはいますか · eigo o hanaseru hito wa imasu ka", "en": "Is there someone who speaks English?" }
+    ]
+  },
   "restaurants": [
     {
       "name": "Gyudon chains (Yoshinoya / Sukiya / Matsuya)",

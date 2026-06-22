@@ -21,6 +21,7 @@ export const STRINGS = {
   'nav.rooms': '部屋',
   'nav.map': '地図',
   'nav.plan': 'プラン',
+  'nav.emergency': '緊急',
 
   'head.dashboard.needs': '対応が必要なこと',
   'head.widget.deadlines': '次の締め切り',
@@ -55,6 +56,7 @@ export const STRINGS = {
   'head.rooms': '部屋探し',
   'head.map': '東京マップ',
   'head.plan': '一日プラン',
+  'head.emergency': '緊急時ガイド',
   // JS-rendered (tracker.js) — not present as static data-i18n in index.html:
   'head.tracker.fixed': '定時リリースのルール',
   'head.tracker.dated': '日付指定の予約枠',
@@ -78,6 +80,7 @@ export const STRINGS = {
   'lede.rooms': '外国人歓迎のシェアハウス＆アパート — 礼金なし、保証人なし、海外から予約可。あくまで出発点です（公開 API を持つ事業者はありません）。最新の空室はリンクから。<span id="roomCount" class="room-count" role="status" aria-live="polite"></span>',
   'lede.map': 'ここにある全スポットをエリア別にまとめています — タップで Google マップが開きます（スマホではマップアプリが起動）。下の地図は位置把握用の都心エリアです。',
   'lede.plan': '一日ずつ組み立て — 保存したピン、カタログ、イベントから立ち寄り先を追加。ドラッグで並べ替え、各区間のおおよその移動時間も表示。決まったらカレンダーに書き出せます。',
+  'lede.emergency': '電波がなくても見られる、いざという時のページ — 日本の緊急番号、カナダ大使館、常に携帯すべきもの、そして本当に必要な時のフレーズ。番号をタップで発信。オフラインでも使えます。',
 };
 
 // JP term → reading + gloss for the hover dictionary (covers the .jp accents + nav + brand;
@@ -113,4 +116,5 @@ export const GLOSSARY = {
   '集まり・イベント': { r: 'あつまり・イベント · atsumari · ibento', m: 'meetups & events' },
   'ゲーム・アニメ・技術': { r: 'ゲーム・アニメ・ぎじゅつ · gēmu · anime · gijutsu', m: 'games · anime · tech' },
   '食べ歩き': { r: 'たべあるき · tabe-aruki', m: 'food-walking (eating around)' },
+  '緊急': { r: 'きんきゅう · kinkyū', m: 'emergency / urgent' },
 };

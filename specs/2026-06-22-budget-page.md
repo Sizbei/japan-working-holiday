@@ -69,9 +69,10 @@ summary(baked, state) -> {
   runwayMonths (= monthlyNet < 0 ? floor(savings / -monthlyNet) : Infinity),
   afterLanding (= savings - oneTimeTotal)        // savings left right after setup
 }
-fmtYen(n) -> "¥1,234,567"   // reuse/share the yen-formatting approach from lib/rooms.js
+fmtYen(n) -> "¥1,234,567"   // OWNED HERE — define in lib/budget.js as `'¥' + Math.round(n).toLocaleString('en-US')`.
+                            // (lib/rooms.js only PARSES yen; the display `yen()` in rooms.js is a private const, not importable.)
 ```
-All pure, no DOM, importable in Node. Guards: non-numeric/negative inputs coerced to 0; `runwayMonths` is `Infinity` (render as "∞ / sustainable") when net ≥ 0.
+All pure, no DOM, importable in Node. Guards: non-numeric/negative inputs coerced to 0; `runwayMonths` is `Infinity` when `monthlyNet ≥ 0` — **kept in JS memory only, never persisted** (JSON can't hold Infinity); the UI renders it as "∞ / sustainable".
 
 ## 5. UI (`budget.js`)
 
@@ -80,11 +81,11 @@ All pure, no DOM, importable in Node. Guards: non-numeric/negative inputs coerce
 - **Two lists:** One-time costs and Monthly costs. Each line: label + an editable amount (number input) + a remove (×) for the line; a `＋ Add line` per group (label + amount). Editing/removing/adding writes to `jwh-budget-v1` and re-renders the summary.
 - **Reset to defaults** button (confirm via existing `confirmModal`).
 - Every dynamic string through `esc()`. Number inputs validated (≥0, integer yen).
-- Mutations save to localStorage and dispatch `jwh:data-changed` so the dashboard could later surface a budget teaser (out of scope to add the teaser now).
+- Mutations save to localStorage and **re-render the budget view directly** (call the local `render()` after a save). They do **NOT** dispatch `jwh:data-changed` — nothing else derives from the budget yet, and dispatching would trigger needless no-op re-renders in the dashboard/calendar/map/plan listeners. (Per the single-path convention: dispatch only when another module consumes the change.)
 
 ## 6. Dashboard touch (optional, minimal)
 
-None required for v1. (A future dashboard "runway" widget is out of scope.)
+None required for v1. (A future dashboard "runway" widget is out of scope; when it lands, *that* work adds the `jwh:data-changed` dispatch + a dashboard listener together.)
 
 ## 7. Testing
 

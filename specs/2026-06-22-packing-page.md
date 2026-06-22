@@ -13,7 +13,7 @@ A categorized **packing checklist** for the Canada→Tokyo move: a curated, rese
 ## 2. Where it lives
 
 New route `packing`, same new-page pattern as Budget:
-- `router.js`: `'packing'` in `ROUTES`, `packing: 'Packing'` in `TITLES`.
+- `router.js`: add `'packing'` to `ROUTES` **and** `packing: 'Packing'` to `TITLES` (the two MUST stay in sync — a route without a `TITLES` entry yields an undefined `document.title`).
 - `index.html`: nav link (`data-i18n="nav.packing"`) + `<div class="view" id="view-packing"><section id="packing">` with `.pillar-head` (jp accent `荷造り`, `<h2 data-i18n="head.packing">`), a `.lede`, a progress bar (`#packBar`/`#packPct` mirroring `#checkBar`/`#checkPct`), and a list container `#packList`.
 - `main.js`: `mountPacking(data)` near the other mounts.
 - `lib/store.js` `KEYS`: `packing: 'jwh-packing-v1'`, `packCustom: 'jwh-pack-custom-v1'`.
@@ -45,19 +45,22 @@ Item fields: `id` (stable), `cat`, `item`, optional `note`, optional `confidence
 
 ## 4. Logic
 
-The render is DOM glue (like `content.js` checklist). The one genuinely pure, testable piece:
-- `lib/packing.js`: `groupByCategory(items, ORDER)` → `[{ cat, items[] }]` in fixed order (unknown cats last), and `progress(items, checked)` → `{ done, total, pct }`. Pure, unit-tested. (If this proves too thin, fold into `packing.js` and test progress via a tiny exported pure fn — but prefer the lib.)
+The render is DOM glue (like `content.js` checklist). The genuinely pure, testable logic lives in `lib/packing.js`:
+- `groupByCategory(items, ORDER)` → `[{ cat, items[] }]` in fixed order (unknown cats last).
+- `progress(items, checked)` → `{ done, total, pct }`. **`items` = baked packing items ++ user custom items** — progress counts **only** packing items, **never** `DATA.checklist` (the yearlong checklist is a separate store/feature; they must not cross-count). `total` includes custom items; `done` = items whose id is truthy in the `checked` map.
 
 CATEGORY_ORDER = `['Documents','Money','Electronics','Clothing','Health','Day-one bag','Misc']`.
 
 ## 5. UI (`packing.js`)
 
 - **Progress bar** at top: `${pct}% · ${done}/${total}` (reuse the checklist's bar markup/CSS).
-- **Grouped sections** by category (fixed order); each item is a real `<label><input type=checkbox>…</label>` row (checkbox is the focusable control, matching the project's a11y rule — real controls, not `role=button`). A baked item with a `note` shows it as a sub-line; `confidence:"low"` items get the same "verify" affordance the rest of the app uses. Custom items show a remove (×).
+- **Grouped sections** by category (fixed order); each item is a real `<label><input type=checkbox>…</label>` row (checkbox is the focusable control, matching the project's a11y rule — real controls, not `role=button`). A baked item with a `note` renders it as a second-line sub-text (like a checklist item's note); a `confidence:"low"` item renders a `.badge.low` "verify" badge (the same class/treatment as `content.js` domain findings). Custom items show a remove (×). Baked item ids follow `pk-<slug>`, custom ids `pku<ts>`.
 - **Add item:** an input + category select + Add (like the brew "idea cards" add). Appends to `jwh-pack-custom-v1` with a fresh `pku<ts>` id.
-- Checking/adding/removing saves to localStorage, re-renders, updates progress, and dispatches `jwh:data-changed`. **100% fires the existing celebrate path** (`dndToast` "Packed and ready ✈️" + confetti, gated by the celebrations setting) — reuse, don't reinvent.
-- Every dynamic string through `esc()`. Keyboard focus restored across the `innerHTML` rebuild (same technique as calendar/checklist).
-- **Long-press / right-click parity (optional, cheap):** `gestures.js` `resolveTarget` could map a packing row to ☑/☐ + remove, mirroring the checklist rows. Nice-to-have; not required for v1 (flag, don't block).
+- **Remove a custom item:** delete it from `jwh-pack-custom-v1` **and** delete its id from the `jwh-packing-v1` checked map (no orphaned checked entries). Baked items are not removable (just left unchecked).
+- Checking/adding/removing saves to localStorage and **re-renders the packing view directly** (+ updates progress). It does **NOT** dispatch `jwh:data-changed` — nothing else derives from packing (per the single-path convention; same reasoning as Budget).
+- **100% celebration (DRY fix):** `celebrate()` is currently **private** in `content.js` and not importable. Extract it into a small shared module **`assets/celebrate.js`** — `export function celebrate(message)` (the `blip('1up')` + `dndToast(message)` + confetti DOM + celebrations-setting gate, moved verbatim from content.js); `content.js` imports it (its checklist 100% message unchanged), and `packing.js` calls `celebrate('Packed and ready ✈️')` on the 0→100% crossing. (Do **not** duplicate the confetti.)
+- Every dynamic string through `esc()`. Keyboard focus is restored across the `innerHTML` rebuild using the **checklist's selector-capture pattern** (`captureCheckFocus()` in `content.js` — capture a CSS selector for the focused control before rebuild, refocus after); replicate it as `capturePackFocus()`.
+- **Long-press / right-click parity (optional, cheap):** `gestures.js` `resolveTarget` could map a packing row to a quick menu — **custom** rows get ☑/☐ + ✕ Remove; **baked** rows get only ☑/☐ (baked items aren't removable). Nice-to-have; not required for v1 (flag, don't block).
 
 ## 6. Testing
 
@@ -66,8 +69,8 @@ CATEGORY_ORDER = `['Documents','Money','Electronics','Clothing','Health','Day-on
 
 ## 7. Files
 
-- **Create:** `assets/packing.js`, `assets/lib/packing.js`, `tests/packing.test.mjs`.
-- **Modify:** `index.html`, `router.js`, `main.js`, `lib/store.js`, `data/tips.json` (`packing[]`), `assets/i18n.js`, `sw.js`. Optionally `gestures.js` (long-press parity — deferred).
+- **Create:** `assets/packing.js`, `assets/lib/packing.js`, `assets/celebrate.js` (extracted shared celebration), `tests/packing.test.mjs`.
+- **Modify:** `index.html` (nav + view + progress bar), `router.js` (ROUTES+TITLES), `main.js` (mount), `lib/store.js` (KEYS ×2), `data/tips.json` (`packing[]`), `assets/content.js` (import `celebrate` from the new module; remove its private copy), `assets/i18n.js` (nav/head/lede.packing), `sw.js` (precache `assets/packing.js` + `assets/lib/packing.js` + `assets/celebrate.js`, CACHE bump). Optionally `gestures.js` (long-press parity — deferred).
 
 ## 8. Out of scope
 

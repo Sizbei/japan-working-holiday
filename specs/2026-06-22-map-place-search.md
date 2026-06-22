@@ -18,14 +18,16 @@ The app already has a **local point model** — `placesModel()` in `map.js` (the
 
 ## 3. Design
 
-### 3.1 Local search first, geocode as fallback
-On input (≥2 chars, debounced), the box runs **two phases into one results list**:
-1. **Local (instant, offline):** fuzzy-match the query against `placesModel()` — match on `name` (and `area`). Rank: name-prefix > name-substring > area-substring. Show up to ~6, each labelled by source: **★ saved**, **◆ catalogue** (and skip event points or label them). These render immediately, no network.
-2. **Geocode (network, only if useful):** keep the existing Nominatim search, but render its results **below** a divider, labelled **🔍 add new**, and only fetch when the query is ≥3 chars (unchanged rate-limit/debounce/abort). If the top local match is an exact name hit, the geocode section can still show (to add a *different* nearby place), but the UI makes clear which results are "already in your map" vs "add new".
+### 3.1 Local search first, geocode as fallback — two independent sections
+`#placeSug` holds **two stacked sections** that update on their own clocks, so the instant local results never flicker/get clobbered by the slower geocode fetch:
+1. **Local (instant, offline) — renders synchronously on every keystroke** (≥2 chars, no debounce, no network): `searchLocal(placesModel(), q)` fuzzy-matches `name`/`area` (rank: name-prefix > name-substring > area-substring). Up to ~6 rows, each labelled by source — **★ saved**, **◆ catalogue** (event points skipped) — and showing precision (saved = exact; catalogue = `≈` neighbourhood). Rendered into a `.sug-local` container.
+2. **Geocode (network) — fills a separate `.sug-geo` container after the existing debounce** (≥3 chars; unchanged 450ms debounce, 1 req/s rate-limit, AbortController). Results sit below a `<li class="sug-div">` divider, labelled **🔍 add new**. Updating `.sug-geo` does not touch `.sug-local`. While the fetch is pending the geo section can show nothing (no spinner needed). The two sections coexist so the user sees "already in your map" vs "add new".
 
-### 3.2 Click behavior by result type
-- **Local result (saved/catalogue):** do **not** create a new place. Focus/open it on the map — reuse `focusPlace(id)` for saved; for a catalogue point that isn't yet a saved place, either focus its marker or offer "save to my pins" (reuse the existing catalogue→save path). No duplicate place is created.
-- **Geocode result:** the existing `upsertPlace({source:'searched'})` + optional date→event flow, unchanged.
+### 3.2 Click routing (critical — the existing handler only matches `button[data-lat]`)
+Local-result buttons carry **`data-id`** (the `placesModel()` point id), geocode-result buttons keep their existing **`data-lat`/`data-lng`/`data-name`/`data-addr`**. The `#placeSug` click handler branches:
+- `e.target.closest('button[data-lat]')` → **geocode add** (the existing path, unchanged): `upsertPlace({source:'searched'})` + optional `#placeDate`→event linking.
+- else `e.target.closest('button[data-id]')` → **local focus**: do **not** create a place. Call `focusPlace(id)` (verified to work for saved *and* catalogue ids — both are in `markersById` via `renderPins`, and `zoomToShowLayer` un-clusters them). For a catalogue point the user wants to keep, offer "save to my pins" via the existing catalogue→save path. No duplicate is created.
+- The optional `#placeDate` applies **only to the geocode-add path**; focusing an existing local pin ignores it (documented behavior).
 
 ### 3.3 Markup
 Relabel the input from "ADD A PLACE // …" to a search placeholder (e.g. "SEARCH PLACES // ramen, Shibuya, a saved pin…"), keep the optional `#placeDate`. The `#placeSug` list gains a small source badge per row and an optional `<li class="sug-div">` divider between the local and geocode groups. `aria-live="polite"` stays.
@@ -60,7 +62,8 @@ searchLocal(points, query, limit=6) -> [{ ...point, score, why }]   // pure rank
 ## 7. Files
 
 - **Create:** `assets/lib/placesearch.js`, `tests/placesearch.test.mjs`.
-- **Modify:** `assets/map.js` (wrap `wireAddPlace`: local phase + relabel + source badges + click routing), `index.html` (input placeholder/label + optional divider styling hook), `assets/style.css` (source badge + divider), `assets/i18n.js` (update the map search placeholder/label strings), `sw.js` (precache `assets/lib/placesearch.js` + CACHE bump).
+- **Modify:** `assets/map.js` (wrap `wireAddPlace`: synchronous local phase + the two-section render + `data-id` click branch), `index.html` (relabel the `#placeSearch` placeholder/aria-label **directly in the markup** — these are plain hardcoded strings, **not** in the i18n system, so no `i18n.js` change), `assets/style.css` (`.sug-local`/`.sug-geo` sections, source badge, `.sug-div` divider), `sw.js` (precache `assets/lib/placesearch.js` + CACHE bump).
+- **NOT touched:** `assets/i18n.js` — the map controls were explicitly out of the translation scope (the prior pass covered headings + ledes only), and `#placeSearch`'s placeholder has no `data-i18n` key. (Earlier draft wrongly listed an i18n change.)
 
 ## 8. Out of scope
 

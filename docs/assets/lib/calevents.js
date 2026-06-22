@@ -24,6 +24,7 @@ export function eventMenuSpec(ev, { isGoing = false } = {}) {
       { key: 'edit', label: 'Edit' },
       { key: 'duplicate', label: 'Duplicate' },
       { key: 'plan', label: '＋ Add to day plan' },
+      { key: 'checklist', label: '＋ Add to checklist' },
       { key: 'gcal', label: '＋ Google Calendar' },
       going,
       { sep: true },
@@ -33,6 +34,7 @@ export function eventMenuSpec(ev, { isGoing = false } = {}) {
   return [
     { key: 'open', label: 'Open details' },
     { key: 'plan', label: '＋ Add to day plan' },
+    { key: 'checklist', label: '＋ Add to checklist' },
     { key: 'gcal', label: '＋ Google Calendar' },
     { key: 'copy', label: 'Copy to my events' },
     going,

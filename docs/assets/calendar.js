@@ -16,6 +16,7 @@ import { isGoing, toggleGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
+import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { openMenu } from './lib/menu.js';
 
 let DATA = null;
@@ -387,6 +388,15 @@ function addEventToPlan(ev) {
   upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));   // upsertStop → dispatch
   alertModal(`Added “${ev.title}” to your plan for ${fmtDate(ev.date)}.`);
 }
+// "＋ Add to checklist": create a custom checklist item from the event (title + its
+// date as the due hint), landing in "My tasks". Re-renders the checklist + dashboard
+// via their jwh:data-changed listeners (no content.js import → no cycle).
+function addEventToChecklist(ev) {
+  saveChecklistCustom([...loadChecklistCustom(),
+    customItem(ev.title, 'My tasks', (ev.date || '').slice(0, 10), 'cku' + Date.now())]);
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  dndToast('Added to checklist');
+}
 function copyBakedToUser(ev) {
   saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
 }
@@ -424,6 +434,7 @@ function eventMenuItems(ev) {
     edit: () => openModal(ev),
     duplicate: () => { saveUser([...loadUser(), duplicateUserEvent(ev, 'u' + Date.now())]); focusAdd(); },
     plan: () => addEventToPlan(ev),
+    checklist: () => addEventToChecklist(ev),
     gcal: () => window.open(gcalUrl(ev), '_blank', 'noopener'),
     going: () => { toggleGoingEv(ev); focusAdd(); },
     copy: () => { copyBakedToUser(ev); focusAdd(); },

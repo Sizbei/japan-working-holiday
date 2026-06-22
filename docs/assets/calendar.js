@@ -14,7 +14,7 @@ import { upsertStop, newStop } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
 import { isGoing, toggleGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
-import { makeMovable } from './dnd.js';
+import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { openMenu } from './lib/menu.js';
 
@@ -390,10 +390,30 @@ function addEventToPlan(ev) {
 function copyBakedToUser(ev) {
   saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
 }
+let pendingUndo = null, undoTimer = null;
+function clearPending() { pendingUndo = null; if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; } }
+
 function deleteUserEvent(id) {
-  const linked = loadPlaces().find(p => p.eventId === id);     // clear the back-ref on any place that linked this event
-  if (linked) patchPlace(linked.id, { eventId: '', date: '', remindDate: '' });
-  saveUser(loadUser().filter(x => x.id !== id));               // saveUser dispatches once
+  const event = loadUser().find(x => x.id === id);
+  if (!event) return;                                          // already gone — nothing to delete/undo
+  const lp = loadPlaces().find(p => p.eventId === id);         // the place (if any) linked to this event
+  const place = lp ? { id: lp.id, eventId: lp.eventId, date: lp.date, remindDate: lp.remindDate } : null;   // snapshot BEFORE teardown
+  if (lp) patchPlace(lp.id, { eventId: '', date: '', remindDate: '' });   // clear the back-ref (silent — patchPlace doesn't dispatch)
+  saveUser(loadUser().filter(x => x.id !== id));               // saveUser dispatches once → render
+  clearPending();                                              // supersede any prior undoable delete (it becomes permanent)
+  pendingUndo = { event, place };
+  undoTimer = setTimeout(clearPending, 4200);                  // window matches dndToast's auto-dismiss
+  dndToast(`Deleted “${event.title}”`, undoLastDelete);        // dndToast uses textContent → title is injection-safe
+}
+
+// Restore the most-recently-deleted event (Undo button or Ctrl/Cmd+Z). Returns true if it undid something.
+export function undoLastDelete() {
+  if (!pendingUndo) return false;
+  const { event, place } = pendingUndo;                        // atomic consume: capture, then clear BEFORE mutating
+  clearPending();
+  if (place) patchPlace(place.id, { eventId: place.eventId, date: place.date, remindDate: place.remindDate });   // re-link first (silent) …
+  saveUser([...loadUser(), event]);                            // … then save: one dispatch renders both. Original id → Going + place links reconnect.
+  return true;
 }
 function focusAdd() { $('#calAdd')?.focus(); }                 // after a mutating menu action, render destroys the trigger
 

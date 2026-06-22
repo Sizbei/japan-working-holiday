@@ -18,6 +18,7 @@ import { placesVisitedStats } from './lib/placestats.js';
 import {
   loadPlaces, placeById, placeByName, upsertPlace, patchPlace, deletePlace, toggleFav, setHomeBase, catId, slug,
 } from './lib/places.js';
+import { searchLocal } from './lib/placesearch.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
 import { nowISO } from './lib/dates.js';
@@ -720,15 +721,42 @@ function renderIndex() {
     </details>`).join('');
 }
 
-// ====================================================================== add-place (Nominatim)
+// ====================================================================== unified place search
+// Two stacked sections in #placeSug that update on their OWN clocks (spec §3.1):
+//   .sug-local — INSTANT, offline, synchronous on every keystroke (≥2 chars): searchLocal()
+//     over the unified placesModel(). Rows carry data-id → focusPlace() (no place created).
+//   .sug-geo   — the UNCHANGED debounced Nominatim path (≥3 chars, 450ms, 1 req/s, abort).
+//     Rows carry data-lat/lng/name/addr → geocode-add (+ optional #placeDate→event).
+// Each section renders into its own <li> wrapper so the slow geocode fetch never clobbers
+// (or is clobbered by) the instant local results.
+const SUG_SRC = { user: '★', catalogue: '◆' };       // source badge: ★ saved, ◆ catalogue
+function localRow(pt) {
+  const badge = SUG_SRC[pt.kind] || '◆';
+  const label = pt.kind === 'user' ? 'saved' : 'catalogue';
+  const prec = pt.coordKind === 'exact' ? 'exact' : '≈';
+  const area = pt.area ? `<span class="sug-area">${esc(pt.area)}</span>` : '';
+  return `<li><button type="button" data-id="${esc(String(pt.id))}">
+    <span class="sug-badge sug-${esc(pt.kind)}" title="${label}" aria-hidden="true">${badge}</span>
+    <span class="sug-name">${esc(pt.name)}</span>${area}
+    <span class="sug-prec" aria-hidden="true">${prec}</span>
+  </button></li>`;
+}
+function renderLocalSug(host, q) {
+  const hits = q.length >= 2 ? searchLocal(placesModel(), q) : [];
+  host.innerHTML = hits.map(localRow).join('');
+}
 function wireAddPlace() {
   const input = $('#placeSearch'), sug = $('#placeSug');
   if (!input || !sug) return;
+  // two independent section containers (created once); local on top, divider + geo below.
+  sug.innerHTML = `<li class="sug-local-wrap"><ul class="sug-local"></ul></li><li class="sug-geo-wrap"><ul class="sug-geo"></ul></li>`;
+  const localEl = sug.querySelector('.sug-local'), geoEl = sug.querySelector('.sug-geo');
   let timer, controller, lastReq = 0;
   input.addEventListener('input', () => {
     clearTimeout(timer);
     const q = input.value.trim();
-    if (q.length < 3) { sug.innerHTML = ''; return; }
+    renderLocalSug(localEl, q);                       // INSTANT, synchronous, offline — every keystroke
+    if (q.length < 3) { geoEl.innerHTML = ''; return; }
     const run = async () => {
       const now = Date.now();
       const wait = 1100 - (now - lastReq);
@@ -738,25 +766,38 @@ function wireAddPlace() {
       controller = new AbortController();
       try {
         const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=5&q=${encodeURIComponent(q)}`, { signal: controller.signal, headers: { 'Accept-Language': 'en' } });
-        if (!r.ok) { sug.innerHTML = '<li class="sug-msg">Search unavailable — try again</li>'; return; }
+        if (!r.ok) { geoEl.innerHTML = '<li class="sug-msg">Search unavailable — try again</li>'; return; }
         const data = await r.json();
-        sug.innerHTML = data.length ? data.map(d =>
+        const rows = data.length ? data.map(d =>
           `<li><button type="button" data-lat="${esc(String(d.lat))}" data-lng="${esc(String(d.lon))}" data-name="${esc(d.display_name.split(',')[0])}" data-addr="${esc(d.display_name)}">${esc(d.display_name)}</button></li>`).join('')
           : '<li class="sug-msg">No matches</li>';
-      } catch (e) { if (e.name !== 'AbortError') sug.innerHTML = '<li class="sug-msg">Search unavailable (offline?)</li>'; }
+        geoEl.innerHTML = `<li class="sug-div" aria-hidden="true">🔍 add new</li>` + rows;
+      } catch (e) { if (e.name !== 'AbortError') geoEl.innerHTML = '<li class="sug-msg">Search unavailable (offline?)</li>'; }
     };
     timer = setTimeout(run, 450);
   });
+  const reset = (dateEl) => { input.value = ''; localEl.innerHTML = ''; geoEl.innerHTML = ''; if (dateEl) dateEl.value = ''; };
   sug.addEventListener('click', (e) => {
-    const b = e.target.closest('button[data-lat]'); if (!b) return;
-    const dateEl = $('#placeDate');
-    const date = (dateEl?.value || '').trim();
-    const id = 'p' + Date.now();
-    const rec = { id, name: b.dataset.name, address: b.dataset.addr, lat: +b.dataset.lat, lng: +b.dataset.lng, category: 'personal', source: 'searched', coordKind: 'exact' };
-    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) { rec.date = date; rec.remindDate = ''; rec.eventId = pushEvent('Visit: ' + rec.name, date, rec.address); }
-    upsertPlace(rec);
-    input.value = ''; sug.innerHTML = ''; if (dateEl) dateEl.value = '';
+    // geocode-add path (existing): adds a place + optional #placeDate→event linking
+    const g = e.target.closest('button[data-lat]');
+    if (g) {
+      const dateEl = $('#placeDate');
+      const date = (dateEl?.value || '').trim();
+      const id = 'p' + Date.now();
+      const rec = { id, name: g.dataset.name, address: g.dataset.addr, lat: +g.dataset.lat, lng: +g.dataset.lng, category: 'personal', source: 'searched', coordKind: 'exact' };
+      if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) { rec.date = date; rec.remindDate = ''; rec.eventId = pushEvent('Visit: ' + rec.name, date, rec.address); }
+      upsertPlace(rec);
+      reset(dateEl);
+      ensureLeaflet();
+      focusPlace(id);
+      return;
+    }
+    // local-focus path: an existing pin (saved or catalogue) — focus it, never create a place.
+    // #placeDate is ignored here (documented: it applies only to the geocode-add path).
+    const l = e.target.closest('button[data-id]');
+    if (!l) return;
+    reset($('#placeDate'));
     ensureLeaflet();
-    focusPlace(id);
+    focusPlace(l.dataset.id);
   });
 }

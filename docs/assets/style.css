@@ -1104,6 +1104,18 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .place-sug button{ width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:.5rem .7rem; font-size:.8rem; color: var(--ink); }
 .place-sug button:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
 .sug-msg{ padding:.5rem .7rem; font-size:.78rem; color: var(--ink-soft); }
+/* unified place search: two stacked sections (instant local + debounced geocode) */
+.place-sug .sug-local-wrap, .place-sug .sug-geo-wrap{ border-bottom:none; padding:0; }
+.place-sug .sug-local, .place-sug .sug-geo{ list-style:none; margin:0; padding:0; }
+.place-sug .sug-local:empty, .place-sug .sug-geo:empty{ display:none; }   /* collapse an empty section so the box hides when both are empty */
+.place-sug .sug-local button, .place-sug .sug-geo button{ display:flex; align-items:center; gap:.45rem; }
+.sug-div{ padding:.32rem .7rem; font-family: var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color: var(--ink-soft); background: var(--bg-soft); border-bottom:1px solid var(--line); }
+.sug-badge{ flex:none; width:1.1rem; text-align:center; font-size:.8rem; line-height:1; }
+.sug-badge.sug-user{ color: var(--gold); }
+.sug-badge.sug-catalogue{ color: var(--indigo); }
+.sug-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sug-area{ flex:none; font-size:.7rem; color: var(--ink-soft); }
+.sug-prec{ flex:none; font-size:.66rem; font-weight:700; color: var(--ink-soft); opacity:.8; }
 .map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: var(--bg-sunk); }
 .map-canvas.failed::after{ content:'Map offline — use the neighbourhood index below.'; display:grid; place-items:center; height:100%; color: var(--ink-soft); font-size:.85rem; }
 /* loading state — spinner while Leaflet lazy-loads (a blank canvas reads as broken) */

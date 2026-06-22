@@ -51,6 +51,7 @@
   <a href="#/checklist" data-route="checklist" data-i18n="nav.checklist">Checklist</a>
   <a href="#/packing" data-route="packing" data-i18n="nav.packing">Packing</a>
   <a href="#/budget" data-route="budget" data-i18n="nav.budget">Budget</a>
+  <a href="#/phrases" data-route="phrases" data-i18n="nav.phrases">Phrases</a>
   <a href="#/deadlines" data-route="deadlines" data-i18n="nav.deadlines">Deadlines</a>
   <a href="#/explore" data-route="explore" data-i18n="nav.explore">Explore</a>
   <a href="#/rooms" data-route="rooms" data-i18n="nav.rooms">Rooms</a>
@@ -237,6 +238,19 @@
     </div>
   </section>
   </div><!-- /view-budget -->
+
+  <div class="view" id="view-phrases" data-route="phrases">
+  <!-- ============ PHRASEBOOK ============ -->
+  <section id="phrases">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">言葉</span><h2 data-i18n="head.phrases">Survival Japanese</h2></div>
+    <p class="lede" data-i18n="lede.phrases">Survival-Japanese phrases for the working-holiday year — konbini, ward-office paperwork, apartment hunting, restaurants, transit, emergencies and daily life, each with the Japanese, a reading, and the English meaning. Hover any Japanese to see its reading; ★ the ones you're learning. Favorites save on this device.</p>
+    <div class="pack-tools">
+      <button type="button" id="phraseCollapseAll" class="ct-toggle">Collapse / expand all</button>
+      <button type="button" id="phraseFavOnly" class="ct-toggle" aria-pressed="false">☆ Favorites only</button>
+    </div>
+    <div id="phraseList"></div>
+  </section>
+  </div><!-- /view-phrases -->
 
   <div class="view" id="view-explore" data-route="explore">
   <!-- ============ SEARCHABLE LOGISTICS ============ -->

@@ -182,12 +182,13 @@
       <div class="bar"><i id="checkBar"></i></div>
       <button class="reset" id="checkReset" type="button">reset</button>
     </div>
-    <div id="checkTools" class="check-tools"></div>
+    <input type="search" id="checkSearch" class="list-search" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off">
     <form id="checkAddForm" class="pack-add" autocomplete="off">
       <input type="text" id="checkAddInput" placeholder="Add your own task…" aria-label="New checklist task" maxlength="120">
       <select id="checkAddPhase" aria-label="Phase"></select>
       <button type="submit" class="pack-add-btn">Add</button>
     </form>
+    <div id="checkTools" class="check-tools"></div>
     <div id="checkPhases"></div>
   </section>
 
@@ -202,16 +203,17 @@
       <span class="pct" id="packPct" role="status" aria-live="polite">0%</span>
       <div class="bar"><i id="packBar"></i></div>
     </div>
-    <div class="pack-tools">
-      <button type="button" id="packCollapseAll" class="ct-toggle">Collapse / expand all</button>
-      <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
-    </div>
-    <div id="packList"></div>
+    <input type="search" id="packSearch" class="list-search" placeholder="Search items…" aria-label="Search packing list" autocomplete="off">
     <form id="packAddForm" class="pack-add" autocomplete="off">
       <input type="text" id="packAddInput" placeholder="Add your own item…" aria-label="New packing item" maxlength="120">
       <select id="packAddCat" aria-label="Category"></select>
       <button type="submit" class="pack-add-btn">Add</button>
     </form>
+    <div class="pack-tools">
+      <button type="button" id="packCollapseAll" class="ct-toggle">Collapse / expand all</button>
+      <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
+    </div>
+    <div id="packList"></div>
   </section>
   </div><!-- /view-packing -->
 

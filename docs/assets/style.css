@@ -1963,6 +1963,12 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .pack-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
 .pack-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
 .pack-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
+/* live search/filter on the checklist + packing list pages */
+.list-search { display: block; width: 100%; box-sizing: border-box; margin: var(--s3) 0; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
+.list-search::placeholder { color: var(--ink-soft); }
+.list-search:focus { outline: 2px solid var(--indigo); border-color: transparent; }
+.empty.list-empty { padding: 2rem 1rem; }
+
 .pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
 .pack-add input[type=text] { flex: 1; min-width: 12rem; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
 .pack-add select { padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }

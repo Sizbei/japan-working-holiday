@@ -34,6 +34,8 @@ export const KEYS = {
   packOrder: 'jwh-pack-order-v1',
   packHideDone: 'jwh-pack-hidedone-v1',
   budget: 'jwh-budget-v1',
+  phraseFav: 'jwh-phrasefav-v1',
+  phraseFavView: 'jwh-phrase-favview-v1',
 };
 
 export function get(key, fallback) {

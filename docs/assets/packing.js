@@ -12,6 +12,7 @@ import { makeSortable } from './dnd.js';
 import { mountAccordion } from './collapse.js';
 import { celebrate } from './celebrate.js';
 import { groupByCategory, progress, CATEGORY_ORDER } from './lib/packing.js';
+import { listCtl, LISTCTL } from './lib/listctl.js';
 
 let DATA = null;
 let lastPct = null;
@@ -47,21 +48,100 @@ export function mountPacking(data) {
   DATA = data || {};
   const list = $('#packList');
   if (!list) return;
-  // seed the add-item category select once
-  const sel = $('#packAddCat');
-  if (sel && !sel.options.length) {
-    sel.innerHTML = CATEGORY_ORDER.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
-  }
+  renderPackToolbar();
   wireControls();
+  wirePackSettingsListener();
   render();
 }
 
-function wireControls() {
-  // Variant A — the unified quick-line (#packSearch + the contextual add row). Typing filters live
-  // AND slides in an "add to [category] ＋ Add <text>" row; Enter commits an add.
+// ---- toolbar (#packQuickline) — variant A (quick-line) or B (two pills) ----
+// Both variants expose #packSearch (the live filter input) and #packAddCat (the target-category
+// select) so the shared filter (searchQ→render) and add path work identically. The toolbar lives
+// OUTSIDE #packList, so render()'s rebuild doesn't touch it — re-rendered on mount + settings change.
+function packCatOptions() {
+  return CATEGORY_ORDER.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+}
+function renderPackToolbar() {
+  const host = $('#packQuickline');
+  if (!host) return;
+  const opts = packCatOptions();
+  if (listCtl() === LISTCTL.PILLS) {
+    host.innerHTML = `
+      <div class="lc-pills">
+        <button type="button" class="lc-pill" id="packSearchPill" aria-expanded="false" aria-controls="packSearchWrap"><span class="lc-gx" aria-hidden="true">🔍</span> Search</button>
+        <button type="button" class="lc-pill" id="packAddPill" aria-expanded="false" aria-controls="packAddWrap"><span class="lc-gx" aria-hidden="true">＋</span> Add</button>
+      </div>
+      <div class="lc-search-wrap" id="packSearchWrap">
+        <div class="ql-field">
+          <span class="ql-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="packSearch" class="ql-input" placeholder="Filter items…" aria-label="Filter packing items" autocomplete="off">
+          <button type="button" class="lc-miniclose" id="packSearchClose" aria-label="Close search">✕</button>
+        </div>
+      </div>
+      <div class="ql-reveal lc-add-wrap" id="packAddWrap"><div>
+        <div class="lc-composer">
+          <input type="text" id="packAddText" class="ql-input lc-add-input" placeholder="New item…" aria-label="New item" autocomplete="off">
+          <select id="packAddCat" class="ql-sel" aria-label="Category">${opts}</select>
+          <button type="button" class="ql-addsuggest lc-add-go" id="packAddGo">＋ Add</button>
+          <button type="button" class="lc-miniclose" id="packAddClose" aria-label="Cancel">✕</button>
+        </div>
+      </div></div>`;
+  } else {
+    host.innerHTML = `
+      <div class="ql-field">
+        <span class="ql-icon" aria-hidden="true">🔍</span>
+        <input type="search" id="packSearch" class="ql-input" placeholder="Search or add an item…" aria-label="Search or add a packing item" autocomplete="off">
+        <span class="ql-hint" id="packQlHint" aria-hidden="true">enter ↵ filtering</span>
+      </div>
+      <div class="ql-reveal" id="packAddRow"><div>
+        <div class="ql-quickadd">
+          <span class="ql-lab">add to</span>
+          <select id="packAddCat" class="ql-sel" aria-label="Category">${opts}</select>
+          <button type="button" class="ql-addsuggest" id="packAddBtn">＋ Add “<span class="ql-q" id="packAddQ"></span>”</button>
+        </div>
+      </div></div>`;
+  }
+  wireToolbar();
+}
+
+// In the pills variant, the no-match empty state opens the Add composer pre-filled. Set by wireToolbar.
+let packPillsOpenAdd = null;
+// Wire the active toolbar variant (fresh nodes each render).
+function wireToolbar() {
   const search = $('#packSearch');
-  if (search && !search.dataset.wired) {
-    search.dataset.wired = '1';
+  if (!search) return;
+  if (listCtl() === LISTCTL.PILLS) {
+    const searchPill = $('#packSearchPill'), searchWrap = $('#packSearchWrap');
+    const addPill = $('#packAddPill'), addWrap = $('#packAddWrap'), addText = $('#packAddText');
+    const reduce = document.documentElement.dataset.reduceMotion === 'on';
+    const openSearch = (open) => {
+      searchPill.classList.toggle('is-on', open);
+      searchPill.setAttribute('aria-expanded', String(open));
+      searchWrap.classList.toggle('is-open', open);
+      if (open) { setTimeout(() => search.focus(), reduce ? 0 : 120); }
+      else { search.value = ''; searchQ = ''; render(); searchPill.focus(); }
+    };
+    const openAdd = (open) => {
+      addPill.classList.toggle('is-on', open);
+      addPill.setAttribute('aria-expanded', String(open));
+      addWrap.classList.toggle('is-open', open);
+      if (open) { setTimeout(() => addText.focus(), reduce ? 0 : 120); }
+      else { addText.value = ''; addPill.focus(); }
+    };
+    searchPill.addEventListener('click', () => openSearch(searchPill.getAttribute('aria-expanded') !== 'true'));
+    $('#packSearchClose')?.addEventListener('click', () => openSearch(false));
+    search.addEventListener('input', () => { searchQ = (search.value || '').trim().toLowerCase(); render(); });
+    search.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); openSearch(false); } });
+    addPill.addEventListener('click', () => openAdd(addPill.getAttribute('aria-expanded') !== 'true'));
+    $('#packAddClose')?.addEventListener('click', () => openAdd(false));
+    $('#packAddGo')?.addEventListener('click', () => { if (addText.value.trim()) { addPackFromComposer(); openAdd(false); } });
+    addText.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (addText.value.trim()) { addPackFromComposer(); openAdd(false); } }
+      else if (e.key === 'Escape') { e.preventDefault(); openAdd(false); }
+    });
+    packPillsOpenAdd = (prefill) => { addText.value = prefill || ''; openAdd(true); };
+  } else {
+    packPillsOpenAdd = null;
     const addRow = $('#packAddRow'), hint = $('#packQlHint'), qEcho = $('#packAddQ');
     const sync = () => {
       const raw = search.value;
@@ -79,7 +159,10 @@ function wireControls() {
     });
     $('#packAddBtn')?.addEventListener('click', () => { if (search.value.trim()) addPackFromQuickline(); });
   }
-  // hide-done toggle
+}
+
+function wireControls() {
+  // hide-done toggle (lives in .pack-tools, outside the variant toolbar — wire once)
   const hd = $('#packHideDone');
   if (hd && !hd.dataset.wired) {
     hd.dataset.wired = '1';
@@ -91,20 +174,48 @@ function wireControls() {
   // collapse-all is wired by mountAccordion (passed the element); nothing here.
 }
 
-// Commit the typed text as a new custom item in the selected category, then clear the quick-line
-// (which restores the full list + hides the add row).
-function addPackFromQuickline() {
-  const search = $('#packSearch'), sel = $('#packAddCat');
-  const item = (search?.value || '').trim();
+// Re-render the toolbar (and reset the live filter) when the List-controls setting flips. Wire once.
+let packSettingsWired = false;
+function wirePackSettingsListener() {
+  if (packSettingsWired) return;
+  packSettingsWired = true;
+  document.addEventListener('jwh:settings-changed', () => {
+    if (!$('#packQuickline')) return;
+    searchQ = '';
+    renderPackToolbar();
+    render();
+  });
+}
+
+// Shared add path: persist a custom item in the selected category, then re-render. `focusEl` (optional)
+// gets focus after the rebuild.
+function commitPackItem(item, focusEl) {
+  item = (item || '').trim();
   if (!item) return;
+  const sel = $('#packAddCat');
   const cat = CATEGORY_ORDER.includes(sel?.value) ? sel.value : 'Misc';
   saveCustom([...loadCustom(), { id: 'pku' + Date.now(), cat, item }]);
+  render();
+  focusEl?.focus();
+}
+// Variant A: commit the quick-line query, then clear it (restores the full list + hides the add row).
+function addPackFromQuickline() {
+  const search = $('#packSearch');
+  const item = (search?.value || '').trim();
+  if (!item) return;
   if (search) search.value = '';
   searchQ = '';
   $('#packAddRow')?.classList.remove('is-open');
   const hint = $('#packQlHint'); if (hint) hint.textContent = 'enter ↵ filtering';
-  render();
-  search?.focus();
+  commitPackItem(item, search);
+}
+// Variant B: commit the composer text, then clear it.
+function addPackFromComposer() {
+  const text = $('#packAddText');
+  const item = (text?.value || '').trim();
+  if (!item) return;
+  if (text) text.value = '';
+  commitPackItem(item, text);
 }
 
 // identify the focused control so render() can restore it after the innerHTML rebuild
@@ -210,10 +321,15 @@ function render() {
 }
 
 // Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
-// Re-rendered with the list, so (re)bind each render. Routes to the same quick-line add path
-// (the typed query is already in #packSearch, the category select holds the target group).
+// Re-rendered with the list, so (re)bind each render. In A it commits the query straight from
+// #packSearch; in B it opens the Add composer pre-filled (the search input stays the filter).
 function wirePackEmptyAdd() {
-  $('#packEmptyAdd')?.addEventListener('click', addPackFromQuickline);
+  const btn = $('#packEmptyAdd');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    if (listCtl() === LISTCTL.PILLS && packPillsOpenAdd) packPillsOpenAdd(searchQ);
+    else addPackFromQuickline();
+  });
 }
 
 function wireRows() {

@@ -27,8 +27,8 @@ readiness({ checklistPct, packingPct, budgetReady, daysToArrival }) -> {
 - Computed in `dashboard.js` `refresh()`/`refreshTeasers()` (it already runs on `jwh:data-changed` + on `jwh:route` to dashboard). Reads:
   - **checklistPct:** `checklistItems(data)` (exported from content.js) + the `jwh-checklist-v1` checked map → done/total.
   - **packingPct:** `progress([...(data.packing||[]), ...packCustom], packChecked)` from `lib/packing.js`.
-  - **budget:** `summary(data.budget||fallback, get(KEYS.budget,{}))` from `lib/budget.js` → derive `budgetReady`/tight/unset.
-  - **daysToArrival:** the `lib/dates.js` countdown helper (arrival 2026-06-30).
+  - **budget:** `const s = summary(data.budget||fallback, get(KEYS.budget,{}))`; the **caller derives** `budgetReady` from `s.runwayMonths` (`Infinity`/≥6 → ready; some runway → tight; the budget state is empty/unconfigured → unset). `summary()` itself returns the totals, not the status.
+  - **daysToArrival:** `countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO())` from `lib/dates.js` (the real helper name is `countdown(arrivalISO, todayISO)`; dashboard.js already imports it).
 - Every dynamic value is numeric/label (app-controlled) → still through `esc()`/the existing widget helper. No new storage. No `jwh:data-changed` dispatch (read-only widget).
 - The heading (if `data-i18n`) needs an i18n string or the drift test fails — add `head.readiness` (e.g. 旅の準備).
 

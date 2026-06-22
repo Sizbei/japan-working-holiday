@@ -6,7 +6,8 @@
 The ⌘K palette currently indexes the fixed routes + baked `tips.json` content, built **once at mount** (`palette.js:13` `INDEX = buildIndex(data, routeLabels)`). So your own stuff — custom checklist tasks, custom packing items, saved map places, your calendar events — isn't searchable. Fix: also index user content, **rebuilt fresh every time the palette opens** (so it's always current).
 
 ## 2. Design
-- **Lazy rebuild on open:** in `palette.js`, move the index build into `openPalette()` (or a small `buildFullIndex()` it calls): `INDEX = [...buildIndex(data, routeLabels), ...buildUserEntries(readUserStores())]`. The baked half (`buildIndex`) is static — compute once at mount and cache it; the user half is rebuilt each open from current localStorage (cheap: a few hundred items max). This keeps results fresh after you add/edit/delete, with no `jwh:data-changed` listener needed.
+- **Lazy rebuild on open (explicit):** at mount, cache the static baked half once — `const BAKED = buildIndex(data, routeLabels)`. In `openPalette()`, rebuild only the user half each open: `INDEX = [...BAKED, ...buildUserEntries(readUserStores())]` (cheap — a few hundred items max). This keeps results fresh after add/edit/delete with no `jwh:data-changed` listener.
+- **★ yours badge:** user entries carry `mine:true`; the result-row render shows a small `★` (or "yours") marker for `e.mine` so your items are distinguishable from baked content (a one-line conditional in the existing `palette.js` row render — `esc()` not needed, it's a static marker).
 - **User sources** (each a `kind:'content'` entry with its target `route`, read fresh):
   - `jwh-events-v1` user events → `label = title`, `sub = date`, route `calendar`.
   - `jwh-places-v1` saved places → `label = name`, `sub = area || address`, route `map`.

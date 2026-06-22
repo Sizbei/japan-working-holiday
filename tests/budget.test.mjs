@@ -46,6 +46,10 @@ test('fmtCad: rounds to nearest dollar', () => {
   assert.equal(fmtCad(162, 108), 'C$2');           // 1.5 → 2
   assert.equal(fmtCad(0, 108), 'C$0');
 });
+test('fmtCad: negative renders the sign before the symbol (− U+2212), consistently', () => {
+  assert.equal(fmtCad(-234000, 108), '−C$2,167');
+  assert.equal(fmtCad(-108, 108), '−C$1');
+});
 
 // ---- effectiveLines ----
 test('effectiveLines returns baked defaults when state is empty', () => {

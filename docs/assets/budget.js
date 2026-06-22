@@ -91,7 +91,7 @@ function renderSummary() {
   // optional CAD twin under each yen figure — only when a positive rate is set (fmtCad → '' otherwise).
   const rate = clampRate(load().cadRate);
   const cad = (yen) => { const t = fmtCad(yen, rate); return t ? `<span class="bdg-cad">≈ ${esc(t)}</span>` : ''; };
-  const netCad = (() => { const t = fmtCad(Math.abs(s.monthlyNet), rate); return t ? `<span class="bdg-cad">≈ ${esc(netSign + t)}</span>` : ''; })();
+  const netCad = (() => { const t = fmtCad(s.monthlyNet, rate); return t ? `<span class="bdg-cad">≈ ${esc(t)}</span>` : ''; })();   // fmtCad owns the sign now
 
   band.innerHTML = `
     <div class="bdg-stat">

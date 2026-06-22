@@ -16,7 +16,8 @@ export function fmtYen(n) { return '¥' + Math.round(+n || 0).toLocaleString('en
 // divide-by-zero / Infinity / NaN can never render. rate is yen-per-1-CAD (e.g. 108).
 export function fmtCad(yen, rate) {
   if (!(rate > 0)) return '';
-  return 'C$' + Math.round(yen / rate).toLocaleString('en-US');
+  const v = Math.round(yen / rate);
+  return (v < 0 ? '−' : '') + 'C$' + Math.abs(v).toLocaleString('en-US');   // sign before the symbol, consistently (U+2212)
 }
 
 // the effective line list for one group: baked (override ?? default, minus hidden) ++ custom.

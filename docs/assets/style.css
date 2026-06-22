@@ -538,6 +538,18 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .w-bar i{ display:block; height:100%; background: linear-gradient(90deg,var(--red),var(--gold)); }
 .w-pct{ font-size:.76rem; font-weight:700; color: var(--ink-soft); white-space:nowrap; }
 .w-link{ font-size:.8rem; color: var(--indigo); text-decoration:none; font-weight:700; }
+/* trip-readiness widget */
+.rdy{ display:flex; align-items:center; gap:.7rem; }
+.rdy-score{ font-family: var(--mono); font-size:2rem; font-weight:800; line-height:1; color: var(--ink-soft); }
+.rdy-pct{ font-size:1rem; font-weight:700; margin-left:.05em; }
+.rdy[data-tone="good"] .rdy-score{ color: var(--ok-ink); }
+.rdy[data-tone="ok"] .rdy-score{ color: var(--warn-ink); }
+.rdy[data-tone="low"] .rdy-score{ color: var(--bad-ink); }
+.rdy-meta{ min-width:0; }
+.rdy-days{ font-size:.78rem; font-weight:700; color: var(--ink-soft); margin-bottom:.15rem; }
+.rdy-parts{ font-size:.78rem; color: var(--ink-faint); display:flex; flex-wrap:wrap; gap:.3rem .35rem; }
+.rdy-parts a{ color: var(--indigo); text-decoration:none; font-weight:600; }
+.rdy-parts a:hover{ text-decoration: underline; }
 
 /* ---- Calendar ---- */
 #calendarSection,#trackerSection{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 1.5rem; }

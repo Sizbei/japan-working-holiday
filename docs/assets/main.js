@@ -14,6 +14,7 @@ import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
 import { mountPlan } from './plan.js';
 import { mountEmergency } from './emergency.js';
+import { mountPrint } from './print.js';
 import { mountEventSearch } from './eventsearch.js';
 import { mountLang } from './lang.js';
 import { mountBackup } from './backup.js';
@@ -60,6 +61,7 @@ function boot() {
       mountMap(data);                // map page (#/map)
       mountPlan(data);               // day itinerary planner (#/plan)
       mountEmergency(data);          // emergency quick-reference (#/emergency) — read-only, offline
+      mountPrint(data, today);       // 🖨 one-page printable trip summary (footer button)
       mountEventSearch(data);        // search all events on the calendar page
       mountLang();                   // EN/日本語 chrome toggle + hover-dictionary
       mountBackup();                 // export/import all device-local trip data

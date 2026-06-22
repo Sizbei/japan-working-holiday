@@ -465,11 +465,15 @@
   </div><!-- /view-emergency -->
 </main>
 
+<!-- Printable one-page summary — hidden on screen; the @media print rule reveals it. -->
+<div id="printView" hidden></div>
+
 <footer>
   <p>My Year in Japan · last updated <span id="footGen"></span></p>
   <div class="backup">
     <button type="button" id="backupExport" class="backup-btn" title="Download all your events, places, checklist and notes as a file">⬇ Back up my data</button>
     <button type="button" id="backupImport" class="backup-btn" title="Restore from a backup file (replaces data on this device)">⬆ Restore</button>
+    <button type="button" id="printBtn" class="backup-btn" title="Print or save a one-page PDF summary of your trip status">🖨 Print Summary</button>
     <input type="file" id="backupFile" accept="application/json,.json" hidden>
     <span id="backupStatus" class="backup-status" role="status" aria-live="polite"></span>
   </div>

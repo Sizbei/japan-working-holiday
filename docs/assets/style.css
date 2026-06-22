@@ -62,7 +62,18 @@
   --s5: 1.25rem; --s6: 1.5rem;  --s8: 2rem;    --s10: 2.5rem;
   --s12: 3rem;   --s16: 4rem;   --s20: 5rem;
   /* ============ LAYOUT ============ */
-  --maxw: 1280px;   /* content column — wide enough to fill desktop/laptop screens so the centered body doesn't read as a narrow strip under the full-width chrome */
+  /* CONTENT-WIDTH SYSTEM — two tiers, applied consistently to every routed page:
+       --maxw       WIDE  : card-grid / multi-column tool pages
+                            (dashboard, calendar, explore, rooms, plan).
+       --maxw-read  READ  : single-column reading / list pages
+                            (going, deadlines, checklist, packing, budget,
+                             phrases, emergency). Same width on every one so
+                            pages don't appear randomly different.
+     EXCEPTION: #view-map stays full --maxw (wide) — user-excepted.
+     The shared cap lives on `main`; per-page tier is set near the bottom of
+     this file (search "content-width tiers"). No other per-page max-width. */
+  --maxw: 1280px;   /* WIDE tier — fills desktop/laptop so the centered body doesn't read as a narrow strip under the full-width chrome */
+  --maxw-read: 920px;   /* READ tier — comfortable measure for lists/tables; wide enough for the budget/emergency mini-grids */
   --maxw-prose: 68ch;
   --gutter: clamp(1rem, 4vw, 1.5rem);
   --header-h: 3.25rem;
@@ -1478,12 +1489,18 @@ body { line-height: 1.7; }
 .grid{ gap: var(--s5); }
 @media (max-width: 559px){ .block{ padding: var(--s5); } }
 
-/* --- "behave like regular pages": smart per-page reading width ---
-   Reading-heavy routes get a comfortable measure; tool routes (calendar,
-   map, plan, rooms) and the dashboard stay full-width. */
+/* --- content-width tiers (see the "CONTENT-WIDTH SYSTEM" comment at the top) ---
+   `main` already caps every view at the WIDE tier (--maxw). Reading/list
+   routes narrow that to the READ tier (--maxw-read); they all get the SAME
+   width so pages don't jump around. Grid/tool routes keep the WIDE tier and
+   need no rule here. #view-map is explicitly excepted and stays WIDE. */
+html.js-router #view-going,
 html.js-router #view-deadlines,
-html.js-router #view-checklist, html.js-router #view-packing, html.js-router #view-phrases{ max-width: 780px; margin-inline: auto; }
-html.js-router #view-explore{ max-width: 1000px; margin-inline: auto; }   /* keep card grids, just rein in the line length */
+html.js-router #view-checklist,
+html.js-router #view-packing,
+html.js-router #view-budget,
+html.js-router #view-phrases,
+html.js-router #view-emergency{ max-width: var(--maxw-read); margin-inline: auto; }
 #view-deadlines .block, #view-checklist .block{ background: transparent; border: none; box-shadow: none; padding: 0; }
 
 /* each route reads as its own page: a touch of top breathing room under the sticky nav */

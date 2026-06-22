@@ -1896,3 +1896,27 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2),
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: auto; }
 }
+
+/* ============ PACKING PAGE (super-checklist) ============ */
+.pack-tools { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
+.pack-cat { margin-bottom: var(--s3); }
+.pack-list { list-style: none; padding: 0; margin: 0; }
+.pack-item { display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); border-radius: 12px; border: 1px solid transparent; transition: background .15s; }
+.pack-item:hover { background: var(--bg-soft); }
+.pack-row { display: flex; align-items: flex-start; gap: var(--s3); flex: 1; cursor: pointer; }
+.pack-item input[type=checkbox] { appearance: none; -webkit-appearance: none; min-width: 24px; height: 24px; margin-top: 2px; border: 2px solid var(--line); border-radius: 7px; cursor: pointer; position: relative; flex-shrink: 0; transition: all .15s; }
+.pack-item input[type=checkbox]:checked { background: var(--red); border-color: var(--red); animation: pop var(--dur-2) var(--spring); }
+.pack-item input[type=checkbox]:checked::after { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: .85rem; font-weight: 700; }
+.pack-body { flex: 1; }
+.pack-name { font-weight: 600; line-height: 1.4; }
+.pack-item input:checked ~ .pack-body .pack-name { text-decoration: line-through; opacity: .55; }
+.pack-note { display: block; font-size: .85rem; color: var(--ink-soft); margin-top: .15rem; }
+.pack-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
+.pack-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+.pack-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
+.pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
+.pack-add input[type=text] { flex: 1; min-width: 12rem; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
+.pack-add select { padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
+.pack-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .55rem 1.1rem; border-radius: var(--r-pill); cursor: pointer; }
+.pack-add-btn:hover { filter: brightness(1.06); }
+@media (max-width: 760px) { .pack-item { padding: var(--s4) var(--s3); } .pack-name { font-size: .92rem; } }

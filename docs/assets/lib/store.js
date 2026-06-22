@@ -29,6 +29,10 @@ export const KEYS = {
   brewIdeas: 'jwh-brew-ideas-v1',
   rooms: 'jwh-rooms-v1',
   collapse: 'jwh-collapse-v1',
+  packing: 'jwh-packing-v1',
+  packCustom: 'jwh-pack-custom-v1',
+  packOrder: 'jwh-pack-order-v1',
+  packHideDone: 'jwh-pack-hidedone-v1',
 };
 
 export function get(key, fallback) {

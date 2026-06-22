@@ -49,6 +49,7 @@
   <a href="#/calendar" data-route="calendar" data-i18n="nav.calendar">Calendar</a>
   <a href="#/going" data-route="going" data-i18n="nav.going">Going</a>
   <a href="#/checklist" data-route="checklist" data-i18n="nav.checklist">Checklist</a>
+  <a href="#/packing" data-route="packing" data-i18n="nav.packing">Packing</a>
   <a href="#/deadlines" data-route="deadlines" data-i18n="nav.deadlines">Deadlines</a>
   <a href="#/explore" data-route="explore" data-i18n="nav.explore">Explore</a>
   <a href="#/rooms" data-route="rooms" data-i18n="nav.rooms">Rooms</a>
@@ -181,6 +182,28 @@
   </section>
 
   </div><!-- /view-checklist -->
+
+  <div class="view" id="view-packing" data-route="packing">
+  <!-- ============ PACKING ============ -->
+  <section id="packing">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">荷造り</span><h2 data-i18n="head.packing">What to Pack</h2></div>
+    <p class="lede" data-i18n="lede.packing">A categorized packing list for the Canada → Tokyo move — documents, money, electronics, clothing, health, a day-one bag and more. Add your own items; progress saves on this device.</p>
+    <div class="check-progress" id="packProgress">
+      <span class="pct" id="packPct" role="status" aria-live="polite">0%</span>
+      <div class="bar"><i id="packBar"></i></div>
+    </div>
+    <div class="pack-tools">
+      <button type="button" id="packCollapseAll" class="ct-toggle">Collapse / expand all</button>
+      <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
+    </div>
+    <div id="packList"></div>
+    <form id="packAddForm" class="pack-add" autocomplete="off">
+      <input type="text" id="packAddInput" placeholder="Add your own item…" aria-label="New packing item" maxlength="120">
+      <select id="packAddCat" aria-label="Category"></select>
+      <button type="submit" class="pack-add-btn">Add</button>
+    </form>
+  </section>
+  </div><!-- /view-packing -->
 
   <div class="view" id="view-explore" data-route="explore">
   <!-- ============ SEARCHABLE LOGISTICS ============ -->

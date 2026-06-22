@@ -191,5 +191,13 @@ function resolveTarget(node) {
     if (due) items.push({ label: '📅 Set due date', run: () => due.click() });
     if (items.length) return { items };
   }
+  const pi = node.closest?.('.pack-item[data-id]');
+  if (pi) {
+    const cb = pi.querySelector('input[type=checkbox]'), del = pi.querySelector('.pack-del');
+    const items = [];
+    if (cb) items.push({ label: cb.checked ? '☐ Mark unpacked' : '☑ Mark packed', run: () => cb.click() });
+    if (del) items.push({ label: '✕ Remove', run: () => del.click() });
+    if (items.length) return { items };
+  }
   return null;
 }

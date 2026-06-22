@@ -23,6 +23,7 @@ export const KEYS = {
   theme: 'jwh-theme',
   lang: 'jwh-lang',
   reduceMotion: 'jwh-reduce-motion',
+  listCtl: 'jwh-listctl-v1',
   celebrations: 'jwh-celebrations',
   sound: 'jwh-sound',
   homeLayout: 'jwh-home-layout-v1',

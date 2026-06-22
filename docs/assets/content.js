@@ -13,6 +13,7 @@ import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dis
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
 import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
+import { listCtl, LISTCTL } from './lib/listctl.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -27,7 +28,9 @@ export function renderContent(data, today) {
   renderDomains();
   initBrew();
   renderCheckTools();
+  renderCheckToolbar();
   renderChecklist(today);
+  wireCheckSettingsListener();
   renderPillar('activities', '#activitiesGrid', 'Researching the seasonal calendar…');
   renderPillar('restaurants', '#restaurantsGrid', 'Hunting down the best eats…');
   renderPillar('disney', '#disneyGrid', 'Mapping Disneyland &amp; DisneySea…');
@@ -397,6 +400,168 @@ export function orderItems(items, savedOrder) {
 function loadCheckOrder() { return get(KEYS.checkOrder, {}) || {}; }
 function saveCheckOrder(o) { set(KEYS.checkOrder, o); }
 
+let checkSearchQ = '';   // live search/filter query (view-only; never mutates data, doesn't affect progress)
+
+// ---- toolbar (#checkQuickline) — variant A (quick-line) or B (two pills) ----
+// Both variants expose #checkSearch (the live filter input) and #checkAddPhase (the target-group
+// select) so the shared filter (checkSearchQ→renderChecklist) and add path (addCheckFromQuickline)
+// work identically. The toolbar lives OUTSIDE #checkPhases, so renderChecklist()'s rebuild doesn't
+// touch it — it's re-rendered only on mount + settings change.
+function checkPhaseOptions() {
+  const labels = [...(DATA.checklist || []).map(p => p.phase), 'My tasks'];
+  return labels.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join('');
+}
+function renderCheckToolbar() {
+  const host = $('#checkQuickline');
+  if (!host) return;
+  const opts = checkPhaseOptions();
+  if (listCtl() === LISTCTL.PILLS) {
+    host.innerHTML = `
+      <div class="lc-pills">
+        <button type="button" class="lc-pill" id="checkSearchPill" aria-expanded="false" aria-controls="checkSearchWrap"><span class="lc-gx" aria-hidden="true">🔍</span> Search</button>
+        <button type="button" class="lc-pill" id="checkAddPill" aria-expanded="false" aria-controls="checkAddWrap"><span class="lc-gx" aria-hidden="true">＋</span> Add</button>
+      </div>
+      <div class="lc-search-wrap" id="checkSearchWrap">
+        <div class="ql-field">
+          <span class="ql-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="checkSearch" class="ql-input" placeholder="Filter tasks…" aria-label="Filter checklist tasks" autocomplete="off">
+          <button type="button" class="lc-miniclose" id="checkSearchClose" aria-label="Close search">✕</button>
+        </div>
+      </div>
+      <div class="ql-reveal lc-add-wrap" id="checkAddWrap"><div>
+        <div class="lc-composer">
+          <input type="text" id="checkAddText" class="ql-input lc-add-input" placeholder="New task…" aria-label="New task" autocomplete="off">
+          <select id="checkAddPhase" class="ql-sel" aria-label="Phase">${opts}</select>
+          <button type="button" class="ql-addsuggest lc-add-go" id="checkAddGo">＋ Add</button>
+          <button type="button" class="lc-miniclose" id="checkAddClose" aria-label="Cancel">✕</button>
+        </div>
+      </div></div>`;
+  } else {
+    host.innerHTML = `
+      <div class="ql-field">
+        <span class="ql-icon" aria-hidden="true">🔍</span>
+        <input type="search" id="checkSearch" class="ql-input" placeholder="Search or add a task…" aria-label="Search or add a checklist task" autocomplete="off">
+        <span class="ql-hint" id="checkQlHint" aria-hidden="true">enter ↵ filtering</span>
+      </div>
+      <div class="ql-reveal" id="checkAddRow"><div>
+        <div class="ql-quickadd">
+          <span class="ql-lab">add to</span>
+          <select id="checkAddPhase" class="ql-sel" aria-label="Phase">${opts}</select>
+          <button type="button" class="ql-addsuggest" id="checkAddBtn">＋ Add “<span class="ql-q" id="checkAddQ"></span>”</button>
+        </div>
+      </div></div>`;
+  }
+  $('#checkAddPhase').value = 'My tasks';
+  wireCheckSearch();
+}
+
+// Wire the active toolbar variant. Re-run on each toolbar render (fresh nodes each time).
+function wireCheckSearch() {
+  const search = $('#checkSearch');
+  if (!search) return;
+  // shared filter sync — updates the live query + re-renders the list
+  const filterSync = () => {
+    checkSearchQ = (search.value || '').trim().toLowerCase();
+    renderChecklist();
+  };
+
+  if (listCtl() === LISTCTL.PILLS) {
+    const searchPill = $('#checkSearchPill'), searchWrap = $('#checkSearchWrap');
+    const addPill = $('#checkAddPill'), addWrap = $('#checkAddWrap'), addText = $('#checkAddText');
+    const reduce = document.documentElement.dataset.reduceMotion === 'on';
+    const openSearch = (open) => {
+      searchPill.classList.toggle('is-on', open);
+      searchPill.setAttribute('aria-expanded', String(open));
+      searchWrap.classList.toggle('is-open', open);
+      if (open) { setTimeout(() => search.focus(), reduce ? 0 : 120); }
+      else { search.value = ''; checkSearchQ = ''; renderChecklist(); searchPill.focus(); }
+    };
+    const openAdd = (open) => {
+      addPill.classList.toggle('is-on', open);
+      addPill.setAttribute('aria-expanded', String(open));
+      addWrap.classList.toggle('is-open', open);
+      if (open) { setTimeout(() => addText.focus(), reduce ? 0 : 120); }
+      else { addText.value = ''; addPill.focus(); }
+    };
+    searchPill.addEventListener('click', () => openSearch(searchPill.getAttribute('aria-expanded') !== 'true'));
+    $('#checkSearchClose')?.addEventListener('click', () => openSearch(false));
+    search.addEventListener('input', filterSync);
+    search.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); openSearch(false); } });
+    addPill.addEventListener('click', () => openAdd(addPill.getAttribute('aria-expanded') !== 'true'));
+    $('#checkAddClose')?.addEventListener('click', () => openAdd(false));
+    $('#checkAddGo')?.addEventListener('click', () => { if (addText.value.trim()) { addCheckFromComposer(); openAdd(false); } });
+    addText.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (addText.value.trim()) { addCheckFromComposer(); openAdd(false); } }
+      else if (e.key === 'Escape') { e.preventDefault(); openAdd(false); }
+    });
+    // the no-match empty state's ＋ Add opens the composer pre-filled with the current query
+    checkPillsOpenAdd = (prefill) => { addText.value = prefill || ''; openAdd(true); };
+  } else {
+    checkPillsOpenAdd = null;
+    const addRow = $('#checkAddRow'), hint = $('#checkQlHint'), qEcho = $('#checkAddQ');
+    const sync = () => {
+      const raw = search.value;
+      checkSearchQ = raw.trim().toLowerCase();
+      const has = raw.trim().length > 0;
+      if (qEcho) qEcho.textContent = raw.trim();
+      addRow?.classList.toggle('is-open', has);
+      renderChecklist();
+      // hint reflects what Enter does: filter at rest, add (always commits) once there's a query
+      if (hint) hint.textContent = has ? 'enter ↵ = add' : 'enter ↵ filtering';
+    };
+    search.addEventListener('input', sync);
+    search.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (search.value.trim()) addCheckFromQuickline(); }
+      else if (e.key === 'Escape') { e.preventDefault(); search.value = ''; sync(); }
+    });
+    $('#checkAddBtn')?.addEventListener('click', () => { if (search.value.trim()) addCheckFromQuickline(); });
+  }
+}
+// In the pills variant, the no-match empty state opens the Add composer pre-filled. Set by wireCheckSearch.
+let checkPillsOpenAdd = null;
+// Re-render the toolbar (and reset the live filter) when the List-controls setting flips. Wire once.
+let checkSettingsWired = false;
+function wireCheckSettingsListener() {
+  if (checkSettingsWired) return;
+  checkSettingsWired = true;
+  document.addEventListener('jwh:settings-changed', () => {
+    if (!$('#checkQuickline')) return;
+    checkSearchQ = '';
+    renderCheckToolbar();
+    renderChecklist();
+  });
+}
+// Shared add path: persist a custom task in the selected phase, then re-render + notify. Pure of
+// which variant called it. `focusEl` (optional) gets focus after the rebuild.
+function commitCheckTask(task, focusEl) {
+  task = (task || '').trim();
+  if (!task) return;
+  const phase = $('#checkAddPhase')?.value || 'My tasks';
+  saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
+  renderChecklist();                                              // re-render the list (no jwh:data-changed→renderChecklist listener)
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));    // refresh the dashboard teaser/bell
+  focusEl?.focus();
+}
+// Variant A: commit the quick-line query, then clear it (restores the full list + hides the add row).
+function addCheckFromQuickline() {
+  const search = $('#checkSearch');
+  const task = (search?.value || '').trim();
+  if (!task) return;
+  if (search) search.value = '';
+  checkSearchQ = '';
+  $('#checkAddRow')?.classList.remove('is-open');
+  const hint = $('#checkQlHint'); if (hint) hint.textContent = 'enter ↵ filtering';
+  commitCheckTask(task, search);
+}
+// Variant B: commit the composer text, then clear it.
+function addCheckFromComposer() {
+  const text = $('#checkAddText');
+  const task = (text?.value || '').trim();
+  if (!task) return;
+  if (text) text.value = '';
+  commitCheckTask(task, text);
+}
+
 function renderChecklist(today) {
   const phases = DATA.checklist || [];
   const wrap = $('#checkPhases');
@@ -407,7 +572,11 @@ function renderChecklist(today) {
   const order = loadCheckOrder();
   const now = today || nowISO();
   const prio = loadPriority();
-  const view = checkView(), hd = hideDone();
+  const hd = hideDone();
+  const searching = !!checkSearchQ;
+  // a search query forces the phase view (don't drop into the flat Due-soon view while searching)
+  const view = searching ? 'phase' : checkView();
+  const match = it => !searching || (it.task || '').toLowerCase().includes(checkSearchQ);
   const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
   const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
 
@@ -432,11 +601,12 @@ function renderChecklist(today) {
     const { byPhase, mine } = partitionCustom(
       loadChecklistCustom().map(c => ({ ...c, _custom: true })),
       phases.map(p => p.phase));
+    const drag = !hd && !searching;   // drag is meaningless over a hidden/searched view
     let html = phases.map((p, pi) => {
       const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
-      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id]));
-      if (!its.length) return '';                           // skip a phase that's fully done/hidden
-      // count over the FULL phase (not the hide-done-filtered list) so progress math is stable
+      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id])).filter(match);
+      if (!its.length) return '';                           // skip a phase fully done/hidden, or with no search match
+      // count over the FULL phase (not the hide-done/search-filtered list) so progress math is stable
       const total = all.filter(it => it.id).length;
       const done = all.filter(it => it.id && state[it.id]).length;
       const accId = `chk-phase-${pi}`;
@@ -449,7 +619,7 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-${esc(accId)}" role="region" aria-label="${esc(phaseName)}">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
           </div>
         </div>
       </section>`;
@@ -458,7 +628,7 @@ function renderChecklist(today) {
     // Reorder key is the string "mine" (distinct from numeric baked phase indices).
     if (mine.length) {
       const all = orderItems(mine, order['mine']);
-      const its = all.filter(it => !(hd && state[it.id]));
+      const its = all.filter(it => !(hd && state[it.id])).filter(match);
       if (its.length) {
         const total = mine.length;
         const done = mine.filter(it => state[it.id]).length;
@@ -470,26 +640,31 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-chk-phase-mine" role="region" aria-label="My tasks">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
           </div>
         </div>
       </section>`;
       }
     }
-    wrap.innerHTML = html;
+    wrap.innerHTML = (searching && !html)
+      ? `<div class="empty list-empty">No matches for “${esc(checkSearchQ)}”.<br>
+          <button type="button" class="list-empty-add" id="checkEmptyAdd">＋ Add “<span class="lea-q">${esc(checkSearchQ)}</span>”</button>
+        </div>`
+      : html;
   }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
-  wireAddItem();
+  wireCheckEmptyAdd();
   wireChecklist();
-  if (view === 'phase' && !hd) {   // dnd reorder only in the full grouped view (reordering a filtered/flat list is meaningless)
+  if (view === 'phase' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
       itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
       idOf: el => el.dataset.id,
       onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
     }));
   }
-  if (view === 'phase') mountAccordion($('#checkPhases'));   // wire/restore collapse AFTER makeSortable (phase view only)
+  // wire/restore collapse AFTER makeSortable (phase view only); force-expand while searching so matches show
+  if (view === 'phase') mountAccordion($('#checkPhases'), { forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }
@@ -589,29 +764,16 @@ function wireReset() {
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   });
 }
-// Add-item form (#checkAddForm) lives OUTSIDE #checkPhases, so renderChecklist()'s
-// innerHTML rebuild doesn't replace it — seed the select + wire the submit ONCE.
-function wireAddItem() {
-  const sel = $('#checkAddPhase');
-  if (sel && !sel.options.length) {
-    const labels = [...(DATA.checklist || []).map(p => p.phase), 'My tasks'];
-    sel.innerHTML = labels.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join('');
-  }
-  const form = $('#checkAddForm'), input = $('#checkAddInput');
-  if (form && input && sel && !form.dataset.wired) {
-    form.dataset.wired = '1';
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const task = input.value.trim();
-      if (!task) return;                                       // empty → ignored
-      const phase = sel.value || 'My tasks';
-      saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
-      input.value = '';
-      renderChecklist();                                       // re-render the list (no jwh:data-changed→renderChecklist listener)
-      document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh the dashboard teaser/bell
-      input.focus();
-    });
-  }
+// Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
+// Re-rendered with the list, so (re)bind each render. In A it commits the query straight
+// from #checkSearch; in B it opens the Add composer pre-filled (the search input stays the filter).
+function wireCheckEmptyAdd() {
+  const btn = $('#checkEmptyAdd');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    if (listCtl() === LISTCTL.PILLS && checkPillsOpenAdd) checkPillsOpenAdd(checkSearchQ);
+    else addCheckFromQuickline();
+  });
 }
 let lastPct = null;
 function updateProgress() {

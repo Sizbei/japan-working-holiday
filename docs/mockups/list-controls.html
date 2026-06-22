@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>List Controls UX — A/B/C mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f7f4ee; --bg-soft:#fffdf8; --bg-sunk:#f0ece2;
+    --ink:#1a1a22; --ink-soft:#595550; --line:#e4ddd0;
+    --indigo:#223a70; --red:#c8442f; --gold:#b8860b;
+    --serif:"Newsreader",Georgia,serif;
+    --mono:"Space Mono",ui-monospace,monospace;
+    --shadow:0 1px 2px rgba(26,26,34,.04), 0 8px 24px -16px rgba(26,26,34,.18);
+    --shadow-lift:0 2px 6px rgba(26,26,34,.06), 0 18px 40px -22px rgba(34,58,112,.32);
+    --r:14px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --t:.34s;
+  }
+  html[data-theme="dark"]{
+    --bg:#14141a; --bg-soft:#1d1d26; --bg-sunk:#101016;
+    --ink:#ece9e2; --ink-soft:#b3aea4; --line:#2e2e3a;
+    --indigo:#8fb0ff; --red:#ff5a45; --gold:#e0b34a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.7);
+    --shadow-lift:0 2px 8px rgba(0,0,0,.5), 0 22px 48px -24px rgba(0,0,0,.85);
+  }
+  @media (prefers-reduced-motion: reduce){
+    :root{ --t:0s; }
+    *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--serif); font-size:17px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(120% 70% at 50% -10%, color-mix(in srgb, var(--indigo) 14%, transparent), transparent 60%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  .wrap{ max-width:780px; margin:0 auto; padding:28px 22px 96px; }
+
+  /* ---------- top chrome ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:22px; }
+  .brandmark{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-soft); }
+  .brandmark b{ color:var(--ink); font-weight:700; }
+  .iconbtn{
+    font-family:var(--mono); font-size:12px; cursor:pointer;
+    background:var(--bg-soft); color:var(--ink); border:1px solid var(--line);
+    border-radius:999px; padding:7px 13px; display:inline-flex; align-items:center; gap:7px;
+    transition:border-color var(--t) var(--ease), background var(--t) var(--ease), transform .12s var(--ease);
+  }
+  .iconbtn:hover{ border-color:color-mix(in srgb, var(--indigo) 45%, var(--line)); }
+  .iconbtn:active{ transform:translateY(1px); }
+
+  /* segmented control */
+  .seg{
+    display:inline-flex; background:var(--bg-sunk); border:1px solid var(--line);
+    border-radius:999px; padding:4px; gap:2px; position:relative;
+  }
+  .seg button{
+    font-family:var(--mono); font-size:12px; letter-spacing:.04em; cursor:pointer;
+    border:0; background:transparent; color:var(--ink-soft); padding:8px 16px; border-radius:999px;
+    position:relative; z-index:1; transition:color var(--t) var(--ease);
+  }
+  .seg button[aria-pressed="true"]{ color:var(--bg-soft); }
+  html[data-theme="dark"] .seg button[aria-pressed="true"]{ color:var(--bg); }
+  .seg .thumb{
+    position:absolute; top:4px; bottom:4px; border-radius:999px;
+    background:var(--indigo); box-shadow:0 4px 14px -6px color-mix(in srgb, var(--indigo) 70%, transparent);
+    transition:left var(--t) var(--ease), width var(--t) var(--ease); z-index:0;
+  }
+
+  .seg-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .viewtoggle{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+  .viewtoggle .vt{
+    border:1px solid var(--line); background:var(--bg-soft); color:var(--ink-soft);
+    border-radius:999px; padding:5px 12px; cursor:pointer; font-family:var(--mono); font-size:11px;
+    transition:all var(--t) var(--ease);
+  }
+  .viewtoggle .vt[aria-pressed="true"]{ color:var(--ink); border-color:color-mix(in srgb, var(--gold) 55%, var(--line)); background:color-mix(in srgb, var(--gold) 10%, var(--bg-soft)); }
+
+  .caption{
+    font-family:var(--mono); font-size:12px; line-height:1.6; color:var(--ink-soft);
+    margin:16px 2px 26px; padding-left:13px; border-left:2px solid color-mix(in srgb, var(--indigo) 55%, var(--line));
+  }
+  .caption b{ color:var(--ink); font-weight:700; }
+  .caption .tag{ color:var(--indigo); }
+
+  /* ---------- list page ---------- */
+  h1.page{
+    font-family:var(--serif); font-weight:800; font-size:30px; line-height:1.1; letter-spacing:-.01em;
+    margin:0 0 4px;
+  }
+  .lede{ color:var(--ink-soft); font-size:16px; margin:0 0 20px; max-width:54ch; }
+
+  .progress{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .progress .bar{ flex:1; height:5px; border-radius:999px; background:var(--bg-sunk); overflow:hidden; border:1px solid var(--line); }
+  .progress .bar i{ display:block; height:100%; width:18%; border-radius:999px;
+    background:linear-gradient(90deg, var(--indigo), color-mix(in srgb, var(--indigo) 60%, var(--gold))); }
+  .progress .pct{ font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--ink-soft); white-space:nowrap; }
+  .progress .pct b{ color:var(--ink); font-weight:700; }
+
+  /* toolbar (shared shell) */
+  .toolbar{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:18px; min-height:40px; }
+  .pill{
+    font-family:var(--mono); font-size:12px; cursor:pointer;
+    background:var(--bg-soft); color:var(--ink); border:1px solid var(--line);
+    border-radius:999px; padding:8px 14px; display:inline-flex; align-items:center; gap:7px; white-space:nowrap;
+    transition:border-color var(--t) var(--ease), background var(--t) var(--ease), color var(--t) var(--ease), transform .12s var(--ease), box-shadow var(--t) var(--ease);
+  }
+  .pill:hover{ border-color:color-mix(in srgb, var(--indigo) 45%, var(--line)); }
+  .pill:active{ transform:translateY(1px); }
+  .pill.is-on{ background:color-mix(in srgb, var(--indigo) 12%, var(--bg-soft)); border-color:color-mix(in srgb, var(--indigo) 50%, var(--line)); color:var(--indigo); }
+  .pill .gx{ font-size:13px; line-height:1; }
+  .chip{
+    font-family:var(--mono); font-size:11px; cursor:pointer; color:var(--ink-soft);
+    background:transparent; border:1px solid var(--line); border-radius:999px; padding:6px 11px;
+    transition:all var(--t) var(--ease);
+  }
+  .chip[aria-pressed="true"]{ color:var(--indigo); border-color:color-mix(in srgb, var(--indigo) 50%, var(--line)); background:color-mix(in srgb, var(--indigo) 9%, transparent); }
+  .spacer{ flex:1 1 auto; }
+
+  /* input shell, used by expanding search + composer */
+  .field{
+    display:flex; align-items:center; gap:8px;
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:999px;
+    padding:6px 8px 6px 14px;
+  }
+  .field:focus-within{ border-color:var(--indigo); box-shadow:0 0 0 3px color-mix(in srgb, var(--indigo) 18%, transparent); }
+  .field .gx{ color:var(--ink-soft); font-size:13px; }
+  .field input[type=text]{
+    flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ink);
+    font-family:var(--serif); font-size:16px;
+  }
+  .field input::placeholder{ color:color-mix(in srgb, var(--ink-soft) 75%, transparent); }
+  select.sel{
+    font-family:var(--mono); font-size:11px; color:var(--ink-soft);
+    background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:6px 10px; cursor:pointer; outline:0;
+  }
+  select.sel:focus-visible{ border-color:var(--indigo); box-shadow:0 0 0 3px color-mix(in srgb, var(--indigo) 18%, transparent); }
+  .miniclose{ border:0; background:transparent; color:var(--ink-soft); cursor:pointer; font-family:var(--mono); font-size:14px; padding:4px 8px; border-radius:999px; }
+  .miniclose:hover{ color:var(--red); }
+  .go{
+    font-family:var(--mono); font-size:12px; font-weight:700; cursor:pointer;
+    background:var(--indigo); color:var(--bg-soft); border:0; border-radius:999px; padding:8px 16px;
+    transition:filter .12s var(--ease), transform .12s var(--ease);
+  }
+  html[data-theme="dark"] .go{ color:var(--bg); }
+  .go:hover{ filter:brightness(1.08); }
+  .go:active{ transform:translateY(1px); }
+
+  /* generic expandable: width (search) + height (composer) */
+  .grow-w{ overflow:hidden; transition:max-width var(--t) var(--ease), opacity var(--t) var(--ease); }
+  .reveal{
+    display:grid; grid-template-rows:0fr; opacity:0;
+    transition:grid-template-rows var(--t) var(--ease), opacity var(--t) var(--ease), margin var(--t) var(--ease);
+  }
+  .reveal.open{ grid-template-rows:1fr; opacity:1; }
+  .reveal > div{ overflow:hidden; min-height:0; }
+
+  /* inline add-affordance (variant A) */
+  .quickadd{
+    display:flex; align-items:center; gap:8px; padding-top:9px; margin-top:9px;
+    border-top:1px dashed var(--line);
+  }
+  .quickadd .lab{ font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+  .addsuggest{
+    font-family:var(--mono); font-size:12px; cursor:pointer;
+    background:color-mix(in srgb, var(--gold) 12%, var(--bg-soft)); color:var(--ink);
+    border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line)); border-radius:999px; padding:7px 13px;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:all var(--t) var(--ease), transform .12s var(--ease);
+  }
+  .addsuggest:hover{ background:color-mix(in srgb, var(--gold) 22%, var(--bg-soft)); }
+  .addsuggest:active{ transform:translateY(1px); }
+  .addsuggest .q{ color:var(--indigo); }
+
+  /* popover composer (variant C) */
+  .pop-anchor{ position:relative; }
+  .popover{
+    position:absolute; top:calc(100% + 10px); right:0; z-index:20; width:320px; max-width:86vw;
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--r);
+    box-shadow:var(--shadow-lift); padding:14px;
+    transform-origin:top right; transform:scale(.96) translateY(-4px); opacity:0; pointer-events:none;
+    transition:transform var(--t) var(--ease), opacity var(--t) var(--ease);
+  }
+  .popover.open{ transform:scale(1) translateY(0); opacity:1; pointer-events:auto; }
+  .popover::before{
+    content:""; position:absolute; top:-7px; right:16px; width:12px; height:12px;
+    background:var(--bg-soft); border-left:1px solid var(--line); border-top:1px solid var(--line);
+    transform:rotate(45deg);
+  }
+  .popover .pop-title{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:9px; }
+  .popover .field{ margin-bottom:10px; }
+  .popover .pop-foot{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+
+  /* ---------- accordion list ---------- */
+  .sections{ display:flex; flex-direction:column; gap:10px; }
+  .section{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--r);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .sec-head{
+    width:100%; display:flex; align-items:center; gap:12px; cursor:pointer;
+    background:transparent; border:0; color:var(--ink); text-align:left;
+    padding:14px 16px; font-family:var(--serif);
+    transition:background var(--t) var(--ease);
+  }
+  .sec-head:hover{ background:color-mix(in srgb, var(--indigo) 5%, transparent); }
+  .sec-head .chev{ color:var(--ink-soft); transition:transform var(--t) var(--ease); font-size:13px; width:14px; }
+  .section.open .sec-head .chev{ transform:rotate(90deg); }
+  .sec-head .title{ font-weight:600; font-size:18px; letter-spacing:-.005em; flex:1; }
+  .sec-head .count{ font-family:var(--mono); font-size:11px; color:var(--ink-soft); background:var(--bg-sunk); border:1px solid var(--line); border-radius:999px; padding:3px 9px; }
+  .sec-body{ display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--t) var(--ease); }
+  .section.open .sec-body{ grid-template-rows:1fr; }
+  .sec-body > .inner{ overflow:hidden; min-height:0; }
+  .rows{ padding:2px 8px 10px; }
+
+  .row{
+    display:flex; align-items:flex-start; gap:12px; padding:9px 10px; border-radius:10px;
+    transition:background .18s var(--ease);
+  }
+  .row:hover{ background:color-mix(in srgb, var(--indigo) 5%, transparent); }
+  .row.hidden{ display:none; }
+  .row label{ display:flex; align-items:flex-start; gap:11px; flex:1; cursor:pointer; }
+  .row input[type=checkbox]{
+    appearance:none; -webkit-appearance:none; width:19px; height:19px; margin:2px 0 0; flex:0 0 auto;
+    border:1.5px solid color-mix(in srgb, var(--ink-soft) 55%, var(--line)); border-radius:6px;
+    background:var(--bg); cursor:pointer; position:relative;
+    transition:border-color .15s var(--ease), background .15s var(--ease);
+  }
+  .row input[type=checkbox]:hover{ border-color:var(--indigo); }
+  .row input[type=checkbox]:checked{ background:var(--indigo); border-color:var(--indigo); }
+  .row input[type=checkbox]:checked::after{
+    content:""; position:absolute; left:5.5px; top:2px; width:5px; height:9px;
+    border:solid var(--bg-soft); border-width:0 2px 2px 0; transform:rotate(40deg);
+  }
+  html[data-theme="dark"] .row input[type=checkbox]:checked::after{ border-color:var(--bg); }
+  .row input:focus-visible{ outline:0; box-shadow:0 0 0 3px color-mix(in srgb, var(--indigo) 30%, transparent); }
+  .row .txt{ font-size:16px; line-height:1.45; padding-top:1px; }
+  .row input:checked + .txt{ color:var(--ink-soft); text-decoration:line-through; text-decoration-color:color-mix(in srgb, var(--ink-soft) 50%, transparent); }
+  .row .rm{ border:0; background:transparent; color:color-mix(in srgb, var(--ink-soft) 70%, transparent); cursor:pointer; font-family:var(--mono); font-size:13px; padding:2px 7px; border-radius:999px; opacity:0; transition:opacity .15s, color .15s; }
+  .row:hover .rm{ opacity:1; }
+  .row .rm:hover{ color:var(--red); }
+  .row .tagdot{ font-family:var(--mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); align-self:center; opacity:.7; }
+
+  /* empty state */
+  .empty{
+    text-align:center; padding:30px 18px; color:var(--ink-soft);
+    border:1px dashed var(--line); border-radius:var(--r); background:color-mix(in srgb, var(--bg-sunk) 50%, transparent);
+  }
+  .empty.hidden{ display:none; }
+  .empty .big{ font-family:var(--serif); font-size:19px; color:var(--ink); margin-bottom:4px; }
+  .empty .big q{ color:var(--indigo); font-style:italic; }
+  .empty .sub{ font-family:var(--mono); font-size:12px; margin-bottom:16px; }
+
+  .footnote{ font-family:var(--mono); font-size:11px; color:var(--ink-soft); text-align:center; margin-top:40px; opacity:.8; }
+
+  /* per-variant toolbar visibility handled in JS via [data-variant] on .wrap */
+  .v-only{ display:none; }
+  .wrap[data-variant="A"] .vA{ display:flex; }
+  .wrap[data-variant="B"] .vB{ display:flex; }
+  .wrap[data-variant="C"] .vC{ display:flex; }
+
+  /* toast for "added" feel */
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 16px); opacity:0;
+    background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:12px;
+    padding:10px 16px; border-radius:999px; box-shadow:var(--shadow-lift); pointer-events:none; z-index:50;
+    transition:transform var(--t) var(--ease), opacity var(--t) var(--ease);
+  }
+  .toast.show{ transform:translate(-50%,0); opacity:1; }
+  html[data-theme="dark"] .toast{ background:var(--bg-soft); color:var(--ink); border:1px solid var(--line); }
+
+  @keyframes pop-in{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:translateY(0);} }
+  .row.just-added{ animation:pop-in .4s var(--ease); background:color-mix(in srgb, var(--gold) 14%, transparent); }
+</style>
+</head>
+<body>
+<div class="wrap" data-variant="B">
+
+  <div class="topbar">
+    <div class="brandmark"><b>List Controls</b> · search + add · A / B / C</div>
+    <button class="iconbtn" id="themeToggle" aria-label="Toggle theme">◐ <span>theme</span></button>
+  </div>
+
+  <div class="seg-row">
+    <div class="seg" role="tablist" aria-label="Control variant">
+      <span class="thumb" id="segThumb"></span>
+      <button role="tab" data-variant="A" aria-pressed="false">A · Quick-line</button>
+      <button role="tab" data-variant="B" aria-pressed="true">B · Two pills</button>
+      <button role="tab" data-variant="C" aria-pressed="false">C · Icons</button>
+    </div>
+    <div class="viewtoggle" role="group" aria-label="Sample context">
+      view:
+      <button class="vt" data-view="checklist" aria-pressed="true">Checklist</button>
+      <button class="vt" data-view="packing" aria-pressed="false">Packing</button>
+    </div>
+  </div>
+
+  <p class="caption" id="caption"></p>
+
+  <!-- ===== list page ===== -->
+  <h1 class="page" id="pageTitle">Checklist</h1>
+  <p class="lede" id="pageLede">Everything to handle before and after landing — locked steps unlock as you check off what they depend on.</p>
+
+  <div class="progress">
+    <span class="pct" id="pctText"><b>18%</b> · 13/74</span>
+    <div class="bar"><i></i></div>
+  </div>
+
+  <!-- ===== TOOLBAR (variant-specific) ===== -->
+  <div class="toolbar" id="toolbar">
+
+    <!-- Variant A: unified quick-line -->
+    <div class="v-only vA" style="flex:1 1 100%; flex-direction:column; align-items:stretch; gap:0;">
+      <div class="field" style="flex:1 1 auto;">
+        <span class="gx">🔍</span>
+        <input type="text" id="aInput" placeholder="Search or add a task…" autocomplete="off" aria-label="Search or add" />
+        <span class="tagdot" id="aHint">enter ↵</span>
+      </div>
+      <div class="reveal" id="aQuickWrap"><div>
+        <div class="quickadd">
+          <span class="lab">add to</span>
+          <select class="sel" id="aSelect"></select>
+          <button class="addsuggest" id="aAddBtn">＋ Add “<span class="q" id="aQ"></span>”</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- Variant B: two compact pills + chips -->
+    <div class="v-only vB" style="flex:1 1 100%; flex-direction:column; align-items:stretch; gap:10px;">
+      <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+        <button class="pill" id="bSearchPill" aria-expanded="false" aria-controls="bSearchWrap"><span class="gx">🔍</span> Search</button>
+        <button class="pill" id="bAddPill" aria-expanded="false" aria-controls="bAddWrap"><span class="gx">＋</span> Add</button>
+        <span class="spacer"></span>
+        <button class="chip filterchip" data-filter="all" aria-pressed="true">All phases</button>
+        <button class="chip filterchip" data-filter="due" aria-pressed="false">Due soon</button>
+        <button class="chip" id="bHideDone" aria-pressed="false">Hide done</button>
+      </div>
+      <div class="grow-w" id="bSearchWrap" style="max-width:0; opacity:0;">
+        <div class="field">
+          <span class="gx">🔍</span>
+          <input type="text" id="bSearch" placeholder="Filter tasks…" autocomplete="off" aria-label="Search tasks" />
+          <button class="miniclose" id="bSearchClose" aria-label="Close search">✕</button>
+        </div>
+      </div>
+      <div class="reveal" id="bAddWrap"><div>
+        <div class="field" style="border-radius:var(--r); padding:8px;">
+          <input type="text" id="bAdd" placeholder="New task…" autocomplete="off" aria-label="New task" style="padding-left:6px;" />
+          <select class="sel" id="bSelect"></select>
+          <button class="go" id="bAddGo">Add</button>
+          <button class="miniclose" id="bAddClose" aria-label="Cancel">✕</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- Variant C: ultra-minimal icons + popover -->
+    <div class="v-only vC" style="flex:1 1 100%; flex-direction:column; align-items:stretch; gap:8px;">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="spacer"></span>
+        <button class="iconbtn" id="cSearchIcon" aria-label="Search" aria-expanded="false" style="padding:8px 11px;">🔍</button>
+        <div class="pop-anchor">
+          <button class="iconbtn" id="cAddIcon" aria-label="Add task" aria-expanded="false" style="padding:8px 11px;">＋</button>
+          <div class="popover" id="cPop" role="dialog" aria-label="Add a task">
+            <div class="pop-title">New task</div>
+            <div class="field"><input type="text" id="cAdd" placeholder="Task…" autocomplete="off" aria-label="New task" /></div>
+            <div class="pop-foot">
+              <select class="sel" id="cSelect"></select>
+              <button class="go" id="cAddGo">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grow-w" id="cSearchWrap" style="max-width:0; opacity:0;">
+        <div class="field">
+          <span class="gx">🔍</span>
+          <input type="text" id="cSearch" placeholder="Filter tasks…" autocomplete="off" aria-label="Search tasks" />
+          <button class="miniclose" id="cSearchClose" aria-label="Close search">✕</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== list ===== -->
+  <div class="sections" id="sections"></div>
+  <div class="empty hidden" id="empty">
+    <div class="big">No matches for <q id="emptyQ"></q></div>
+    <div class="sub">Nothing here — but you can add it.</div>
+    <button class="addsuggest" id="emptyAdd">＋ Add “<span class="q" id="emptyAddQ"></span>”</button>
+  </div>
+
+  <p class="footnote">Mock · interactions are real, persistence is not · A/B/C · light + dark · checklist + packing</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = (s) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const wrap = $('.wrap');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- sample data, both contexts ----------
+  const DATA = {
+    checklist: {
+      title: "Checklist",
+      lede: "Everything to handle before and after landing — locked steps unlock as you check off what they depend on.",
+      groupNoun: "phase",
+      sections: [
+        { name: "Pre-Departure", items: [
+          { t: "Apply for the Working Holiday visa at the consulate", done: true },
+          { t: "Book a one-way flight (NRT, arrive 2026-06-30)", done: true },
+          { t: "Buy travel + health insurance for year one", done: false },
+          { t: "Get an international driving permit", done: false },
+          { t: "Notify the bank of a long-term move abroad", done: false },
+        ]},
+        { name: "First Week in Tokyo", items: [
+          { t: "Register address at the ward office (jūminhyō)", done: true },
+          { t: "Pick up a SIM / pocket Wi-Fi at the airport", done: false },
+          { t: "Open a Japan Post Bank account", done: false },
+          { t: "Get a Suica / PASMO and load it", done: false },
+          { t: "Apply for the My Number card", done: false },
+        ]},
+        { name: "My tasks", custom: true, items: [
+          { t: "Find a co-op for music gear storage", done: false, custom: true },
+          { t: "Email the share-house about move-in date", done: true, custom: true },
+        ]},
+      ],
+    },
+    packing: {
+      title: "Packing",
+      lede: "Everything to bring — grouped by bag and category so nothing gets left at the gate.",
+      groupNoun: "category",
+      sections: [
+        { name: "Carry-on", items: [
+          { t: "Passport + visa printout in a document sleeve", done: true },
+          { t: "Universal power adapter (Type A, 100V)", done: true },
+          { t: "Noise-cancelling headphones", done: false },
+          { t: "Refillable water bottle (empty for security)", done: false },
+          { t: "Spare change of clothes", done: false },
+        ]},
+        { name: "Checked bag", items: [
+          { t: "Two weeks of clothing for humid summer", done: true },
+          { t: "Quick-dry towel + toiletries", done: false },
+          { t: "Shoes: walking + one nicer pair", done: false },
+          { t: "Medication with a copy of prescriptions", done: false },
+          { t: "Small gifts (omiyage) for new contacts", done: false },
+        ]},
+        { name: "My items", custom: true, items: [
+          { t: "MIDI keyboard in a padded case", done: false, custom: true },
+          { t: "Switch + favourite cartridges", done: true, custom: true },
+        ]},
+      ],
+    },
+  };
+
+  let viewKey = "checklist";
+  let variant = "B";
+  let hideDone = false;
+  let dueFilter = false; // variant B chip
+  // live working copy so "added" items can be inserted
+  let model = structuredClone(DATA.checklist);
+
+  const CAPTIONS = {
+    A: 'Focused: <b>A — Unified quick-line.</b> <span class="tag">One input does both.</span> Fastest path; trade-off: conflates search vs. add, so the add target must stay obvious.',
+    B: 'Focused: <b>B — Two compact pills</b> <span class="tag">(recommended).</span> Explicit Search + Add, each expands in place. Trade-off: two affordances to maintain a tidy expand for.',
+    C: 'Focused: <b>C — Minimal icons + popover.</b> <span class="tag">Checkboxes sit highest.</span> Leanest at rest; trade-off: icons are less discoverable and the popover is more machinery.',
+  };
+
+  // ---------- render ----------
+  const sectionsEl = $('#sections');
+  function render(){
+    sectionsEl.innerHTML = model.sections.map((sec, si) => {
+      const total = sec.items.length;
+      const done = sec.items.filter(i=>i.done).length;
+      const rows = sec.items.map((it, ri) => `
+        <div class="row" data-text="${esc(it.t.toLowerCase())}">
+          <label>
+            <input type="checkbox" ${it.done?'checked':''} data-si="${si}" data-ri="${ri}" />
+            <span class="txt">${esc(it.t)}</span>
+          </label>
+          ${it.custom ? `<button class="rm" data-si="${si}" data-ri="${ri}" aria-label="Remove">✕</button>` : ``}
+        </div>`).join('');
+      return `
+        <section class="section open" data-si="${si}">
+          <button class="sec-head" aria-expanded="true">
+            <span class="chev">▶</span>
+            <span class="title">${esc(sec.name)}</span>
+            <span class="count">${done}/${total}</span>
+          </button>
+          <div class="sec-body"><div class="inner"><div class="rows">${rows}</div></div></div>
+        </section>`;
+    }).join('');
+    bindRows();
+    applyFilter(currentQuery, {keepExpand:false});
+    refreshSelects();
+  }
+
+  function bindRows(){
+    $$('.sec-head', sectionsEl).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sec = btn.closest('.section');
+        const open = sec.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    });
+    $$('.row input[type=checkbox]', sectionsEl).forEach(cb => {
+      cb.addEventListener('change', () => {
+        const it = model.sections[+cb.dataset.si].items[+cb.dataset.ri];
+        it.done = cb.checked;
+        const sec = cb.closest('.section');
+        const all = model.sections[+cb.dataset.si].items;
+        $('.count', sec).textContent = `${all.filter(i=>i.done).length}/${all.length}`;
+        if (hideDone) applyFilter(currentQuery, {keepExpand:false});
+      });
+    });
+    $$('.rm', sectionsEl).forEach(b => {
+      b.addEventListener('click', () => {
+        model.sections[+b.dataset.si].items.splice(+b.dataset.ri, 1);
+        render();
+      });
+    });
+  }
+
+  // ---------- filtering ----------
+  let currentQuery = "";
+  function applyFilter(q, {keepExpand=true}={}){
+    currentQuery = q;
+    const query = q.trim().toLowerCase();
+    let anyVisible = false;
+    $$('.section', sectionsEl).forEach(sec => {
+      let secVisible = 0;
+      $$('.row', sec).forEach(row => {
+        const txt = row.dataset.text;
+        const isDone = $('input', row).checked;
+        let show = true;
+        if (query) show = txt.includes(query);
+        if (show && hideDone && isDone) show = false;
+        row.classList.toggle('hidden', !show);
+        if (show) secVisible++;
+      });
+      // hide a whole section with no visible rows when filtering
+      sec.style.display = (secVisible === 0 && (query || hideDone)) ? 'none' : '';
+      if (secVisible) anyVisible = true;
+      // force-expand while searching
+      if (query){
+        sec.classList.add('open');
+        $('.sec-head', sec).setAttribute('aria-expanded','true');
+      }
+    });
+    const empty = $('#empty');
+    const showEmpty = !!query && !anyVisible;
+    empty.classList.toggle('hidden', !showEmpty);
+    if (showEmpty){
+      $('#emptyQ').textContent = q.trim();
+      $('#emptyAddQ').textContent = q.trim();
+    }
+  }
+
+  // ---------- selects (phase/category) ----------
+  function refreshSelects(){
+    const opts = model.sections.map((s,i)=>`<option value="${i}">${esc(s.name)}</option>`).join('');
+    ['#aSelect','#bSelect','#cSelect'].forEach(sel => { const e=$(sel); if(e) e.innerHTML = opts; });
+  }
+
+  // ---------- add item ----------
+  function addItem(text, sectionIndex){
+    text = (text||'').trim();
+    if (!text) return;
+    const si = Math.min(Math.max(0, sectionIndex|0), model.sections.length-1);
+    model.sections[si].items.push({ t:text, done:false, custom:true });
+    render();
+    // expand + flash newest
+    const sec = $$('.section', sectionsEl)[si];
+    sec.classList.add('open');
+    const rows = $$('.row', sec);
+    const last = rows[rows.length-1];
+    if (last){
+      last.classList.add('just-added');
+      last.scrollIntoView({behavior: reduceMotion?'auto':'smooth', block:'center'});
+      setTimeout(()=>last.classList.remove('just-added'), 1200);
+    }
+    toast(`Added to ${model.sections[si].name}`);
+  }
+
+  let toastT;
+  function toast(msg){
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 1600);
+  }
+
+  // ============ VARIANT A ============
+  const aInput = $('#aInput'), aQuickWrap = $('#aQuickWrap'), aHint = $('#aHint');
+  function aSync(){
+    const q = aInput.value;
+    applyFilter(q);
+    const has = q.trim().length > 0;
+    $('#aQ').textContent = q.trim();
+    aQuickWrap.classList.toggle('open', has);
+    // hint reflects what Enter will do: add when nothing matches, else filter
+    const noMatch = has && $('#empty') && !$('#empty').classList.contains('hidden');
+    aHint.textContent = !has ? 'enter ↵' : (noMatch ? 'enter = add' : 'filtering');
+  }
+  aInput.addEventListener('input', aSync);
+  aInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter'){
+      const noMatch = !$('#empty').classList.contains('hidden');
+      if (noMatch || aInput.value.trim()){
+        // Enter adds when nothing matches; otherwise it's a no-op-ish filter confirm.
+        if (noMatch){ addItem(aInput.value, +$('#aSelect').value); aInput.value=''; aSync(); }
+      }
+    } else if (e.key === 'Escape'){ aInput.value=''; aSync(); aInput.blur(); }
+  });
+  $('#aAddBtn').addEventListener('click', () => { addItem(aInput.value, +$('#aSelect').value); aInput.value=''; aSync(); });
+
+  // ============ VARIANT B ============
+  const bSearchPill = $('#bSearchPill'), bSearchWrap = $('#bSearchWrap'), bSearch = $('#bSearch');
+  function bOpenSearch(open){
+    bSearchPill.classList.toggle('is-on', open);
+    bSearchPill.setAttribute('aria-expanded', String(open));
+    bSearchWrap.style.maxWidth = open ? '520px' : '0px';
+    bSearchWrap.style.opacity = open ? '1' : '0';
+    if (open){ setTimeout(()=>bSearch.focus(), reduceMotion?0:120); }
+    else { bSearch.value=''; applyFilter(''); bSearchPill.focus(); }
+  }
+  bSearchPill.addEventListener('click', () => bOpenSearch(bSearchPill.getAttribute('aria-expanded')!=='true'));
+  $('#bSearchClose').addEventListener('click', () => bOpenSearch(false));
+  bSearch.addEventListener('input', () => applyFilter(bSearch.value));
+  bSearch.addEventListener('keydown', e => { if (e.key==='Escape') bOpenSearch(false); });
+
+  const bAddPill = $('#bAddPill'), bAddWrap = $('#bAddWrap'), bAdd = $('#bAdd');
+  function bOpenAdd(open){
+    bAddPill.classList.toggle('is-on', open);
+    bAddPill.setAttribute('aria-expanded', String(open));
+    bAddWrap.classList.toggle('open', open);
+    bAddWrap.style.marginTop = open ? '2px' : '0';
+    if (open){ setTimeout(()=>bAdd.focus(), reduceMotion?0:120); }
+    else { bAdd.value=''; bAddPill.focus(); }
+  }
+  bAddPill.addEventListener('click', () => bOpenAdd(bAddPill.getAttribute('aria-expanded')!=='true'));
+  $('#bAddClose').addEventListener('click', () => bOpenAdd(false));
+  $('#bAddGo').addEventListener('click', () => { if(bAdd.value.trim()){ addItem(bAdd.value, +$('#bSelect').value); bOpenAdd(false); } });
+  bAdd.addEventListener('keydown', e => {
+    if (e.key==='Enter' && bAdd.value.trim()){ addItem(bAdd.value, +$('#bSelect').value); bOpenAdd(false); }
+    else if (e.key==='Escape') bOpenAdd(false);
+  });
+  // chips
+  $$('.filterchip').forEach(c => c.addEventListener('click', () => {
+    $$('.filterchip').forEach(x=>x.setAttribute('aria-pressed','false'));
+    c.setAttribute('aria-pressed','true');
+    dueFilter = c.dataset.filter==='due';
+    toast(dueFilter ? 'Showing due soon (mock)' : 'All phases');
+  }));
+  $('#bHideDone').addEventListener('click', () => {
+    hideDone = !hideDone;
+    $('#bHideDone').setAttribute('aria-pressed', String(hideDone));
+    $('#bHideDone').classList.toggle('is-on', hideDone);
+    applyFilter(currentQuery);
+  });
+
+  // ============ VARIANT C ============
+  const cSearchIcon = $('#cSearchIcon'), cSearchWrap = $('#cSearchWrap'), cSearch = $('#cSearch');
+  function cOpenSearch(open){
+    cSearchIcon.setAttribute('aria-expanded', String(open));
+    cSearchIcon.classList.toggle('iconbtn-on', open);
+    cSearchWrap.style.maxWidth = open ? '740px' : '0px';
+    cSearchWrap.style.opacity = open ? '1' : '0';
+    if (open){ setTimeout(()=>cSearch.focus(), reduceMotion?0:120); }
+    else { cSearch.value=''; applyFilter(''); cSearchIcon.focus(); }
+  }
+  cSearchIcon.addEventListener('click', () => cOpenSearch(cSearchIcon.getAttribute('aria-expanded')!=='true'));
+  $('#cSearchClose').addEventListener('click', () => cOpenSearch(false));
+  cSearch.addEventListener('input', () => applyFilter(cSearch.value));
+  cSearch.addEventListener('keydown', e => { if (e.key==='Escape') cOpenSearch(false); });
+
+  const cAddIcon = $('#cAddIcon'), cPop = $('#cPop'), cAdd = $('#cAdd');
+  function cOpenPop(open){
+    cAddIcon.setAttribute('aria-expanded', String(open));
+    cPop.classList.toggle('open', open);
+    if (open){ setTimeout(()=>cAdd.focus(), reduceMotion?0:60); }
+    else cAddIcon.focus();
+  }
+  cAddIcon.addEventListener('click', (e) => { e.stopPropagation(); cOpenPop(!cPop.classList.contains('open')); });
+  $('#cAddGo').addEventListener('click', () => { if(cAdd.value.trim()){ addItem(cAdd.value, +$('#cSelect').value); cAdd.value=''; cOpenPop(false); } });
+  cAdd.addEventListener('keydown', e => {
+    if (e.key==='Enter' && cAdd.value.trim()){ addItem(cAdd.value, +$('#cSelect').value); cAdd.value=''; cOpenPop(false); }
+    else if (e.key==='Escape') cOpenPop(false);
+  });
+  document.addEventListener('click', e => {
+    if (cPop.classList.contains('open') && !cPop.contains(e.target) && e.target!==cAddIcon) cOpenPop(false);
+  });
+
+  // ============ shared empty-state add (used by A query + B/C search) ============
+  function activeSelectIndex(){
+    if (variant==='A') return +$('#aSelect').value;
+    if (variant==='B') return +$('#bSelect').value;
+    return +$('#cSelect').value;
+  }
+  $('#emptyAdd').addEventListener('click', () => {
+    const q = $('#emptyQ').textContent;
+    addItem(q, activeSelectIndex());
+    // clear whichever search is live
+    [aInput, bSearch, cSearch].forEach(i=>{ if(i) i.value=''; });
+    applyFilter('');
+    if (variant==='A') aSync();
+  });
+
+  // ============ variant switching ============
+  const segThumb = $('#segThumb');
+  function setVariant(v){
+    variant = v;
+    wrap.setAttribute('data-variant', v);
+    $$('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.variant===v)));
+    $('#caption').innerHTML = CAPTIONS[v];
+    moveThumb();
+    // reset transient states + filters when switching
+    hideDone = false; $('#bHideDone')?.setAttribute('aria-pressed','false'); $('#bHideDone')?.classList.remove('is-on');
+    [aInput,bSearch,cSearch].forEach(i=>{ if(i) i.value=''; });
+    if (variant!=='B'){ bOpenSearch(false); bOpenAdd(false); }
+    if (variant!=='C'){ cOpenPop(false); }
+    applyFilter('');
+    aQuickWrap.classList.remove('open');
+    bSearchWrap.style.maxWidth='0'; bSearchWrap.style.opacity='0'; bSearchPill.classList.remove('is-on'); bSearchPill.setAttribute('aria-expanded','false');
+    cSearchWrap.style.maxWidth='0'; cSearchWrap.style.opacity='0'; cSearchIcon.setAttribute('aria-expanded','false');
+    bAddWrap.classList.remove('open'); bAddPill.classList.remove('is-on'); bAddPill.setAttribute('aria-expanded','false');
+  }
+  function moveThumb(){
+    const active = $('.seg button[aria-pressed="true"]');
+    if (!active) return;
+    segThumb.style.left = active.offsetLeft + 'px';
+    segThumb.style.width = active.offsetWidth + 'px';
+  }
+  $$('.seg button').forEach(b => b.addEventListener('click', () => setVariant(b.dataset.variant)));
+  window.addEventListener('resize', moveThumb);
+
+  // ============ view (checklist / packing) ============
+  function setView(v){
+    viewKey = v;
+    model = structuredClone(DATA[v]);
+    $$('.vt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view===v)));
+    $('#pageTitle').textContent = DATA[v].title;
+    $('#pageLede').textContent = DATA[v].lede;
+    const noun = DATA[v].groupNoun;
+    aInput.placeholder = `Search or add ${v==='packing'?'an item':'a task'}…`;
+    bAdd.placeholder = $('#cAdd').placeholder = (v==='packing'?'New item…':'New task…');
+    bSearch.placeholder = cSearch.placeholder = (v==='packing'?'Filter items…':'Filter tasks…');
+    $$('.filterchip')[0].textContent = v==='packing' ? 'All categories' : 'All phases';
+    render();
+  }
+  $$('.vt').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+  // ============ theme ============
+  $('#themeToggle').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    moveThumb();
+  });
+
+  // ============ boot ============
+  setView('checklist');
+  setVariant('B');
+  requestAnimationFrame(moveThumb);
+  setTimeout(moveThumb, 200); // after fonts settle
+})();
+</script>
+</body>
+</html>

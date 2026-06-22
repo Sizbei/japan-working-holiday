@@ -128,9 +128,10 @@ function openHelp() {
     <h2 class="kh-title">Keyboard shortcuts</h2>
     <div class="kh-grid">${rows}</div>
     <div class="kh-row"><kbd>[</kbd> <kbd>]</kbd><span>Previous / next page</span></div>
-    <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere (command palette)</span></div>
+    <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere + search everything (command palette)</span></div>
+    <div class="kh-row"><kbd>⌘Z</kbd> <kbd>Ctrl+Z</kbd><span>Undo the last calendar delete</span></div>
     <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
-    <p class="kh-hint">Tip: swipe left/right to change pages on a phone.</p>
+    <p class="kh-hint">Tap 🔍 on the Checklist & Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>
   </div>`;
   document.body.appendChild(helpEl);

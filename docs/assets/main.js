@@ -3,6 +3,7 @@
 
 import { mountGate } from './gate.js';
 import { renderContent } from './content.js';
+import { mountPacking } from './packing.js';
 import { mountCalendar } from './calendar.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
@@ -47,6 +48,7 @@ function boot() {
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
       mountTracker(data);
       renderContent(data, today);
+      mountPacking(data);            // packing page (#/packing) — categorized super-checklist
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

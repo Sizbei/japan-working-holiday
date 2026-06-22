@@ -11,8 +11,8 @@ import { getEventMenu, undoLastDelete } from './calendar.js';
 import { openPalette } from './palette.js';
 
 const PAGE_LABEL = {
-  dashboard: 'Home', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
-  explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a day',
+  dashboard: 'Home', calendar: 'Calendar', going: 'Going To', deadlines: 'Deadlines', checklist: 'Checklist',
+  packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a day', emergency: 'Emergency',
 };
 
 function currentRoute() {
@@ -123,7 +123,7 @@ function openHelp() {
   helpEl = document.createElement('div');
   helpEl.className = 'kbd-help';
   helpEl.setAttribute('role', 'dialog'); helpEl.setAttribute('aria-modal', 'true'); helpEl.setAttribute('aria-label', 'Keyboard shortcuts');
-  const rows = ROUTES.map((r, i) => `<div class="kh-row"><kbd>${i + 1}</kbd><span>${PAGE_LABEL[r] || r}</span></div>`).join('');
+  const rows = ROUTES.slice(0, Math.min(9, ROUTES.length)).map((r, i) => `<div class="kh-row"><kbd>${i + 1}</kbd><span>${PAGE_LABEL[r] || r}</span></div>`).join('');   // only 1–9 have a number shortcut; the rest are reachable via ⌘K (below)
   helpEl.innerHTML = `<div class="kh-panel">
     <h2 class="kh-title">Keyboard shortcuts</h2>
     <div class="kh-grid">${rows}</div>

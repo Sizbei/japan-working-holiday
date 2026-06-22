@@ -38,5 +38,12 @@ searchIndex(index, query, limit=12) -> ranked subset
 - XSS: results come from `ROUTES` + baked `tips.json` content → `esc()` all interpolation; double-quoted attributes.
 - Browser: Cmd+K opens, type "budget" → Budget route on top, Enter jumps to `#/budget`; type a restaurant name → content hit → Enter goes to Explore; `/` opens when not typing; Esc closes + focus returns; ↑/↓ navigate; 0 console errors.
 
+## 6b. Hardening (from adversarial + security review)
+- **Checklist is phased, not flat:** index it via `(data.checklist||[]).flatMap(p => p.items||[])` (each phase object has `items[]` with `task`/`id`) — don't read `data.checklist.items`. Guard all content arrays with `|| []`.
+- **Route labels:** `router.js` exports a small **`routeLabel(route)`** helper (returns `TITLES[route] || route`) — `TITLES` stays module-local. `palette.js` builds `routeLabels = Object.fromEntries(ROUTES.map(r => [r, routeLabel(r)]))`.
+- **Cmd+K placement:** the `gestures.js wireKeyboard` handler **bails on any modifier first** — the Cmd/Ctrl+K branch MUST sit at the TOP, before that bail (same as the calendar undo Ctrl+Z), with `if (e.isComposing) return;` and `if (document.querySelector('.cmdk-overlay')) return;`. The `/` branch sits after the existing `typingTarget`/modal guards and also checks no `.cmdk-overlay` is open.
+- **Overlay = `.cmdk-overlay`:** the palette dialog carries `.cmdk-overlay`; both triggers no-op when one is open (single instance). Esc closes + restores focus to `document.activeElement` captured at open (mirror `lib/modal.js`).
+- **XSS:** all row `label`/`sub` and any `data-*` through `esc()`, **double-quoted attributes only** (`esc()` doesn't escape `'`). Content is baked, but esc anyway. `route` values come only from the fixed `ROUTES`/hardcoded strings — never from the user query — so `location.hash='#/'+route` is safe.
+
 ## 7. Out of scope
 Deep-scroll/highlight the matched item on its page, recent/history, fuzzy typo-tolerance beyond substring, actions (toggle/check) from the palette.

@@ -1968,24 +1968,30 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 /* slim control row above the checklist / packing list: [🔍 search] [＋ Add] [⊟ collapse] [☐ hide done] */
 .list-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); }
 .list-toolbar .check-tools, .list-toolbar .pack-tools { margin: 0; display: contents; }
-/* ＋ Add toggle — matches the 🔍 toggle / .ct-toggle weight */
-.lt-add { display: inline-flex; align-items: center; height: 2.2rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font: inherit; font-weight: 700; font-size: .8rem; line-height: 1; cursor: pointer; transition: color .2s, border-color .2s; }
-.lt-add:hover { color: var(--ink); }
-.lt-add[aria-expanded="true"] { color: var(--ink); border-color: var(--indigo); }
-.lt-add:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+/* Variant B — two compact pills (🔍 Search · ＋ Add). Shared pill shell: matches .ct-toggle weight,
+   gets an indigo-tinted treatment when expanded/active. */
+.lt-add, .lsx-toggle { display: inline-flex; align-items: center; gap: .4rem; height: 2.2rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font: inherit; font-weight: 700; font-size: .8rem; line-height: 1; white-space: nowrap; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+.lt-add:hover, .lsx-toggle:hover { color: var(--ink); border-color: color-mix(in srgb, var(--indigo) 40%, var(--line)); }
+.lt-add[aria-expanded="true"], .lsx-toggle[aria-expanded="true"] { color: var(--indigo); border-color: color-mix(in srgb, var(--indigo) 50%, var(--line)); background: color-mix(in srgb, var(--indigo) 10%, var(--bg-soft)); }
+.lt-add:focus-visible, .lsx-toggle:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.lt-add-icon, .lsx-icon { font-size: .95rem; line-height: 1; }
 
-/* expandable 🔍 search on the checklist + packing list pages — a compact icon that grows into an input */
+/* expandable 🔍 search on the checklist + packing list pages — a compact pill that grows into an input */
 .list-search-x { display: inline-flex; align-items: center; gap: 0; max-width: 100%; }
-.lsx-toggle { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; flex-shrink: 0; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font-size: 1rem; line-height: 1; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
-.lsx-toggle:hover { color: var(--ink); }
-.lsx-toggle[aria-expanded="true"] { color: var(--ink); border-color: var(--indigo); }
-.lsx-toggle:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+/* when open, the pill collapses to just its icon so the input has room to grow inline */
+.list-search-x.is-open .lsx-toggle { gap: 0; padding: 0 .7rem; }
+.list-search-x.is-open .lsx-label { display: none; }
 .lsx-input { width: 0; min-width: 0; padding: 0; border: 1px solid transparent; border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); opacity: 0; overflow: hidden; transition: width .22s ease, opacity .18s ease, padding .22s ease, margin .22s ease; }
 .lsx-input::placeholder { color: var(--ink-soft); }
 .list-search-x.is-open .lsx-input { width: 220px; max-width: calc(100vw - 6rem); padding: .5rem .8rem; margin-left: .4rem; opacity: 1; border-color: var(--line); }
 .list-search-x.is-open .lsx-input:focus { outline: 2px solid var(--indigo); border-color: transparent; }
 html[data-reduce-motion="on"] .lsx-input { transition: none; }
 .empty.list-empty { padding: 2rem 1rem; }
+/* search → add shortcut: the inline ＋ Add "<query>" button in the no-match empty state */
+.list-empty-add { display: inline-flex; align-items: center; gap: .4rem; margin-top: var(--s3); padding: .5rem 1rem; border: 1px solid color-mix(in srgb, var(--indigo) 45%, var(--line)); border-radius: var(--r-pill); background: color-mix(in srgb, var(--indigo) 8%, var(--bg-soft)); color: var(--ink); font: inherit; font-weight: 700; font-size: .82rem; cursor: pointer; transition: background .2s, border-color .2s; }
+.list-empty-add:hover { background: color-mix(in srgb, var(--indigo) 16%, var(--bg-soft)); }
+.list-empty-add:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.list-empty-add .lea-q { color: var(--indigo); }
 
 .pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
 /* the add form as an expandable panel under the toolbar (toggled by .lt-add) */

@@ -284,6 +284,8 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 
 /* section intro blurb (first-person) */
 .lede { color: var(--ink-soft); font-family: var(--serif); font-style: italic; font-size: 1.02rem; margin: -.5rem 0 var(--s6); max-width: 64ch; }
+/* checklist + packing: lighten the reference lede and tighten everything above the list so the checkboxes sit near the top */
+#view-checklist .lede, #view-packing .lede { font-size: .92rem; opacity: .72; margin-bottom: var(--s3); }
 
 /* pillar banner headings — bigger, more presence */
 .pillar-head {
@@ -324,8 +326,8 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .c-src a { color: var(--indigo); margin-right: .6rem; }
 
 /* ---- saveable yearlong checklist ---- */
-.check-progress { position: sticky; top: calc(var(--header-h) + var(--nav-h)); z-index: 4; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 100px; padding: var(--s2) var(--s4); margin-bottom: var(--s6); display: flex; align-items: center; gap: var(--s4); box-shadow: var(--shadow); }
-.check-progress .bar { flex: 1; height: 8px; background: var(--line); border-radius: 100px; overflow: hidden; }
+.check-progress { position: sticky; top: calc(var(--header-h) + var(--nav-h)); z-index: 4; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 100px; padding: var(--s1) var(--s4); margin-bottom: var(--s3); display: flex; align-items: center; gap: var(--s3); box-shadow: var(--shadow); }
+.check-progress .bar { flex: 1; height: 5px; background: var(--line); border-radius: 100px; overflow: hidden; }
 .check-progress .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--red), var(--gold)); transition: width .4s ease; }
 .check-progress .pct { font-weight: 700; font-size: .85rem; white-space: nowrap; }
 .check-progress .reset { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .78rem; text-decoration: underline; }
@@ -1963,8 +1965,17 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .pack-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex-shrink: 0; }
 .pack-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
 .pack-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
+/* slim control row above the checklist / packing list: [🔍 search] [＋ Add] [⊟ collapse] [☐ hide done] */
+.list-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); }
+.list-toolbar .check-tools, .list-toolbar .pack-tools { margin: 0; display: contents; }
+/* ＋ Add toggle — matches the 🔍 toggle / .ct-toggle weight */
+.lt-add { display: inline-flex; align-items: center; height: 2.2rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font: inherit; font-weight: 700; font-size: .8rem; line-height: 1; cursor: pointer; transition: color .2s, border-color .2s; }
+.lt-add:hover { color: var(--ink); }
+.lt-add[aria-expanded="true"] { color: var(--ink); border-color: var(--indigo); }
+.lt-add:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
 /* expandable 🔍 search on the checklist + packing list pages — a compact icon that grows into an input */
-.list-search-x { display: inline-flex; align-items: center; gap: 0; margin: var(--s3) 0; max-width: 100%; }
+.list-search-x { display: inline-flex; align-items: center; gap: 0; max-width: 100%; }
 .lsx-toggle { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; flex-shrink: 0; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font-size: 1rem; line-height: 1; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
 .lsx-toggle:hover { color: var(--ink); }
 .lsx-toggle[aria-expanded="true"] { color: var(--ink); border-color: var(--indigo); }
@@ -1977,6 +1988,12 @@ html[data-reduce-motion="on"] .lsx-input { transition: none; }
 .empty.list-empty { padding: 2rem 1rem; }
 
 .pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
+/* the add form as an expandable panel under the toolbar (toggled by .lt-add) */
+.list-add { margin: 0 0 var(--s4); overflow: hidden; }
+.list-add[hidden] { display: none; }
+.list-add.is-open { animation: listAddIn var(--dur-2, .22s) ease both; }
+@keyframes listAddIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+html[data-reduce-motion="on"] .list-add.is-open { animation: none; }
 .pack-add input[type=text] { flex: 1; min-width: 12rem; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
 .pack-add select { padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
 .pack-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .55rem 1.1rem; border-radius: var(--r-pill); cursor: pointer; }

@@ -7,7 +7,7 @@
 import { ROUTES } from './router.js';
 import { prefersReducedMotion } from './motion.js';
 import { openMenu } from './lib/menu.js';
-import { getEventMenu } from './calendar.js';
+import { getEventMenu, undoLastDelete } from './calendar.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -93,6 +93,13 @@ function typingTarget(el) {
 }
 function wireKeyboard() {
   document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'z' || e.key === 'Z')) {  // undo (Ctrl/Cmd+Z)
+      if (e.isComposing) return;                                // don't fight an IME
+      if (typingTarget(document.activeElement)) return;         // native undo in a text field
+      if (document.querySelector('.modal-overlay')) return;     // a modal owns the keyboard
+      if (undoLastDelete()) e.preventDefault();                 // only swallow the key if we actually undid
+      return;
+    }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (typingTarget(document.activeElement)) return;
     if (document.querySelector('.modal-overlay')) return;     // let modals own the keyboard

@@ -1482,7 +1482,7 @@ body { line-height: 1.7; }
    Reading-heavy routes get a comfortable measure; tool routes (calendar,
    map, plan, rooms) and the dashboard stay full-width. */
 html.js-router #view-deadlines,
-html.js-router #view-checklist{ max-width: 780px; margin-inline: auto; }
+html.js-router #view-checklist, html.js-router #view-packing, html.js-router #view-phrases{ max-width: 780px; margin-inline: auto; }
 html.js-router #view-explore{ max-width: 1000px; margin-inline: auto; }   /* keep card grids, just rein in the line length */
 #view-deadlines .block, #view-checklist .block{ background: transparent; border: none; box-shadow: none; padding: 0; }
 

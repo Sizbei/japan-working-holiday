@@ -63,8 +63,15 @@ function wireDictionary() {
   document.addEventListener('focusin', (e) => { const t = e.target.closest('.jp, [data-jp]'); if (t) showFor(t); });
   document.addEventListener('focusout', (e) => { if (e.target.closest('.jp, [data-jp]')) scheduleHide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideNow(); });
-  // make the decorative .jp accents reachable by keyboard for the lookup — as named buttons, not anonymous tab stops
-  $$('.jp').forEach(el => {
+  wireJpAccents(document);
+}
+// Make the .jp accents inside `container` reachable by keyboard for the lookup — as named
+// buttons, not anonymous tab stops. Idempotent (skips already-wired). Pages that render .jp
+// dynamically (e.g. phrases.js) call this after each render so JS-rendered .jp get keyboard
+// access; the mouseover/focus delegation in wireDictionary already covers dynamic .jp.
+export function wireJpAccents(container = document) {
+  if (!container) return;
+  container.querySelectorAll('.jp').forEach(el => {
     if (el.hasAttribute('tabindex')) return;
     const word = (el.textContent || '').trim();
     el.setAttribute('tabindex', '0');

@@ -5,7 +5,7 @@
 
 import { transitionView, prefersReducedMotion } from './motion.js';
 
-export const ROUTES = ['dashboard', 'calendar', 'going', 'deadlines', 'checklist', 'packing', 'budget', 'phrases', 'explore', 'rooms', 'map', 'plan'];
+export const ROUTES = ['dashboard', 'calendar', 'going', 'deadlines', 'checklist', 'packing', 'budget', 'phrases', 'explore', 'rooms', 'map', 'plan', 'emergency'];
 
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {
@@ -32,9 +32,12 @@ let current = null;
 // per-route document title so browser tabs + history entries read like real pages
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', deadlines: 'Deadlines', checklist: 'Checklist',
-  packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day',
+  packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
 };
 const SITE = 'My Year in Japan';
+
+// route → human label (for the command palette). TITLES stays module-local.
+export function routeLabel(route) { return TITLES[route] || route; }
 
 function activate(route, { scroll = true } = {}) {
   const target = document.getElementById('view-' + route);

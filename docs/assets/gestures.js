@@ -8,6 +8,7 @@ import { ROUTES } from './router.js';
 import { prefersReducedMotion } from './motion.js';
 import { openMenu } from './lib/menu.js';
 import { getEventMenu, undoLastDelete } from './calendar.js';
+import { openPalette } from './palette.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -93,6 +94,11 @@ function typingTarget(el) {
 }
 function wireKeyboard() {
   document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'k' || e.key === 'K')) {  // command palette (Ctrl/Cmd+K)
+      if (e.isComposing) return;                                // don't fight an IME
+      if (document.querySelector('.cmdk-overlay')) return;      // single instance
+      e.preventDefault(); openPalette(); return;
+    }
     if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'z' || e.key === 'Z')) {  // undo (Ctrl/Cmd+Z)
       if (e.isComposing) return;                                // don't fight an IME
       if (typingTarget(document.activeElement)) return;         // native undo in a text field
@@ -103,6 +109,7 @@ function wireKeyboard() {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (typingTarget(document.activeElement)) return;
     if (document.querySelector('.modal-overlay')) return;     // let modals own the keyboard
+    if (e.key === '/' && !document.querySelector('.cmdk-overlay')) { e.preventDefault(); openPalette(); return; }
     if (e.key >= '1' && e.key <= String(Math.min(9, ROUTES.length))) { e.preventDefault(); go(ROUTES[+e.key - 1]); return; }
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
@@ -121,6 +128,7 @@ function openHelp() {
     <h2 class="kh-title">Keyboard shortcuts</h2>
     <div class="kh-grid">${rows}</div>
     <div class="kh-row"><kbd>[</kbd> <kbd>]</kbd><span>Previous / next page</span></div>
+    <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere (command palette)</span></div>
     <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
     <p class="kh-hint">Tip: swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>

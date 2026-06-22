@@ -36,6 +36,9 @@ const TITLES = {
 };
 const SITE = 'My Year in Japan';
 
+// route → human label (for the command palette). TITLES stays module-local.
+export function routeLabel(route) { return TITLES[route] || route; }
+
 function activate(route, { scroll = true } = {}) {
   const target = document.getElementById('view-' + route);
   if (!target) return;

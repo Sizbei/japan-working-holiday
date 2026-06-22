@@ -1540,6 +1540,41 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 .kh-close:hover{ background: var(--bg-sunk); }
 @media (prefers-reduced-motion: reduce){ .lp-menu, .kbd-help{ animation: none; } }
 
+/* ---------- command palette (⌘K / "/") — see palette.js ---------- */
+.cmdk-overlay{
+  position: fixed; inset: 0; z-index: 90; display: grid; align-items: start; justify-items: center;
+  padding: max(8vh, var(--s6)) var(--s4) var(--s4);
+  background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: lp-in var(--dur-2) var(--ease-out);
+}
+.cmdk-panel{
+  width: min(560px, 94vw); background: var(--bg-elevated);
+  border: 1px solid var(--line-strong); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg); overflow: hidden;
+  animation: cmdk-rise var(--dur-2) var(--ease-out);
+}
+.cmdk-input{
+  display: block; width: 100%; box-sizing: border-box; border: 0;
+  border-bottom: 1px solid var(--line); background: transparent; color: var(--ink);
+  font: inherit; font-size: 1.05rem; padding: var(--s4) var(--s5);
+}
+.cmdk-input:focus{ outline: none; }
+.cmdk-input::placeholder{ color: var(--ink-faint); }
+.cmdk-list{ list-style: none; margin: 0; padding: var(--s2); max-height: min(56vh, 440px); overflow-y: auto; }
+.cmdk-opt{
+  display: flex; align-items: baseline; gap: .55rem; cursor: pointer;
+  padding: .5rem .7rem; border-radius: var(--r-sm); color: var(--ink);
+}
+.cmdk-opt.is-active{ background: var(--bg-sunk); }
+.cmdk-ic{ color: var(--ink-faint); font-size: .85rem; flex: 0 0 auto; }
+.cmdk-lab{ font-weight: 600; }
+.cmdk-sub{ color: var(--ink-faint); font-size: .85rem; margin-left: auto; padding-left: .6rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%; }
+.cmdk-empty{ list-style: none; padding: .7rem; color: var(--ink-faint); text-align: center; }
+@keyframes cmdk-rise{ from{ transform: translateY(-8px); opacity: .6; } to{ transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce){ .cmdk-overlay, .cmdk-panel{ animation: none; } }
+html[data-reduce-motion="on"] .cmdk-overlay, html[data-reduce-motion="on"] .cmdk-panel{ animation: none; }
+
 /* event/place emoji in the map area index */
 .map-emoji{ display: inline-block; width: 1.3em; text-align: center; margin-right: .15rem; }
 

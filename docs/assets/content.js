@@ -3,7 +3,7 @@
 // searchable domains, brew scratchpad, the dependency-aware checklist (with due
 // dates), the pillar grids, and sources. Fed entirely by tips.json.
 
-import { $, $$, esc, srcLinks, wireExpandableSearch } from './lib/dom.js';
+import { $, $$, esc, srcLinks, wireExpandableSearch, wireExpandableAdd } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
 import { makeSortable } from './dnd.js';
@@ -619,6 +619,7 @@ function wireAddItem() {
   const form = $('#checkAddForm'), input = $('#checkAddInput');
   if (form && input && sel && !form.dataset.wired) {
     form.dataset.wired = '1';
+    wireExpandableAdd($('#checkAddToggle'), form, input);     // expandable ＋ Add toggle
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const task = input.value.trim();
@@ -626,9 +627,9 @@ function wireAddItem() {
       const phase = sel.value || 'My tasks';
       saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
       input.value = '';
+      form.dispatchEvent(new CustomEvent('jwh:add-done'));     // collapse the add panel
       renderChecklist();                                       // re-render the list (no jwh:data-changed→renderChecklist listener)
       document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh the dashboard teaser/bell
-      input.focus();
     });
   }
 }

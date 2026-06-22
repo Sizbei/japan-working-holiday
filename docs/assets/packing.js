@@ -5,7 +5,7 @@
 //
 // Pure grouping/progress math lives in lib/packing.js; this file is DOM glue.
 
-import { $, $$, esc, wireExpandableSearch } from './lib/dom.js';
+import { $, $$, esc, wireExpandableSearch, wireExpandableAdd } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { slug } from './lib/places.js';
 import { makeSortable } from './dnd.js';
@@ -61,6 +61,7 @@ function wireControls() {
   const form = $('#packAddForm'), input = $('#packAddInput'), sel = $('#packAddCat');
   if (form && input && sel && !form.dataset.wired) {
     form.dataset.wired = '1';
+    wireExpandableAdd($('#packAddToggle'), form, input);      // expandable ＋ Add toggle
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const item = input.value.trim();
@@ -68,8 +69,8 @@ function wireControls() {
       const cat = CATEGORY_ORDER.includes(sel.value) ? sel.value : 'Misc';
       saveCustom([...loadCustom(), { id: 'pku' + Date.now(), cat, item }]);
       input.value = '';
+      form.dispatchEvent(new CustomEvent('jwh:add-done'));     // collapse the add panel
       render();
-      input.focus();
     });
   }
   // live search/filter

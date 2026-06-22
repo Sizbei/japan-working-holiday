@@ -182,16 +182,19 @@
       <div class="bar"><i id="checkBar"></i></div>
       <button class="reset" id="checkReset" type="button">reset</button>
     </div>
-    <div class="list-search-x" data-search-x>
-      <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search checklist" aria-controls="checkSearch">🔍</button>
-      <input type="search" id="checkSearch" class="lsx-input" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off" tabindex="-1">
+    <div class="list-toolbar">
+      <div class="list-search-x" data-search-x>
+        <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search checklist" aria-controls="checkSearch">🔍</button>
+        <input type="search" id="checkSearch" class="lsx-input" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off" tabindex="-1">
+      </div>
+      <button type="button" class="lt-add" id="checkAddToggle" aria-expanded="false" aria-controls="checkAddForm">＋ Add</button>
+      <div id="checkTools" class="check-tools"></div>
     </div>
-    <form id="checkAddForm" class="pack-add" autocomplete="off">
+    <form id="checkAddForm" class="pack-add list-add" autocomplete="off" hidden>
       <input type="text" id="checkAddInput" placeholder="Add your own task…" aria-label="New checklist task" maxlength="120">
       <select id="checkAddPhase" aria-label="Phase"></select>
       <button type="submit" class="pack-add-btn">Add</button>
     </form>
-    <div id="checkTools" class="check-tools"></div>
     <div id="checkPhases"></div>
   </section>
 
@@ -206,19 +209,22 @@
       <span class="pct" id="packPct" role="status" aria-live="polite">0%</span>
       <div class="bar"><i id="packBar"></i></div>
     </div>
-    <div class="list-search-x" data-search-x>
-      <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search packing list" aria-controls="packSearch">🔍</button>
-      <input type="search" id="packSearch" class="lsx-input" placeholder="Search items…" aria-label="Search packing list" autocomplete="off" tabindex="-1">
+    <div class="list-toolbar">
+      <div class="list-search-x" data-search-x>
+        <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search packing list" aria-controls="packSearch">🔍</button>
+        <input type="search" id="packSearch" class="lsx-input" placeholder="Search items…" aria-label="Search packing list" autocomplete="off" tabindex="-1">
+      </div>
+      <button type="button" class="lt-add" id="packAddToggle" aria-expanded="false" aria-controls="packAddForm">＋ Add</button>
+      <div class="pack-tools">
+        <button type="button" id="packCollapseAll" class="ct-toggle">⊟ Collapse all</button>
+        <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
+      </div>
     </div>
-    <form id="packAddForm" class="pack-add" autocomplete="off">
+    <form id="packAddForm" class="pack-add list-add" autocomplete="off" hidden>
       <input type="text" id="packAddInput" placeholder="Add your own item…" aria-label="New packing item" maxlength="120">
       <select id="packAddCat" aria-label="Category"></select>
       <button type="submit" class="pack-add-btn">Add</button>
     </form>
-    <div class="pack-tools">
-      <button type="button" id="packCollapseAll" class="ct-toggle">Collapse / expand all</button>
-      <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
-    </div>
     <div id="packList"></div>
   </section>
   </div><!-- /view-packing -->

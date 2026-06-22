@@ -31,6 +31,16 @@ export function partitionCustom(custom, bakedPhaseLabels) {
   return { byPhase, mine };
 }
 
+// Rename a custom item in place: return a NEW array with the item whose id matches having its
+// `field` set to text.trim(). Blank/whitespace text, a missing/unknown id → array returned
+// unchanged. No mutation. Generic (field) so checklist (task) + packing (item) share it.
+export function renameById(arr, id, field, text) {
+  const list = Array.isArray(arr) ? arr : [];
+  const t = String(text ?? '').trim();
+  if (!id || !t) return list;
+  return list.map(it => (it && it.id === id) ? { ...it, [field]: t } : it);
+}
+
 // ---- store wrappers (KEYS.checklistCustom = jwh-checklist-custom-v1) ----
 export function loadChecklistCustom() { return get(KEYS.checklistCustom, []) || []; }
 export function saveChecklistCustom(arr) { set(KEYS.checklistCustom, arr); }

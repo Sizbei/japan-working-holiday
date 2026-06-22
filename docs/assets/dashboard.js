@@ -13,6 +13,7 @@ import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';
 import { summary, fmtYen } from './lib/budget.js';
 import { progress } from './lib/packing.js';
+import { readiness } from './lib/readiness.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -62,6 +63,52 @@ function refreshTeasers() {
   const p = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
   const packText = p.total === 0 ? 'Start your packing list' : `${p.pct}% packed · ${p.done}/${p.total}`;
   teaser('#tPacking', packText, '#/packing');
+
+  renderReadiness();
+}
+
+// "Trip readiness" widget — one weighted score over checklist + packing + budget, with a 3-part
+// breakdown and days-to-arrival. Read-only (reads localStorage fresh, dispatches nothing).
+function renderReadiness() {
+  const el = $('#wReadiness');
+  if (!el) return;
+
+  const checks = get(KEYS.checklist, {}) || {};
+  const allChecks = checklistItems(DATA);
+  const ckDone = allChecks.filter(it => checks[it.id]).length;
+  const checklistPct = allChecks.length ? Math.round((ckDone / allChecks.length) * 100) : 0;
+
+  const pk = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
+
+  const budgetState = get(KEYS.budget, {}) || {};
+  const s = summary(DATA.budget || { currency: 'JPY', oneTime: [], monthly: [] }, budgetState);
+  const noBudget = s.oneTimeTotal === 0 && s.monthlyTotal === 0 && !(budgetState.savings > 0);
+  const budgetReady = noBudget ? 'unset'
+    : (s.runwayMonths === Infinity || s.runwayMonths >= 6) ? 'ready'
+    : 'tight';
+
+  const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
+
+  const r = readiness({ checklistPct, packingPct: pk.pct, budgetReady, daysToArrival: c.days });
+  const budgetLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[r.parts[2].status] || 'unset';
+  const daysLine = c.phase === 'arrived'
+    ? `Day ${(c.days ?? 0) + 1} in Japan`
+    : `${c.days ?? '—'} day${c.days === 1 ? '' : 's'} to Tokyo`;
+
+  el.querySelector('.widget-body').innerHTML = `
+    <div class="rdy" data-tone="${esc(r.tone)}">
+      <div class="rdy-score">${esc(String(r.score))}<span class="rdy-pct">%</span></div>
+      <div class="rdy-meta">
+        <div class="rdy-days">${esc(daysLine)}</div>
+        <div class="rdy-parts">
+          <a href="#/checklist">Checklist ${esc(String(r.parts[0].pct))}%</a>
+          <span aria-hidden="true">·</span>
+          <a href="#/packing">Packing ${esc(String(r.parts[1].pct))}%</a>
+          <span aria-hidden="true">·</span>
+          <a href="#/budget">Budget ${esc(budgetLabel)}</a>
+        </div>
+      </div>
+    </div>`;
 }
 
 function dismiss(id) {

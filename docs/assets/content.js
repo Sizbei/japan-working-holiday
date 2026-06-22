@@ -12,7 +12,7 @@ import { celebrate } from './celebrate.js';
 import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
-import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
+import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
 
 let DATA = null;
@@ -697,7 +697,8 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const flagged = !!(opts.prio && opts.prio.has(id));
   const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
   const del = it._custom
-    ? `<button type="button" class="check-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.task)}">✕</button>`
+    ? `<button type="button" class="check-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.task)}">✎</button>`
+      + `<button type="button" class="check-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.task)}">✕</button>`
     : '';
   return `
     <li class="check-item ${locked ? 'locked' : ''}${flagged ? ' flagged' : ''}" data-id="${esc(id)}">
@@ -737,6 +738,9 @@ function wireChecklist() {
     renderChecklist();                                                   // re-render the list (no jwh:data-changed→renderChecklist listener)
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));          // refresh the dashboard teaser/bell
   }));
+  $$('#checkPhases .check-edit').forEach(b => b.addEventListener('click', () => {
+    openCheckEditor(b.dataset.edit);
+  }));
   $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', async () => {
     const id = btn.dataset.due;
     const due = { ...loadDue() };
@@ -750,6 +754,44 @@ function wireChecklist() {
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   }));
   wireReset();
+}
+// Inline-edit a custom checklist task. Swaps the .ci-task text for a focused <input>; Enter/blur
+// saves (renameById → save → re-render), Esc cancels. A re-render rebuilds innerHTML, so only one
+// editor can ever be open at once. Blank/whitespace save is a no-op (lib renameById ignores it).
+function openCheckEditor(id) {
+  const li = $(`#checkPhases .check-item[data-id="${(window.CSS && CSS.escape) ? CSS.escape(id) : id}"]`);
+  if (!li) return;
+  const task = li.querySelector('.ci-task');
+  if (!task || li.querySelector('.ci-edit-input')) return;
+  const it = loadChecklistCustom().find(x => x.id === id);
+  if (!it) return;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'ci-edit-input';
+  input.setAttribute('aria-label', 'Edit task');
+  input.value = it.task || '';              // .value (DOM property) — safe, no innerHTML of user text
+  task.replaceWith(input);
+  input.focus();
+  input.select();
+
+  let done = false;
+  const commit = (save) => {
+    if (done) return; done = true;
+    if (save) {
+      const val = input.value;
+      saveChecklistCustom(renameById(loadChecklistCustom(), id, 'task', val));
+      renderChecklist();                                            // save → close → re-render (matches add/remove)
+      document.dispatchEvent(new CustomEvent('jwh:data-changed'));  // refresh dashboard teaser/bell
+    } else {
+      renderChecklist();                    // cancel → re-render restores the original row (closes the editor)
+    }
+  };
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+  });
+  input.addEventListener('blur', () => commit(true));
 }
 // #checkReset lives OUTSIDE #checkPhases, so renderChecklist() doesn't replace it — wire it ONCE
 let resetWired = false;

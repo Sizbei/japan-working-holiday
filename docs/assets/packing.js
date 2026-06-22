@@ -12,6 +12,7 @@ import { makeSortable } from './dnd.js';
 import { mountAccordion } from './collapse.js';
 import { celebrate } from './celebrate.js';
 import { groupByCategory, progress, CATEGORY_ORDER } from './lib/packing.js';
+import { renameById } from './lib/checklist.js';   // generic pure rename helper (shared with the checklist)
 import { listCtl, LISTCTL } from './lib/listctl.js';
 
 let DATA = null;
@@ -241,7 +242,8 @@ function itemRowHTML(it, checked, drag) {
   const lowBadge = conf === 'low' ? `<span class="badge low">verify</span>` : '';
   const note = it.note ? `<span class="pack-note">${esc(it.note)}</span>` : '';
   const remove = it._custom
-    ? `<button type="button" class="pack-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.item)}">✕</button>`
+    ? `<button type="button" class="pack-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.item)}">✎</button>`
+      + `<button type="button" class="pack-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.item)}">✕</button>`
     : '';
   return `
     <li class="pack-item" data-id="${esc(id)}">
@@ -339,6 +341,7 @@ function wireRows() {
     saveChecks(m);
     render();
   }));
+  $$('#packList .pack-edit').forEach(b => b.addEventListener('click', () => openPackEditor(b.dataset.edit)));
   $$('#packList .pack-del').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.del;
     saveCustom(loadCustom().filter(x => x.id !== id));   // drop from custom
@@ -348,6 +351,39 @@ function wireRows() {
     saveOrder(o);
     render();
   }));
+}
+
+// Inline-edit a custom packing item. Swaps the .pack-name text for a focused <input>; Enter/blur
+// saves (renameById → save → re-render), Esc cancels. A re-render rebuilds innerHTML, so only one
+// editor can ever be open at once. Blank/whitespace save is a no-op (renameById ignores it).
+function openPackEditor(id) {
+  const li = $(`#packList .pack-item[data-id="${(window.CSS && CSS.escape) ? CSS.escape(id) : id}"]`);
+  if (!li) return;
+  const name = li.querySelector('.pack-name');
+  if (!name || li.querySelector('.pack-edit-input')) return;
+  const it = loadCustom().find(x => x.id === id);
+  if (!it) return;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'pack-edit-input';
+  input.setAttribute('aria-label', 'Edit item');
+  input.value = it.item || '';              // .value (DOM property) — safe
+  name.replaceWith(input);
+  input.focus();
+  input.select();
+
+  let done = false;
+  const commit = (save) => {
+    if (done) return; done = true;
+    if (save) saveCustom(renameById(loadCustom(), id, 'item', input.value));
+    render();                               // save → close → re-render (cancel just re-renders the original)
+  };
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+  });
+  input.addEventListener('blur', () => commit(true));
 }
 
 function updateProgress(items) {

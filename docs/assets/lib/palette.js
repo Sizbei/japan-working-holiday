@@ -49,6 +49,25 @@ export function buildIndex(data, routeLabels) {
   return index;
 }
 
+// buildUserEntries({ events, places, checklistCustom, packCustom }) → user content entries.
+// Each is a kind:'content' entry carrying mine:true and a HARDCODED route (never copied from the
+// stored data, so a malicious/garbage stored `route` can't be navigated to). Guards each array with
+// `|| []`, skips entries with an empty label, no input mutation. key = the item's own id.
+export function buildUserEntries(stores) {
+  const s = stores || {};
+  const out = [];
+  const push = (label, sub, route, key) => {
+    const lab = String(label ?? '').trim();
+    if (!lab) return;
+    out.push({ kind: 'content', label: lab, sub: String(sub ?? ''), route, key, mine: true });
+  };
+  for (const e of (s.events || [])) push(e && e.title, e && e.date, 'calendar', e && e.id);
+  for (const p of (s.places || [])) push(p && p.name, (p && (p.area || p.address)) || '', 'map', p && p.id);
+  for (const c of (s.checklistCustom || [])) push(c && c.task, c && c.phase, 'checklist', c && c.id);
+  for (const k of (s.packCustom || [])) push(k && k.item, k && k.cat, 'packing', k && k.id);
+  return out;
+}
+
 // score one entry against a normalized (lowercased, trimmed) query. 0 = drop.
 function scoreOf(entry, q) {
   const label = entry.label.toLowerCase();

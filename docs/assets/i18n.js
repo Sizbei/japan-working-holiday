@@ -24,6 +24,7 @@ export const STRINGS = {
   'nav.emergency': '緊急',
 
   'head.dashboard.needs': '対応が必要なこと',
+  'head.readiness': '旅の準備',
   'head.widget.deadlines': '次の締め切り',
   'head.widget.going': '参加予定',
   'head.widget.checklist': 'チェックリスト',

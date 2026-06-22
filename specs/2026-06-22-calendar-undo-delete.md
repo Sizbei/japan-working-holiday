@@ -53,15 +53,21 @@ function clearPending() { pendingUndo = null; if (undoTimer) { clearTimeout(undo
 Re-adding with the **original id** means: a linked place's `eventId` reconnects, and **Going state survives** automatically (it's keyed by event id in separate storage). The place re-patch precedes `saveUser` because `patchPlace` does **not** dispatch (`places.js`) — so the one `saveUser` dispatch renders the place change too (no second render, mirroring the existing delete order).
 
 ### Ctrl/Cmd+Z — in `gestures.js` `wireKeyboard` (where global shortcuts live)
-Add, **after** the existing `if (typingTarget(document.activeElement)) return;` and `if (document.querySelector('.modal-overlay')) return;` guards:
+The existing handler bails on any modifier as its **first** line (`if (e.metaKey || e.ctrlKey || e.altKey) return;`), so the Ctrl+Z branch must go at the **top of the handler, before that early-return**, carrying its own guards (which mirror the ones just below it):
 ```js
-if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'z' || e.key === 'Z')) {
-  if (e.isComposing) return;                // don't fight an IME
-  if (undoLastDelete()) e.preventDefault();  // only swallow the key if we actually undid something
-  return;
-}
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'z' || e.key === 'Z')) {  // undo
+    if (e.isComposing) return;                                  // don't fight an IME
+    if (typingTarget(document.activeElement)) return;           // native undo in a text field
+    if (document.querySelector('.modal-overlay')) return;       // a modal owns the keyboard
+    if (undoLastDelete()) e.preventDefault();                   // only swallow the key if we actually undid
+    return;
+  }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;               // (existing) ignore other modified keys
+  // … existing typingTarget / modal / number / bracket / ? / Escape handling unchanged …
+});
 ```
-`gestures.js` imports `undoLastDelete` from `calendar.js` (one-way; calendar does not import gestures). The pre-existing guards mean Ctrl+Z is ignored while typing or with a modal open (native undo wins) — no separate guard logic to maintain.
+`typingTarget` is already module-private in `gestures.js`. `gestures.js` already imports from `calendar.js` (`getEventMenu`) — add `undoLastDelete` to that import (one-way; calendar does not import gestures).
 
 ## 4. Why no new pure helper / unit test
 

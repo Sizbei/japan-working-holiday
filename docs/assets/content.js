@@ -7,6 +7,7 @@ import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
 import { makeSortable, dndToast } from './dnd.js';
+import { mountAccordion } from './collapse.js';
 import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
@@ -422,12 +423,26 @@ function renderChecklist(today) {
       : `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">🎏</div><p class="empty-h">Nothing due in the next 30 days.</p><p class="empty-sub">You're clear — switch to “All phases” to plan further ahead, or flag ⚑ items to pin them here.</p></div>`;
   } else {
     wrap.innerHTML = phases.map((p, pi) => {
-      const its = orderItems(p.items || [], order[pi]).filter(it => !(hd && state[it.id]));
+      const all = p.items || [];
+      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id]));
       if (!its.length) return '';                           // skip a phase that's fully done/hidden
-      return `<div class="phase-block">
-        <h3>${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></h3>
-        <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
-      </div>`;
+      // count over the FULL phase (not the hide-done-filtered list) so progress math is stable
+      const total = all.filter(it => it.id).length;
+      const done = all.filter(it => it.id && state[it.id]).length;
+      const accId = `chk-phase-${pi}`;
+      const phaseName = `${p.phase}${p.window ? ' · ' + p.window : ''}`;
+      return `<section class="acc phase-block" data-acc="${esc(accId)}">
+        <button type="button" class="acc-head" aria-expanded="true" aria-controls="acc-panel-${esc(accId)}" aria-label="${esc(phaseName)}">
+          <span class="acc-chevron" aria-hidden="true">›</span>
+          <span class="acc-title">${esc(p.phase)} <span class="window">${esc(p.window || '')}</span></span>
+          <span class="acc-count">${esc(String(done))}/${esc(String(total))}</span>
+        </button>
+        <div class="acc-panel" id="acc-panel-${esc(accId)}" role="region" aria-label="${esc(phaseName)}">
+          <div class="acc-inner">
+            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+          </div>
+        </div>
+      </section>`;
     }).join('');
   }
   const prog = $('#checkProgress');
@@ -440,6 +455,7 @@ function renderChecklist(today) {
       onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
     }));
   }
+  if (view === 'phase') mountAccordion($('#checkPhases'));   // wire/restore collapse AFTER makeSortable (phase view only)
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }
@@ -448,6 +464,10 @@ function captureCheckFocus() {
   const a = document.activeElement, wrap = $('#checkPhases');
   if (!a || !wrap || !wrap.contains(a)) return null;
   const esc2 = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
+  if (a.classList.contains('acc-head')) {
+    const acc = a.closest('.acc');
+    if (acc?.dataset.acc) return `.acc[data-acc="${esc2(acc.dataset.acc)}"] .acc-head`;
+  }
   if (a.dataset.cid) return `input[data-cid="${esc2(a.dataset.cid)}"]`;
   if (a.dataset.due) return `.ci-due[data-due="${esc2(a.dataset.due)}"]`;
   if (a.dataset.flag) return `.ci-flag[data-flag="${esc2(a.dataset.flag)}"]`;

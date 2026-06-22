@@ -30,13 +30,15 @@ Fields: `id` (`ph-<slug>`), `cat`, `jp`, `read` (`かな · romaji`), `en`. Cate
 ## 4. UI (`phrases.js`)
 - **Collapsible accordion categories** (reuse `mountAccordion`, ids `ph-cat-${slug(cat)}`); `.acc-count` = phrase count (or fav count) per category.
 - Each phrase row: the **`jp`** wrapped in a `.jp` span (so the hover-dictionary works) + `lang="ja"`, the `read`, the `en`, and a **★ favorite** toggle (persist to `jwh-phrasefav-v1`). Optional: a 🔊 button is **out of scope** (no TTS).
+- **Hover-dictionary on JS-rendered `.jp` (required fix):** `lang.js`'s mouseover/focus delegation already works for dynamic `.jp` (mouse), but its **keyboard** enablement (the `tabindex`/`role=button`/`aria-label` it adds) runs as a **one-time `$$('.jp')` scan at boot**, before the phrasebook renders → JS-rendered phrases would be mouse-hoverable but **not keyboard-accessible**. Fix: `lang.js` exports `wireJpAccents(container)` (the per-`.jp` keyboard-enable loop, extracted from `wireDictionary`); `phrases.js` calls `wireJpAccents($('#phraseList'))` after every render. (Apply the same to any other page that renders `.jp` dynamically — out of scope here.)
 - **"★ Favorites only"** toggle filters to favorited phrases (re-render).
 - Every dynamic string through `esc()`. The `jp`/`read`/`en` come from baked tips.json (developer-controlled); favorites add no free-text. Real `<button>` for the star (a11y).
 - Mutations (fav toggle) save to `jwh-phrasefav-v1` and re-render directly (no `jwh:data-changed` — nothing else consumes it).
 
 ## 5. Files
 - **Create:** `assets/phrases.js`, `tests/phrases.test.mjs` (a tiny pure `groupByCategory`/`favCount` helper, or reuse `lib/packing.js`'s `groupByCategory` since it's generic — prefer reusing it).
-- **Modify:** `index.html`, `router.js`, `main.js`, `lib/store.js`, `data/tips.json` (`phrases[]`), `assets/i18n.js`, `assets/style.css` (phrase rows), `sw.js`.
+- **Modify:** `index.html`, `router.js`, `main.js`, `lib/store.js`, `data/tips.json` (`phrases[]`), `assets/i18n.js`, `assets/style.css` (phrase rows), `assets/lang.js` (extract + export `wireJpAccents(container)`), `sw.js`.
+- **esc() obligation:** `jp`/`read`/`en` and `data-id="${esc(id)}"` all through `esc()` (double-quoted attributes only — `esc()` doesn't escape `'`).
 - **Reuse:** `assets/collapse.js`, `lib/packing.js` `groupByCategory` (generic), the `.jp` hover-dictionary (already global via `lang.js`).
 
 ## 6. Hardening / testing

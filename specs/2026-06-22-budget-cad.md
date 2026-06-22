@@ -8,7 +8,7 @@ A Canadian planning in yen wants dollar context. Add an optional **CAD per ¥100
 ## 2. Design
 - A small **rate input** near the summary: "1 CAD = ¥___" (number, default empty/blank = off). Stored in `jwh-budget-v1` as `cadRate` (yen per 1 CAD, e.g. 108). Debounced save + re-render.
 - When `cadRate > 0`, the summary band shows CAD under each yen figure: To land `¥234,000 (≈ C$2,167)`, Monthly burn, Net/mo, After-setup. Conversion = `yen / cadRate`, formatted `C$X,XXX` (2-dp or rounded — `Math.round`).
-- **Pure logic in `lib/budget.js`:** `fmtCad(yen, rate)` → `'C$' + (yen/rate).toLocaleString('en-US',{maximumFractionDigits:0})`, returns `''` when `rate` is falsy/≤0 (so the UI just omits CAD). Add to the existing `summary()` consumers or as a standalone formatter; unit-test it (incl. rate=0/blank → '', a normal rate, rounding).
+- **Pure logic in `lib/budget.js`:** `fmtCad(yen, rate)` — **the `rate ≤ 0 / non-finite → '' guard lives INSIDE the function** (`if (!(rate > 0)) return ''`), not just at the call site, so a divide-by-zero/`Infinity`/`NaN` can never render. Otherwise `'C$' + Math.round(yen/rate).toLocaleString('en-US')`. Unit-test it (rate=0/blank/NaN/negative → '', a normal rate, rounding).
 - The runway/months figures are unitless (no CAD). Only yen-denominated totals get a CAD twin.
 
 ## 3. Files

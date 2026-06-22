@@ -5,7 +5,7 @@
 //
 // Pure grouping/progress math lives in lib/packing.js; this file is DOM glue.
 
-import { $, $$, esc, wireExpandableSearch, wireExpandableAdd } from './lib/dom.js';
+import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { slug } from './lib/places.js';
 import { makeSortable } from './dnd.js';
@@ -57,28 +57,27 @@ export function mountPacking(data) {
 }
 
 function wireControls() {
-  // add-item form
-  const form = $('#packAddForm'), input = $('#packAddInput'), sel = $('#packAddCat');
-  if (form && input && sel && !form.dataset.wired) {
-    form.dataset.wired = '1';
-    wireExpandableAdd($('#packAddToggle'), form, input);      // expandable ＋ Add toggle
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const item = input.value.trim();
-      if (!item) return;
-      const cat = CATEGORY_ORDER.includes(sel.value) ? sel.value : 'Misc';
-      saveCustom([...loadCustom(), { id: 'pku' + Date.now(), cat, item }]);
-      input.value = '';
-      form.dispatchEvent(new CustomEvent('jwh:add-done'));     // collapse the add panel
-      render();
-    });
-  }
-  // live search/filter
+  // Variant A — the unified quick-line (#packSearch + the contextual add row). Typing filters live
+  // AND slides in an "add to [category] ＋ Add <text>" row; Enter commits an add.
   const search = $('#packSearch');
   if (search && !search.dataset.wired) {
     search.dataset.wired = '1';
-    search.addEventListener('input', () => { searchQ = search.value.trim().toLowerCase(); render(); });
-    wireExpandableSearch(search, () => { searchQ = ''; render(); });
+    const addRow = $('#packAddRow'), hint = $('#packQlHint'), qEcho = $('#packAddQ');
+    const sync = () => {
+      const raw = search.value;
+      searchQ = raw.trim().toLowerCase();
+      const has = raw.trim().length > 0;
+      if (qEcho) qEcho.textContent = raw.trim();
+      addRow?.classList.toggle('is-open', has);
+      render();
+      if (hint) hint.textContent = has ? 'enter ↵ = add' : 'enter ↵ filtering';
+    };
+    search.addEventListener('input', sync);
+    search.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (search.value.trim()) addPackFromQuickline(); }
+      else if (e.key === 'Escape') { e.preventDefault(); search.value = ''; sync(); }
+    });
+    $('#packAddBtn')?.addEventListener('click', () => { if (search.value.trim()) addPackFromQuickline(); });
   }
   // hide-done toggle
   const hd = $('#packHideDone');
@@ -90,6 +89,22 @@ function wireControls() {
     });
   }
   // collapse-all is wired by mountAccordion (passed the element); nothing here.
+}
+
+// Commit the typed text as a new custom item in the selected category, then clear the quick-line
+// (which restores the full list + hides the add row).
+function addPackFromQuickline() {
+  const search = $('#packSearch'), sel = $('#packAddCat');
+  const item = (search?.value || '').trim();
+  if (!item) return;
+  const cat = CATEGORY_ORDER.includes(sel?.value) ? sel.value : 'Misc';
+  saveCustom([...loadCustom(), { id: 'pku' + Date.now(), cat, item }]);
+  if (search) search.value = '';
+  searchQ = '';
+  $('#packAddRow')?.classList.remove('is-open');
+  const hint = $('#packQlHint'); if (hint) hint.textContent = 'enter ↵ filtering';
+  render();
+  search?.focus();
 }
 
 // identify the focused control so render() can restore it after the innerHTML rebuild
@@ -195,25 +210,10 @@ function render() {
 }
 
 // Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
-// Re-rendered with the list, so (re)bind each render. Opens the ＋ Add composer pre-filled
-// with the query, focuses the category select, and clears the search.
+// Re-rendered with the list, so (re)bind each render. Routes to the same quick-line add path
+// (the typed query is already in #packSearch, the category select holds the target group).
 function wirePackEmptyAdd() {
-  const btn = $('#packEmptyAdd');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    const search = $('#packSearch'), input = $('#packAddInput'), toggle = $('#packAddToggle'), sel = $('#packAddCat');
-    const q = (search?.value || searchQ).trim();
-    if (toggle && toggle.getAttribute('aria-expanded') !== 'true') toggle.click();   // expand the composer
-    if (input) input.value = q;                                                       // pre-fill the query
-    if (search) {                                                                     // clear + collapse the search pill
-      search.value = '';
-      const stoggle = search.closest('.list-search-x')?.querySelector('[data-search-toggle]');
-      if (search.closest('.list-search-x')?.classList.contains('is-open')) stoggle?.click();
-    }
-    searchQ = '';
-    render();                                                                         // drop the empty state, restore the list
-    sel?.focus();                                                                     // land on the category picker
-  });
+  $('#packEmptyAdd')?.addEventListener('click', addPackFromQuickline);
 }
 
 function wireRows() {

@@ -1968,24 +1968,29 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 /* slim control row above the checklist / packing list: [🔍 search] [＋ Add] [⊟ collapse] [☐ hide done] */
 .list-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); }
 .list-toolbar .check-tools, .list-toolbar .pack-tools { margin: 0; display: contents; }
-/* Variant B — two compact pills (🔍 Search · ＋ Add). Shared pill shell: matches .ct-toggle weight,
-   gets an indigo-tinted treatment when expanded/active. */
-.lt-add, .lsx-toggle { display: inline-flex; align-items: center; gap: .4rem; height: 2.2rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font: inherit; font-weight: 700; font-size: .8rem; line-height: 1; white-space: nowrap; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
-.lt-add:hover, .lsx-toggle:hover { color: var(--ink); border-color: color-mix(in srgb, var(--indigo) 40%, var(--line)); }
-.lt-add[aria-expanded="true"], .lsx-toggle[aria-expanded="true"] { color: var(--indigo); border-color: color-mix(in srgb, var(--indigo) 50%, var(--line)); background: color-mix(in srgb, var(--indigo) 10%, var(--bg-soft)); }
-.lt-add:focus-visible, .lsx-toggle:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
-.lt-add-icon, .lsx-icon { font-size: .95rem; line-height: 1; }
-
-/* expandable 🔍 search on the checklist + packing list pages — a compact pill that grows into an input */
-.list-search-x { display: inline-flex; align-items: center; gap: 0; max-width: 100%; }
-/* when open, the pill collapses to just its icon so the input has room to grow inline */
-.list-search-x.is-open .lsx-toggle { gap: 0; padding: 0 .7rem; }
-.list-search-x.is-open .lsx-label { display: none; }
-.lsx-input { width: 0; min-width: 0; padding: 0; border: 1px solid transparent; border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); opacity: 0; overflow: hidden; transition: width .22s ease, opacity .18s ease, padding .22s ease, margin .22s ease; }
-.lsx-input::placeholder { color: var(--ink-soft); }
-.list-search-x.is-open .lsx-input { width: 220px; max-width: calc(100vw - 6rem); padding: .5rem .8rem; margin-left: .4rem; opacity: 1; border-color: var(--line); }
-.list-search-x.is-open .lsx-input:focus { outline: 2px solid var(--indigo); border-color: transparent; }
-html[data-reduce-motion="on"] .lsx-input { transition: none; }
+/* Variant A — unified quick-line: one slim input that filters live AND reveals a contextual add row.
+   It's the primary control, so it takes the full toolbar width; the other toggles wrap onto the next row. */
+.quickline { flex: 1 1 100%; min-width: 0; }
+.ql-field { display: flex; align-items: center; gap: .55rem; padding: .1rem .7rem .1rem .85rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); }
+.ql-field:focus-within { border-color: var(--indigo); box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 16%, transparent); }
+.ql-icon { font-size: .95rem; line-height: 1; color: var(--ink-soft); flex: 0 0 auto; }
+.ql-input { flex: 1 1 auto; min-width: 0; padding: .5rem 0; border: 0; outline: 0; background: transparent; font: inherit; color: var(--ink); }
+.ql-input::placeholder { color: var(--ink-soft); }
+.ql-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.ql-hint { flex: 0 0 auto; font-weight: 700; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; opacity: .8; }
+/* contextual add row beneath the input — slides open via grid-rows when there's a query */
+.ql-reveal { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .26s ease, opacity .2s ease; }
+.ql-reveal.is-open { grid-template-rows: 1fr; opacity: 1; }
+.ql-reveal > div { overflow: hidden; min-height: 0; }
+.ql-quickadd { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin: .55rem .2rem 0; padding-top: .55rem; border-top: 1px dashed var(--line); }
+.ql-lab { font-weight: 700; font-size: .72rem; color: var(--ink-soft); }
+.ql-sel { padding: .4rem .6rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; font-size: .82rem; color: var(--ink-soft); cursor: pointer; }
+.ql-sel:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.ql-addsuggest { display: inline-flex; align-items: center; gap: .35rem; padding: .42rem .85rem; border: 1px solid color-mix(in srgb, var(--indigo) 45%, var(--line)); border-radius: var(--r-pill); background: color-mix(in srgb, var(--indigo) 8%, var(--bg-soft)); color: var(--ink); font: inherit; font-weight: 700; font-size: .8rem; cursor: pointer; transition: background .2s, border-color .2s; }
+.ql-addsuggest:hover { background: color-mix(in srgb, var(--indigo) 16%, var(--bg-soft)); }
+.ql-addsuggest:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.ql-addsuggest .ql-q { color: var(--indigo); }
+html[data-reduce-motion="on"] .ql-reveal { transition: none; }
 .empty.list-empty { padding: 2rem 1rem; }
 /* search → add shortcut: the inline ＋ Add "<query>" button in the no-match empty state */
 .list-empty-add { display: inline-flex; align-items: center; gap: .4rem; margin-top: var(--s3); padding: .5rem 1rem; border: 1px solid color-mix(in srgb, var(--indigo) 45%, var(--line)); border-radius: var(--r-pill); background: color-mix(in srgb, var(--indigo) 8%, var(--bg-soft)); color: var(--ink); font: inherit; font-weight: 700; font-size: .82rem; cursor: pointer; transition: background .2s, border-color .2s; }
@@ -1993,17 +1998,6 @@ html[data-reduce-motion="on"] .lsx-input { transition: none; }
 .list-empty-add:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
 .list-empty-add .lea-q { color: var(--indigo); }
 
-.pack-add { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
-/* the add form as an expandable panel under the toolbar (toggled by .lt-add) */
-.list-add { margin: 0 0 var(--s4); overflow: hidden; }
-.list-add[hidden] { display: none; }
-.list-add.is-open { animation: listAddIn var(--dur-2, .22s) ease both; }
-@keyframes listAddIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-html[data-reduce-motion="on"] .list-add.is-open { animation: none; }
-.pack-add input[type=text] { flex: 1; min-width: 12rem; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
-.pack-add select { padding: .55rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
-.pack-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .55rem 1.1rem; border-radius: var(--r-pill); cursor: pointer; }
-.pack-add-btn:hover { filter: brightness(1.06); }
 @media (max-width: 760px) { .pack-item { padding: var(--s4) var(--s3); } .pack-name { font-size: .92rem; } }
 
 /* ---- Phrasebook (#/phrases) ---- */

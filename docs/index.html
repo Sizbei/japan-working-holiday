@@ -183,18 +183,22 @@
       <button class="reset" id="checkReset" type="button">reset</button>
     </div>
     <div class="list-toolbar">
-      <div class="list-search-x" data-search-x>
-        <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search checklist" aria-controls="checkSearch"><span class="lsx-icon" aria-hidden="true">🔍</span><span class="lsx-label">Search</span></button>
-        <input type="search" id="checkSearch" class="lsx-input" placeholder="Search tasks…" aria-label="Search checklist" autocomplete="off" tabindex="-1">
+      <div class="quickline" id="checkQuickline">
+        <div class="ql-field">
+          <span class="ql-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="checkSearch" class="ql-input" placeholder="Search or add a task…" aria-label="Search or add a checklist task" autocomplete="off">
+          <span class="ql-hint" id="checkQlHint" aria-hidden="true">enter ↵ filtering</span>
+        </div>
+        <div class="ql-reveal" id="checkAddRow"><div>
+          <div class="ql-quickadd">
+            <span class="ql-lab">add to</span>
+            <select id="checkAddPhase" class="ql-sel" aria-label="Phase"></select>
+            <button type="button" class="ql-addsuggest" id="checkAddBtn">＋ Add “<span class="ql-q" id="checkAddQ"></span>”</button>
+          </div>
+        </div></div>
       </div>
-      <button type="button" class="lt-add" id="checkAddToggle" aria-expanded="false" aria-controls="checkAddForm"><span class="lt-add-icon" aria-hidden="true">＋</span><span>Add</span></button>
       <div id="checkTools" class="check-tools"></div>
     </div>
-    <form id="checkAddForm" class="pack-add list-add" autocomplete="off" hidden>
-      <input type="text" id="checkAddInput" placeholder="Add your own task…" aria-label="New checklist task" maxlength="120">
-      <select id="checkAddPhase" aria-label="Phase"></select>
-      <button type="submit" class="pack-add-btn">Add</button>
-    </form>
     <div id="checkPhases"></div>
   </section>
 
@@ -210,21 +214,25 @@
       <div class="bar"><i id="packBar"></i></div>
     </div>
     <div class="list-toolbar">
-      <div class="list-search-x" data-search-x>
-        <button type="button" class="lsx-toggle" data-search-toggle aria-expanded="false" aria-label="Search packing list" aria-controls="packSearch"><span class="lsx-icon" aria-hidden="true">🔍</span><span class="lsx-label">Search</span></button>
-        <input type="search" id="packSearch" class="lsx-input" placeholder="Search items…" aria-label="Search packing list" autocomplete="off" tabindex="-1">
+      <div class="quickline" id="packQuickline">
+        <div class="ql-field">
+          <span class="ql-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="packSearch" class="ql-input" placeholder="Search or add an item…" aria-label="Search or add a packing item" autocomplete="off">
+          <span class="ql-hint" id="packQlHint" aria-hidden="true">enter ↵ filtering</span>
+        </div>
+        <div class="ql-reveal" id="packAddRow"><div>
+          <div class="ql-quickadd">
+            <span class="ql-lab">add to</span>
+            <select id="packAddCat" class="ql-sel" aria-label="Category"></select>
+            <button type="button" class="ql-addsuggest" id="packAddBtn">＋ Add “<span class="ql-q" id="packAddQ"></span>”</button>
+          </div>
+        </div></div>
       </div>
-      <button type="button" class="lt-add" id="packAddToggle" aria-expanded="false" aria-controls="packAddForm"><span class="lt-add-icon" aria-hidden="true">＋</span><span>Add</span></button>
       <div class="pack-tools">
         <button type="button" id="packCollapseAll" class="ct-toggle">⊟ Collapse all</button>
         <button type="button" id="packHideDone" class="ct-toggle" aria-pressed="false">☐ Hide done</button>
       </div>
     </div>
-    <form id="packAddForm" class="pack-add list-add" autocomplete="off" hidden>
-      <input type="text" id="packAddInput" placeholder="Add your own item…" aria-label="New packing item" maxlength="120">
-      <select id="packAddCat" aria-label="Category"></select>
-      <button type="submit" class="pack-add-btn">Add</button>
-    </form>
     <div id="packList"></div>
   </section>
   </div><!-- /view-packing -->

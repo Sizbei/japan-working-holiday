@@ -3,7 +3,7 @@
 // searchable domains, brew scratchpad, the dependency-aware checklist (with due
 // dates), the pillar grids, and sources. Fed entirely by tips.json.
 
-import { $, $$, esc, srcLinks, wireExpandableSearch, wireExpandableAdd } from './lib/dom.js';
+import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
 import { makeSortable } from './dnd.js';
@@ -398,13 +398,55 @@ function loadCheckOrder() { return get(KEYS.checkOrder, {}) || {}; }
 function saveCheckOrder(o) { set(KEYS.checkOrder, o); }
 
 let checkSearchQ = '';   // live search/filter query (view-only; never mutates data, doesn't affect progress)
-// #checkSearch lives OUTSIDE #checkPhases, so renderChecklist()'s rebuild doesn't replace it — wire ONCE.
+// Variant A — the unified quick-line (#checkSearch + the contextual add row) lives OUTSIDE
+// #checkPhases, so renderChecklist()'s rebuild doesn't replace it — wire ONCE.
+// Typing filters live AND slides in an "add to [phase] ＋ Add <text>" row; Enter commits an add.
 function wireCheckSearch() {
   const search = $('#checkSearch');
   if (!search || search.dataset.wired) return;
   search.dataset.wired = '1';
-  search.addEventListener('input', () => { checkSearchQ = search.value.trim().toLowerCase(); renderChecklist(); });
-  wireExpandableSearch(search, () => { checkSearchQ = ''; renderChecklist(); });
+  seedCheckPhaseSelect();
+  const addRow = $('#checkAddRow'), hint = $('#checkQlHint'), qEcho = $('#checkAddQ');
+  const sync = () => {
+    const raw = search.value;
+    checkSearchQ = raw.trim().toLowerCase();
+    const has = raw.trim().length > 0;
+    if (qEcho) qEcho.textContent = raw.trim();
+    addRow?.classList.toggle('is-open', has);
+    renderChecklist();
+    // hint reflects what Enter does: filter at rest, add (always commits) once there's a query
+    if (hint) hint.textContent = has ? 'enter ↵ = add' : 'enter ↵ filtering';
+  };
+  search.addEventListener('input', sync);
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); if (search.value.trim()) addCheckFromQuickline(); }
+    else if (e.key === 'Escape') { e.preventDefault(); search.value = ''; sync(); }
+  });
+  $('#checkAddBtn')?.addEventListener('click', () => { if (search.value.trim()) addCheckFromQuickline(); });
+}
+// Seed the phase select (checklist phases + "My tasks", default "My tasks") once.
+function seedCheckPhaseSelect() {
+  const sel = $('#checkAddPhase');
+  if (!sel || sel.options.length) return;
+  const labels = [...(DATA.checklist || []).map(p => p.phase), 'My tasks'];
+  sel.innerHTML = labels.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join('');
+  sel.value = 'My tasks';
+}
+// Commit the typed text as a new custom task in the selected phase, then clear the quick-line
+// (which restores the full list + hides the add row).
+function addCheckFromQuickline() {
+  const search = $('#checkSearch'), sel = $('#checkAddPhase');
+  const task = (search?.value || '').trim();
+  if (!task) return;
+  const phase = sel?.value || 'My tasks';
+  saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
+  if (search) search.value = '';
+  checkSearchQ = '';
+  $('#checkAddRow')?.classList.remove('is-open');
+  const hint = $('#checkQlHint'); if (hint) hint.textContent = 'enter ↵ filtering';
+  renderChecklist();                                              // re-render the list (no jwh:data-changed→renderChecklist listener)
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));    // refresh the dashboard teaser/bell
+  search?.focus();
 }
 
 function renderChecklist(today) {
@@ -500,7 +542,6 @@ function renderChecklist(today) {
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
   wireCheckSearch();
-  wireAddItem();
   wireCheckEmptyAdd();
   wireChecklist();
   if (view === 'phase' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
@@ -611,51 +652,11 @@ function wireReset() {
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   });
 }
-// Add-item form (#checkAddForm) lives OUTSIDE #checkPhases, so renderChecklist()'s
-// innerHTML rebuild doesn't replace it — seed the select + wire the submit ONCE.
-function wireAddItem() {
-  const sel = $('#checkAddPhase');
-  if (sel && !sel.options.length) {
-    const labels = [...(DATA.checklist || []).map(p => p.phase), 'My tasks'];
-    sel.innerHTML = labels.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join('');
-  }
-  const form = $('#checkAddForm'), input = $('#checkAddInput');
-  if (form && input && sel && !form.dataset.wired) {
-    form.dataset.wired = '1';
-    wireExpandableAdd($('#checkAddToggle'), form, input);     // expandable ＋ Add toggle
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const task = input.value.trim();
-      if (!task) return;                                       // empty → ignored
-      const phase = sel.value || 'My tasks';
-      saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
-      input.value = '';
-      form.dispatchEvent(new CustomEvent('jwh:add-done'));     // collapse the add panel
-      renderChecklist();                                       // re-render the list (no jwh:data-changed→renderChecklist listener)
-      document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh the dashboard teaser/bell
-    });
-  }
-}
 // Search → Add shortcut: the inline ＋ Add “<q>” button in the no-match empty state.
-// Re-rendered with the list, so (re)bind each render. Opens the ＋ Add composer pre-filled
-// with the query, focuses the phase select, and clears the search.
+// Re-rendered with the list, so (re)bind each render. Routes to the same quick-line add path
+// (the typed query is already in #checkSearch, the phase select holds the target group).
 function wireCheckEmptyAdd() {
-  const btn = $('#checkEmptyAdd');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    const search = $('#checkSearch'), input = $('#checkAddInput'), toggle = $('#checkAddToggle'), sel = $('#checkAddPhase');
-    const q = (search?.value || checkSearchQ).trim();
-    if (toggle && toggle.getAttribute('aria-expanded') !== 'true') toggle.click();   // expand the composer
-    if (input) input.value = q;                                                       // pre-fill the query
-    if (search) {                                                                     // clear + collapse the search pill
-      search.value = '';
-      const stoggle = search.closest('.list-search-x')?.querySelector('[data-search-toggle]');
-      if (search.closest('.list-search-x')?.classList.contains('is-open')) stoggle?.click();
-    }
-    checkSearchQ = '';
-    renderChecklist();                                                                // drop the empty state, restore the list
-    sel?.focus();                                                                     // land on the phase picker
-  });
+  $('#checkEmptyAdd')?.addEventListener('click', addCheckFromQuickline);
 }
 let lastPct = null;
 function updateProgress() {

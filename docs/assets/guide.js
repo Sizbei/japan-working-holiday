@@ -6,6 +6,12 @@
 import { $, $$ } from './lib/dom.js';
 import { KEYS, getRaw, setRaw } from './lib/store.js';
 import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/homelayout.js';
+import { listCtl, LISTCTL } from './lib/listctl.js';
+
+const LISTCTL_OPTS = [
+  { v: LISTCTL.QUICKLINE, label: 'Quick-line' },
+  { v: LISTCTL.PILLS, label: 'Pills' },
+];
 
 // Reflect the persisted home-layout theme onto <html data-home>. Exported so main.js can call
 // it as early as possible in boot (before the dashboard paints) to avoid a layout flash.
@@ -54,6 +60,7 @@ function openGuide() {
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
   const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
+  const listCtlCur = listCtl();
   ov = document.createElement('div');
   ov.className = 'guide-overlay';
   ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'guideTitle');
@@ -79,6 +86,12 @@ function openGuide() {
         <div class="set-text"><span class="set-label">Home layout</span><span class="set-sub">How the Dashboard arranges itself</span></div>
         <div class="set-seg" role="radiogroup" aria-label="Home layout">
           ${HOME_LAYOUTS.map(l => `<button type="button" class="seg-btn" role="radio" data-home-opt="${l}" aria-checked="${l === homeLayout ? 'true' : 'false'}">${HOME_LAYOUT_LABELS[l]}</button>`).join('')}
+        </div>
+      </div>
+      <div class="set-row">
+        <div class="set-text"><span class="set-label">List controls</span><span class="set-sub">How Checklist &amp; Packing search and add</span></div>
+        <div class="set-seg" role="radiogroup" aria-label="List controls">
+          ${LISTCTL_OPTS.map(o => `<button type="button" class="seg-btn" role="radio" data-listctl-opt="${o.v}" aria-checked="${o.v === listCtlCur ? 'true' : 'false'}">${o.label}</button>`).join('')}
         </div>
       </div>
       ${row('setTheme', 'Dark mode', 'Easier on the eyes at night', dark)}
@@ -124,6 +137,12 @@ function openGuide() {
     setRaw(KEYS.homeLayout, v);
     applyHomeLayout();                                         // live: reflects onto <html data-home> immediately
     $$('.set-seg [data-home-opt]', ov).forEach(x => x.setAttribute('aria-checked', x.dataset.homeOpt === v ? 'true' : 'false'));
+  }));
+  $$('.set-seg [data-listctl-opt]', ov).forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.listctlOpt === LISTCTL.PILLS ? LISTCTL.PILLS : LISTCTL.QUICKLINE;
+    setRaw(KEYS.listCtl, v);
+    $$('.set-seg [data-listctl-opt]', ov).forEach(x => x.setAttribute('aria-checked', x.dataset.listctlOpt === v ? 'true' : 'false'));
+    document.dispatchEvent(new CustomEvent('jwh:settings-changed'));   // checklist + packing re-render their toolbars
   }));
 
   document.addEventListener('keydown', onKey, true);

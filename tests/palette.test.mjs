@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildIndex, searchIndex } from '../docs/assets/lib/palette.js';
+import { buildIndex, searchIndex, buildUserEntries } from '../docs/assets/lib/palette.js';
 
 // A small representative routeLabels map (palette.js derives this from ROUTES + routeLabel()).
 const routeLabels = {
@@ -135,6 +135,79 @@ test('searchIndex does not mutate the index', () => {
   const snapshot = JSON.parse(JSON.stringify(index));
   searchIndex(index, 'ramen');
   assert.deepEqual(index, snapshot);
+});
+
+// ---- buildUserEntries (Feature 1: index the user's own content) ----
+
+test('buildUserEntries: events → calendar route, mine:true, label/sub mapped', () => {
+  const out = buildUserEntries({
+    events: [{ id: 'u1', title: 'Coffee with Ken', date: '2026-07-03' }],
+  });
+  assert.equal(out.length, 1);
+  assert.deepEqual(out[0], { kind: 'content', label: 'Coffee with Ken', sub: '2026-07-03', route: 'calendar', key: 'u1', mine: true });
+});
+
+test('buildUserEntries: places → map route (sub = area || address)', () => {
+  const out = buildUserEntries({
+    places: [
+      { id: 'p1', name: 'My cafe', area: 'Shibuya', address: '1-2-3' },
+      { id: 'p2', name: 'No area', address: '4-5-6' },
+    ],
+  });
+  assert.deepEqual(out.map(e => e.route), ['map', 'map']);
+  assert.ok(out.every(e => e.mine === true && e.kind === 'content'));
+  assert.equal(out[0].sub, 'Shibuya');   // area wins
+  assert.equal(out[1].sub, '4-5-6');     // falls back to address
+});
+
+test('buildUserEntries: checklistCustom → checklist route (sub = phase)', () => {
+  const out = buildUserEntries({
+    checklistCustom: [{ id: 'cku1', task: 'Buy adapter', phase: 'My tasks' }],
+  });
+  assert.deepEqual(out[0], { kind: 'content', label: 'Buy adapter', sub: 'My tasks', route: 'checklist', key: 'cku1', mine: true });
+});
+
+test('buildUserEntries: packCustom → packing route (sub = cat)', () => {
+  const out = buildUserEntries({
+    packCustom: [{ id: 'pku1', item: 'Travel pillow', cat: 'Misc' }],
+  });
+  assert.deepEqual(out[0], { kind: 'content', label: 'Travel pillow', sub: 'Misc', route: 'packing', key: 'pku1', mine: true });
+});
+
+test('buildUserEntries: empty / missing arrays → []', () => {
+  assert.deepEqual(buildUserEntries({}), []);
+  assert.deepEqual(buildUserEntries({ events: [], places: [], checklistCustom: [], packCustom: [] }), []);
+  assert.deepEqual(buildUserEntries(undefined), []);
+});
+
+test('buildUserEntries: entries with empty/missing label are skipped', () => {
+  const out = buildUserEntries({
+    events: [{ id: 'u1', title: '', date: 'x' }, { id: 'u2', title: '   ', date: 'y' }, { id: 'u3', title: 'Keep', date: 'z' }],
+    places: [{ id: 'p1', name: '' }],
+    checklistCustom: [{ id: 'c1', task: undefined }],
+    packCustom: [{ id: 'pk1' }],
+  });
+  assert.equal(out.length, 1);
+  assert.equal(out[0].label, 'Keep');
+});
+
+test('buildUserEntries: route is hardcoded, never copied from stored data', () => {
+  const out = buildUserEntries({
+    events: [{ id: 'u1', title: 'X', date: 'd', route: 'evil' }],
+  });
+  assert.equal(out[0].route, 'calendar');   // ignores the injected route
+});
+
+test('buildUserEntries: does not mutate its inputs', () => {
+  const input = {
+    events: [{ id: 'u1', title: 'E', date: 'd' }],
+    places: [{ id: 'p1', name: 'P', area: 'A' }],
+    checklistCustom: [{ id: 'c1', task: 'C', phase: 'Ph' }],
+    packCustom: [{ id: 'pk1', item: 'I', cat: 'Misc' }],
+  };
+  const snapshot = JSON.parse(JSON.stringify(input));
+  buildUserEntries(input);
+  assert.deepEqual(input, snapshot);
 });
 
 test('searchIndex tie-break: shorter label, then alpha', () => {

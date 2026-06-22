@@ -5,24 +5,33 @@
 // Every dynamic string goes through esc() with double-quoted attributes only.
 
 import { ROUTES, routeLabel } from './router.js';
-import { buildIndex, searchIndex } from './lib/palette.js';
+import { buildIndex, searchIndex, buildUserEntries } from './lib/palette.js';
+import { KEYS, get } from './lib/store.js';
 import { esc } from './lib/dom.js';
 
 const KIND_ICON = { route: '➜', content: '◦' };
 
-let INDEX = [];          // built once at mount
+let BAKED = [];          // static baked half, built once at mount
+let INDEX = [];          // BAKED + user content, rebuilt fresh each open
 let overlay = null;      // the live .cmdk-overlay (single instance) or null
 let activeIdx = -1;      // highlighted option index
 let results = [];        // current rendered entries
 
 export function mountPalette(data) {
   const routeLabels = Object.fromEntries(ROUTES.map(r => [r, routeLabel(r)]));
-  INDEX = buildIndex(data, routeLabels);
+  BAKED = buildIndex(data, routeLabels);
 }
 
 // public: open the palette (no-op if one is already open). The trigger (gestures.js) calls this.
 export function openPalette() {
   if (overlay || document.querySelector('.cmdk-overlay')) return;
+  // rebuild the user half fresh every open so add/edit/delete is reflected without a data-changed listener
+  INDEX = [...BAKED, ...buildUserEntries({
+    events: get(KEYS.events, []),
+    places: get(KEYS.places, []),
+    checklistCustom: get(KEYS.checklistCustom, []),
+    packCustom: get(KEYS.packCustom, []),
+  })];
   const prevFocus = document.activeElement;
 
   overlay = document.createElement('div');
@@ -57,10 +66,11 @@ export function openPalette() {
     }
     list.innerHTML = results.map((e, i) => {
       const sub = e.sub ? `<span class="cmdk-sub">${esc(e.sub)}</span>` : '';
+      const mine = e.mine ? `<span class="cmdk-mine" aria-label="your content" title="yours">★</span>` : '';
       return `<li class="cmdk-opt${i === activeIdx ? ' is-active' : ''}" role="option" id="cmdk-opt-${i}"`
         + ` data-i="${i}" aria-selected="${i === activeIdx ? 'true' : 'false'}">`
         + `<span class="cmdk-ic" aria-hidden="true">${esc(KIND_ICON[e.kind] || '')}</span>`
-        + `<span class="cmdk-lab">${esc(e.label)}</span>${sub}</li>`;
+        + `<span class="cmdk-lab">${esc(e.label)}</span>${sub}${mine}</li>`;
     }).join('');
     input.setAttribute('aria-activedescendant', 'cmdk-opt-' + activeIdx);
   };

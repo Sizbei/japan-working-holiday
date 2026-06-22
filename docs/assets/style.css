@@ -1591,6 +1591,8 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 .cmdk-lab{ font-weight: 600; }
 .cmdk-sub{ color: var(--ink-faint); font-size: .85rem; margin-left: auto; padding-left: .6rem;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%; }
+.cmdk-mine{ color: var(--gold); font-size: .8rem; flex: 0 0 auto; padding-left: .4rem; }
+.cmdk-lab + .cmdk-mine{ margin-left: auto; }   /* no sub → push the star to the right edge */
 .cmdk-empty{ list-style: none; padding: .7rem; color: var(--ink-faint); text-align: center; }
 @keyframes cmdk-rise{ from{ transform: translateY(-8px); opacity: .6; } to{ transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce){ .cmdk-overlay, .cmdk-panel{ animation: none; } }

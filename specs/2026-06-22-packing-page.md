@@ -68,6 +68,16 @@ A genuinely full-featured checklist. Controls at top: **collapse-all/expand-all*
 - Every dynamic string through `esc()`. Keyboard focus is restored across the `innerHTML` rebuild using the **checklist's selector-capture pattern** (`captureCheckFocus()` in `content.js` — capture a CSS selector for the focused control before rebuild, refocus after); replicate it as `capturePackFocus()`.
 - **Long-press / right-click parity (optional, cheap):** `gestures.js` `resolveTarget` could map a packing row to a quick menu — **custom** rows get ☑/☐ + ✕ Remove; **baked** rows get only ☑/☐ (baked items aren't removable). Nice-to-have; not required for v1 (flag, don't block).
 
+## 5c. Hardening (from adversarial + security review)
+
+- **XSS (BLOCKER):** the custom item **`item` label is user free-text → it is the primary XSS surface**. It MUST pass through `esc()` before any `innerHTML` interpolation (as must the baked `note`; `cat` is from CATEGORY_ORDER, baked). `data-id`/`data-del` attribute values also `esc()`'d.
+- **Ids are generated, never from user text:** custom item id = `'pku' + Date.now()`; baked ids `pk-<slug>`. Category collapse ids = `pack-cat-${slug(cat)}` (the existing `slug()` helper, safe because categories are the fixed CATEGORY_ORDER). `capturePackFocus()` builds selectors with `CSS.escape(id)` (mirroring `captureCheckFocus`).
+- **Hide-done = filter + re-render (not CSS hide):** when hide-done is on, filter checked items OUT of the rendered HTML and re-render on toggle (exactly the checklist's `orderItems(...).filter(it => !(hd && checked[it.id]))`); wire `makeSortable` **only when `!hideDone`** (no drag while hiding done). This keeps drag from touching hidden rows.
+- **Init order:** render → `makeSortable` per category list → `mountAccordion($('#packList'), { allToggle:'#packCollapseAll' })`.
+- **Three-store custom-item removal:** removing a custom item deletes it from `jwh-pack-custom-v1` **and** clears its id from the `jwh-packing-v1` checked map; for `jwh-pack-order-v1`, use lazy cleanup — the order-apply helper skips ids not in the live set (like `orderItems` in content.js) and the `onReorder` callback re-syncs the saved order to live ids (like the brew-ideas `onReorder`). Order keys are the stable category names (not user-editable in v1).
+- **Defensive reads:** `store.get(KEYS.packCustom, [])` (array fallback fires the type-guard); `store.get(KEYS.packing, {})`; `esc(item ?? '')` degrades a corrupted non-string safely.
+- **Progress counts ALL items (baked ++ custom), never just visible** — proven by a unit test (e.g. `progress([pk1,pk2,custom1], {pk1:true})` → `{done:1,total:3,pct:33}` regardless of hide-done).
+
 ## 6. Testing
 
 - `tests/packing.test.mjs`: `groupByCategory` (order, unknown-cat handling, empty), `progress` (0/partial/100, custom items included). Existing suites stay green.

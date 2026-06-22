@@ -87,6 +87,13 @@ All pure, no DOM, importable in Node. Guards: non-numeric/negative inputs coerce
 
 None required for v1. (A future dashboard "runway" widget is out of scope; when it lands, *that* work adds the `jwh:data-changed` dispatch + a dashboard listener together.)
 
+## 6b. Hardening (from adversarial + security review)
+
+- **XSS (BLOCKER):** custom-line **`label` is user free-text → the primary XSS surface**; it MUST pass through `esc()` before any `innerHTML` interpolation (baked labels/notes too). `data-id` attribute values `esc()`'d.
+- **Custom-line ids are generated, never from the label:** `id = 'bdg' + Date.now()`.
+- **Defensive state shape:** `effectiveLines`/`summary` MUST default-destructure the loaded state so a corrupted/empty `jwh-budget-v1` (the type-guard returns `{}`) can't throw: `const { savings = 0, monthlyIncome = 0, overrides = {}, hidden = [], custom = { oneTime: [], monthly: [] } } = state`. Number inputs coerce via `+value` / `Math.max(0, Math.round(...))` — no `eval`.
+- `store.get(KEYS.budget, {})` (object fallback fires the type-guard); the `budget` defaults come from `data.budget` (tips.json) with a hardcoded fallback if absent.
+
 ## 7. Testing
 
 - `tests/budget.test.mjs` (node --test): `effectiveLines` merge (override beats default, hidden removed, custom appended), `sum`, `summary` (toLand, monthlyNet, runwayMonths incl. the `Infinity` and negative-net cases, afterLanding), `fmtYen` formatting incl. 0 and large numbers. Input guards (negative/NaN → 0).

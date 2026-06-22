@@ -51,7 +51,7 @@ searchLocal(points, query, limit=6) -> [{ ...point, score, why }]   // pure rank
 - **No new CDN / external service:** only the already-used Nominatim + OSM. Overpass/Google Places are **not** added.
 - **Rate-limit + abort:** unchanged (Nominatim 1 req/s, debounce, AbortController).
 - **Dedup:** a place that is both saved and in the catalogue shows once (saved wins).
-- **Escaping:** every dynamic string (names, addresses, areas) through `esc()` before `innerHTML` (the current code already does for geocode rows; apply the same to local rows).
+- **Escaping (security):** every dynamic string (names, addresses, areas) through `esc()` before `innerHTML` — and the local-result button's `data-id="${esc(pt.id)}"` too (the existing geocode rows already `esc()` `display_name`/coords; the place ids are slug-safe but escaping the attribute is the convention). Nominatim `lat`/`lon` stay numbers (`+value`) on read-back; the endpoint is fixed (`encodeURIComponent(q)` only — no SSRF).
 - **Keyboard/a11y:** results are real `<button>`s; the list is `aria-live`; arrow/enter navigation is a nice-to-have (the current list relies on Tab) — keep parity with today, don't regress.
 
 ## 6. Testing

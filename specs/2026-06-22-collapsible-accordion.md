@@ -62,8 +62,16 @@ Budget (cost groups) and Packing (categories) render their groups with the same 
 
 ## 5. Accessibility / motion
 
-- Headers are real `<button>`s with `aria-expanded` + `aria-controls`; panels are `role="region"` labelled by the title. Keyboard: Tab to header, Enter/Space toggles. Collapsed panels are visually hidden via `0fr` rows + `overflow:hidden` (content is not focusable when collapsed because it has zero height — acceptable; if stricter hiding is needed, set `hidden`/`inert` on collapse, but the grid approach keeps the animation — v1 uses the grid approach and additionally toggles `inert` on the panel when collapsed so its controls aren't tab-reachable).
-- Reduce-motion: transitions disabled (instant) via the existing `html[data-reduce-motion="on"]`.
+- Headers are real `<button>`s with `aria-expanded` + `aria-controls`; panels are `role="region"` labelled by the title. Keyboard: Tab to header, Enter/Space toggles. Reduce-motion: transitions disabled (instant) via the existing `html[data-reduce-motion="on"]` (verified: set by `guide.js`, styled at `style.css`'s `html[data-reduce-motion="on"]` rules; the animation token is `--t-base`).
+- **No `inert`.** (An earlier draft suggested toggling `inert` on collapsed panels — dropped: `inert` breaks the `makeSortable` keyboard/drag handlers inside a panel, and contradicts the grid-animation.) Instead: a collapsed panel is `grid-template-rows: 0fr` + `overflow:hidden` (its content clips to zero height, so it isn't hit-testable), **plus `pointer-events: none` on the collapsed `.acc-inner`** (belt-and-suspenders against `dnd.js`'s `elementFromPoint` finding a clipped item). Accepted minor: a keyboard user could still Tab into a collapsed panel's controls (they're 0-height but focusable) — acceptable for v1; a future pass can add `hidden` on `transitionend`.
+
+## 5b. Hardening (from adversarial + security review)
+
+- **`.acc-count` counts the FULL section** (`done/total` over *all* items in the phase/category, including any hidden by a hide-done filter), computed from the source data — **not** from the currently-rendered (filtered) rows. Collapsing/hiding never changes progress math.
+- **Focus restore across re-render:** the checklist rebuilds `#checkPhases` on every checkbox change. Extend `captureCheckFocus()` to also capture/restore focus on `.acc-head` buttons (they carry a stable `data-acc`), so collapsing/checking doesn't drop keyboard focus.
+- **Init order (drag + accordion):** render → `makeSortable(list)` on each list → **then** `mountAccordion(container)`. Wiring drag before applying collapse state avoids wiring handlers that depend on layout; a restored-collapsed section's list is simply 0-height (no visible items to drag, which is correct — you expand a section to reorder it).
+- **Escaping (security):** the renderer MUST `esc()` every dynamic value interpolated into the accordion markup — `data-acc="${esc(id)}"`, `aria-controls`/`id` (built from the same id), `aria-label="${esc(title)}"`, `.acc-title` text, and `.acc-count`. (Numeric counts/subtotals are safe but escaping is harmless.)
+- **Section ids must be slug-safe, never raw user text.** Consumers pass ids like `chk-phase-<index>` (integer), `budget-onetime`/`budget-monthly` (literals), `pack-cat-<slug>` (via the existing `slug()` → `[a-z0-9-]`). `collapse.js` keys its map and any `getElementById`/attribute lookups on these; it must treat the id as opaque (no selector string-building from unsanitized text). If custom (user-named) sections are ever added, generate the id (counter/timestamp) rather than slugging user text.
 
 ## 6. Testing
 

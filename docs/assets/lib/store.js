@@ -33,6 +33,7 @@ export const KEYS = {
   packCustom: 'jwh-pack-custom-v1',
   packOrder: 'jwh-pack-order-v1',
   packHideDone: 'jwh-pack-hidedone-v1',
+  budget: 'jwh-budget-v1',
 };
 
 export function get(key, fallback) {

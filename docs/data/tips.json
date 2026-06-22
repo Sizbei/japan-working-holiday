@@ -2929,6 +2929,25 @@
       ]
     }
   ],
+  "budget": {
+    "currency": "JPY",
+    "oneTime": [
+      { "id": "flight", "label": "Flight (YVR→NRT, one-way)", "amount": 90000, "note": "Off-peak one-way economy runs ~¥80–110k; book early. Verify closer.", "confidence": "medium" },
+      { "id": "visa", "label": "WHV application", "amount": 0, "note": "Free for Canadians at the embassy/consulate.", "confidence": "high" },
+      { "id": "deposit", "label": "Move-in (deposit + first month, foreigner-friendly share house)", "amount": 120000, "note": "Foreigner-friendly operators waive key money/guarantor; budget ~one month rent + a low contract/deposit fee.", "confidence": "medium" },
+      { "id": "sim", "label": "SIM / eSIM setup", "amount": 4000, "note": "Prepaid data eSIM on arrival, then a longer plan once you have an address.", "confidence": "medium" },
+      { "id": "furnish", "label": "Bedding / starter kit", "amount": 20000, "note": "Futon/bedding, kitchen basics, hangers — most share houses are furnished but bedding is on you.", "confidence": "low" }
+    ],
+    "monthly": [
+      { "id": "rent", "label": "Rent (share house)", "amount": 60000, "note": "Foreigner-friendly share houses run ~¥45–95k/mo; private room in a Tokyo hub.", "confidence": "medium" },
+      { "id": "utils", "label": "Utilities / internet", "amount": 12000, "note": "Often a flat ~¥10–22k/mo in share houses (electric/gas/water/wifi bundled).", "confidence": "medium" },
+      { "id": "transit", "label": "Transit (Suica)", "amount": 10000, "note": "Daily commuting + getting around; a commuter pass can lower this.", "confidence": "medium" },
+      { "id": "food", "label": "Food & groceries", "amount": 45000, "note": "Mix of supermarket cooking and cheap eats (¥400–800 chain bowls). Eating out more pushes this up.", "confidence": "low" },
+      { "id": "phone", "label": "Phone plan", "amount": 3000, "note": "Budget MVNO data plan once you have a Japanese address/bank.", "confidence": "medium" },
+      { "id": "health", "label": "NHI + National Pension", "amount": 20000, "note": "National Health Insurance + National Pension (Category-1). Apply for the pension exemption (免除) to lower this; first-year NHI is income-assessed. Verify at the ward office.", "confidence": "medium" },
+      { "id": "fun", "label": "Fun / travel", "amount": 40000, "note": "Shows, arcades, gear, day trips — the part of the year you actually came for.", "confidence": "low" }
+    ]
+  },
   "packing": [
     { "id": "pk-passport", "cat": "Documents", "item": "Passport (6+ months validity) + WHV visa page", "note": "Immigration checks the visa sticker on arrival — keep the passport on you, not in checked luggage.", "confidence": "high" },
     { "id": "pk-coe", "cat": "Documents", "item": "Certificate of Eligibility / visa docs (printed)", "note": "Bring a paper copy even if you have a digital one — kept with your immigration paperwork.", "confidence": "high" },

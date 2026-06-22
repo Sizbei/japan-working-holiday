@@ -1920,3 +1920,47 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-c
 .pack-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .55rem 1.1rem; border-radius: var(--r-pill); cursor: pointer; }
 .pack-add-btn:hover { filter: brightness(1.06); }
 @media (max-width: 760px) { .pack-item { padding: var(--s4) var(--s3); } .pack-name { font-size: .92rem; } }
+
+/* ---- Budget planner (#/budget) ---- */
+.bdg-summary { display: flex; flex-wrap: wrap; gap: var(--s3); margin-bottom: var(--s5); }
+.bdg-stat { flex: 1; min-width: 8rem; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3) var(--s4); display: flex; flex-direction: column; gap: .15rem; }
+.bdg-stat-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); font-weight: 700; }
+.bdg-stat-num { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.bdg-stat.bdg-good .bdg-stat-num { color: var(--ok-ink); }
+.bdg-stat.bdg-warn .bdg-stat-num { color: var(--warn-ink); }
+.bdg-stat.bdg-bad .bdg-stat-num { color: var(--bad-ink); }
+.bdg-stat.bdg-good { border-color: color-mix(in srgb, var(--ok-fill) 35%, var(--line)); }
+.bdg-stat.bdg-warn { border-color: color-mix(in srgb, var(--warn-fill) 35%, var(--line)); }
+.bdg-stat.bdg-bad { border-color: color-mix(in srgb, var(--bad-fill) 35%, var(--line)); }
+
+.bdg-inputs { display: flex; flex-wrap: wrap; gap: var(--s4); margin-bottom: var(--s5); }
+.bdg-input { flex: 1; min-width: 13rem; display: flex; flex-direction: column; gap: .3rem; }
+.bdg-input-label { font-size: .8rem; font-weight: 700; color: var(--ink-soft); }
+.bdg-input-field { display: flex; align-items: center; gap: .3rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); padding: 0 .8rem; }
+.bdg-input-field input { flex: 1; border: none; background: none; font: inherit; color: var(--ink); padding: .55rem 0; font-variant-numeric: tabular-nums; }
+.bdg-input-field input:focus { outline: none; }
+.bdg-input-field:focus-within { border-color: var(--red); }
+.bdg-yen { color: var(--ink-faint); font-weight: 700; }
+
+.bdg-group { margin-bottom: var(--s3); }
+.bdg-list { list-style: none; padding: 0; margin: 0; }
+.bdg-line { display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s3); border-radius: 12px; border: 1px solid transparent; transition: background .15s; }
+.bdg-line:hover { background: var(--bg-soft); }
+.bdg-line-body { flex: 1; min-width: 0; }
+.bdg-line-label { font-weight: 600; line-height: 1.4; }
+.bdg-note { display: block; font-size: .85rem; color: var(--ink-soft); margin-top: .15rem; }
+.bdg-line-amt { display: flex; align-items: center; gap: .25rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); padding: 0 .55rem; flex: none; }
+.bdg-line-amt input { width: 6.5rem; border: none; background: none; font: inherit; color: var(--ink); padding: .4rem 0; text-align: right; font-variant-numeric: tabular-nums; }
+.bdg-line-amt input:focus { outline: none; }
+.bdg-line-amt:focus-within { border-color: var(--red); }
+.bdg-del { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: .9rem; line-height: 1; padding: .35rem; border-radius: 8px; flex: none; }
+.bdg-del:hover { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+.bdg-empty { list-style: none; color: var(--ink-soft); font-size: .85rem; padding: var(--s3); }
+.bdg-add { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-top: var(--s4); padding: 0 var(--s3); }
+.bdg-add-label { flex: 1; min-width: 10rem; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
+.bdg-add-amt { width: 7rem; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.bdg-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .5rem 1rem; border-radius: var(--r-pill); cursor: pointer; }
+.bdg-add-btn:hover { filter: brightness(1.06); }
+.bdg-group .acc-count { color: var(--ink); font-variant-numeric: tabular-nums; }
+.bdg-tools { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
+@media (max-width: 760px) { .bdg-stat-num { font-size: 1.1rem; } .bdg-line-amt input { width: 5rem; } }

@@ -12,6 +12,7 @@ import { celebrate } from './celebrate.js';
 import { placeById, loadPlaces, upsertPlace, patchPlace, deletePlace, catId, dispatchChanged } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
+import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -376,6 +377,11 @@ export function checklistItems(data) {
     if (!it.id) return;
     out.push({ ...it, phase: p.phase, effectiveDue: due[it.id] || it.dueBy || '' });
   }));
+  // user-added custom items — so progress / due-soon / knownIds account for them too
+  loadChecklistCustom().forEach(c => {
+    if (!c.id) return;
+    out.push({ ...c, phase: c.phase, effectiveDue: due[c.id] || c.dueBy || '', _custom: true });
+  });
   return out;
 }
 
@@ -422,8 +428,12 @@ function renderChecklist(today) {
       ? `<ul class="check-list check-soon">${items.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true })).join('')}</ul>`
       : `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">🎏</div><p class="empty-h">Nothing due in the next 30 days.</p><p class="empty-sub">You're clear — switch to “All phases” to plan further ahead, or flag ⚑ items to pin them here.</p></div>`;
   } else {
-    wrap.innerHTML = phases.map((p, pi) => {
-      const all = p.items || [];
+    // merge user-added custom items: grouped under their baked phase, or the synthetic "My tasks" group
+    const { byPhase, mine } = partitionCustom(
+      loadChecklistCustom().map(c => ({ ...c, _custom: true })),
+      phases.map(p => p.phase));
+    let html = phases.map((p, pi) => {
+      const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
       const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id]));
       if (!its.length) return '';                           // skip a phase that's fully done/hidden
       // count over the FULL phase (not the hide-done-filtered list) so progress math is stable
@@ -444,9 +454,33 @@ function renderChecklist(today) {
         </div>
       </section>`;
     }).join('');
+    // synthetic "My tasks" group — custom items with phase "My tasks" or an orphan label.
+    // Reorder key is the string "mine" (distinct from numeric baked phase indices).
+    if (mine.length) {
+      const all = orderItems(mine, order['mine']);
+      const its = all.filter(it => !(hd && state[it.id]));
+      if (its.length) {
+        const total = mine.length;
+        const done = mine.filter(it => state[it.id]).length;
+        html += `<section class="acc phase-block" data-acc="chk-phase-mine">
+        <button type="button" class="acc-head" aria-expanded="true" aria-controls="acc-panel-chk-phase-mine" aria-label="My tasks">
+          <span class="acc-chevron" aria-hidden="true">›</span>
+          <span class="acc-title">My tasks <span class="window"></span></span>
+          <span class="acc-count">${esc(String(done))}/${esc(String(total))}</span>
+        </button>
+        <div class="acc-panel" id="acc-panel-chk-phase-mine" role="region" aria-label="My tasks">
+          <div class="acc-inner">
+            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+          </div>
+        </div>
+      </section>`;
+      }
+    }
+    wrap.innerHTML = html;
   }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
+  wireAddItem();
   wireChecklist();
   if (view === 'phase' && !hd) {   // dnd reorder only in the full grouped view (reordering a filtered/flat list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
@@ -487,6 +521,9 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';
   const flagged = !!(opts.prio && opts.prio.has(id));
   const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
+  const del = it._custom
+    ? `<button type="button" class="check-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.task)}">✕</button>`
+    : '';
   return `
     <li class="check-item ${locked ? 'locked' : ''}${flagged ? ' flagged' : ''}" data-id="${esc(id)}">
       ${opts.drag ? '<button type="button" class="dnd-handle" aria-label="Reorder task" tabindex="0">⠿</button>' : ''}
@@ -499,6 +536,7 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
       </label>
       <button type="button" class="ci-flag${flagged ? ' on' : ''}" data-flag="${esc(id)}" aria-pressed="${flagged ? 'true' : 'false'}" aria-label="${flagged ? 'Remove priority' : 'Mark as priority'}" title="Priority">⚑</button>
       <button type="button" class="ci-due" data-due="${esc(id)}" title="Set a due date" aria-label="Set due date">📅</button>
+      ${del}
     </li>`;
 }
 function wireChecklist() {
@@ -513,6 +551,16 @@ function wireChecklist() {
     const id = btn.dataset.flag, p = loadPriority();
     p.has(id) ? p.delete(id) : p.add(id); savePriority(p);
     renderChecklist();   // re-render: flag state + (in Due-soon) the item's position/inclusion
+  }));
+  $$('#checkPhases .check-del').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.del;
+    saveChecklistCustom(loadChecklistCustom().filter(x => x.id !== id));   // drop from custom store
+    const m = { ...loadChecks() }; delete m[id]; saveChecks(m);            // clear its checked entry
+    const o = loadCheckOrder();                                           // lazy-clean order maps (skip orphaned id)
+    Object.keys(o).forEach(k => { o[k] = (o[k] || []).filter(x => x !== id); });
+    saveCheckOrder(o);
+    renderChecklist();                                                   // re-render the list (no jwh:data-changed→renderChecklist listener)
+    document.dispatchEvent(new CustomEvent('jwh:data-changed'));          // refresh the dashboard teaser/bell
   }));
   $$('#checkPhases .ci-due').forEach(btn => btn.addEventListener('click', async () => {
     const id = btn.dataset.due;
@@ -540,6 +588,30 @@ function wireReset() {
     renderChecklist();
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   });
+}
+// Add-item form (#checkAddForm) lives OUTSIDE #checkPhases, so renderChecklist()'s
+// innerHTML rebuild doesn't replace it — seed the select + wire the submit ONCE.
+function wireAddItem() {
+  const sel = $('#checkAddPhase');
+  if (sel && !sel.options.length) {
+    const labels = [...(DATA.checklist || []).map(p => p.phase), 'My tasks'];
+    sel.innerHTML = labels.map(l => `<option value="${esc(l)}">${esc(l)}</option>`).join('');
+  }
+  const form = $('#checkAddForm'), input = $('#checkAddInput');
+  if (form && input && sel && !form.dataset.wired) {
+    form.dataset.wired = '1';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const task = input.value.trim();
+      if (!task) return;                                       // empty → ignored
+      const phase = sel.value || 'My tasks';
+      saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
+      input.value = '';
+      renderChecklist();                                       // re-render the list (no jwh:data-changed→renderChecklist listener)
+      document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh the dashboard teaser/bell
+      input.focus();
+    });
+  }
 }
 let lastPct = null;
 function updateProgress() {

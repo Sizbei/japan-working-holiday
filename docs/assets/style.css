@@ -606,6 +606,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .lock{ display:inline-block; font-size:.68rem; color: var(--warn-ink); margin-left:.4rem; font-weight:700; }
 .ci-due{ background:none; border:none; cursor:pointer; font-size:.85rem; opacity:.5; padding:.1rem .3rem; }
 .ci-due:hover{ opacity:1; }
+.check-del{ background:none; border:none; color: var(--ink-soft); cursor:pointer; font-size:.85rem; line-height:1; padding:.1rem .35rem; border-radius:8px; flex-shrink:0; }
+.check-del:hover{ color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
 .ci-src{ display:block; margin-top:.2rem; }
 .ci-src a{ font-size:.7rem; color: var(--indigo); margin-right:.5rem; }
 

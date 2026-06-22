@@ -397,6 +397,15 @@ export function orderItems(items, savedOrder) {
 function loadCheckOrder() { return get(KEYS.checkOrder, {}) || {}; }
 function saveCheckOrder(o) { set(KEYS.checkOrder, o); }
 
+let checkSearchQ = '';   // live search/filter query (view-only; never mutates data, doesn't affect progress)
+// #checkSearch lives OUTSIDE #checkPhases, so renderChecklist()'s rebuild doesn't replace it — wire ONCE.
+function wireCheckSearch() {
+  const search = $('#checkSearch');
+  if (!search || search.dataset.wired) return;
+  search.dataset.wired = '1';
+  search.addEventListener('input', () => { checkSearchQ = search.value.trim().toLowerCase(); renderChecklist(); });
+}
+
 function renderChecklist(today) {
   const phases = DATA.checklist || [];
   const wrap = $('#checkPhases');
@@ -407,7 +416,11 @@ function renderChecklist(today) {
   const order = loadCheckOrder();
   const now = today || nowISO();
   const prio = loadPriority();
-  const view = checkView(), hd = hideDone();
+  const hd = hideDone();
+  const searching = !!checkSearchQ;
+  // a search query forces the phase view (don't drop into the flat Due-soon view while searching)
+  const view = searching ? 'phase' : checkView();
+  const match = it => !searching || (it.task || '').toLowerCase().includes(checkSearchQ);
   const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
   const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
 
@@ -432,11 +445,12 @@ function renderChecklist(today) {
     const { byPhase, mine } = partitionCustom(
       loadChecklistCustom().map(c => ({ ...c, _custom: true })),
       phases.map(p => p.phase));
+    const drag = !hd && !searching;   // drag is meaningless over a hidden/searched view
     let html = phases.map((p, pi) => {
       const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
-      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id]));
-      if (!its.length) return '';                           // skip a phase that's fully done/hidden
-      // count over the FULL phase (not the hide-done-filtered list) so progress math is stable
+      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id])).filter(match);
+      if (!its.length) return '';                           // skip a phase fully done/hidden, or with no search match
+      // count over the FULL phase (not the hide-done/search-filtered list) so progress math is stable
       const total = all.filter(it => it.id).length;
       const done = all.filter(it => it.id && state[it.id]).length;
       const accId = `chk-phase-${pi}`;
@@ -449,7 +463,7 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-${esc(accId)}" role="region" aria-label="${esc(phaseName)}">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
           </div>
         </div>
       </section>`;
@@ -458,7 +472,7 @@ function renderChecklist(today) {
     // Reorder key is the string "mine" (distinct from numeric baked phase indices).
     if (mine.length) {
       const all = orderItems(mine, order['mine']);
-      const its = all.filter(it => !(hd && state[it.id]));
+      const its = all.filter(it => !(hd && state[it.id])).filter(match);
       if (its.length) {
         const total = mine.length;
         const done = mine.filter(it => state[it.id]).length;
@@ -470,26 +484,30 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-chk-phase-mine" role="region" aria-label="My tasks">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag: !hd })).join('')}</ul>
+            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
           </div>
         </div>
       </section>`;
       }
     }
-    wrap.innerHTML = html;
+    wrap.innerHTML = (searching && !html)
+      ? `<div class="empty list-empty">No tasks match “${esc(checkSearchQ)}”.</div>`
+      : html;
   }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
+  wireCheckSearch();
   wireAddItem();
   wireChecklist();
-  if (view === 'phase' && !hd) {   // dnd reorder only in the full grouped view (reordering a filtered/flat list is meaningless)
+  if (view === 'phase' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
       itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
       idOf: el => el.dataset.id,
       onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
     }));
   }
-  if (view === 'phase') mountAccordion($('#checkPhases'));   // wire/restore collapse AFTER makeSortable (phase view only)
+  // wire/restore collapse AFTER makeSortable (phase view only); force-expand while searching so matches show
+  if (view === 'phase') mountAccordion($('#checkPhases'), { forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }

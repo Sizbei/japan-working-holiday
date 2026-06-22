@@ -29,7 +29,10 @@ function applyState(acc, collapsed) {
 
 // Wire (or re-wire) every `.acc[data-acc]` inside `container`. Idempotent:
 // reads storage each call, so re-rendering a list + re-calling is safe.
-export function mountAccordion(container, { allToggle } = {}) {
+// `forceExpanded:true` ignores the persisted collapsed map and shows every section
+// open (used while a list search is active so matches can't hide in a collapsed panel).
+// The stored state is untouched, so clearing the search restores it on the next mount.
+export function mountAccordion(container, { allToggle, forceExpanded = false } = {}) {
   if (!container) return;
   const collapsedSet = loadCollapsed();
   const sections = Array.from(container.querySelectorAll('.acc[data-acc]'));
@@ -37,7 +40,7 @@ export function mountAccordion(container, { allToggle } = {}) {
   sections.forEach(acc => {
     const id = acc.getAttribute('data-acc');
     if (!id) return;
-    applyState(acc, collapsedSet.has(id));
+    applyState(acc, forceExpanded ? false : collapsedSet.has(id));
 
     const head = acc.querySelector('.acc-head');
     if (!head || head.dataset.accWired) return;   // wire each header once

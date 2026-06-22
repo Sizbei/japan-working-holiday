@@ -15,6 +15,7 @@ import { groupByCategory, progress, CATEGORY_ORDER } from './lib/packing.js';
 
 let DATA = null;
 let lastPct = null;
+let searchQ = '';   // live search/filter query (view-only; never mutates data)
 
 // ---- state (defensive reads — type-guarded fallbacks) ----
 function bakedItems() { return DATA && Array.isArray(DATA.packing) ? DATA.packing : []; }
@@ -70,6 +71,12 @@ function wireControls() {
       render();
       input.focus();
     });
+  }
+  // live search/filter
+  const search = $('#packSearch');
+  if (search && !search.dataset.wired) {
+    search.dataset.wired = '1';
+    search.addEventListener('input', () => { searchQ = search.value.trim().toLowerCase(); render(); });
   }
   // hide-done toggle
   const hd = $('#packHideDone');
@@ -131,18 +138,24 @@ function render() {
   const checked = loadChecks();
   const order = loadOrder();
   const hd = hideDone();
+  const searching = !!searchQ;
+  const match = it => !searching || (it.item || '').toLowerCase().includes(searchQ);
   const focusSel = capturePackFocus();
   const groups = groupByCategory(items, CATEGORY_ORDER);
 
-  wrap.innerHTML = groups.map(g => {
-    const all = g.items;
+  // drag is meaningless over a filtered list (hide-done) or a search-narrowed view
+  const drag = !hd && !searching;
+
+  const sections = groups.map(g => {
+    const all = g.items.filter(match);
+    if (searching && !all.length) return '';   // drop categories with no matches
     const ordered = orderItems(all, order[g.cat]).filter(it => !(hd && checked[it.id]));
-    // counts are over the FULL category (not the hide-done-filtered rows)
-    const total = all.length;
-    const done = all.filter(it => checked[it.id]).length;
+    // counts are over the FULL category (not the search/hide-done-filtered rows)
+    const total = g.items.length;
+    const done = g.items.filter(it => checked[it.id]).length;
     const accId = `pack-cat-${slug(g.cat)}`;
     const rows = ordered.length
-      ? ordered.map(it => itemRowHTML(it, checked, !hd)).join('')
+      ? ordered.map(it => itemRowHTML(it, checked, drag)).join('')
       : `<li class="pack-empty">All packed in this category.</li>`;
     return `<section class="acc pack-cat" data-acc="${esc(accId)}">
       <button type="button" class="acc-head" aria-expanded="true" aria-controls="acc-panel-${esc(accId)}" aria-label="${esc(g.cat)}">
@@ -158,9 +171,11 @@ function render() {
     </section>`;
   }).join('');
 
+  wrap.innerHTML = sections || `<div class="empty list-empty">No items match “${esc(searchQ)}”.</div>`;
+
   wireRows();
-  // drag-reorder per category — only when NOT hiding done (no drag over a filtered list)
-  if (!hd) {
+  // drag-reorder per category — only when fully unfiltered (no drag over a hidden/searched view)
+  if (drag) {
     $$('#packList .pack-list').forEach(ul => makeSortable(ul, {
       itemSelector: '.pack-item', handleSelector: '.dnd-handle', label: 'item',
       idOf: el => el.dataset.id,
@@ -168,7 +183,8 @@ function render() {
     }));
   }
   // wire/restore collapse state AFTER makeSortable. Pass the element (it lives outside #packList).
-  mountAccordion(wrap, { allToggle: $('#packCollapseAll') });
+  // While searching, force every category open so matches aren't hidden in a collapsed panel.
+  mountAccordion(wrap, { allToggle: $('#packCollapseAll'), forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress(items);
 }

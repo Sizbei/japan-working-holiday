@@ -4,6 +4,7 @@
 import { mountGate } from './gate.js';
 import { renderContent } from './content.js';
 import { mountPacking } from './packing.js';
+import { mountBudget } from './budget.js';
 import { mountCalendar } from './calendar.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
@@ -49,6 +50,7 @@ function boot() {
       mountTracker(data);
       renderContent(data, today);
       mountPacking(data);            // packing page (#/packing) — categorized super-checklist
+      mountBudget(data);             // budget planner (#/budget) — one-time + monthly cost estimate
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

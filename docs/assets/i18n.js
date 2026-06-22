@@ -29,6 +29,8 @@ export const STRINGS = {
   'head.teaser.bookby': '予約期限',
   'head.teaser.upcoming': '近日予定',
   'head.teaser.dayplan': '一日プラン',
+  'head.teaser.budget': '予算',
+  'head.teaser.packing': '荷造り',
   'head.calendar': '私のカレンダー',
   'head.going': '参加予定',
   'head.tracker': '抽選・先行販売',

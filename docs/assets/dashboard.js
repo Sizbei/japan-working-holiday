@@ -11,6 +11,8 @@ import { checklistItems } from './content.js';
 import { allEvents } from './calendar.js';
 import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';
+import { summary, fmtYen } from './lib/budget.js';
+import { progress } from './lib/packing.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -23,6 +25,10 @@ export function mountDashboard(data, today) {
   wireBell();
   refresh();
   document.addEventListener('jwh:data-changed', refresh);
+  // Budget/packing mutations happen on their OWN routes and re-render locally; they intentionally
+  // do NOT dispatch jwh:data-changed (that would trigger no-op re-renders across other listeners).
+  // So landing back on the dashboard is the natural refresh trigger for their teasers.
+  document.addEventListener('jwh:route', (e) => { if (e.detail && e.detail.route === 'dashboard') refreshTeasers(); });
 }
 
 function gcDismissed() {
@@ -38,6 +44,24 @@ function refresh() {
   renderBadge(alerts);
   renderPanel(alerts);
   renderWidgets(alerts);
+  refreshTeasers();
+}
+
+// Budget + packing teasers — read localStorage fresh each call (no staleness). Cheap (two
+// teaser() calls), so the dual trigger (refresh + jwh:route) isn't a meaningful double-render.
+// budget/packing DON'T dispatch jwh:data-changed by design (see mountDashboard) — don't "fix"
+// this into a global dispatch.
+function refreshTeasers() {
+  const s = summary(DATA.budget || { currency: 'JPY', oneTime: [], monthly: [] }, get(KEYS.budget, {}) || {});
+  const savings = (get(KEYS.budget, {}) || {}).savings || 0;
+  const budgetText = (s.oneTimeTotal === 0 && s.monthlyTotal === 0 && savings === 0)
+    ? 'Set up your budget'
+    : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · to land ${fmtYen(s.toLand)}`;
+  teaser('#tBudget', budgetText, '#/budget');
+
+  const p = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
+  const packText = p.total === 0 ? 'Start your packing list' : `${p.pct}% packed · ${p.done}/${p.total}`;
+  teaser('#tPacking', packText, '#/packing');
 }
 
 function dismiss(id) {

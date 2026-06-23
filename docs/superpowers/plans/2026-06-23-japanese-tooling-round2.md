@@ -27,11 +27,9 @@
 
 **Files:** Modify `docs/assets/lib/store.js:39-40`
 
-- [ ] **Step 1:** After the `phraseFavView` line, add the keys:
+- [ ] **Step 1:** `phraseFav`/`phraseFavView` ALREADY EXIST at store.js:39-40 — do NOT re-add them. Insert ONLY these three new lines immediately after the existing `phraseFavView` line (before the closing `};`):
 
 ```js
-  phraseFav: 'jwh-phrasefav-v1',
-  phraseFavView: 'jwh-phrase-favview-v1',
   userPhrases: 'jwh-phrases-user-v1',
   ankiDeck: 'jwh-anki-deck-v1',
   translateCache: 'jwh-translate-cache-v1',
@@ -400,7 +398,7 @@ git commit -m "chore: sw v85 — precache anki/translate/userphrases libs"
 
 ### Task 1.1: Toolbar markup + "Japanese tools" row
 
-- [ ] **Step 1:** In `docs/index.html`, inside `#view-phrases`, immediately above `#phraseList`, insert the tools toolbar (the Look-up/Translate panels are filled in later phases — Phase 1 only wires Anki):
+- [ ] **Step 1:** In `docs/index.html`, `#view-phrases` contains `<section id="phrases">` → a `.lede` paragraph → an existing `.pack-tools` row (`#phraseCollapseAll`, `#phraseFavOnly`) → `#phraseList`. Insert the new `.jtools` toolbar **after the `.lede` and BEFORE the existing `.pack-tools`** (leave `.pack-tools` and `#phraseList` untouched — do not create a second favorites/collapse row). The Look-up/Translate panels fill in in later phases; Phase 1 only wires Anki:
 
 ```html
 <div class="jtools" role="group" aria-label="Japanese tools">
@@ -602,13 +600,14 @@ function pickFromList(items) {
     showModal('Pick a deck to import', `<div class="jt-decks">${list || 'No decks.'}</div>`, { closeLabel: 'Cancel' });
     // wire after mount: the .jt-deck buttons resolve + close the modal
     setTimeout(() => document.querySelectorAll('.jt-deck').forEach(b => b.addEventListener('click', () => {
-      resolve(b.dataset.deck); document.querySelector('.app-modal-overlay .am-btn[data-close], .modal-close')?.click();
+      resolve(b.dataset.deck);
+      document.querySelector('.app-modal-acts [data-ok]')?.click();   // verified: showModal's close control is [data-ok]
     })), 0);
   });
 }
-// NOTE: confirm showModal's actual close-control selector + whether it returns a promise during impl;
-// if it manages its own lifecycle differently, adapt the resolve/close wiring (this is the
-// localhost-only live path — lower stakes than the file path).
+// showModal(title, trustedHTML, {closeLabel}) renders the body + a single [data-ok] button and
+// resolves to undefined on close — so the selection is delivered via the resolve() above, and we
+// close by clicking [data-ok]. Live path is localhost-only (lower stakes than the file path).
 
 async function doImportLive() {
   const decks = await invoke('deckNames');
@@ -704,33 +703,48 @@ git commit -m "feat: dictionary search box on Phrases (Jotoba lookup, Jisho fall
 
 **Files:** Modify `docs/assets/phrases.js`, `docs/assets/style.css`, `docs/sw.js`
 
-### Task 4.1: Translate panel + cache
+### Task 4.0: `lib/translatecache.js` (shared fetch+cache home — DRY, no cycle)
 
-- [ ] **Step 1:** Imports: `import { translateURL, parseTranslation, MAX_LEN } from './lib/translate.js';`
-- [ ] **Step 2:** Cache helpers (shared key, used by Phase 5 too):
+Both the Translate panel (Phase 4) and per-card translate (Phase 5) need `translate()`. Putting it in `phrases.js` would force `cardtranslate.js` to import all of `phrases.js`. So it lives in its own small module from the start.
+
+- [ ] **Step 1:** Create `docs/assets/lib/translatecache.js`:
 ```js
+'use strict';
+// Shared on-demand translate(): MyMemory fetch (lib/translate.js) + a tiny localStorage cache.
+// Used by the Phrases "Translate" panel and the per-card 訳. I/O (fetch) — not unit-tested.
+import { translateURL, parseTranslation } from './translate.js';
+import { KEYS, get, set } from './store.js';
+
 function tCacheGet(k) { const c = get(KEYS.translateCache, {}) || {}; return c[k]; }
 function tCachePut(k, v) {
   const c = get(KEYS.translateCache, {}) || {};
   c[k] = v; const keys = Object.keys(c);
-  if (keys.length > 20) delete c[keys[0]];   // simple FIFO/LRU trim to 20
+  if (keys.length > 20) delete c[keys[0]];     // FIFO trim to 20 (set() already try/catches quota)
   set(KEYS.translateCache, c);
 }
-export async function translate(text, from, to) {   // shared by cardtranslate.js (Phase 5)
+export async function translate(text, from, to) {
   const key = `${from}|${to}|${text}`;
   const hit = tCacheGet(key); if (hit) return hit;
-  const ctrl = new AbortController(); const to2 = setTimeout(() => ctrl.abort(), 4000);
+  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 4000);
   try {
     const r = await fetch(translateURL(text, from, to), { signal: ctrl.signal });
     const out = parseTranslation(await r.json());
     if (out.text) tCachePut(key, out);
     return out;
-  } finally { clearTimeout(to2); }
+  } finally { clearTimeout(t); }
 }
 ```
-> If sharing across modules is awkward, put `translate`/cache in a tiny `lib/translatecache.js` instead and import from both `phrases.js` and `cardtranslate.js`. Decide during impl; keep one copy (DRY).
+- [ ] **Step 2:** (`assets/lib/translate.js` is already precached from Phase 0.) Add `'assets/lib/translatecache.js'` to `sw.js` ASSETS and bump CACHE → `jwh-v89`. Commit.
+```bash
+git add docs/assets/lib/translatecache.js docs/sw.js
+git commit -m "feat: lib/translatecache.js — shared translate() + cache (used by panel + cards)"
+```
 
-- [ ] **Step 3:** The panel:
+### Task 4.1: Translate panel
+
+- [ ] **Step 1:** Imports in `phrases.js`: `import { translateURL, MAX_LEN } from './lib/translate.js';` and `import { translate } from './lib/translatecache.js';` (the panel uses `translate`; `MAX_LEN` for the char cap UI).
+
+- [ ] **Step 2:** The panel:
 ```js
 function wireTranslate() {
   const btn = $('#jtTranslateBtn'), panel = $('#jtTranslatePanel');
@@ -766,10 +780,10 @@ function wireTranslateInner() {
   });
 }
 ```
-- [ ] **Step 4:** Call `wireTranslate();` from `mountPhrases()`.
-- [ ] **Step 5:** CSS for textarea/`.jt-trow`/`.jt-note`/`.jt-count`.
-- [ ] **Step 6: Browser-verify.** Type "Where is the station?", Translate → 駅…; flip direction; char counter caps at 500; Copy works; the MyMemory note shows. 0 console errors.
-- [ ] **Step 7:** SW bump → `jwh-v89`. Commit.
+- [ ] **Step 3:** Call `wireTranslate();` from `mountPhrases()`.
+- [ ] **Step 4:** CSS for textarea/`.jt-trow`/`.jt-note`/`.jt-count`.
+- [ ] **Step 5: Browser-verify.** Type "Where is the station?", Translate → 駅…; flip direction; char counter caps at 500; Copy works; the MyMemory note shows. 0 console errors.
+- [ ] **Step 6:** SW bump → `jwh-v90` (phrases.js changed). Commit.
 ```bash
 git add docs/assets/phrases.js docs/assets/style.css docs/sw.js
 git commit -m "feat: translate-any-text tool (MyMemory, EN⇄JP, cache, 500-cap, disclosure)"
@@ -791,7 +805,7 @@ git commit -m "feat: translate-any-text tool (MyMemory, EN⇄JP, cache, 500-cap,
 // Splits name/detail into separate <=500-char MyMemory requests; truncates visibly past 500.
 import { esc } from './lib/dom.js';
 import { prefersReducedMotion } from './motion.js';
-import { translate } from './phrases.js';   // shared cache+fetch (or lib/translatecache.js)
+import { translate } from './lib/translatecache.js';   // shared fetch+cache (Task 4.0) — NO cycle
 import { MAX_LEN } from './lib/translate.js';
 
 async function tField(text) {
@@ -820,27 +834,32 @@ export function attachCardTranslate(triggerEl, fields, mountEl) {
   });
 }
 ```
-> If importing `translate` from `phrases.js` creates a cycle (content.js ↔ phrases.js), move `translate`+cache into `lib/translatecache.js` (Phase 4 note) and import from there in both. Verify no cycle during impl.
+> Import graph verified: `content.js → cardtranslate.js → lib/translatecache.js → lib/translate.js + lib/store.js`. `phrases.js` is NOT in this chain → no cycle.
 
-- [ ] **Step 2:** In `content.js`, where a pillar/content card renders its body, add a trigger + mount once. Find the content-card template (the `.card2`/disclosure render) and append inside it:
-```js
-`<button type="button" class="ct-btn" aria-label="Translate to Japanese">訳</button><div class="ct-out" hidden></div>`
-```
-then after render, for each card wire it:
+- [ ] **Step 2:** Wire the per-card 訳 in `content.js`. The real card markup (`contentCard()`) is: `<article class="card2 …">` → `.c-top` (with the `.c-name` title, a `<span class="c-chev">▾</span>` child when collapsible) → `.c-meta` → optional `.c-body` with one or two `.c-detail` blocks. Do NOT edit the `contentCard()` template (that would add 訳 to every pillar); instead inject + wire in a post-render hook for **one grid to start — the music pillar `#musicGrid`** (confirm the exact id at the `renderPillar('music', '#musicGrid', …)` call). Add to `content.js`:
 ```js
 import { attachCardTranslate } from './cardtranslate.js';
-// after the cards innerHTML is set:
-$$('#<cardsContainer> .card2').forEach(card => {
-  const name = card.querySelector('.card2-title')?.textContent || '';
-  const detail = card.querySelector('.card2-detail')?.textContent || '';
-  const btn = card.querySelector('.ct-btn'), out = card.querySelector('.ct-out');
-  if (btn && out) attachCardTranslate(btn, [name, detail], out);
-});
-```
-> Use the ACTUAL container id + title/detail selectors present in content.js (inspect during impl). Start with ONE card grid (e.g. the music/geek pillar) to keep the change surgical; the helper is reusable for more later.
 
-- [ ] **Step 3:** CSS for `.ct-btn`/`.ct-out`/`.ct-tag`/`.ct-trunc` (small, muted; honors reduce-motion via the global rule).
-- [ ] **Step 4:** Add `cardtranslate.js` (+ `lib/translatecache.js` if created) to `sw.js` ASSETS; bump CACHE → `jwh-v90`.
+// call this after a grid's innerHTML is set (e.g. at the end of renderPillar, gated to one key)
+function wireCardTranslate(grid) {
+  if (!grid) return;
+  grid.querySelectorAll('.card2').forEach(card => {
+    if (card.querySelector('.ct-btn')) return;                       // once
+    const name = (card.querySelector('.c-name')?.textContent || '').replace('▾', '').trim();
+    const detail = [...card.querySelectorAll('.c-detail')].map(d => d.textContent.trim()).join(' ');
+    const top = card.querySelector('.c-top'); if (!top) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ct-btn'; btn.setAttribute('aria-label', 'Translate to Japanese'); btn.textContent = '訳';
+    const out = document.createElement('div'); out.className = 'ct-out'; out.hidden = true;
+    top.appendChild(btn); card.appendChild(out);
+    attachCardTranslate(btn, [name, detail], out);
+  });
+}
+// in renderPillar, after grid.innerHTML = …:  if (key === 'music') wireCardTranslate(grid);
+```
+
+- [ ] **Step 3:** CSS for `.ct-btn`/`.ct-out`/`.ct-tag`/`.ct-trunc` (small, muted; honors reduce-motion via the global rule). `.ct-btn` sits in `.c-top` beside the name — keep it small so it doesn't crowd the disclosure.
+- [ ] **Step 4:** Add `'assets/cardtranslate.js'` to `sw.js` ASSETS (translatecache.js was precached in Task 4.0); bump CACHE → `jwh-v91`.
 - [ ] **Step 5: Browser-verify.** On a pillar card, tap 訳 → JP appears with the MyMemory tag; tap again → collapses; reopen → instant (cached); offline reopen still shows it. A very long detail shows "(truncated)". 0 console errors.
 - [ ] **Step 6:** Commit.
 ```bash

@@ -52,10 +52,13 @@ function activate(route, { scroll = true } = {}) {
     const h = target.querySelector('h1, h2, h3');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
   });
+  let activeNav = null;
   document.querySelectorAll('#routeNav a[data-route]').forEach(a => {
-    if (a.dataset.route === route) a.setAttribute('aria-current', 'page');
+    if (a.dataset.route === route) { a.setAttribute('aria-current', 'page'); activeNav = a; }
     else a.removeAttribute('aria-current');
   });
+  // on the mobile scrollable bottom bar, keep the current tab in view (no-op on the desktop wrap nav)
+  activeNav?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   if (scroll && route !== current) {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   }

@@ -76,7 +76,7 @@
   --maxw-read: 920px;   /* READ tier — comfortable measure for lists/tables; wide enough for the budget/emergency mini-grids */
   --maxw-prose: 68ch;
   --gutter: clamp(1rem, 4vw, 1.5rem);
-  --header-h: 3.25rem;
+  --header-h: 3.5rem;   /* must match the real topbar height (38px control + .5rem padding) so sticky route-nav/legend sit flush */
   --nav-h: 3.65rem;   /* route-nav rendered height (incl. padding @106.25% root) — secondary sticky bars (cal-legend, check-progress) offset below the now-sticky nav */
   --sticky-gap: var(--s2);
   /* ============ RADII ============ */
@@ -470,7 +470,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .countdown.arrived{ color: var(--red); background: color-mix(in srgb, var(--red) 12%, transparent); }
 .cd-num{ font-size: 1.05rem; font-weight: 900; }
 .topbar-right{ display: flex; align-items: center; gap: .4rem; }
-.topbar .theme-toggle{ position: static; top: auto; right: auto; }
+.topbar .theme-toggle{ position: static; top: auto; right: auto; width: 38px; height: 38px; border-radius: 10px; }   /* match the bell/kbd/guide siblings (was a 42px circle) */
 /* keyboard-shortcuts trigger — discoverable affordance for the ? overlay (desktop/pointer only) */
 .kbd-trigger{ background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
   width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;
@@ -1007,17 +1007,21 @@ html.js-router .view.is-active { display: block; }
 .widget > .dnd-handle{ position: absolute; top: .55rem; right: .55rem; z-index: 2; }
 
 @media (max-width: 560px){
-  /* route-nav becomes a fixed bottom tab bar (was wrapping to 2 rows) */
+  /* route-nav = a fixed, horizontally-scrollable single-row bottom tab bar (13 routes don't fit one
+     non-scrolling row at 360px; the old space-around made them wrap to a tall bar that overlapped content) */
   .route-nav{
     position: fixed; bottom: 0; left: 0; right: 0; top: auto;
     border-top: 1px solid var(--line); border-bottom: none;
-    justify-content: space-around; gap: 0;
-    padding: .25rem .1rem calc(.25rem + env(safe-area-inset-bottom, 0px));
+    flex-wrap: nowrap; justify-content: flex-start; gap: .1rem;
+    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    padding: .25rem .35rem calc(.25rem + env(safe-area-inset-bottom, 0px));
     z-index: 60; box-shadow: 0 -2px 12px rgba(0,0,0,.06);
   }
-  .route-nav a{ flex: 1; text-align: center; font-size: .58rem; padding: .45rem .15rem; border-radius: var(--r-sm); }
+  .route-nav::-webkit-scrollbar{ display: none; }
+  .route-nav a{ flex: 0 0 auto; white-space: nowrap; text-align: center; font-size: .72rem; padding: .4rem .55rem; border-radius: var(--r-sm); scroll-snap-align: center; }
   .route-nav a[aria-current="page"]{ background: transparent; color: var(--red); }
-  #main{ padding-bottom: 3.5rem; }   /* clear the bottom bar */
+  #main{ padding-bottom: calc(2.9rem + env(safe-area-inset-bottom, 0px)); }   /* clear the single-row bottom bar */
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1490,12 +1494,16 @@ body { line-height: 1.7; }
 .finding .f-why, .card2 .c-detail, .ci-note, .lede, .top-card .t-reason,
 .modal-note, .pin-pop, .room-card p { line-height: 1.65; }
 
-/* --- calmer primary navigation: readable sans, larger target, not shouty mono --- */
-.route-nav a{
-  font-family: var(--sans); text-transform: none; letter-spacing: .005em;
-  font-size: .92rem; padding: .5rem 1rem;
+/* --- calmer primary navigation: readable sans, larger target, not shouty mono ---
+   scoped to >560px so it does NOT clobber the mobile bottom-bar sizing below (cascade: this rule
+   sits after the @media(max-width:560px) block, so unscoped it would win and blow the 13-tab bar out). */
+@media (min-width: 561px){
+  .route-nav a{
+    font-family: var(--sans); text-transform: none; letter-spacing: .005em;
+    font-size: .92rem; padding: .5rem 1rem;
+  }
+  .route-nav{ gap: .3rem; padding: .5rem var(--gutter); }
 }
-.route-nav{ gap: .3rem; padding: .5rem var(--gutter); }
 
 /* --- calmer section/widget headings: sentence-case sans, clearer hierarchy --- */
 .widget-h, .trk-h, .cp-head{
@@ -1901,7 +1909,7 @@ html[data-reduce-motion="on"] *::after{
 #view-dashboard .hc-date{ font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); letter-spacing: .06em; margin-top: .2rem; }
 
 /* ---- needs-me strip ---- */
-#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }
+#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s4); margin-top: var(--s5); }   /* 4 widgets → balanced 2×2 (was repeat(3) → orphaned 4th) */
 #view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
 
 
@@ -1920,6 +1928,7 @@ html[data-reduce-motion="on"] *::after{
 #view-dashboard.is-active .needs-me .widget{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
 #view-dashboard.is-active .needs-me .widget:nth-of-type(2){ animation-delay: .05s; }
 #view-dashboard.is-active .needs-me .widget:nth-of-type(3){ animation-delay: .1s; }
+#view-dashboard.is-active .needs-me .widget:nth-of-type(4){ animation-delay: .15s; }
 #view-dashboard.is-active .dash-teasers .teaser{ animation: dashRise .55s cubic-bezier(.23,1,.32,1) both; }
 #view-dashboard.is-active .dash-teasers .teaser:nth-of-type(2){ animation-delay: .05s; }
 #view-dashboard.is-active .dash-teasers .teaser:nth-of-type(3){ animation-delay: .1s; }
@@ -1985,12 +1994,14 @@ html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: repeat
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: span 6; }
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(4){ grid-column: span 6; }   /* 4th widget fills its own row (was an orphaned 1/6 sliver) */
 @media (max-width: 860px){
   html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: 1fr; }
   /* reset the bento spans at matching (:nth-of-type) specificity, else they force implicit columns */
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1),
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2),
-  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: auto; }
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3),
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(4){ grid-column: auto; }
 }
 
 /* ============ PACKING PAGE (super-checklist) ============ */

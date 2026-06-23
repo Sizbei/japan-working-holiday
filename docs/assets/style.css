@@ -2075,6 +2075,11 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .phrase-fav:hover { color: var(--red); }
 .phrase-fav.is-on { color: var(--red); animation: pop var(--dur-2) var(--spring); }
 .phrase-fav:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+.phrase-del{ font:inherit; border:none; background:none; color:var(--ink-soft); cursor:pointer; padding:.1rem .3rem; border-radius:.3rem; }
+.phrase-del:hover{ color:var(--bad-ink, #c0392b); }
+.phrase-mine{ color:var(--gold, #d4a017); font-size:.8rem; margin-inline-start:.3rem; }
+.jt-decks{ display:flex; flex-direction:column; gap:.4rem; }
+.jt-deck{ width:100%; text-align:left; }
 @media (max-width: 760px) { .phrase-row { padding: var(--s4) var(--s3); } .phrase-jp { font-size: 1.05rem; } }
 
 .jtools{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:.6rem 0 .9rem; }

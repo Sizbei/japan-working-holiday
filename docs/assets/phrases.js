@@ -16,7 +16,9 @@ import { groupByCategory } from './lib/packing.js';
 import { wireJpAccents } from './lang.js';
 import { toAnkiTSV } from './lib/anki.js';
 import { isAvailable, invoke } from './lib/ankiconnect.js';
-import { alertModal } from './lib/modal.js';
+import { alertModal, confirmModal, showModal } from './lib/modal.js';
+import { userPhrase, addUserPhrases, removeUserPhrase } from './lib/userphrases.js';
+import { stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
 
 // fixed category render order (unknown cats fall to the end, per groupByCategory)
 const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward office', 'Apartment', 'Emergency', 'Work/meetup'];
@@ -24,6 +26,8 @@ const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward offic
 let DATA = null;
 
 function bakedPhrases() { return DATA && Array.isArray(DATA.phrases) ? DATA.phrases : []; }
+function loadUser() { return get(KEYS.userPhrases, []) || []; }
+function saveUser(list) { set(KEYS.userPhrases, list); }
 function loadFavs() { return get(KEYS.phraseFav, {}) || {}; }
 function saveFavs(m) { set(KEYS.phraseFav, m); }
 function favOnly() { return getRaw(KEYS.phraseFavView, '') === 'on'; }
@@ -68,6 +72,73 @@ async function doExport() {
   alertModal('Anki not detected — downloaded japan-phrases.txt. In Anki: File → Import.');
 }
 
+const MAX_IMPORT = 1000;
+
+function commitImport(rows, srcLabel) {           // rows: [{jp, en, read}]
+  if (!rows.length) { alertModal('Nothing to import.'); return; }
+  let r = rows;
+  if (r.length > MAX_IMPORT) { r = r.slice(0, MAX_IMPORT); alertModal(`Imported ${MAX_IMPORT} of ${rows.length} — the rest were skipped.`); }
+  const base = Date.now();
+  const list = r.map((x, i) => userPhrase({ jp: stripHtml(x.jp), read: stripHtml(x.read || ''), en: stripHtml(x.en), cat: 'Imported', src: srcLabel }, 'uph' + (base + i)));
+  saveUser(addUserPhrases(loadUser(), list)); render();
+}
+
+// confirmModal resolves true(ok)/false(cancel|dismiss) and esc()s its own message — pass RAW text.
+// Frame so dismiss is safe: dismiss==false keeps the auto-detected orientation (never a silent swap).
+async function importWithPreview(rows, srcLabel) {       // rows already mapped to {jp,en,read}
+  const sample = rows.find(x => x.jp || x.en) || rows[0] || { jp: '', en: '' };
+  const swap = await confirmModal(
+    `Import ${rows.length} phrase(s). Detected Front → Japanese 「${sample.jp}」, Back → English 「${sample.en}」. Swap front/back?`,
+    { ok: 'Swap', cancel: 'Looks right' });
+  const final = swap ? rows.map(x => ({ jp: x.en, en: x.jp, read: x.read })) : rows;
+  commitImport(final, srcLabel);
+}
+
+function doImportFile() {
+  const inp = $('#jtImportFile'); if (!inp) return;
+  inp.onchange = () => {
+    const f = inp.files && inp.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const parsed = parseAnkiTSV(String(rd.result || ''));   // [{front, back, tags}]
+      const m = mapNoteFields(parsed.length ? ['c0', 'c1', 'c2'] : []);  // file = no field names → positional 0/1/2
+      const rows = parsed.map(p => { const cols = [p.front, p.back]; return { jp: cols[m.jpIdx] ?? p.front, en: cols[m.enIdx] ?? p.back, read: '' }; });
+      importWithPreview(rows, 'anki-file');
+      inp.value = '';
+    };
+    rd.readAsText(f);
+  };
+  inp.click();
+}
+
+// deck picker on showModal: render a button per deck; resolve the chosen name + close via [data-ok].
+function pickFromList(items) {
+  return new Promise(resolve => {
+    const list = (items || []).map(d => `<button type="button" class="am-btn jt-deck" data-deck="${esc(d)}">${esc(d)}</button>`).join('');
+    showModal('Pick a deck to import', `<div class="jt-decks">${list || 'No decks.'}</div>`, { closeLabel: 'Cancel' });
+    setTimeout(() => document.querySelectorAll('.jt-deck').forEach(b => b.addEventListener('click', () => {
+      resolve(b.dataset.deck);
+      document.querySelector('.app-modal-acts [data-ok]')?.click();
+    })), 0);
+  });
+}
+
+async function doImportLive() {
+  const decks = await invoke('deckNames');
+  const deck = await pickFromList(decks);
+  if (!deck) return;
+  const ids = await invoke('findNotes', { query: `deck:"${deck}"` });
+  const infos = await invoke('notesInfo', { notes: (ids || []).slice(0, MAX_IMPORT) });
+  if (!infos || !infos.length) { alertModal('That deck has no notes.'); return; }
+  const fieldOrder = Object.entries(infos[0].fields).sort((a, b) => a[1].order - b[1].order).map(([name]) => ({ name }));
+  const m = mapNoteFields(fieldOrder);
+  const valsOf = (note) => Object.entries(note.fields).sort((a, b) => a[1].order - b[1].order).map(([, v]) => v.value);
+  const rows = infos.map(n => { const v = valsOf(n); return { jp: v[m.jpIdx] || '', en: v[m.enIdx] || '', read: v[m.readIdx] || '' }; });
+  importWithPreview(rows, 'anki:' + deck);
+}
+
+async function doImport() { (await isAvailable()) ? doImportLive() : doImportFile(); }
+
 function wireControls() {
   const fav = $('#phraseFavOnly');
   if (fav && !fav.dataset.wired) {
@@ -85,26 +156,32 @@ function wireControls() {
     fav.textContent = on ? '★ Favorites only' : '☆ Favorites only';
   }
   $('#jtExport')?.addEventListener('click', doExport);
+  $('#jtImport')?.addEventListener('click', doImport);
 }
 
 function rowHTML(p, favs) {
   const id = p.id;
   const on = !!favs[id];
+  const mine = p._user
+    ? `<button type="button" class="phrase-del" data-del="${esc(p.id)}" aria-label="Remove ${esc(p.en || p.jp)}">✕</button>`
+    : '';
   return `
     <li class="phrase-row" data-id="${esc(id)}">
       <div class="phrase-main">
         <span class="jp phrase-jp" lang="ja">${esc(p.jp)}</span>
         <span class="phrase-read">${esc(p.read)}</span>
         <span class="phrase-en">${esc(p.en)}</span>
+        ${p._user ? `<span class="phrase-mine" aria-label="your phrase" title="yours">★</span>` : ''}
       </div>
       <button type="button" class="phrase-fav${on ? ' is-on' : ''}" data-fav="${esc(id)}" aria-pressed="${on ? 'true' : 'false'}" aria-label="Favorite: ${esc(p.en)}">${on ? '★' : '☆'}</button>
+      ${mine}
     </li>`;
 }
 
 function render() {
   const wrap = $('#phraseList');
   if (!wrap) return;
-  const all = bakedPhrases();
+  const all = [...bakedPhrases(), ...loadUser()];
   const favs = loadFavs();
   const filtered = favOnly() ? all.filter(p => favs[p.id]) : all;
 
@@ -143,5 +220,8 @@ function wireRows() {
     if (m[id]) delete m[id]; else m[id] = true;
     saveFavs(m);
     render();
+  }));
+  $$('#phraseList .phrase-del').forEach(b => b.addEventListener('click', () => {
+    saveUser(removeUserPhrase(loadUser(), b.dataset.del)); render();
   }));
 }

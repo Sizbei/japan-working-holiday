@@ -10,6 +10,7 @@
 - **All state browser-local.** New data (imported phrases, translation cache, deck preference) lives in `localStorage` under `jwh-*` keys → auto-covered by `backup.js` (prefix-scan, verified).
 - **Every dynamic string through `esc()`** before `innerHTML`; double-quoted attributes.
 - **SW network-first;** bump `CACHE` + precache every new `assets/lib/*.js`.
+- **CSP `connect-src` must whitelist each API.** `index.html` has a `<meta http-equiv="Content-Security-Policy">` whose `connect-src` gates all `fetch`. Jotoba is already listed; this work ADDS `https://api.mymemory.translated.net` (translate) and `http://127.0.0.1:8765` (AnkiConnect live path). Without these the calls are CSP-blocked even when reachable. (Found in Phase-1 browser-verify.)
 
 ## 1. The five features (independently shippable, ship in this order)
 

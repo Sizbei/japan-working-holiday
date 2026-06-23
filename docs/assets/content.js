@@ -14,6 +14,7 @@ import { approxCoord } from './lib/geo.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
 import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
+import { attachCardTranslate } from './cardtranslate.js';
 
 let DATA = null;
 let activeConf = 'all';
@@ -142,6 +143,24 @@ function renderPillar(key, sel, placeholder) {
     ? list.map(i => contentCard(i, withStar)).join('')
     : `<div class="empty">${placeholder} this fills in as research lands.</div>`;
   if (withStar) wireTabetai(grid);
+  if (key === 'music') wireCardTranslate(grid);
+}
+
+// inject a 訳 (translate) control on each card of a grid + wire on-demand MT (one grid for now)
+function wireCardTranslate(grid) {
+  if (!grid) return;
+  grid.querySelectorAll('.card2').forEach(card => {
+    if (card.querySelector('.ct-btn')) return;                       // once
+    const name = (card.querySelector('.c-name')?.textContent || '').replace('▾', '').trim();
+    const detail = [...card.querySelectorAll('.c-detail')].map(d => d.textContent.trim()).join(' ');
+    if (!name && !detail) return;
+    const top = card.querySelector('.c-top'); if (!top) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ct-btn'; btn.setAttribute('aria-label', 'Translate to Japanese'); btn.textContent = '訳';
+    const out = document.createElement('div'); out.className = 'ct-out'; out.hidden = true;
+    top.appendChild(btn); card.appendChild(out);
+    attachCardTranslate(btn, [name, detail], out);
+  });
 }
 
 // ---- Tabetai (want-to-eat): ★ a restaurant -> a source:'tabetai' place (map pin + saved list) ----

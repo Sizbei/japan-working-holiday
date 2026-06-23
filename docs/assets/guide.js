@@ -77,6 +77,7 @@ function openGuide() {
         <li><b>Rearrange</b> — drag the ⠿ handle to reorder lists; drag an event chip to another day to reschedule.</li>
         <li><b>Your data</b> — everything saves on <i>this device only</i>. Use <b>⬇ Back up my data</b> (bottom of the page) before switching phones.</li>
         <li><b>Languages</b> — the <b>あ</b> button toggles a Japanese chrome + hover-dictionary; <b>🌙</b> switches dark mode.</li>
+        <li><b>Anki sync</b> — works when you run this dashboard locally (http://localhost) with Anki + the AnkiConnect add-on open, and add that origin to AnkiConnect's webCorsOriginList (per-origin, all-or-nothing — only add origins you trust). On the live site, Export/Import fall back to a file.</li>
       </ul>
     </section>
 

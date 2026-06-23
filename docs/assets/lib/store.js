@@ -38,6 +38,9 @@ export const KEYS = {
   budget: 'jwh-budget-v1',
   phraseFav: 'jwh-phrasefav-v1',
   phraseFavView: 'jwh-phrase-favview-v1',
+  userPhrases: 'jwh-phrases-user-v1',
+  ankiDeck: 'jwh-anki-deck-v1',
+  translateCache: 'jwh-translate-cache-v1',
 };
 
 export function get(key, fallback) {

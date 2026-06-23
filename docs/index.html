@@ -7,7 +7,7 @@
      script-src is strict (no inline scripts/handlers); style-src needs 'unsafe-inline' (inline style= attrs);
      unpkg = Leaflet (SRI-pinned), tiles = OSM, connect = tips.json + Nominatim + Jotoba, fonts = Google. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://nominatim.openstreetmap.org https://jotoba.de; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://nominatim.openstreetmap.org https://jotoba.de https://api.mymemory.translated.net http://127.0.0.1:8765; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
 <title>My Year in Japan — Trip Dashboard</title>
 <meta name="description" content="A personal, password-gated trip dashboard for a working-holiday year in Tokyo — editable calendar, booking deadlines, paperwork, seasons, food and Disney.">
 <meta name="theme-color" content="#bc002d" media="(prefers-color-scheme: light)">
@@ -247,6 +247,18 @@
   <section id="phrases">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">言葉</span><h2 data-i18n="head.phrases">Survival Japanese</h2></div>
     <p class="lede" data-i18n="lede.phrases">Survival-Japanese phrases for the working-holiday year — konbini, ward-office paperwork, apartment hunting, restaurants, transit, emergencies and daily life, each with the Japanese, a reading, and the English meaning. Hover any Japanese to see its reading; ★ the ones you're learning. Favorites save on this device.</p>
+    <div class="jtools" role="group" aria-label="Japanese tools">
+      <button type="button" class="jt-btn" id="jtLookupBtn" aria-expanded="false" aria-controls="jtLookupPanel">🔍 Look up</button>
+      <button type="button" class="jt-btn" id="jtTranslateBtn" aria-expanded="false" aria-controls="jtTranslatePanel">あ→A Translate</button>
+      <div class="jt-anki">
+        <button type="button" class="jt-btn" id="jtExport">⬇ Export to Anki</button>
+        <button type="button" class="jt-btn" id="jtImport">⬆ Import from Anki</button>
+        <label class="jt-scope"><input type="checkbox" id="jtFavScope"> ★ only</label>
+      </div>
+    </div>
+    <div class="jt-panel" id="jtLookupPanel" hidden></div>
+    <div class="jt-panel" id="jtTranslatePanel" hidden></div>
+    <input type="file" id="jtImportFile" accept=".txt,.tsv,.csv" hidden>
     <div class="pack-tools">
       <button type="button" id="phraseCollapseAll" class="ct-toggle">Collapse / expand all</button>
       <button type="button" id="phraseFavOnly" class="ct-toggle" aria-pressed="false">☆ Favorites only</button>

@@ -109,22 +109,28 @@ function render(word, reading, meaning, loading) {
     <div class="jd-mean">${loading ? '<span class="jd-load">looking up…</span>' : esc(meaning || '')}</div>
     <a class="jd-link" href="https://jisho.org/search/${encodeURIComponent(word)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a>`;
 }
+// Shared dictionary lookup (the hover popover here + the Phrases search box both use this).
+// Returns { reading, gloss } on a hit, null on no match; throws on network/abort — callers handle.
+export async function lookupWord(word, { signal } = {}) {
+  const r = await fetch('https://jotoba.de/api/search/words', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: word, language: 'English', no_english: false }), signal,
+  });
+  const data = r.ok ? await r.json() : null;
+  const w = data && data.words && data.words[0];
+  if (!w) return null;
+  const reading = w.reading ? [w.reading.kana, w.reading.kanji].filter(Boolean).join(' · ') : '';
+  const gloss = w.senses?.[0]?.glosses?.join(', ') || '';
+  return (reading || gloss) ? { reading, gloss } : null;
+}
 async function lookup(word, p, el) {
   try {
     const ctrl = new AbortController();
     const to = setTimeout(() => ctrl.abort(), 2500);
-    const r = await fetch('https://jotoba.de/api/search/words', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: word, language: 'English', no_english: false }), signal: ctrl.signal,
-    });
-    clearTimeout(to);
-    if (lastWord !== word) return;                                   // user moved on
-    const data = r.ok ? await r.json() : null;
-    if (lastWord !== word) return;                                   // re-check after the json() await — don't clobber a newer word's gloss
-    const w = data && data.words && data.words[0];
-    const reading = w?.reading ? [w.reading.kana, w.reading.kanji].filter(Boolean).join(' · ') : '';
-    const gloss = w?.senses?.[0]?.glosses?.join(', ') || '';
-    if (reading || gloss) { p.innerHTML = render(word, reading, gloss, false); position(p, el); }
+    let res = null;
+    try { res = await lookupWord(word, { signal: ctrl.signal }); } finally { clearTimeout(to); }
+    if (lastWord !== word) return;
+    if (res) { p.innerHTML = render(word, res.reading, res.gloss, false); position(p, el); }
     else { p.innerHTML = render(word, '', 'no dictionary match — open Jisho for details', false); }
   } catch {
     if (lastWord === word) p.innerHTML = render(word, '', 'lookup unavailable — open Jisho ↗', false);

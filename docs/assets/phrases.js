@@ -14,6 +14,9 @@ import { slug } from './lib/places.js';
 import { mountAccordion } from './collapse.js';
 import { groupByCategory } from './lib/packing.js';
 import { wireJpAccents } from './lang.js';
+import { toAnkiTSV } from './lib/anki.js';
+import { isAvailable, invoke } from './lib/ankiconnect.js';
+import { alertModal } from './lib/modal.js';
 
 // fixed category render order (unknown cats fall to the end, per groupByCategory)
 const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward office', 'Apartment', 'Emergency', 'Work/meetup'];
@@ -33,6 +36,38 @@ export function mountPhrases(data) {
   render();
 }
 
+function exportRows(favScope) {
+  const favs = loadFavs();
+  const src = favScope ? bakedPhrases().filter(p => favs[p.id]) : bakedPhrases();
+  const users = get(KEYS.userPhrases, []) || [];
+  const all = [...src, ...(favScope ? users.filter(p => favs[p.id]) : users)];
+  return all.map(p => ({ front: p.jp, back: [p.read, p.en].filter(Boolean).join(' <br> '), tags: ['whv', p.cat || 'Phrase'] }));
+}
+
+async function doExport() {
+  const favScope = $('#jtFavScope')?.checked;
+  const rows = exportRows(favScope);
+  if (!rows.length) { alertModal('No phrases to export.'); return; }
+  const deck = getRaw(KEYS.ankiDeck, 'Japan WHV');
+  if (await isAvailable()) {
+    try {
+      await invoke('createDeck', { deck });
+      const notes = rows.map(r => ({ deckName: deck, modelName: 'Basic', fields: { Front: r.front, Back: r.back }, tags: r.tags, options: { allowDuplicate: false } }));
+      const can = await invoke('canAddNotes', { notes });
+      const res = await invoke('addNotes', { notes });
+      const added = (res || []).filter(x => x != null).length;
+      const skipped = notes.length - (can || []).filter(Boolean).length;
+      alertModal(`Added ${added} to “${deck}”${skipped ? ` (${skipped} duplicates skipped)` : ''}.`);
+      return;
+    } catch (e) { /* fall through to file */ }
+  }
+  const blob = new Blob([toAnkiTSV(rows)], { type: 'text/tab-separated-values' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'japan-phrases.txt';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+  alertModal('Anki not detected — downloaded japan-phrases.txt. In Anki: File → Import.');
+}
+
 function wireControls() {
   const fav = $('#phraseFavOnly');
   if (fav && !fav.dataset.wired) {
@@ -49,6 +84,7 @@ function wireControls() {
     fav.setAttribute('aria-pressed', on ? 'true' : 'false');
     fav.textContent = on ? '★ Favorites only' : '☆ Favorites only';
   }
+  $('#jtExport')?.addEventListener('click', doExport);
 }
 
 function rowHTML(p, favs) {

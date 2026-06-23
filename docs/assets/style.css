@@ -2077,6 +2077,13 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .phrase-fav:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
 @media (max-width: 760px) { .phrase-row { padding: var(--s4) var(--s3); } .phrase-jp { font-size: 1.05rem; } }
 
+.jtools{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:.6rem 0 .9rem; }
+.jt-btn{ font:inherit; padding:.4rem .7rem; border:1px solid var(--line); border-radius:999px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.jt-btn:hover{ border-color:var(--indigo); }
+.jt-anki{ display:flex; gap:.5rem; align-items:center; margin-inline-start:auto; }
+.jt-scope{ display:inline-flex; gap:.3rem; align-items:center; font-size:.85rem; color:var(--ink-soft); }
+.jt-panel{ margin:0 0 .9rem; padding:.7rem; border:1px solid var(--line); border-radius:.6rem; background:var(--bg-soft); }
+
 /* ---- Budget planner (#/budget) ---- */
 .bdg-summary { display: flex; flex-wrap: wrap; gap: var(--s3); margin-bottom: var(--s5); }
 .bdg-stat { flex: 1; min-width: 8rem; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3) var(--s4); display: flex; flex-direction: column; gap: .15rem; }

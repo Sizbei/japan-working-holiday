@@ -2088,6 +2088,15 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .jt-anki{ display:flex; gap:.5rem; align-items:center; margin-inline-start:auto; }
 .jt-scope{ display:inline-flex; gap:.3rem; align-items:center; font-size:.85rem; color:var(--ink-soft); }
 .jt-panel{ margin:0 0 .9rem; padding:.7rem; border:1px solid var(--line); border-radius:.6rem; background:var(--bg-soft); }
+.jt-lk{ display:block; }
+.jt-lk input{ width:100%; font:inherit; padding:.45rem .6rem; border:1px solid var(--line); border-radius:.5rem; background:var(--bg); color:var(--ink); }
+.jt-out{ margin-top:.5rem; font-size:.95rem; }
+.jt-load{ color:var(--ink-soft); }
+.jt-res{ padding:.4rem 0; }
+.jt-read{ color:var(--ink-soft); font-size:.85rem; }
+.jt-mean{ margin:.15rem 0; }
+.jt-act{ display:flex; gap:.6rem; align-items:center; margin-top:.3rem; font-size:.85rem; }
+.jt-save{ font:inherit; font-size:.85rem; padding:.2rem .5rem; border:1px solid var(--line); border-radius:.4rem; background:var(--bg-soft); cursor:pointer; }
 
 /* ---- Budget planner (#/budget) ---- */
 .bdg-summary { display: flex; flex-wrap: wrap; gap: var(--s3); margin-bottom: var(--s5); }

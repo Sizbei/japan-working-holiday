@@ -14,6 +14,7 @@ import { slug } from './lib/places.js';
 import { mountAccordion } from './collapse.js';
 import { groupByCategory } from './lib/packing.js';
 import { wireJpAccents } from './lang.js';
+import { lookupWord } from './lang.js';
 import { toAnkiTSV } from './lib/anki.js';
 import { isAvailable, invoke } from './lib/ankiconnect.js';
 import { alertModal, confirmModal, showModal } from './lib/modal.js';
@@ -37,7 +38,55 @@ export function mountPhrases(data) {
   const list = $('#phraseList');
   if (!list) return;
   wireControls();
+  wireLookup();
   render();
+}
+
+let lookCtrl = null, lookTimer = null;
+function wireLookup() {
+  const btn = $('#jtLookupBtn'), panel = $('#jtLookupPanel');
+  if (!btn || !panel || btn.dataset.wired) return; btn.dataset.wired = '1';
+  btn.addEventListener('click', () => {
+    const open = panel.hidden;
+    panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      panel.innerHTML = `<label class="jt-lk"><span class="sr-only">Look up a word</span><input type="search" id="jtLookInput" placeholder="Look up a word (日本語, or try English)"></label><div id="jtLookOut" class="jt-out" aria-live="polite"></div>`;
+      $('#jtLookInput')?.focus(); wireLookInput();
+    }
+  });
+}
+function wireLookInput() {
+  const inp = $('#jtLookInput'); if (!inp) return;
+  inp.addEventListener('input', () => {
+    const q = inp.value.trim();
+    clearTimeout(lookTimer);
+    if (q.length < 1) { const o = $('#jtLookOut'); if (o) o.innerHTML = ''; return; }
+    lookTimer = setTimeout(() => runLookup(q), 250);
+  });
+}
+async function runLookup(q) {
+  const out = $('#jtLookOut'); if (!out) return;
+  if (lookCtrl) lookCtrl.abort(); lookCtrl = new AbortController();
+  out.innerHTML = '<span class="jt-load">looking up…</span>';
+  const jisho = `https://jisho.org/search/${encodeURIComponent(q)}`;
+  try {
+    const res = await lookupWord(q, { signal: lookCtrl.signal });
+    if (res) {
+      out.innerHTML = `<div class="jt-res"><div class="jt-read">${esc(res.reading)}</div><div class="jt-mean">${esc(res.gloss)}</div>`
+        + `<div class="jt-act"><button type="button" class="jt-save" data-jp="${esc(q)}" data-read="${esc(res.reading)}" data-en="${esc(res.gloss)}">★ Save to my phrases</button> <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a></div></div>`;
+      wireSave();
+    } else {
+      out.innerHTML = `<div class="jt-res">No dictionary match. <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Open Jisho ↗</a></div>`;
+    }
+  } catch { out.innerHTML = `<div class="jt-res">Lookup unavailable. <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Open Jisho ↗</a></div>`; }
+}
+function wireSave() {
+  const b = $('#jtLookOut .jt-save'); if (!b) return;
+  b.addEventListener('click', () => {
+    const p = userPhrase({ jp: b.dataset.jp, read: b.dataset.read, en: b.dataset.en, cat: 'Saved', src: 'jisho' }, 'uph' + Date.now());
+    saveUser(addUserPhrases(loadUser(), [p])); render();
+    b.textContent = '★ Saved'; b.disabled = true;
+  });
 }
 
 function exportRows(favScope) {

@@ -1313,6 +1313,13 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .tabetai-star.on{ color: var(--gold, #d8a200); }
 .tabetai-star:focus-visible{ outline:2px solid var(--indigo); border-radius:4px; }
 
+.ct-btn{ font:inherit; font-size:.8rem; line-height:1; padding:.2rem .4rem; margin-inline-start:.4rem; border:1px solid var(--line); border-radius:.4rem; background:var(--bg-soft); color:var(--ink-soft); cursor:pointer; flex:0 0 auto; }
+.ct-btn:hover{ border-color:var(--indigo); color:var(--ink); }
+.ct-out{ margin-top:.4rem; padding:.4rem .5rem; border-inline-start:2px solid var(--indigo); background:var(--bg-soft); border-radius:.3rem; font-size:.95rem; }
+.ct-tag{ margin-top:.25rem; font-size:.72rem; color:var(--ink-soft); }
+.ct-trunc{ color:var(--ink-soft); font-size:.8rem; }
+.ct-load{ color:var(--ink-soft); }
+
 /* backup & restore */
 .backup{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin:.5rem 0 .2rem; }
 .backup-btn{ font-family: var(--mono); font-size:.7rem; font-weight:700; letter-spacing:.03em; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.38rem .65rem; cursor:pointer; transition: border-color var(--t-hover), transform var(--t-hover); }

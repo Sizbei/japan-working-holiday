@@ -2097,6 +2097,11 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .jt-mean{ margin:.15rem 0; }
 .jt-act{ display:flex; gap:.6rem; align-items:center; margin-top:.3rem; font-size:.85rem; }
 .jt-save{ font:inherit; font-size:.85rem; padding:.2rem .5rem; border:1px solid var(--line); border-radius:.4rem; background:var(--bg-soft); cursor:pointer; }
+#jtTaIn{ width:100%; font:inherit; padding:.45rem .6rem; border:1px solid var(--line); border-radius:.5rem; background:var(--bg); color:var(--ink); resize:vertical; }
+.jt-trow{ display:flex; gap:.5rem; align-items:center; margin-top:.4rem; }
+.jt-count{ font-size:.8rem; color:var(--ink-soft); margin-inline-start:auto; }
+.jt-note{ font-size:.78rem; color:var(--ink-soft); margin:.5rem 0 0; }
+#jtCopy{ font:inherit; font-size:.85rem; padding:.2rem .5rem; border:1px solid var(--line); border-radius:.4rem; background:var(--bg-soft); cursor:pointer; }
 
 /* ---- Budget planner (#/budget) ---- */
 .bdg-summary { display: flex; flex-wrap: wrap; gap: var(--s3); margin-bottom: var(--s5); }

@@ -20,6 +20,8 @@ import { isAvailable, invoke } from './lib/ankiconnect.js';
 import { alertModal, confirmModal, showModal } from './lib/modal.js';
 import { userPhrase, addUserPhrases, removeUserPhrase } from './lib/userphrases.js';
 import { stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
+import { MAX_LEN } from './lib/translate.js';
+import { translate } from './lib/translatecache.js';
 
 // fixed category render order (unknown cats fall to the end, per groupByCategory)
 const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward office', 'Apartment', 'Emergency', 'Work/meetup'];
@@ -39,7 +41,42 @@ export function mountPhrases(data) {
   if (!list) return;
   wireControls();
   wireLookup();
+  wireTranslate();
   render();
+}
+
+function wireTranslate() {
+  const btn = $('#jtTranslateBtn'), panel = $('#jtTranslatePanel');
+  if (!btn || !panel || btn.dataset.wired) return; btn.dataset.wired = '1';
+  btn.addEventListener('click', () => {
+    const open = panel.hidden; panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open && !panel.dataset.built) {
+      panel.dataset.built = '1';
+      panel.innerHTML = `<textarea id="jtTaIn" maxlength="${MAX_LEN}" rows="2" placeholder="Type English or Japanese…"></textarea>
+        <div class="jt-trow"><button type="button" id="jtDir" class="jt-btn" data-dir="en-ja">EN → 日本語 ⇄</button>
+        <button type="button" id="jtGo" class="jt-btn">Translate</button><span id="jtCount" class="jt-count">0/${MAX_LEN}</span></div>
+        <div id="jtTaOut" class="jt-out" aria-live="polite"></div>
+        <p class="jt-note">Translations are sent to MyMemory (a free service) — see their terms.</p>`;
+      wireTranslateInner();
+    }
+  });
+}
+function wireTranslateInner() {
+  const inp = $('#jtTaIn'), dir = $('#jtDir');
+  inp?.addEventListener('input', () => { const c = $('#jtCount'); if (c) c.textContent = `${inp.value.length}/${MAX_LEN}`; });
+  dir?.addEventListener('click', () => { const ej = dir.dataset.dir === 'en-ja'; dir.dataset.dir = ej ? 'ja-en' : 'en-ja'; dir.textContent = ej ? '日本語 → EN ⇄' : 'EN → 日本語 ⇄'; });
+  $('#jtGo')?.addEventListener('click', async () => {
+    const text = (inp.value || '').trim(); if (!text) return;
+    const [from, to] = ($('#jtDir').dataset.dir === 'en-ja') ? ['en', 'ja'] : ['ja', 'en'];
+    const out = $('#jtTaOut'); out.innerHTML = '<span class="jt-load">translating…</span>';
+    try {
+      const res = await translate(text, from, to);
+      out.innerHTML = res.text
+        ? `<div class="jt-res"><div class="jt-mean">${esc(res.text)}</div><div class="jt-act"><button type="button" id="jtCopy">Copy</button> <a href="https://jisho.org/search/${encodeURIComponent(text)}" target="_blank" rel="noopener noreferrer">Dictionary ↗</a></div></div>`
+        : `<div class="jt-res">${esc(res.warning || 'translation unavailable')}</div>`;
+      const cp = $('#jtCopy'); if (cp) cp.addEventListener('click', () => navigator.clipboard?.writeText(res.text));
+    } catch { out.innerHTML = `<div class="jt-res">Translation unavailable.</div>`; }
+  });
 }
 
 let lookCtrl = null, lookTimer = null;

@@ -69,8 +69,10 @@ async function runLookup(q) {
   if (lookCtrl) lookCtrl.abort(); lookCtrl = new AbortController();
   out.innerHTML = '<span class="jt-load">looking up…</span>';
   const jisho = `https://jisho.org/search/${encodeURIComponent(q)}`;
+  const ctrl = lookCtrl, killer = setTimeout(() => ctrl.abort(), 4000);   // a slow/hung Jotoba must fall back, not hang on "looking up…" (mirrors the hover's timeout)
   try {
     const res = await lookupWord(q, { signal: lookCtrl.signal });
+    clearTimeout(killer);
     if (res) {
       out.innerHTML = `<div class="jt-res"><div class="jt-read">${esc(res.reading)}</div><div class="jt-mean">${esc(res.gloss)}</div>`
         + `<div class="jt-act"><button type="button" class="jt-save" data-jp="${esc(q)}" data-read="${esc(res.reading)}" data-en="${esc(res.gloss)}">★ Save to my phrases</button> <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a></div></div>`;
@@ -78,7 +80,7 @@ async function runLookup(q) {
     } else {
       out.innerHTML = `<div class="jt-res">No dictionary match. <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Open Jisho ↗</a></div>`;
     }
-  } catch { out.innerHTML = `<div class="jt-res">Lookup unavailable. <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Open Jisho ↗</a></div>`; }
+  } catch { clearTimeout(killer); out.innerHTML = `<div class="jt-res">Lookup unavailable. <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Open Jisho ↗</a></div>`; }
 }
 function wireSave() {
   const b = $('#jtLookOut .jt-save'); if (!b) return;

@@ -91,13 +91,14 @@ function renderReadiness() {
 
   const r = readiness({ checklistPct, packingPct: pk.pct, budgetReady, daysToArrival: c.days });
   const budgetLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[r.parts[2].status] || 'unset';
+  const toneWord = { good: 'on track', ok: 'getting there', low: 'just starting' }[r.tone] || '';
   const daysLine = c.phase === 'arrived'
     ? `Day ${(c.days ?? 0) + 1} in Japan`
     : `${c.days ?? '—'} day${c.days === 1 ? '' : 's'} to Tokyo`;
 
   el.querySelector('.widget-body').innerHTML = `
     <div class="rdy" data-tone="${esc(r.tone)}">
-      <div class="rdy-score">${esc(String(r.score))}<span class="rdy-pct">%</span></div>
+      <div class="rdy-score">${esc(String(r.score))}<span class="rdy-pct">%</span><span class="sr-only"> ready — ${esc(toneWord)}</span></div>
       <div class="rdy-meta">
         <div class="rdy-days">${esc(daysLine)}</div>
         <div class="rdy-parts">

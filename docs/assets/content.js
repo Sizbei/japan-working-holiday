@@ -776,7 +776,7 @@ function openCheckEditor(id) {
   input.select();
 
   let done = false;
-  const commit = (save) => {
+  const commit = (save, refocus) => {
     if (done) return; done = true;
     if (save) {
       const val = input.value;
@@ -786,12 +786,16 @@ function openCheckEditor(id) {
     } else {
       renderChecklist();                    // cancel → re-render restores the original row (closes the editor)
     }
+    if (refocus) {                          // keyboard commit (Enter/Esc): return focus to the row; NOT on blur (would hijack a click)
+      const cssId = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+      ($(`#checkPhases .check-edit[data-edit="${cssId}"]`) || $(`#checkPhases input[data-cid="${cssId}"]`))?.focus();
+    }
   };
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); commit(true); }
-    else if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+    if (e.key === 'Enter') { e.preventDefault(); commit(true, true); }
+    else if (e.key === 'Escape') { e.preventDefault(); commit(false, true); }
   });
-  input.addEventListener('blur', () => commit(true));
+  input.addEventListener('blur', () => commit(true, false));
 }
 // #checkReset lives OUTSIDE #checkPhases, so renderChecklist() doesn't replace it — wire it ONCE
 let resetWired = false;

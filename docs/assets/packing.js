@@ -374,16 +374,20 @@ function openPackEditor(id) {
   input.select();
 
   let done = false;
-  const commit = (save) => {
+  const commit = (save, refocus) => {
     if (done) return; done = true;
     if (save) saveCustom(renameById(loadCustom(), id, 'item', input.value));
     render();                               // save → close → re-render (cancel just re-renders the original)
+    if (refocus) {                          // keyboard commit (Enter/Esc): return focus to the row; NOT on blur (would hijack a click)
+      const cssId = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+      ($(`#packList .pack-edit[data-edit="${cssId}"]`) || $(`#packList input[data-pid="${cssId}"]`))?.focus();
+    }
   };
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); commit(true); }
-    else if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+    if (e.key === 'Enter') { e.preventDefault(); commit(true, true); }
+    else if (e.key === 'Escape') { e.preventDefault(); commit(false, true); }
   });
-  input.addEventListener('blur', () => commit(true));
+  input.addEventListener('blur', () => commit(true, false));
 }
 
 function updateProgress(items) {

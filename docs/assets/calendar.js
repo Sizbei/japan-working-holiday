@@ -106,6 +106,8 @@ export function mountCalendar(data, today) {
     e.preventDefault();
     openMenu(items, 0, 0, { anchor: document.activeElement, label: 'Event actions' });
   });
+  // re-render the week view when crossing the mobile breakpoint (grid ↔ vertical list)
+  window.matchMedia('(max-width: 700px)').addEventListener('change', () => { if (mode === 'week') render(); });
 }
 
 function wireToolbar() {
@@ -192,7 +194,31 @@ function weekLabel() {
     ? `${am} ${a.getUTCDate()} – ${b.getUTCDate()}, ${b.getUTCFullYear()}`
     : `${am} ${a.getUTCDate()} – ${bm} ${b.getUTCDate()}, ${b.getUTCFullYear()}`;
 }
+const isNarrowWeek = () => window.matchMedia('(max-width: 700px)').matches;
+// mobile: a vertical day-by-day list (the 7-col grid is unusable on a phone; a vertical list also
+// avoids the horizontal route-swipe conflict). Each day lists its overlapping events; multi-day
+// events get a continues marker. Reuses the per-day ＋ (.wk-add) + click→openDetail wiring.
+function weekListHTML() {
+  const days = weekDays(weekAnchor);
+  const evs = allEvents().filter(visible);
+  return `<div class="wk-list">` + days.map(d => {
+    const t = parseISO(d), dow = t.getUTCDay();
+    const dayEvs = evs.filter(e => { const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s; return s <= d && en >= d; })
+      .sort((a, b) => a.date.localeCompare(b.date));
+    const rows = dayEvs.map(e => {
+      const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s;
+      const cont = isMultiDay(e) ? (d === s ? `<span class="wkl-cont">→ ${esc(fmtShort(en))}</span>` : d === en ? '<span class="wkl-cont">ends</span>' : '<span class="wkl-cont">ongoing ┄</span>') : '';
+      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)})"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${cont}</button>`;
+    }).join('') || '<p class="wkl-empty">No events</p>';
+    const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
+    return `<section class="wkl-day${cls}">
+      <div class="wkl-head"><span class="wkl-dn">${DOW[dow]} ${t.getUTCDate()}</span>${d === TODAY ? '<span class="wkl-today">TODAY</span>' : ''}<button type="button" class="wk-add wkl-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button></div>
+      <div class="wkl-evs">${rows}</div>
+    </section>`;
+  }).join('') + `</div>`;
+}
 function weekHTML() {
+  if (isNarrowWeek()) return weekListHTML();
   const days = weekDays(weekAnchor);
   const hd = days.map(d => {
     const t = parseISO(d), dow = t.getUTCDay();
@@ -248,7 +274,7 @@ function wireWeek() {
   });
   // click/Enter a chip OR bar → openDetail (baked → detail view w/ Going/Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.
-  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id]').forEach(el => el.addEventListener('click', () => {
+  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id]').forEach(el => el.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === el.dataset.id);
     if (ev) openDetail(ev);
   }));

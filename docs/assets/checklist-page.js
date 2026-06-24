@@ -31,7 +31,8 @@ function loadChecks() { return get(KEYS.checklist, {}) || {}; }
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }
 // checklist focus controls (reduce the 74-item yearlong list to what's actionable now)
-function smartView() { return getRaw(KEYS.checkSmartView, 'all'); }   // 'all' | 'today' | 'upcoming' | 'overdue'
+const SMART_VIEWS = ['all', 'today', 'upcoming', 'overdue'];
+function smartView() { const v = getRaw(KEYS.checkSmartView, 'all'); return SMART_VIEWS.includes(v) ? v : 'all'; }   // guard a stale/corrupt stored value → never crash the empty-state lookup
 function hideDone() { return getRaw(KEYS.checkHideDone, '') === 'on'; }
 // p1–p4 priorities (map {id: 1..4}). Migrates the legacy v1 binary-flag array (each flagged id → p1).
 function loadPriority() {

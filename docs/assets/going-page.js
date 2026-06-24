@@ -31,7 +31,7 @@ function render() {
   const bar = $('#goingFilters');
   if (bar) bar.innerHTML = [
     `<button type="button" class="chip ${fCat === 'all' ? 'active' : ''}" data-fcat="all" aria-pressed="${fCat === 'all'}">All</button>`,
-    ...cats.map(c => `<button type="button" class="chip cat-${esc(c)} ${fCat === c ? 'active' : ''}" data-fcat="${esc(c)}" aria-pressed="${fCat === c}">${esc(c)}</button>`),
+    ...cats.map(c => `<button type="button" class="chip going-fcat ${fCat === c ? 'active' : ''}" data-fcat="${esc(c)}" aria-pressed="${fCat === c}"><span class="going-fdot cat-${esc(c)}" aria-hidden="true"></span>${esc(c)}</button>`),
     `<button type="button" class="chip going-upcoming ${fUpcoming ? 'active' : ''}" data-upcoming aria-pressed="${fUpcoming}">${fUpcoming ? '☑' : '☐'} Upcoming only</button>`,
   ].join('');
 

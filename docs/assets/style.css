@@ -1928,6 +1928,11 @@ html[data-reduce-motion="on"] *::after{
 .going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
 .going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .going-upcoming.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
+/* category filter pills: a colour dot + readable label on the normal pill — NOT a full cat-* swatch
+   (which painted dark --ink-soft text on a saturated background = unreadable) */
+.going-fcat{ text-transform: capitalize; }
+.going-fdot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-inline-end:.4rem; vertical-align:baseline; }
+.going-fcat.active .going-fdot{ box-shadow: 0 0 0 1.5px var(--on-accent); }   /* keep the dot legible on the active indigo pill */
 
 /* ============================================================
    FRONT PAGE — Sumi-e ink, scoped to #view-dashboard only.

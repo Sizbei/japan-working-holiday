@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar — Notion-style week view (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f4ee; --card:#fffdf8; --ink:#2b2824; --ink-soft:#6b6359; --line:#e4ddd0;
+    --red:#bc002d; --indigo:#4f5bd5;
+    --seasonal:#5f8a5c; --seasonal-bg:#e9f0e6;
+    --admin:#b07d18;  --admin-bg:#f6ecd6;
+    --festival:#cc5a3c; --festival-bg:#f7e6df;
+    --music:#5a52c9;  --music-bg:#e8e6f7;
+    --arrival:#bc002d; --arrival-bg:#f6dfe3;
+    --r:10px; --shadow:0 1px 2px rgba(60,50,30,.06),0 6px 18px rgba(60,50,30,.05);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:36px 28px 60px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  .pagehead{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+  .pagehead h1{font-family:"Newsreader",serif;font-weight:600;font-size:1.9rem;margin:0;letter-spacing:-.01em;}
+  .pagehead .sub{color:var(--ink-soft);font-size:.9rem;}
+  .note{color:var(--ink-soft);font-size:.82rem;margin:0 0 26px;max-width:70ch;line-height:1.5;}
+  .note b{color:var(--ink);font-weight:700;}
+
+  /* ---- toolbar ---- */
+  .cal{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
+  .toolbar{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;gap:2px;}
+  .nav button{font:inherit;width:32px;height:32px;border:1px solid var(--line);background:var(--paper);border-radius:8px;cursor:pointer;color:var(--ink);font-size:1rem;line-height:1;}
+  .nav button:hover{border-color:var(--ink-soft);}
+  .range{font-family:"Newsreader",serif;font-size:1.15rem;font-weight:600;margin-left:6px;}
+  .range em{font-style:normal;color:var(--ink-soft);font-weight:400;font-size:.95rem;}
+  .seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-left:auto;}
+  .seg button{font:inherit;font-size:.84rem;padding:.42rem .8rem;border:none;background:var(--card);color:var(--ink-soft);cursor:pointer;}
+  .seg button+button{border-left:1px solid var(--line);}
+  .seg button.on{background:var(--ink);color:var(--paper);font-weight:600;}
+  .today-btn{font:inherit;font-size:.84rem;padding:.42rem .7rem;border:1px solid var(--line);background:var(--paper);border-radius:8px;cursor:pointer;color:var(--ink);}
+
+  /* ---- week grid ---- */
+  .daysrow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line);}
+  .dayhd{padding:10px 8px 9px;text-align:center;border-left:1px solid var(--line);}
+  .dayhd:first-child{border-left:none;}
+  .dayhd .dn{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .dayhd .dd{font-family:"Newsreader",serif;font-size:1.35rem;line-height:1.1;margin-top:2px;}
+  .dayhd.today .dd{display:inline-block;background:var(--red);color:#fff;border-radius:50%;width:36px;height:36px;line-height:36px;}
+  .dayhd.weekend{background:#faf7f0;}
+
+  .allday{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:5px 0;padding:8px 0 10px;background:linear-gradient(#fffdf8,#fffdf8);}
+  /* column guide lines */
+  .allday::before{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/7 - 1px),var(--line) calc(100%/7 - 1px),var(--line) calc(100%/7));
+    pointer-events:none;}
+  .lane{grid-column:1/8;display:grid;grid-template-columns:repeat(7,1fr);align-items:center;height:30px;position:relative;z-index:1;}
+  .bar{margin:0 4px;height:26px;display:flex;align-items:center;gap:7px;padding:0 10px;border-radius:8px;
+    font-size:.78rem;font-weight:500;white-space:nowrap;overflow:hidden;cursor:grab;
+    box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .bar .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}
+  .bar.cont-l{border-top-left-radius:3px;border-bottom-left-radius:3px;margin-left:0;}
+  .bar.cont-r{border-top-right-radius:3px;border-bottom-right-radius:3px;margin-right:0;}
+  .bar .arr{color:var(--ink-soft);font-size:.7rem;}
+  .b-seasonal{background:var(--seasonal-bg);color:#3c5a3a;} .b-seasonal .dot{background:var(--seasonal);}
+  .b-admin{background:var(--admin-bg);color:#7a5710;} .b-admin .dot{background:var(--admin);}
+  .b-festival{background:var(--festival-bg);color:#9c3f26;} .b-festival .dot{background:var(--festival);}
+  .b-music{background:var(--music-bg);color:#3f3895;} .b-music .dot{background:var(--music);}
+  /* a single-day chip sits in one column */
+  .chips{grid-column:1/8;display:grid;grid-template-columns:repeat(7,1fr);align-items:start;padding-top:2px;position:relative;z-index:1;}
+  .chip{margin:2px 4px;height:24px;border-radius:7px;display:flex;align-items:center;gap:6px;padding:0 9px;font-size:.76rem;font-weight:600;white-space:nowrap;overflow:hidden;cursor:grab;}
+  .chip.arrival{background:var(--arrival-bg);color:var(--arrival);}
+  .chip.festival{background:var(--festival-bg);color:#9c3f26;}
+  .chip.music{background:var(--music-bg);color:#3f3895;}
+  .chip.seasonal{background:var(--seasonal-bg);color:#3c5a3a;}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto;opacity:.85;}
+
+  /* drag ghost suggestion */
+  .ghost{outline:2px dashed var(--indigo);outline-offset:1px;opacity:.55;}
+  .addhint{grid-column:1/8;text-align:center;color:var(--ink-soft);font-size:.74rem;padding:9px 0 4px;border-top:1px dashed var(--line);margin-top:6px;}
+  .addhint kbd{font-family:"Space Mono",monospace;background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.72rem;}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;padding:12px 18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:9px;height:9px;border-radius:50%;}
+
+  /* ---- mobile panel ---- */
+  .panels{display:grid;grid-template-columns:1fr 380px;gap:30px;align-items:start;margin-top:34px;}
+  @media(max-width:1080px){.panels{grid-template-columns:1fr;}}
+  .panel-label{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 12px;}
+  .phone{width:360px;margin:0 auto;border:10px solid #1d1a16;border-radius:36px;background:var(--card);overflow:hidden;box-shadow:var(--shadow);}
+  .phone .ptop{background:var(--card);border-bottom:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:8px;}
+  .phone .ptop .range{font-size:.98rem;}
+  .phone .pnav{margin-left:auto;display:flex;gap:4px;}
+  .phone .pnav button{width:28px;height:28px;border:1px solid var(--line);background:var(--paper);border-radius:7px;font-size:.9rem;cursor:pointer;}
+  .mday{border-bottom:1px solid var(--line);padding:10px 14px;}
+  .mday.today{background:#fdf3f4;}
+  .mday .mh{display:flex;align-items:baseline;gap:8px;margin-bottom:7px;}
+  .mday .mh .mdn{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+  .mday .mh .mdd{font-family:"Newsreader",serif;font-size:1.05rem;font-weight:600;}
+  .mday.today .mh .mdd{color:var(--red);}
+  .mday .mh .mtoday{margin-left:auto;font-size:.64rem;color:var(--red);font-weight:700;letter-spacing:.06em;}
+  .mev{display:flex;align-items:center;gap:8px;padding:5px 9px;border-radius:7px;font-size:.8rem;font-weight:500;margin-bottom:5px;}
+  .mev .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}
+  .mev .cont{margin-left:auto;color:var(--ink-soft);font-size:.66rem;}
+  .mev.s{background:var(--seasonal-bg);color:#3c5a3a;} .mev.s .dot{background:var(--seasonal);}
+  .mev.a{background:var(--admin-bg);color:#7a5710;} .mev.a .dot{background:var(--admin);}
+  .mev.f{background:var(--festival-bg);color:#9c3f26;} .mev.f .dot{background:var(--festival);}
+  .mev.m{background:var(--music-bg);color:#3f3895;} .mev.m .dot{background:var(--music);}
+  .mev.ar{background:var(--arrival-bg);color:var(--arrival);} .mev.ar .dot{background:var(--arrival);}
+  .mempty{color:var(--ink-soft);font-size:.74rem;font-style:italic;padding:2px 0 3px;}
+  .callouts{margin-top:26px;font-size:.82rem;color:var(--ink-soft);line-height:1.6;}
+  .callouts li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pagehead"><h1>Calendar — week view</h1><span class="sub">Notion feel · all-day, no hourly grid · mock</span></div>
+  <p class="note">Your events are <b>all-day seasonal windows</b>, so the week view's job is to show the <b>overlapping multi-day bars at a glance</b> — when do the beer gardens, the admin window, and teamLab summer all overlap? Drag a bar to another day to reschedule; click an empty day to add. The hourly time-grid is intentionally cut (you have no timed meetings).</p>
+
+  <!-- ===================== DESKTOP WEEK ===================== -->
+  <div class="cal">
+    <div class="toolbar">
+      <div class="nav"><button aria-label="Previous week">‹</button><button aria-label="Next week">›</button></div>
+      <span class="range">Jun 28 – Jul 4 <em>· 2026</em></span>
+      <button class="today-btn">Today</button>
+      <div class="seg"><button>Month</button><button class="on">Week</button><button>Agenda</button></div>
+    </div>
+
+    <div class="daysrow">
+      <div class="dayhd weekend"><div class="dn">Sun</div><div class="dd">28</div></div>
+      <div class="dayhd"><div class="dn">Mon</div><div class="dd">29</div></div>
+      <div class="dayhd today"><div class="dn">Tue</div><div class="dd">30</div></div>
+      <div class="dayhd"><div class="dn">Wed</div><div class="dd">1</div></div>
+      <div class="dayhd"><div class="dn">Thu</div><div class="dd">2</div></div>
+      <div class="dayhd weekend"><div class="dn">Fri</div><div class="dd">3</div></div>
+      <div class="dayhd weekend"><div class="dn">Sat</div><div class="dd">4</div></div>
+    </div>
+
+    <div class="allday">
+      <!-- multi-day seasonal bars (span columns; cont arrows = continues beyond the week) -->
+      <div class="lane"><div class="bar b-seasonal cont-l cont-r" style="grid-column:1/8"><span class="arr">‹</span><span class="dot"></span>Forest Beer Garden — Meiji Jingu Gaien<span class="arr">›</span></div></div>
+      <div class="lane"><div class="bar b-seasonal cont-l cont-r" style="grid-column:1/8"><span class="arr">‹</span><span class="dot"></span>Hilton 'Sunset Beach' Rooftop Beer Garden<span class="arr">›</span></div></div>
+      <div class="lane"><div class="bar b-seasonal cont-l cont-r" style="grid-column:1/8"><span class="arr">‹</span><span class="dot"></span>Mt. Takao Beer Mount<span class="arr">›</span></div></div>
+      <div class="lane"><div class="bar b-admin cont-r" style="grid-column:3/8"><span class="dot"></span>WHV admin window — address · NHI · pension · My Number<span class="arr">›</span></div></div>
+      <div class="lane"><div class="bar b-seasonal cont-r" style="grid-column:4/8"><span class="dot"></span>teamLab Planets — Summer Sunflower<span class="arr">›</span></div></div>
+      <!-- single-day chips, each in its own column -->
+      <div class="chips">
+        <div></div><div></div>
+        <div><div class="chip arrival"><span class="dot"></span>✈ Land NRT</div></div>
+        <div><div class="chip seasonal ghost"><span class="dot"></span>teamLab Borderless</div></div>
+        <div></div>
+        <div><div class="chip music"><span class="dot"></span>VENT Omotesando</div></div>
+        <div><div class="chip festival"><span class="dot"></span>Farmer's Mkt @ UNU</div><div class="chip music"><span class="dot"></span>WOMB Shibuya</div></div>
+      </div>
+      <div class="addhint">drag a bar to reschedule · click any day to add · <kbd>W</kbd> week · <kbd>M</kbd> month · <kbd>A</kbd> agenda</div>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:var(--seasonal)"></i>seasonal</span>
+      <span><i style="background:var(--admin)"></i>admin / deadline</span>
+      <span><i style="background:var(--festival)"></i>festival</span>
+      <span><i style="background:var(--music)"></i>music</span>
+      <span><i style="background:var(--arrival)"></i>arrival</span>
+      <span style="margin-left:auto;color:var(--indigo)">⬚ dashed = drag-to-reschedule preview</span>
+    </div>
+  </div>
+
+  <!-- ===================== MOBILE ===================== -->
+  <div class="panels">
+    <div>
+      <p class="panel-label">Why this beats a grid here</p>
+      <ul class="callouts">
+        <li><b>The bars are the value.</b> Three beer gardens + the admin window + teamLab all overlap your arrival week — you see it in one glance, which a month grid hides and a 24-hour grid would leave 80% empty.</li>
+        <li><b>Drag-to-reschedule</b> between days (the dashed teamLab Borderless chip shows the drop preview); <b>click a day</b> to quick-create an all-day event.</li>
+        <li><b>Month + Agenda stay</b> — Week is a third lens, not a replacement.</li>
+        <li><b>No hourly grid, no timed events</b> — cut as Notion-cosplay for an all-day trip calendar (per the adversarial review).</li>
+      </ul>
+    </div>
+    <div>
+      <p class="panel-label">Mobile — week as a vertical 7-day list (no fragile horizontal grid / swipe-conflict)</p>
+      <div class="phone">
+        <div class="ptop"><span class="range">Jun 28 – Jul 4</span><div class="pnav"><button>‹</button><button>›</button></div></div>
+        <div class="mday"><div class="mh"><span class="mdn">Sun</span><span class="mdd">28</span></div>
+          <div class="mev s"><span class="dot"></span>Forest Beer Garden<span class="cont">all week ┄</span></div>
+          <div class="mev s"><span class="dot"></span>Hilton Sunset Beach<span class="cont">┄</span></div>
+          <div class="mev s"><span class="dot"></span>Mt. Takao Beer Mount<span class="cont">┄</span></div>
+        </div>
+        <div class="mday"><div class="mh"><span class="mdn">Mon</span><span class="mdd">29</span></div>
+          <div class="mempty">3 ongoing seasonal · nothing new</div>
+        </div>
+        <div class="mday today"><div class="mh"><span class="mdn">Tue</span><span class="mdd">30</span><span class="mtoday">ARRIVAL · TODAY</span></div>
+          <div class="mev ar"><span class="dot"></span>✈ Land NRT 2026-06-30</div>
+          <div class="mev a"><span class="dot"></span>WHV admin window opens<span class="cont">→ Jul 14</span></div>
+        </div>
+        <div class="mday"><div class="mh"><span class="mdn">Wed</span><span class="mdd">1</span></div>
+          <div class="mev s"><span class="dot"></span>teamLab Planets — Summer<span class="cont">→ Jul 31</span></div>
+          <div class="mev s"><span class="dot"></span>teamLab Borderless</div>
+        </div>
+        <div class="mday"><div class="mh"><span class="mdn">Thu</span><span class="mdd">2</span></div><div class="mempty">ongoing only</div></div>
+        <div class="mday"><div class="mh"><span class="mdn">Fri</span><span class="mdd">3</span></div>
+          <div class="mev m"><span class="dot"></span>VENT Omotesando</div>
+        </div>
+        <div class="mday"><div class="mh"><span class="mdn">Sat</span><span class="mdd">4</span></div>
+          <div class="mev f"><span class="dot"></span>Farmer's Market @ UNU</div>
+          <div class="mev m"><span class="dot"></span>WOMB Shibuya</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

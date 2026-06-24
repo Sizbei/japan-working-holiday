@@ -18,10 +18,12 @@ import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { openMenu } from './lib/menu.js';
+import { weekDays } from './lib/weekgrid.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
-let mode = 'month';
+let mode = 'month';        // 'month' | 'week' | 'agenda'
+let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
 let TODAY = '2026-06-15';
 let hiddenCats = new Set();
 let popEl = null, popCleanup = null;
@@ -82,6 +84,7 @@ export function mountCalendar(data, today) {
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
+  weekAnchor = TODAY;
   wireToolbar();
   buildLegend();
   render();
@@ -108,15 +111,19 @@ export function mountCalendar(data, today) {
 function wireToolbar() {
   $('#calPrev')?.addEventListener('click', () => shift(-1));
   $('#calNext')?.addEventListener('click', () => shift(1));
-  $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render(); });
+  $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });
   $('#calModeMonth')?.addEventListener('click', () => { mode = 'month'; render(); });
+  $('#calModeWeek')?.addEventListener('click', () => { mode = 'week'; render(); });
   $('#calModeAgenda')?.addEventListener('click', () => { mode = 'agenda'; render(); });
   $('#calAdd')?.addEventListener('click', () => openModal(null, TODAY));
   $('#calExport')?.addEventListener('click', openExport);
   $('#calImportBtn')?.addEventListener('click', () => $('#calImport').click());
   $('#calImport')?.addEventListener('change', onImport);
 }
-function shift(d) { viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render(); }
+function shift(d) {
+  if (mode === 'week') { weekAnchor = addDaysISO(weekAnchor, 7 * d); render(); return; }   // week mode steps by a week
+  viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render();
+}
 
 // jump the month view to a given ISO date (used by event search)
 export function goToDate(iso) {
@@ -149,10 +156,14 @@ function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 function render() {
   _evCache = null;   // invalidate the per-render event cache (data may have changed since last render)
   dismissPopover();
-  const mEl = $('#calModeMonth'), aEl = $('#calModeAgenda');
+  const mEl = $('#calModeMonth'), wEl = $('#calModeWeek'), aEl = $('#calModeAgenda');
   mEl?.classList.toggle('active', mode === 'month'); mEl?.setAttribute('aria-pressed', String(mode === 'month'));
+  wEl?.classList.toggle('active', mode === 'week'); wEl?.setAttribute('aria-pressed', String(mode === 'week'));
   aEl?.classList.toggle('active', mode === 'agenda'); aEl?.setAttribute('aria-pressed', String(mode === 'agenda'));
-  const label = $('#calLabel'); if (label) label.textContent = mode === 'agenda' ? `Agenda — from ${MONTHS[viewM]} ${viewY}` : `${MONTHS[viewM]} ${viewY}`;
+  const label = $('#calLabel');
+  if (label) label.textContent = mode === 'agenda' ? `Agenda — from ${MONTHS[viewM]} ${viewY}` : mode === 'week' ? weekLabel() : `${MONTHS[viewM]} ${viewY}`;
+  const unit = mode === 'week' ? 'week' : 'month';   // prev/next step by week in week mode
+  $('#calPrev')?.setAttribute('aria-label', 'Previous ' + unit); $('#calNext')?.setAttribute('aria-label', 'Next ' + unit);
   const view = $('#calView'); if (!view) return;
   const panel = $('#calPanel');
   if (mode === 'month') {
@@ -160,11 +171,37 @@ function render() {
     if (panel) { panel.hidden = false; panel.innerHTML = panelHTML(); wirePanel(); }
     wireCells();
     wireReschedule();
+  } else if (mode === 'week') {
+    view.innerHTML = weekHTML();
+    if (panel) panel.hidden = true;   // the week view shows the whole week; the month deadline panel would duplicate
   } else {
     view.innerHTML = agendaHTML();
     if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate
     wireAgenda();
   }
+}
+
+// ---- WEEK view (all-day lane + per-day add; bars/drag land in later stages) ----
+const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+function weekLabel() {
+  const days = weekDays(weekAnchor);
+  const a = parseISO(days[0]), b = parseISO(days[6]);
+  const am = MONTHS[a.getUTCMonth()].slice(0, 3), bm = MONTHS[b.getUTCMonth()].slice(0, 3);
+  return am === bm
+    ? `${am} ${a.getUTCDate()} – ${b.getUTCDate()}, ${b.getUTCFullYear()}`
+    : `${am} ${a.getUTCDate()} – ${bm} ${b.getUTCDate()}, ${b.getUTCFullYear()}`;
+}
+function weekHTML() {
+  const days = weekDays(weekAnchor);
+  const hd = days.map(d => {
+    const t = parseISO(d), dow = t.getUTCDay();
+    const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
+    return `<div class="wk-dayhd${cls}" data-day="${esc(d)}"><span class="wk-dn">${DOW[dow]}</span><span class="wk-dd">${t.getUTCDate()}</span></div>`;
+  }).join('');
+  return `<div class="wk-grid">
+    <div class="wk-daysrow">${hd}</div>
+    <div class="wk-allday" id="wkAllday"></div>
+  </div>`;
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }

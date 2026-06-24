@@ -36,7 +36,8 @@
 - [ ] **Stage 19 — full regression.** `node --test tests/*.mjs` green; smoke all 13 routes (no overflow, render, 0 console errors); `python3 -m json.tool docs/data/tips.json`. Fix anything. Commit.
 - [ ] **Stage 20 — finish.** Final whole-branch code review (subagent). Merge `feat/cal-checklist-redesign` → main, push (deploys Pages). Report. END the loop (no further self-prompt).
 
-## Loop bookkeeping
-- After each stage: `git add -A && git commit`, check the box here (commit the plan edit too), then continue if budget allows or `ScheduleWakeup(~1800s)` to resume.
-- If subagents/workflows hit a session/rate limit: do the stage in the main loop (no subagents) where feasible, or back off and re-schedule.
+## Loop bookkeeping (updated 2026-06-24)
+- **Cadence: ~600s (10 min).** Re-schedule with `ScheduleWakeup(~600s)` each cycle.
+- **Every stage gets the full goal cycle: (1) brief plan, (2) build, (3) adversarial/AI review (2–3 blind subagent critics on the stage's diff; verify findings yourself, reject wrong ones), (4) fix confirmed findings, (5) verify (node --test + browser where UI), (6) commit + check the box.** ultracode: run the per-stage review as a small workflow/parallel critics; do the build in a workflow when parallel-safe, else the main loop.
+- If subagents/workflows hit a session/rate limit: do the stage + a lighter self-review in the main loop, or back off and re-schedule.
 - Don't merge to main until Stage 20 (keep everything on the branch).

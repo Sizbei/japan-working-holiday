@@ -21,7 +21,7 @@
 
 ## PHASE B — Calendar
 
-- [ ] **Stage 7 — Revise the mock.** Update `docs/mockups/calendar-week.html`: swap invented palette for real `--c-*` tokens; today = red outline not filled circle; lane-pack bars (admin+teamLab share a lane where they don't overlap); add a per-day "+" affordance; fix the Friday `.weekend` bug (only Sun+Sat). Serve + screenshot. Commit.
+- [x] **Stage 7 — Revise the mock.** ✓ Real --c-* tokens (color-mix tints), today=red outline, per-day ＋ row, weekend Sat+Sun only (Fri fixed), teamLab→illumination. Design-critic review: fixed mobile .mev illum (Planets+Borderless), legend illumination entry, ink to match app (#1a1a22/#595550). Sent to user. Update `docs/mockups/calendar-week.html`: swap invented palette for real `--c-*` tokens; today = red outline not filled circle; lane-pack bars (admin+teamLab share a lane where they don't overlap); add a per-day "+" affordance; fix the Friday `.weekend` bug (only Sun+Sat). Serve + screenshot. Commit.
 - [x] **Stage 8 — `lib/weekgrid.js`** ✓ built in Stage 1 (20 tests).
 - [ ] **Stage 9 — calendar.js week mode skeleton.** Add `mode='week'` + a Month/Week/Agenda toggle (`#calModeWeek`); `renderWeek()` builds the 7-col header (real outline-today, weekend tint Sat+Sun only), wired to viewY/viewM/a week anchor. `[`/`]` + prev/next shift by a week in week mode. Verify: toggling shows the header. Commit.
 - [ ] **Stage 10 — week all-day lane.** Render packed multi-day bars (`lib/weekgrid.packLanes`) with real category colors (`var(--c-<cat>)` tint + ink) + continue `‹ ›` arrows; single-day events as chips per column. Use `eventsOn(date,false)` (NOT the month SPAN_CAP). esc() all titles. Commit.

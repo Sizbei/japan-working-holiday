@@ -9,13 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#f7f4ee; --card:#fffdf8; --ink:#2b2824; --ink-soft:#6b6359; --line:#e4ddd0;
+    --paper:#f7f4ee; --card:#fffdf8; --ink:#1a1a22; --ink-soft:#595550; --line:#e4ddd0;
     --red:#bc002d; --indigo:#4f5bd5;
-    --seasonal:#5f8a5c; --seasonal-bg:#e9f0e6;
-    --admin:#b07d18;  --admin-bg:#f6ecd6;
-    --festival:#cc5a3c; --festival-bg:#f7e6df;
-    --music:#5a52c9;  --music-bg:#e8e6f7;
-    --arrival:#bc002d; --arrival-bg:#f6dfe3;
+    /* the app's REAL category tokens (style.css :root) + a matching tint via color-mix */
+    --seasonal:#8a6508; --seasonal-bg:color-mix(in srgb,#8a6508 13%,#fffdf8);
+    --admin:#3a5ba0;    --admin-bg:color-mix(in srgb,#3a5ba0 12%,#fffdf8);   /* WHV admin = --c-personal */
+    --festival:#c43459; --festival-bg:color-mix(in srgb,#c43459 11%,#fffdf8);
+    --music:#5a3fb5;    --music-bg:color-mix(in srgb,#5a3fb5 11%,#fffdf8);
+    --arrival:#bc002d;  --arrival-bg:color-mix(in srgb,#bc002d 10%,#fffdf8);  /* arrival = --c-holiday */
+    --illum:#266a9e;    --illum-bg:color-mix(in srgb,#266a9e 12%,#fffdf8);    /* teamLab = --c-illumination */
     --r:10px; --shadow:0 1px 2px rgba(60,50,30,.06),0 6px 18px rgba(60,50,30,.05);
   }
   *{box-sizing:border-box;}
@@ -44,12 +46,19 @@
 
   /* ---- week grid ---- */
   .daysrow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line);}
+  .dayhd{position:relative;}
+  .addrow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line);background:#fffdf8;}
+  .addrow button{border:none;border-left:1px solid var(--line);background:none;color:var(--ink-soft);opacity:.4;font-size:.85rem;line-height:1;padding:4px 0;cursor:pointer;transition:opacity .15s,background .15s,color .15s;}
+  .addrow button:first-child{border-left:none;}
+  .addrow button:hover{opacity:1;background:var(--seasonal-bg);color:var(--ink);}
   .dayhd{padding:10px 8px 9px;text-align:center;border-left:1px solid var(--line);}
   .dayhd:first-child{border-left:none;}
   .dayhd .dn{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
   .dayhd .dd{font-family:"Newsreader",serif;font-size:1.35rem;line-height:1.1;margin-top:2px;}
-  .dayhd.today .dd{display:inline-block;background:var(--red);color:#fff;border-radius:50%;width:36px;height:36px;line-height:36px;}
-  .dayhd.weekend{background:#faf7f0;}
+  /* today = red OUTLINE (matches .cal-cell.today in the app), not a filled circle */
+  .dayhd.today{box-shadow:inset 0 0 0 1px var(--red);}
+  .dayhd.today .dd{color:var(--red);}
+  .dayhd.weekend{background:var(--card);}
 
   .allday{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:5px 0;padding:8px 0 10px;background:linear-gradient(#fffdf8,#fffdf8);}
   /* column guide lines */
@@ -64,17 +73,19 @@
   .bar.cont-l{border-top-left-radius:3px;border-bottom-left-radius:3px;margin-left:0;}
   .bar.cont-r{border-top-right-radius:3px;border-bottom-right-radius:3px;margin-right:0;}
   .bar .arr{color:var(--ink-soft);font-size:.7rem;}
-  .b-seasonal{background:var(--seasonal-bg);color:#3c5a3a;} .b-seasonal .dot{background:var(--seasonal);}
-  .b-admin{background:var(--admin-bg);color:#7a5710;} .b-admin .dot{background:var(--admin);}
-  .b-festival{background:var(--festival-bg);color:#9c3f26;} .b-festival .dot{background:var(--festival);}
-  .b-music{background:var(--music-bg);color:#3f3895;} .b-music .dot{background:var(--music);}
+  .b-seasonal{background:var(--seasonal-bg);color:var(--seasonal);} .b-seasonal .dot{background:var(--seasonal);}
+  .b-admin{background:var(--admin-bg);color:var(--admin);} .b-admin .dot{background:var(--admin);}
+  .b-festival{background:var(--festival-bg);color:var(--festival);} .b-festival .dot{background:var(--festival);}
+  .b-music{background:var(--music-bg);color:var(--music);} .b-music .dot{background:var(--music);}
+  .b-illum{background:var(--illum-bg);color:var(--illum);} .b-illum .dot{background:var(--illum);}
   /* a single-day chip sits in one column */
   .chips{grid-column:1/8;display:grid;grid-template-columns:repeat(7,1fr);align-items:start;padding-top:2px;position:relative;z-index:1;}
   .chip{margin:2px 4px;height:24px;border-radius:7px;display:flex;align-items:center;gap:6px;padding:0 9px;font-size:.76rem;font-weight:600;white-space:nowrap;overflow:hidden;cursor:grab;}
   .chip.arrival{background:var(--arrival-bg);color:var(--arrival);}
-  .chip.festival{background:var(--festival-bg);color:#9c3f26;}
-  .chip.music{background:var(--music-bg);color:#3f3895;}
-  .chip.seasonal{background:var(--seasonal-bg);color:#3c5a3a;}
+  .chip.festival{background:var(--festival-bg);color:var(--festival);}
+  .chip.music{background:var(--music-bg);color:var(--music);}
+  .chip.seasonal{background:var(--seasonal-bg);color:var(--seasonal);}
+  .chip.illum{background:var(--illum-bg);color:var(--illum);}
   .chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto;opacity:.85;}
 
   /* drag ghost suggestion */
@@ -106,10 +117,11 @@
   .mev{display:flex;align-items:center;gap:8px;padding:5px 9px;border-radius:7px;font-size:.8rem;font-weight:500;margin-bottom:5px;}
   .mev .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}
   .mev .cont{margin-left:auto;color:var(--ink-soft);font-size:.66rem;}
-  .mev.s{background:var(--seasonal-bg);color:#3c5a3a;} .mev.s .dot{background:var(--seasonal);}
-  .mev.a{background:var(--admin-bg);color:#7a5710;} .mev.a .dot{background:var(--admin);}
-  .mev.f{background:var(--festival-bg);color:#9c3f26;} .mev.f .dot{background:var(--festival);}
-  .mev.m{background:var(--music-bg);color:#3f3895;} .mev.m .dot{background:var(--music);}
+  .mev.s{background:var(--seasonal-bg);color:var(--seasonal);} .mev.s .dot{background:var(--seasonal);}
+  .mev.a{background:var(--admin-bg);color:var(--admin);} .mev.a .dot{background:var(--admin);}
+  .mev.f{background:var(--festival-bg);color:var(--festival);} .mev.f .dot{background:var(--festival);}
+  .mev.m{background:var(--music-bg);color:var(--music);} .mev.m .dot{background:var(--music);}
+  .mev.illum{background:var(--illum-bg);color:var(--illum);} .mev.illum .dot{background:var(--illum);}
   .mev.ar{background:var(--arrival-bg);color:var(--arrival);} .mev.ar .dot{background:var(--arrival);}
   .mempty{color:var(--ink-soft);font-size:.74rem;font-style:italic;padding:2px 0 3px;}
   .callouts{margin-top:26px;font-size:.82rem;color:var(--ink-soft);line-height:1.6;}
@@ -136,8 +148,16 @@
       <div class="dayhd today"><div class="dn">Tue</div><div class="dd">30</div></div>
       <div class="dayhd"><div class="dn">Wed</div><div class="dd">1</div></div>
       <div class="dayhd"><div class="dn">Thu</div><div class="dd">2</div></div>
-      <div class="dayhd weekend"><div class="dn">Fri</div><div class="dd">3</div></div>
+      <div class="dayhd"><div class="dn">Fri</div><div class="dd">3</div></div>
       <div class="dayhd weekend"><div class="dn">Sat</div><div class="dd">4</div></div>
+    </div>
+
+    <!-- always-visible per-day add affordance (click a day to quick-create an all-day event) -->
+    <div class="addrow" aria-label="Add an event">
+      <button aria-label="Add on Sun 28">＋</button><button aria-label="Add on Mon 29">＋</button>
+      <button aria-label="Add on Tue 30">＋</button><button aria-label="Add on Wed 1">＋</button>
+      <button aria-label="Add on Thu 2">＋</button><button aria-label="Add on Fri 3">＋</button>
+      <button aria-label="Add on Sat 4">＋</button>
     </div>
 
     <div class="allday">
@@ -146,12 +166,12 @@
       <div class="lane"><div class="bar b-seasonal cont-l cont-r" style="grid-column:1/8"><span class="arr">‹</span><span class="dot"></span>Hilton 'Sunset Beach' Rooftop Beer Garden<span class="arr">›</span></div></div>
       <div class="lane"><div class="bar b-seasonal cont-l cont-r" style="grid-column:1/8"><span class="arr">‹</span><span class="dot"></span>Mt. Takao Beer Mount<span class="arr">›</span></div></div>
       <div class="lane"><div class="bar b-admin cont-r" style="grid-column:3/8"><span class="dot"></span>WHV admin window — address · NHI · pension · My Number<span class="arr">›</span></div></div>
-      <div class="lane"><div class="bar b-seasonal cont-r" style="grid-column:4/8"><span class="dot"></span>teamLab Planets — Summer Sunflower<span class="arr">›</span></div></div>
+      <div class="lane"><div class="bar b-illum cont-r" style="grid-column:4/8"><span class="dot"></span>teamLab Planets — Summer Sunflower<span class="arr">›</span></div></div>
       <!-- single-day chips, each in its own column -->
       <div class="chips">
         <div></div><div></div>
         <div><div class="chip arrival"><span class="dot"></span>✈ Land NRT</div></div>
-        <div><div class="chip seasonal ghost"><span class="dot"></span>teamLab Borderless</div></div>
+        <div><div class="chip illum ghost"><span class="dot"></span>teamLab Borderless</div></div>
         <div></div>
         <div><div class="chip music"><span class="dot"></span>VENT Omotesando</div></div>
         <div><div class="chip festival"><span class="dot"></span>Farmer's Mkt @ UNU</div><div class="chip music"><span class="dot"></span>WOMB Shibuya</div></div>
@@ -164,6 +184,7 @@
       <span><i style="background:var(--admin)"></i>admin / deadline</span>
       <span><i style="background:var(--festival)"></i>festival</span>
       <span><i style="background:var(--music)"></i>music</span>
+      <span><i style="background:var(--illum)"></i>illumination</span>
       <span><i style="background:var(--arrival)"></i>arrival</span>
       <span style="margin-left:auto;color:var(--indigo)">⬚ dashed = drag-to-reschedule preview</span>
     </div>
@@ -197,8 +218,8 @@
           <div class="mev a"><span class="dot"></span>WHV admin window opens<span class="cont">→ Jul 14</span></div>
         </div>
         <div class="mday"><div class="mh"><span class="mdn">Wed</span><span class="mdd">1</span></div>
-          <div class="mev s"><span class="dot"></span>teamLab Planets — Summer<span class="cont">→ Jul 31</span></div>
-          <div class="mev s"><span class="dot"></span>teamLab Borderless</div>
+          <div class="mev illum"><span class="dot"></span>teamLab Planets — Summer<span class="cont">→ Jul 31</span></div>
+          <div class="mev illum"><span class="dot"></span>teamLab Borderless</div>
         </div>
         <div class="mday"><div class="mh"><span class="mdn">Thu</span><span class="mdd">2</span></div><div class="mempty">ongoing only</div></div>
         <div class="mday"><div class="mh"><span class="mdn">Fri</span><span class="mdd">3</span></div>

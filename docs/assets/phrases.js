@@ -70,8 +70,9 @@ function wireTranslateInner() {
     const out = $('#jtTaOut'); out.innerHTML = '<span class="jt-load">translating…</span>';
     try {
       const res = await translate(text, from, to);
+      const outLang = to === 'ja' ? ' lang="ja"' : '';   // mark JP output for SR voice + CJK glyphs (WCAG 3.1.2)
       out.innerHTML = res.text
-        ? `<div class="jt-res"><div class="jt-mean">${esc(res.text)}</div><div class="jt-act"><button type="button" id="jtCopy">Copy</button> <a href="https://jisho.org/search/${encodeURIComponent(text)}" target="_blank" rel="noopener noreferrer">Dictionary ↗</a></div></div>`
+        ? `<div class="jt-res"><div class="jt-mean"${outLang}>${esc(res.text)}</div><div class="jt-act"><button type="button" id="jtCopy">Copy</button> <a href="https://jisho.org/search/${encodeURIComponent(text)}" target="_blank" rel="noopener noreferrer">Dictionary ↗</a></div></div>`
         : `<div class="jt-res">${esc(res.warning || 'translation unavailable')}</div>`;
       const cp = $('#jtCopy'); if (cp) cp.addEventListener('click', () => navigator.clipboard?.writeText(res.text));
     } catch { out.innerHTML = `<div class="jt-res">Translation unavailable.</div>`; }
@@ -110,7 +111,7 @@ async function runLookup(q) {
     const res = await lookupWord(q, { signal: lookCtrl.signal });
     clearTimeout(killer);
     if (res) {
-      out.innerHTML = `<div class="jt-res"><div class="jt-read">${esc(res.reading)}</div><div class="jt-mean">${esc(res.gloss)}</div>`
+      out.innerHTML = `<div class="jt-res"><div class="jt-read" lang="ja">${esc(res.reading)}</div><div class="jt-mean">${esc(res.gloss)}</div>`
         + `<div class="jt-act"><button type="button" class="jt-save" data-jp="${esc(q)}" data-read="${esc(res.reading)}" data-en="${esc(res.gloss)}">★ Save to my phrases</button> <a href="${esc(jisho)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a></div></div>`;
       wireSave();
     } else {

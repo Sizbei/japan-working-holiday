@@ -11,7 +11,8 @@ async function tField(text) {
   const t = (text || '').trim(); if (!t) return '';
   const slice = t.slice(0, MAX_LEN);
   const res = await translate(slice, 'en', 'ja');
-  return res.text ? esc(res.text) + (t.length > MAX_LEN ? ' <span class="ct-trunc">… (truncated)</span>' : '') : '';
+  // output is always Japanese (EN→JA) → mark lang="ja" so screen readers use a JP voice (WCAG 3.1.2)
+  return res.text ? `<span lang="ja">${esc(res.text)}</span>` + (t.length > MAX_LEN ? ' <span class="ct-trunc">… (truncated)</span>' : '') : '';
 }
 
 export function attachCardTranslate(triggerEl, fields, mountEl) {

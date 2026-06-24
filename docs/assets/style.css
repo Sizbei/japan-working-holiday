@@ -1834,7 +1834,11 @@ html[data-reduce-motion="on"] *::after{
 /* priority flag (⚑) + flagged row accent */
 .ci-flag{ background:none; border:none; cursor:pointer; font-size:.82rem; opacity:.32; padding:.1rem .3rem; color:var(--ink-soft); transition:opacity .15s, color .15s; align-self:flex-start; margin-top:.05rem; }
 .ci-flag:hover{ opacity:.7; }
-.ci-flag.on{ opacity:1; color:var(--red); }
+.ci-flag.on{ opacity:1; }
+.ci-flag.p1{ color:var(--red); }            /* P1 urgent */
+.ci-flag.p2{ color:var(--c-food); }         /* P2 high (rust/orange) */
+.ci-flag.p3{ color:var(--indigo); }         /* P3 medium (blue) */
+.ci-flag.p4{ color:var(--ink-soft); }       /* P4 low (grey) */
 .ci-flag:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .check-item.flagged{ background:color-mix(in srgb, var(--red) 5%, transparent); box-shadow:inset 3px 0 0 var(--red); }
 

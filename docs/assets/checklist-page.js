@@ -12,6 +12,7 @@ import { celebrate } from './celebrate.js';
 import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
+import { migratePriority, getLevel, setLevel, cyclePriority, priorityRank } from './lib/priority.js';
 
 let DATA = null;
 
@@ -30,8 +31,13 @@ function loadDue() { return get(KEYS.due, {}) || {}; }
 // checklist focus controls (reduce the 74-item yearlong list to what's actionable now)
 function checkView() { return getRaw(KEYS.checkView, 'phase'); }     // 'phase' | 'soon'
 function hideDone() { return getRaw(KEYS.checkHideDone, '') === 'on'; }
-function loadPriority() { const a = get(KEYS.checkPriority, []); return new Set(Array.isArray(a) ? a : []); }
-function savePriority(ids) { set(KEYS.checkPriority, [...ids]); }
+// p1–p4 priorities (map {id: 1..4}). Migrates the legacy v1 binary-flag array (each flagged id → p1).
+function loadPriority() {
+  const v2 = get(KEYS.checkPriorityV2, null);
+  if (v2 && typeof v2 === 'object' && !Array.isArray(v2)) return v2;     // already on v2
+  return migratePriority(get(KEYS.checkPriority, []));                    // legacy flags → { id: 1 }
+}
+function savePriority(map) { set(KEYS.checkPriorityV2, map); }
 function renderCheckTools() {
   const el = $('#checkTools'); if (!el) return;
   const view = checkView(), hd = hideDone();
@@ -259,11 +265,11 @@ function renderChecklist(today) {
     // plus anything you've flagged ⚑ — sorted flag-first, then soonest due.
     const items = checklistItems(DATA).filter(it => {
       if (state[it.id]) return false;                       // done → not pressing
-      if (prio.has(it.id)) return true;                     // flagged → always
+      if (getLevel(prio, it.id) > 0) return true;           // any priority → always pressing
       const eff = it.effectiveDue; if (!eff) return false;  // undated → not "due soon"
       const d = daysBetween(now, eff); return d !== null && d <= 30;   // overdue or within 30d
     }).sort((a, b) => {
-      const pa = prio.has(a.id) ? 0 : 1, pb = prio.has(b.id) ? 0 : 1;
+      const pa = priorityRank(getLevel(prio, a.id)), pb = priorityRank(getLevel(prio, b.id));   // P1 first … none last
       if (pa !== pb) return pa - pb;
       return (a.effectiveDue || '9999').localeCompare(b.effectiveDue || '9999');
     });
@@ -368,7 +374,8 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const eff = due[id] || it.dueBy || '';
   const st = eff ? windowStatus(eff, now) : 'none';
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';
-  const flagged = !!(opts.prio && opts.prio.has(id));
+  const lvl = opts.prio ? getLevel(opts.prio, id) : 0;   // 0 = none, 1–4 = P1–P4
+  const flagged = lvl > 0;
   const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
   const del = it._custom
     ? `<button type="button" class="check-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.task)}">✎</button>`
@@ -384,7 +391,7 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
         ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
         ${srcLinks(it.sources, 'ci-src')}
       </label>
-      <button type="button" class="ci-flag${flagged ? ' on' : ''}" data-flag="${esc(id)}" aria-pressed="${flagged ? 'true' : 'false'}" aria-label="${flagged ? 'Remove priority' : 'Mark as priority'}" title="Priority">⚑</button>
+      <button type="button" class="ci-flag${lvl ? ' on p' + lvl : ''}" data-flag="${esc(id)}" aria-label="${lvl ? 'Priority P' + lvl + ' — click to change' : 'Set priority'}" title="Priority — P1 (urgent) → P4, click to cycle">⚑</button>
       <button type="button" class="ci-due" data-due="${esc(id)}" title="Set a due date" aria-label="Set due date">📅</button>
       ${del}
     </li>`;
@@ -399,8 +406,8 @@ function wireChecklist() {
   }));
   $$('#checkPhases .ci-flag').forEach(btn => btn.addEventListener('click', () => {
     const id = btn.dataset.flag, p = loadPriority();
-    p.has(id) ? p.delete(id) : p.add(id); savePriority(p);
-    renderChecklist();   // re-render: flag state + (in Due-soon) the item's position/inclusion
+    savePriority(setLevel(p, id, cyclePriority(getLevel(p, id))));   // cycle none→P1→P2→P3→P4→none
+    renderChecklist();   // re-render: priority dot + (in Due-soon) the item's position/inclusion
   }));
   $$('#checkPhases .check-del').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.del;

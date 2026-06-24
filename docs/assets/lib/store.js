@@ -20,6 +20,8 @@ export const KEYS = {
   checkView: 'jwh-check-view-v1',
   checkHideDone: 'jwh-check-hidedone-v1',
   checkPriority: 'jwh-check-priority-v1',
+  checkPriorityV2: 'jwh-check-priority-v2',
+  checkSmartView: 'jwh-check-smartview',
   theme: 'jwh-theme',
   lang: 'jwh-lang',
   reduceMotion: 'jwh-reduce-motion',

@@ -5,7 +5,7 @@
 
 import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
-import { fmtShort, windowStatus, nowISO, daysBetween } from './lib/dates.js';
+import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable } from './dnd.js';
 import { mountAccordion } from './collapse.js';
 import { celebrate } from './celebrate.js';
@@ -13,6 +13,7 @@ import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, 
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { askDate, alertModal, confirmModal } from './lib/modal.js';
 import { migratePriority, getLevel, setLevel, cyclePriority, priorityRank } from './lib/priority.js';
+import { filterView, groupByDay } from './lib/smartviews.js';
 
 let DATA = null;
 
@@ -29,7 +30,7 @@ function loadChecks() { return get(KEYS.checklist, {}) || {}; }
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }
 // checklist focus controls (reduce the 74-item yearlong list to what's actionable now)
-function checkView() { return getRaw(KEYS.checkView, 'phase'); }     // 'phase' | 'soon'
+function smartView() { return getRaw(KEYS.checkSmartView, 'all'); }   // 'all' | 'today' | 'upcoming' | 'overdue'
 function hideDone() { return getRaw(KEYS.checkHideDone, '') === 'on'; }
 // p1–p4 priorities (map {id: 1..4}). Migrates the legacy v1 binary-flag array (each flagged id → p1).
 function loadPriority() {
@@ -40,14 +41,14 @@ function loadPriority() {
 function savePriority(map) { set(KEYS.checkPriorityV2, map); }
 function renderCheckTools() {
   const el = $('#checkTools'); if (!el) return;
-  const view = checkView(), hd = hideDone();
+  const view = smartView(), hd = hideDone();
+  const pill = (v, label) => `<button type="button" class="ct-chip ${view === v ? 'on' : ''}" data-view="${v}" aria-pressed="${view === v}">${label}</button>`;
   el.innerHTML = `
     <div class="ct-views" role="group" aria-label="Checklist view">
-      <button type="button" class="ct-chip ${view === 'phase' ? 'on' : ''}" data-view="phase" aria-pressed="${view === 'phase'}">All phases</button>
-      <button type="button" class="ct-chip ${view === 'soon' ? 'on' : ''}" data-view="soon" aria-pressed="${view === 'soon'}">Due soon · 30 days</button>
+      ${pill('all', 'All')}${pill('today', 'Today')}${pill('upcoming', 'Upcoming')}${pill('overdue', 'Overdue')}
     </div>
     <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>`;
-  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { setRaw(KEYS.checkView, b.dataset.view); renderCheckTools(); renderChecklist(); }));
+  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { setRaw(KEYS.checkSmartView, b.dataset.view); renderCheckTools(); renderChecklist(); }));
   el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); });
 }
 function saveDue(s) { set(KEYS.due, s); }
@@ -254,28 +255,33 @@ function renderChecklist(today) {
   const prio = loadPriority();
   const hd = hideDone();
   const searching = !!checkSearchQ;
-  // a search query forces the phase view (don't drop into the flat Due-soon view while searching)
-  const view = searching ? 'phase' : checkView();
+  // a search query forces the grouped All view (don't drop into a flat smart view while searching)
+  const view = searching ? 'all' : smartView();
   const match = it => !searching || (it.task || '').toLowerCase().includes(checkSearchQ);
   const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
   const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
 
-  if (view === 'soon') {
-    // a flat list of what's actually pressing: undone items due within 30 days (or overdue),
-    // plus anything you've flagged ⚑ — sorted flag-first, then soonest due.
-    const items = checklistItems(DATA).filter(it => {
-      if (state[it.id]) return false;                       // done → not pressing
-      if (getLevel(prio, it.id) > 0) return true;           // any priority → always pressing
-      const eff = it.effectiveDue; if (!eff) return false;  // undated → not "due soon"
-      const d = daysBetween(now, eff); return d !== null && d <= 30;   // overdue or within 30d
-    }).sort((a, b) => {
+  if (view !== 'all') {
+    // a flat, date-driven smart view (Today / Upcoming / Overdue), undone only, P1-first then soonest
+    const undone = checklistItems(DATA).filter(it => !state[it.id]);
+    const items = filterView(undone, view, now).sort((a, b) => {
       const pa = priorityRank(getLevel(prio, a.id)), pb = priorityRank(getLevel(prio, b.id));   // P1 first … none last
       if (pa !== pb) return pa - pb;
       return (a.effectiveDue || '9999').localeCompare(b.effectiveDue || '9999');
     });
-    wrap.innerHTML = items.length
-      ? `<ul class="check-list check-soon">${items.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true })).join('')}</ul>`
-      : `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">🎏</div><p class="empty-h">Nothing due in the next 30 days.</p><p class="empty-sub">You're clear — switch to “All phases” to plan further ahead, or flag ⚑ items to pin them here.</p></div>`;
+    const renderRow = it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true });
+    if (!items.length) {
+      const e = { today: ['🎏', 'Nothing due today.', 'You’re clear for today — peek at “Upcoming”.'],
+                  upcoming: ['🗓', 'Nothing in the next 7 days.', 'Set due dates on tasks to see them land here.'],
+                  overdue: ['✅', 'Nothing overdue.', 'Nice — you’re on top of it.'] }[view];
+      wrap.innerHTML = `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">${e[0]}</div><p class="empty-h">${esc(e[1])}</p><p class="empty-sub">${esc(e[2])}</p></div>`;
+    } else if (view === 'upcoming') {
+      // group by day with date subheaders (already date-sorted within filterView/groupByDay)
+      wrap.innerHTML = groupByDay(items).map(g =>
+        `<div class="check-daygroup"><h3 class="check-dayhead">${esc(fmtShort(g.day))}</h3><ul class="check-list check-soon">${g.items.map(renderRow).join('')}</ul></div>`).join('');
+    } else {
+      wrap.innerHTML = `<ul class="check-list check-soon">${items.map(renderRow).join('')}</ul>`;
+    }
   } else {
     // merge user-added custom items: grouped under their baked phase, or the synthetic "My tasks" group
     const { byPhase, mine } = partitionCustom(
@@ -336,7 +342,7 @@ function renderChecklist(today) {
   if (prog) prog.hidden = false;
   wireCheckEmptyAdd();
   wireChecklist();
-  if (view === 'phase' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
+  if (view === 'all' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
       itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
       idOf: el => el.dataset.id,
@@ -344,7 +350,7 @@ function renderChecklist(today) {
     }));
   }
   // wire/restore collapse AFTER makeSortable (phase view only); force-expand while searching so matches show
-  if (view === 'phase') mountAccordion($('#checkPhases'), { forceExpanded: searching });
+  if (view === 'all') mountAccordion($('#checkPhases'), { forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
   updateProgress();
 }

@@ -174,6 +174,7 @@ function render() {
   } else if (mode === 'week') {
     view.innerHTML = weekHTML();
     if (panel) panel.hidden = true;   // the week view shows the whole week; the month deadline panel would duplicate
+    wireWeek();
   } else {
     view.innerHTML = agendaHTML();
     if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate
@@ -211,8 +212,12 @@ function weekHTML() {
   evs.filter(e => !isMultiDay(e)).forEach(e => { const i = days.indexOf(e.date.slice(0, 10)); if (i >= 0) cols[i].push(e); });
   const chips = cols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
 
+  // always-visible per-day add (one ＋ per column, even when bars cover the day)
+  const addrow = days.map(d => `<button type="button" class="wk-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button>`).join('');
+
   return `<div class="wk-grid">
     <div class="wk-daysrow">${hd}</div>
+    <div class="wk-addrow" aria-label="Add an event">${addrow}</div>
     <div class="wk-allday" id="wkAllday">
       ${lanes || '<div class="wk-lane"></div>'}
       <div class="wk-chips">${chips}</div>
@@ -229,6 +234,9 @@ function barHTML(p) {
 }
 function chipHTML(e) {
   return `<div class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></div>`;
+}
+function wireWeek() {
+  $$('#calView .wk-add').forEach(b => b.addEventListener('click', () => openModal(null, b.dataset.day)));   // quick-create an all-day event on that day
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }

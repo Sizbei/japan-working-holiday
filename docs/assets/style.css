@@ -581,6 +581,11 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 /* ---- WEEK view (all-day lane; today = red outline like .cal-cell.today) ---- */
 .wk-grid{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--bg-soft); }
 .wk-daysrow{ display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--line); }
+.wk-addrow{ display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--line); background:var(--bg-soft); }
+.wk-add{ border:none; border-left:1px solid var(--line); background:none; color:var(--ink-soft); opacity:.38; font-size:.85rem; line-height:1; padding:3px 0; cursor:pointer; transition:opacity .15s, background .15s, color .15s; }
+.wk-add:first-child{ border-left:none; }
+.wk-add:hover{ opacity:1; background:var(--bg); color:var(--ink); }
+.wk-add:focus-visible{ opacity:1; outline:2px solid var(--indigo); outline-offset:-2px; }
 .wk-dayhd{ padding:8px 6px 9px; text-align:center; border-left:1px solid var(--line); position:relative; }
 .wk-dayhd:first-child{ border-left:none; }
 .wk-dayhd.weekend{ background:var(--bg); }

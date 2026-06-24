@@ -63,6 +63,14 @@ function wireDictionary() {
   document.addEventListener('focusin', (e) => { const t = e.target.closest('.jp, [data-jp]'); if (t) showFor(t); });
   document.addEventListener('focusout', (e) => { if (e.target.closest('.jp, [data-jp]')) scheduleHide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideNow(); });
+  // Touch: hover/focus-on-tap is unreliable for span[tabindex] on mobile, so wire an explicit
+  // tap. Only the .jp accents (inert role=button spans) — NOT [data-jp] nav links, whose tap
+  // must navigate. Tapping outside (anywhere but the popover) dismisses.
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.jp');
+    if (t && !t.closest('a, button:not(.jp)')) { showFor(t); return; }
+    if (pop && pop.classList.contains('show') && !e.target.closest('.jp-dict')) scheduleHide();
+  });
   wireJpAccents(document);
 }
 // Make the .jp accents inside `container` reachable by keyboard for the lookup — as named
@@ -84,6 +92,7 @@ function ensurePop() {
   if (pop) return pop;
   pop = document.createElement('div');
   pop.className = 'jp-dict'; pop.id = 'jpDictPop'; pop.setAttribute('role', 'tooltip');
+  pop.setAttribute('aria-live', 'polite');   // announce the async reading/meaning once the lookup fills in
   pop.addEventListener('mouseover', () => clearTimeout(hideTimer));
   pop.addEventListener('mouseout', scheduleHide);
   document.body.appendChild(pop);

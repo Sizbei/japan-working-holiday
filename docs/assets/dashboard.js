@@ -7,7 +7,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
-import { checklistItems } from './content.js';
+import { checklistItems } from './checklist-page.js';
 import { allEvents } from './calendar.js';
 import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';

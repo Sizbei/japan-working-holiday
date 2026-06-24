@@ -5,7 +5,7 @@
 const CACHE = 'jwh-v92';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
-  'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/calendar.js',
+  'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js',
   'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/going-page.js', 'assets/palette.js', 'assets/emergency.js', 'assets/print.js', 'assets/cardtranslate.js',
   'assets/lib/dom.js', 'assets/lib/store.js', 'assets/lib/rooms.js', 'assets/lib/dates.js', 'assets/lib/homelayout.js', 'assets/lib/packing.js', 'assets/lib/budget.js',
   'assets/lib/notify.js', 'assets/lib/ics.js', 'assets/lib/places.js', 'assets/lib/geo.js', 'assets/lib/transit.js', 'assets/lib/dayplan.js', 'assets/lib/modal.js', 'assets/lib/going.js', 'assets/lib/directions.js', 'assets/lib/audio.js', 'assets/lib/placestats.js', 'assets/lib/menu.js', 'assets/lib/calevents.js', 'assets/lib/placesearch.js', 'assets/lib/palette.js', 'assets/lib/checklist.js', 'assets/lib/listctl.js', 'assets/lib/readiness.js', 'assets/lib/anki.js', 'assets/lib/ankiconnect.js', 'assets/lib/translate.js', 'assets/lib/userphrases.js', 'assets/lib/translatecache.js',

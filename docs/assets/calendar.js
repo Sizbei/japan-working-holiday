@@ -18,7 +18,7 @@ import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { openMenu } from './lib/menu.js';
-import { weekDays } from './lib/weekgrid.js';
+import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
@@ -198,10 +198,37 @@ function weekHTML() {
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
     return `<div class="wk-dayhd${cls}" data-day="${esc(d)}"><span class="wk-dn">${DOW[dow]}</span><span class="wk-dd">${t.getUTCDate()}</span></div>`;
   }).join('');
+
+  // visible events overlapping the week → multi-day BARS (lane-packed) + single-day CHIPS.
+  // allEvents()+clampSpan span events across columns without the month grid's SPAN_CAP flood-guard.
+  const evs = allEvents().filter(visible);
+  const packed = packLanes(evs.filter(isMultiDay), days);          // [{ev,lane,col0,col1,contL,contR}]
+  const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);
+  let lanes = '';
+  for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
+
+  const cols = Array.from({ length: 7 }, () => []);
+  evs.filter(e => !isMultiDay(e)).forEach(e => { const i = days.indexOf(e.date.slice(0, 10)); if (i >= 0) cols[i].push(e); });
+  const chips = cols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
+
   return `<div class="wk-grid">
     <div class="wk-daysrow">${hd}</div>
-    <div class="wk-allday" id="wkAllday"></div>
+    <div class="wk-allday" id="wkAllday">
+      ${lanes || '<div class="wk-lane"></div>'}
+      <div class="wk-chips">${chips}</div>
+    </div>
   </div>`;
+}
+// a category guaranteed to have a --c-* token (an imported .ics could carry an arbitrary one →
+// var(--c-<unknown>) would be undefined and the bar would render unstyled/unreadable)
+function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
+function barHTML(p) {
+  const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
+  return `<div class="wk-bar${cls}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}">`
+    + `${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}</div>`;
+}
+function chipHTML(e) {
+  return `<div class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></div>`;
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }

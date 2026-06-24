@@ -588,7 +588,20 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .wk-dn{ display:block; font-family:var(--mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
 .wk-dd{ display:block; font-family:var(--serif); font-size:1.25rem; line-height:1.1; margin-top:1px; }
 .wk-dayhd.today .wk-dd{ color:var(--red); }
-.wk-allday{ min-height:46px; padding:6px 0; }
+.wk-allday{ min-height:46px; padding:6px 0; display:flex; flex-direction:column; gap:4px;
+  background-image: repeating-linear-gradient(90deg, transparent 0, transparent calc(100%/7 - 1px), var(--line) calc(100%/7 - 1px), var(--line) calc(100%/7)); }
+.wk-lane{ display:grid; grid-template-columns:repeat(7,1fr); align-items:center; min-height:26px; }
+.wk-bar{ margin:0 3px; height:24px; display:flex; align-items:center; gap:6px; padding:0 8px; border-radius:7px; font-size:.76rem; font-weight:500; white-space:nowrap; overflow:hidden; cursor:pointer;
+  background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: var(--cat); }
+.wk-bar.cont-l{ border-top-left-radius:3px; border-bottom-left-radius:3px; margin-left:0; }
+.wk-bar.cont-r{ border-top-right-radius:3px; border-bottom-right-radius:3px; margin-right:0; }
+.wk-dot{ width:7px; height:7px; border-radius:50%; background:var(--cat); flex:0 0 auto; }
+.wk-bt{ overflow:hidden; text-overflow:ellipsis; }
+.wk-arr{ color:var(--ink-soft); font-size:.7rem; flex:0 0 auto; }
+.wk-chips{ display:grid; grid-template-columns:repeat(7,1fr); }
+.wk-chipcol{ padding:0 3px; display:flex; flex-direction:column; gap:3px; min-width:0; }
+.wk-chip{ height:22px; display:flex; align-items:center; gap:6px; padding:0 7px; border-radius:6px; font-size:.74rem; font-weight:600; white-space:nowrap; overflow:hidden; cursor:pointer;
+  background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: var(--cat); }
 .cal-chip{ display:block; width:100%; text-align:left; border:none; cursor:pointer; color:#fff;
   font-size:.66rem; font-weight:600; line-height:1.25; padding:1px 5px; border-radius:5px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background: var(--c-personal); }

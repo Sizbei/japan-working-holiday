@@ -1,6 +1,6 @@
 'use strict';
 // The dependency-aware checklist (extracted from content.js to keep both files focused).
-// Pure data fns (checklistItems/orderItems) are exported for dashboard.js + readiness; all
+// checklistItems() is exported for dashboard.js (the readiness widget + alert stream); all
 // mutation handlers dispatch jwh:data-changed at the mutation site (never in render()).
 
 import { $, $$, esc, srcLinks } from './lib/dom.js';
@@ -19,6 +19,7 @@ let DATA = null;
 
 export function mountChecklist(data, today) {
   DATA = data;
+  migratePriorityOnce();   // persist the v1→v2 priority migration once (not on every render)
   renderCheckTools();
   renderCheckToolbar();
   renderChecklist(today);
@@ -39,6 +40,12 @@ function loadPriority() {
   return migratePriority(get(KEYS.checkPriority, []));                    // legacy flags → { id: 1 }
 }
 function savePriority(map) { set(KEYS.checkPriorityV2, map); }
+function migratePriorityOnce() {
+  if (get(KEYS.checkPriorityV2, null) == null) {
+    const m = migratePriority(get(KEYS.checkPriority, []));
+    if (Object.keys(m).length) set(KEYS.checkPriorityV2, m);   // only write when there were legacy flags
+  }
+}
 function renderCheckTools() {
   const el = $('#checkTools'); if (!el) return;
   const view = smartView(), hd = hideDone();
@@ -48,8 +55,8 @@ function renderCheckTools() {
       ${pill('all', 'All')}${pill('today', 'Today')}${pill('upcoming', 'Upcoming')}${pill('overdue', 'Overdue')}
     </div>
     <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>`;
-  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { setRaw(KEYS.checkSmartView, b.dataset.view); renderCheckTools(); renderChecklist(); }));
-  el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); });
+  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.view; setRaw(KEYS.checkSmartView, v); renderCheckTools(); renderChecklist(); $(`#checkTools [data-view="${v}"]`)?.focus(); }));   // restore keyboard focus after the innerHTML rebuild
+  el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); $('#checkTools [data-hidedone]')?.focus(); });
 }
 function saveDue(s) { set(KEYS.due, s); }
 
@@ -70,7 +77,7 @@ export function checklistItems(data) {
 }
 
 // reconcile a phase's items against a saved id order (unknown/new ids append). Pure.
-export function orderItems(items, savedOrder) {
+function orderItems(items, savedOrder) {
   if (!savedOrder || !savedOrder.length) return items;
   const map = new Map(items.map(it => [it.id, it]));
   const out = [];
@@ -263,7 +270,8 @@ function renderChecklist(today) {
 
   if (view !== 'all') {
     // a flat, date-driven smart view (Today / Upcoming / Overdue), undone only, P1-first then soonest
-    const undone = checklistItems(DATA).filter(it => !state[it.id]);
+    // undone AND actionable (a requires[]-locked item isn't actionable → don't surface it as "Today")
+    const undone = checklistItems(DATA).filter(it => !state[it.id] && !(it.requires || []).some(r => knownIds.has(r) && !state[r]));
     const items = filterView(undone, view, now).sort((a, b) => {
       const pa = priorityRank(getLevel(prio, a.id)), pb = priorityRank(getLevel(prio, b.id));   // P1 first … none last
       if (pa !== pb) return pa - pb;
@@ -290,7 +298,7 @@ function renderChecklist(today) {
     const drag = !hd && !searching;   // drag is meaningless over a hidden/searched view
     let html = phases.map((p, pi) => {
       const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
-      const its = orderItems(all, order[pi]).filter(it => !(hd && state[it.id])).filter(match);
+      const its = orderItems(all, order[pi]).filter(it => it.id).filter(it => !(hd && state[it.id])).filter(match);   // it.id guard: never render a cb-undefined row from a malformed item
       if (!its.length) return '';                           // skip a phase fully done/hidden, or with no search match
       // count over the FULL phase (not the hide-done/search-filtered list) so progress math is stable
       const total = all.filter(it => it.id).length;
@@ -352,6 +360,8 @@ function renderChecklist(today) {
   // wire/restore collapse AFTER makeSortable (phase view only); force-expand while searching so matches show
   if (view === 'all') mountAccordion($('#checkPhases'), { forceExpanded: searching });
   if (focusSel) wrap.querySelector(focusSel)?.focus();
+  // keep the smart-view pills' active state in sync with the EFFECTIVE view (a search forces 'all')
+  $$('#checkTools [data-view]').forEach(b => { const on = b.dataset.view === view; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
   updateProgress();
 }
 // identify the focused checklist control so renderChecklist() can restore it after the rebuild
@@ -382,6 +392,7 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const dueTag = eff ? `<span class="due-tag ${st}">due ${esc(fmtShort(eff))}</span>` : '';
   const lvl = opts.prio ? getLevel(opts.prio, id) : 0;   // 0 = none, 1–4 = P1–P4
   const flagged = lvl > 0;
+  const nextLbl = lvl >= 4 ? 'none' : 'P' + (lvl + 1);   // what a press will set (cyclePriority)
   const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
   const del = it._custom
     ? `<button type="button" class="check-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.task)}">✎</button>`
@@ -397,7 +408,7 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
         ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
         ${srcLinks(it.sources, 'ci-src')}
       </label>
-      <button type="button" class="ci-flag${lvl ? ' on p' + lvl : ''}" data-flag="${esc(id)}" aria-label="${lvl ? 'Priority P' + lvl + ' — click to change' : 'Set priority'}" title="Priority — P1 (urgent) → P4, click to cycle">⚑</button>
+      <button type="button" class="ci-flag${lvl ? ' on p' + lvl : ''}" data-flag="${esc(id)}" aria-label="${lvl ? 'Priority P' + lvl + ' — press to set ' + nextLbl : 'Set priority — press to set P1'}" title="Priority — P1 (urgent) → P4, press to cycle">⚑<sub class="ci-flvl" aria-hidden="true">${lvl || ''}</sub></button>
       <button type="button" class="ci-due" data-due="${esc(id)}" title="Set a due date" aria-label="Set due date">📅</button>
       ${del}
     </li>`;

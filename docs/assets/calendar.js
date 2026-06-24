@@ -229,14 +229,29 @@ function weekHTML() {
 function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
 function barHTML(p) {
   const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
-  return `<div class="wk-bar${cls}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}">`
-    + `${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}</div>`;
+  return `<button type="button" class="wk-bar${cls}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}">`
+    + `${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}</button>`;
 }
 function chipHTML(e) {
-  return `<div class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></div>`;
+  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)})" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
 }
 function wireWeek() {
+  const view = $('#calView'); if (!view) return;
   $$('#calView .wk-add').forEach(b => b.addEventListener('click', () => openModal(null, b.dataset.day)));   // quick-create an all-day event on that day
+  // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
+  // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
+  makeMovable(view, {
+    itemSelector: '.wk-chip[data-id]', label: 'event',
+    idOf: el => el.dataset.id,
+    targetSelector: '.wk-dayhd[data-day]', keyOf: t => t.dataset.day,
+    onMove: rescheduleEvent,
+  });
+  // click/Enter a chip OR bar → openDetail (baked → detail view w/ Going/Reset/Copy; user → edit modal).
+  // A real drag releases over a day header, so it never also fires this.
+  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id]').forEach(el => el.addEventListener('click', () => {
+    const ev = allEvents().find(x => x.id === el.dataset.id);
+    if (ev) openDetail(ev);
+  }));
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -361,20 +376,22 @@ function wireReschedule() {
     canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,
-    onMove: (id, day) => {
-      const ev = allEvents().find(x => x.id === id);
-      if (!ev) return;
-      if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
-      if (ev.source === 'user') {
-        saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span
-        syncPlaceDate(id, day);                   // a linked "Visit:" place must follow its event's new date
-      } else {                                    // baked event → store a date override (tips.json stays untouched)
-        const orig = (DATA.calendar || []).find(c => c.id === id);
-        if (orig && day === (orig.date || '').slice(0, 10)) { const { [id]: _d, ...o } = loadOverrides(); saveOverrides(o); }   // back to researched date → drop the override
-        else saveOverrides({ ...loadOverrides(), [id]: day });
-      }
-    },
+    onMove: rescheduleEvent,
   });
+}
+// shared reschedule (month grid + week chips): user → edit date (keep span); baked → date override.
+function rescheduleEvent(id, day) {
+  const ev = allEvents().find(x => x.id === id);
+  if (!ev) return;
+  if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
+  if (ev.source === 'user') {
+    saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span
+    syncPlaceDate(id, day);                   // a linked "Visit:" place must follow its event's new date
+  } else {                                    // baked event → store a date override (tips.json stays untouched)
+    const orig = (DATA.calendar || []).find(c => c.id === id);
+    if (orig && day === (orig.date || '').slice(0, 10)) { const { [id]: _d, ...o } = loadOverrides(); saveOverrides(o); }   // back to researched date → drop the override
+    else saveOverrides({ ...loadOverrides(), [id]: day });
+  }
 }
 // keep a place's stored date in step when its linked calendar event is rescheduled (place↔event parity)
 function syncPlaceDate(eventId, day) {

@@ -125,7 +125,7 @@ export function makeMovable(container, opts) {
       if (e.button != null && e.button !== 0) return;
       const id = idOf(el);
       const sx = e.clientX, sy = e.clientY;
-      let dropTarget = null, moved = false;
+      let dropTarget = null, moved = false, lastKey = null;
       const onMv = (ev) => {
         if (!moved) {
           if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 6) return;   // ignore tap jitter — only a real drag reschedules
@@ -136,14 +136,15 @@ export function makeMovable(container, opts) {
         container.querySelectorAll(targetSelector).forEach(t => t.classList.remove('dnd-over'));
         const under = document.elementFromPoint(ev.clientX, ev.clientY);
         dropTarget = under && under.closest(targetSelector);
-        if (dropTarget) dropTarget.classList.add('dnd-over');
+        if (dropTarget) { dropTarget.classList.add('dnd-over'); const k = keyOf(dropTarget); if (k !== lastKey) { lastKey = k; announce(`${label} over ${k}`); } }
       };
       const onUp = () => {
         document.removeEventListener('pointermove', onMv);
         document.removeEventListener('pointerup', onUp);
         el.classList.remove('dnd-dragging');
         container.querySelectorAll(targetSelector).forEach(t => t.classList.remove('dnd-over'));
-        if (moved && dropTarget) { const key = keyOf(dropTarget); if (key) onMove(id, key); }
+        if (moved && dropTarget) { const key = keyOf(dropTarget); if (key) { onMove(id, key); announce(`${label} moved to ${key}.`); } }
+        else if (moved) announce(`${label} move cancelled.`);
       };
       document.addEventListener('pointermove', onMv);
       document.addEventListener('pointerup', onUp);

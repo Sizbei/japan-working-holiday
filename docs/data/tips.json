@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Japan Working Holiday — Insider Living Hacks (Canada → Tokyo)",
+    "title": "Japan Working Holiday — Insider Living Hacks (Seattle → Tokyo)",
     "subtitle": "One year. Tokyo. Synths, arcades, shipping code at 2am JST — with the paperwork that keeps me here. Land NRT 2026-06-30.",
     "generated": "2026-06-15",
     "status": "",
@@ -106,15 +106,15 @@
       "id": "book-first-week-accommodation-hotel-hostel-soft-",
       "when": "2026-06-15",
       "what": "First-week accommodation (hotel/hostel soft-landing) + share-house application",
-      "action": "BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House from Canada before landing.",
+      "action": "DONE — booked Sakura House (Makoto) through Jul 7; find long-term housing before checkout. (Original guidance:) BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House from Canada before landing.",
       "leadTime": "2-4 weeks before landing",
       "confidence": "high"
     },
     {
       "id": "book-pre-departure-sim-esim-wise-card-canada-iss",
       "when": "2026-06-22",
-      "what": "Pre-departure SIM/eSIM + Wise card (Canada-issued) + Mobile Suica",
-      "action": "Order Wise card and verify in CANADA before flying (a Japan-issued Wise card loses Apple/Google Pay). Install Ubigi/Sakura eSIM un-activated; pre-order Mobal SIM. Set up Mobile Suica in Apple Wallet. FLAG: Wise due 2026-06-29, eSIM install by 2026-06-29.",
+      "what": "Pre-departure SIM/eSIM + Wise card (home-issued, optional) + Mobile Suica",
+      "action": "Order Wise card (optional, Chase-Sapphire-only setup) and verify before flying while in the US (a Japan-issued Wise card loses Apple/Google Pay). Install Ubigi/Sakura eSIM un-activated; pre-order Mobal SIM. Set up Mobile Suica in Apple Wallet. FLAG: Wise due 2026-06-29, eSIM install by 2026-06-29.",
       "leadTime": "1-2 weeks before departure",
       "confidence": "high"
     },
@@ -1814,7 +1814,7 @@
     "Within 14 days: register your address (住民票) at your ward office.",
     "Same visit: enroll in National Health Insurance + pension.",
     "Open a Japan Post Bank (ゆうちょ) account — the most foreigner-friendly for new arrivals.",
-    "Set up phone/eSIM data + bridge spending with Wise + a no-FX-fee Canadian card until local payment is sorted."
+    "Set up phone/eSIM data + bridge spending with your Chase Sapphire Preferred (no-FX Visa) until local payment is sorted."
   ],
   "arrivalWeek": [
     {
@@ -1825,7 +1825,7 @@
         "At immigration: present passport + WHV visa, collect your Residence Card (在留カード) on the spot. Confirm it printed correctly.",
         "Have your status packet ready in case of spot-check: bank statement (proof of funds), accommodation booking, onward/return ticket.",
         "Withdraw your first JPY at a Seven Bank (7-Eleven) ATM in arrivals — skip the exchange counters.",
-        "Confirm Mobile Suica is loaded in Apple Wallet (topped up from your Canada-issued Wise card); tap into the Narita Express / Keisei toward Tokyo.",
+        "Confirm Mobile Suica is loaded in Apple Wallet (topped up from your Chase Sapphire Preferred — test foreign-card top-up early); tap into the Narita Express / Keisei toward Tokyo.",
         "Check into your pre-booked hotel/hostel near a hub (Shinjuku/Shibuya/Ueno). Rest — don't try to do admin today."
       ]
     },
@@ -1834,7 +1834,7 @@
       "date": "2026-07-01",
       "steps": [
         "Recover from jet lag; orient to your neighborhood. Locate the nearest konbini, ward office, post office, and station charge machines.",
-        "If you applied to a share house from Canada, confirm move-in logistics and view the room in person if possible.",
+        "If you applied to your Sakura House room before you flew, confirm move-in logistics and view the room in person if possible.",
         "Optional fun anchor: teamLab Planets Summer Sunflower Exclusive opens today — book a timed slot via DMM/Klook if you want a low-effort first outing.",
         "Buy a cheap data top-up if needed; verify your Mobal/passport-only SIM number works for SMS."
       ]
@@ -1907,8 +1907,8 @@
       "domain": "money"
     },
     {
-      "tip": "Set up the money stack in the right order: Canada-issued Wise card → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)",
-      "reason": "A Japanese phone number gates every money app, and a Canada-issued Wise card keeps Apple/Google Pay + Suica top-up working (a Japan-issued one doesn't). Concentrating spend in one ecosystem (Rakuten for gear) beats spreading thin.",
+      "tip": "Set up the money stack in order: Chase Sapphire (no-FX Visa) in Apple Pay → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)",
+      "reason": "A Japanese phone number gates every money app, and your Chase Sapphire (no-FX) in Apple Pay covers tap-pay + most purchases. Foreign-card Mobile Suica top-up can be finicky — test it day one; Wise (optional) or a Japanese card is the reliable Suica fallback. Concentrating spend in one ecosystem (Rakuten for gear) beats spreading thin.",
       "domain": "money"
     },
     {
@@ -1978,7 +1978,7 @@
         {
           "tip": "Japanese credit card is effectively impossible on a WHV",
           "why": "No local credit history; banks decline.",
-          "how": "Use a no-foreign-transaction-fee Canadian card + Wise debit as the bridge. Rakuten is the eventual long shot.",
+          "how": "Use your Chase Sapphire Preferred (no foreign-transaction fee) for purchases + a no-FX debit card for ATM cash as the bridge. Rakuten is the eventual long shot.",
           "impact": "Saves wasted applications + FX fees",
           "confidence": "high",
           "sources": [
@@ -2262,7 +2262,7 @@
         },
         {
           "id": "chk-carry-proof-of-funds-onward",
-          "task": "Carry proof of funds + onward planning docs through immigration. Canadian WHV applicants must show sufficient funds (commonly ~CAD 2,500, or ~CAD 4,000 without a return ticket) at visa stage; keep a printed bank statement and your return/onward ticket evidence accessible at Narita in case the immigration officer asks.",
+          "task": "Carry proof of funds + onward planning docs through immigration. Your Canadian WHV required showing sufficient funds (commonly ~CAD 2,500, or ~CAD 4,000 without a return ticket) at visa stage; keep a printed bank statement and your return/onward ticket evidence accessible at Narita in case the immigration officer asks.",
           "window": "at the airport on landing",
           "dueBy": "2026-06-30",
           "kind": "legal",
@@ -2274,7 +2274,7 @@
         },
         {
           "id": "chk-set-up-mobile-suica-in-apple-w",
-          "task": "Set up Mobile Suica in Apple Wallet on your iPhone before/at arrival and top it up from your Canada-issued Wise card (or a foreign Visa/Mastercard/Amex on your Apple ID). This is your IC transit + tap-to-pay card from minute one — no deposit, works nationwide. Avoid the physical Welcome Suica (only 4 weeks) and physical Suica deposits.",
+          "task": "Set up Mobile Suica in Apple Wallet on your iPhone before/at arrival and top it up from your Chase Sapphire Preferred in Apple Pay (a no-FX Visa). Heads-up: foreign-card Mobile Suica top-up is sometimes rejected — test it on day one; if CSP won't top up, a Wise card or a Japanese card is the reliable fallback. This is your IC transit + tap-to-pay card from minute one — no deposit, works nationwide. Avoid the physical Welcome Suica (only 4 weeks) and physical Suica deposits.",
           "window": "before departure or day of landing",
           "dueBy": "2026-06-30",
           "kind": "setup",
@@ -2959,7 +2959,7 @@
     { "id": "pk-cash", "cat": "Money", "item": "Starter ¥ cash (¥30,000–50,000) for day one", "note": "Many small shops, the ward office and some transit top-ups are cash-only; get yen before you fly or at the airport.", "confidence": "medium" },
     { "id": "pk-travelnotice", "cat": "Money", "item": "Tell your bank you're moving abroad (avoid fraud blocks)", "confidence": "high" },
     { "id": "pk-phone-sim", "cat": "Electronics", "item": "Pocket wifi or eSIM for arrival connectivity", "note": "Set up an eSIM before landing, or reserve pocket wifi for pickup at the airport — you'll need data day one.", "confidence": "high" },
-    { "id": "pk-power", "cat": "Electronics", "item": "Power: Japan is Type A, 100V (Canada plugs fit; check voltage)", "note": "Canadian plugs physically fit, but Japan is 100V vs 120V — confirm dual-voltage on chargers/appliances.", "confidence": "high" },
+    { "id": "pk-power", "cat": "Electronics", "item": "Power: Japan is Type A, 100V (North-American plugs fit; check voltage)", "note": "North-American plugs physically fit, but Japan is 100V vs 120V — confirm dual-voltage on chargers/appliances.", "confidence": "high" },
     { "id": "pk-powerbank", "cat": "Electronics", "item": "Power bank (carry-on only — never checked)", "note": "Airlines require lithium power banks in carry-on; check the Wh limit.", "confidence": "high" },
     { "id": "pk-phone", "cat": "Electronics", "item": "Unlocked phone + charger", "confidence": "high" },
     { "id": "pk-laptop", "cat": "Electronics", "item": "Laptop + charger (for remote work / setup)", "confidence": "medium" },
@@ -6314,7 +6314,7 @@
       "roomType": "private-apartment",
       "gender": "any",
       "contact": "24/7 English support; entire process online incl. e-signature",
-      "note": "The cleanest sign-before-you-fly route into a private apartment: no guarantor, no Japanese bank account, and the lease is e-signed via DocuSign from Canada using a home-country credit card as the security mechanism. Furnished options exist (rare in Japan). Premium over local-market rent is the cost of that convenience. Ideal for locking housing before you land, then optionally switching to UR/Village House once you have a residence card and bank account. Verify the per-unit initial cost and current availability before booking.",
+      "note": "The cleanest sign-before-you-fly route into a private apartment: no guarantor, no Japanese bank account, and the lease is e-signed via DocuSign from the US using a home-country credit card as the security mechanism. Furnished options exist (rare in Japan). Premium over local-market rent is the cost of that convenience. Ideal for locking housing before you land, then optionally switching to UR/Village House once you have a residence card and bank account. Verify the per-unit initial cost and current availability before booking.",
       "tier": "mid",
       "foreignerFriendly": true,
       "confidence": "medium",

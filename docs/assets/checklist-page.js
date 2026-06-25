@@ -17,6 +17,21 @@ import { filterView, groupByDay } from './lib/smartviews.js';
 
 let DATA = null;
 
+let composerDue = '';   // ISO due date chosen in the add-composer; reset after each add
+function setComposerDueLabel() {
+  const b = $('#checkAddDue');
+  if (b) b.textContent = composerDue ? `📅 ${fmtShort(composerDue)}` : '📅 Due';
+}
+function wireComposerDue() {
+  setComposerDueLabel();
+  $('#checkAddDue')?.addEventListener('click', async () => {
+    const v = await askDate('Due date for the new task (blank to clear):', { value: composerDue });
+    if (v === null) return;            // cancelled
+    composerDue = v.trim();            // '' clears
+    setComposerDueLabel();
+  });
+}
+
 export function mountChecklist(data, today) {
   DATA = data;
   migratePriorityOnce();   // persist the v1→v2 priority migration once (not on every render)
@@ -121,6 +136,7 @@ function renderCheckToolbar() {
         <div class="lc-composer">
           <input type="text" id="checkAddText" class="ql-input lc-add-input" placeholder="New task…" aria-label="New task" autocomplete="off">
           <select id="checkAddPhase" class="ql-sel" aria-label="Phase">${opts}</select>
+          <button type="button" class="ql-due" id="checkAddDue" aria-label="Set due date for new task">📅 Due</button>
           <button type="button" class="ql-addsuggest lc-add-go" id="checkAddGo">＋ Add</button>
           <button type="button" class="lc-miniclose" id="checkAddClose" aria-label="Cancel">✕</button>
         </div>
@@ -135,13 +151,15 @@ function renderCheckToolbar() {
       <div class="ql-reveal" id="checkAddRow"><div>
         <div class="ql-quickadd">
           <span class="ql-lab">add to</span>
-          <select id="checkAddPhase" class="ql-sel" aria-label="Phase">${opts}</select>
-          <button type="button" class="ql-addsuggest" id="checkAddBtn">＋ Add “<span class="ql-q" id="checkAddQ"></span>”</button>
+          <select id=”checkAddPhase” class=”ql-sel” aria-label=”Phase”>${opts}</select>
+          <button type=”button” class=”ql-due” id=”checkAddDue” aria-label=”Set due date for new task”>📅 Due</button>
+          <button type=”button” class=”ql-addsuggest” id=”checkAddBtn”>＋ Add “<span class=”ql-q” id=”checkAddQ”></span>”</button>
         </div>
       </div></div>`;
   }
   $('#checkAddPhase').value = 'My tasks';
   wireCheckSearch();
+  wireComposerDue();
 }
 
 // Wire the active toolbar variant. Re-run on each toolbar render (fresh nodes each time).
@@ -226,9 +244,11 @@ function commitCheckTask(task, focusEl) {
   task = (task || '').trim();
   if (!task) return;
   const phase = $('#checkAddPhase')?.value || 'My tasks';
-  saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, '', 'cku' + Date.now())]);
-  renderChecklist();                                              // re-render the list (no jwh:data-changed→renderChecklist listener)
-  document.dispatchEvent(new CustomEvent('jwh:data-changed'));    // refresh the dashboard teaser/bell
+  saveChecklistCustom([...loadChecklistCustom(), customItem(task, phase, composerDue, 'cku' + Date.now())]);
+  composerDue = '';                  // clear the picked due date after adding
+  setComposerDueLabel();
+  renderChecklist();                                              // re-render the list
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));    // refresh dashboard teaser/bell
   focusEl?.focus();
 }
 // Variant A: commit the quick-line query, then clear it (restores the full list + hides the add row).

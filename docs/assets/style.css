@@ -2763,3 +2763,14 @@ html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open) .sp-backdrop{
   .cal-sidepanel:not(.is-open){ transition: transform 150ms ease-in; }
   .sp-inner{ height: auto; overflow-y: visible; }
 }
+
+/* ============================================================
+   DARK THEME — Task 4 fixes
+   Only one hardcoded #fff found in Task 1-3 CSS that fails in dark:
+   .cal-actions .cal-btn.primary:hover uses background: var(--red).
+   In dark, --red=#ff4d6d (luminance 0.277) → #fff contrast = 3.2:1 (FAIL).
+   Fix: use --on-accent (#15151c) which gives 5.7:1 (PASS).
+   All other new surfaces (mini-nav, segmented control, month grid,
+   side panel) are fully token-driven and pass in both themes.
+   ============================================================ */
+[data-theme="dark"] .cal-actions .cal-btn.primary:hover{ color: var(--on-accent); }

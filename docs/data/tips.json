@@ -2101,6 +2101,20 @@
       "window": "Now → June 29 2026",
       "items": [
         {
+          "task": "Register with Registration of Canadians Abroad (ROCA) — free; lets Global Affairs Canada reach you in an emergency (disaster, unrest) and you reach them. Do it before/just after you land.",
+          "kind": "legal",
+          "id": "chk-register-roca",
+          "confidence": "high",
+          "sources": ["https://travel.gc.ca/travelling/registration"]
+        },
+        {
+          "task": "(Only if you'll drive) Get a CAA International Driving Permit before you fly — Canada signed the 1949 Geneva Convention, so a Canadian licence + IDP lets you drive in Japan for up to 1 year from entry. If you're in the US, CAA takes mail/online orders — apply early so it arrives before departure. For a longer stay, get a JAF translation of your licence or convert (gaimen kirikae).",
+          "kind": "logistics",
+          "id": "chk-idp-driving",
+          "confidence": "high",
+          "sources": ["https://english.jaf.or.jp/driving-in-japan/drive-in-japan", "https://www.international.gc.ca/country-pays/japan-japon/drivers_licenses-permis_de_conduire.aspx?lang=eng"]
+        },
+        {
           "task": "Confirm WHV eligibility (age 18–30, Canadian citizen; visa already granted)",
           "kind": "logistics",
           "id": "chk-confirm-whv-eligibility-age-1"
@@ -2521,6 +2535,27 @@
       "window": "July 2026",
       "items": [
         {
+          "task": "At long-term move-in: set up electricity / gas / water (usually an online or phone form) + internet, and learn your ward's garbage-sorting + collection-day rules — burnable / non-burnable / recyclables differ by ward and mis-sorting gets bags rejected.",
+          "kind": "setup",
+          "id": "chk-utilities-garbage",
+          "confidence": "high",
+          "sources": ["https://www.japan-guide.com/e/e2060.html"]
+        },
+        {
+          "task": "Sort renters / contents (kasai hoken) insurance for your long-term place — share houses sometimes bundle it; a normal lease usually requires it. Confirm what's already included before buying.",
+          "kind": "setup",
+          "id": "chk-renters-insurance",
+          "confidence": "medium",
+          "sources": []
+        },
+        {
+          "task": "When you move from Makoto Guesthouse to long-term housing: file a Japan Post mail-forwarding (tensō) request AND re-register your address at the ward office (within 14 days of the move).",
+          "kind": "logistics",
+          "id": "chk-mail-forwarding-move",
+          "confidence": "high",
+          "sources": ["https://www.post.japanpost.jp/int/index_en.html"]
+        },
+        {
           "task": "Lock in long-term housing before the Makoto Guesthouse stay ends on Jul 7 — view share-house rooms in person, then sign.",
           "kind": "housing",
           "id": "chk-lock-long-term-housing",
@@ -2593,6 +2628,20 @@
       "phase": "Ongoing Setup & Money",
       "window": "first few months",
       "items": [
+        {
+          "task": "(Usually optional) A hanko / inkan personal seal — most banks and contracts now accept a signature for foreign residents. You only really need a REGISTERED seal (jitsuin) for major legal transactions (car, real estate, insurance payouts). Skip unless something specifically asks for it.",
+          "kind": "setup",
+          "id": "chk-hanko-optional",
+          "confidence": "medium",
+          "sources": ["https://expatsguide.jp/living-in/visas-residency/registering-personal-seal/"]
+        },
+        {
+          "task": "If you work during the WHV: you'll either get a year-end adjustment (nenmatsu chōsei) via your employer, or file a tax return (kakutei shinkoku) by mid-March for the prior year. Keep your payslips + My Number.",
+          "kind": "money",
+          "id": "chk-tax-filing-if-working",
+          "confidence": "medium",
+          "sources": ["https://www.nta.go.jp/english/"]
+        },
         {
           "task": "Primary card = Chase Sapphire Preferred (Visa, no foreign-transaction fee). Set a travel notice and add it to Apple/Google Pay. Note: CSP at an ATM is a cash-advance (fee + interest) — use it for purchases, not yen withdrawals.",
           "kind": "money",
@@ -2904,6 +2953,13 @@
       "phase": "Exit & Departure",
       "window": "May–Jun 2027",
       "items": [
+        {
+          "task": "On leaving Japan, claim the National Pension lump-sum withdrawal (dattai ichijikin) — file within 2 years of departure. A withholding tax (commonly cited ~20.42%) is taken at source but is reclaimable through your appointed tax agent; verify the current rate when you file.",
+          "kind": "money",
+          "id": "chk-pension-lumpsum-exit",
+          "confidence": "medium",
+          "sources": ["https://www.nenkin.go.jp/international/"]
+        },
         {
           "id": "chk-reentry-exit",
           "task": "NEVER leave Japan without a re-entry permit (single-entry WHV)",

@@ -19,6 +19,7 @@ import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { openMenu } from './lib/menu.js';
 import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
+import { searchJP } from './lib/nominatim.js';
 
 let DATA = null;
 let viewY = 2026, viewM = 5;
@@ -588,6 +589,10 @@ function openModal(ev, presetDate) {
       <div class="row2">
         <label>Category<select name="category">${opts}</select></label>
       </div>
+      <label class="ev-loc-field">Location (optional)
+        <input name="area" id="evArea" value="${esc(e.area || '')}" placeholder="Search an address…" autocomplete="off">
+        <ul id="evAreaSug" class="ev-loc-sug" role="listbox" aria-label="Address suggestions"></ul>
+      </label>
       <label>Note<textarea name="note" rows="3">${esc(e.note || '')}</textarea></label>
       <div class="modal-actions">
         ${ev && ev.id ? `<button type="button" class="btn ${isGoing(ev.id) ? 'primary' : ''}" id="mdGoingU" aria-pressed="${isGoing(ev.id) ? 'true' : 'false'}">${isGoing(ev.id) ? '✓ Going' : '＋ Going'}</button>` : ''}
@@ -597,6 +602,7 @@ function openModal(ev, presetDate) {
       </div>
     </form>`;
   const ov = showModal(body);
+  wireLocationField(ov);
   ov.querySelector('#mdGoingU')?.addEventListener('click', () => { toggleGoingEv(ev); closeModal(ov, { rerender: true }); });
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
@@ -611,6 +617,45 @@ function openModal(ev, presetDate) {
     closeModal(ov, { rerender: true });   // jwh:data-changed → render() (single path)
   });
   ov.querySelector('#mdDel')?.addEventListener('click', () => { deleteUserEvent(ev.id); closeModal(ov, { rerender: true }); });
+}
+
+// Debounced Nominatim autocomplete for the event form's Location (area) field. Mirrors the map's
+// add-place throttle (>=1.1s between requests). Picking a suggestion fills the input; FormData then
+// persists it as event.area. Every remote string is esc()'d before innerHTML.
+function wireLocationField(ov) {
+  const input = ov.querySelector('#evArea'), sug = ov.querySelector('#evAreaSug');
+  if (!input || !sug) return;
+  let timer, controller, lastReq = 0;
+  const clear = () => { sug.innerHTML = ''; };
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = input.value.trim();
+    if (q.length < 3) { clear(); return; }
+    const run = async () => {
+      const now = Date.now();
+      const wait = 1100 - (now - lastReq);
+      if (wait > 0) { timer = setTimeout(run, wait); return; }   // throttle, don't drop
+      lastReq = now;
+      if (controller) controller.abort();
+      controller = new AbortController();
+      try {
+        const matches = await searchJP(q, controller.signal);
+        if (!sug.isConnected) return;                            // modal closed mid-request → bail (no detached write)
+        sug.innerHTML = matches.length
+          ? matches.map(m => `<li><button type="button" class="ev-loc-opt" data-addr="${esc(m.addr)}">${esc(m.addr)}</button></li>`).join('')
+          : '<li class="ev-loc-msg">No matches</li>';
+      } catch (e) { if (e.name !== 'AbortError' && sug.isConnected) sug.innerHTML = '<li class="ev-loc-msg">Search unavailable — try again</li>'; }
+    };
+    timer = setTimeout(run, 450);
+  });
+  // Select on mousedown (fires BEFORE the input's blur) + preventDefault so focus/selection isn't lost —
+  // avoids the blur-vs-click race entirely (no timing-dependent setTimeout).
+  sug.addEventListener('mousedown', (e) => {
+    const b = e.target.closest('.ev-loc-opt'); if (!b) return;
+    e.preventDefault();
+    input.value = b.dataset.addr; clear();
+  });
+  input.addEventListener('blur', clear);   // mousedown already committed any selection, so a plain clear is safe
 }
 
 // ---- bulk add: tag-filtered .ics + Google import how-to ----

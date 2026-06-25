@@ -6,6 +6,7 @@
 
 import { esc } from './dom.js';
 import { openDatePicker } from '../datepicker.js';
+import { normalizeTag } from './tags.js';
 
 function openDialog(innerHTML, { onMount, initialFocus } = {}) {
   return new Promise((resolve) => {
@@ -80,6 +81,43 @@ const coarsePointer = () => !!(window.matchMedia && (matchMedia('(pointer: coars
 export function askDate(label, { value = '', min = '2026-01-01', max = '2027-12-31' } = {}) {
   if (coarsePointer()) return askText(label, { type: 'date', ok: 'Set', min, max, value });
   return openDatePicker({ value, min, max });
+}
+
+// Tag editor: chips for current tags (each removable) + a datalist-backed input. Resolves the new
+// tag array on Done (commits any half-typed input), or null on cancel. Every tag string is esc()'d.
+export function askTags(taskLabel, current = [], all = []) {
+  const chip = (t) => `<span class="tagedit-chip"><span class="tagedit-t">${esc(t)}</span><button type="button" class="tagedit-x" data-rm="${esc(t)}" aria-label="Remove tag ${esc(t)}">✕</button></span>`;
+  const options = (all || []).map(t => `<option value="${esc(t)}"></option>`).join('');
+  const titleSuffix = taskLabel ? ` — ${esc(taskLabel)}` : '';
+  return openDialog(`
+    <h2 id="amTitle" class="app-modal-title">Tags${titleSuffix}</h2>
+    <div class="tagedit-chips" id="tageditChips"></div>
+    <input class="app-modal-input tagedit-input" id="tageditInput" list="tageditList" placeholder="Add a tag — press Enter" aria-label="Add a tag" autocomplete="off">
+    <datalist id="tageditList">${options}</datalist>
+    <div class="app-modal-acts">
+      <button type="button" class="am-btn" data-cancel>Cancel</button>
+      <button type="button" class="am-btn am-primary" data-done>Done</button>
+    </div>`, {
+    onMount: (card, done) => {
+      let tags = (current || []).slice();
+      const chipsEl = card.querySelector('#tageditChips');
+      const input = card.querySelector('#tageditInput');
+      const redraw = () => { chipsEl.innerHTML = tags.length ? tags.map(chip).join('') : '<span class="tagedit-empty">No tags yet</span>'; };
+      const add = () => {
+        const t = normalizeTag(input.value);
+        input.value = '';
+        if (t && !tags.includes(t)) { tags.push(t); redraw(); }
+      };
+      redraw();
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); add(); } });
+      chipsEl.addEventListener('click', (e) => {
+        const x = e.target.closest('[data-rm]'); if (!x) return;
+        tags = tags.filter(t => t !== x.dataset.rm); redraw();
+      });
+      card.querySelector('[data-done]').addEventListener('click', () => { add(); done(tags); });
+      card.querySelector('[data-cancel]').addEventListener('click', () => done(null));
+    }, initialFocus: '.tagedit-input',
+  });
 }
 
 // Generic content dialog: titled, focus-trapped, with a single Close button. `trustedHTML` is

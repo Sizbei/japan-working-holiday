@@ -2302,3 +2302,9 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* composer "Due" button (checklist add-task) */
 .ql-due{ font-family: var(--mono); font-weight:700; font-size:.78rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .7rem; cursor:pointer; white-space:nowrap; }
 .ql-due:hover{ border-color: var(--indigo); }
+/* ---- tag editor modal (askTags) ---- */
+.tagedit-chips{ display:flex; flex-wrap:wrap; gap:.35rem; min-height:1.8rem; margin-bottom: var(--s4); }
+.tagedit-empty{ font-size:.8rem; color: var(--ink-faint); }
+.tagedit-chip{ display:inline-flex; align-items:center; gap:.2rem; font-family:var(--mono); font-size:.72rem; font-weight:700; padding:.18rem .2rem .18rem .5rem; border-radius:999px; background: var(--bg-soft); border:1px solid var(--line); color: var(--ink); }
+.tagedit-x{ border:none; background:none; cursor:pointer; color: var(--ink-soft); font-size:.72rem; line-height:1; padding:.1rem .25rem; border-radius:999px; }
+.tagedit-x:hover{ color: var(--ink); background: var(--bg-sunk); }

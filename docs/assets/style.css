@@ -2278,3 +2278,27 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   #printView { display: block !important; position: static; margin: 0; padding: 2rem; max-width: 8.5in; color: #000; }
   footer { display: none !important; }
 }
+
+/* ---- mini-calendar date picker (datepicker.js) ---- */
+.dp-overlay{ position:fixed; inset:0; z-index:1100; background: color-mix(in srgb, #000 50%, transparent); display:grid; place-items:center; padding: var(--s4); }
+.dp-card{ width:100%; max-width:320px; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--s4); }
+.dp-nav{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+.dp-title{ font-weight:700; font-size:.95rem; color: var(--ink); }
+.dp-arrow{ border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); width:34px; height:34px; cursor:pointer; font-size:1rem; }
+.dp-arrow:hover{ border-color: var(--indigo); }
+.dp-grid{ width:100%; border-collapse:collapse; table-layout:fixed; }
+.dp-grid th{ font-size:.7rem; font-weight:600; color: var(--ink-faint); padding:.25rem 0; }
+.dp-grid td{ padding:1px; text-align:center; }
+.dp-day{ width:100%; aspect-ratio:1; min-height:34px; border:1px solid transparent; background:transparent; color: var(--ink); border-radius: var(--r-sm); cursor:pointer; font-size:.85rem; font-variant-numeric: tabular-nums; }
+.dp-day:hover{ background: var(--bg-soft); border-color: var(--line); }
+.dp-day:focus-visible{ outline:none; box-shadow: var(--ring); }
+.dp-out{ color: var(--ink-faint); opacity:.55; }
+.dp-today{ font-weight:700; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.dp-sel{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); font-weight:700; }
+.dp-day[disabled]{ opacity:.3; cursor:not-allowed; }
+.dp-acts{ display:flex; justify-content:space-between; gap:.5rem; margin-top:.6rem; }
+.dp-clear, .dp-set-today{ font-family: var(--mono); font-weight:700; font-size:.78rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .8rem; cursor:pointer; min-height:38px; }
+.dp-set-today{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+/* composer "Due" button (checklist add-task) */
+.ql-due{ font-family: var(--mono); font-weight:700; font-size:.78rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .7rem; cursor:pointer; white-space:nowrap; }
+.ql-due:hover{ border-color: var(--indigo); }

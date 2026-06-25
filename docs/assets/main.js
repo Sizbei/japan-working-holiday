@@ -6,7 +6,8 @@ import { renderContent } from './content.js';
 import { mountPacking } from './packing.js';
 import { mountBudget } from './budget.js';
 import { mountPhrases } from './phrases.js';
-import { mountCalendar } from './calendar.js';
+import { mountCalendar, allEvents } from './calendar.js';
+import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
@@ -52,6 +53,7 @@ function boot() {
       setText('#footGen', m.generated || '');
       seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
       mountCalendar(data, today);
+      mountGoogleSync(() => allEvents());
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
       mountTracker(data);
       renderContent(data, today);

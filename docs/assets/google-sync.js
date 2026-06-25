@@ -324,12 +324,90 @@ export function isConnected() {
 /**
  * mountGoogleSync(getEvents)
  * getEvents is a thunk returning allEvents() — avoids a direct import of calendar.js (no cycle).
- * Wires the toolbar control. The control is only shown if CLIENT_ID is set.
- * If CLIENT_ID is empty, the control renders a "needs setup" message instead.
+ * Wires the #calGoogle toolbar button:
+ *   - CLIENT_ID === '' → disabled + title "Google sync — needs setup"
+ *   - not connected    → click opens connect flow
+ *   - connected        → click shows sync/disconnect menu
  */
 export function mountGoogleSync(getEvents) {
-  // Nothing to mount — caller wires UI based on isConnected()/connect()/syncNow()/disconnect().
-  // This entry point exists so the caller can lazy-import this module from the calendar route
-  // without creating a module-level dependency on calendar.js.
+  const btn = document.getElementById('calGoogle');
+  if (!btn) return { connect, syncNow: () => syncNow(getEvents), disconnect, isConnected };
+
+  // Last-synced timestamp (display only, not persisted across sessions).
+  let lastSynced = null;
+
+  function updateButton() {
+    if (!CLIENT_ID) {
+      btn.disabled = true;
+      btn.title = 'Google sync — needs setup';
+      btn.textContent = 'Google';
+      return;
+    }
+    btn.disabled = false;
+    if (isConnected()) {
+      const ts = lastSynced ? ` (synced ${lastSynced})` : '';
+      btn.textContent = `Google ⌄`;
+      btn.title = `Sync now or disconnect${ts}`;
+    } else {
+      btn.textContent = 'Google';
+      btn.title = 'Connect to Google Calendar';
+    }
+  }
+
+  btn.addEventListener('click', async () => {
+    if (!CLIENT_ID) {
+      await alertModal('Google Sync needs setup: paste your OAuth Client ID into google-sync.js.');
+      return;
+    }
+
+    if (!isConnected()) {
+      const ok = await connect();
+      if (ok) {
+        updateButton();
+        // Offer an immediate sync after connecting.
+        const doSync = await confirmModal('Connected! Push your events to Google Calendar now?', { ok: 'Sync now', cancel: 'Later' });
+        if (doSync) await runSync();
+      }
+      return;
+    }
+
+    // Already connected — show sync/disconnect choice.
+    const choice = await confirmModal(
+      lastSynced
+        ? `Last synced: ${esc(lastSynced)}. Push events to Google Calendar now?`
+        : 'Push your events to Google Calendar now?',
+      { ok: 'Sync now', cancel: 'Disconnect' },
+    );
+
+    if (choice) {
+      await runSync();
+    } else {
+      const sure = await confirmModal('Disconnect from Google Calendar? Your local events are unaffected.', { ok: 'Disconnect', cancel: 'Cancel', danger: true });
+      if (sure) {
+        await disconnect();
+        lastSynced = null;
+        updateButton();
+      }
+    }
+  });
+
+  async function runSync() {
+    let result = null;
+    try {
+      result = await syncNow(getEvents);
+    } catch (e) {
+      await alertModal(`Sync failed: ${esc(e.message || String(e))}`);
+      updateButton();
+      return;
+    }
+    if (result) {
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      lastSynced = now;
+      await alertModal(`Synced: ${result.inserted} added, ${result.updated} updated, ${result.deleted} removed.`);
+    }
+    updateButton();
+  }
+
+  updateButton();
   return { connect, syncNow: () => syncNow(getEvents), disconnect, isConnected };
 }

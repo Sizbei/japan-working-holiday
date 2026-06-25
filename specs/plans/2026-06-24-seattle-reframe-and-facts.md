@@ -157,24 +157,23 @@
     "task": "Sort a cash/ATM card for Japan — Japan is cash-heavy and CSP charges a cash-advance fee. Bring a no-FX debit card (or the home-issued Wise card) for Seven-Bank ATM withdrawals." }
   ```
 
-- [ ] **Step 3 — Sakura House baked calendar event + lock-housing task.** Add to `calendar[]` (real schema: `id/title/date/endDate/category/area/confidence`):
+- [ ] **Step 3 — Sakura House baked calendar event + lock-housing task.** Add to `calendar[]` (real schema: `id/title/date/endDate/category/area/confidence`). **Use category `personal`** — it's an existing `CATS` entry in `calendar.js` (`festival/…/personal/imported`), so the event is themed with no `calendar.js`/CSS change. (`housing` is NOT a valid category and would silently fall back to `imported`.)
   ```json
   { "id": "ev-sakura-house-makoto-stay", "title": "Sakura House (Makoto) — initial stay",
-    "date": "2026-06-30", "endDate": "2026-07-07", "category": "housing",
-    "area": "Tokyo (Sakura House Makoto)", "confidence": "high",
-    "bookingNotes": "Booked initial accommodation, arrival through Jul 7. Find long-term housing before checkout." }
+    "date": "2026-06-30", "endDate": "2026-07-07", "category": "personal",
+    "area": "Tokyo (Sakura House Makoto)", "confidence": "medium",
+    "bookingNotes": "Initial accommodation, arrival through Jul 7. Verify the exact property name (Makoto) against your booking confirmation — Sakura House has many named buildings. Find long-term housing before checkout." }
   ```
-  Add to `"First Month — Settle In"` phase `items[]`:
+  Add to `"First Month — Settle In"` phase `items[]` (kind `housing` is fine — that's the checklist `kind` tag, unrelated to calendar categories):
   ```json
   { "id": "chk-lock-long-term-housing", "kind": "housing", "dueBy": "2026-07-07",
     "task": "Lock in long-term housing before the Sakura House (Makoto) stay ends on Jul 7 — view share-house rooms in person, then sign." }
   ```
-  > **Note (calendar `housing` category color):** confirm `housing` maps to a legend color. If `calendar.js`/CSS has no `housing` category color, either reuse an existing category (e.g. the one used for logistics) OR add a `--cat-housing` mapping. The executor checks `grep -i housing docs/assets/calendar.js docs/assets/style.css` and, if absent, adds a color so the event isn't un-themed.
 
-- [ ] **Step 4 — validate + commit.**
+- [ ] **Step 4 — validate + commit.** (Task 4 MUST be committed before Task 5 — the seed + its existence test reference `chk-adhd-ncd-permit`, added here.)
   ```bash
   python3 -m json.tool docs/data/tips.json > /dev/null && echo JSON_OK
-  git add docs/data/tips.json docs/assets/calendar.js docs/assets/style.css 2>/dev/null
+  git add docs/data/tips.json
   git commit -m "feat(data): personal facts — Vyvanse/NCD, Chase Sapphire, Sakura House stay + lock-housing"
   ```
 
@@ -189,32 +188,38 @@
 
 - [ ] **Step 1 — store.js.** Add to `KEYS` (after `tags`): `seed: 'jwh-seed-v1',`.
 
-- [ ] **Step 2 — main.js seed.** Read `docs/assets/main.js` to confirm boot order (gate → fetch tips.json → mount features → router → …). Import `get, set` (and `KEYS`) from `./lib/store.js` if not already imported. AFTER the checklist mounts (i.e. after `renderContent(data, today)` runs), add a one-time additive merge:
+- [ ] **Step 2 — main.js seed.** Read `docs/assets/main.js` first. It does NOT currently import the store, so **add this import** with the other imports at the top:
+  ```js
+  import { get, set, KEYS } from './lib/store.js';
+  ```
+  Then place the seed **BEFORE `renderContent(data, today)`** runs (right after `tips.json` resolves, before any feature mounts). This matters: the app is a hash-router that does NOT re-render the checklist on navigation, and `checklist-page.js` does not listen for `jwh:data-changed` — so if the seed ran *after* the checklist's first render, the ticks wouldn't show until a later mutation. Seeding first means `renderChecklist`'s first pass already reads the seeded `loadChecks()` and shows the ticks; the dashboard reads it too.
   ```js
   // One-time seed: tick the items the owner has already completed (visa granted, passport ready,
   // first accommodation booked, NCD permit in hand). Additive only (never un-checks); runs once.
   if (!get(KEYS.seed, false)) {
     const SEED_DONE = ['chk-confirm-whv-eligibility-age-1','chk-gather-visa-documents-passpor','chk-show-proof-of-funds-in-your-ac','chk-book-consulate-appointment-and','chk-check-passport-validity-blan','chk-lock-the-proof-of-funds-figure-2','chk-reserve-a-furnished-share-hous','chk-book-first-week-accommodation-2','chk-line-up-a-no-key-money-share-h-2','chk-adhd-ncd-permit'];
     const checks = get(KEYS.checklist, {}) || {};
-    SEED_DONE.forEach(id => { checks[id] = true; });   // additive — only sets true
+    SEED_DONE.forEach(id => { checks[id] = true; });   // additive — only sets true, never un-checks
     set(KEYS.checklist, checks);
     set(KEYS.seed, true);
-    document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // refresh dashboard/bell/progress
   }
   ```
-  Place it so `get(KEYS.checklist…)`/`set` exist and the dispatch reaches the already-mounted checklist + dashboard. The merge is additive so it never clobbers a user who already ticked/un-ticked things; the flag makes it run exactly once per device.
+  The merge is additive so it never clobbers a user who already ticked/un-ticked things; the `jwh-seed-v1` flag makes it run exactly once per device. (Running before mount means no dispatch is needed.)
 
-- [ ] **Step 3 — seed-id existence test.** Append to `tests/lib.test.mjs` a test that every seeded id exists in `tips.json` (fails loudly if a future edit renames one). It reads the file via `node:fs`:
+- [ ] **Step 3 — seed-id existence test.** The test file is ESM (`.mjs`), so `require` is NOT available — use a top-level `import`. Add this import alongside the existing `import { test } from 'node:test';` block at the TOP of `tests/lib.test.mjs`:
+  ```js
+  import { readFileSync } from 'node:fs';
+  ```
+  Then append the test (fails loudly if a future edit renames a seeded id):
   ```js
   test('seed ids all exist in tips.json checklist', () => {
-    const fs = require('node:fs');
-    const data = JSON.parse(fs.readFileSync(new URL('../docs/data/tips.json', import.meta.url)));
-    const ids = new Set(data.checklist.flatMap(p => (p.items||[]).map(i => i.id)));
+    const data = JSON.parse(readFileSync(new URL('../docs/data/tips.json', import.meta.url)));
+    const ids = new Set(data.checklist.flatMap(p => (p.items || []).map(i => i.id)));
     const SEED = ['chk-confirm-whv-eligibility-age-1','chk-gather-visa-documents-passpor','chk-show-proof-of-funds-in-your-ac','chk-book-consulate-appointment-and','chk-check-passport-validity-blan','chk-lock-the-proof-of-funds-figure-2','chk-reserve-a-furnished-share-hous','chk-book-first-week-accommodation-2','chk-line-up-a-no-key-money-share-h-2','chk-adhd-ncd-permit'];
     SEED.forEach(id => assert.ok(ids.has(id), `seed id missing: ${id}`));
   });
   ```
-  (`require` is available in `.mjs` only via `createRequire`; if `require` is undefined, use `import { readFileSync } from 'node:fs'` at the top instead. The implementer adapts to whatever the existing test file already imports.)
+  This test runs AFTER Task 4 has added `chk-adhd-ncd-permit`, so all 10 ids resolve.
 
 - [ ] **Step 4 — verify + commit.**
   ```bash
@@ -249,4 +254,4 @@
 
 **Placeholder scan:** none — every edit names an exact id/key/string and authored replacement.
 
-**Risk notes:** (1) Seed ids verified `requires: None` → no checked-but-locked rows. (2) Cross-border tax note is `confidence: low` — deliberately non-prescriptive. (3) The `housing` calendar category may need a color (Task 4 Step 3 checks). (4) The reframe deliberately leaves CAD funds, the Canadian embassy, CAD-software, and "free for Canadians" untouched — the executor must resist a blanket Canada→US sweep.
+**Risk notes:** (1) All 10 seed ids verified to have no `requires[]` → no checked-but-locked rows; `chk-adhd-ncd-permit` is added in Task 4 (which precedes Task 5). (2) Cross-border tax note is `confidence: low` — deliberately non-prescriptive. (3) Sakura House event uses the existing `personal` calendar category (no `calendar.js`/CSS change); its identity is `confidence: medium` pending the owner's booking confirmation. (4) Seed runs BEFORE `renderContent` so the checklist's first render shows the ticks (hash router won't re-render it later). (5) The reframe deliberately leaves CAD funds, the Canadian embassy, CAD-software, and "free for Canadians" untouched — the executor must resist a blanket Canada→US sweep.

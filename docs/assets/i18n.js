@@ -52,7 +52,7 @@ export const STRINGS = {
   'head.geek': 'ゲーム・アニメ・テック',
   'head.meetups': '集まり・イベント',
   'head.livemusic': 'ライブ & ナイトライフ',
-  'head.canada': 'カナダ向けメモ',
+  'head.home': '出発前メモ（カナダ国籍・シアトル発）',
   'head.sources': '参考情報',
   'head.rooms': '部屋探し',
   'head.map': '東京マップ',

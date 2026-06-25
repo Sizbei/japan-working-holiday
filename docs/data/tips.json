@@ -1801,12 +1801,12 @@
       "confidence": "medium"
     }
   ],
-  "canadaNotes": [
-    "Since Dec 1 2024, the Canada–Japan WHV can be granted TWICE in a lifetime (two 1-year stays) or as one continuous 2-year stay.",
-    "Eligibility: Canadian citizen, age 18–30, residing in Canada, clean record, good health.",
-    "No consular fee — the visa is free.",
-    "Proof-of-funds figures vary by consulate (Vancouver, Toronto, Calgary, Montreal) — verify your specific consulate's current page.",
-    "You apply at a Japanese consulate IN CANADA before departure; the visa is not issued in Japan."
+  "homeNotes": [
+    "You're a Canadian citizen departing from Seattle — your WHV is already in hand, so pre-departure is logistics, not eligibility.",
+    "Cross-border tax is genuinely complex here (Canadian citizen, recent US resident, now leaving for Japan): you may have US and/or Canadian filing duties plus a Canadian departure-tax/residency question. Washington has no state income tax. Verify with a cross-border accountant — don't guess.",
+    "Keep a US mailing address and a working US bank/card while abroad; set USPS mail forwarding or a mail-scanning service before you fly.",
+    "Carry your CAD proof-of-funds statement and your status packet through Narita even though the visa is granted — immigration can spot-check.",
+    "Your Canadian passport and consular protection still run through the Embassy of Canada in Tokyo (see the Emergency tab)."
   ],
   "arrivalSequence": [
     "Land at Narita (NRT) → receive your residence card (在留カード) at immigration.",

@@ -559,3 +559,13 @@ test('seed ids all exist in tips.json checklist', () => {
   const SEED = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-reserve-a-furnished-share-hous', 'chk-book-first-week-accommodation-2', 'chk-line-up-a-no-key-money-share-h-2', 'chk-adhd-ncd-permit'];
   SEED.forEach(id => assert.ok(ids.has(id), `seed id missing: ${id}`));
 });
+
+import { eventToGcal, nextDayISO } from '../docs/assets/lib/gcal.js';
+
+test('eventToGcal maps an all-day single + multi-day event with exclusive end', () => {
+  assert.deepEqual(eventToGcal({ title: 'Sumida Hanabi', date: '2026-07-25', area: 'Asakusa', note: 'arrive early' }),
+    { summary: 'Sumida Hanabi', location: 'Asakusa', description: 'arrive early', start: { date: '2026-07-25' }, end: { date: '2026-07-26' } });
+  // multi-day: end is exclusive (Jul 7 stay → end.date Jul 8)
+  assert.equal(eventToGcal({ title: 'x', date: '2026-06-30', endDate: '2026-07-07' }).end.date, '2026-07-08');
+  assert.equal(nextDayISO('2026-12-31'), '2027-01-01');   // year roll
+});

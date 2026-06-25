@@ -35,8 +35,8 @@ Residence-card pickup at NRT, ward-office move-in (14-day), National Health Insu
   ```
   ```json
   { "id": "chk-idp-driving", "kind": "logistics",
-    "task": "(Only if you'll drive) Get a CAA International Driving Permit BEFORE you fly — Canada signed the 1949 Geneva Convention, so a Canadian licence + IDP lets you drive in Japan for up to 1 year. For a longer stay, get a JAF translation of your licence or convert to a Japanese licence (gaimen kirikae).",
-    "confidence": "high", "sources": ["https://www.international.gc.ca/country-pays/japan-japon/drivers_licenses-permis_de_conduire.aspx?lang=eng", "https://english.jaf.or.jp/driving-in-japan/drive-in-japan/switch-to-japanese-license"] }
+    "task": "(Only if you'll drive) Get a CAA International Driving Permit before you fly — Canada signed the 1949 Geneva Convention, so a Canadian licence + IDP lets you drive in Japan for up to 1 year from entry. If you're in the US, CAA takes mail/online orders — apply early so it arrives before departure. For a longer stay, get a JAF translation of your licence or convert (gaimen kirikae).",
+    "confidence": "high", "sources": ["https://english.jaf.or.jp/driving-in-japan/drive-in-japan", "https://www.international.gc.ca/country-pays/japan-japon/drivers_licenses-permis_de_conduire.aspx?lang=eng"] }
   ```
 
 - [ ] **Step 2 — First Month / move-in tasks: utilities+garbage, renters insurance, mail-forwarding.**
@@ -69,8 +69,8 @@ Residence-card pickup at NRT, ward-office move-in (14-day), National Health Insu
   ```
   ```json
   { "id": "chk-pension-lumpsum-exit", "kind": "money",
-    "task": "On leaving Japan, claim the National Pension lump-sum withdrawal (dattai ichijikin) — file within 2 years of departure. ~20.42% is withheld at source but is reclaimable through your appointed tax agent.",
-    "confidence": "medium", "sources": ["https://www.nenkin.go.jp/international/english/lumpsum/lumpsum.html"] }
+    "task": "On leaving Japan, claim the National Pension lump-sum withdrawal (dattai ichijikin) — file within 2 years of departure. A withholding tax (commonly cited ~20.42%) is taken at source but is reclaimable through your appointed tax agent; verify the current rate when you file.",
+    "confidence": "medium", "sources": ["https://www.nenkin.go.jp/international/"] }
   ```
 
 - [ ] **Step 4 — validate + commit.** `python3 -m json.tool docs/data/tips.json >/dev/null && echo JSON_OK`; `node --test tests/lib.test.mjs` (seed test still green); confirm the 8 new ids present. Commit `feat(data): researched gap-filling tasks (ROCA, IDP, utilities, insurance, hanko, tax, pension, mail)`.
@@ -110,4 +110,4 @@ The existing checklist has genuine duplicates/overlaps. **Do not auto-remove.** 
 
 **Scope check:** deliberately NOT a giant expansion — the existing list already covers the majors (documented above), so Plan 7 only fills verified gaps + dedupes. This avoids re-adding covered obligations.
 
-**Risks:** (1) **Owner-gated deletions** — Task 2 removes nothing without approval; the seed-id test backstops accidental removal of a seeded id. (2) **2026 facts** — additions are sourced + confidence-flagged; the medium-confidence ones (hanko, tax, pension) say "verify"/"if". (3) **Canadian framing** — ROCA/IDP/embassy are correct for a Canadian; don't genericize. (4) **JSON fragility** — `json.tool` after every edit; direct controller edits (not transcription).
+**Risks:** (1) **Owner-gated deletions** — Task 2 removes nothing without approval; the seed-id test backstops accidental removal of a seeded id. (2) **2026 facts** — additions are sourced + confidence-flagged; the medium-confidence ones (hanko, tax, pension) say "verify"/"if". **Executor: confirm each `sources` URL resolves at build time and replace any 404** (deep gov/JAF/nenkin links move — the IDP claim is JAF-sourced, the pension rate is hedged "verify current rate"). (3) **Canadian framing** — ROCA/IDP/embassy are correct for a Canadian; don't genericize. (4) **JSON fragility** — `json.tool` after every edit; direct controller edits (not transcription).

@@ -373,10 +373,10 @@ function renderChecklist(today) {
       }
     }
     wrap.innerHTML = (!html && (searching || tagActive))
-      ? `<div class=”empty list-empty”>No ${searching
+      ? `<div class="empty list-empty">No ${searching
             ? `matches for “${esc(checkSearchQ)}”`
             : `tasks tagged “${esc(tagFilter)}”`}.${searching
-            ? `<br><button type=”button” class=”list-empty-add” id=”checkEmptyAdd”>＋ Add “<span class=”lea-q”>${esc(checkSearchQ)}</span>”</button>`
+            ? `<br><button type="button" class="list-empty-add" id="checkEmptyAdd">＋ Add “<span class="lea-q">${esc(checkSearchQ)}</span>”</button>`
             : ''}</div>`
       : html;
   }

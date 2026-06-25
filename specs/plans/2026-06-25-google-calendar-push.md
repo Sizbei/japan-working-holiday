@@ -18,7 +18,7 @@
 - **Idempotent.** Persist `{ calendarId, events: { [localEventId]: googleEventId } }` in `jwh-gcal-map-v1` (`KEYS.gcalMap`). Write the map **per successful API call** so a partial failure self-heals (next sync PATCHes mapped, INSERTs unmapped). On `404` (calendar deleted) / `401`/`403` (revoked/expired) → clear the map, re-prompt, recreate. Disconnect clears token + map.
 - **Privacy consent:** a first-connect modal states trip dates/locations are sent to Google under Google's terms, BEFORE any token request.
 - **Every dynamic string `esc()`'d** before `innerHTML`. Respect reduce-motion (the control has no essential animation).
-- Service worker: bump `CACHE` (`jwh-v114` → `jwh-v115`) and add `assets/google-sync.js` + `assets/lib/gcal.js` to `ASSETS` (NOT the external GIS URL).
+- Service worker: bump `CACHE` to the **next unused version** (the *executed* branch is at `jwh-v113`; Plan 5, if built first, takes `v114` — so read the current value and increment) and add `assets/google-sync.js` + `assets/lib/gcal.js` to `ASSETS` (NOT the external GIS URL). Note: `sw.js` is network-first and **ignores cross-origin requests**, so the GIS script (`accounts.google.com`) is never cached — correct.
 
 ## File Structure
 
@@ -32,7 +32,7 @@
 **Files:** Create `docs/assets/lib/gcal.js`; Modify `docs/assets/lib/store.js` (add `KEYS.gcalMap`); Test `tests/lib.test.mjs` (append).
 
 **Interfaces (pure, unit-tested):**
-- `eventToGcal(ev) → { summary, location, description, start:{date}, end:{date} }` — all-day mapping; `end.date` is the **exclusive** next day after `endDate || date` (Google all-day convention, mirrors `ics.js` `toICS`). `location` from `ev.area`, `description` from `ev.note || ev.bookingNotes || ''`.
+- `eventToGcal(ev) → { summary, location, description, start:{date}, end:{date} }` — all-day mapping; `end.date` is the **exclusive** next day after `endDate || date` (Google all-day convention, mirrors `ics.js` `toICS`). `location` from `ev.area`; **`description` from `ev.bookingNotes || ev.note || ev.why || ''`** — this field order matters: user events carry `note`, baked events carry `bookingNotes`/`why` (matches `ics.js`'s description logic). Reuse `ics.js`'s `nextDay` math (`new Date(iso+'T00:00:00Z')` + 1 day).
 - `nextDayISO(iso) → 'YYYY-MM-DD'` — exclusive end helper (UTC-safe; reuse the same approach as `ics.js`/`minical.js`).
 - Map helpers: `getMapped(map, localId)`, `setMapped(map, localId, googleId)` (immutable), `forgetCalendar(map)` (returns empty `{calendarId:'', events:{}}`).
 
@@ -57,7 +57,13 @@ test('eventToGcal maps an all-day single + multi-day event with exclusive end', 
 
 ### Task 2: Auth + push engine (`google-sync.js`)
 
-**Files:** Create `docs/assets/google-sync.js`.
+**Files:** Create `docs/assets/google-sync.js`; Modify `docs/index.html` (CSP).
+
+- [ ] **Step 0 — CSP (REQUIRED FIRST — the GIS script is CSP-blocked without this).** The `<meta http-equiv="Content-Security-Policy">` in `index.html` currently allows only `script-src 'self' https://unpkg.com` and `connect-src 'self' https://nominatim… …`. Add Google origins:
+  - `script-src`: add `https://accounts.google.com`
+  - `connect-src`: add `https://www.googleapis.com https://accounts.google.com https://oauth2.googleapis.com`
+  - add a `frame-src https://accounts.google.com` directive (the GIS token popup/iframe; currently no `frame-src` → falls back to `default-src 'self'` and is blocked).
+  Verify in the browser console there are **no CSP violations** when `connect()` runs. (This is the single most likely silent failure — the GIS `<script>` won't even load without it.)
 
 **Interfaces (the module exports a small controller):**
 - `mountGoogleSync(getEvents)` — `getEvents` is a thunk returning `allEvents()` (so the module doesn't import calendar.js → no cycle). Wires the toolbar control + lazy-loads GIS on first use.
@@ -84,7 +90,12 @@ function loadMap() { return get(KEYS.gcalMap, { calendarId: '', events: {} }) ||
 function saveMap(m) { set(KEYS.gcalMap, m); }
 ```
 - [ ] **Step 2: `connect()`** — show the privacy consent `confirmModal` FIRST; on accept, `await loadGIS()`, create `tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPE, callback })`, request a token, store it in memory, then `ensureCalendar()` (GET the stored `calendarId`; if missing/404, POST `/calendars` `{ summary: 'Japan WHV' }`, save its id to the map). Handle popup-blocked / scope-denied with a clear `alertModal`.
-- [ ] **Step 3: `syncNow()`** — for each event from `getEvents()`: build `body = eventToGcal(ev)`; if `getMapped(map, ev.id)` exists → `PATCH /calendars/{calId}/events/{gid}`, else `POST /calendars/{calId}/events` and `setMapped`. **Write the map after each success.** On `401/403` → token expired/revoked: re-prompt once. On `404` of the calendar → `forgetCalendar` + recreate. Report a summary (`n pushed, m updated`). A locally-deleted event whose id is still in the map → `DELETE` its Google event + unmap.
+- [ ] **Step 3: `syncNow()` (recovery semantics matter — get these exactly right to avoid orphans/dups).**
+  - **Proactive token check FIRST:** GIS access tokens (~1h) do NOT auto-refresh. Before the batch, if there's no in-memory token (or it's near expiry), `requestAccessToken()` again (silent if recently consented). Only push once a valid token is held.
+  - For each event from `getEvents()`: `body = eventToGcal(ev)`; if `getMapped(map, ev.id)` → `PATCH …/events/{gid}`, else `POST …/events` then `setMapped`. **Write the map after EACH success** (per-event, not per-batch) → a partial batch self-heals: the next sync PATCHes already-mapped, INSERTs unmapped.
+  - **`401/403` mid-batch (token expired / revoked):** re-`requestAccessToken()` once and **RESUME from where you were — do NOT clear the map** (clearing would re-INSERT already-pushed events = duplicates). If re-auth fails, stop and report partial progress.
+  - **`404` on the calendar id (owner deleted the "Japan WHV" calendar):** its events died with it, so there are no orphans — `forgetCalendar(map)` to drop the stale calendarId **and the now-invalid event ids**, recreate the calendar, and re-INSERT (correct, no duplicates).
+  - Report a summary (`n inserted, m updated`). A locally-deleted event still in the map → `DELETE` its Google event + unmap.
 - [ ] **Step 4: `disconnect()`** — `google.accounts.oauth2.revoke(token)` (best-effort), `token = null`, `saveMap(forgetCalendar(loadMap()))`.
 - [ ] **Step 5: build behind a testable seam** — the push/idempotency logic should call an injectable `api(method, path, body)` so it can be unit-tested with a fake (the network call is the only un-testable part). Add focused unit tests for the INSERT-then-PATCH idempotency over the map (with a fake `api`).
 - [ ] **Step 6: verify** `node --check docs/assets/google-sync.js`; suite green. **Manual (owner, real creds):** Connect → consent → first push creates the calendar → re-push PATCHes (no dup) → delete a local event removes it in Google → Disconnect clears the map. Commit `feat(gsync): GIS-token one-way push engine`.
@@ -104,7 +115,7 @@ function saveMap(m) { set(KEYS.gcalMap, m); }
 
 ### Task 4: Service-worker bump
 
-- [ ] **Step 1.** `docs/sw.js`: `CACHE` `jwh-v114`→`jwh-v115`; append `'assets/google-sync.js'` (top-level assets line) + `'assets/lib/gcal.js'` (lib line). **Do NOT** add the external GIS URL.
+- [ ] **Step 1.** `docs/sw.js`: read the current `CACHE` value and increment it (executed branch is `jwh-v113`; if Plan 5 landed first it's `jwh-v114` → go to the next). Append `'assets/google-sync.js'` (top-level assets line) + `'assets/lib/gcal.js'` (lib line). **Do NOT** add the external GIS URL.
 - [ ] **Step 2.** `node --check docs/sw.js`; suite green.
 - [ ] **Step 3.** Commit `chore(sw): cache google-sync + lib/gcal, bump to jwh-v115`.
 

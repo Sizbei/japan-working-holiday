@@ -2355,3 +2355,262 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .ev-loc-opt{ display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:.5rem .6rem; font-size:.82rem; color: var(--ink); border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); }
 .ev-loc-opt:hover, .ev-loc-opt:focus-visible{ background: var(--bg-soft); outline:none; }
 .ev-loc-msg{ padding:.5rem .6rem; font-size:.8rem; color: var(--ink-faint); }
+
+/* ============================================================
+   NOTION-STYLE RESTYLE — toolbar, month grid, legend
+   (Plan 5 Task 2 — appended at end so specificity/order wins)
+   ============================================================ */
+
+/* ---- Toolbar ---- */
+.cal-toolbar{
+  gap: .5rem;
+  padding: .5rem 0 .6rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--s3);
+}
+.cal-nav{ gap: .4rem; }
+.cal-label{
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 600;
+  min-width: 8rem;
+  text-align: center;
+  color: var(--ink);
+}
+/* nav arrows: ghost round buttons */
+.cal-nav .cal-btn{
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  color: var(--ink-soft);
+  padding: .3rem .5rem;
+  font-size: .9rem;
+}
+.cal-nav .cal-btn:hover{ background: var(--bg-soft); border-color: var(--line); color: var(--ink); }
+
+/* segmented mode control */
+.cal-modes{
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  padding: 2px;
+  gap: 2px;
+  display: inline-flex;
+}
+.cal-modes .cal-btn{
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--r-sm) - 2px);
+  color: var(--ink-soft);
+  padding: .3rem .7rem;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.cal-modes .cal-btn.active{
+  background: var(--bg-elevated);
+  color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+.cal-modes .cal-btn:hover:not(.active){ background: color-mix(in srgb, var(--line) 30%, transparent); color: var(--ink); }
+
+/* action buttons: quiet ghost */
+.cal-actions .cal-btn{
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink-soft);
+  font-size: .8rem;
+  padding: .3rem .65rem;
+}
+.cal-actions .cal-btn:hover{ border-color: var(--indigo); color: var(--ink); }
+.cal-actions .cal-btn.primary{
+  background: none;
+  border-color: var(--red);
+  color: var(--red);
+}
+.cal-actions .cal-btn.primary:hover{ background: var(--red); color: #fff; }
+
+/* ---- Month grid ---- */
+.cal-grid{ gap: 2px; }
+.cal-dow{
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+  padding: .4rem 0 .3rem;
+}
+.cal-cell{
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  min-height: 88px;
+  padding: 5px 4px 3px;
+  gap: 3px;
+  transition: border-color var(--t-hover);
+}
+.cal-cell:hover{ border-color: color-mix(in srgb, var(--indigo) 55%, var(--line)); }
+.cal-cell.empty{ background: transparent; border-color: transparent; }
+
+/* today: indigo pill on the date number, not a heavy red cell border */
+.cal-cell.today{ border-color: var(--line); box-shadow: none; }
+.cal-cell.today .cal-date{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--indigo);
+  color: #fff;
+  border-radius: 50%;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 0;
+}
+[data-theme="dark"] .cal-cell.today .cal-date{ color: var(--on-accent); }
+
+.cal-date{
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  align-self: flex-start;
+}
+
+/* ---- Event chips — contrast-critical override ----
+   These rules MUST appear AFTER the .cat-<cat> fills (lines 641-646)
+   and after .cal-chip's base rule (line 637).
+   Using the "chip category dot" pattern for colour identity without
+   relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
+   --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
+.cal-chip{
+  background: var(--bg-soft) !important;
+  color: var(--ink) !important;
+  border: none;
+  border-left: 3px solid var(--chip-cat, var(--line));
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px 1px 5px;
+  font-size: .64rem;
+  font-weight: 500;
+  line-height: 1.3;
+  min-height: 16px;
+}
+/* category dot inside the chip — set per cat via --chip-cat */
+.cal-chip::before{
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chip-cat, var(--line));
+  flex: 0 0 auto;
+}
+/* per-category: set --chip-cat so border-left + dot both pick up the colour */
+.cal-chip.cat-festival   { --chip-cat: var(--c-festival); }
+.cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks); }
+.cal-chip.cat-illumination{ --chip-cat: var(--c-illumination); }
+.cal-chip.cat-convention { --chip-cat: var(--c-convention); }
+.cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal); }
+.cal-chip.cat-nature     { --chip-cat: var(--c-nature); }
+.cal-chip.cat-holiday    { --chip-cat: var(--c-holiday); }
+.cal-chip.cat-food       { --chip-cat: var(--c-food); }
+.cal-chip.cat-disney     { --chip-cat: var(--c-disney); }
+.cal-chip.cat-music      { --chip-cat: var(--c-music); }
+.cal-chip.cat-personal   { --chip-cat: var(--c-personal); }
+.cal-chip.cat-imported   { --chip-cat: var(--c-imported); }
+
+/* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
+[data-theme="dark"] .cal-chip.cat-festival   { --chip-cat: var(--c-festival-ink); }
+[data-theme="dark"] .cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] .cal-chip.cat-illumination{ --chip-cat: var(--c-illumination-ink); }
+[data-theme="dark"] .cal-chip.cat-convention { --chip-cat: var(--c-convention-ink); }
+[data-theme="dark"] .cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] .cal-chip.cat-nature     { --chip-cat: var(--c-nature-ink); }
+[data-theme="dark"] .cal-chip.cat-holiday    { --chip-cat: var(--c-holiday-ink); }
+[data-theme="dark"] .cal-chip.cat-food       { --chip-cat: var(--c-food-ink); }
+[data-theme="dark"] .cal-chip.cat-disney     { --chip-cat: var(--c-disney-ink); }
+[data-theme="dark"] .cal-chip.cat-music      { --chip-cat: var(--c-music-ink); }
+[data-theme="dark"] .cal-chip.cat-personal   { --chip-cat: var(--c-personal-ink); }
+[data-theme="dark"] .cal-chip.cat-imported   { --chip-cat: var(--c-imported-ink); }
+
+/* mobile: keep single chip visible, compact */
+@media (max-width: 560px){
+  .cal-chip{ font-size: .6rem; padding: 1px 3px 1px 4px; min-height: 14px; border-left-width: 2px; }
+  .cal-chip::before{ width: 4px; height: 4px; }
+}
+
+/* ---- Legend — pill toggles with dot + label (not full category fills) ---- */
+.cal-legend .lg{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-elevated);
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 10px 3px 7px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity var(--t-hover), border-color var(--t-hover), color var(--t-hover);
+}
+.cal-legend .lg::before{
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lg-cat, var(--line));
+  flex: 0 0 auto;
+}
+/* per-category legend dot colour */
+.cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival); }
+.cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks); }
+.cal-legend .lg.cat-illumination{ --lg-cat: var(--c-illumination); }
+.cal-legend .lg.cat-convention { --lg-cat: var(--c-convention); }
+.cal-legend .lg.cat-seasonal   { --lg-cat: var(--c-seasonal); }
+.cal-legend .lg.cat-nature     { --lg-cat: var(--c-nature); }
+.cal-legend .lg.cat-holiday    { --lg-cat: var(--c-holiday); }
+.cal-legend .lg.cat-food       { --lg-cat: var(--c-food); }
+.cal-legend .lg.cat-disney     { --lg-cat: var(--c-disney); }
+.cal-legend .lg.cat-music      { --lg-cat: var(--c-music); }
+.cal-legend .lg.cat-personal   { --lg-cat: var(--c-personal); }
+.cal-legend .lg.cat-imported   { --lg-cat: var(--c-imported); }
+
+[data-theme="dark"] .cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-illumination{ --lg-cat: var(--c-illumination-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-convention { --lg-cat: var(--c-convention-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-seasonal   { --lg-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-nature     { --lg-cat: var(--c-nature-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-holiday    { --lg-cat: var(--c-holiday-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-food       { --lg-cat: var(--c-food-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-disney     { --lg-cat: var(--c-disney-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-music      { --lg-cat: var(--c-music-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-personal   { --lg-cat: var(--c-personal-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-imported   { --lg-cat: var(--c-imported-ink); }
+
+/* active: border highlights with the category colour */
+.cal-legend .lg:not(.off):hover{ border-color: var(--lg-cat, var(--indigo)); color: var(--ink); }
+/* off (hidden category): muted, strike-through */
+.cal-legend .lg.off{ opacity: .38; text-decoration: line-through; color: var(--ink-faint); }
+.cal-legend .lg.off::before{ opacity: .4; }
+
+/* "All" pill — keep existing style, just ensure it aligns */
+.lg-all{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bg-elevated);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.lg-all:hover{ border-color: var(--indigo); color: var(--ink); }

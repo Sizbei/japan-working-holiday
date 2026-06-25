@@ -239,6 +239,35 @@
 
 ---
 
+## Brainstorm refinements (folded in — 2026-06-24)
+
+Owner confirmed: no extra pre-departure prep done (seed unchanged); Vyvanse resupply task stays **dateless**; **yes** to a home pin; money setup is **Chase Sapphire only** (no Wise).
+
+### R1 — Money-stack: Chase-Sapphire-only reframe (extends Tasks 2-3)
+The baked plan centers a "Canada-issued Wise card." The owner uses **CSP only**, so reframe (keep ids; honest about the foreign-card Suica caveat):
+- `chk-open-a-wise-multi-currency-acc` (Pre-Departure) → make it OPTIONAL: `"(Optional) Wise account — you're going Chase-Sapphire-only, so this is an upgrade, not required: Wise is the most reliable way to top up Mobile Suica and gives cheap mid-market JPY. Skip it to keep things simple."`
+- `chk-order-a-wise-formerly-transfe-2` (Pre-Departure) → prefix `"(Optional) "` and keep the Apple-Pay-compatibility reasoning as *why Wise helps if you choose to add it.*
+- `chk-set-up-mobile-suica-in-apple-w` (Landing Day) → replace `"top it up from your Canada-issued Wise card"` with `"top it up from your Chase Sapphire Preferred in Apple Pay (no-FX Visa). Heads-up: foreign-card Mobile Suica top-up is sometimes rejected — test it on day one; if CSP won't top up, a Wise card or a Japanese card is the reliable fallback."`
+- `top10[3].tip` → `"Set up the money stack in order: Chase Sapphire (no-FX Visa) in Apple Pay → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)"`; `top10[3].reason` → swap the "Canada-issued Wise card" sentence for the CSP-in-Apple-Pay point + "(Wise optional, but the most reliable Suica top-up)".
+- `arrivalWeek[0].steps[4]` → `"Confirm Mobile Suica is loaded in Apple Wallet (topped up from your Chase Sapphire Preferred — test foreign-card top-up early); tap into the Narita Express / Keisei toward Tokyo."`
+- Keep the new `chk-cash-atm-card` task (CSP at ATMs is a cash-advance → still need a debit/cash card).
+
+### R2 — Seed a Sakura House home pin (extends Task 5 Step 2)
+In the SAME one-time seed block (guarded by `jwh-seed-v1`), also seed a home base — but respect the single-home invariant: only claim `home` if the user has none.
+```js
+// Seed a home base (Sakura House) so the map/planner can estimate travel from it.
+const places = get(KEYS.places, []) || [];
+if (!places.some(p => p.id === 'p-sakura-house-makoto')) {
+  const hasHome = places.some(p => p.home);
+  places.push({ id: 'p-sakura-house-makoto', name: 'Sakura House (Makoto)',
+    address: 'Tokyo — approximate, verify & move when confirmed', area: 'Shinjuku',
+    lat: 35.6938, lng: 139.7034, category: 'personal', source: 'seed', coordKind: 'approx',
+    fav: false, locked: false, visited: false, emoji: '', home: !hasHome });
+  set(KEYS.places, places);
+}
+```
+The coords are an approximate central-Tokyo (Shinjuku) placeholder — the name + address flag it for the owner to drag/correct once the exact Sakura House Makoto address is known. (`KEYS.places` = `jwh-places-v1`, already defined.)
+
 ## Self-Review
 
 **Spec coverage (WS4 Seattle reframe + WS5 personal facts + seed):**

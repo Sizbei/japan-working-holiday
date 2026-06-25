@@ -1,7 +1,7 @@
 # Trip Dashboard Enhancements — Design
 
 **Date:** 2026-06-24
-**Status:** Hardened via adversarial review (round 1). Two scoping decisions open (Google sync, framework).
+**Status:** Hardened via adversarial review. Decisions locked: Google sync = one-way push; stay vanilla.
 **Extends** `specs/2026-06-15-trip-dashboard-design.md` (the design contract).
 
 ## Context
@@ -38,7 +38,7 @@ Confirmed personal facts (2026-06-24):
 6. **More extensive, web-researched 2026 task list** + a cleanup of now-irrelevant tasks (ships as an
    independent final PR with its own veto pass).
 7. **Address autocomplete** (a "Location" field) in the calendar event form.
-8. **Google Calendar sync** *(scope pending owner decision — see Workstream 8)*.
+8. **Google Calendar sync** — one-way push (app → Google), in-browser, no backend.
 
 ## Non-goals
 
@@ -47,11 +47,9 @@ Confirmed personal facts (2026-06-24):
 
 ## Constraint change (2026-06-24)
 
-The owner now permits a framework. **Recommendation: stay vanilla ES modules anyway** for the calendar
-redesign — the entire app is zero-build GitHub Pages with relative paths, and introducing a
-build/framework would force a toolchain on every other module for one screen's benefit. Adopting a
-framework is therefore deferred unless the owner explicitly wants it (open decision below). Google sync
-does **not** require a framework.
+The owner permitted a framework but **chose to stay vanilla ES modules** — the entire app is zero-build
+GitHub Pages with relative paths, and a build/framework would force a toolchain on every other module for
+one screen's benefit. The calendar redesign and Google sync are both built in vanilla.
 
 ---
 
@@ -176,35 +174,49 @@ owner — **surface the full removal list in the PR for per-item veto**; nothing
 - Add a **"Location"** field to `#evForm` using the util; persist as `event.location`; show it in the
   WS3 side-panel. `pushEvent` already threads an address arg.
 
-## Workstream 8 — Google Calendar sync *(scope pending owner decision)*
+## Workstream 8 — Google Calendar sync (one-way push)
 
-Feasible on a static, public GitHub Pages site **without a backend** via **Google Identity Services
-(GIS) token model**: a **public OAuth client ID** (client IDs are not secrets), authorized JS origin =
-the Pages domain, minimal scope `calendar.events`. User clicks "Connect Google," grants in-browser, the
-app holds a short-lived access token in memory (not persisted) and calls the Calendar API directly.
+Runs on the static, public GitHub Pages site **without a backend** via the **Google Identity Services
+(GIS) token model**:
 
-- **MVP = one-way push** (app events → a dedicated "Japan WHV" Google calendar), mirroring the existing
-  `.ics` export / GCal add-event links. Idempotent: store a `googleEventId` per pushed event so re-push
-  updates rather than duplicates.
-- **Two-way sync** (pull Google → app, conflict resolution) is **much** larger and out of MVP unless the
-  owner asks.
-- Graceful handling: offline, popup-blocked, scope-denied, token-expired → clear UI states, never a
-  silent failure. No secret in the repo. New module `google-sync.js`; loaded only on the calendar route.
-
-*This workstream is specified at approach-level only; finalize after the two decisions below.*
-
----
-
-## Open decisions (owner)
-
-1. **Google sync scope:** one-way push (recommended MVP) or full two-way sync?
-2. **Framework:** stay vanilla (recommended) or adopt a framework + build step for the calendar?
+- **Auth:** a **public OAuth client ID** (client IDs are not secrets; no client secret in the repo),
+  authorized JS origin = the Pages domain. "Connect Google" triggers
+  `google.accounts.oauth2.initTokenClient`; the app holds the **short-lived access token in memory
+  only** (never localStorage).
+- **Scope (corrected — `calendar.events` alone cannot CREATE a calendar):** use the least-privilege
+  app-calendar scope **`https://www.googleapis.com/auth/calendar.app.created`**, which lets the app
+  create and manage **only the secondary calendars it created** — not the user's other calendars.
+  *(Confirm the exact scope string + behavior against Google's Calendar API auth-scopes doc during
+  implementation; fallback if unavailable: push to the primary calendar with `calendar.events` and a
+  distinguishing event property.)*
+- **Push:** app events (baked + user) → a dedicated **"Japan WHV" Google calendar** (created on first
+  connect). **Persist `{ calendarId, events:{ localId → googleEventId } }` in `jwh-gcal-map-v1`** (add
+  `KEYS.gcalMap`). The map is written **per successful event call** (not per batch) so a partial failure
+  is self-healing: the next sync PATCHes already-mapped events and INSERTs unmapped ones. A deleted
+  local event deletes its Google counterpart.
+- **Recovery (was a blocker):** before each sync, GET the stored `calendarId`; on **404** (user deleted
+  the calendar) or **401/403** (revoked/expired) → clear the map, re-prompt, recreate. "Disconnect"
+  clears the token + map. No path leaves silent orphans/duplicates.
+- **One-way only:** the app never pulls/overwrites from Google. The "Japan WHV" calendar is a push
+  target; the user is told their hand-edits there are overwritten on next push.
+- **Privacy consent:** a first-connect modal stating trip dates/locations will be sent to Google under
+  Google's terms, before any token request.
+- **UX + failure states:** a "Connect / Sync now / Disconnect" control on the calendar route; clear
+  states for offline, popup-blocked, scope-denied, token-expired (re-prompt) — never a silent failure.
+  The GIS script (`https://accounts.google.com/gsi/client`) and `gapi` load **lazily on the calendar
+  route only** (like Leaflet on the map) — **not precached** by the SW (verified: `sw.js` ignores
+  cross-origin requests, so Google scripts/tokens are never cached).
+- **Token-theft surface:** the in-memory access token is exploitable for ~1h **only** via XSS. Mitigate
+  by holding the strict-`esc()` discipline everywhere user/remote strings hit `innerHTML` — **including
+  the WS7 Nominatim `Location` suggestions** (escape every `display_name` before render).
+- New module `google-sync.js`. Loading an external Google script is the one allowed exception to the
+  "no new CDNs" rule, scoped to this feature and justified by the owner's explicit sync request.
 
 ## Files touched (summary)
 
 - **New:** `lib/tags.js`, `lib/minical.js`, `datepicker.js`, `lib/nominatim.js`, `google-sync.js`.
 - **Edited:** `checklist-page.js`, `calendar.js`, `map.js`, `content.js`, `main.js`, `lib/store.js`
-  (`tags`,`seed` KEYS), `lib/modal.js`, `index.html`, `assets/i18n.js`, `assets/router.js`,
+  (`tags`,`seed`,`gcalMap` KEYS), `lib/modal.js`, `index.html`, `assets/i18n.js`, `assets/router.js`,
   `data/tips.json`, the CSS file(s), and `sw.js` — **bump `CACHE` `jwh-v108` → `jwh-v109`** and add
   `'assets/lib/tags.js','assets/lib/minical.js','assets/datepicker.js','assets/lib/nominatim.js',
   'assets/google-sync.js'` to its `ASSETS` list.
@@ -217,7 +229,7 @@ app holds a short-lived access token in memory (not persisted) and calls the Cal
 4. Data: Seattle reframe + personal facts + additive seed (WS4, WS5) + seed id-existence test.
 5. `lib/nominatim.js` extraction + event Location field (WS7).
 6. Notion calendar redesign + event side-panel (WS3).
-7. Google Calendar sync MVP (WS8) — after decisions.
+7. Google Calendar one-way push (WS8).
 8. Web-researched task expansion + cleanup (WS6), last, as its own veto'd PR.
 
 ## Verification
@@ -227,9 +239,13 @@ app holds a short-lived access token in memory (not persisted) and calls the Cal
 - `python3 -m json.tool docs/data/tips.json` validates.
 - Serve locally, auth, click every route, **no console errors**: tag a task + due-date it; filter by
   tag within a smart view; calendar week/month + mini-nav + event side-panel + autocompleted Location;
-  seed ticks the right items once and not again on reload; Google "Connect" → push → no duplicate on
-  re-push. Re-verify WCAG-AA category-text contrast in both themes. Bump `sw.js` `CACHE`; confirm fresh
-  assets load (network-first).
+  seed ticks the right items once and not again on reload. Re-verify WCAG-AA category-text contrast in
+  both themes. Bump `sw.js` `CACHE`; confirm fresh assets load (network-first).
+- **WS8 (Google) is not unit-testable offline** — it needs a real OAuth client ID with the Pages domain
+  (and `localhost` for dev) as authorized origins. Build `google-sync.js` behind a small injectable
+  API seam so the push/idempotency logic can be unit-tested with a mocked client, and keep a **manual
+  PR checklist**: Connect → first push creates the calendar → re-push PATCHes (no duplicates) → delete a
+  local event removes it in Google → Disconnect clears the map.
 
 ## Risks / open items
 

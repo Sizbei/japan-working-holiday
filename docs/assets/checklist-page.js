@@ -11,7 +11,8 @@ import { mountAccordion } from './collapse.js';
 import { celebrate } from './celebrate.js';
 import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
-import { askDate, alertModal, confirmModal } from './lib/modal.js';
+import { askDate, askTags, alertModal, confirmModal } from './lib/modal.js';
+import { tagsFor, allTags, setTags, tagHue } from './lib/tags.js';
 import { migratePriority, getLevel, setLevel, cyclePriority, priorityRank } from './lib/priority.js';
 import { filterView, groupByDay } from './lib/smartviews.js';
 
@@ -45,6 +46,9 @@ export function mountChecklist(data, today) {
 function loadChecks() { return get(KEYS.checklist, {}) || {}; }
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }
+function loadTags() { return get(KEYS.tags, {}) || {}; }
+function saveTags(m) { set(KEYS.tags, m); }
+let tagFilter = '';   // one active tag filter (view-only; never mutates data or progress, AND with smart view/search)
 // checklist focus controls (reduce the 74-item yearlong list to what's actionable now)
 const SMART_VIEWS = ['all', 'today', 'upcoming', 'overdue'];
 function smartView() { const v = getRaw(KEYS.checkSmartView, 'all'); return SMART_VIEWS.includes(v) ? v : 'all'; }   // guard a stale/corrupt stored value → never crash the empty-state lookup
@@ -70,9 +74,11 @@ function renderCheckTools() {
     <div class="ct-views" role="group" aria-label="Checklist view">
       ${pill('all', 'All')}${pill('today', 'Today')}${pill('upcoming', 'Upcoming')}${pill('overdue', 'Overdue')}
     </div>
-    <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>`;
+    <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>
+    ${tagFilter ? `<button type="button" class="ct-tagpill" data-cleartag style="--h:${tagHue(tagFilter)}" aria-label="Clear tag filter ${esc(tagFilter)}" title="Clear tag filter">🏷 ${esc(tagFilter)} <span aria-hidden="true">✕</span></button>` : ''}`;
   el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.view; setRaw(KEYS.checkSmartView, v); renderCheckTools(); renderChecklist(); $(`#checkTools [data-view="${v}"]`)?.focus(); }));   // restore keyboard focus after the innerHTML rebuild
   el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); $('#checkTools [data-hidedone]')?.focus(); });
+  el.querySelector('[data-cleartag]')?.addEventListener('click', () => { tagFilter = ''; renderCheckTools(); renderChecklist(); });
 }
 function saveDue(s) { set(KEYS.due, s); }
 
@@ -234,6 +240,7 @@ function wireCheckSettingsListener() {
   document.addEventListener('jwh:settings-changed', () => {
     if (!$('#checkQuickline')) return;
     checkSearchQ = '';
+    tagFilter = '';
     renderCheckToolbar();
     renderChecklist();
   });
@@ -282,28 +289,32 @@ function renderChecklist(today) {
   const now = today || nowISO();
   const prio = loadPriority();
   const hd = hideDone();
+  const tags = loadTags();
   const searching = !!checkSearchQ;
   // a search query forces the grouped All view (don't drop into a flat smart view while searching)
   const view = searching ? 'all' : smartView();
   const match = it => !searching || (it.task || '').toLowerCase().includes(checkSearchQ);
+  const tagActive = !!tagFilter;
+  const matchTag = it => !tagActive || tagsFor(tags, it.id).includes(tagFilter);
   const focusSel = captureCheckFocus();   // preserve keyboard focus across the innerHTML rebuild
   const knownIds = new Set(phases.flatMap(p => (p.items || []).map(it => it.id)));
 
   if (view !== 'all') {
     // a flat, date-driven smart view (Today / Upcoming / Overdue), undone only, P1-first then soonest
     // undone AND actionable (a requires[]-locked item isn't actionable → don't surface it as "Today")
-    const undone = checklistItems(DATA).filter(it => !state[it.id] && !(it.requires || []).some(r => knownIds.has(r) && !state[r]));
+    const undone = checklistItems(DATA).filter(it => !state[it.id] && !(it.requires || []).some(r => knownIds.has(r) && !state[r])).filter(matchTag);
     const items = filterView(undone, view, now).sort((a, b) => {
       const pa = priorityRank(getLevel(prio, a.id)), pb = priorityRank(getLevel(prio, b.id));   // P1 first … none last
       if (pa !== pb) return pa - pb;
       return (a.effectiveDue || '9999').localeCompare(b.effectiveDue || '9999');
     });
-    const renderRow = it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true });
+    const renderRow = it => checkItemHTML(it, state, due, now, knownIds, { prio, showPhase: true, tags });
     if (!items.length) {
       const e = { today: ['🎏', 'Nothing due today.', 'You’re clear for today — peek at “Upcoming”.'],
                   upcoming: ['🗓', 'Nothing in the next 7 days.', 'Set due dates on tasks to see them land here.'],
                   overdue: ['✅', 'Nothing overdue.', 'Nice — you’re on top of it.'] }[view];
-      wrap.innerHTML = `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">${e[0]}</div><p class="empty-h">${esc(e[1])}</p><p class="empty-sub">${esc(e[2])}</p></div>`;
+      const sub = tagActive ? `No "${esc(tagFilter)}" tasks in this view.` : esc(e[2]);
+      wrap.innerHTML = `<div class="empty empty-state"><div class="empty-emoji" aria-hidden="true">${e[0]}</div><p class="empty-h">${esc(e[1])}</p><p class="empty-sub">${sub}</p></div>`;
     } else if (view === 'upcoming') {
       // group by day with date subheaders (already date-sorted within filterView/groupByDay)
       wrap.innerHTML = groupByDay(items).map(g =>
@@ -316,10 +327,10 @@ function renderChecklist(today) {
     const { byPhase, mine } = partitionCustom(
       loadChecklistCustom().map(c => ({ ...c, _custom: true })),
       phases.map(p => p.phase));
-    const drag = !hd && !searching;   // drag is meaningless over a hidden/searched view
+    const drag = !hd && !searching && !tagActive;   // drag is meaningless over a hidden/searched/tag-filtered view
     let html = phases.map((p, pi) => {
       const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
-      const its = orderItems(all, order[pi]).filter(it => it.id).filter(it => !(hd && state[it.id])).filter(match);   // it.id guard: never render a cb-undefined row from a malformed item
+      const its = orderItems(all, order[pi]).filter(it => it.id).filter(it => !(hd && state[it.id])).filter(match).filter(matchTag);   // it.id guard: never render a cb-undefined row from a malformed item
       if (!its.length) return '';                           // skip a phase fully done/hidden, or with no search match
       // count over the FULL phase (not the hide-done/search-filtered list) so progress math is stable
       const total = all.filter(it => it.id).length;
@@ -334,7 +345,7 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-${esc(accId)}" role="region" aria-label="${esc(phaseName)}">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
+            <ul class="check-list" data-phase="${pi}">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag, tags })).join('')}</ul>
           </div>
         </div>
       </section>`;
@@ -343,7 +354,7 @@ function renderChecklist(today) {
     // Reorder key is the string "mine" (distinct from numeric baked phase indices).
     if (mine.length) {
       const all = orderItems(mine, order['mine']);
-      const its = all.filter(it => !(hd && state[it.id])).filter(match);
+      const its = all.filter(it => !(hd && state[it.id])).filter(match).filter(matchTag);
       if (its.length) {
         const total = mine.length;
         const done = mine.filter(it => state[it.id]).length;
@@ -355,23 +366,25 @@ function renderChecklist(today) {
         </button>
         <div class="acc-panel" id="acc-panel-chk-phase-mine" role="region" aria-label="My tasks">
           <div class="acc-inner">
-            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag })).join('')}</ul>
+            <ul class="check-list" data-phase="mine">${its.map(it => checkItemHTML(it, state, due, now, knownIds, { prio, drag, tags })).join('')}</ul>
           </div>
         </div>
       </section>`;
       }
     }
-    wrap.innerHTML = (searching && !html)
-      ? `<div class="empty list-empty">No matches for “${esc(checkSearchQ)}”.<br>
-          <button type="button" class="list-empty-add" id="checkEmptyAdd">＋ Add “<span class="lea-q">${esc(checkSearchQ)}</span>”</button>
-        </div>`
+    wrap.innerHTML = (!html && (searching || tagActive))
+      ? `<div class=”empty list-empty”>No ${searching
+            ? `matches for “${esc(checkSearchQ)}”`
+            : `tasks tagged “${esc(tagFilter)}”`}.${searching
+            ? `<br><button type=”button” class=”list-empty-add” id=”checkEmptyAdd”>＋ Add “<span class=”lea-q”>${esc(checkSearchQ)}</span>”</button>`
+            : ''}</div>`
       : html;
   }
   const prog = $('#checkProgress');
   if (prog) prog.hidden = false;
   wireCheckEmptyAdd();
   wireChecklist();
-  if (view === 'all' && !hd && !searching) {   // dnd reorder only in the full grouped, unsearched view (reordering a filtered list is meaningless)
+  if (view === 'all' && !hd && !searching && !tagActive) {   // dnd reorder only in the full grouped, unsearched, unfiltered view (reordering a filtered list is meaningless)
     $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
       itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
       idOf: el => el.dataset.id,
@@ -396,6 +409,7 @@ function captureCheckFocus() {
   }
   if (a.dataset.cid) return `input[data-cid="${esc2(a.dataset.cid)}"]`;
   if (a.dataset.due) return `.ci-due[data-due="${esc2(a.dataset.due)}"]`;
+  if (a.dataset.tagbtn) return `.ci-tag[data-tagbtn="${esc2(a.dataset.tagbtn)}"]`;
   if (a.dataset.flag) return `.ci-flag[data-flag="${esc2(a.dataset.flag)}"]`;
   const li = a.closest?.('.check-item');
   if (li && a.classList.contains('dnd-handle')) return `.check-item[data-id="${esc2(li.dataset.id)}"] .dnd-handle`;
@@ -419,6 +433,10 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
     ? `<button type="button" class="check-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.task)}">✎</button>`
       + `<button type="button" class="check-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.task)}">✕</button>`
     : '';
+  const tagBtns = (opts.tags ? tagsFor(opts.tags, id) : [])
+    .map(t => `<button type="button" class="chip-tag" data-tagfilter="${esc(t)}" style="--h:${tagHue(t)}" title="Filter by ${esc(t)}">${esc(t)}</button>`)
+    .join('');
+  const tagsBlock = tagBtns ? `<span class="ci-tags">${tagBtns}</span>` : '';
   return `
     <li class="check-item ${locked ? 'locked' : ''}${flagged ? ' flagged' : ''}" data-id="${esc(id)}">
       ${opts.drag ? '<button type="button" class="dnd-handle" aria-label="Reorder task" tabindex="0">⠿</button>' : ''}
@@ -429,8 +447,10 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
         ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
         ${srcLinks(it.sources, 'ci-src')}
       </label>
+      ${tagsBlock}
       <button type="button" class="ci-flag${lvl ? ' on p' + lvl : ''}" data-flag="${esc(id)}" aria-label="${lvl ? 'Priority P' + lvl + ' — press to set ' + nextLbl : 'Set priority — press to set P1'}" title="Priority — P1 (urgent) → P4, press to cycle">⚑<sub class="ci-flvl" aria-hidden="true">${lvl || ''}</sub></button>
       <button type="button" class="ci-due" data-due="${esc(id)}" title="Set a due date" aria-label="Set due date">📅</button>
+      <button type="button" class="ci-tag" data-tagbtn="${esc(id)}" title="Edit tags" aria-label="Edit tags for ${esc(it.task)}">🏷</button>
       ${del}
     </li>`;
 }
@@ -470,6 +490,24 @@ function wireChecklist() {
     else { alertModal('Use a valid date (YYYY-MM-DD).'); return; }
     saveDue(due);
     renderChecklist();                 // direct render refreshes dependency locks now; the dispatch only refreshes the dashboard/bell (no jwh:data-changed→renderChecklist listener exists, so no double-render)
+    document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  }));
+  $$('#checkPhases .chip-tag').forEach(btn => btn.addEventListener('click', (e) => {
+    e.preventDefault();                                   // chips are not in a label, but be safe
+    const t = btn.dataset.tagfilter || '';
+    tagFilter = (tagFilter === t) ? '' : t;               // click the active tag again to clear
+    renderCheckTools();                                   // refresh the active-tag pill
+    renderChecklist();                                    // view-only re-render (no jwh:data-changed)
+  }));
+  $$('#checkPhases .ci-tag').forEach(btn => btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const id = btn.dataset.tagbtn;
+    const label = btn.closest('.check-item')?.querySelector('input[type=checkbox]')?.getAttribute('aria-label') || '';
+    const map = loadTags();
+    const res = await askTags(label, tagsFor(map, id), allTags(map));
+    if (res === null) return;                             // cancelled
+    saveTags(setTags(map, id, res));                      // mutation → save + dispatch
+    renderChecklist();
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   }));
   wireReset();

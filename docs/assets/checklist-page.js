@@ -151,9 +151,9 @@ function renderCheckToolbar() {
       <div class="ql-reveal" id="checkAddRow"><div>
         <div class="ql-quickadd">
           <span class="ql-lab">add to</span>
-          <select id=”checkAddPhase” class=”ql-sel” aria-label=”Phase”>${opts}</select>
-          <button type=”button” class=”ql-due” id=”checkAddDue” aria-label=”Set due date for new task”>📅 Due</button>
-          <button type=”button” class=”ql-addsuggest” id=”checkAddBtn”>＋ Add “<span class=”ql-q” id=”checkAddQ”></span>”</button>
+          <select id="checkAddPhase" class="ql-sel" aria-label="Phase">${opts}</select>
+          <button type="button" class="ql-due" id="checkAddDue" aria-label="Set due date for new task">📅 Due</button>
+          <button type="button" class="ql-addsuggest" id="checkAddBtn">＋ Add “<span class="ql-q" id="checkAddQ"></span>"</button>
         </div>
       </div></div>`;
   }

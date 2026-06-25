@@ -511,6 +511,18 @@ test('isoToYM parses and rejects', () => {
 
 import { normalizeTag, setTags, tagsFor, allTags, tagHue } from '../docs/assets/lib/tags.js';
 
+import { parseNominatim } from '../docs/assets/lib/nominatim.js';
+
+test('parseNominatim maps display_name/lat/lon and drops empties', () => {
+  const out = parseNominatim([
+    { display_name: 'Shinjuku Station, Shinjuku, Tokyo, Japan', lat: '35.69', lon: '139.70' },
+    { display_name: '', lat: '0', lon: '0' },
+  ]);
+  assert.equal(out.length, 1);
+  assert.deepEqual(out[0], { name: 'Shinjuku Station', addr: 'Shinjuku Station, Shinjuku, Tokyo, Japan', lat: '35.69', lng: '139.70' });
+  assert.deepEqual(parseNominatim(null), []);
+});
+
 test('normalizeTag: trims, strips #, strips commas, collapses ws, lowercases, caps length', () => {
   assert.equal(normalizeTag('  #Visa '), 'visa');
   assert.equal(normalizeTag('Ward  Office'), 'ward office');

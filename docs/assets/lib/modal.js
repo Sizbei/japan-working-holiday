@@ -5,6 +5,7 @@
 // aria-modal + aria-labelledby. Every dynamic string is esc()'d.
 
 import { esc } from './dom.js';
+import { openDatePicker } from '../datepicker.js';
 
 function openDialog(innerHTML, { onMount, initialFocus } = {}) {
   return new Promise((resolve) => {
@@ -73,7 +74,13 @@ export function askText(label, { value = '', placeholder = '', ok = 'Save', type
     }, initialFocus: '.app-modal-input',
   });
 }
-export const askDate = (label, opts = {}) => askText(label, { type: 'date', ok: 'Set', min: '2026-01-01', max: '2027-12-31', ...opts });
+// Coarse-pointer / small screens get the native date input (better mobile UX); pointer/desktop
+// gets the themed mini-calendar popover. Same (label, opts) → Promise<string|null> contract.
+const coarsePointer = () => !!(window.matchMedia && (matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 700px)').matches));
+export function askDate(label, { value = '', min = '2026-01-01', max = '2027-12-31' } = {}) {
+  if (coarsePointer()) return askText(label, { type: 'date', ok: 'Set', min, max, value });
+  return openDatePicker({ value, min, max });
+}
 
 // Generic content dialog: titled, focus-trapped, with a single Close button. `trustedHTML` is
 // injected RAW — the caller MUST pre-esc()' every dynamic value in it (the param name flags this

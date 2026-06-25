@@ -227,7 +227,7 @@ function weekLabel() {
 const isNarrowWeek = () => window.matchMedia('(max-width: 700px)').matches;
 // mobile: a vertical day-by-day list (the 7-col grid is unusable on a phone; a vertical list also
 // avoids the horizontal route-swipe conflict). Each day lists its overlapping events; multi-day
-// events get a continues marker. Reuses the per-day ＋ (.wk-add) + click→openDetail wiring.
+// events get a continues marker. Reuses the per-day ＋ (.wk-add) + click→openSidePanel wiring.
 function weekListHTML() {
   const days = weekDays(weekAnchor);
   const evs = allEvents().filter(visible);
@@ -302,7 +302,7 @@ function wireWeek() {
     targetSelector: '.wk-dayhd[data-day]', keyOf: t => t.dataset.day,
     onMove: rescheduleEvent,
   });
-  // click/Enter a chip OR bar → openDetail (baked → detail view w/ Going/Reset/Copy; user → edit modal).
+  // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Going/Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.
   $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id]').forEach(el => el.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === el.dataset.id);
@@ -515,6 +515,7 @@ function closeSidePanel() {
 }
 
 function openSidePanel(ev, trigger) {
+  if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
   _sidePanelTrigger = trigger || document.activeElement;
   _sidePanelEv = ev.id;
   const panel = $('#calSidePanel');

@@ -2627,7 +2627,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   background: var(--bg-elevated);
   border-left: 1px solid var(--line);
   box-shadow: var(--shadow-lg);
-  z-index: 100;   /* above grid (z-index 1) and popover (80), below modal (120) */
+  z-index: 101;   /* above grid (z-index 1) and popover (80), below modal (120) */
   display: flex;
   flex-direction: column;
   transform: translateX(100%);

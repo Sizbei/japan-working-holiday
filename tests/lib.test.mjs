@@ -508,3 +508,35 @@ test('isoToYM parses and rejects', () => {
   assert.equal(MONTHS[6], 'July');
   assert.equal(WEEKDAYS_SHORT[0], 'Su');
 });
+
+import { normalizeTag, setTags, tagsFor, allTags, tagHue } from '../docs/assets/lib/tags.js';
+
+test('normalizeTag: trims, strips #, strips commas, collapses ws, lowercases, caps length', () => {
+  assert.equal(normalizeTag('  #Visa '), 'visa');
+  assert.equal(normalizeTag('Ward  Office'), 'ward office');
+  assert.equal(normalizeTag('##HOUSING'), 'housing');
+  assert.equal(normalizeTag('visa,housing'), 'visa housing');   // commas → space (no commas in stored tags)
+  assert.equal(normalizeTag('   '), '');
+  assert.equal(normalizeTag(null), '');
+  assert.equal(normalizeTag('a'.repeat(40)).length, 24);
+});
+
+test('setTags: normalizes+dedupes a whole list, deletes when empty', () => {
+  assert.deepEqual(setTags({}, 'a', ['#Visa', 'visa', 'Money']), { a: ['visa', 'money'] });
+  assert.deepEqual(setTags({ a: ['x'] }, 'a', []), {});
+  assert.deepEqual(setTags({ a: ['x'] }, 'a', ['  ']), {});       // all-empty → deleted
+});
+
+test('tagsFor / allTags', () => {
+  const m = { a: ['money', 'visa'], b: ['visa', 'health'] };
+  assert.deepEqual(tagsFor(m, 'a'), ['money', 'visa']);
+  assert.deepEqual(tagsFor(m, 'missing'), []);
+  assert.deepEqual(allTags(m), ['health', 'money', 'visa']);     // distinct + sorted
+  assert.deepEqual(allTags({}), []);
+});
+
+test('tagHue: deterministic, in range, stable across calls', () => {
+  const h = tagHue('visa');
+  assert.equal(h, tagHue('visa'));
+  assert.ok(Number.isInteger(h) && h >= 0 && h < 360);
+});

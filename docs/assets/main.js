@@ -98,7 +98,7 @@ function seedOnce() {
   const places = get(KEYS.places, []) || [];
   if (!places.some(p => p.id === 'p-sakura-house-makoto')) {
     const hasHome = places.some(p => p.home);        // respect the single-home invariant
-    places.push({ id: 'p-sakura-house-makoto', name: 'Sakura House (Makoto)', address: 'Tokyo — approximate, verify & move when confirmed', area: 'Shinjuku', lat: 35.6938, lng: 139.7034, category: 'personal', source: 'seed', coordKind: 'approx', fav: false, locked: false, visited: false, emoji: '', home: !hasHome });
+    places.push({ id: 'p-sakura-house-makoto', name: 'Makoto Guesthouse', address: '2-3-9 Towa, Adachi-ku, Tokyo (Booking.com)', area: 'Ayase', lat: 35.7684, lng: 139.8264, category: 'personal', source: 'seed', coordKind: 'approx', fav: false, locked: false, visited: false, emoji: '', home: !hasHome });
     set(KEYS.places, places);
   }
   set(KEYS.seed, true);

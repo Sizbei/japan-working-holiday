@@ -106,7 +106,7 @@
       "id": "book-first-week-accommodation-hotel-hostel-soft-",
       "when": "2026-06-15",
       "what": "First-week accommodation (hotel/hostel soft-landing) + share-house application",
-      "action": "DONE — booked Sakura House (Makoto) through Jul 7; find long-term housing before checkout. (Original guidance:) BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House before you fly.",
+      "action": "DONE — booked Makoto Guesthouse (Adachi-ku) through Jul 7; find long-term housing before checkout. (Original guidance:) BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House before you fly.",
       "leadTime": "2-4 weeks before landing",
       "confidence": "high"
     },
@@ -242,13 +242,13 @@
   "calendar": [
     {
       "id": "ev-sakura-house-makoto-stay",
-      "title": "Sakura House (Makoto) — initial stay",
+      "title": "Makoto Guesthouse — initial stay",
       "date": "2026-06-30",
       "endDate": "2026-07-07",
       "category": "personal",
-      "area": "Tokyo (Sakura House Makoto)",
-      "bookingNotes": "Initial accommodation, arrival through Jul 7. Verify the exact property name (Makoto) against your booking confirmation — Sakura House has many named buildings. Find long-term housing before checkout.",
-      "confidence": "medium"
+      "area": "Adachi-ku, Tokyo (Towa, near Ayase / Kameari station)",
+      "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. It's far northeast Tokyo, so budget commute time into the centre; find long-term housing before checkout.",
+      "confidence": "high"
     },
     {
       "id": "ev-forest-beer-garden-mori-no-beer-garden-meiji-",
@@ -1844,7 +1844,7 @@
       "date": "2026-07-01",
       "steps": [
         "Recover from jet lag; orient to your neighborhood. Locate the nearest konbini, ward office, post office, and station charge machines.",
-        "If you applied to your Sakura House room before you flew, confirm move-in logistics and view the room in person if possible.",
+        "Settle into Makoto Guesthouse (your first-week base in Adachi-ku), then start viewing long-term share-house rooms in person before the stay ends.",
         "Optional fun anchor: teamLab Planets Summer Sunflower Exclusive opens today — book a timed slot via DMM/Klook if you want a low-effort first outing.",
         "Buy a cheap data top-up if needed; verify your Mobal/passport-only SIM number works for SMS."
       ]
@@ -2521,7 +2521,7 @@
       "window": "July 2026",
       "items": [
         {
-          "task": "Lock in long-term housing before the Sakura House (Makoto) stay ends on Jul 7 — view share-house rooms in person, then sign.",
+          "task": "Lock in long-term housing before the Makoto Guesthouse stay ends on Jul 7 — view share-house rooms in person, then sign.",
           "kind": "housing",
           "id": "chk-lock-long-term-housing",
           "dueBy": "2026-07-07"

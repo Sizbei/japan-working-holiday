@@ -2356,19 +2356,6 @@
           "confidence": "high"
         },
         {
-          "id": "chk-get-your-residence-card-zairy",
-          "task": "Get your Residence Card (zairyu card) ON ARRIVAL at Narita. As a WHV holder landing at NRT, immigration issues the residence card at the airport during landing permission. Confirm the card prints correctly and keep it on you at all times - it is the master key that unlocks address registration, banking, phone contracts, and work.",
-          "window": "on 2026-06-30 at NRT immigration",
-          "dueBy": "2026-06-30",
-          "kind": "legal",
-          "note": "Residence card is issued at major airports (Narita, Haneda, Kansai, Chubu) on entry. By law you must carry it at all times. Address is blank on issue - you fill it in at the ward office (next task).",
-          "sources": [
-            "https://japanlivinglife.com/articles/japan-post-bank-account-guide",
-            "https://www.yolo-japan.com/en/information/details/281"
-          ],
-          "confidence": "high"
-        },
-        {
           "id": "chk-break-the-sim-bank-address-chi",
           "task": "Break the SIM/bank/address chicken-and-egg with a passport-only SIM. Banks and most contract phone plans demand a Japanese phone number AND a registered address - but you can't get a contract SIM without an address. Solution: buy a Mobal or Sakura Mobile SIM/eSIM that needs ONLY your passport (no residence card, no address) - order before departure or pick up at Narita. This gives you the Japanese number you need to open the bank account and fill out forms from day one.",
           "window": "order before departure or buy at NRT on arrival",
@@ -2414,7 +2401,7 @@
       "items": [
         {
           "id": "chk-addr-reg",
-          "task": "File your moving-in notification (転入届 / 住民登録) at your Tokyo ward or city office once you have a fixed address. Bring passport + Residence Card; they print your address on the back of the card on the spot and create your resident record (juminhyo). This is the legal gateway that unlocks pension, health insurance, My Number, and banking — do it first.",
+          "task": "File your moving-in notification (転入届 / 住民登録) at your Tokyo ward or city office once you have a fixed address. Bring passport + Residence Card; they print your address on the back of the card on the spot and create your resident record (juminhyo). While there, grab a few Jūminhyō copies (~¥300 each) — the bank will want one; missing the 14-day window risks a fine up to ¥50,000. This is the legal gateway that unlocks pension, health insurance, My Number, and banking — do it first.",
           "window": "within 14 days of settling into your address",
           "dueBy": "2026-07-14",
           "kind": "legal",
@@ -2512,19 +2499,6 @@
           "sources": [
             "https://www.japanlivingguide.com/expatinfo/transportation/mobile-suica/",
             "https://atadistance.net/2026/04/21/global-nfc-samsung-galaxy-and-why-its-important/"
-          ],
-          "confidence": "high"
-        },
-        {
-          "id": "chk-register-your-address-at-the-l",
-          "task": "Register your address at the local ward/city office within 14 DAYS of landing - this is a hard legal deadline. Bring your residence card and passport, file the Moving-In Notification (tennyu todoke), and they will write your address on the back of your residence card. While there, also request a few copies of your Juminhyo (residence certificate ~300 yen each) - you'll need it for the bank. Missing the 14-day window risks a fine up to 50,000 yen.",
-          "window": "within 14 days of landing",
-          "dueBy": "2026-07-14",
-          "kind": "legal",
-          "note": "This is the linchpin that breaks the address chicken-and-egg: share house move-in gives you an address, ward office stamps it onto your residence card + issues Juminhyo, and THEN banks/phone contracts become possible. Also enroll in National Health Insurance and National Pension here at the same visit.",
-          "sources": [
-            "https://www.yolo-japan.com/en/information/details/281",
-            "https://wise.com/en-jp/blog/register-change-address-japan"
           ],
           "confidence": "high"
         }

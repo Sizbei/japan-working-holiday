@@ -29,6 +29,9 @@ let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view s
 let TODAY = '2026-06-15';
 let hiddenCats = new Set();
 let popEl = null, popCleanup = null;
+let _sidePanelEv = null;          // currently open event id (null = closed)
+let _sidePanelTrigger = null;     // element that opened the panel (focus restore)
+let _sidePanelCleanup = null;     // remove side-panel document listeners
 
 const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
 const SPAN_CAP = 10;
@@ -303,7 +306,7 @@ function wireWeek() {
   // A real drag releases over a day header, so it never also fires this.
   $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id]').forEach(el => el.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === el.dataset.id);
-    if (ev) openDetail(ev);
+    if (ev) openSidePanel(ev, el);
   }));
 }
 
@@ -374,7 +377,7 @@ function panelHTML() {
 }
 function wirePanel() {
   $$('#calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
-    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openDetail(ev);
+    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
   }));
   // auto-scroll the first upcoming (non-overdue) deadline into view
   const next = $('#calPanel .cp-deadline .cp-dot.sev-due-soon, #calPanel .cp-deadline .cp-dot.sev-upcoming');
@@ -408,7 +411,7 @@ function wireAgenda() {
   // the .agenda-title button is the keyboard trigger (native Enter/Space); its click bubbles to the
   // row. A mouse click anywhere on the row (except the +G link) also opens the detail.
   $$('#calView .agenda-row').forEach(r => {
-    r.addEventListener('click', (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openDetail(ev); });
+    r.addEventListener('click', (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openSidePanel(ev, e.target.closest('button') || r); });
   });
 }
 
@@ -417,7 +420,7 @@ function wireCells() {
   $$('#calView .cal-cell[data-day]').forEach(c => {
     // the .cal-date button is the keyboard-focusable trigger; its click bubbles here. A chip click
     // opens the event; any other click on the cell (the date button or empty space) opens the day popover.
-    c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const ev = allEvents().find(x => x.id === e.target.closest('.cal-chip').dataset.ev); if (ev) openDetail(ev); return; } dayPopover(c.dataset.day, c); });
+    c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const chip = e.target.closest('.cal-chip'); const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return; } dayPopover(c.dataset.day, c); });
   });
 }
 // drag a USER event chip onto another day to reschedule (baked events are fixed)
@@ -479,7 +482,7 @@ function dayPopover(date, anchor) {
   const flipUp = r.bottom + popEl.offsetHeight + 12 > window.innerHeight;
   popEl.style.top = (flipUp ? window.scrollY + r.top - popEl.offsetHeight - 6 : top) + 'px';
   popEl.style.left = Math.max(window.scrollX + 8, left) + 'px';
-  popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openDetail(ev); }));
+  popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openSidePanel(ev, anchor); }));
   popEl.querySelector('.pop-add').addEventListener('click', () => { dismissPopover(); openModal(null, date); });
   const onDoc = (e) => { if (popEl && !popEl.contains(e.target) && e.target !== anchor) dismissPopover(); };
   const onKey = (e) => {
@@ -496,32 +499,92 @@ function dayPopover(date, anchor) {
   popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
 }
 
-// ---- detail (baked read-only, user editable) ----
-function openDetail(ev) {
-  if (ev.source === 'user') return openModal(ev);
-  const body = `
-    <h3 class="modal-title">${esc(ev.title)}</h3>
-    <p class="modal-line"><b>${esc(fmtDate(ev.date))}${ev.endDate ? ' – ' + esc(fmtDate(ev.endDate)) : ''}</b> · ${esc(ev.category || '')}</p>
-    ${ev.area ? `<p class="modal-line">📍 ${esc(ev.area)}</p>` : ''}
-    ${ev.cost ? `<p class="modal-line">💴 ${esc(ev.cost)}</p>` : ''}
-    ${ev.bookBy ? `<p class="modal-line book">🎟️ Book by <b>${esc(fmtDate(ev.bookBy))}</b></p>` : ''}
-    ${ev.bookingNotes ? `<p class="modal-note">${esc(ev.bookingNotes)}</p>` : ''}
-    ${ev.why ? `<p class="modal-note">${esc(ev.why)}</p>` : ''}
-    ${srcline(ev.sources)}
-    ${ev.moved ? '<p class="modal-line">↩ You rescheduled this from its researched date.</p>' : ''}
-    <div class="modal-actions">
-      <button class="btn ${isGoing(ev.id) ? 'primary' : ''}" id="mdGoing" aria-pressed="${isGoing(ev.id) ? 'true' : 'false'}">${isGoing(ev.id) ? '✓ Going' : '＋ Going'}</button>
-      ${ev.moved ? '<button class="btn" id="mdReset">↺ Reset date</button>' : ''}
-      <button class="btn" id="mdPlan">＋ Add to day plan</button>
-      <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
-      <button class="btn" id="mdCopy">Copy to my events</button>
-    </div>`;
-  const ov = showModal(body);
-  ov.querySelector('#mdGoing')?.addEventListener('click', () => { toggleGoingEv(ev); closeModal(ov, { rerender: true }); });
-  ov.querySelector('#mdReset')?.addEventListener('click', () => { const { [ev.id]: _drop, ...o } = loadOverrides(); saveOverrides(o); closeModal(ov, { rerender: true }); });
-  ov.querySelector('#mdPlan')?.addEventListener('click', () => { addEventToPlan(ev); closeModal(ov, { rerender: true }); });
-  ov.querySelector('#mdCopy')?.addEventListener('click', () => { copyBakedToUser(ev); closeModal(ov, { rerender: true }); });
+// ---- slide-in side panel (replaces openDetail as the event-detail surface) ----
+function closeSidePanel() {
+  const panel = $('#calSidePanel');
+  if (!panel) return;
+  panel.classList.remove('is-open');
+  // wait for CSS transition before hiding (150ms exit, matches CSS)
+  setTimeout(() => { if (!panel.classList.contains('is-open')) panel.hidden = true; }, 160);
+  if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
+  const trig = _sidePanelTrigger;
+  _sidePanelEv = null;
+  _sidePanelTrigger = null;
+  if (trig && document.contains(trig)) trig.focus();
+  else $('#calAdd')?.focus();
 }
+
+function openSidePanel(ev, trigger) {
+  _sidePanelTrigger = trigger || document.activeElement;
+  _sidePanelEv = ev.id;
+  const panel = $('#calSidePanel');
+  if (!panel) return;
+
+  const isBaked = ev.source !== 'user';
+  const going = isGoing(ev.id);
+  const dateRange = esc(fmtDate(ev.date)) + (ev.endDate ? ' – ' + esc(fmtDate(ev.endDate)) : '');
+  const actions = isBaked
+    ? `<button class="btn ${going ? 'primary' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>
+       ${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}
+       <button class="btn" id="spPlan">＋ Add to day plan</button>
+       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
+       <button class="btn" id="spCopy">Copy to my events</button>`
+    : `<button class="btn" id="spEdit">Edit</button>
+       <button class="btn ${going ? 'primary' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>
+       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
+       <button class="btn danger" id="spDel">Delete</button>`;
+
+  panel.innerHTML = `
+    <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
+    <div class="sp-inner" role="dialog" aria-modal="true" aria-label="${esc(ev.title)}">
+      <div class="sp-head">
+        <h2 class="sp-title">${esc(ev.title)}</h2>
+        <button class="sp-close" id="spClose" aria-label="Close">✕</button>
+      </div>
+      <div class="sp-body">
+        <div class="sp-row"><span class="sp-icon" aria-hidden="true">📅</span><span>${dateRange}</span></div>
+        ${ev.area ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">📍</span><span>${esc(ev.area)}</span></div>` : ''}
+        ${ev.category ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">🏷</span><span>${esc(ev.category)}</span></div>` : ''}
+        ${ev.cost ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">💴</span><span>${esc(ev.cost)}</span></div>` : ''}
+        ${ev.bookBy ? `<div class="sp-row sp-bookby"><span class="sp-icon" aria-hidden="true">🎟️</span><span>Book by <b>${esc(fmtDate(ev.bookBy))}</b></span></div>` : ''}
+        ${(ev.note || ev.bookingNotes || ev.why) ? `<p class="sp-note">${esc(ev.note || ev.bookingNotes || ev.why || '')}</p>` : ''}
+        ${ev.moved ? '<p class="sp-moved">↩ You rescheduled this from its researched date.</p>' : ''}
+        ${srcline(ev.sources)}
+      </div>
+      <div class="sp-actions">${actions}</div>
+    </div>`;
+
+  panel.hidden = false;
+  // rAF so the hidden→visible transition actually fires
+  requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('is-open'); }); });
+
+  // wire actions
+  panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
+  panel.querySelector('#spBackdrop')?.addEventListener('click', closeSidePanel);
+  panel.querySelector('#spGoing')?.addEventListener('click', () => { toggleGoingEv(ev); openSidePanel(ev, _sidePanelTrigger); });
+  if (isBaked) {
+    panel.querySelector('#spReset')?.addEventListener('click', () => { const { [ev.id]: _d, ...o } = loadOverrides(); saveOverrides(o); closeSidePanel(); });
+    panel.querySelector('#spPlan')?.addEventListener('click', () => { addEventToPlan(ev); closeSidePanel(); });
+    panel.querySelector('#spCopy')?.addEventListener('click', () => { copyBakedToUser(ev); closeSidePanel(); });
+  } else {
+    panel.querySelector('#spEdit')?.addEventListener('click', () => { closeSidePanel(); openModal(ev); });
+    panel.querySelector('#spDel')?.addEventListener('click', () => { deleteUserEvent(ev.id); });  // single-path: deleteUserEvent→saveUser→jwh:data-changed→render; auto-close below
+  }
+
+  // Esc closes
+  const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); } };
+  document.addEventListener('keydown', onKey, true);
+  _sidePanelCleanup = () => document.removeEventListener('keydown', onKey, true);
+
+  // focus first focusable element inside the panel
+  setTimeout(() => { panel.querySelector('#spClose, button, [href]')?.focus(); }, 40);
+}
+
+// Auto-close side panel when the open event disappears (delete / external change)
+document.addEventListener('jwh:data-changed', () => {
+  if (!_sidePanelEv) return;
+  if (!allEvents().find(x => x.id === _sidePanelEv)) closeSidePanel();
+});
 
 // ---- shared event actions (used by both the modal handlers and the context menu) ----
 function toggleGoingEv(ev) { toggleGoing(ev.id); }                     // toggleGoing dispatches
@@ -572,7 +635,7 @@ function focusAdd() { $('#calAdd')?.focus(); }                 // after a mutati
 // Map an event object to concrete menu items (label + run). Spec (labels/order/danger) is pure (lib/calevents).
 function eventMenuItems(ev) {
   const RUN = {
-    open: () => openDetail(ev),
+    open: () => openSidePanel(ev),
     edit: () => openModal(ev),
     duplicate: () => { saveUser([...loadUser(), duplicateUserEvent(ev, 'u' + Date.now())]); focusAdd(); },
     plan: () => addEventToPlan(ev),

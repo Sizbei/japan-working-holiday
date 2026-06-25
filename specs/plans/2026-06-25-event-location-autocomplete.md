@@ -190,18 +190,22 @@ function wireLocationField(ov) {
       controller = new AbortController();
       try {
         const matches = await searchJP(q, controller.signal);
+        if (!sug.isConnected) return;                            // modal closed mid-request → bail (no detached write)
         sug.innerHTML = matches.length
           ? matches.map(m => `<li><button type="button" class="ev-loc-opt" data-addr="${esc(m.addr)}">${esc(m.addr)}</button></li>`).join('')
           : '<li class="ev-loc-msg">No matches</li>';
-      } catch (e) { if (e.name !== 'AbortError') sug.innerHTML = '<li class="ev-loc-msg">Search unavailable — try again</li>'; }
+      } catch (e) { if (e.name !== 'AbortError' && sug.isConnected) sug.innerHTML = '<li class="ev-loc-msg">Search unavailable — try again</li>'; }
     };
     timer = setTimeout(run, 450);
   });
-  sug.addEventListener('click', (e) => {
+  // Select on mousedown (fires BEFORE the input's blur) + preventDefault so focus/selection isn't lost —
+  // avoids the blur-vs-click race entirely (no timing-dependent setTimeout).
+  sug.addEventListener('mousedown', (e) => {
     const b = e.target.closest('.ev-loc-opt'); if (!b) return;
-    input.value = b.dataset.addr; clear(); input.focus();
+    e.preventDefault();
+    input.value = b.dataset.addr; clear();
   });
-  input.addEventListener('blur', () => setTimeout(clear, 150));   // let a suggestion click land first
+  input.addEventListener('blur', clear);   // mousedown already committed any selection, so a plain clear is safe
 }
 ```
 
@@ -249,4 +253,8 @@ git commit -m "feat(calendar): autocompleting Location field on the event form"
 
 **Type consistency:** `searchJP(query, signal) → Promise<[{name,addr,lat,lng}]>` and `parseNominatim(rows) → [{name,addr,lat,lng}]` are defined in Task 1 and consumed identically in Tasks 2 (`m.lat/m.lng/m.name/m.addr`) and 3 (`m.addr`). The event field `name="area"` matches the existing agenda renderer (`e.area`) and the submit's `FormData` path. `#evArea`/`#evAreaSug`/`.ev-loc-opt`/`data-addr` selectors match between the form HTML (Step 2), the wiring (Step 3), and the CSS (Step 4).
 
-**Decision flagged for review:** the field writes to `area`, not a new `location` property (the spec said `location`). Rationale: events already carry `area`, the agenda renders it, and the map estimates travel from `area || address` — reusing it gives immediate display + map integration with zero new render code. A reviewer should confirm this reuse doesn't collide with how baked events use `area`.
+**Decision flagged for review:** the field writes to `area`, not a new `location` property (the spec said `location`). Rationale: events already carry `area`, the agenda renders it, and the map estimates travel from `area || address` — reusing it gives immediate display + map integration with zero new render code. Adversarial review confirmed both baked and user events read `area` uniformly (agenda, map estimator) — no collision.
+
+**Location is text-only this round:** `searchJP` returns coords, but the event persists only the address text (`area`). Capturing lat/lng to drop a precise event pin is deliberately deferred (a later enhancement, likely with the Plan 5 map/side-panel work).
+
+**Adversarial-review fixes folded in:** `isConnected` guard before the suggestion-list write (no detached-node write if the modal closes mid-request); suggestion selection on `mousedown`+`preventDefault` (removes the blur-vs-click race). **Rejected with reason:** extracting a shared `throttledFetch` util (would force refactoring the working, untouched map loop to dedup ~15 lines with only two callers — rule-of-three; revisit on a third caller); reusing the map's `.sug-*` CSS (would couple the calendar's floating dropdown to the map's inline-list styling); merging `parseNominatim` into `searchJP` (keeping them split is what makes the parse logic unit-testable without mocking `fetch`).

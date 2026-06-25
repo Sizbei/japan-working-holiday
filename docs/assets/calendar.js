@@ -18,6 +18,7 @@ import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { openMenu } from './lib/menu.js';
+import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
 import { searchJP } from './lib/nominatim.js';
 
@@ -156,6 +157,30 @@ function buildLegend() {
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 
+function renderMiniNav() {
+  const host = $('#calMiniNav'); if (!host) return;
+  const weeks = monthGrid(viewY, viewM);
+  const rows = weeks.map(w => `<tr>${w.map(c =>
+    `<td><button type="button" class="mn-day${c.inMonth ? '' : ' mn-out'}${c.iso === TODAY ? ' mn-today' : ''}" data-iso="${esc(c.iso)}" aria-label="${esc(c.iso)}">${c.day}</button></td>`
+  ).join('')}</tr>`).join('');
+  host.innerHTML = `
+    <div class="mn-head">
+      <button type="button" class="mn-arrow" data-mn="-1" aria-label="Previous month">&#x2039;</button>
+      <span class="mn-title">${esc(MONTHS[viewM])} ${viewY}</span>
+      <button type="button" class="mn-arrow" data-mn="1" aria-label="Next month">&#x203a;</button>
+    </div>
+    <table class="mn-grid"><thead><tr>${WEEKDAYS_SHORT.map(d => `<th scope="col">${esc(d)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+  host.querySelectorAll('[data-mn]').forEach(b => b.addEventListener('click', () => { ({ year: viewY, month: viewM } = addMonths(viewY, viewM, +b.dataset.mn)); render(); }));
+  host.querySelectorAll('.mn-day[data-iso]').forEach(b => b.addEventListener('click', () => jumpToDate(b.dataset.iso)));
+}
+
+function jumpToDate(iso) {
+  const t = parseISO(iso); if (!t) return;
+  viewY = t.getUTCFullYear(); viewM = t.getUTCMonth();
+  if (mode === 'week') weekAnchor = iso;
+  render();
+}
+
 function render() {
   _evCache = null;   // invalidate the per-render event cache (data may have changed since last render)
   dismissPopover();
@@ -183,6 +208,7 @@ function render() {
     if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate
     wireAgenda();
   }
+  renderMiniNav();
 }
 
 // ---- WEEK view (all-day lane + per-day add; bars/drag land in later stages) ----

@@ -131,8 +131,12 @@
     </div>
     <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
+      <aside class="cal-sidebar" aria-label="Calendar navigation">
+        <div id="calMiniNav" class="cal-mininav"></div>
+        <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
+      </aside>
       <div id="calView"></div>
-      <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
+      <div id="calSidePanel" class="cal-sidepanel" hidden aria-label="Event details"></div>
     </div>
   </section>
 

@@ -36,7 +36,7 @@ export function loadGIS() {
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
-    script.onload = resolve;
+    script.onload = () => resolve();
     script.onerror = () => {
       gisLoadPromise = null;
       reject(new Error('Failed to load Google Identity Services. Check your network connection.'));
@@ -239,6 +239,7 @@ export async function syncNow(getEvents) {
       if (googleId) {
         // PATCH existing.
         await callWithRetry('PATCH', `/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(googleId)}`, body);
+        saveMap(map);   // write after each success (spec: per-success; future-proofs storing etag/version)
         updated++;
       } else {
         // POST new.

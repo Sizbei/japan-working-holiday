@@ -2087,11 +2087,11 @@
   ],
   "checklist": [
     {
-      "phase": "Pre-Departure (Canada)",
+      "phase": "Pre-Departure (Seattle / US)",
       "window": "Now → June 29 2026",
       "items": [
         {
-          "task": "Confirm WHV eligibility (age 18–30, citizen, residing in Canada)",
+          "task": "Confirm WHV eligibility (age 18–30, Canadian citizen; visa already granted)",
           "kind": "logistics",
           "id": "chk-confirm-whv-eligibility-age-1"
         },
@@ -2119,7 +2119,7 @@
           "id": "chk-check-passport-validity-blan"
         },
         {
-          "task": "Open a Wise multi-currency account from Canada",
+          "task": "(Optional) Wise account — you're going Chase-Sapphire-only, so this is an upgrade, not required: Wise is the most reliable way to top up Mobile Suica and gives cheap mid-market JPY. Skip it to keep things simple.",
           "note": "Bridges banking until Japan Post is set up; cheap FX.",
           "kind": "logistics",
           "id": "chk-open-a-wise-multi-currency-acc"
@@ -2175,7 +2175,7 @@
         },
         {
           "id": "chk-line-up-a-no-key-money-share-h-2",
-          "task": "Line up a no-key-money share house (Oakhouse / Sakura House / Borderless House) as your real first base instead of a normal Japanese apartment. These skip the four classic rental gotchas: NO key money (reikin, normally 1-2 months non-refundable), NO guarantor (hoshonin - nearly impossible as a new arrival), NO agent fee, and little/no deposit. You can apply online from Canada and reserve a room before you land. Typical Tokyo all-in: ~50,000-90,000 yen/month rent + a one-time contract fee (~30,000-50,000 yen) + monthly utilities/maintenance fee, furnished with wifi included.",
+          "task": "Line up a no-key-money share house (Oakhouse / Sakura House / Borderless House) as your real first base instead of a normal Japanese apartment. These skip the four classic rental gotchas: NO key money (reikin, normally 1-2 months non-refundable), NO guarantor (hoshonin - nearly impossible as a new arrival), NO agent fee, and little/no deposit. You can apply online before you fly and reserve a room before you land. Typical Tokyo all-in: ~50,000-90,000 yen/month rent + a one-time contract fee (~30,000-50,000 yen) + monthly utilities/maintenance fee, furnished with wifi included.",
           "window": "apply 2-4 weeks before landing; move in within first week",
           "dueBy": "2026-06-22",
           "kind": "housing",
@@ -2188,7 +2188,7 @@
         },
         {
           "id": "chk-order-a-wise-formerly-transfe-2",
-          "task": "Order a Wise (formerly TransferWise) card and verify the account while still in CANADA, before you fly. A Wise card issued in Canada keeps Apple Pay/Google Pay compatibility; a Wise card issued after you become a Japan resident does NOT work with Apple Pay/Google Pay, so you lose the ability to top up a mobile Suica with it. Load some JPY at the mid-market rate so you land with spendable funds.",
+          "task": "(Optional, for a Chase-Sapphire-only setup) Order a Wise card and verify the account while still in the US, before you fly. A Wise card issued in your home country (CA/US) keeps Apple Pay/Google Pay compatibility; a Wise card issued after you become a Japan resident does NOT work with Apple Pay/Google Pay, so you lose the ability to top up a mobile Suica with it. Load some JPY at the mid-market rate so you land with spendable funds.",
           "window": "before departure (now through 2026-06-29)",
           "dueBy": "2026-06-29",
           "kind": "setup",
@@ -2201,7 +2201,7 @@
         },
         {
           "id": "chk-decide-your-long-term-plan-bef-2",
-          "task": "Decide your long-term plan BEFORE arrival: a WHV holder cannot get a Japanese credit card or major carrier (docomo/au/SoftBank/Rakuten) contract on day one because they reject foreign cards and want a residence card. Pre-order a foreigner-friendly SIM from Mobal (no residence card needed, real 070/080/090 number, free worldwide shipping, pays with your Canadian card) so a physical SIM is waiting or shippable. Sakura Mobile and GTN are alternatives but lean toward needing a residence card / convenience-store payment.",
+          "task": "Decide your long-term plan BEFORE arrival: a WHV holder cannot get a Japanese credit card or major carrier (docomo/au/SoftBank/Rakuten) contract on day one because they reject foreign cards and want a residence card. Pre-order a foreigner-friendly SIM from Mobal (no residence card needed, real 070/080/090 number, free worldwide shipping, pays with your home (CA/US) card) so a physical SIM is waiting or shippable. Sakura Mobile and GTN are alternatives but lean toward needing a residence card / convenience-store payment.",
           "window": "1-2 weeks before departure",
           "dueBy": "2026-06-29",
           "kind": "setup",
@@ -2217,7 +2217,7 @@
         },
         {
           "id": "chk-lock-the-proof-of-funds-figure-2",
-          "task": "Lock the proof-of-funds figure with YOUR consulate before flying. Canadian WHV: most recent bank statement showing roughly CAD 3,500 if you hold a return/onward ticket, OR ~CAD 4,500-5,000 if you do NOT. Print a fresh bank statement (dated within the last few days) and carry a paper copy. Note: this is checked at APPLICATION (already done if visa is in hand), but also keep it on you for landing.",
+          "task": "Confirm the proof-of-funds figure per your Canadian WHV terms (already cleared at application). Canadian WHV: most recent bank statement showing roughly CAD 3,500 if you hold a return/onward ticket, OR ~CAD 4,500-5,000 if you do NOT. Print a fresh bank statement (dated within the last few days) and carry a paper copy. Note: this is checked at APPLICATION (already done if visa is in hand), but also keep it on you for landing.",
           "window": "before 2026-06-30 (carry on landing day)",
           "dueBy": "2026-06-29",
           "kind": "money",

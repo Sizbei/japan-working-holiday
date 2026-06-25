@@ -35,10 +35,8 @@
 
 **Interfaces:**
 - Produces:
-  - `normalizeTag(s) → string` — trim, strip leading `#`, collapse inner whitespace, lowercase, cap 24 chars. `''` for junk/empty.
-  - `addTag(map, id, tag) → newMap` — adds a normalized tag to `map[id]` (no dupes, no mutation; no-op on empty id/tag).
-  - `removeTag(map, id, tag) → newMap` — removes it; deletes the `id` entry entirely when its array becomes empty.
-  - `setTags(map, id, arr) → newMap` — replaces `map[id]` with a normalized, de-duplicated array; deletes the entry if the result is empty.
+  - `normalizeTag(s) → string` — trim, strip leading `#`, strip commas, collapse inner whitespace, lowercase, cap 24 chars. `''` for junk/empty.
+  - `setTags(map, id, arr) → newMap` — replaces `map[id]` with a normalized, de-duplicated array; deletes the entry if the result is empty. (The editor commits the whole list at once, so a bulk `setTags` is all the UI needs — no per-tag add/remove API.)
   - `tagsFor(map, id) → string[]` — the id's tags (always an array).
   - `allTags(map) → string[]` — distinct tags across all ids, sorted ascending.
   - `tagHue(tag) → number` — stable hash in `[0,359]` for the chip color.
@@ -46,33 +44,16 @@
 - [ ] **Step 1: Write the failing tests** — append to `tests/lib.test.mjs`:
 
 ```js
-import { normalizeTag, addTag, removeTag, setTags, tagsFor, allTags, tagHue } from '../docs/assets/lib/tags.js';
+import { normalizeTag, setTags, tagsFor, allTags, tagHue } from '../docs/assets/lib/tags.js';
 
-test('normalizeTag: trims, strips #, collapses ws, lowercases, caps length', () => {
+test('normalizeTag: trims, strips #, strips commas, collapses ws, lowercases, caps length', () => {
   assert.equal(normalizeTag('  #Visa '), 'visa');
   assert.equal(normalizeTag('Ward  Office'), 'ward office');
   assert.equal(normalizeTag('##HOUSING'), 'housing');
+  assert.equal(normalizeTag('visa,housing'), 'visa housing');   // commas → space (no commas in stored tags)
   assert.equal(normalizeTag('   '), '');
   assert.equal(normalizeTag(null), '');
   assert.equal(normalizeTag('a'.repeat(40)).length, 24);
-});
-
-test('addTag: normalizes, dedupes, never mutates', () => {
-  const m0 = {};
-  const m1 = addTag(m0, 'cku1', '#Visa');
-  assert.deepEqual(m1, { cku1: ['visa'] });
-  assert.deepEqual(m0, {});                         // original untouched
-  const m2 = addTag(m1, 'cku1', 'visa');            // dup → unchanged map content
-  assert.deepEqual(m2, { cku1: ['visa'] });
-  assert.equal(addTag(m1, '', 'x'), m1);            // empty id → same ref
-  assert.equal(addTag(m1, 'cku1', '   '), m1);      // empty tag → same ref
-});
-
-test('removeTag: removes and deletes empty id entry', () => {
-  const m = { a: ['visa', 'money'] };
-  assert.deepEqual(removeTag(m, 'a', 'money'), { a: ['visa'] });
-  assert.deepEqual(removeTag({ a: ['visa'] }, 'a', 'visa'), {});   // last tag → id removed
-  assert.deepEqual(m, { a: ['visa', 'money'] });                  // original untouched
 });
 
 test('setTags: normalizes+dedupes a whole list, deletes when empty', () => {
@@ -111,30 +92,11 @@ Expected: FAIL — `Cannot find module '../docs/assets/lib/tags.js'`.
 
 const MAX_LEN = 24;
 
-// trim, strip leading '#', collapse inner whitespace, lowercase, cap length. '' for junk.
+// trim, strip leading '#', strip commas (→ space), collapse inner whitespace, lowercase, cap length.
+// '' for junk. Commas are stripped so a pasted "a,b" can never become one comma-bearing tag.
 export function normalizeTag(s) {
   return String(s == null ? '' : s)
-    .trim().replace(/^#+/, '').replace(/\s+/g, ' ').toLowerCase().slice(0, MAX_LEN).trim();
-}
-
-// add a normalized tag to an id's list → NEW map (no mutation, no dupes; no-op on empty id/tag).
-export function addTag(map, id, tag) {
-  const t = normalizeTag(tag);
-  if (!id || !t) return map;
-  const cur = Array.isArray(map[id]) ? map[id] : [];
-  if (cur.includes(t)) return map;
-  return { ...map, [id]: [...cur, t] };
-}
-
-// remove a tag from an id's list → NEW map; deletes the id entry when its array empties.
-export function removeTag(map, id, tag) {
-  const t = normalizeTag(tag);
-  const cur = Array.isArray(map[id]) ? map[id] : [];
-  if (!cur.includes(t)) return map;
-  const next = cur.filter(x => x !== t);
-  const out = { ...map };
-  if (next.length) out[id] = next; else delete out[id];
-  return out;
+    .trim().replace(/^#+/, '').replace(/,/g, ' ').replace(/\s+/g, ' ').toLowerCase().slice(0, MAX_LEN).trim();
 }
 
 // replace an id's whole list with a normalized, de-duplicated array → NEW map; deletes when empty.
@@ -408,6 +370,13 @@ Then narrow each item pipeline:
   }));
 ```
 
+Then, for parity with the search filter (which resets on a list-controls setting flip), reset the tag
+filter too. In `wireCheckSettingsListener`, find the existing `checkSearchQ = '';` line and add below it:
+
+```js
+    tagFilter = '';
+```
+
 - [ ] **Step 8: Restore focus to the 🏷 button across rebuilds.** In `captureCheckFocus`, after the `if (a.dataset.due) ...` line, add:
 
 ```js
@@ -433,10 +402,13 @@ with:
 - [ ] **Step 10: Append chip / button / pill styles** to the END of `docs/assets/style.css`:
 
 ```css
-/* ---- task tags: row chips, editor button, active-filter pill ---- */
+/* ---- task tags: row chips, editor button, active-filter pill ----
+   Light text L=24% on bg L=94% keeps WCAG-AA (>=4.5:1) with margin across ALL hues —
+   the weakest hue is yellow (~h60); L 24% vs the earlier 28% lifts it clear of the 4.5 line.
+   Dark text L=82% on bg L=24% is high-contrast for every hue. Re-verify h~55 and h~190 if tweaked. */
 .ci-tags{ display:inline-flex; flex-wrap:wrap; gap:.25rem; align-items:center; align-self:center; margin-right:.15rem; }
 .chip-tag{ font-family:var(--mono); font-size:.64rem; font-weight:700; line-height:1; padding:.2rem .45rem; border-radius:999px; cursor:pointer; white-space:nowrap;
-  color: hsl(var(--h,210) 65% 28%); background: hsl(var(--h,210) 70% 93%); border:1px solid hsl(var(--h,210) 50% 70%); }
+  color: hsl(var(--h,210) 65% 24%); background: hsl(var(--h,210) 70% 94%); border:1px solid hsl(var(--h,210) 45% 68%); }
 .chip-tag::before{ content:"#"; opacity:.55; }
 .chip-tag:hover{ filter:brightness(.97); }
 .chip-tag:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
@@ -445,7 +417,7 @@ with:
 .ci-tag:hover{ opacity:1; }
 .ci-tag:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .ct-tagpill{ font-family:var(--mono); font-size:.72rem; font-weight:700; cursor:pointer; padding:.25rem .6rem; border-radius:999px; white-space:nowrap;
-  color: hsl(var(--h,210) 65% 28%); background: hsl(var(--h,210) 70% 93%); border:1px solid hsl(var(--h,210) 50% 65%); }
+  color: hsl(var(--h,210) 65% 24%); background: hsl(var(--h,210) 70% 94%); border:1px solid hsl(var(--h,210) 45% 64%); }
 .ct-tagpill:hover{ filter:brightness(.97); }
 [data-theme="dark"] .ct-tagpill{ color: hsl(var(--h,210) 85% 82%); background: hsl(var(--h,210) 35% 24%); border-color: hsl(var(--h,210) 35% 42%); }
 ```
@@ -490,7 +462,7 @@ git commit -m "chore(sw): cache lib/tags.js, bump to jwh-v110"
 
 **Spec coverage (Plan 2 = WS1 "Free-form task labels"):**
 - `jwh-tags-v1: { [taskId]: string[] }` store, `KEYS.tags` → Task 1. ✓
-- Pure `lib/tags.js` (`normalizeTag`/`addTag`/`removeTag`/`setTags`/`tagsFor`/`allTags`/`tagHue`), unit-tested → Task 1. ✓
+- Pure `lib/tags.js` (`normalizeTag`/`setTags`/`tagsFor`/`allTags`/`tagHue` — bulk `setTags` only, no dead per-tag mutators), unit-tested → Task 1. ✓
 - Chips after kind/due/phase tags, colored by stable hue → Task 3 (chips render in `.ci-tags`, `--h` from `tagHue`). ✓
 - 🏷 per-row button (sibling of 📅/⚑) opening an editor with a `datalist` of `allTags`, chips removable → Tasks 2 + 3. ✓
 - One active tag filter, AND within the current smart view; toolbar "🏷 tag ✕" pill to clear → Task 3. ✓

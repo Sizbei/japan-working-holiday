@@ -17,9 +17,10 @@ Confirmed personal facts (2026-06-24):
 - **"NCD papers" = Japan Narcotics Control Department import permit** for Vyvanse (lisdexamfetamine).
   The permit (carried with the prescription) is the correct route for **import/possession on entry**.
   **Caveat (verified):** Japan approves lisdexamfetamine only for patients **under 18** — adult
-  *domestic* prescription/refills are not supported. So the import permit ≠ a domestic supply. Track
-  the permit as done, but flag `confidence: medium` and note "carry full trip supply; refills in Japan
-  not available for adults — verify with prescriber."
+  *domestic* prescription/refills are not supported. So the import permit ≠ a domestic supply. Owner is
+  carrying a **3-month supply** (the NCD permit covers a specific quantity). Track the permit as done,
+  but flag `confidence: medium` and note "3-month supply carried; adult refills unavailable in Japan —
+  plan coverage for the rest of the year (resupply route / prescriber)."
 - **Primary card = Chase Sapphire Preferred** (Visa, **no foreign-transaction fee** — verified). It
   charges a cash-advance fee at ATMs, and Japan is cash-heavy → a separate cash/ATM card is still needed.
 - **Initial accommodation = "Sakura House (Makoto)," 2026-06-30 → 2026-07-07** (name as owner gave it;
@@ -133,8 +134,9 @@ rewrite its data flow. Verified-intact rule: `saveUser → changed()→ jwh:data
 **Data edits (`tips.json`):**
 - **Visa:** drop visa-application entries from `bookByTimeline`/`timeSensitive`; reframe visa tasks to
   "carry CoE + passport-with-visa."
-- **Vyvanse / NCD:** add task "ADHD meds — carry NCD import permit + full trip supply" with
-  `confidence: medium`, sources, and the adult-refill caveat above.
+- **Vyvanse / NCD:** add task "ADHD meds — carry NCD import permit + 3-month supply" (done) with
+  `confidence: medium`, sources, and the adult-refill caveat above. Add a follow-on task "Plan ADHD-med
+  resupply for months 4–12 (no adult refills in Japan)" — undone, no hard date.
 - **Chase Sapphire Preferred:** money note (CSP = Visa, no FTF; set travel notice) + new task "Sort a
   cash/ATM card for Japan."
 - **Sakura House:** baked `calendar` event using the real schema —

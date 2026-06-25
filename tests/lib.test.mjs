@@ -479,3 +479,32 @@ test('bookFromAbroad: explicit "after arrival only / not bookable from abroad" o
   assert.equal(bookFromAbroad({ moveIn: 'After arrival only — not bookable from abroad', requirements: ['Apply online at a UR center'] }), false);
   assert.equal(bookFromAbroad({ moveIn: 'Rolling — apply online from abroad', requirements: [] }), true);
 });
+
+import { monthGrid, addMonths, isoToYM, MONTHS, WEEKDAYS_SHORT } from '../docs/assets/lib/minical.js';
+
+test('monthGrid: full 6x7 rectangle, right in-month count + weekday alignment', () => {
+  const g = monthGrid(2026, 6);                 // July 2026 (month is 0-indexed)
+  assert.equal(g.length, 6);
+  assert.ok(g.every(w => w.length === 7));
+  const flat = g.flat();
+  assert.equal(flat.length, 42);
+  assert.equal(flat.filter(c => c.inMonth).length, 31);   // July has 31 days
+  // July 1 2026 is a Wednesday → row 0, column 3
+  assert.equal(g[0][3].iso, '2026-07-01');
+  assert.equal(g[0][3].inMonth, true);
+  assert.equal(g[0][0].iso, '2026-06-28');                // leading Sunday from June
+  assert.equal(g[0][0].inMonth, false);
+});
+
+test('addMonths wraps year boundaries', () => {
+  assert.deepEqual(addMonths(2026, 11, 1), { year: 2027, month: 0 });
+  assert.deepEqual(addMonths(2026, 0, -1), { year: 2025, month: 11 });
+  assert.deepEqual(addMonths(2026, 5, 0), { year: 2026, month: 5 });
+});
+
+test('isoToYM parses and rejects', () => {
+  assert.deepEqual(isoToYM('2026-07-01'), { year: 2026, month: 6, day: 1 });
+  assert.equal(isoToYM('nope'), null);
+  assert.equal(MONTHS[6], 'July');
+  assert.equal(WEEKDAYS_SHORT[0], 'Su');
+});

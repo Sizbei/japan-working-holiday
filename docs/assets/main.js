@@ -52,6 +52,7 @@ function boot() {
       const m = data.meta || {};
       setText('#footGen', m.generated || '');
       seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
+      seedNearby();                  // one-time: drop the near-base neighborhood pins (+ the festival venue)
       mountCalendar(data, today);
       mountGoogleSync(() => allEvents());
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
@@ -104,6 +105,32 @@ function seedOnce() {
     set(KEYS.places, places);
   }
   set(KEYS.seed, true);
+}
+
+// One-time seed (guarded by jwh-seed-nearby-v1): drop the near-base neighborhood pins + the
+// World DJ Festival venue, so the map/day-planner can show travel from Makoto. Idempotent by id —
+// only adds a pin that isn't already there; never marks any of them home. Runs once per device.
+function seedNearby() {
+  if (get(KEYS.seedNearby, false)) return;
+  const NEARBY = [
+    { id: 'p-kameari',   name: 'Kameari — KochiKame statues + Ario', area: 'Kameari',     lat: 35.7608, lng: 139.8487 },
+    { id: 'p-shibamata', name: 'Shibamata — Taishakuten + Tora-san town', area: 'Shibamata', lat: 35.7596, lng: 139.8806 },
+    { id: 'p-mizumoto',  name: 'Mizumoto Park', area: 'Mizumoto', lat: 35.7869, lng: 139.8689 },
+    { id: 'p-tateishi',  name: 'Tateishi — Showa izakaya alley', area: 'Tateishi', lat: 35.7437, lng: 139.8470 },
+    { id: 'p-kitasenju', name: 'Kita-Senju — food/izakaya hub', area: 'Kita-Senju', lat: 35.7497, lng: 139.8050 },
+    { id: 'p-nishiarai', name: 'Nishiarai Daishi temple', area: 'Nishiarai', lat: 35.7766, lng: 139.7914 },
+    { id: 'p-seaforest', name: 'World DJ Festival — Sea Forest Waterway (~2h)', area: 'Koto-ku (Tokyo Bay)', lat: 35.6047, lng: 139.8225 },
+  ];
+  const places = get(KEYS.places, []) || [];
+  const have = new Set(places.map(p => p.id));
+  let added = false;
+  NEARBY.forEach(p => {
+    if (have.has(p.id)) return;
+    places.push({ id: p.id, name: p.name, address: '', area: p.area, lat: p.lat, lng: p.lng, category: 'personal', source: 'seed', coordKind: 'approx', fav: false, locked: false, visited: false, emoji: '', home: false });
+    added = true;
+  });
+  if (added) set(KEYS.places, places);
+  set(KEYS.seedNearby, true);
 }
 
 function registerSW() {

@@ -241,6 +241,79 @@
   ],
   "calendar": [
     {
+      "id": "ev-world-dj-festival-2026",
+      "title": "World DJ Festival Japan — Day 1",
+      "date": "2026-07-04",
+      "category": "music",
+      "area": "Sea Forest Waterway, Koto-ku (Tokyo Bay)",
+      "bookingNotes": "Day 1 = Sat Jul 4 (the one you want); Day 2 = Sun Jul 5. Lineup incl. Martin Garrix, Porter Robinson, KSHMR, Galantis, Alok. Super-early-bird tickets on sale NOW — buy early, it sells out. TRAVEL: the venue is far SE bay reclaimed land, ~2h door-to-door from Makoto (Chiyoda/Rinkai lines + the festival shuttle from Tokyo Teleport). Leave ~3h before the set you care about, and check the LAST-train / official late-night shuttle times before you go — getting back to Adachi-ku after midnight is the hard part.",
+      "sources": ["http://en.worlddjfestival-jp.com/", "https://www.jambase.com/festival/world-dj-festival-japan-2026"],
+      "confidence": "high"
+    },
+    {
+      "id": "ev-plan-arrival",
+      "title": "Day 1 — Arrival: NRT → Makoto (soft plan)",
+      "date": "2026-06-30",
+      "category": "personal",
+      "area": "Narita → Adachi-ku (~1.5-2h)",
+      "bookingNotes": "Soft plan. Land NRT → residence card at immigration → Seven-Bank ATM for first yen → Keisei + transfers up to Ayase. Budget ~1.5-2h airport-to-bed. Keep it low-key: konbini run near Kameari/Ayase, then sleep off the jet lag.",
+      "confidence": "medium"
+    },
+    {
+      "id": "ev-plan-kameari",
+      "title": "Day 2 — Kameari local (jet-lag friendly)",
+      "date": "2026-07-01",
+      "category": "personal",
+      "area": "Kameari (~1 stop, 5-10 min)",
+      "bookingNotes": "Soft plan. Easy first full day while you adjust — all within ~10 min of base, no commute: KochiKame statue hunt around Kameari station + park, Ario mall for anything you need, dinner in Kita-Senju.",
+      "confidence": "low"
+    },
+    {
+      "id": "ev-plan-shibamata",
+      "title": "Day 3 — Shibamata old-town + Mizumoto Park",
+      "date": "2026-07-02",
+      "category": "personal",
+      "area": "Shibamata / Mizumoto (~20-25 min)",
+      "bookingNotes": "Soft plan. NE-Tokyo half-day, still local: Taishakuten temple + the Tora-san retro sando in the morning (shops shut ~5pm), then Mizumoto Park for a riverside wander. ~20-25 min each via Keisei — no central-Tokyo trek.",
+      "confidence": "low"
+    },
+    {
+      "id": "ev-plan-central",
+      "title": "Day 4 — central Tokyo + rest before the festival",
+      "date": "2026-07-03",
+      "category": "personal",
+      "area": "Ueno / Akihabara (~20-30 min)",
+      "bookingNotes": "Soft plan. Ueno (~20 min on JR Joban) or Akihabara — proof central isn't an hour away. But take it easy: tomorrow's festival is a ~2h-each-way, late-night marathon. Tonight: confirm your WDJF ticket + lock the shuttle/route and last-train plan.",
+      "confidence": "low"
+    },
+    {
+      "id": "ev-plan-recover",
+      "title": "Day 6 — recover (Tateishi or rest)",
+      "date": "2026-07-05",
+      "category": "personal",
+      "area": "Tateishi / local",
+      "bookingNotes": "Soft plan. Sleep in after the festival. If you've got energy, the Tateishi Showa izakaya alley (~15-20 min) is a low-key local night. (WDJF Day 2 is also today if you change your mind.)",
+      "confidence": "low"
+    },
+    {
+      "id": "ev-plan-housing",
+      "title": "Day 7 — lock long-term housing (checkout tomorrow!)",
+      "date": "2026-07-06",
+      "category": "personal",
+      "area": "share-house viewings",
+      "bookingNotes": "Soft plan — but the deadline is real: Makoto checkout is tomorrow (Jul 7). View + sign your long-term share house TODAY if you haven't. Keep the day flexible around viewings; Kita-Senju for dinner.",
+      "confidence": "high"
+    },
+    {
+      "id": "ev-plan-move",
+      "title": "Day 8 — checkout + move to long-term housing",
+      "date": "2026-07-07",
+      "category": "personal",
+      "area": "Adachi → new place",
+      "bookingNotes": "Soft plan. Check out of Makoto, move into your long-term place, and start the ward-office address-registration clock (within 14 days of moving in).",
+      "confidence": "medium"
+    },
+    {
       "id": "ev-sakura-house-makoto-stay",
       "title": "Makoto Guesthouse — initial stay",
       "date": "2026-06-30",

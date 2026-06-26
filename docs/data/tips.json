@@ -247,7 +247,7 @@
       "endDate": "2026-07-07",
       "category": "personal",
       "area": "Adachi-ku, Tokyo (Towa, near Ayase / Kameari station)",
-      "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. It's far northeast Tokyo, so budget commute time into the centre; find long-term housing before checkout.",
+      "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. Far northeast Tokyo, BUT better-connected than it feels: Ayase is on the Chiyoda line + JR Joban, so Ueno is ~20 min and central Tokyo ~25-35 min direct (not the full hour). Nearby for your first week (see Explore › Activities): Kameari KochiKame statues (1 stop), Shibamata old-town + Taishakuten, Mizumoto Park, Tateishi izakaya alley, Kita-Senju food hub, Nishiarai Daishi. Find long-term housing before checkout.",
       "confidence": "high"
     },
     {
@@ -3460,6 +3460,66 @@
     }
   ],
   "activities": [
+    {
+      "name": "Kameari — Kochikame statues + Ario mall (your nearest fun, 1 stop away)",
+      "detail": "Kameari is the home of the long-running manga 'Kochira Katsushika-ku Kameari Koen-mae Hashutsujo' (KochiKame). 15+ bronze statues of Ryotsu & co. are scattered around the station and Kameari Park, with themed manhole covers to hunt down. Plus the big Ario Kameari shopping mall (food, cinema, daily needs) and Kameari Katori Shrine — a proper slice-of-life 'downtown' Tokyo a single JR stop from your base.",
+      "how_or_when": "Kameari Station (JR Joban line) is one stop from Ayase / right by Towa — walkable or a 3-min train. Free; grab a statue map at the station and wander. Good first-day, jet-lag-friendly outing.",
+      "area_or_park": "Kameari, Katsushika (1 stop from Makoto Guesthouse)",
+      "price_or_cost": "Free (statues + shrine); mall as you like",
+      "tier": "budget",
+      "sources": ["https://blog.gaijinpot.com/kameari-a-slice-of-life-in-downtown-tokyo/", "https://www.tripadvisor.com/AttractionsNear-g1066447-d4564233-Kameari_Station-Katsushika_Tokyo_Tokyo_Prefecture_Kanto.html"],
+      "confidence": "high"
+    },
+    {
+      "name": "Shibamata — Taishakuten temple + Tora-san retro old-town",
+      "detail": "The most atmospheric old-Tokyo half-day near your base. A beautifully restored 17th-century Taishakuten temple covered in elaborate wood carvings, fronted by the Taishakuten Sando — a cobblestone shopping street of Showa-era snack shops, kusa-dango and tea (the setting of the beloved 'Otoko wa Tsurai yo / Tora-san' films). Add the Yamamoto-tei garden, the Tora-san museum, and the Yagiri-no-Watashi hand-rowed ferry across the Edo River.",
+      "how_or_when": "Keisei Kanamachi line to Shibamata (transfer at Keisei-Takasago) — ~20-25 min from your base. Temple grounds free; small fees for the garden/museum. Go mid-morning before the day-trippers; many sando shops close ~5pm.",
+      "area_or_park": "Shibamata, Katsushika (~20-25 min)",
+      "price_or_cost": "Free temple; ~¥100-500 garden/museum; cheap street snacks",
+      "tier": "budget",
+      "sources": ["https://www.gltjp.com/en/summary/area/katsushika/", "https://www.tripadvisor.com/Attractions-g1066447-Activities-Katsushika_Tokyo_Tokyo_Prefecture_Kanto.html"],
+      "confidence": "high"
+    },
+    {
+      "name": "Mizumoto Park — Tokyo's largest waterside park",
+      "detail": "A huge riverside park along the Edo River with metasequoia groves, lotus and iris ponds, long jogging/cycling paths, picnic lawns and lots of birdlife — a genuine escape from central-Tokyo crowds and a perfect calm reset while you're jet-lagged and flat-hunting.",
+      "how_or_when": "Bus from Kanamachi Station, or a long walk from Shibamata — easy to pair with a Shibamata morning. Free, open dawn-to-dusk. Best early morning; bring water in the July heat.",
+      "area_or_park": "Mizumoto, Katsushika (~25 min)",
+      "price_or_cost": "Free",
+      "tier": "budget",
+      "sources": ["https://wanderlog.com/list/geoCategory/1586492/top-things-to-do-and-attractions-in-katsushika"],
+      "confidence": "high"
+    },
+    {
+      "name": "Tateishi — Nonbei Yokocho retro izakaya alley",
+      "detail": "One of Tokyo's last great Showa-era drinking warrens: a tangle of tiny standing bars and motsuyaki (grilled-offal) counters around Tateishi station, cheap and unpretentious, a true time-capsule downtown. Note it's partly under redevelopment — go while the old alley still stands.",
+      "how_or_when": "Keisei line to Tateishi — ~15-20 min from your base. Evenings; cash only, counters are tiny so arrive early (5-6pm) for a spot. Solo-friendly.",
+      "area_or_park": "Tateishi, Katsushika (~15-20 min)",
+      "price_or_cost": "Cheap — ¥1,500-3,000 for a crawl",
+      "tier": "budget",
+      "sources": ["https://www.gltjp.com/en/summary/area/katsushika/"],
+      "confidence": "medium"
+    },
+    {
+      "name": "Kita-Senju — your nearest big food/nightlife hub",
+      "detail": "The closest large hub to your base and the best default for dinner without trekking into central Tokyo: a buzzing student-and-old-town mix with dense izakaya, the old Nikko-kaido backstreets, department stores (Lumine, Marui) and some of the cheapest eats in the city. Surprisingly good night out for how little it costs.",
+      "how_or_when": "1-2 stops on the Chiyoda / JR Joban line from Ayase. Anytime; evenings for the izakaya streets behind the west exit.",
+      "area_or_park": "Kita-Senju, Adachi (~10 min)",
+      "price_or_cost": "Budget-friendly",
+      "tier": "budget",
+      "sources": ["https://wanderlog.com/list/geoCategory/1586463/top-things-to-do-and-attractions-in-adachi"],
+      "confidence": "high"
+    },
+    {
+      "name": "Nishiarai Daishi (Sōji-ji) — a quiet major temple in Adachi",
+      "detail": "One of the Kanto region's 'three great Daishi' temples — a large, atmospheric Shingon complex with a five-storey-feel main hall, gardens, and old temple-town streets. A calmer, tourist-free alternative to Senso-ji, lively on festival/ennichi days.",
+      "how_or_when": "Tobu Daishi line — a 2-minute shuttle from Nishiarai Station — ~20 min from your base. Free grounds; mornings are serene.",
+      "area_or_park": "Nishiarai, Adachi (~20 min)",
+      "price_or_cost": "Free",
+      "tier": "budget",
+      "sources": ["https://wanderlog.com/list/geoCategory/1586463/top-things-to-do-and-attractions-in-adachi"],
+      "confidence": "high"
+    },
     {
       "name": "Ghibli Museum (Mitaka) — lottery-style monthly ticket drop",
       "detail": "Intimate Miyazaki/Studio Ghibli museum in Mitaka, west Tokyo (~25 min from Shinjuku). Date- and time-slot-specific, no same-day tickets, sells out within minutes. Strict no-photos inside; exclusive short film in the Saturn Theater. A must for the anime/tech-culture interest, and a quick half-day rather than a full day trip.",

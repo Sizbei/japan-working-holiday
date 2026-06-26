@@ -22,6 +22,7 @@ import { searchLocal } from './lib/placesearch.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
 import { nowISO } from './lib/dates.js';
+import { searchJP } from './lib/nominatim.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false, pinsShown = false;
@@ -765,14 +766,12 @@ function wireAddPlace() {
       if (controller) controller.abort();
       controller = new AbortController();
       try {
-        const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=jp&limit=5&q=${encodeURIComponent(q)}`, { signal: controller.signal, headers: { 'Accept-Language': 'en' } });
-        if (!r.ok) { geoEl.innerHTML = '<li class="sug-msg">Search unavailable — try again</li>'; return; }
-        const data = await r.json();
-        const rows = data.length ? data.map(d =>
-          `<li><button type="button" data-lat="${esc(String(d.lat))}" data-lng="${esc(String(d.lon))}" data-name="${esc(d.display_name.split(',')[0])}" data-addr="${esc(d.display_name)}">${esc(d.display_name)}</button></li>`).join('')
+        const matches = await searchJP(q, controller.signal);
+        const rows = matches.length ? matches.map(m =>
+          `<li><button type="button" data-lat="${esc(String(m.lat))}" data-lng="${esc(String(m.lng))}" data-name="${esc(m.name)}" data-addr="${esc(m.addr)}">${esc(m.addr)}</button></li>`).join('')
           : '<li class="sug-msg">No matches</li>';
         geoEl.innerHTML = `<li class="sug-div" aria-hidden="true">🔍 add new</li>` + rows;
-      } catch (e) { if (e.name !== 'AbortError') geoEl.innerHTML = '<li class="sug-msg">Search unavailable (offline?)</li>'; }
+      } catch (e) { if (e.name !== 'AbortError') geoEl.innerHTML = '<li class="sug-msg">Search unavailable — try again</li>'; }
     };
     timer = setTimeout(run, 450);
   });

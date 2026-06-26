@@ -7,7 +7,7 @@
      script-src is strict (no inline scripts/handlers); style-src needs 'unsafe-inline' (inline style= attrs);
      unpkg = Leaflet (SRI-pinned), tiles = OSM, connect = tips.json + Nominatim + Jotoba, fonts = Google. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://nominatim.openstreetmap.org https://jotoba.de https://api.mymemory.translated.net http://127.0.0.1:8765; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://nominatim.openstreetmap.org https://jotoba.de https://api.mymemory.translated.net http://127.0.0.1:8765 https://www.googleapis.com https://accounts.google.com https://oauth2.googleapis.com; frame-src https://accounts.google.com; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
 <title>My Year in Japan — Trip Dashboard</title>
 <meta name="description" content="A personal, password-gated trip dashboard for a working-holiday year in Tokyo — editable calendar, booking deadlines, paperwork, seasons, food and Disney.">
 <meta name="theme-color" content="#bc002d" media="(prefers-color-scheme: light)">
@@ -121,6 +121,7 @@
         <button id="calAdd" class="cal-btn primary">+ Add</button>
         <button id="calImportBtn" class="cal-btn text">Import</button>
         <button id="calExport" class="cal-btn text">Export</button>
+        <button id="calGoogle" class="cal-btn text">Google</button>
         <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
       </div>
     </div>
@@ -131,8 +132,12 @@
     </div>
     <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
+      <aside class="cal-sidebar" aria-label="Calendar navigation">
+        <div id="calMiniNav" class="cal-mininav"></div>
+        <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
+      </aside>
       <div id="calView"></div>
-      <aside id="calPanel" class="cal-panel" aria-label="This month's deadlines"></aside>
+      <div id="calSidePanel" class="cal-sidepanel" hidden aria-label="Event details"></div>
     </div>
   </section>
 
@@ -384,10 +389,10 @@
     <div class="grid" id="livemusicGrid"></div>
   </section>
 
-  <!-- ============ CANADA NOTES ============ -->
-  <section class="block" id="canadaSection">
-    <h2><span class="emoji" aria-hidden="true">🇨🇦</span> <span data-i18n="head.canada">Canada-Specific Notes</span></h2>
-    <ul class="note-list" id="canadaList"></ul>
+  <!-- ============ PRE-DEPARTURE (HOME) NOTES ============ -->
+  <section class="block" id="homeSection">
+    <h2><span class="emoji" aria-hidden="true">🍁</span> <span data-i18n="head.home">Pre-Departure Notes (Canadian, leaving Seattle)</span></h2>
+    <ul class="note-list" id="homeList"></ul>
   </section>
 
   <!-- ============ SOURCES ============ -->

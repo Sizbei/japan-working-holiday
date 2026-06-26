@@ -479,3 +479,197 @@ test('bookFromAbroad: explicit "after arrival only / not bookable from abroad" o
   assert.equal(bookFromAbroad({ moveIn: 'After arrival only — not bookable from abroad', requirements: ['Apply online at a UR center'] }), false);
   assert.equal(bookFromAbroad({ moveIn: 'Rolling — apply online from abroad', requirements: [] }), true);
 });
+
+import { monthGrid, addMonths, isoToYM, MONTHS, WEEKDAYS_SHORT } from '../docs/assets/lib/minical.js';
+
+test('monthGrid: full 6x7 rectangle, right in-month count + weekday alignment', () => {
+  const g = monthGrid(2026, 6);                 // July 2026 (month is 0-indexed)
+  assert.equal(g.length, 6);
+  assert.ok(g.every(w => w.length === 7));
+  const flat = g.flat();
+  assert.equal(flat.length, 42);
+  assert.equal(flat.filter(c => c.inMonth).length, 31);   // July has 31 days
+  // July 1 2026 is a Wednesday → row 0, column 3
+  assert.equal(g[0][3].iso, '2026-07-01');
+  assert.equal(g[0][3].inMonth, true);
+  assert.equal(g[0][0].iso, '2026-06-28');                // leading Sunday from June
+  assert.equal(g[0][0].inMonth, false);
+});
+
+test('addMonths wraps year boundaries', () => {
+  assert.deepEqual(addMonths(2026, 11, 1), { year: 2027, month: 0 });
+  assert.deepEqual(addMonths(2026, 0, -1), { year: 2025, month: 11 });
+  assert.deepEqual(addMonths(2026, 5, 0), { year: 2026, month: 5 });
+});
+
+test('isoToYM parses and rejects', () => {
+  assert.deepEqual(isoToYM('2026-07-01'), { year: 2026, month: 6, day: 1 });
+  assert.equal(isoToYM('nope'), null);
+  assert.equal(MONTHS[6], 'July');
+  assert.equal(WEEKDAYS_SHORT[0], 'Su');
+});
+
+import { normalizeTag, setTags, tagsFor, allTags, tagHue } from '../docs/assets/lib/tags.js';
+
+import { parseNominatim } from '../docs/assets/lib/nominatim.js';
+
+test('parseNominatim maps display_name/lat/lon and drops empties', () => {
+  const out = parseNominatim([
+    { display_name: 'Shinjuku Station, Shinjuku, Tokyo, Japan', lat: '35.69', lon: '139.70' },
+    { display_name: '', lat: '0', lon: '0' },
+  ]);
+  assert.equal(out.length, 1);
+  assert.deepEqual(out[0], { name: 'Shinjuku Station', addr: 'Shinjuku Station, Shinjuku, Tokyo, Japan', lat: '35.69', lng: '139.70' });
+  assert.deepEqual(parseNominatim(null), []);
+});
+
+test('normalizeTag: trims, strips #, strips commas, collapses ws, lowercases, caps length', () => {
+  assert.equal(normalizeTag('  #Visa '), 'visa');
+  assert.equal(normalizeTag('Ward  Office'), 'ward office');
+  assert.equal(normalizeTag('##HOUSING'), 'housing');
+  assert.equal(normalizeTag('visa,housing'), 'visa housing');   // commas → space (no commas in stored tags)
+  assert.equal(normalizeTag('   '), '');
+  assert.equal(normalizeTag(null), '');
+  assert.equal(normalizeTag('a'.repeat(40)).length, 24);
+});
+
+test('setTags: normalizes+dedupes a whole list, deletes when empty', () => {
+  assert.deepEqual(setTags({}, 'a', ['#Visa', 'visa', 'Money']), { a: ['visa', 'money'] });
+  assert.deepEqual(setTags({ a: ['x'] }, 'a', []), {});
+  assert.deepEqual(setTags({ a: ['x'] }, 'a', ['  ']), {});       // all-empty → deleted
+});
+
+test('tagsFor / allTags', () => {
+  const m = { a: ['money', 'visa'], b: ['visa', 'health'] };
+  assert.deepEqual(tagsFor(m, 'a'), ['money', 'visa']);
+  assert.deepEqual(tagsFor(m, 'missing'), []);
+  assert.deepEqual(allTags(m), ['health', 'money', 'visa']);     // distinct + sorted
+  assert.deepEqual(allTags({}), []);
+});
+
+test('tagHue: deterministic, in range, stable across calls', () => {
+  const h = tagHue('visa');
+  assert.equal(h, tagHue('visa'));
+  assert.ok(Number.isInteger(h) && h >= 0 && h < 360);
+});
+
+test('seed ids all exist in tips.json checklist', () => {
+  const data = JSON.parse(readFileSync(new URL('../docs/data/tips.json', import.meta.url)));
+  const ids = new Set(data.checklist.flatMap(p => (p.items || []).map(i => i.id)));
+  const SEED = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-reserve-a-furnished-share-hous', 'chk-book-first-week-accommodation-2', 'chk-line-up-a-no-key-money-share-h-2', 'chk-adhd-ncd-permit'];
+  SEED.forEach(id => assert.ok(ids.has(id), `seed id missing: ${id}`));
+});
+
+import { eventToGcal, nextDayISO, getMapped, setMapped, forgetCalendar } from '../docs/assets/lib/gcal.js';
+
+test('eventToGcal maps an all-day single + multi-day event with exclusive end', () => {
+  assert.deepEqual(eventToGcal({ title: 'Sumida Hanabi', date: '2026-07-25', area: 'Asakusa', note: 'arrive early' }),
+    { summary: 'Sumida Hanabi', location: 'Asakusa', description: 'arrive early', start: { date: '2026-07-25' }, end: { date: '2026-07-26' } });
+  // multi-day: end is exclusive (Jul 7 stay → end.date Jul 8)
+  assert.equal(eventToGcal({ title: 'x', date: '2026-06-30', endDate: '2026-07-07' }).end.date, '2026-07-08');
+  assert.equal(nextDayISO('2026-12-31'), '2027-01-01');   // year roll
+});
+
+// --- google-sync idempotency logic (tested with a fake api, no network) ---
+
+/**
+ * Thin replica of the INSERT-then-PATCH idempotency logic from google-sync.js, driven by
+ * an injectable `api` function so we can test it in Node without DOM/fetch/GIS.
+ *
+ * Logic under test:
+ *   • First sync of an event: POST → setMapped → write map
+ *   • Second sync of same event: PATCH (uses the stored google id) → no duplicate
+ *   • Locally deleted event (in map but not in localIds): DELETE → unmap
+ */
+async function runSyncWithFakeApi(events, initialMap, fakeApi) {
+  let map = { calendarId: 'cal-1', events: {}, ...initialMap };
+  const calId = map.calendarId;
+  const localIds = new Set(events.map(ev => ev.id));
+  const log = [];
+  let inserted = 0, updated = 0, deleted = 0;
+
+  for (const ev of events) {
+    const body = eventToGcal(ev);
+    const googleId = getMapped(map, ev.id);
+    if (googleId) {
+      await fakeApi('PATCH', `/calendars/${calId}/events/${googleId}`, body);
+      log.push({ op: 'PATCH', localId: ev.id, googleId });
+      updated++;
+    } else {
+      const created = await fakeApi('POST', `/calendars/${calId}/events`, body);
+      map = setMapped(map, ev.id, created.id);
+      log.push({ op: 'POST', localId: ev.id, googleId: created.id });
+      inserted++;
+    }
+  }
+
+  // Deletions for locally-removed events.
+  for (const [localId, googleId] of Object.entries(map.events || {})) {
+    if (!localIds.has(localId)) {
+      await fakeApi('DELETE', `/calendars/${calId}/events/${googleId}`);
+      const { [localId]: _, ...rest } = map.events;
+      map = { ...map, events: rest };
+      log.push({ op: 'DELETE', localId, googleId });
+      deleted++;
+    }
+  }
+
+  return { map, log, inserted, updated, deleted };
+}
+
+test('gcal sync: INSERT-then-PATCH idempotency — second sync PATCHes, no duplicate POST', async () => {
+  let nextId = 1;
+  const calls = [];
+  const fakeApi = async (method, path, body) => {
+    calls.push({ method, path });
+    if (method === 'POST') return { id: `g${nextId++}` };
+    return null;
+  };
+
+  const events = [{ id: 'local-1', title: 'Hanabi', date: '2026-07-25' }];
+
+  // First sync: no map → POST
+  const r1 = await runSyncWithFakeApi(events, { events: {} }, fakeApi);
+  assert.equal(r1.inserted, 1);
+  assert.equal(r1.updated, 0);
+  assert.equal(getMapped(r1.map, 'local-1'), 'g1');
+  assert.equal(calls.filter(c => c.method === 'POST').length, 1);
+
+  // Second sync: same event, map already has the google id → PATCH only
+  const calls2 = [];
+  const fakeApi2 = async (method, path) => { calls2.push({ method, path }); return null; };
+  const r2 = await runSyncWithFakeApi(events, r1.map, fakeApi2);
+  assert.equal(r2.inserted, 0);
+  assert.equal(r2.updated, 1);
+  assert.equal(calls2.filter(c => c.method === 'POST').length, 0, 'no second POST — would be a duplicate');
+  assert.equal(calls2.filter(c => c.method === 'PATCH').length, 1);
+});
+
+test('gcal sync: locally-deleted event is DELETEd from Google and unmapped', async () => {
+  const calls = [];
+  const fakeApi = async (method, path) => { calls.push({ method, path }); return null; };
+
+  // Map has an event that is no longer in the local events list.
+  const initialMap = { events: { 'old-1': 'g-old-1' } };
+  const r = await runSyncWithFakeApi([], initialMap, fakeApi);
+  assert.equal(r.deleted, 1);
+  assert.equal(calls.filter(c => c.method === 'DELETE').length, 1);
+  assert.equal(getMapped(r.map, 'old-1'), undefined, 'unmapped after deletion');
+});
+
+test('gcal sync: forgetCalendar wipes calendarId and event map', () => {
+  const m = { calendarId: 'cal-x', events: { 'a': 'g-a' } };
+  const cleared = forgetCalendar(m);
+  assert.equal(cleared.calendarId, '');
+  assert.deepEqual(cleared.events, {});
+  // immutable — original unchanged
+  assert.equal(m.calendarId, 'cal-x');
+});
+
+test('gcal sync: setMapped is immutable — original map not mutated', () => {
+  const m = { calendarId: 'cal-1', events: { 'x': 'g-x' } };
+  const m2 = setMapped(m, 'y', 'g-y');
+  assert.equal(getMapped(m, 'y'), undefined);   // original untouched
+  assert.equal(getMapped(m2, 'y'), 'g-y');
+  assert.equal(getMapped(m2, 'x'), 'g-x');      // existing entry preserved
+});

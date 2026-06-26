@@ -20,7 +20,7 @@ let query = '';
 export function renderContent(data, today) {
   DATA = data;
   renderTimeSensitive();
-  renderCanada();
+  renderHome();
   renderTop(today);
   renderSources();
   renderDomains();
@@ -203,11 +203,11 @@ function renderTimeSensitive() {
   }).join('');
 }
 
-function renderCanada() {
-  const list = DATA.canadaNotes || [];
-  const sec = $('#canadaSection');
+function renderHome() {
+  const list = DATA.homeNotes || [];
+  const sec = $('#homeSection');
   if (!list.length) { if (sec) sec.style.display = 'none'; return; }
-  $('#canadaList').innerHTML = list.map(n => `<li>${esc(n)}</li>`).join('');
+  $('#homeList').innerHTML = list.map(n => `<li>${esc(n)}</li>`).join('');
 }
 
 function renderTop() {

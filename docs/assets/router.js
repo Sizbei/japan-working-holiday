@@ -15,7 +15,7 @@ const LEGACY = {
   checklist: 'checklist',
   controls: 'explore', brew: 'explore', activities: 'explore', restaurants: 'explore',
   disney: 'explore', building: 'explore', music: 'explore', geek: 'explore',
-  meetups: 'explore', canadaSection: 'explore', sourcesSection: 'explore',
+  meetups: 'explore', homeSection: 'explore', sourcesSection: 'explore',
   livemusic: 'explore', rooms: 'rooms', map: 'map', plan: 'plan',
 };
 

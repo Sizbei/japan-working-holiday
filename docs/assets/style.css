@@ -775,10 +775,28 @@ html.gated{ overflow: hidden; }
 /* standalone severity helpers (previously only scoped under .np-item) */
 .sev-overdue{ --sev: var(--bad-ink); } .sev-due-soon{ --sev: var(--warn-ink); } .sev-upcoming{ --sev: var(--indigo-ink); }
 
-/* layout: grid + sticky side panel */
-.cal-layout{ display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s4); align-items:start; }
+/* layout: sidebar + main (2-col; #calSidePanel is fixed-position, not a grid column) */
+.cal-layout{ display:grid; grid-template-columns: 240px minmax(0,1fr); gap: var(--s4); align-items:start; }
+.cal-sidebar{ display:flex; flex-direction:column; gap: var(--s3); }
 .cal-panel{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s4);
   position: sticky; top: 3.2rem; max-height: calc(100vh - 4rem); overflow:auto; }
+
+/* mini-month navigator */
+.cal-mininav{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s3);
+  position: sticky; top: 3.2rem; }
+.mn-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
+.mn-title{ font-size:.8rem; font-weight:700; color: var(--ink); }
+.mn-arrow{ background:none; border:1px solid var(--line); border-radius:6px; cursor:pointer; color: var(--ink);
+  font-size:1rem; line-height:1; padding:1px 6px; }
+.mn-arrow:hover{ border-color: var(--indigo); color: var(--indigo); }
+.mn-grid{ border-collapse:collapse; width:100%; font-size:.72rem; }
+.mn-grid thead th{ color: var(--ink-faint); font-weight:600; text-align:center; padding:2px 0; }
+.mn-grid td{ padding:1px; text-align:center; }
+.mn-day{ background:none; border:none; cursor:pointer; border-radius:50%; width:24px; height:24px;
+  font-size:.72rem; color: var(--ink); display:inline-flex; align-items:center; justify-content:center; }
+.mn-day:hover{ background: var(--bg-soft); }
+.mn-out{ color: var(--ink-faint); }
+.mn-today{ box-shadow: 0 0 0 2px var(--indigo); color: var(--indigo); font-weight:700; }
 
 /* legend = sticky filter strip under the toolbar */
 .cal-legend{ position: sticky; top: calc(var(--header-h) + var(--nav-h)); z-index:3; display:flex; flex-wrap:wrap; gap:.4rem;
@@ -839,10 +857,12 @@ html.gated{ overflow: hidden; }
 .pop-add{ width:100%; margin-top:.5rem; background: var(--red); color:#fff; border:none; border-radius:8px; padding:.45rem; font-weight:700; font-size:.8rem; cursor:pointer; }
 .agenda-row{ position:relative; }
 
-/* mobile: panel above grid, single column (820/560 to match app breakpoints) */
+/* mobile: sidebar above grid, single column (820/560 to match app breakpoints) */
 @media (max-width: 820px){
   .cal-layout{ grid-template-columns: minmax(0, 1fr); }   /* minmax(0,…) so a wide child (week list) can't blow out the single column */
-  .cal-panel{ position: static; order:-1; max-height:none; }
+  .cal-sidebar{ order:-1; }
+  .cal-mininav{ position: static; }
+  .cal-panel{ position: static; max-height:none; }
   .cal-legend{ top: calc(var(--header-h) + var(--nav-h)); }   /* route-nav still sticky at top on tablets */
 }
 @media (max-width: 560px){
@@ -2278,3 +2298,479 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   #printView { display: block !important; position: static; margin: 0; padding: 2rem; max-width: 8.5in; color: #000; }
   footer { display: none !important; }
 }
+
+/* ---- mini-calendar date picker (datepicker.js) ---- */
+.dp-overlay{ position:fixed; inset:0; z-index:1100; background: color-mix(in srgb, #000 50%, transparent); display:grid; place-items:center; padding: var(--s4); }
+.dp-card{ width:100%; max-width:320px; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--s4); }
+.dp-nav{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+.dp-title{ font-weight:700; font-size:.95rem; color: var(--ink); }
+.dp-arrow{ border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); width:34px; height:34px; cursor:pointer; font-size:1rem; }
+.dp-arrow:hover{ border-color: var(--indigo); }
+.dp-grid{ width:100%; border-collapse:collapse; table-layout:fixed; }
+.dp-grid th{ font-size:.7rem; font-weight:600; color: var(--ink-faint); padding:.25rem 0; }
+.dp-grid td{ padding:1px; text-align:center; }
+.dp-day{ width:100%; aspect-ratio:1; min-height:34px; border:1px solid transparent; background:transparent; color: var(--ink); border-radius: var(--r-sm); cursor:pointer; font-size:.85rem; font-variant-numeric: tabular-nums; }
+.dp-day:hover{ background: var(--bg-soft); border-color: var(--line); }
+.dp-day:focus-visible{ outline:none; box-shadow: var(--ring); }
+.dp-out{ color: var(--ink-faint); opacity:.55; }
+.dp-today{ font-weight:700; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.dp-sel{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); font-weight:700; }
+.dp-day[disabled]{ opacity:.3; cursor:not-allowed; }
+.dp-acts{ display:flex; justify-content:space-between; gap:.5rem; margin-top:.6rem; }
+.dp-clear, .dp-set-today{ font-family: var(--mono); font-weight:700; font-size:.78rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .8rem; cursor:pointer; min-height:38px; }
+.dp-set-today{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+/* composer "Due" button (checklist add-task) */
+.ql-due{ font-family: var(--mono); font-weight:700; font-size:.78rem; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .7rem; cursor:pointer; white-space:nowrap; }
+.ql-due:hover{ border-color: var(--indigo); }
+/* ---- tag editor modal (askTags) ---- */
+.tagedit-chips{ display:flex; flex-wrap:wrap; gap:.35rem; min-height:1.8rem; margin-bottom: var(--s4); }
+.tagedit-empty{ font-size:.8rem; color: var(--ink-faint); }
+.tagedit-chip{ display:inline-flex; align-items:center; gap:.2rem; font-family:var(--mono); font-size:.72rem; font-weight:700; padding:.18rem .2rem .18rem .5rem; border-radius:999px; background: var(--bg-soft); border:1px solid var(--line); color: var(--ink); }
+.tagedit-x{ border:none; background:none; cursor:pointer; color: var(--ink-soft); font-size:.72rem; line-height:1; padding:.1rem .25rem; border-radius:999px; }
+.tagedit-x:hover{ color: var(--ink); background: var(--bg-sunk); }
+
+/* ---- task tags: row chips, editor button, active-filter pill ----
+   Light text L=24% on bg L=94% keeps WCAG-AA (>=4.5:1) with margin across ALL hues —
+   the weakest hue is yellow (~h60); L 24% vs the earlier 28% lifts it clear of the 4.5 line.
+   Dark text L=82% on bg L=24% is high-contrast for every hue. Re-verify h~55 and h~190 if tweaked. */
+.ci-tags{ display:inline-flex; flex-wrap:wrap; gap:.25rem; align-items:center; align-self:center; margin-right:.15rem; }
+.chip-tag{ font-family:var(--mono); font-size:.64rem; font-weight:700; line-height:1; padding:.2rem .45rem; border-radius:999px; cursor:pointer; white-space:nowrap;
+  color: hsl(var(--h,210) 65% 24%); background: hsl(var(--h,210) 70% 94%); border:1px solid hsl(var(--h,210) 45% 68%); }
+.chip-tag::before{ content:"#"; opacity:.55; }
+.chip-tag:hover{ filter:brightness(.97); }
+.chip-tag:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
+[data-theme="dark"] .chip-tag{ color: hsl(var(--h,210) 85% 82%); background: hsl(var(--h,210) 35% 24%); border-color: hsl(var(--h,210) 35% 42%); }
+.ci-tag{ background:none; border:none; cursor:pointer; font-size:.82rem; opacity:.5; padding:.1rem .3rem; }
+.ci-tag:hover{ opacity:1; }
+.ci-tag:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
+.ct-tagpill{ font-family:var(--mono); font-size:.72rem; font-weight:700; cursor:pointer; padding:.25rem .6rem; border-radius:999px; white-space:nowrap;
+  color: hsl(var(--h,210) 65% 24%); background: hsl(var(--h,210) 70% 94%); border:1px solid hsl(var(--h,210) 45% 64%); }
+.ct-tagpill:hover{ filter:brightness(.97); }
+[data-theme="dark"] .ct-tagpill{ color: hsl(var(--h,210) 85% 82%); background: hsl(var(--h,210) 35% 24%); border-color: hsl(var(--h,210) 35% 42%); }
+
+/* ---- event-form location autocomplete ---- */
+.ev-loc-field{ position:relative; }
+.ev-loc-sug{ list-style:none; margin:.2rem 0 0; padding:0; position:absolute; left:0; right:0; z-index:10; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); max-height:220px; overflow:auto; }
+.ev-loc-sug:empty{ display:none; }
+.ev-loc-opt{ display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:.5rem .6rem; font-size:.82rem; color: var(--ink); border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.ev-loc-opt:hover, .ev-loc-opt:focus-visible{ background: var(--bg-soft); outline:none; }
+.ev-loc-msg{ padding:.5rem .6rem; font-size:.8rem; color: var(--ink-faint); }
+
+/* ============================================================
+   NOTION-STYLE RESTYLE — toolbar, month grid, legend
+   (Plan 5 Task 2 — appended at end so specificity/order wins)
+   ============================================================ */
+
+/* ---- Toolbar ---- */
+.cal-toolbar{
+  gap: .5rem;
+  padding: .5rem 0 .6rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--s3);
+}
+.cal-nav{ gap: .4rem; }
+.cal-label{
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 600;
+  min-width: 8rem;
+  text-align: center;
+  color: var(--ink);
+}
+/* nav arrows: ghost round buttons */
+.cal-nav .cal-btn{
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  color: var(--ink-soft);
+  padding: .3rem .5rem;
+  font-size: .9rem;
+}
+.cal-nav .cal-btn:hover{ background: var(--bg-soft); border-color: var(--line); color: var(--ink); }
+
+/* segmented mode control */
+.cal-modes{
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  padding: 2px;
+  gap: 2px;
+  display: inline-flex;
+}
+.cal-modes .cal-btn{
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--r-sm) - 2px);
+  color: var(--ink-soft);
+  padding: .3rem .7rem;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.cal-modes .cal-btn.active{
+  background: var(--bg-elevated);
+  color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+.cal-modes .cal-btn:hover:not(.active){ background: color-mix(in srgb, var(--line) 30%, transparent); color: var(--ink); }
+
+/* action buttons: quiet ghost */
+.cal-actions .cal-btn{
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink-soft);
+  font-size: .8rem;
+  padding: .3rem .65rem;
+}
+.cal-actions .cal-btn:hover{ border-color: var(--indigo); color: var(--ink); }
+.cal-actions .cal-btn.primary{
+  background: none;
+  border-color: var(--red);
+  color: var(--red);
+}
+.cal-actions .cal-btn.primary:hover{ background: var(--red); color: #fff; }
+
+/* ---- Month grid ---- */
+.cal-grid{ gap: 2px; }
+.cal-dow{
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+  padding: .4rem 0 .3rem;
+}
+.cal-cell{
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  min-height: 88px;
+  padding: 5px 4px 3px;
+  gap: 3px;
+  transition: border-color var(--t-hover);
+}
+.cal-cell:hover{ border-color: color-mix(in srgb, var(--indigo) 55%, var(--line)); }
+.cal-cell.empty{ background: transparent; border-color: transparent; }
+
+/* today: indigo pill on the date number, not a heavy red cell border */
+.cal-cell.today{ border-color: var(--line); box-shadow: none; }
+.cal-cell.today .cal-date{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--indigo);
+  color: #fff;
+  border-radius: 50%;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 0;
+}
+[data-theme="dark"] .cal-cell.today .cal-date{ color: var(--on-accent); }
+
+.cal-date{
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  align-self: flex-start;
+}
+
+/* ---- Event chips — contrast-critical override ----
+   These rules MUST appear AFTER the .cat-<cat> fills (lines 641-646)
+   and after .cal-chip's base rule (line 637).
+   Using the "chip category dot" pattern for colour identity without
+   relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
+   --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
+.cal-chip{
+  background: var(--bg-soft) !important;
+  color: var(--ink) !important;
+  border: none;
+  border-left: 3px solid var(--chip-cat, var(--line));
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px 1px 5px;
+  font-size: .64rem;
+  font-weight: 500;
+  line-height: 1.3;
+  min-height: 16px;
+}
+/* category dot inside the chip — set per cat via --chip-cat */
+.cal-chip::before{
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chip-cat, var(--line));
+  flex: 0 0 auto;
+}
+/* per-category: set --chip-cat so border-left + dot both pick up the colour */
+.cal-chip.cat-festival   { --chip-cat: var(--c-festival); }
+.cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks); }
+.cal-chip.cat-illumination{ --chip-cat: var(--c-illumination); }
+.cal-chip.cat-convention { --chip-cat: var(--c-convention); }
+.cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal); }
+.cal-chip.cat-nature     { --chip-cat: var(--c-nature); }
+.cal-chip.cat-holiday    { --chip-cat: var(--c-holiday); }
+.cal-chip.cat-food       { --chip-cat: var(--c-food); }
+.cal-chip.cat-disney     { --chip-cat: var(--c-disney); }
+.cal-chip.cat-music      { --chip-cat: var(--c-music); }
+.cal-chip.cat-personal   { --chip-cat: var(--c-personal); }
+.cal-chip.cat-imported   { --chip-cat: var(--c-imported); }
+
+/* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
+[data-theme="dark"] .cal-chip.cat-festival   { --chip-cat: var(--c-festival-ink); }
+[data-theme="dark"] .cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] .cal-chip.cat-illumination{ --chip-cat: var(--c-illumination-ink); }
+[data-theme="dark"] .cal-chip.cat-convention { --chip-cat: var(--c-convention-ink); }
+[data-theme="dark"] .cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] .cal-chip.cat-nature     { --chip-cat: var(--c-nature-ink); }
+[data-theme="dark"] .cal-chip.cat-holiday    { --chip-cat: var(--c-holiday-ink); }
+[data-theme="dark"] .cal-chip.cat-food       { --chip-cat: var(--c-food-ink); }
+[data-theme="dark"] .cal-chip.cat-disney     { --chip-cat: var(--c-disney-ink); }
+[data-theme="dark"] .cal-chip.cat-music      { --chip-cat: var(--c-music-ink); }
+[data-theme="dark"] .cal-chip.cat-personal   { --chip-cat: var(--c-personal-ink); }
+[data-theme="dark"] .cal-chip.cat-imported   { --chip-cat: var(--c-imported-ink); }
+
+/* mobile: keep single chip visible, compact */
+@media (max-width: 560px){
+  .cal-chip{ font-size: .6rem; padding: 1px 3px 1px 4px; min-height: 14px; border-left-width: 2px; }
+  .cal-chip::before{ width: 4px; height: 4px; }
+}
+
+/* ---- Legend — pill toggles with dot + label (not full category fills) ---- */
+.cal-legend .lg{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-elevated);
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 10px 3px 7px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity var(--t-hover), border-color var(--t-hover), color var(--t-hover);
+}
+.cal-legend .lg::before{
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lg-cat, var(--line));
+  flex: 0 0 auto;
+}
+/* per-category legend dot colour */
+.cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival); }
+.cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks); }
+.cal-legend .lg.cat-illumination{ --lg-cat: var(--c-illumination); }
+.cal-legend .lg.cat-convention { --lg-cat: var(--c-convention); }
+.cal-legend .lg.cat-seasonal   { --lg-cat: var(--c-seasonal); }
+.cal-legend .lg.cat-nature     { --lg-cat: var(--c-nature); }
+.cal-legend .lg.cat-holiday    { --lg-cat: var(--c-holiday); }
+.cal-legend .lg.cat-food       { --lg-cat: var(--c-food); }
+.cal-legend .lg.cat-disney     { --lg-cat: var(--c-disney); }
+.cal-legend .lg.cat-music      { --lg-cat: var(--c-music); }
+.cal-legend .lg.cat-personal   { --lg-cat: var(--c-personal); }
+.cal-legend .lg.cat-imported   { --lg-cat: var(--c-imported); }
+
+[data-theme="dark"] .cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-illumination{ --lg-cat: var(--c-illumination-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-convention { --lg-cat: var(--c-convention-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-seasonal   { --lg-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-nature     { --lg-cat: var(--c-nature-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-holiday    { --lg-cat: var(--c-holiday-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-food       { --lg-cat: var(--c-food-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-disney     { --lg-cat: var(--c-disney-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-music      { --lg-cat: var(--c-music-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-personal   { --lg-cat: var(--c-personal-ink); }
+[data-theme="dark"] .cal-legend .lg.cat-imported   { --lg-cat: var(--c-imported-ink); }
+
+/* active: border highlights with the category colour */
+.cal-legend .lg:not(.off):hover{ border-color: var(--lg-cat, var(--indigo)); color: var(--ink); }
+/* off (hidden category): muted, strike-through */
+.cal-legend .lg.off{ opacity: .38; text-decoration: line-through; color: var(--ink-faint); }
+.cal-legend .lg.off::before{ opacity: .4; }
+
+/* "All" pill — keep existing style, just ensure it aligns */
+.lg-all{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bg-elevated);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.lg-all:hover{ border-color: var(--indigo); color: var(--ink); }
+
+/* ============================================================
+   CALENDAR SIDE PANEL — slide-in event detail (Task 3)
+   ============================================================ */
+.cal-sidepanel{
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: 0;
+  width: min(360px, 92vw);
+  background: var(--bg-elevated);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  z-index: 101;   /* above grid (z-index 1) and popover (80), below modal (120) */
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--dur-2) var(--ease-out);
+  overflow: hidden;
+}
+.cal-sidepanel[hidden]{ display: none; }
+.cal-sidepanel.is-open{ transform: translateX(0); }
+
+/* exit is slightly faster */
+.cal-sidepanel:not(.is-open){ transition: transform 150ms ease-in; }
+
+/* backdrop (subtle, outside the panel itself) */
+.sp-backdrop{
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, #000 28%, transparent);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out);
+  pointer-events: auto;
+}
+.cal-sidepanel.is-open .sp-backdrop{ opacity: 1; }
+.cal-sidepanel:not(.is-open) .sp-backdrop{ transition: opacity 150ms ease-in; }
+
+/* inner (fills the panel, scrollable) */
+.sp-inner{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* header row */
+.sp-head{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s4) var(--s4) var(--s3);
+  border-bottom: 1px solid var(--line);
+}
+.sp-title{
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 0;
+}
+.sp-close{
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-size: .85rem;
+  line-height: 1;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+.sp-close:hover{ border-color: var(--indigo); color: var(--ink); }
+
+/* body detail rows */
+.sp-body{
+  padding: var(--s3) var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  flex: 1;
+}
+.sp-row{
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s2);
+  font-size: .875rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+.sp-icon{ width: 1.25em; text-align: center; flex-shrink: 0; }
+.sp-bookby{ color: var(--warn-ink); }
+.sp-note{
+  font-size: .83rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: var(--s1) 0 0;
+  padding-top: var(--s2);
+  border-top: 1px dashed var(--line);
+}
+.sp-moved{ font-size: .8rem; color: var(--ink-faint); font-style: italic; }
+
+/* actions footer */
+.sp-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4) var(--s4);
+  border-top: 1px solid var(--line);
+}
+.sp-actions .btn{ flex: 1 0 auto; text-align: center; }
+
+/* reduce-motion: no transform transition */
+@media (prefers-reduced-motion: reduce){
+  .cal-sidepanel,
+  .cal-sidepanel:not(.is-open),
+  .sp-backdrop,
+  .cal-sidepanel:not(.is-open) .sp-backdrop{
+    transition: none;
+  }
+}
+html[data-reduce-motion="on"] .cal-sidepanel,
+html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open),
+html[data-reduce-motion="on"] .sp-backdrop,
+html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open) .sp-backdrop{
+  transition: none;
+}
+
+/* mobile: bottom sheet (<700px — matches existing week-mode breakpoint) */
+@media (max-width: 699px){
+  .cal-sidepanel{
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: 80vh;
+    border-left: none;
+    border-top: 1px solid var(--line);
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    transform: translateY(100%);
+    overflow-y: auto;
+  }
+  .cal-sidepanel.is-open{ transform: translateY(0); }
+  .cal-sidepanel:not(.is-open){ transition: transform 150ms ease-in; }
+  .sp-inner{ height: auto; overflow-y: visible; }
+}
+
+/* ============================================================
+   DARK THEME — Task 4 fixes
+   Only one hardcoded #fff found in Task 1-3 CSS that fails in dark:
+   .cal-actions .cal-btn.primary:hover uses background: var(--red).
+   In dark, --red=#ff4d6d (luminance 0.277) → #fff contrast = 3.2:1 (FAIL).
+   Fix: use --on-accent (#15151c) which gives 5.7:1 (PASS).
+   All other new surfaces (mini-nav, segmented control, month grid,
+   side panel) are fully token-driven and pass in both themes.
+   ============================================================ */
+[data-theme="dark"] .cal-actions .cal-btn.primary:hover{ color: var(--on-accent); }

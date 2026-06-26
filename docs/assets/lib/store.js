@@ -42,6 +42,9 @@ export const KEYS = {
   userPhrases: 'jwh-phrases-user-v1',
   ankiDeck: 'jwh-anki-deck-v1',
   translateCache: 'jwh-translate-cache-v1',
+  tags: 'jwh-tags-v1',
+  seed: 'jwh-seed-v1',
+  gcalMap: 'jwh-gcal-map-v1',
 };
 
 export function get(key, fallback) {

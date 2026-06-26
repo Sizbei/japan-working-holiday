@@ -6,7 +6,8 @@ import { renderContent } from './content.js';
 import { mountPacking } from './packing.js';
 import { mountBudget } from './budget.js';
 import { mountPhrases } from './phrases.js';
-import { mountCalendar } from './calendar.js';
+import { mountCalendar, allEvents } from './calendar.js';
+import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
@@ -27,6 +28,7 @@ import { mountEaster } from './easter.js';
 import { stagger } from './motion.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
+import { get, set, KEYS } from './lib/store.js';
 
 // Clickjacking defense: a static host can't send X-Frame-Options and frame-ancestors is
 // ignored in a <meta> CSP, so bust out of any (cross-origin) frame before rendering.
@@ -49,7 +51,9 @@ function boot() {
       const today = nowISO();
       const m = data.meta || {};
       setText('#footGen', m.generated || '');
+      seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
       mountCalendar(data, today);
+      mountGoogleSync(() => allEvents());
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
       mountTracker(data);
       renderContent(data, today);
@@ -81,6 +85,26 @@ function boot() {
 }
 
 function setText(sel, txt) { const el = $(sel); if (el) el.textContent = txt; }
+
+// One-time seed (guarded by jwh-seed-v1): tick the items the owner has already completed
+// (visa granted, passport ready, first accommodation booked, NCD permit in hand) and drop a
+// Sakura House home base. Additive only — never un-checks, never overrides an existing home.
+// Runs BEFORE any feature mounts so the checklist's first render shows the ticks (the hash
+// router won't re-render it later) and the map/dashboard read the seeded place.
+function seedOnce() {
+  if (get(KEYS.seed, false)) return;
+  const SEED_DONE = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-reserve-a-furnished-share-hous', 'chk-book-first-week-accommodation-2', 'chk-line-up-a-no-key-money-share-h-2', 'chk-adhd-ncd-permit'];
+  const checks = get(KEYS.checklist, {}) || {};
+  SEED_DONE.forEach(id => { checks[id] = true; });   // additive — only sets true, never un-checks
+  set(KEYS.checklist, checks);
+  const places = get(KEYS.places, []) || [];
+  if (!places.some(p => p.id === 'p-sakura-house-makoto')) {
+    const hasHome = places.some(p => p.home);        // respect the single-home invariant
+    places.push({ id: 'p-sakura-house-makoto', name: 'Makoto Guesthouse', address: '2-3-9 Towa, Adachi-ku, Tokyo (Booking.com)', area: 'Ayase', lat: 35.7684, lng: 139.8264, category: 'personal', source: 'seed', coordKind: 'approx', fav: false, locked: false, visited: false, emoji: '', home: !hasHome });
+    set(KEYS.places, places);
+  }
+  set(KEYS.seed, true);
+}
 
 function registerSW() {
   if (!('serviceWorker' in navigator)) return;

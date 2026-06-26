@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Japan Working Holiday — Insider Living Hacks (Canada → Tokyo)",
+    "title": "Japan Working Holiday — Insider Living Hacks (Seattle → Tokyo)",
     "subtitle": "One year. Tokyo. Synths, arcades, shipping code at 2am JST — with the paperwork that keeps me here. Land NRT 2026-06-30.",
     "generated": "2026-06-15",
     "status": "",
@@ -106,15 +106,15 @@
       "id": "book-first-week-accommodation-hotel-hostel-soft-",
       "when": "2026-06-15",
       "what": "First-week accommodation (hotel/hostel soft-landing) + share-house application",
-      "action": "BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House from Canada before landing.",
+      "action": "DONE — booked Makoto Guesthouse (Adachi-ku) through Jul 7; find long-term housing before checkout. (Original guidance:) BOOK NOW — already overdue per plan (accommodation due 2026-06-20, share house apply 2026-06-22). Reserve 5-10 nights near a hub (Shinjuku/Shibuya/Ueno) and apply online to Oakhouse/Sakura House/Borderless House before you fly.",
       "leadTime": "2-4 weeks before landing",
       "confidence": "high"
     },
     {
       "id": "book-pre-departure-sim-esim-wise-card-canada-iss",
       "when": "2026-06-22",
-      "what": "Pre-departure SIM/eSIM + Wise card (Canada-issued) + Mobile Suica",
-      "action": "Order Wise card and verify in CANADA before flying (a Japan-issued Wise card loses Apple/Google Pay). Install Ubigi/Sakura eSIM un-activated; pre-order Mobal SIM. Set up Mobile Suica in Apple Wallet. FLAG: Wise due 2026-06-29, eSIM install by 2026-06-29.",
+      "what": "Pre-departure SIM/eSIM + Wise card (home-issued, optional) + Mobile Suica",
+      "action": "Order Wise card (optional, Chase-Sapphire-only setup) and verify before flying while in the US (a Japan-issued Wise card loses Apple/Google Pay). Install Ubigi/Sakura eSIM un-activated; pre-order Mobal SIM. Set up Mobile Suica in Apple Wallet. FLAG: Wise due 2026-06-29, eSIM install by 2026-06-29.",
       "leadTime": "1-2 weeks before departure",
       "confidence": "high"
     },
@@ -240,6 +240,16 @@
     }
   ],
   "calendar": [
+    {
+      "id": "ev-sakura-house-makoto-stay",
+      "title": "Makoto Guesthouse — initial stay",
+      "date": "2026-06-30",
+      "endDate": "2026-07-07",
+      "category": "personal",
+      "area": "Adachi-ku, Tokyo (Towa, near Ayase / Kameari station)",
+      "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. It's far northeast Tokyo, so budget commute time into the centre; find long-term housing before checkout.",
+      "confidence": "high"
+    },
     {
       "id": "ev-forest-beer-garden-mori-no-beer-garden-meiji-",
       "title": "Forest Beer Garden (Mori no Beer Garden), Meiji Jingu Gaien",
@@ -1801,12 +1811,12 @@
       "confidence": "medium"
     }
   ],
-  "canadaNotes": [
-    "Since Dec 1 2024, the Canada–Japan WHV can be granted TWICE in a lifetime (two 1-year stays) or as one continuous 2-year stay.",
-    "Eligibility: Canadian citizen, age 18–30, residing in Canada, clean record, good health.",
-    "No consular fee — the visa is free.",
-    "Proof-of-funds figures vary by consulate (Vancouver, Toronto, Calgary, Montreal) — verify your specific consulate's current page.",
-    "You apply at a Japanese consulate IN CANADA before departure; the visa is not issued in Japan."
+  "homeNotes": [
+    "You're a Canadian citizen departing from Seattle — your WHV is already in hand, so pre-departure is logistics, not eligibility.",
+    "Cross-border tax is genuinely complex here (Canadian citizen, recent US resident, now leaving for Japan): you may have US and/or Canadian filing duties plus a Canadian departure-tax/residency question. Washington has no state income tax. Verify with a cross-border accountant — don't guess.",
+    "Keep a US mailing address and a working US bank/card while abroad; set USPS mail forwarding or a mail-scanning service before you fly.",
+    "Carry your CAD proof-of-funds statement and your status packet through Narita even though the visa is granted — immigration can spot-check.",
+    "Your Canadian passport and consular protection still run through the Embassy of Canada in Tokyo (see the Emergency tab)."
   ],
   "arrivalSequence": [
     "Land at Narita (NRT) → receive your residence card (在留カード) at immigration.",
@@ -1814,7 +1824,7 @@
     "Within 14 days: register your address (住民票) at your ward office.",
     "Same visit: enroll in National Health Insurance + pension.",
     "Open a Japan Post Bank (ゆうちょ) account — the most foreigner-friendly for new arrivals.",
-    "Set up phone/eSIM data + bridge spending with Wise + a no-FX-fee Canadian card until local payment is sorted."
+    "Set up phone/eSIM data + bridge spending with your Chase Sapphire Preferred (no-FX Visa) until local payment is sorted."
   ],
   "arrivalWeek": [
     {
@@ -1825,7 +1835,7 @@
         "At immigration: present passport + WHV visa, collect your Residence Card (在留カード) on the spot. Confirm it printed correctly.",
         "Have your status packet ready in case of spot-check: bank statement (proof of funds), accommodation booking, onward/return ticket.",
         "Withdraw your first JPY at a Seven Bank (7-Eleven) ATM in arrivals — skip the exchange counters.",
-        "Confirm Mobile Suica is loaded in Apple Wallet (topped up from your Canada-issued Wise card); tap into the Narita Express / Keisei toward Tokyo.",
+        "Confirm Mobile Suica is loaded in Apple Wallet (topped up from your Chase Sapphire Preferred — test foreign-card top-up early); tap into the Narita Express / Keisei toward Tokyo.",
         "Check into your pre-booked hotel/hostel near a hub (Shinjuku/Shibuya/Ueno). Rest — don't try to do admin today."
       ]
     },
@@ -1834,7 +1844,7 @@
       "date": "2026-07-01",
       "steps": [
         "Recover from jet lag; orient to your neighborhood. Locate the nearest konbini, ward office, post office, and station charge machines.",
-        "If you applied to a share house from Canada, confirm move-in logistics and view the room in person if possible.",
+        "Settle into Makoto Guesthouse (your first-week base in Adachi-ku), then start viewing long-term share-house rooms in person before the stay ends.",
         "Optional fun anchor: teamLab Planets Summer Sunflower Exclusive opens today — book a timed slot via DMM/Klook if you want a low-effort first outing.",
         "Buy a cheap data top-up if needed; verify your Mobal/passport-only SIM number works for SMS."
       ]
@@ -1907,13 +1917,13 @@
       "domain": "money"
     },
     {
-      "tip": "Set up the money stack in the right order: Canada-issued Wise card → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)",
-      "reason": "A Japanese phone number gates every money app, and a Canada-issued Wise card keeps Apple/Google Pay + Suica top-up working (a Japan-issued one doesn't). Concentrating spend in one ecosystem (Rakuten for gear) beats spreading thin.",
+      "tip": "Set up the money stack in order: Chase Sapphire (no-FX Visa) in Apple Pay → passport-only SIM (Japanese number) → PayPay → one points ecosystem (Rakuten)",
+      "reason": "A Japanese phone number gates every money app, and your Chase Sapphire (no-FX) in Apple Pay covers tap-pay + most purchases. Foreign-card Mobile Suica top-up can be finicky — test it day one; Wise (optional) or a Japanese card is the reliable Suica fallback. Concentrating spend in one ecosystem (Rakuten for gear) beats spreading thin.",
       "domain": "money"
     },
     {
       "tip": "Skip normal apartments; use a no-key-money share house (Oakhouse/Sakura House/Borderless House) as your first base",
-      "reason": "Normal Tokyo apartments stack key money + deposit + agent fee + a guarantor you can't provide — easily ¥400-600k upfront. Share houses skip all four, you can apply from Canada, and move in within your first week for ~¥120-180k all-in.",
+      "reason": "Normal Tokyo apartments stack key money + deposit + agent fee + a guarantor you can't provide — easily ¥400-600k upfront. Share houses skip all four, you can apply before you fly, and move in within your first week for ~¥120-180k all-in.",
       "domain": "housing"
     },
     {
@@ -1978,7 +1988,7 @@
         {
           "tip": "Japanese credit card is effectively impossible on a WHV",
           "why": "No local credit history; banks decline.",
-          "how": "Use a no-foreign-transaction-fee Canadian card + Wise debit as the bridge. Rakuten is the eventual long shot.",
+          "how": "Use your Chase Sapphire Preferred (no foreign-transaction fee) for purchases + a no-FX debit card for ATM cash as the bridge. Rakuten is the eventual long shot.",
           "impact": "Saves wasted applications + FX fees",
           "confidence": "high",
           "sources": [
@@ -2087,13 +2097,34 @@
   ],
   "checklist": [
     {
-      "phase": "Pre-Departure (Canada)",
+      "phase": "Pre-Departure (Seattle / US)",
       "window": "Now → June 29 2026",
       "items": [
         {
-          "task": "Confirm WHV eligibility (age 18–30, citizen, residing in Canada)",
+          "task": "Register with Registration of Canadians Abroad (ROCA) — free; lets Global Affairs Canada reach you in an emergency (disaster, unrest) and you reach them. Do it before/just after you land.",
+          "kind": "legal",
+          "id": "chk-register-roca",
+          "confidence": "high",
+          "sources": ["https://travel.gc.ca/travelling/registration"]
+        },
+        {
+          "task": "(Only if you'll drive) Get a CAA International Driving Permit before you fly — Canada signed the 1949 Geneva Convention, so a Canadian licence + IDP lets you drive in Japan for up to 1 year from entry. If you're in the US, CAA takes mail/online orders — apply early so it arrives before departure. For a longer stay, get a JAF translation of your licence or convert (gaimen kirikae).",
+          "kind": "logistics",
+          "id": "chk-idp-driving",
+          "confidence": "high",
+          "sources": ["https://english.jaf.or.jp/driving-in-japan/drive-in-japan", "https://www.international.gc.ca/country-pays/japan-japon/drivers_licenses-permis_de_conduire.aspx?lang=eng"]
+        },
+        {
+          "task": "Confirm WHV eligibility (age 18–30, Canadian citizen; visa already granted)",
           "kind": "logistics",
           "id": "chk-confirm-whv-eligibility-age-1"
+        },
+        {
+          "task": "ADHD meds — carry your NCD (Narcotics Control Department) import permit + 3-month supply. Japan classes lisdexamfetamine (Vyvanse) as a 'Stimulants' Raw Material'; the NCD advance-import permit carried WITH your prescription is the legal route. Adult domestic refills are not available in Japan — plan resupply for months 4-12 (verify with your prescriber).",
+          "kind": "legal",
+          "id": "chk-adhd-ncd-permit",
+          "confidence": "medium",
+          "sources": ["https://www.ncd.mhlw.go.jp/en/application2.html", "https://www.zengaijin.com/post/bringing-medication-to-japan"]
         },
         {
           "task": "Gather visa documents: passport, form + photo, CV, written activity plan",
@@ -2119,7 +2150,7 @@
           "id": "chk-check-passport-validity-blan"
         },
         {
-          "task": "Open a Wise multi-currency account from Canada",
+          "task": "(Optional) Wise account — you're going Chase-Sapphire-only, so this is an upgrade, not required: Wise is the most reliable way to top up Mobile Suica and gives cheap mid-market JPY. Skip it to keep things simple.",
           "note": "Bridges banking until Japan Post is set up; cheap FX.",
           "kind": "logistics",
           "id": "chk-open-a-wise-multi-currency-acc"
@@ -2175,7 +2206,7 @@
         },
         {
           "id": "chk-line-up-a-no-key-money-share-h-2",
-          "task": "Line up a no-key-money share house (Oakhouse / Sakura House / Borderless House) as your real first base instead of a normal Japanese apartment. These skip the four classic rental gotchas: NO key money (reikin, normally 1-2 months non-refundable), NO guarantor (hoshonin - nearly impossible as a new arrival), NO agent fee, and little/no deposit. You can apply online from Canada and reserve a room before you land. Typical Tokyo all-in: ~50,000-90,000 yen/month rent + a one-time contract fee (~30,000-50,000 yen) + monthly utilities/maintenance fee, furnished with wifi included.",
+          "task": "Line up a no-key-money share house (Oakhouse / Sakura House / Borderless House) as your real first base instead of a normal Japanese apartment. These skip the four classic rental gotchas: NO key money (reikin, normally 1-2 months non-refundable), NO guarantor (hoshonin - nearly impossible as a new arrival), NO agent fee, and little/no deposit. You can apply online before you fly and reserve a room before you land. Typical Tokyo all-in: ~50,000-90,000 yen/month rent + a one-time contract fee (~30,000-50,000 yen) + monthly utilities/maintenance fee, furnished with wifi included.",
           "window": "apply 2-4 weeks before landing; move in within first week",
           "dueBy": "2026-06-22",
           "kind": "housing",
@@ -2188,7 +2219,7 @@
         },
         {
           "id": "chk-order-a-wise-formerly-transfe-2",
-          "task": "Order a Wise (formerly TransferWise) card and verify the account while still in CANADA, before you fly. A Wise card issued in Canada keeps Apple Pay/Google Pay compatibility; a Wise card issued after you become a Japan resident does NOT work with Apple Pay/Google Pay, so you lose the ability to top up a mobile Suica with it. Load some JPY at the mid-market rate so you land with spendable funds.",
+          "task": "(Optional, for a Chase-Sapphire-only setup) Order a Wise card and verify the account while still in the US, before you fly. A Wise card issued in your home country (CA/US) keeps Apple Pay/Google Pay compatibility; a Wise card issued after you become a Japan resident does NOT work with Apple Pay/Google Pay, so you lose the ability to top up a mobile Suica with it. Load some JPY at the mid-market rate so you land with spendable funds.",
           "window": "before departure (now through 2026-06-29)",
           "dueBy": "2026-06-29",
           "kind": "setup",
@@ -2201,7 +2232,7 @@
         },
         {
           "id": "chk-decide-your-long-term-plan-bef-2",
-          "task": "Decide your long-term plan BEFORE arrival: a WHV holder cannot get a Japanese credit card or major carrier (docomo/au/SoftBank/Rakuten) contract on day one because they reject foreign cards and want a residence card. Pre-order a foreigner-friendly SIM from Mobal (no residence card needed, real 070/080/090 number, free worldwide shipping, pays with your Canadian card) so a physical SIM is waiting or shippable. Sakura Mobile and GTN are alternatives but lean toward needing a residence card / convenience-store payment.",
+          "task": "Decide your long-term plan BEFORE arrival: a WHV holder cannot get a Japanese credit card or major carrier (docomo/au/SoftBank/Rakuten) contract on day one because they reject foreign cards and want a residence card. Pre-order a foreigner-friendly SIM from Mobal (no residence card needed, real 070/080/090 number, free worldwide shipping, pays with your home (CA/US) card) so a physical SIM is waiting or shippable. Sakura Mobile and GTN are alternatives but lean toward needing a residence card / convenience-store payment.",
           "window": "1-2 weeks before departure",
           "dueBy": "2026-06-29",
           "kind": "setup",
@@ -2217,7 +2248,7 @@
         },
         {
           "id": "chk-lock-the-proof-of-funds-figure-2",
-          "task": "Lock the proof-of-funds figure with YOUR consulate before flying. Canadian WHV: most recent bank statement showing roughly CAD 3,500 if you hold a return/onward ticket, OR ~CAD 4,500-5,000 if you do NOT. Print a fresh bank statement (dated within the last few days) and carry a paper copy. Note: this is checked at APPLICATION (already done if visa is in hand), but also keep it on you for landing.",
+          "task": "Confirm the proof-of-funds figure per your Canadian WHV terms (already cleared at application). Canadian WHV: most recent bank statement showing roughly CAD 3,500 if you hold a return/onward ticket, OR ~CAD 4,500-5,000 if you do NOT. Print a fresh bank statement (dated within the last few days) and carry a paper copy. Note: this is checked at APPLICATION (already done if visa is in hand), but also keep it on you for landing.",
           "window": "before 2026-06-30 (carry on landing day)",
           "dueBy": "2026-06-29",
           "kind": "money",
@@ -2262,7 +2293,7 @@
         },
         {
           "id": "chk-carry-proof-of-funds-onward",
-          "task": "Carry proof of funds + onward planning docs through immigration. Canadian WHV applicants must show sufficient funds (commonly ~CAD 2,500, or ~CAD 4,000 without a return ticket) at visa stage; keep a printed bank statement and your return/onward ticket evidence accessible at Narita in case the immigration officer asks.",
+          "task": "Carry proof of funds + onward planning docs through immigration. Your Canadian WHV required showing sufficient funds (commonly ~CAD 2,500, or ~CAD 4,000 without a return ticket) at visa stage; keep a printed bank statement and your return/onward ticket evidence accessible at Narita in case the immigration officer asks.",
           "window": "at the airport on landing",
           "dueBy": "2026-06-30",
           "kind": "legal",
@@ -2274,7 +2305,7 @@
         },
         {
           "id": "chk-set-up-mobile-suica-in-apple-w",
-          "task": "Set up Mobile Suica in Apple Wallet on your iPhone before/at arrival and top it up from your Canada-issued Wise card (or a foreign Visa/Mastercard/Amex on your Apple ID). This is your IC transit + tap-to-pay card from minute one — no deposit, works nationwide. Avoid the physical Welcome Suica (only 4 weeks) and physical Suica deposits.",
+          "task": "Set up Mobile Suica in Apple Wallet on your iPhone before/at arrival and top it up from your Chase Sapphire Preferred in Apple Pay (a no-FX Visa). Heads-up: foreign-card Mobile Suica top-up is sometimes rejected — test it on day one; if CSP won't top up, a Wise card or a Japanese card is the reliable fallback. This is your IC transit + tap-to-pay card from minute one — no deposit, works nationwide. Avoid the physical Welcome Suica (only 4 weeks) and physical Suica deposits.",
           "window": "before departure or day of landing",
           "dueBy": "2026-06-30",
           "kind": "setup",
@@ -2325,19 +2356,6 @@
           "confidence": "high"
         },
         {
-          "id": "chk-get-your-residence-card-zairy",
-          "task": "Get your Residence Card (zairyu card) ON ARRIVAL at Narita. As a WHV holder landing at NRT, immigration issues the residence card at the airport during landing permission. Confirm the card prints correctly and keep it on you at all times - it is the master key that unlocks address registration, banking, phone contracts, and work.",
-          "window": "on 2026-06-30 at NRT immigration",
-          "dueBy": "2026-06-30",
-          "kind": "legal",
-          "note": "Residence card is issued at major airports (Narita, Haneda, Kansai, Chubu) on entry. By law you must carry it at all times. Address is blank on issue - you fill it in at the ward office (next task).",
-          "sources": [
-            "https://japanlivinglife.com/articles/japan-post-bank-account-guide",
-            "https://www.yolo-japan.com/en/information/details/281"
-          ],
-          "confidence": "high"
-        },
-        {
           "id": "chk-break-the-sim-bank-address-chi",
           "task": "Break the SIM/bank/address chicken-and-egg with a passport-only SIM. Banks and most contract phone plans demand a Japanese phone number AND a registered address - but you can't get a contract SIM without an address. Solution: buy a Mobal or Sakura Mobile SIM/eSIM that needs ONLY your passport (no residence card, no address) - order before departure or pick up at Narita. This gives you the Japanese number you need to open the bank account and fill out forms from day one.",
           "window": "order before departure or buy at NRT on arrival",
@@ -2383,7 +2401,7 @@
       "items": [
         {
           "id": "chk-addr-reg",
-          "task": "File your moving-in notification (転入届 / 住民登録) at your Tokyo ward or city office once you have a fixed address. Bring passport + Residence Card; they print your address on the back of the card on the spot and create your resident record (juminhyo). This is the legal gateway that unlocks pension, health insurance, My Number, and banking — do it first.",
+          "task": "File your moving-in notification (転入届 / 住民登録) at your Tokyo ward or city office once you have a fixed address. Bring passport + Residence Card; they print your address on the back of the card on the spot and create your resident record (juminhyo). While there, grab a few Jūminhyō copies (~¥300 each) — the bank will want one; missing the 14-day window risks a fine up to ¥50,000. This is the legal gateway that unlocks pension, health insurance, My Number, and banking — do it first.",
           "window": "within 14 days of settling into your address",
           "dueBy": "2026-07-14",
           "kind": "legal",
@@ -2483,19 +2501,6 @@
             "https://atadistance.net/2026/04/21/global-nfc-samsung-galaxy-and-why-its-important/"
           ],
           "confidence": "high"
-        },
-        {
-          "id": "chk-register-your-address-at-the-l",
-          "task": "Register your address at the local ward/city office within 14 DAYS of landing - this is a hard legal deadline. Bring your residence card and passport, file the Moving-In Notification (tennyu todoke), and they will write your address on the back of your residence card. While there, also request a few copies of your Juminhyo (residence certificate ~300 yen each) - you'll need it for the bank. Missing the 14-day window risks a fine up to 50,000 yen.",
-          "window": "within 14 days of landing",
-          "dueBy": "2026-07-14",
-          "kind": "legal",
-          "note": "This is the linchpin that breaks the address chicken-and-egg: share house move-in gives you an address, ward office stamps it onto your residence card + issues Juminhyo, and THEN banks/phone contracts become possible. Also enroll in National Health Insurance and National Pension here at the same visit.",
-          "sources": [
-            "https://www.yolo-japan.com/en/information/details/281",
-            "https://wise.com/en-jp/blog/register-change-address-japan"
-          ],
-          "confidence": "high"
         }
       ]
     },
@@ -2503,6 +2508,33 @@
       "phase": "First Month — Settle In",
       "window": "July 2026",
       "items": [
+        {
+          "task": "At long-term move-in: set up electricity / gas / water (usually an online or phone form) + internet, and learn your ward's garbage-sorting + collection-day rules — burnable / non-burnable / recyclables differ by ward and mis-sorting gets bags rejected.",
+          "kind": "setup",
+          "id": "chk-utilities-garbage",
+          "confidence": "high",
+          "sources": ["https://www.japan-guide.com/e/e2060.html"]
+        },
+        {
+          "task": "Sort renters / contents (kasai hoken) insurance for your long-term place — share houses sometimes bundle it; a normal lease usually requires it. Confirm what's already included before buying.",
+          "kind": "setup",
+          "id": "chk-renters-insurance",
+          "confidence": "medium",
+          "sources": []
+        },
+        {
+          "task": "When you move from Makoto Guesthouse to long-term housing: file a Japan Post mail-forwarding (tensō) request AND re-register your address at the ward office (within 14 days of the move).",
+          "kind": "logistics",
+          "id": "chk-mail-forwarding-move",
+          "confidence": "high",
+          "sources": ["https://www.post.japanpost.jp/int/index_en.html"]
+        },
+        {
+          "task": "Lock in long-term housing before the Makoto Guesthouse stay ends on Jul 7 — view share-house rooms in person, then sign.",
+          "kind": "housing",
+          "id": "chk-lock-long-term-housing",
+          "dueBy": "2026-07-07"
+        },
         {
           "id": "chk-open-a-japanese-bank-account",
           "task": "Open a Japanese bank account. Japan Post Bank (Yucho) accepts new arrivals without a 6-month-residency requirement and has the most ATMs nationwide — best first account. Bring your residence card (issued at Narita) and proof of a Tokyo address once you have one. Online banks Sony Bank and Rakuten Bank offer English apps and debit cards as good second accounts.",
@@ -2570,6 +2602,35 @@
       "phase": "Ongoing Setup & Money",
       "window": "first few months",
       "items": [
+        {
+          "task": "(Usually optional) A hanko / inkan personal seal — most banks and contracts now accept a signature for foreign residents. You only really need a REGISTERED seal (jitsuin) for major legal transactions (car, real estate, insurance payouts). Skip unless something specifically asks for it.",
+          "kind": "setup",
+          "id": "chk-hanko-optional",
+          "confidence": "medium",
+          "sources": ["https://expatsguide.jp/living-in/visas-residency/registering-personal-seal/"]
+        },
+        {
+          "task": "If you work during the WHV: you'll either get a year-end adjustment (nenmatsu chōsei) via your employer, or file a tax return (kakutei shinkoku) by mid-March for the prior year. Keep your payslips + My Number.",
+          "kind": "money",
+          "id": "chk-tax-filing-if-working",
+          "confidence": "medium",
+          "sources": ["https://www.nta.go.jp/english/"]
+        },
+        {
+          "task": "Primary card = Chase Sapphire Preferred (Visa, no foreign-transaction fee). Set a travel notice and add it to Apple/Google Pay. Note: CSP at an ATM is a cash-advance (fee + interest) — use it for purchases, not yen withdrawals.",
+          "kind": "money",
+          "id": "chk-csp-primary-card"
+        },
+        {
+          "task": "Sort a cash/ATM card for Japan — Japan is cash-heavy and CSP charges a cash-advance fee. Bring a no-FX debit card (or the optional home-issued Wise card) for Seven-Bank ATM withdrawals.",
+          "kind": "money",
+          "id": "chk-cash-atm-card"
+        },
+        {
+          "task": "Plan ADHD-med resupply for months 4-12 — no adult refills in Japan (mail-import with a fresh NCD permit, a trip home, or a prescriber arrangement).",
+          "kind": "legal",
+          "id": "chk-adhd-resupply-plan"
+        },
         {
           "id": "chk-watch-your-mailbox-for-the-my",
           "task": "Watch your mailbox for the My Number notification (個人番号 assigned automatically when you register your address) — a letter arrives at your registered address ~2-3 weeks after move-in. Your number is the key ID for health insurance, tax, and employment. Then optionally apply for the physical My Number Card (separate application, online/post/in-person; ready in ~2-4 weeks).",
@@ -2867,6 +2928,13 @@
       "window": "May–Jun 2027",
       "items": [
         {
+          "task": "On leaving Japan, claim the National Pension lump-sum withdrawal (dattai ichijikin) — file within 2 years of departure. A withholding tax (commonly cited ~20.42%) is taken at source but is reclaimable through your appointed tax agent; verify the current rate when you file.",
+          "kind": "money",
+          "id": "chk-pension-lumpsum-exit",
+          "confidence": "medium",
+          "sources": ["https://www.nenkin.go.jp/international/"]
+        },
+        {
           "id": "chk-reentry-exit",
           "task": "NEVER leave Japan without a re-entry permit (single-entry WHV)",
           "window": "before every departure",
@@ -2959,7 +3027,7 @@
     { "id": "pk-cash", "cat": "Money", "item": "Starter ¥ cash (¥30,000–50,000) for day one", "note": "Many small shops, the ward office and some transit top-ups are cash-only; get yen before you fly or at the airport.", "confidence": "medium" },
     { "id": "pk-travelnotice", "cat": "Money", "item": "Tell your bank you're moving abroad (avoid fraud blocks)", "confidence": "high" },
     { "id": "pk-phone-sim", "cat": "Electronics", "item": "Pocket wifi or eSIM for arrival connectivity", "note": "Set up an eSIM before landing, or reserve pocket wifi for pickup at the airport — you'll need data day one.", "confidence": "high" },
-    { "id": "pk-power", "cat": "Electronics", "item": "Power: Japan is Type A, 100V (Canada plugs fit; check voltage)", "note": "Canadian plugs physically fit, but Japan is 100V vs 120V — confirm dual-voltage on chargers/appliances.", "confidence": "high" },
+    { "id": "pk-power", "cat": "Electronics", "item": "Power: Japan is Type A, 100V (North-American plugs fit; check voltage)", "note": "North-American plugs physically fit, but Japan is 100V vs 120V — confirm dual-voltage on chargers/appliances.", "confidence": "high" },
     { "id": "pk-powerbank", "cat": "Electronics", "item": "Power bank (carry-on only — never checked)", "note": "Airlines require lithium power banks in carry-on; check the Wh limit.", "confidence": "high" },
     { "id": "pk-phone", "cat": "Electronics", "item": "Unlocked phone + charger", "confidence": "high" },
     { "id": "pk-laptop", "cat": "Electronics", "item": "Laptop + charger (for remote work / setup)", "confidence": "medium" },
@@ -6314,7 +6382,7 @@
       "roomType": "private-apartment",
       "gender": "any",
       "contact": "24/7 English support; entire process online incl. e-signature",
-      "note": "The cleanest sign-before-you-fly route into a private apartment: no guarantor, no Japanese bank account, and the lease is e-signed via DocuSign from Canada using a home-country credit card as the security mechanism. Furnished options exist (rare in Japan). Premium over local-market rent is the cost of that convenience. Ideal for locking housing before you land, then optionally switching to UR/Village House once you have a residence card and bank account. Verify the per-unit initial cost and current availability before booking.",
+      "note": "The cleanest sign-before-you-fly route into a private apartment: no guarantor, no Japanese bank account, and the lease is e-signed via DocuSign from the US using a home-country credit card as the security mechanism. Furnished options exist (rare in Japan). Premium over local-market rent is the cost of that convenience. Ideal for locking housing before you land, then optionally switching to UR/Village House once you have a residence card and bank account. Verify the per-unit initial cost and current availability before booking.",
       "tier": "mid",
       "foreignerFriendly": true,
       "confidence": "medium",

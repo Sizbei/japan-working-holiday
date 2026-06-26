@@ -45,6 +45,7 @@ export const KEYS = {
   tags: 'jwh-tags-v1',
   seed: 'jwh-seed-v1',
   gcalMap: 'jwh-gcal-map-v1',
+  seedNearby: 'jwh-seed-nearby-v1',
 };
 
 export function get(key, fallback) {

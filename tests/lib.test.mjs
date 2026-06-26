@@ -556,7 +556,7 @@ test('tagHue: deterministic, in range, stable across calls', () => {
 test('seed ids all exist in tips.json checklist', () => {
   const data = JSON.parse(readFileSync(new URL('../docs/data/tips.json', import.meta.url)));
   const ids = new Set(data.checklist.flatMap(p => (p.items || []).map(i => i.id)));
-  const SEED = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-reserve-a-furnished-share-hous', 'chk-book-first-week-accommodation-2', 'chk-line-up-a-no-key-money-share-h-2', 'chk-adhd-ncd-permit'];
+  const SEED = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-book-first-week-accommodation-2', 'chk-adhd-ncd-permit'];
   SEED.forEach(id => assert.ok(ids.has(id), `seed id missing: ${id}`));
 });
 

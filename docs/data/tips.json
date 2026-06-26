@@ -2606,22 +2606,6 @@
           "dueBy": "2026-07-07"
         },
         {
-          "id": "chk-open-a-japanese-bank-account",
-          "task": "Open a Japanese bank account. Japan Post Bank (Yucho) accepts new arrivals without a 6-month-residency requirement and has the most ATMs nationwide — best first account. Bring your residence card (issued at Narita) and proof of a Tokyo address once you have one. Online banks Sony Bank and Rakuten Bank offer English apps and debit cards as good second accounts.",
-          "window": "within 2-4 weeks of landing (after address registration)",
-          "dueBy": "2026-07-31",
-          "kind": "money",
-          "note": "GOTCHA: Japan Post Bank won't let you do overseas deposits/remittances if your stay is under 6 months — so don't rely on it for Canada<->Japan transfers early on; use Wise for that. Most banks want a Tokyo address (so register at your ward office first) and sometimes a Japanese phone number. A hanko/seal is often optional at Yucho.",
-          "sources": [
-            "https://wise.com/en-jp/blog/open-bank-account-japan-post-bank",
-            "https://www.tokyodev.com/articles/bank-account-in-japan"
-          ],
-          "confidence": "high",
-          "requires": [
-            "chk-bank-open"
-          ]
-        },
-        {
           "id": "chk-set-up-paypay-as-your-primary",
           "task": "Set up PayPay as your primary QR cashless wallet — it's the most widely accepted code-payment app in Japan and the lowest-friction to start (link a credit card or charge via bank). Register with your Japanese phone number; have your residence card ready for identity verification if prompted.",
           "window": "first 2-4 weeks",
@@ -2652,19 +2636,6 @@
           "requires": [
             "chk-bank-open"
           ]
-        },
-        {
-          "id": "chk-open-a-bank-account-at-japan-p",
-          "task": "Open a bank account at Japan Post Bank (Yucho) once you have: residence card WITH printed address + Juminhyo + Japanese phone number. Japan Post Bank is the most new-arrival-friendly major bank - it does NOT strictly enforce the 6-month-residency rule that megabanks impose, so WHV holders can open early. Go to a post office branch with all three documents. This account is what employers pay wages into and what you use for rent/utilities.",
-          "window": "after address registration; weeks 2-4",
-          "dueBy": "2026-07-20",
-          "kind": "money",
-          "note": "Megabanks (MUFG, Mizuho, SMBC) often refuse foreigners with under 6 months' residence. Japan Post Bank is the standard go-to for WHV holders. Bring your Inkan/hanko stamp if you have one (some branches accept signature). Required: residence card, address-matching Juminhyo, JP phone number. Yucho generally cannot send/receive INTERNATIONAL transfers in your first ~6 months — use Wise for inbound CAD→JPY early on.",
-          "sources": [
-            "https://japanlivinglife.com/articles/japan-post-bank-account-guide",
-            "https://migaku.com/blog/language-fun/japan-post-bank-account-for-foreigners-how-to-open-one"
-          ],
-          "confidence": "high"
         }
       ]
     },
@@ -2728,9 +2699,9 @@
         },
         {
           "id": "chk-bank-open",
-          "task": "Open a Japanese bank account AFTER your Residence Card shows your registered address (you cannot open one before). For a WHV/short-residency holder the realistic options are Japan Post Bank (Yucho) — most branches, often accepts 3+ months' residency — and SBI Shinsei Bank, historically the most foreigner-friendly and openable soon after arrival. Sony Bank is good for FX/remote-work income but can be stricter on short visas.",
+          "task": "Open a Japanese bank account AFTER your Residence Card shows your registered address (you cannot open one before). For a WHV/short-residency holder the realistic options are Japan Post Bank (Yucho) — most branches, often accepts 3+ months' residency — and SBI Shinsei Bank, historically the most foreigner-friendly and openable soon after arrival. Sony Bank is good for FX/remote-work income but can be stricter on short visas. This is the account wages get paid into and you pay rent/utilities from. Bring three things — residence card (with your address printed), a Jūminhyō copy, and a Japanese phone number — and add an English-app online bank (Rakuten / Sony) as a handy second account.",
           "window": "after address is printed on Residence Card; within first 2-4 weeks",
-          "dueBy": "",
+          "dueBy": "2026-07-20",
           "kind": "money",
           "note": "WHV-specific gotcha: the Foreign Exchange Control Law's 6-month rule means many banks refuse residents with under 6 months in Japan — Yucho and SBI Shinsei are the standard workarounds. Expect extra scrutiny for temporary visas. Bring Residence Card + passport + a Japanese phone number (get a SIM first). Yucho + Shinsei combo gives you cash-everywhere ATMs plus easy English online banking. Yucho generally cannot send/receive INTERNATIONAL transfers in your first ~6 months — use Wise for inbound CAD→JPY early on.",
           "sources": [

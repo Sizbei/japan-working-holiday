@@ -54,6 +54,7 @@ function boot() {
       seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
       seedNearby();                  // one-time: drop the near-base neighborhood pins (+ the festival venue)
       fixHousingSeed();              // one-time: un-tick the wrongly-seeded long-term share-house items
+      seedDayPlanJul4();             // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
       mountCalendar(data, today);
       mountGoogleSync(() => allEvents());
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
@@ -149,6 +150,30 @@ function fixHousingSeed() {
   });
   if (changed) set(KEYS.checklist, checks);
   set(KEYS.fixHousing, true);
+}
+
+// One-time seed (jwh-seed-plan-v1): a ready-made Plan-a-Day for the World DJ Festival (Jul 4) so the
+// #/plan timeline shows the door-to-door route from Makoto to Sea Forest Waterway with the ~2h buffer
+// and the all-important return plan. Won't overwrite a plan the owner already made for that date.
+function seedDayPlanJul4() {
+  if (get(KEYS.seedPlan, false)) return;
+  const DATE = '2026-07-04';
+  const plans = get(KEYS.dayPlans, {}) || {};
+  if (!plans[DATE]) {
+    plans[DATE] = {
+      date: DATE,
+      title: 'World DJ Festival — Day 1 (Sea Forest Waterway)',
+      note: 'Door-to-door ~2h from Makoto. Bring: ticket QR, cash, sunscreen, hat, portable charger, water. SORT YOUR RETURN before you go in — last trains from the bay are ~midnight.',
+      stops: [
+        { id: 's-jul4-depart', placeId: 'p-sakura-house-makoto', name: 'Depart — Makoto Guesthouse', lat: 35.7684, lng: 139.8264, coordKind: 'approx', area: 'Ayase', startTime: '13:00', durationMin: 0, note: 'Eat first; leave by ~1pm to comfortably catch an afternoon set.', locked: false },
+        { id: 's-jul4-transit', placeId: '', name: 'Transit → the bay (Rinkai line)', lat: null, lng: null, coordKind: 'approx', area: 'Shin-Kiba / Tokyo Teleport', startTime: '13:10', durationMin: 90, note: 'Ayase → Yurakucho line → Shin-Kiba → Rinkai line → Tokyo Teleport (Toei bus to the venue) OR Kokusai-Tenjijo (free festival shuttle). Confirm the shuttle stop + times on the official WDJF site.', locked: false },
+        { id: 's-jul4-festival', placeId: 'p-seaforest', name: 'World DJ Festival — Sea Forest Waterway', lat: 35.6047, lng: 139.8225, coordKind: 'approx', area: 'Koto-ku (Tokyo Bay)', startTime: '15:00', durationMin: 480, note: 'Day 1: Martin Garrix, Porter Robinson, KSHMR, Galantis, Alok. 3-6-44 Uminomori, Koto-ku.', locked: false },
+        { id: 's-jul4-return', placeId: 'p-sakura-house-makoto', name: 'Return — Makoto (plan the exit!)', lat: 35.7684, lng: 139.8264, coordKind: 'approx', area: 'Ayase', startTime: '23:00', durationMin: 0, note: 'THE HARD PART: last trains from the bay are ~midnight. If sets run later, use the official late shuttle to a hub, or budget a taxi (~¥3-5k) to Shin-Kiba then a night route home.', locked: false },
+      ],
+    };
+    set(KEYS.dayPlans, plans);
+  }
+  set(KEYS.seedPlan, true);
 }
 
 function registerSW() {

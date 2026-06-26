@@ -2248,11 +2248,6 @@
           "id": "chk-reserve-a-furnished-share-hous"
         },
         {
-          "task": "Buy a data eSIM (~5 days before flying)",
-          "kind": "logistics",
-          "id": "chk-buy-a-data-esim-5-days-befor"
-        },
-        {
           "task": "Fill out Visit Japan Web for fast NRT arrival",
           "kind": "logistics",
           "id": "chk-fill-out-visit-japan-web-for-f"
@@ -2269,9 +2264,7 @@
             "https://whereandwander.com/regional-showdown-airalo-vs-ubigi-best-esim-in-japan/"
           ],
           "confidence": "high",
-          "requires": [
-            "chk-bank-open"
-          ]
+          "requires": []
         },
         {
           "id": "chk-book-first-week-accommodation-2",
@@ -2323,9 +2316,7 @@
             "https://www.gtn-mobile.com/s/?language=en_US"
           ],
           "confidence": "high",
-          "requires": [
-            "chk-bank-open"
-          ]
+          "requires": []
         },
         {
           "id": "chk-lock-the-proof-of-funds-figure-2",
@@ -2553,9 +2544,7 @@
             "https://www.axialogic.com/en/abroad/japan/banking/paypay-setup-guide"
           ],
           "confidence": "high",
-          "requires": [
-            "chk-bank-open"
-          ]
+          "requires": []
         },
         {
           "id": "chk-iphone-users-set-up-transit-i",

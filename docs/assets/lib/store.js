@@ -47,6 +47,7 @@ export const KEYS = {
   gcalMap: 'jwh-gcal-map-v1',
   seedNearby: 'jwh-seed-nearby-v1',
   fixHousing: 'jwh-fix-housing-v1',
+  seedPlan: 'jwh-seed-plan-v1',
 };
 
 export function get(key, fallback) {

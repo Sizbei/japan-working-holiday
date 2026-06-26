@@ -95,6 +95,14 @@
   ],
   "bookByTimeline": [
     {
+      "id": "book-world-dj-festival-2026",
+      "when": "2026-06-29",
+      "what": "World DJ Festival Japan (Jul 4–5) — tickets",
+      "action": "Day 1 = Sat Jul 4 (the one you want). Super-early-bird is on sale NOW and this lineup (Martin Garrix, Porter Robinson, KSHMR, Galantis, Alok…) sells out — buy before you're swamped with arrival logistics. Venue: Sea Forest Waterway, Koto-ku — ~2h each way from Makoto, so sort the festival shuttle + last-train/return plan when you buy.",
+      "leadTime": "buy ASAP — sells out",
+      "confidence": "high"
+    },
+    {
       "id": "book-sumida-river-fireworks-festival-jul-25-paid",
       "when": "2026-06-15",
       "what": "Sumida River Fireworks Festival (Jul 25) — paid grandstand/yakatabune boat seats",

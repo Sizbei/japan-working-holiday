@@ -53,6 +53,7 @@ function boot() {
       setText('#footGen', m.generated || '');
       seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
       seedNearby();                  // one-time: drop the near-base neighborhood pins (+ the festival venue)
+      fixHousingSeed();              // one-time: un-tick the wrongly-seeded long-term share-house items
       mountCalendar(data, today);
       mountGoogleSync(() => allEvents());
       mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
@@ -94,7 +95,9 @@ function setText(sel, txt) { const el = $(sel); if (el) el.textContent = txt; }
 // router won't re-render it later) and the map/dashboard read the seeded place.
 function seedOnce() {
   if (get(KEYS.seed, false)) return;
-  const SEED_DONE = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-reserve-a-furnished-share-hous', 'chk-book-first-week-accommodation-2', 'chk-line-up-a-no-key-money-share-h-2', 'chk-adhd-ncd-permit'];
+  // NOTE: the two LONG-TERM share-house items are NOT seeded — the owner booked only the temporary
+  // Makoto Guesthouse; finding the long-term share house is still a live to-do (chk-lock-long-term-housing).
+  const SEED_DONE = ['chk-confirm-whv-eligibility-age-1', 'chk-gather-visa-documents-passpor', 'chk-show-proof-of-funds-in-your-ac', 'chk-book-consulate-appointment-and', 'chk-check-passport-validity-blan', 'chk-lock-the-proof-of-funds-figure-2', 'chk-book-first-week-accommodation-2', 'chk-adhd-ncd-permit'];
   const checks = get(KEYS.checklist, {}) || {};
   SEED_DONE.forEach(id => { checks[id] = true; });   // additive — only sets true, never un-checks
   set(KEYS.checklist, checks);
@@ -131,6 +134,21 @@ function seedNearby() {
   });
   if (added) set(KEYS.places, places);
   set(KEYS.seedNearby, true);
+}
+
+// One-time correction (jwh-fix-housing-v1): an earlier seed wrongly ticked the LONG-TERM share-house
+// items as done. The owner only booked the temporary Makoto Guesthouse — the long-term share house is
+// still a real to-do (chk-lock-long-term-housing). Un-tick those two once so the checklist reads true.
+// (If the owner has genuinely found their long-term place, they can re-tick — runs only once.)
+function fixHousingSeed() {
+  if (get(KEYS.fixHousing, false)) return;
+  const checks = get(KEYS.checklist, {}) || {};
+  let changed = false;
+  ['chk-reserve-a-furnished-share-hous', 'chk-line-up-a-no-key-money-share-h-2'].forEach(id => {
+    if (checks[id]) { delete checks[id]; changed = true; }
+  });
+  if (changed) set(KEYS.checklist, checks);
+  set(KEYS.fixHousing, true);
 }
 
 function registerSW() {

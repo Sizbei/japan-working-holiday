@@ -2684,13 +2684,6 @@
       "window": "first few months",
       "items": [
         {
-          "task": "(Usually optional) A hanko / inkan personal seal — most banks and contracts now accept a signature for foreign residents. You only really need a REGISTERED seal (jitsuin) for major legal transactions (car, real estate, insurance payouts). Skip unless something specifically asks for it.",
-          "kind": "setup",
-          "id": "chk-hanko-optional",
-          "confidence": "medium",
-          "sources": ["https://expatsguide.jp/living-in/visas-residency/registering-personal-seal/"]
-        },
-        {
           "task": "If you work during the WHV: you'll either get a year-end adjustment (nenmatsu chōsei) via your employer, or file a tax return (kakutei shinkoku) by mid-March for the prior year. Keep your payslips + My Number.",
           "kind": "money",
           "id": "chk-tax-filing-if-working",

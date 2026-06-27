@@ -2798,6 +2798,29 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S15 — Quiz / self-test */
+.quiz-wrap { margin-top: var(--s5); }
+.quiz-bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .9rem; }
+.quiz-dir { display: inline-flex; gap: .3rem; padding: .2rem; border: 1px solid var(--line); border-radius: 100px; }
+.quiz-tab { background: none; border: none; cursor: pointer; padding: .3rem .8rem; border-radius: 100px; color: var(--ink-soft);
+  font-family: var(--sans); font-size: .8rem; transition: background var(--t-hover), color var(--t-hover); }
+.quiz-tab.is-on { background: var(--ink); color: var(--bg); font-weight: 700; }
+.quiz-score { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 700; }
+.quiz-q { font-family: var(--serif-jp); font-size: 1.7rem; line-height: 1.5; text-align: center; margin: .4rem 0 1.1rem; color: var(--ink); }
+.quiz-q .quiz-en-prompt { font-family: var(--serif); font-style: italic; }
+.quiz-opts { display: grid; gap: .5rem; }
+.quiz-opt { text-align: left; padding: .7rem .9rem; border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--bg-soft); color: var(--ink); cursor: pointer; font: inherit; transition: border-color var(--t-hover), background var(--t-hover); }
+.quiz-opt:not(:disabled):hover { border-color: var(--indigo); }
+.quiz-opt:disabled { cursor: default; }
+.quiz-opt.quiz-right { border-color: #2e7d32; background: color-mix(in srgb, #2e7d32 16%, var(--bg-soft)); color: var(--ink); font-weight: 600; }
+.quiz-opt.quiz-wrong { border-color: var(--red); background: color-mix(in srgb, var(--red) 16%, var(--bg-soft)); color: var(--ink); }
+[data-theme="dark"] .quiz-opt.quiz-right { border-color: #4caf50; }
+.quiz-feedback { min-height: 1.3em; margin: .7rem 0 .3rem; color: var(--ink-soft); font-size: .9rem; text-align: center; }
+.quiz-next { display: block; margin: .3rem auto 0; background: var(--ink); color: var(--bg); border: none; border-radius: 100px;
+  padding: .5rem 1.3rem; cursor: pointer; font-weight: 700; transition: transform var(--t-hover); }
+.quiz-next:active { transform: scale(var(--press-scale)); }
+.quiz-empty { color: var(--ink-soft); }
 /* S14 — Phrase of the day widget */
 .potd-jp { font-family: var(--serif-jp); font-size: 1.5rem; line-height: 1.5; color: var(--ink); }
 .potd-read { color: var(--ink-soft); font-size: .85rem; margin-top: .15rem; }

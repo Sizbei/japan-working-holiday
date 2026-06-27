@@ -9,6 +9,8 @@ import { mountPhrases } from './phrases.js';
 import { mountPointToSay } from './pointtosay.js';
 import { mountVocab } from './vocab.js';
 import { mountKana } from './kana.js';
+import { mountNumbers } from './numbers.js';
+import { mountSigns } from './signs.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -70,6 +72,8 @@ function boot() {
       mountPointToSay(data);         // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
       mountVocab(data);              // JLPT N5 starter vocabulary (themed, collapsible) on #/phrases
       mountKana();                   // hiragana/katakana reference chart (collapsible) on #/phrases
+      mountNumbers();                // numbers/money/counters/dates reference (collapsible) on #/phrases
+      mountSigns(data);              // daily-life kanji signs recognition grid (collapsible) on #/phrases
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

@@ -3226,6 +3226,28 @@
     { "id": "v-key", "theme": "Daily", "jp": "鍵", "read": "かぎ · kagi", "furi": [["鍵","かぎ"]], "en": "key" },
     { "id": "v-ticket", "theme": "Daily", "jp": "切符", "read": "きっぷ · kippu", "furi": [["切符","きっぷ"]], "en": "ticket" }
   ],
+  "signs": [
+    {"jp": "入口", "read": "いりぐち", "en": "Entrance"},
+    {"jp": "出口", "read": "でぐち", "en": "Exit"},
+    {"jp": "非常口", "read": "ひじょうぐち", "en": "Emergency exit"},
+    {"jp": "押", "read": "おす", "en": "Push"},
+    {"jp": "引", "read": "ひく", "en": "Pull"},
+    {"jp": "営業中", "read": "えいぎょうちゅう", "en": "Open (for business)"},
+    {"jp": "準備中", "read": "じゅんびちゅう", "en": "Preparing — not open yet"},
+    {"jp": "閉店", "read": "へいてん", "en": "Closed"},
+    {"jp": "お手洗い", "read": "おてあらい", "en": "Restroom"},
+    {"jp": "男", "read": "おとこ", "en": "Men"},
+    {"jp": "女", "read": "おんな", "en": "Women"},
+    {"jp": "危険", "read": "きけん", "en": "Danger"},
+    {"jp": "立入禁止", "read": "たちいりきんし", "en": "No entry"},
+    {"jp": "禁煙", "read": "きんえん", "en": "No smoking"},
+    {"jp": "注意", "read": "ちゅうい", "en": "Caution"},
+    {"jp": "故障中", "read": "こしょうちゅう", "en": "Out of order"},
+    {"jp": "会計", "read": "かいけい", "en": "Cashier / checkout"},
+    {"jp": "案内", "read": "あんない", "en": "Information"},
+    {"jp": "改札", "read": "かいさつ", "en": "Ticket gate"},
+    {"jp": "精算", "read": "せいさん", "en": "Fare adjustment"}
+  ],
   "emergency": {
     "numbers": [
       { "label": "Police", "num": "110", "note": "Crime, theft, accidents, a lost or stolen residence card. Free from any phone.", "confidence": "high" },

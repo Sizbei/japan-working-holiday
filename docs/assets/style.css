@@ -2798,6 +2798,23 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S12 — Daily-life kanji signs */
+.signs-wrap { margin-top: var(--s5); }
+.sign-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .5rem; }
+.sign-card { display: flex; flex-direction: column; align-items: center; gap: .15rem; text-align: center;
+  padding: .7rem .4rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft);
+  color: var(--ink); cursor: pointer; font: inherit; transition: transform var(--t-hover), border-color var(--t-hover); }
+.sign-card:hover { border-color: var(--indigo); }
+.sign-card:active { transform: scale(var(--press-scale)); }
+.sign-jp { font-family: var(--serif-jp); font-size: 1.4rem; line-height: 1.15; }
+.sign-read { font-size: .68rem; color: var(--ink-faint); }
+.sign-en { font-size: .74rem; color: var(--ink-soft); }
+/* S11 — Numbers/money/counters reference */
+.num-wrap { margin-top: var(--s5); }
+.num-h { font-family: var(--serif); font-size: 1rem; margin: 1.1rem 0 .3rem; }
+.num-h:first-child { margin-top: .2rem; }
+.num-note { color: var(--ink-soft); font-size: .8rem; margin: 0 0 .5rem; }
+.num-bignote { color: var(--ink-soft); font-size: .82rem; margin: 1rem 0 0; padding: .6rem .8rem; background: var(--bg-soft); border-radius: var(--r-sm); border: 1px solid var(--line); }
 /* S10 — Kana reference chart */
 .kana-wrap { margin-top: var(--s5); }
 .kana-switch { display: inline-flex; gap: .3rem; margin: .2rem 0 .9rem; padding: .2rem; border: 1px solid var(--line); border-radius: 100px; }

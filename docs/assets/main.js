@@ -6,6 +6,7 @@ import { renderContent } from './content.js';
 import { mountPacking } from './packing.js';
 import { mountBudget } from './budget.js';
 import { mountPhrases } from './phrases.js';
+import { mountPointToSay } from './pointtosay.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -64,6 +65,7 @@ function boot() {
       mountPacking(data);            // packing page (#/packing) — categorized super-checklist
       mountBudget(data);             // budget planner (#/budget) — one-time + monthly cost estimate
       mountPhrases(data);            // phrasebook (#/phrases) — curated survival-Japanese phrases
+      mountPointToSay(data);         // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

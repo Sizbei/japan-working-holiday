@@ -2798,6 +2798,25 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S7 — "Point & show" survival cards */
+.point-to-say { margin: 0 0 var(--s5); }
+.pts-title { font-family: var(--serif); font-size: 1.1rem; margin: 0 0 .15rem; }
+.pts-sub { color: var(--ink-soft); font-size: .85rem; margin: 0 0 .7rem; }
+.pts-row { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: .35rem; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.pts-card { flex: 0 0 auto; min-width: 116px; display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  padding: .8rem .7rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft);
+  color: var(--ink); cursor: pointer; scroll-snap-align: start; transition: transform var(--t-hover), border-color var(--t-hover); }
+.pts-card:hover { border-color: var(--indigo); }
+.pts-card:active { transform: scale(var(--press-scale)); }
+.pts-icon { font-size: 1.5rem; line-height: 1; }
+.pts-label { font-size: .82rem; font-weight: 600; text-align: center; line-height: 1.25; }
+.pts-big { font-family: var(--serif-jp); font-size: clamp(1.55rem, 6vw, 2.6rem); line-height: 1.55; letter-spacing: .03em;
+  text-align: center; margin: .2rem 0 1rem; color: var(--ink); }
+.pts-en { text-align: center; color: var(--ink-soft); font-size: 1rem; margin: 0 0 .6rem; }
+.pts-note { text-align: center; color: var(--ink-faint); font-size: .85rem; margin: 0 0 .9rem; }
+.pts-speak { display: block; margin: 0 auto; background: var(--bg-soft); border: 1px solid var(--line);
+  border-radius: 100px; padding: .45rem 1rem; cursor: pointer; color: var(--ink); transition: border-color var(--t-hover), color var(--t-hover); }
+.pts-speak:hover { border-color: var(--indigo); color: var(--indigo); }
 /* S6 — register badge (only on phrases that deviate from standard polite) */
 .phrase-reg { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .04em;
   text-transform: uppercase; padding: .05rem .35rem; border-radius: 100px; vertical-align: middle;

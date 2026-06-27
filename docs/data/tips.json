@@ -3171,6 +3171,14 @@
     { "id": "ph-job-interview", "cat": "Job", "jp": "面接はいつですか", "read": "めんせつはいつですか · mensetsu wa itsu desu ka", "furi": [["面接","めんせつ"],["はいつですか",""]], "en": "When is the interview?" },
     { "id": "ph-job-pay", "cat": "Job", "jp": "時給はいくらですか", "read": "じきゅうはいくらですか · jikyū wa ikura desu ka", "furi": [["時給","じきゅう"],["はいくらですか",""]], "en": "What's the hourly wage?" }
   ],
+  "pointToSay": [
+    {"id": "pts-med", "label": "My medication (ADHD)", "icon": "💊", "jp": "ADHDの薬を持っています。日本の輸入許可（薬監証明）を取得済みです。", "en": "I have ADHD medication. I already obtained Japan's import certificate (Yakkan Shoumei).", "note": "Show this with your import certificate and prescription."},
+    {"id": "pts-sick", "label": "I feel sick", "icon": "🤒", "jp": "気分が悪いです。病院へ連れて行ってもらえますか。", "en": "I feel unwell. Could you take me to a hospital?", "note": ""},
+    {"id": "pts-allergy", "label": "Food allergy", "icon": "🥜", "jp": "食物アレルギーがあります。これに＿＿は入っていますか。", "en": "I have a food allergy. Does this contain ＿＿?", "note": "Fill the blank with your allergen."},
+    {"id": "pts-lost", "label": "I'm lost", "icon": "🧭", "jp": "道に迷いました。この場所へ行きたいです。", "en": "I'm lost. I want to get to this place.", "note": "Show the map or written address."},
+    {"id": "pts-police", "label": "Theft / police", "icon": "🚓", "jp": "財布を盗まれました。警察を呼んでください。", "en": "My wallet was stolen. Please call the police.", "note": ""},
+    {"id": "pts-nojp", "label": "No Japanese", "icon": "💬", "jp": "日本語が話せません。英語を話せる方はいますか。", "en": "I can't speak Japanese. Is there anyone who speaks English?", "note": ""}
+  ],
   "emergency": {
     "numbers": [
       { "label": "Police", "num": "110", "note": "Crime, theft, accidents, a lost or stolen residence card. Free from any phone.", "confidence": "high" },

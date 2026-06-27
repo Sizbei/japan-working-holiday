@@ -19,6 +19,7 @@ import { isAvailable, invoke } from './lib/ankiconnect.js';
 import { alertModal, confirmModal, showModal } from './lib/modal.js';
 import { userPhrase, addUserPhrases, removeUserPhrase } from './lib/userphrases.js';
 import { speak, canSpeak } from './speak.js';
+import { rubyHTML } from './lib/furigana.js';
 
 const SPK = canSpeak();   // platform supports speech synthesis?
 import { stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
@@ -41,7 +42,7 @@ function furiOff() { return getRaw(KEYS.furi, '') === 'off'; }
 // + the reading line via CSS). The wrap survives render() (innerHTML swaps, class stays).
 function applyFuri() {
   const off = furiOff();
-  $('#phraseList')?.classList.toggle('furi-off', off);
+  $('#phrases')?.classList.toggle('furi-off', off);   // whole phrases section → covers phrase list + vocab
   const btn = $('#phraseFuri');
   if (btn) { btn.setAttribute('aria-pressed', off ? 'false' : 'true'); btn.textContent = off ? 'あ Furigana off' : 'あ Furigana'; }
 }
@@ -265,17 +266,6 @@ function wireControls() {
   $('#jtImport')?.addEventListener('click', doImport);
 }
 
-// Build inline furigana ruby from p.furi (array of [base, reading] pairs); esc() each part.
-// Falls back to plain escaped jp when no furi data. The clean jp goes in data-word so the
-// hover-dictionary looks up the phrase, not the ruby-interleaved text.
-function rubyJp(p) {
-  if (!Array.isArray(p.furi) || !p.furi.length) return esc(p.jp);
-  return p.furi.map(seg => {
-    const base = esc(seg[0] || '');
-    return seg[1] ? `<ruby>${base}<rt>${esc(seg[1])}</rt></ruby>` : base;
-  }).join('');
-}
-
 function rowHTML(p, favs) {
   const id = p.id;
   const on = !!favs[id];
@@ -285,7 +275,7 @@ function rowHTML(p, favs) {
   return `
     <li class="phrase-row" data-id="${esc(id)}">
       <div class="phrase-main">
-        <span class="jp phrase-jp" lang="ja" data-word="${esc(p.jp)}">${rubyJp(p)}</span>
+        <span class="jp phrase-jp" lang="ja" data-word="${esc(p.jp)}">${rubyHTML(p.furi, p.jp)}</span>
         <span class="phrase-read">${esc(p.read)}</span>
         <span class="phrase-en">${esc(p.en)}${p.reg ? ` <span class="phrase-reg reg-${esc(p.reg)}" title="${p.reg === 'keigo' ? 'extra-formal / humble register' : 'casual / plain form'}">${esc(p.reg)}</span>` : ''}</span>
         ${p._user ? `<span class="phrase-mine" aria-label="your phrase" title="yours">★</span>` : ''}

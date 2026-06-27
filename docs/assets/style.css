@@ -2798,6 +2798,10 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S9 — JLPT N5 starter vocab section */
+.vocab-wrap { margin-top: var(--s6); padding-top: var(--s5); border-top: 1px solid var(--line); }
+.vocab-h { font-family: var(--serif); font-size: 1.15rem; margin: 0 0 .15rem; }
+.vocab-sub { color: var(--ink-soft); font-size: .85rem; margin: 0 0 .8rem; }
 /* S7 — "Point & show" survival cards */
 .point-to-say { margin: 0 0 var(--s5); }
 .pts-title { font-family: var(--serif); font-size: 1.1rem; margin: 0 0 .15rem; }

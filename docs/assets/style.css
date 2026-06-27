@@ -2798,6 +2798,21 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S10 — Kana reference chart */
+.kana-wrap { margin-top: var(--s5); }
+.kana-switch { display: inline-flex; gap: .3rem; margin: .2rem 0 .9rem; padding: .2rem; border: 1px solid var(--line); border-radius: 100px; }
+.kana-tab { background: none; border: none; cursor: pointer; padding: .35rem .9rem; border-radius: 100px; color: var(--ink-soft);
+  font-family: var(--sans); font-size: .85rem; transition: background var(--t-hover), color var(--t-hover); }
+.kana-tab.is-on { background: var(--ink); color: var(--bg); font-weight: 700; }
+.kana-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; }
+.kana-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .1rem;
+  padding: .5rem .2rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft);
+  color: var(--ink); cursor: pointer; font: inherit; transition: transform var(--t-hover), border-color var(--t-hover); }
+.kana-cell.kana-gap { border: none; background: none; cursor: default; pointer-events: none; }
+.kana-cell:not(.kana-gap):hover { border-color: var(--indigo); }
+.kana-cell:not(.kana-gap):active { transform: scale(var(--press-scale)); }
+.kana-glyph { font-family: var(--serif-jp); font-size: 1.5rem; line-height: 1.1; }
+.kana-romaji { font-size: .68rem; color: var(--ink-faint); letter-spacing: .03em; }
 /* S9 — JLPT N5 starter vocab section */
 .vocab-wrap { margin-top: var(--s6); padding-top: var(--s5); border-top: 1px solid var(--line); }
 .vocab-h { font-family: var(--serif); font-size: 1.15rem; margin: 0 0 .15rem; }

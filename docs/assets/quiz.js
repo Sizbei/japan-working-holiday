@@ -49,7 +49,7 @@ function render(body) {
     </div>
     <div class="quiz-q">${promptHTML(cur)}</div>
     <div class="quiz-opts">${opts.map(o =>
-      `<button type="button" class="quiz-opt" data-jp="${esc(o.jp)}">${optionHTML(o)}</button>`).join('')}</div>
+      `<button type="button" class="quiz-opt"${o === cur ? ' data-correct="1"' : ''}>${optionHTML(o)}</button>`).join('')}</div>
     <div class="quiz-feedback" aria-live="polite"></div>
     <button type="button" class="quiz-next" hidden>Next →</button>`;
   body.querySelectorAll('.quiz-tab').forEach(t => t.addEventListener('click', () => {
@@ -62,7 +62,7 @@ function render(body) {
 function choose(body, btn) {
   if (answered) return;
   answered = true; total++;
-  const right = btn.dataset.jp === cur.jp;
+  const right = btn.dataset.correct === '1';   // explicit flag — robust even if two items share jp
   body.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; });
   if (right) {
     score++;
@@ -75,7 +75,7 @@ function choose(body, btn) {
     if (!reduced()) btn.animate(
       [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' },
        { transform: 'translateX(-4px)' }, { transform: 'translateX(0)' }], { duration: 380 });
-    body.querySelectorAll('.quiz-opt').forEach(b => { if (b.dataset.jp === cur.jp) b.classList.add('quiz-right'); });
+    body.querySelectorAll('.quiz-opt').forEach(b => { if (b.dataset.correct === '1') b.classList.add('quiz-right'); });
     body.querySelector('.quiz-feedback').textContent = `Answer: ${dir === 'jp2en' ? cur.en : cur.jp}`;
   }
   body.querySelector('.quiz-score').textContent = `${score} / ${total}`;

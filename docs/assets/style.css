@@ -2798,6 +2798,12 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S6 — register badge (only on phrases that deviate from standard polite) */
+.phrase-reg { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; padding: .05rem .35rem; border-radius: 100px; vertical-align: middle;
+  margin-left: .35rem; border: 1px solid var(--line); }
+.reg-keigo { color: var(--indigo-ink); background: color-mix(in srgb, var(--indigo) 12%, transparent); border-color: color-mix(in srgb, var(--indigo) 35%, transparent); }
+.reg-casual { color: var(--gold-ink); background: color-mix(in srgb, var(--gold) 14%, transparent); border-color: color-mix(in srgb, var(--gold) 38%, transparent); }
 /* CJK-correct wrapping/spacing for any Japanese text block */
 .jp-cjk { line-height: 1.9; word-break: normal; overflow-wrap: anywhere; line-break: strict; font-feature-settings: "palt" 1; }
 /* large display Japanese (point-to-say cards, kana charts) */

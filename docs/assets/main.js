@@ -11,6 +11,7 @@ import { mountVocab } from './vocab.js';
 import { mountKana } from './kana.js';
 import { mountNumbers } from './numbers.js';
 import { mountSigns } from './signs.js';
+import { mountPhraseDay } from './phraseday.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -74,6 +75,7 @@ function boot() {
       mountKana();                   // hiragana/katakana reference chart (collapsible) on #/phrases
       mountNumbers();                // numbers/money/counters/dates reference (collapsible) on #/phrases
       mountSigns(data);              // daily-life kanji signs recognition grid (collapsible) on #/phrases
+      mountPhraseDay(data);          // "phrase of the day" dashboard widget (deterministic by date)
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

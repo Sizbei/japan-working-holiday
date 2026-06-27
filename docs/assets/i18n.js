@@ -44,6 +44,7 @@ export const STRINGS = {
   'head.budget': '予算プランナー',
   'head.phrases': 'サバイバル日本語',
   'head.vocab': '基本単語 · JLPT N5',
+  'head.widget.potd': '今日のフレーズ',
   'head.brew': 'アイデア出し',
   'head.activities': '四季の楽しみ',
   'head.restaurants': '行きたい店',

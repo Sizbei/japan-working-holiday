@@ -8,7 +8,7 @@
 //     Contained like Leaflet/Nominatim: hover-only, time-boxed, never blocks, fails safe.
 
 import { $, $$, esc } from './lib/dom.js';
-import { getRaw, setRaw, KEYS } from './lib/store.js';
+import { getRaw, setRaw, get, set, KEYS } from './lib/store.js';
 import { STRINGS, GLOSSARY } from './i18n.js';
 
 const LANG_KEY = KEYS.lang;
@@ -120,17 +120,36 @@ function render(word, reading, meaning, loading) {
 }
 // Shared dictionary lookup (the hover popover here + the Phrases search box both use this).
 // Returns { reading, gloss } on a hit, null on no match; throws on network/abort — callers handle.
+// Offline dictionary cache: remembers Jotoba results (including "no match" → null) so repeat
+// hovers are instant and work offline. Capped so it can't grow unbounded.
+const DICT_CACHE_CAP = 600;
+function cacheGet(word) {
+  const c = get(KEYS.dictCache, {}) || {};
+  return Object.prototype.hasOwnProperty.call(c, word) ? c[word] : undefined;
+}
+function cachePut(word, val) {
+  const c = get(KEYS.dictCache, {}) || {};
+  if (!Object.prototype.hasOwnProperty.call(c, word) && Object.keys(c).length >= DICT_CACHE_CAP) return;
+  c[word] = val; set(KEYS.dictCache, c);
+}
+
 export async function lookupWord(word, { signal } = {}) {
+  const cached = cacheGet(word);
+  if (cached !== undefined) return cached;           // offline/instant on repeat
   const r = await fetch('https://jotoba.de/api/search/words', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: word, language: 'English', no_english: false }), signal,
   });
   const data = r.ok ? await r.json() : null;
   const w = data && data.words && data.words[0];
-  if (!w) return null;
-  const reading = w.reading ? [w.reading.kana, w.reading.kanji].filter(Boolean).join(' · ') : '';
-  const gloss = w.senses?.[0]?.glosses?.join(', ') || '';
-  return (reading || gloss) ? { reading, gloss } : null;
+  let result = null;
+  if (w) {
+    const reading = w.reading ? [w.reading.kana, w.reading.kanji].filter(Boolean).join(' · ') : '';
+    const gloss = w.senses?.[0]?.glosses?.join(', ') || '';
+    result = (reading || gloss) ? { reading, gloss } : null;
+  }
+  cachePut(word, result);                            // cache hits AND confirmed "no match"
+  return result;
 }
 async function lookup(word, p, el) {
   try {

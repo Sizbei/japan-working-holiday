@@ -26,7 +26,7 @@
 - ☑ **S16** Count-up animations (countdown digits, progress bars)
 - ☑ **S17** Restaurant/menu deep vocab + dietary/allergy phrases
 - ☑ **S18** Locale-aware JP formatting + pitch-accent/pronunciation tips
-- ☐ **S19** Anki export improvements (readings/furigana fields) + offline lookup cache
+- ☑ **S19** Anki export improvements (readings/furigana fields) + offline lookup cache
 - ☐ **S20** Final adversarial review + regression (tests, a11y contrast, reduce-motion verify, SW bump) + deploy
 
 ## Per-stage exit criteria
@@ -52,3 +52,4 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S16: countup.js — readiness score tallies 0→N (ease-out cubic, 900ms) the first time the dashboard shows, once per session via data-countup; reduce-motion shows final value instantly. (Progress bars already animate via CSS width transitions.) SW v136.
 - S17: +6 Restaurant phrases, +6 new 'Dietary' category (vegan/pork/egg-allergy/allergens/halal/wheat), +13 'Food' vocab words — all with verified furigana. phrases 79→91, vocab 45→58. CATEGORY_ORDER+Dietary, THEME_ORDER+Food. SW v137.
 - S18: pronunciation.js — 7 tips (pitch-not-stress, vowel length, small っ, moraic ん, devoicing, ら-flap, question rise) with audio examples; lib/jpdate.js formats 年月日（曜日） shown as a live 'today in Japanese' line. App-wide date reformatting descoped as high-risk/low-ROI. SW v138.
+- S19: offline dict cache — lookupWord now caches Jotoba results (incl. confirmed 'no match') in KEYS.dictCache (cap 600) → instant repeat hovers + works offline. Anki full export now also includes the 58 study-vocab words (tagged 'vocab'+theme). SW v139.

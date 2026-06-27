@@ -39,6 +39,7 @@ export const KEYS = {
   budget: 'jwh-budget-v1',
   phraseFav: 'jwh-phrasefav-v1',
   furi: 'jwh-furi-v1',
+  dictCache: 'jwh-dict-cache-v1',
   phraseFavView: 'jwh-phrase-favview-v1',
   userPhrases: 'jwh-phrases-user-v1',
   ankiDeck: 'jwh-anki-deck-v1',

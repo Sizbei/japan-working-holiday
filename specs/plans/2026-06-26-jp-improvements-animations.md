@@ -23,7 +23,7 @@
 - ☑ **S13** Expand hover-dictionary GLOSSARY + more frame i18n coverage
 - ☑ **S14** Phrase-of-the-day dashboard widget (subtle flip/reveal)
 - ☑ **S15** Quiz / self-test mode (JP↔EN) w/ feedback animations
-- ☐ **S16** Count-up animations (countdown digits, progress bars)
+- ☑ **S16** Count-up animations (countdown digits, progress bars)
 - ☐ **S17** Restaurant/menu deep vocab + dietary/allergy phrases
 - ☐ **S18** Locale-aware JP formatting + pitch-accent/pronunciation tips
 - ☐ **S19** Anki export improvements (readings/furigana fields) + offline lookup cache
@@ -49,3 +49,4 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S13: GLOSSARY 31→53 terms (signs, ward-office/bank/transit/pharmacy vocab, kana/kanji/furigana meta) for instant offline hover glosses; added head.vocab i18n + data-i18n on the vocab heading. SW v133.
 - S14: phraseday.js — dashboard widget (#wPhrase) shows a phrase chosen deterministically by today's date, furigana+audio, 'Another ↻' shuffle; card flips/reveals on render (reduce-motion gated). i18n head.widget.potd. SW v134.
 - S15: quiz.js — multiple-choice self-test over phrases+vocab (124 items), JP→EN / EN→JP toggle, 4 options, running score; correct flashes green+pulse, wrong shakes red and reveals the answer (motion reduce-motion gated, color kept). Collapsible on #/phrases. SW v135.
+- S16: countup.js — readiness score tallies 0→N (ease-out cubic, 900ms) the first time the dashboard shows, once per session via data-countup; reduce-motion shows final value instantly. (Progress bars already animate via CSS width transitions.) SW v136.

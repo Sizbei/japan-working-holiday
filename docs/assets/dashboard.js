@@ -98,7 +98,7 @@ function renderReadiness() {
 
   el.querySelector('.widget-body').innerHTML = `
     <div class="rdy" data-tone="${esc(r.tone)}">
-      <div class="rdy-score">${esc(String(r.score))}<span class="rdy-pct">%</span><span class="sr-only"> ready — ${esc(toneWord)}</span></div>
+      <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(r.score))}">${esc(String(r.score))}</span><span class="rdy-pct">%</span><span class="sr-only"> ready — ${esc(toneWord)}</span></div>
       <div class="rdy-meta">
         <div class="rdy-days">${esc(daysLine)}</div>
         <div class="rdy-parts">

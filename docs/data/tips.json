@@ -3169,7 +3169,19 @@
     { "id": "ph-job-resume", "cat": "Job", "jp": "履歴書が必要ですか", "read": "りれきしょがひつようですか · rirekisho ga hitsuyō desu ka", "furi": [["履歴書","りれきしょ"],["が",""],["必要","ひつよう"],["ですか",""]], "en": "Do you need a resume?" },
     { "id": "ph-job-start", "cat": "Job", "jp": "いつから働けますか", "read": "いつからはたらけますか · itsu kara hatarakemasu ka", "furi": [["いつから",""],["働","はたら"],["けますか",""]], "en": "When can I start?" },
     { "id": "ph-job-interview", "cat": "Job", "jp": "面接はいつですか", "read": "めんせつはいつですか · mensetsu wa itsu desu ka", "furi": [["面接","めんせつ"],["はいつですか",""]], "en": "When is the interview?" },
-    { "id": "ph-job-pay", "cat": "Job", "jp": "時給はいくらですか", "read": "じきゅうはいくらですか · jikyū wa ikura desu ka", "furi": [["時給","じきゅう"],["はいくらですか",""]], "en": "What's the hourly wage?" }
+    { "id": "ph-job-pay", "cat": "Job", "jp": "時給はいくらですか", "read": "じきゅうはいくらですか · jikyū wa ikura desu ka", "furi": [["時給","じきゅう"],["はいくらですか",""]], "en": "What's the hourly wage?" },
+    { "id": "ph-rest-water", "cat": "Restaurant", "jp": "お水をください", "read": "おみずをください · o-mizu o kudasai", "furi": [["お",""],["水","みず"],["をください",""]], "en": "Water, please" },
+    { "id": "ph-rest-togo", "cat": "Restaurant", "jp": "持ち帰りできますか", "read": "もちかえりできますか · mochikaeri dekimasu ka", "furi": [["持","も"],["ち",""],["帰","かえ"],["りできますか",""]], "en": "Can I take it to go?" },
+    { "id": "ph-rest-notspicy", "cat": "Restaurant", "jp": "辛くしないでください", "read": "からくしないでください · karaku shinaide kudasai", "furi": [["辛","から"],["くしないでください",""]], "en": "Please make it not spicy" },
+    { "id": "ph-rest-refill", "cat": "Restaurant", "jp": "お代わりできますか", "read": "おかわりできますか · okawari dekimasu ka", "furi": [["お",""],["代","か"],["わりできますか",""]], "en": "Can I get a refill?" },
+    { "id": "ph-rest-nonsmoking", "cat": "Restaurant", "jp": "禁煙席をお願いします", "read": "きんえんせきをおねがいします · kin'enseki o onegai shimasu", "furi": [["禁煙席","きんえんせき"],["をお",""],["願","ねが"],["いします",""]], "en": "A non-smoking seat, please" },
+    { "id": "ph-rest-counter", "cat": "Restaurant", "jp": "カウンター席はありますか", "read": "カウンターせきはありますか · kauntā seki wa arimasu ka", "furi": [["カウンター",""],["席","せき"],["はありますか",""]], "en": "Is there counter seating?" },
+    { "id": "ph-diet-vegan", "cat": "Dietary", "jp": "肉も魚も食べません", "read": "にくもさかなもたべません · niku mo sakana mo tabemasen", "furi": [["肉","にく"],["も",""],["魚","さかな"],["も",""],["食","た"],["べません",""]], "en": "I don't eat meat or fish" },
+    { "id": "ph-diet-pork", "cat": "Dietary", "jp": "豚肉は食べられません", "read": "ぶたにくはたべられません · butaniku wa taberaremasen", "furi": [["豚肉","ぶたにく"],["は",""],["食","た"],["べられません",""]], "en": "I can't eat pork" },
+    { "id": "ph-diet-egg", "cat": "Dietary", "jp": "卵アレルギーがあります", "read": "たまごアレルギーがあります · tamago arerugī ga arimasu", "furi": [["卵","たまご"],["アレルギーがあります",""]], "en": "I have an egg allergy" },
+    { "id": "ph-diet-allergen", "cat": "Dietary", "jp": "これにアレルギー物質は入っていますか", "read": "これにアレルギーぶっしつははいっていますか · kore ni arerugī busshitsu wa haitte imasu ka", "furi": [["これにアレルギー",""],["物質","ぶっしつ"],["は",""],["入","はい"],["っていますか",""]], "en": "Does this contain allergens?" },
+    { "id": "ph-diet-halal", "cat": "Dietary", "jp": "ハラルの食べ物はありますか", "read": "ハラルのたべものはありますか · hararu no tabemono wa arimasu ka", "furi": [["ハラルの",""],["食","た"],["べ",""],["物","もの"],["はありますか",""]], "en": "Do you have halal food?" },
+    { "id": "ph-diet-wheat", "cat": "Dietary", "jp": "小麦は入っていますか", "read": "こむぎははいっていますか · komugi wa haitte imasu ka", "furi": [["小麦","こむぎ"],["は",""],["入","はい"],["っていますか",""]], "en": "Does it contain wheat?" }
   ],
   "pointToSay": [
     {"id": "pts-med", "label": "My medication (ADHD)", "icon": "💊", "jp": "ADHDの薬を持っています。日本の輸入許可（薬監証明）を取得済みです。", "en": "I have ADHD medication. I already obtained Japan's import certificate (Yakkan Shoumei).", "note": "Show this with your import certificate and prescription."},
@@ -3224,7 +3236,20 @@
     { "id": "v-money", "theme": "Daily", "jp": "お金", "read": "おかね · okane", "furi": [["お",""],["金","かね"]], "en": "money" },
     { "id": "v-phone", "theme": "Daily", "jp": "電話", "read": "でんわ · denwa", "furi": [["電話","でんわ"]], "en": "phone" },
     { "id": "v-key", "theme": "Daily", "jp": "鍵", "read": "かぎ · kagi", "furi": [["鍵","かぎ"]], "en": "key" },
-    { "id": "v-ticket", "theme": "Daily", "jp": "切符", "read": "きっぷ · kippu", "furi": [["切符","きっぷ"]], "en": "ticket" }
+    { "id": "v-ticket", "theme": "Daily", "jp": "切符", "read": "きっぷ · kippu", "furi": [["切符","きっぷ"]], "en": "ticket" },
+    { "id": "vf-rice", "theme": "Food", "jp": "ご飯", "read": "ごはん · gohan", "furi": [["ご",""],["飯","はん"]], "en": "cooked rice / meal" },
+    { "id": "vf-bread", "theme": "Food", "jp": "パン", "read": "パン · pan", "en": "bread" },
+    { "id": "vf-noodles", "theme": "Food", "jp": "麺", "read": "めん · men", "furi": [["麺","めん"]], "en": "noodles" },
+    { "id": "vf-meat", "theme": "Food", "jp": "肉", "read": "にく · niku", "furi": [["肉","にく"]], "en": "meat" },
+    { "id": "vf-fish", "theme": "Food", "jp": "魚", "read": "さかな · sakana", "furi": [["魚","さかな"]], "en": "fish" },
+    { "id": "vf-veg", "theme": "Food", "jp": "野菜", "read": "やさい · yasai", "furi": [["野菜","やさい"]], "en": "vegetables" },
+    { "id": "vf-egg", "theme": "Food", "jp": "卵", "read": "たまご · tamago", "furi": [["卵","たまご"]], "en": "egg" },
+    { "id": "vf-milk", "theme": "Food", "jp": "牛乳", "read": "ぎゅうにゅう · gyūnyū", "furi": [["牛乳","ぎゅうにゅう"]], "en": "milk" },
+    { "id": "vf-tea", "theme": "Food", "jp": "お茶", "read": "おちゃ · ocha", "furi": [["お",""],["茶","ちゃ"]], "en": "tea" },
+    { "id": "vf-coffee", "theme": "Food", "jp": "コーヒー", "read": "コーヒー · kōhī", "en": "coffee" },
+    { "id": "vf-chicken", "theme": "Food", "jp": "鶏肉", "read": "とりにく · toriniku", "furi": [["鶏肉","とりにく"]], "en": "chicken" },
+    { "id": "vf-pork", "theme": "Food", "jp": "豚肉", "read": "ぶたにく · butaniku", "furi": [["豚肉","ぶたにく"]], "en": "pork" },
+    { "id": "vf-beef", "theme": "Food", "jp": "牛肉", "read": "ぎゅうにく · gyūniku", "furi": [["牛肉","ぎゅうにく"]], "en": "beef" }
   ],
   "signs": [
     {"jp": "入口", "read": "いりぐち", "en": "Entrance"},

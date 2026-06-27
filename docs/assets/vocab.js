@@ -10,7 +10,7 @@ import { rubyHTML } from './lib/furigana.js';
 import { speak, canSpeak } from './speak.js';
 import { slug } from './lib/places.js';
 
-const THEME_ORDER = ['Numbers', 'Time', 'Places', 'People', 'Verbs', 'Adjectives', 'Daily'];
+const THEME_ORDER = ['Numbers', 'Time', 'Places', 'People', 'Food', 'Verbs', 'Adjectives', 'Daily'];
 const SPK = canSpeak();
 
 function rowHTML(w) {

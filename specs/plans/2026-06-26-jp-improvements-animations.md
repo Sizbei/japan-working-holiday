@@ -11,7 +11,7 @@
 - ☑ **S1** CJK typography + ruby/furigana CSS + jp font stack
 - ☑ **S2** Route-view entrance cascade (anim.js) + ruby infra — NOTE: hover-lift/press already existed (style.css 906–920), so S2 delivers NEW motion instead of duplicating
 - ☑ **S3** Furigana support in phrases (ruby render + `furi` data field + toggle)
-- ☐ **S4** Phrasebook content expansion (+~40 phrases; new cats: Bank, Pharmacy/Medical, SIM/Phone, Job)
+- ☑ **S4** Phrasebook content expansion (+~40 phrases; new cats: Bank, Pharmacy/Medical, SIM/Phone, Job)
 - ☑ **S5** Audio pronunciation (Web Speech `SpeechSynthesis` ja-JP) + speaker button + play animation
 - ☐ **S6** Politeness-level tags (casual/polite/keigo) + filter chip
 - ☐ **S7** Point-to-say survival cards (big-text; incl. Vyvanse pharmacy/import card)
@@ -38,3 +38,4 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S2: anim.js route-view first-visit cascade, transform-only (no opacity flash vs root crossfade), wired in main.js boot after initRouter, in SW v123.
 - S3: furigana ruby — 50/59 phrases got verified `furi` [base,reading] arrays (each reconstructs jp exactly); rubyJp() renders <ruby> with esc() per part; data-word keeps hover-dict lookups clean (lang.js prefers el.dataset.word); 'あ Furigana' toggle (#phraseFuri, KEYS.furi) hides rt + reading line via .furi-off. SW v124.
 - S5: speak.js — native SpeechSynthesis ja-JP (rate .92, picks a ja voice), 🔊 per phrase row, gated on canSpeak(); .is-speaking pulse (reduce-motion gated). SW v125. (Did S3+S5 this cycle; S4 next.)
+- S4: +20 phrases (59→79) in 4 new cats — Bank(5), Phone/SIM(4), Pharmacy(5, incl. import-permit phrase for Vyvanse), Job(6). All carry verified furi. CATEGORY_ORDER updated. SW v126. (Note: targeted ~20 high-value over a padded 40.)

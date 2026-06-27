@@ -26,7 +26,7 @@ import { MAX_LEN } from './lib/translate.js';
 import { translate } from './lib/translatecache.js';
 
 // fixed category render order (unknown cats fall to the end, per groupByCategory)
-const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward office', 'Apartment', 'Emergency', 'Work/meetup'];
+const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Transit', 'Ward office', 'Bank', 'Phone/SIM', 'Apartment', 'Pharmacy', 'Emergency', 'Job', 'Work/meetup'];
 
 let DATA = null;
 

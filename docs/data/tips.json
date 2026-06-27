@@ -3149,7 +3149,27 @@
     { "id": "ph-work-card", "cat": "Work/meetup", "jp": "名刺をいただけますか", "read": "めいしをいただけますか · meishi o itadakemasu ka", "furi": [["名刺","めいし"],["をいただけますか",""]], "en": "May I have your business card?" },
     { "id": "ph-work-building", "cat": "Work/meetup", "jp": "＿＿を作っています", "read": "＿＿をつくっています · ___ o tsukutte imasu", "furi": [["＿＿を",""],["作","つく"],["っています",""]], "en": "I'm building / making ___" },
     { "id": "ph-work-contact", "cat": "Work/meetup", "jp": "連絡先を交換しませんか", "read": "れんらくさきをこうかんしませんか · renrakusaki o kōkan shimasen ka", "furi": [["連絡先","れんらくさき"],["を",""],["交換","こうかん"],["しませんか",""]], "en": "Shall we exchange contacts?" },
-    { "id": "ph-work-thanks-today", "cat": "Work/meetup", "jp": "今日はありがとうございました", "read": "きょうはありがとうございました · kyō wa arigatō gozaimashita", "furi": [["今日","きょう"],["はありがとうございました",""]], "en": "Thank you for today" }
+    { "id": "ph-work-thanks-today", "cat": "Work/meetup", "jp": "今日はありがとうございました", "read": "きょうはありがとうございました · kyō wa arigatō gozaimashita", "furi": [["今日","きょう"],["はありがとうございました",""]], "en": "Thank you for today" },
+    { "id": "ph-bank-open", "cat": "Bank", "jp": "口座を開きたいです", "read": "こうざをひらきたいです · kōza o hirakitai desu", "furi": [["口座","こうざ"],["を",""],["開","ひら"],["きたいです",""]], "en": "I'd like to open a bank account" },
+    { "id": "ph-bank-foreigner", "cat": "Bank", "jp": "外国人でも口座を作れますか", "read": "がいこくじんでもこうざをつくれますか · gaikokujin demo kōza o tsukuremasu ka", "furi": [["外国人","がいこくじん"],["でも",""],["口座","こうざ"],["を",""],["作","つく"],["れますか",""]], "en": "Can a foreigner open an account?" },
+    { "id": "ph-bank-cashcard", "cat": "Bank", "jp": "キャッシュカードはいつ届きますか", "read": "キャッシュカードはいつとどきますか · kyasshu kādo wa itsu todokimasu ka", "furi": [["キャッシュカードはいつ",""],["届","とど"],["きますか",""]], "en": "When will my cash card arrive?" },
+    { "id": "ph-bank-overseas", "cat": "Bank", "jp": "海外送金はできますか", "read": "かいがいそうきんはできますか · kaigai sōkin wa dekimasu ka", "furi": [["海外送金","かいがいそうきん"],["はできますか",""]], "en": "Can I send money overseas?" },
+    { "id": "ph-bank-atm", "cat": "Bank", "jp": "この近くにATMはありますか", "read": "このちかくにエーティーエムはありますか · kono chikaku ni ATM wa arimasu ka", "furi": [["この",""],["近","ちか"],["くにATMはありますか",""]], "en": "Is there an ATM near here?" },
+    { "id": "ph-sim-buy", "cat": "Phone/SIM", "jp": "SIMカードを買いたいです", "read": "エスアイエムカードをかいたいです · SIM kādo o kaitai desu", "furi": [["SIMカードを",""],["買","か"],["いたいです",""]], "en": "I'd like to buy a SIM card" },
+    { "id": "ph-sim-foreigner", "cat": "Phone/SIM", "jp": "外国人向けのプランはありますか", "read": "がいこくじんむけのプランはありますか · gaikokujin muke no puran wa arimasu ka", "furi": [["外国人向","がいこくじんむ"],["けのプランはありますか",""]], "en": "Do you have plans for foreigners?" },
+    { "id": "ph-sim-contract", "cat": "Phone/SIM", "jp": "契約に何が必要ですか", "read": "けいやくになにがひつようですか · keiyaku ni nani ga hitsuyō desu ka", "furi": [["契約","けいやく"],["に",""],["何","なに"],["が",""],["必要","ひつよう"],["ですか",""]], "en": "What do I need to sign up?" },
+    { "id": "ph-sim-wifi", "cat": "Phone/SIM", "jp": "ポケットWi-Fiを借りたいです", "read": "ポケットワイファイをかりたいです · poketto Wi-Fi o karitai desu", "furi": [["ポケットWi-Fiを",""],["借","か"],["りたいです",""]], "en": "I'd like to rent a pocket Wi-Fi" },
+    { "id": "ph-pharm-where", "cat": "Pharmacy", "jp": "一番近い薬局はどこですか", "read": "いちばんちかいやっきょくはどこですか · ichiban chikai yakkyoku wa doko desu ka", "furi": [["一番","いちばん"],["近","ちか"],["い",""],["薬局","やっきょく"],["はどこですか",""]], "en": "Where is the nearest pharmacy?" },
+    { "id": "ph-pharm-prescription", "cat": "Pharmacy", "jp": "この処方箋の薬はありますか", "read": "このしょほうせんのくすりはありますか · kono shohōsen no kusuri wa arimasu ka", "furi": [["この",""],["処方箋","しょほうせん"],["の",""],["薬","くすり"],["はありますか",""]], "en": "Do you have the medicine for this prescription?" },
+    { "id": "ph-pharm-import", "cat": "Pharmacy", "jp": "これは輸入許可がある薬です", "read": "これはゆにゅうきょかがあるくすりです · kore wa yunyū kyoka ga aru kusuri desu", "furi": [["これは",""],["輸入許可","ゆにゅうきょか"],["がある",""],["薬","くすり"],["です",""]], "en": "This is medicine I have an import permit for" },
+    { "id": "ph-pharm-cold", "cat": "Pharmacy", "jp": "風邪薬はどれですか", "read": "かぜぐすりはどれですか · kazegusuri wa dore desu ka", "furi": [["風邪薬","かぜぐすり"],["はどれですか",""]], "en": "Which one is cold medicine?" },
+    { "id": "ph-pharm-painkiller", "cat": "Pharmacy", "jp": "痛み止めをください", "read": "いたみどめをください · itami-dome o kudasai", "furi": [["痛","いた"],["み",""],["止","ど"],["めをください",""]], "en": "Painkillers, please" },
+    { "id": "ph-job-hiring", "cat": "Job", "jp": "アルバイトを募集していますか", "read": "アルバイトをぼしゅうしていますか · arubaito o boshū shite imasu ka", "furi": [["アルバイトを",""],["募集","ぼしゅう"],["していますか",""]], "en": "Are you hiring part-time staff?" },
+    { "id": "ph-job-visa", "cat": "Job", "jp": "ワーキングホリデービザで働けますか", "read": "ワーキングホリデービザではたらけますか · wākingu horidē biza de hatarakemasu ka", "furi": [["ワーキングホリデービザで",""],["働","はたら"],["けますか",""]], "en": "Can I work on a working-holiday visa?" },
+    { "id": "ph-job-resume", "cat": "Job", "jp": "履歴書が必要ですか", "read": "りれきしょがひつようですか · rirekisho ga hitsuyō desu ka", "furi": [["履歴書","りれきしょ"],["が",""],["必要","ひつよう"],["ですか",""]], "en": "Do you need a resume?" },
+    { "id": "ph-job-start", "cat": "Job", "jp": "いつから働けますか", "read": "いつからはたらけますか · itsu kara hatarakemasu ka", "furi": [["いつから",""],["働","はたら"],["けますか",""]], "en": "When can I start?" },
+    { "id": "ph-job-interview", "cat": "Job", "jp": "面接はいつですか", "read": "めんせつはいつですか · mensetsu wa itsu desu ka", "furi": [["面接","めんせつ"],["はいつですか",""]], "en": "When is the interview?" },
+    { "id": "ph-job-pay", "cat": "Job", "jp": "時給はいくらですか", "read": "じきゅうはいくらですか · jikyū wa ikura desu ka", "furi": [["時給","じきゅう"],["はいくらですか",""]], "en": "What's the hourly wage?" }
   ],
   "emergency": {
     "numbers": [

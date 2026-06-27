@@ -8,6 +8,7 @@ import { mountBudget } from './budget.js';
 import { mountPhrases } from './phrases.js';
 import { mountPointToSay } from './pointtosay.js';
 import { mountVocab } from './vocab.js';
+import { mountKana } from './kana.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -68,6 +69,7 @@ function boot() {
       mountPhrases(data);            // phrasebook (#/phrases) — curated survival-Japanese phrases
       mountPointToSay(data);         // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
       mountVocab(data);              // JLPT N5 starter vocabulary (themed, collapsible) on #/phrases
+      mountKana();                   // hiragana/katakana reference chart (collapsible) on #/phrases
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

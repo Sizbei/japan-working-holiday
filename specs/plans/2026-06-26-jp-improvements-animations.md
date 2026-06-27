@@ -18,8 +18,8 @@
 - ☑ **S8** Staggered list-reveal — anim.js now picks ONE strategy per view (rows vs cards) to avoid compounding motion
 - ☑ **S9** JLPT N5 starter vocab dataset + study integration
 - ☑ **S10** Kana reference chart (hiragana/katakana) w/ reveal animation
-- ☐ **S11** Numbers / counters / money / dates helper
-- ☐ **S12** Daily-life kanji signs recognition set (入口/出口/押/引/営業中…)
+- ☑ **S11** Numbers / counters / money / dates helper
+- ☑ **S12** Daily-life kanji signs recognition set (入口/出口/押/引/営業中…)
 - ☐ **S13** Expand hover-dictionary GLOSSARY + more frame i18n coverage
 - ☐ **S14** Phrase-of-the-day dashboard widget (subtle flip/reveal)
 - ☐ **S15** Quiz / self-test mode (JP↔EN) w/ feedback animations
@@ -44,3 +44,5 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S8: anim.js reveal() upgraded — list-heavy views (≥3 .check-item/.phrase-row) stagger rows (32ms step, cap 16); other views cascade top-level cards (45ms). Single strategy per view = no block+row compounding. First-visit, transform-only, reduce-motion gated. SW v129.
 - S9: vocab.js — 45 N5 starter words (vocab[], 7 themes: Numbers/Time/Places/People/Verbs/Adjectives/Daily), collapsible on #/phrases, reuses phrase-row styling + furigana + speaker. Extracted lib/furigana.js (rubyHTML) shared by phrases+vocab; furi toggle retargeted to #phrases so it covers both. SW v130.
 - S10: kana.js — collapsible gojūon chart on #/phrases, ひらがな/カタカナ toggle, tap any kana to hear it (speak), cells stagger in on first expand (reduce-motion gated). Static reference data in-module. SW v131.
+- S11: numbers.js — collapsible reference (money ¥1–¥10000, counters with rendaku, days of week, irregular month-days, the 万 grouping note); tap to hear. Curated/static (avoids reading-gen bugs). SW v132.
+- S12: signs.js — 20-sign recognition grid (signs[] in tips.json): 入口/出口/非常口/押/引/営業中/準備中/危険/立入禁止… tap to hear. Collapsible.

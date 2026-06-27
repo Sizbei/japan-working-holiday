@@ -14,17 +14,16 @@ import { slug } from './lib/places.js';
 import { mountAccordion } from './collapse.js';
 import { groupByCategory } from './lib/packing.js';
 import { wireJpAccents, lookupWord } from './lang.js';
-import { toAnkiTSV } from './lib/anki.js';
+import { toAnkiTSV, stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
 import { isAvailable, invoke } from './lib/ankiconnect.js';
 import { alertModal, confirmModal, showModal } from './lib/modal.js';
 import { userPhrase, addUserPhrases, removeUserPhrase } from './lib/userphrases.js';
 import { speak, canSpeak } from './speak.js';
 import { rubyHTML } from './lib/furigana.js';
-
-const SPK = canSpeak();   // platform supports speech synthesis?
-import { stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
 import { MAX_LEN } from './lib/translate.js';
 import { translate } from './lib/translatecache.js';
+
+const SPK = canSpeak();   // platform supports speech synthesis?
 
 // fixed category render order (unknown cats fall to the end, per groupByCategory)
 const CATEGORY_ORDER = ['Daily', 'Konbini', 'Restaurant', 'Dietary', 'Transit', 'Ward office', 'Bank', 'Phone/SIM', 'Apartment', 'Pharmacy', 'Emergency', 'Job', 'Work/meetup'];

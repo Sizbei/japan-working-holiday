@@ -26,6 +26,7 @@ import { mountGuide, applyHomeLayout } from './guide.js';
 import { initKonami } from './konami.js';
 import { mountEaster } from './easter.js';
 import { stagger } from './motion.js';
+import { mountAnim } from './anim.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
 import { get, set, KEYS } from './lib/store.js';
@@ -73,6 +74,7 @@ function boot() {
       mountLang();                   // EN/日本語 chrome toggle + hover-dictionary
       mountBackup();                 // export/import all device-local trip data
       initRouter();                  // hash-router SPA: split views, animated transitions
+      mountAnim();                   // first-visit route-view entrance cascade (reduce-motion gated)
       mountGestures();               // swipe between pages, keyboard shortcuts, long-press menus
       mountPalette(data);            // ⌘K / "/" command palette — jump to any route or content
       mountGuide();                  // ⚙ Guide & Settings overlay (tutorial + theme/arcade/reduce-motion toggles)

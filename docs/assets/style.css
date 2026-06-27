@@ -2774,3 +2774,21 @@ html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open) .sp-backdrop{
    side panel) are fully token-driven and pass in both themes.
    ============================================================ */
 [data-theme="dark"] .cal-actions .cal-btn.primary:hover{ color: var(--on-accent); }
+
+/* ============================================================
+   S1 — CJK typography + furigana (振り仮名) ruby
+   Adds <ruby>/<rt> styling (none existed) so phrases/cards can show
+   readings above kanji, plus CJK block utilities. Reduce-motion safe
+   (static, no animation). ============================================ */
+ruby { ruby-align: center; ruby-position: over; }
+ruby > rt {
+  font-family: var(--sans); font-size: .56em; font-weight: 500;
+  color: var(--ink-faint); letter-spacing: .02em; line-height: 1;
+  user-select: none; text-emphasis: none;
+}
+/* a toggle on the phrases route hides readings when the learner wants raw kanji */
+.furi-off ruby > rt { visibility: hidden; }
+/* CJK-correct wrapping/spacing for any Japanese text block */
+.jp-cjk { line-height: 1.9; word-break: normal; overflow-wrap: anywhere; line-break: strict; font-feature-settings: "palt" 1; }
+/* large display Japanese (point-to-say cards, kana charts) */
+.jp-display { font-family: var(--serif-jp); letter-spacing: .04em; line-height: 1.5; }

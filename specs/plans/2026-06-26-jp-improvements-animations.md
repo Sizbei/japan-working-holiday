@@ -20,7 +20,7 @@
 - ☑ **S10** Kana reference chart (hiragana/katakana) w/ reveal animation
 - ☑ **S11** Numbers / counters / money / dates helper
 - ☑ **S12** Daily-life kanji signs recognition set (入口/出口/押/引/営業中…)
-- ☐ **S13** Expand hover-dictionary GLOSSARY + more frame i18n coverage
+- ☑ **S13** Expand hover-dictionary GLOSSARY + more frame i18n coverage
 - ☐ **S14** Phrase-of-the-day dashboard widget (subtle flip/reveal)
 - ☐ **S15** Quiz / self-test mode (JP↔EN) w/ feedback animations
 - ☐ **S16** Count-up animations (countdown digits, progress bars)
@@ -46,3 +46,4 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S10: kana.js — collapsible gojūon chart on #/phrases, ひらがな/カタカナ toggle, tap any kana to hear it (speak), cells stagger in on first expand (reduce-motion gated). Static reference data in-module. SW v131.
 - S11: numbers.js — collapsible reference (money ¥1–¥10000, counters with rendaku, days of week, irregular month-days, the 万 grouping note); tap to hear. Curated/static (avoids reading-gen bugs). SW v132.
 - S12: signs.js — 20-sign recognition grid (signs[] in tips.json): 入口/出口/非常口/押/引/営業中/準備中/危険/立入禁止… tap to hear. Collapsible.
+- S13: GLOSSARY 31→53 terms (signs, ward-office/bank/transit/pharmacy vocab, kana/kanji/furigana meta) for instant offline hover glosses; added head.vocab i18n + data-i18n on the vocab heading. SW v133.

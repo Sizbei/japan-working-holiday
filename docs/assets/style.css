@@ -2788,6 +2788,8 @@ ruby > rt {
 }
 /* a toggle on the phrases route hides readings when the learner wants raw kanji */
 .furi-off ruby > rt { visibility: hidden; }
+.furi-off .phrase-read { display: none; }
+.phrase-jp ruby { margin: 0 .02em; }
 /* CJK-correct wrapping/spacing for any Japanese text block */
 .jp-cjk { line-height: 1.9; word-break: normal; overflow-wrap: anywhere; line-break: strict; font-feature-settings: "palt" 1; }
 /* large display Japanese (point-to-say cards, kana charts) */

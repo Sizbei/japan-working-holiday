@@ -7,11 +7,16 @@
 import { prefersReducedMotion } from './motion.js';
 
 const shown = new Set();
-const SEL = '.card2, .top-card, .widget, .block, .pillar, .trk-card';
+const CARD_SEL = '.card2, .top-card, .widget, .block, .pillar, .trk-card';
+const LIST_SEL = '.check-item, .phrase-row';   // S8 — list-heavy views stagger rows, not blocks
 const EASE = 'cubic-bezier(.22, 1, .36, 1)';   // --ease-out
 
 function reduced() {
   return prefersReducedMotion() || document.documentElement.dataset.reduceMotion === 'on';
+}
+
+function visibleSlice(view, sel, cap) {
+  return [...view.querySelectorAll(sel)].filter(el => el.offsetParent !== null).slice(0, cap);
 }
 
 function reveal() {
@@ -21,13 +26,16 @@ function reveal() {
   if (shown.has(route)) return;          // first visit only
   shown.add(route);
   if (reduced() || typeof Element.prototype.animate !== 'function') return;
-  const els = [...view.querySelectorAll(SEL)]
-    .filter(el => el.offsetParent !== null)   // visible only
-    .slice(0, 12);                            // cap to the first screenful
-  els.forEach((el, i) => {
+  // Pick ONE strategy per view so motion never compounds (a block rising AND its rows rising):
+  // stagger list rows on list-heavy views, else cascade the top-level cards/blocks.
+  const rows = visibleSlice(view, LIST_SEL, 16);
+  const useRows = rows.length >= 3;
+  const targets = useRows ? rows : visibleSlice(view, CARD_SEL, 12);
+  const step = useRows ? 32 : 45;        // rows are smaller/more numerous → tighter stagger
+  targets.forEach((el, i) => {
     el.animate(
       [{ transform: 'translateY(9px)' }, { transform: 'translateY(0)' }],
-      { duration: 240, delay: i * 45, easing: EASE, fill: 'backwards' }
+      { duration: 240, delay: i * step, easing: EASE, fill: 'backwards' }
     );
   });
 }

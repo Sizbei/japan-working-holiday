@@ -15,7 +15,7 @@
 - ☑ **S5** Audio pronunciation (Web Speech `SpeechSynthesis` ja-JP) + speaker button + play animation
 - ☑ **S6** Register badges (casual/keigo) — ADAPTED: phrasebook is intentionally uniform teineigo, so a 3-way filter would be near-useless and bulk-tagging risks wrong nuance; instead badge only the 4 phrases that genuinely deviate
 - ☑ **S7** Point-to-say survival cards (big-text; incl. Vyvanse pharmacy/import card)
-- ☐ **S8** Staggered list-reveal across checklist / phrases / explore (uses `stagger()`)
+- ☑ **S8** Staggered list-reveal — anim.js now picks ONE strategy per view (rows vs cards) to avoid compounding motion
 - ☐ **S9** JLPT N5 starter vocab dataset + study integration
 - ☐ **S10** Kana reference chart (hiragana/katakana) w/ reveal animation
 - ☐ **S11** Numbers / counters / money / dates helper
@@ -41,3 +41,4 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S4: +20 phrases (59→79) in 4 new cats — Bank(5), Phone/SIM(4), Pharmacy(5, incl. import-permit phrase for Vyvanse), Job(6). All carry verified furi. CATEGORY_ORDER updated. SW v126. (Note: targeted ~20 high-value over a padded 40.)
 - S6: `reg` field on 4 deviating phrases (助けて=casual; いただけますか/よろしくお願いします/ございました=keigo); small token-colored badge by the English; no filter (low value for a uniform-register set). SW v127.
 - S7: pointtosay.js — 6 'Point & show' cards at top of #/phrases (data: pointToSay[]); tap → big-text modal (showModal wide) you show staff; incl. the ADHD/Vyvanse import-certificate card + hospital/allergy/lost/police/no-Japanese; speaker on each. SW v128.
+- S8: anim.js reveal() upgraded — list-heavy views (≥3 .check-item/.phrase-row) stagger rows (32ms step, cap 16); other views cascade top-level cards (45ms). Single strategy per view = no block+row compounding. First-visit, transform-only, reduce-motion gated. SW v129.

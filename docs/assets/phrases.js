@@ -146,7 +146,12 @@ function exportRows(favScope) {
   const src = favScope ? bakedPhrases().filter(p => favs[p.id]) : bakedPhrases();
   const users = get(KEYS.userPhrases, []) || [];
   const all = [...src, ...(favScope ? users.filter(p => favs[p.id]) : users)];
-  return all.map(p => ({ front: p.jp, back: [p.read, p.en].filter(Boolean).join(' <br> '), tags: ['whv', p.cat || 'Phrase'] }));
+  const rows = all.map(p => ({ front: p.jp, back: [p.read, p.en].filter(Boolean).join(' <br> '), tags: ['whv', p.cat || 'Phrase'] }));
+  if (!favScope) {   // a full export also includes the N5 + food study vocabulary
+    const vocab = DATA && Array.isArray(DATA.vocab) ? DATA.vocab : [];
+    vocab.forEach(v => rows.push({ front: v.jp, back: [v.read, v.en].filter(Boolean).join(' <br> '), tags: ['whv', 'vocab', v.theme || 'Vocab'] }));
+  }
+  return rows;
 }
 
 async function doExport() {

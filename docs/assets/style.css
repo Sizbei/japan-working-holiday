@@ -2798,6 +2798,17 @@ ruby > rt {
 .phrase-spk.is-speaking { color: var(--indigo); animation: spk-pulse .8s var(--ease-out) infinite; }
 @keyframes spk-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 @media (prefers-reduced-motion: reduce) { .phrase-spk.is-speaking { animation: none; } }
+/* S18 — Pronunciation tips */
+.pron-wrap { margin-top: var(--s5); }
+.pron-today { color: var(--ink-soft); font-size: .9rem; margin: 0 0 1rem; padding: .5rem .8rem; background: var(--bg-soft); border-radius: var(--r-sm); border: 1px solid var(--line); }
+.pron-card { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.pron-card:last-child { border-bottom: none; }
+.pron-h { font-family: var(--serif); font-size: 1rem; margin: 0 0 .3rem; }
+.pron-body { color: var(--ink-soft); font-size: .9rem; line-height: 1.55; margin: 0 0 .5rem; }
+.pron-ex { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.pron-ex .jp { font-family: var(--serif-jp); font-size: 1.15rem; }
+.pron-read { color: var(--ink-faint); font-size: .82rem; }
+.pron-gloss { color: var(--ink-soft); font-size: .82rem; font-style: italic; }
 /* S15 — Quiz / self-test */
 .quiz-wrap { margin-top: var(--s5); }
 .quiz-bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .9rem; }

@@ -13,6 +13,7 @@ import { mountNumbers } from './numbers.js';
 import { mountSigns } from './signs.js';
 import { mountPhraseDay } from './phraseday.js';
 import { mountQuiz } from './quiz.js';
+import { mountPronunciation } from './pronunciation.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -79,6 +80,7 @@ function boot() {
       mountSigns(data);              // daily-life kanji signs recognition grid (collapsible) on #/phrases
       mountPhraseDay(data);          // "phrase of the day" dashboard widget (deterministic by date)
       mountQuiz(data);               // multiple-choice self-test (JP↔EN) on #/phrases
+      mountPronunciation();          // pronunciation tips + "today in Japanese" (collapsible) on #/phrases
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

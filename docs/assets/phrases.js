@@ -33,6 +33,15 @@ function saveUser(list) { set(KEYS.userPhrases, list); }
 function loadFavs() { return get(KEYS.phraseFav, {}) || {}; }
 function saveFavs(m) { set(KEYS.phraseFav, m); }
 function favOnly() { return getRaw(KEYS.phraseFavView, '') === 'on'; }
+function furiOff() { return getRaw(KEYS.furi, '') === 'off'; }
+// Reflect the furigana on/off state on the persistent #phraseList wrap (.furi-off hides <rt>
+// + the reading line via CSS). The wrap survives render() (innerHTML swaps, class stays).
+function applyFuri() {
+  const off = furiOff();
+  $('#phraseList')?.classList.toggle('furi-off', off);
+  const btn = $('#phraseFuri');
+  if (btn) { btn.setAttribute('aria-pressed', off ? 'false' : 'true'); btn.textContent = off ? 'あ Furigana off' : 'あ Furigana'; }
+}
 
 export function mountPhrases(data) {
   DATA = data || {};
@@ -243,8 +252,25 @@ function wireControls() {
     fav.setAttribute('aria-pressed', on ? 'true' : 'false');
     fav.textContent = on ? '★ Favorites only' : '☆ Favorites only';
   }
+  const furi = $('#phraseFuri');
+  if (furi && !furi.dataset.wired) {
+    furi.dataset.wired = '1';
+    furi.addEventListener('click', () => { setRaw(KEYS.furi, furiOff() ? '' : 'off'); applyFuri(); });
+  }
+  applyFuri();   // reflect persisted state on mount
   $('#jtExport')?.addEventListener('click', doExport);
   $('#jtImport')?.addEventListener('click', doImport);
+}
+
+// Build inline furigana ruby from p.furi (array of [base, reading] pairs); esc() each part.
+// Falls back to plain escaped jp when no furi data. The clean jp goes in data-word so the
+// hover-dictionary looks up the phrase, not the ruby-interleaved text.
+function rubyJp(p) {
+  if (!Array.isArray(p.furi) || !p.furi.length) return esc(p.jp);
+  return p.furi.map(seg => {
+    const base = esc(seg[0] || '');
+    return seg[1] ? `<ruby>${base}<rt>${esc(seg[1])}</rt></ruby>` : base;
+  }).join('');
 }
 
 function rowHTML(p, favs) {
@@ -256,7 +282,7 @@ function rowHTML(p, favs) {
   return `
     <li class="phrase-row" data-id="${esc(id)}">
       <div class="phrase-main">
-        <span class="jp phrase-jp" lang="ja">${esc(p.jp)}</span>
+        <span class="jp phrase-jp" lang="ja" data-word="${esc(p.jp)}">${rubyJp(p)}</span>
         <span class="phrase-read">${esc(p.read)}</span>
         <span class="phrase-en">${esc(p.en)}</span>
         ${p._user ? `<span class="phrase-mine" aria-label="your phrase" title="yours">★</span>` : ''}

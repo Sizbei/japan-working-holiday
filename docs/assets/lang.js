@@ -81,7 +81,7 @@ export function wireJpAccents(container = document) {
   if (!container) return;
   container.querySelectorAll('.jp').forEach(el => {
     if (el.hasAttribute('tabindex')) return;
-    const word = (el.textContent || '').trim();
+    const word = (el.dataset.word || el.textContent || '').trim();   // data-word: clean lookup text when the .jp holds <ruby> furigana
     el.setAttribute('tabindex', '0');
     el.removeAttribute('aria-hidden');
     el.setAttribute('role', 'button');
@@ -100,7 +100,7 @@ function ensurePop() {
 }
 function showFor(el) {
   clearTimeout(hideTimer);
-  const word = (el.textContent || '').trim();
+  const word = (el.dataset.word || el.textContent || '').trim();   // prefer clean data-word over ruby-polluted textContent
   if (!word || !/[぀-ヿ一-龯]/.test(word)) return;   // must contain kana/kanji
   const p = ensurePop();
   lastWord = word;

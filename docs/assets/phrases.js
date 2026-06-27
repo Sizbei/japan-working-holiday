@@ -287,7 +287,7 @@ function rowHTML(p, favs) {
       <div class="phrase-main">
         <span class="jp phrase-jp" lang="ja" data-word="${esc(p.jp)}">${rubyJp(p)}</span>
         <span class="phrase-read">${esc(p.read)}</span>
-        <span class="phrase-en">${esc(p.en)}</span>
+        <span class="phrase-en">${esc(p.en)}${p.reg ? ` <span class="phrase-reg reg-${esc(p.reg)}" title="${p.reg === 'keigo' ? 'extra-formal / humble register' : 'casual / plain form'}">${esc(p.reg)}</span>` : ''}</span>
         ${p._user ? `<span class="phrase-mine" aria-label="your phrase" title="yours">★</span>` : ''}
       </div>
       ${SPK ? `<button type="button" class="phrase-spk" data-jp="${esc(p.jp)}" aria-label="Play pronunciation of ${esc(p.en || p.jp)}">🔊</button>` : ''}

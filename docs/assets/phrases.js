@@ -18,6 +18,9 @@ import { toAnkiTSV } from './lib/anki.js';
 import { isAvailable, invoke } from './lib/ankiconnect.js';
 import { alertModal, confirmModal, showModal } from './lib/modal.js';
 import { userPhrase, addUserPhrases, removeUserPhrase } from './lib/userphrases.js';
+import { speak, canSpeak } from './speak.js';
+
+const SPK = canSpeak();   // platform supports speech synthesis?
 import { stripHtml, parseAnkiTSV, mapNoteFields } from './lib/anki.js';
 import { MAX_LEN } from './lib/translate.js';
 import { translate } from './lib/translatecache.js';
@@ -287,6 +290,7 @@ function rowHTML(p, favs) {
         <span class="phrase-en">${esc(p.en)}</span>
         ${p._user ? `<span class="phrase-mine" aria-label="your phrase" title="yours">★</span>` : ''}
       </div>
+      ${SPK ? `<button type="button" class="phrase-spk" data-jp="${esc(p.jp)}" aria-label="Play pronunciation of ${esc(p.en || p.jp)}">🔊</button>` : ''}
       <button type="button" class="phrase-fav${on ? ' is-on' : ''}" data-fav="${esc(id)}" aria-pressed="${on ? 'true' : 'false'}" aria-label="Favorite: ${esc(p.en)}">${on ? '★' : '☆'}</button>
       ${mine}
     </li>`;
@@ -338,4 +342,5 @@ function wireRows() {
   $$('#phraseList .phrase-del').forEach(b => b.addEventListener('click', () => {
     saveUser(removeUserPhrase(loadUser(), b.dataset.del)); render();
   }));
+  $$('#phraseList .phrase-spk').forEach(b => b.addEventListener('click', () => speak(b.dataset.jp, b)));
 }

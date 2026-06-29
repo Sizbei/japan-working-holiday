@@ -2837,6 +2837,8 @@ ruby > rt {
   font-family: var(--sans); font-size: .8rem; transition: background var(--t-hover), color var(--t-hover); }
 .quiz-tab.is-on { background: var(--ink); color: var(--bg); font-weight: 700; }
 .quiz-score { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 700; }
+.quiz-meta { display: inline-flex; align-items: center; gap: .6rem; }
+.quiz-due { font-size: .72rem; color: var(--indigo-ink); border: 1px solid color-mix(in srgb, var(--indigo) 35%, transparent); border-radius: 100px; padding: .1rem .5rem; }
 .quiz-q { font-family: var(--serif-jp); font-size: 1.7rem; line-height: 1.5; text-align: center; margin: .4rem 0 1.1rem; color: var(--ink); }
 .quiz-q .quiz-en-prompt { font-family: var(--serif); font-style: italic; }
 .quiz-opts { display: grid; gap: .5rem; }

@@ -1,8 +1,10 @@
 'use strict';
 // S15 — Quiz / self-test. Multiple-choice over the phrasebook + vocab, either direction
 // (JP→EN or EN→JP). Correct answers flash green + pulse, wrong shake red and reveal the answer.
-// Collapsible on the phrasebook page. Read-only (no storage). Feedback motion reduce-motion gated.
+// N24 — adaptive: per-item right/wrong is saved, weak/unseen items come up more often, and a
+// "to review" count is shown. Collapsible on the phrasebook page. Feedback motion reduce-motion gated.
 import { $, esc } from './lib/dom.js';
+import { get, set, KEYS } from './lib/store.js';
 import { mountAccordion } from './collapse.js';
 import { rubyHTML } from './lib/furigana.js';
 import { prefersReducedMotion } from './motion.js';
@@ -12,6 +14,30 @@ let dir = 'jp2en';   // 'jp2en' | 'en2jp'
 let cur = null, score = 0, total = 0, answered = false;
 
 const reduced = () => prefersReducedMotion() || document.documentElement.dataset.reduceMotion === 'on';
+
+// --- N24 adaptive review: weight selection by how weak each item is ---
+const keyOf = (it) => it.id || it.jp;
+function loadStats() { return get(KEYS.quizStats, {}) || {}; }
+function record(it, right) {
+  const s = loadStats(); const k = keyOf(it);
+  const e = s[k] || { right: 0, wrong: 0 };
+  if (right) e.right++; else e.wrong++;
+  s[k] = e; set(KEYS.quizStats, s);
+}
+function weightOf(it, stats) {
+  const e = stats[keyOf(it)];
+  if (!e) return 3;                          // never seen → surface it
+  return Math.max(0.4, 3 - (e.right - e.wrong));   // more net-wrong → heavier
+}
+function weightedPick(stats) {
+  const totalW = POOL.reduce((s, it) => s + weightOf(it, stats), 0);
+  let r = Math.random() * totalW;
+  for (const it of POOL) { r -= weightOf(it, stats); if (r <= 0) return it; }
+  return POOL[POOL.length - 1];
+}
+function dueCount(stats) {
+  return POOL.filter(it => { const e = stats[keyOf(it)]; return !e || e.wrong >= e.right; }).length;
+}
 
 function shuffle(a) {
   const r = a.slice();
@@ -37,7 +63,8 @@ function optionHTML(it) {
 function render(body) {
   if (POOL.length < 4) { body.innerHTML = '<p class="quiz-empty">Not enough items to quiz.</p>'; return; }
   answered = false;
-  cur = POOL[Math.floor(Math.random() * POOL.length)];
+  const stats = loadStats();
+  cur = weightedPick(stats);
   const opts = shuffle([cur, ...pickDistractors(3, cur)]);
   body.innerHTML = `
     <div class="quiz-bar">
@@ -45,7 +72,7 @@ function render(body) {
         <button type="button" class="quiz-tab${dir === 'jp2en' ? ' is-on' : ''}" data-dir="jp2en">JP → EN</button>
         <button type="button" class="quiz-tab${dir === 'en2jp' ? ' is-on' : ''}" data-dir="en2jp">EN → JP</button>
       </div>
-      <span class="quiz-score" aria-live="polite">${score} / ${total}</span>
+      <span class="quiz-meta"><span class="quiz-due" title="unseen or more-wrong-than-right">${dueCount(stats)} to review</span><span class="quiz-score" aria-live="polite">${score} / ${total}</span></span>
     </div>
     <div class="quiz-q">${promptHTML(cur)}</div>
     <div class="quiz-opts">${opts.map(o =>
@@ -63,6 +90,8 @@ function choose(body, btn) {
   if (answered) return;
   answered = true; total++;
   const right = btn.dataset.correct === '1';   // explicit flag — robust even if two items share jp
+  record(cur, right);                          // N24 — persist familiarity
+  const due = body.querySelector('.quiz-due'); if (due) due.textContent = `${dueCount(loadStats())} to review`;
   body.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; });
   if (right) {
     score++;

@@ -16,6 +16,7 @@ import { mountQuiz } from './quiz.js';
 import { mountPronunciation } from './pronunciation.js';
 import { mountParticles } from './particles.js';
 import { mountVerbs } from './verbs.js';
+import { mountAdjectives } from './adjectives.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -85,6 +86,7 @@ function boot() {
       mountPronunciation();          // pronunciation tips + "today in Japanese" (collapsible) on #/phrases
       mountParticles();              // particle reference (collapsible) on #/phrases
       mountVerbs();                  // verb-conjugation reference (collapsible) on #/phrases
+      mountAdjectives();             // adjective-conjugation reference (collapsible) on #/phrases
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

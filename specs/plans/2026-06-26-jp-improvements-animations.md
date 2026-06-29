@@ -58,7 +58,9 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 ## Extension batch (post-20, user: "keep building JP features")
 - ☑ **N21** Particle reference (は/が/を/に/で/へ/と/も/の/から/まで/か) — collapsible, examples + audio
 - ☑ **N22** Verb conjugation reference (dict/polite/negative/past/te for key verbs) — collapsible table
-- ☐ **N23** Adjective conjugation (い-adj / な-adj forms) — collapsible
-- ☐ **N24** Adaptive review — track per-item familiarity (right/wrong) in localStorage so the quiz prioritises weak items + shows a "due" count
+- ☑ **N23** Adjective conjugation (い-adj / な-adj forms) — collapsible
+- ☑ **N24** Adaptive review — track per-item familiarity (right/wrong) in localStorage so the quiz prioritises weak items + shows a "due" count
 - N21: particles.js — 12 core particles (は/が/を/に/で/へ/と/も/の/から/まで/か) with role + tap-to-hear example sentence. SW v141.
 - N22: verbs.js — conjugation reference for 7 verbs (ru/u/irregular) showing polite/negative/past/te forms in a grid; dict form audio.
+- N23: adjectives.js — い-adj + な-adj conjugation reference (polite/negative/past/te, incl. the いい→よく irregular), reuses verb-card styling. 
+- N24: quiz.js now adaptive — per-item right/wrong saved to KEYS.quizStats; weak/unseen items weighted up in selection; '<n> to review' badge in the quiz bar. SW v142. Extension batch N21-N24 COMPLETE.

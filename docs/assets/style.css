@@ -571,12 +571,10 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
   padding:4px; cursor:pointer; display:flex; flex-direction:column; gap:2px; overflow:hidden; transition: border-color .12s ease; }
 .cal-cell:hover{ border-color: var(--indigo); }
 .cal-cell.empty{ background: transparent; border:none; cursor: default; }
-.cal-cell.today{ border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red); }
 /* date is a real button (opens the day popover; keyboard-native) styled to look like the number */
 .cal-date{ background:none; border:none; padding:0; margin:0; font:inherit; cursor:pointer; line-height:1;
   font-size:.78rem; font-weight:700; color: var(--ink-soft); }
 .cal-date:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
-.cal-cell.today .cal-date{ color: var(--red); }
 
 /* ---- WEEK view (all-day lane; today = red outline like .cal-cell.today) ---- */
 .wk-grid{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--bg-soft); }
@@ -759,7 +757,8 @@ html.gated{ overflow: hidden; }
 }
 @media (max-width: 560px){
   .dash{ grid-template-columns: 1fr; }
-  .cal-cell{ min-height: 66px; gap: 1px; }
+  .cal-grid{ grid-auto-rows: minmax(66px, 1fr); }   /* grid governs row height now */
+  .cal-cell{ gap: 1px; }
   /* show one legible chip + a "+N" count, not illegible bars; the density meter
      and ticket glyph carry the rest, and tapping the day opens the full list */
   .cal-chip{ font-size: var(--fs-2xs); padding: 1px 4px; height: auto; border-radius: 4px; }
@@ -776,20 +775,21 @@ html.gated{ overflow: hidden; }
 .sev-overdue{ --sev: var(--bad-ink); } .sev-due-soon{ --sev: var(--warn-ink); } .sev-upcoming{ --sev: var(--indigo-ink); }
 
 /* layout: sidebar + main (2-col; #calSidePanel is fixed-position, not a grid column) */
-.cal-layout{ display:grid; grid-template-columns: 240px minmax(0,1fr); gap: var(--s4); align-items:start; }
-.cal-sidebar{ display:flex; flex-direction:column; gap: var(--s3); }
+.cal-layout{ display:grid; grid-template-columns: 220px minmax(0,1fr); gap: var(--s4); align-items:start; }
+.cal-layout > *{ min-width: 0; }   /* grid children can't force their track wider than the column */
+.cal-sidebar{ display:flex; flex-direction:column; gap: var(--s3); min-width: 0; overflow: hidden; }
 .cal-panel{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s4);
   position: sticky; top: 3.2rem; max-height: calc(100vh - 4rem); overflow:auto; }
 
 /* mini-month navigator */
 .cal-mininav{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s3);
-  position: sticky; top: 3.2rem; }
+  position: sticky; top: 3.2rem; overflow: hidden; }
 .mn-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
 .mn-title{ font-size:.8rem; font-weight:700; color: var(--ink); }
 .mn-arrow{ background:none; border:1px solid var(--line); border-radius:6px; cursor:pointer; color: var(--ink);
   font-size:1rem; line-height:1; padding:1px 6px; }
 .mn-arrow:hover{ border-color: var(--indigo); color: var(--indigo); }
-.mn-grid{ border-collapse:collapse; width:100%; font-size:.72rem; }
+.mn-grid{ border-collapse:collapse; table-layout:fixed; width:100%; font-size:.72rem; }   /* fixed: equal columns clamp the table to its 220px rail (was 306px → overflowed onto the grid) */
 .mn-grid thead th{ color: var(--ink-faint); font-weight:600; text-align:center; padding:2px 0; }
 .mn-grid td{ padding:1px; text-align:center; }
 .mn-day{ background:none; border:none; cursor:pointer; border-radius:50%; width:24px; height:24px;
@@ -2431,8 +2431,9 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 }
 .cal-actions .cal-btn.primary:hover{ background: var(--red); color: #fff; }
 
-/* ---- Month grid ---- */
-.cal-grid{ gap: 2px; }
+/* ---- Month grid (Notion-style: one continuous hairline, flat cells, stable 6 rows) ---- */
+.cal-grid{ gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; grid-auto-rows: minmax(88px, 1fr); }
+.cal-dowrow{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; padding: 0 1px; }
 .cal-dow{
   font-size: .68rem;
   font-weight: 600;
@@ -2442,15 +2443,18 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 }
 .cal-cell{
   background: var(--bg-elevated);
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-  min-height: 88px;
-  padding: 5px 4px 3px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  padding: 5px 5px 4px;
   gap: 3px;
-  transition: border-color var(--t-hover);
+  transition: background var(--t-hover);
 }
-.cal-cell:hover{ border-color: color-mix(in srgb, var(--indigo) 55%, var(--line)); }
-.cal-cell.empty{ background: transparent; border-color: transparent; }
+.cal-cell:hover{ background: color-mix(in srgb, var(--indigo) 6%, var(--bg-elevated)); }
+.cal-cell.empty{ display: none; }
+.cal-cell.out{ background: color-mix(in srgb, var(--bg-elevated) 55%, var(--bg)); }
+.cal-cell.out .cal-date{ color: var(--ink-faint); }
+.cal-cell.weekend:not(.out){ background: color-mix(in srgb, var(--bg-sunk) 45%, var(--bg-elevated)); }
 
 /* today: indigo pill on the date number, not a heavy red cell border */
 .cal-cell.today{ border-color: var(--line); box-shadow: none; }
@@ -2483,19 +2487,20 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
    relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
    --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
 .cal-chip{
-  background: var(--bg-soft) !important;
-  color: var(--ink) !important;
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 14%, var(--bg-elevated));
+  color: var(--ink);
   border: none;
-  border-left: 3px solid var(--chip-cat, var(--line));
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 1px 4px 1px 5px;
+  gap: 5px;
+  padding: 1px 6px;
   font-size: .64rem;
   font-weight: 500;
   line-height: 1.3;
   min-height: 16px;
+  width: 100%;
+  text-align: left;
 }
 /* category dot inside the chip — set per cat via --chip-cat */
 .cal-chip::before{
@@ -2535,9 +2540,19 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 [data-theme="dark"] .cal-chip.cat-personal   { --chip-cat: var(--c-personal-ink); }
 [data-theme="dark"] .cal-chip.cat-imported   { --chip-cat: var(--c-imported-ink); }
 
+/* chip title truncates with an ellipsis (flex child needs min-width:0) */
+.cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* +N more — a real, keyboard-focusable control that opens the day popover */
+.cal-more{ display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+  color: var(--ink-soft); font-size: .62rem; font-weight: 600; padding: 0 0 0 6px; line-height: 1.4; }
+.cal-more:hover{ color: var(--ink); }
+.cal-more:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 1px; border-radius: var(--r-xs); }
+/* a quiet dot after the date number marks a day that holds a booking deadline */
+.bk-dot{ width: 4px; height: 4px; border-radius: 50%; background: var(--red); display: inline-block; margin-left: 4px; vertical-align: middle; flex: 0 0 auto; }
+
 /* mobile: keep single chip visible, compact */
 @media (max-width: 560px){
-  .cal-chip{ font-size: .6rem; padding: 1px 3px 1px 4px; min-height: 14px; border-left-width: 2px; }
+  .cal-chip{ font-size: .6rem; padding: 1px 4px; min-height: 14px; }
   .cal-chip::before{ width: 4px; height: 4px; }
 }
 

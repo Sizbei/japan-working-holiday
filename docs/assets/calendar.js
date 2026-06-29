@@ -313,35 +313,28 @@ function wireWeek() {
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
-function densityClass(n) { return n >= 5 ? 3 : n >= 3 ? 2 : 1; }
-
 function monthHTML() {
-  const first = new Date(Date.UTC(viewY, viewM, 1));
-  const startDow = first.getUTCDay();
-  const days = new Date(Date.UTC(viewY, viewM + 1, 0)).getUTCDate();
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  let cells = '';
-  for (let i = 0; i < startDow; i++) cells += `<div class="cal-cell empty" aria-hidden="true"></div>`;
-  for (let d = 1; d <= days; d++) {
-    const date = iso(viewY, viewM, d);
-    const evs = eventsOn(date, true);
+  // stable 6-row grid: monthGrid() yields 42 cells {iso, day, inMonth}; out-of-month days render dimmed
+  const cells = monthGrid(viewY, viewM).flat().map((c, i) => {
+    const date = c.iso;
+    const weekend = (i % 7 === 0) || (i % 7 === 6);
+    const evs = c.inMonth ? eventsOn(date, true) : [];
     const isToday = date === TODAY;
     const hasBook = evs.some(e => e.bookBy);
     const seasonStart = evs.find(e => e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP);
-    const topCat = (evs[0] && catOf(evs[0])) || 'personal';
-    const meter = evs.length
-      ? `<span class="cal-meter cat-${esc(topCat)}" title="${evs.length} event${evs.length === 1 ? '' : 's'}">${'<i></i>'.repeat(densityClass(evs.length))}</span>` : '';
-    const ticket = hasBook ? `<span class="cal-ticket" title="has a booking deadline">🎟</span>` : '';
     const chips = evs.slice(0, 3).map(e => {
-      const ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' →' : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${esc(e.title)}${ong}</button>`;
+      const ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' ›' : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cc-t">${esc(e.title)}${ong}</span></button>`;
     }).join('');
-    const more = evs.length > 3 ? `<span class="cal-more">+${evs.length - 3} more</span>` : '';
-    cells += `<div class="cal-cell ${isToday ? 'today' : ''} ${seasonStart ? 'season-start' : ''}" ${seasonStart ? `style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${date}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${date}" aria-label="${date}, ${evs.length} event${evs.length === 1 ? '' : 's'}">${d}</button><span class="cal-cluster">${ticket}${meter}</span></span>
+    const more = evs.length > 3 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${evs.length - 3} more</button>` : '';
+    const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
+    const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', weekend && 'weekend', seasonStart && 'season-start'].filter(Boolean).join(' ');
+    return `<div class="${cls}"${seasonStart ? ` style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${esc(date)}">
+      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${esc(date)}, ${evs.length} event${evs.length === 1 ? '' : 's'}">${c.day}</button>${bk}</span>
       ${chips}${more}</div>`;
-  }
-  return `<div class="cal-grid">${dows.map(x => `<div class="cal-dow">${x}</div>`).join('')}${cells}</div>`;
+  }).join('');
+  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
 }
 
 // ---- side panel: this month's book-by deadlines + a "happening" tally ----

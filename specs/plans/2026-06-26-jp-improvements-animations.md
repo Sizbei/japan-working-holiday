@@ -54,3 +54,11 @@ Each stage: implement → `node --test tests/lib.test.mjs` green → curly-quote
 - S18: pronunciation.js — 7 tips (pitch-not-stress, vowel length, small っ, moraic ん, devoicing, ら-flap, question rise) with audio examples; lib/jpdate.js formats 年月日（曜日） shown as a live 'today in Japanese' line. App-wide date reformatting descoped as high-risk/low-ROI. SW v138.
 - S19: offline dict cache — lookupWord now caches Jotoba results (incl. confirmed 'no match') in KEYS.dictCache (cap 600) → instant repeat hovers + works offline. Anki full export now also includes the 58 study-vocab words (tagged 'vocab'+theme). SW v139.
 - S20: regression GREEN — 64 tests, JSON valid, curly-clean, all 138 furigana reconstruct exactly, 83 assets all precached, reduce-motion gated everywhere. Independent code-review APPROVED (0 critical/0 high); fixed its 2 MEDIUM (phrases.js import hygiene) + 1 LOW (quiz now uses explicit data-correct, not jp-uniqueness). SW v140. BUILD COMPLETE 20/20.
+
+## Extension batch (post-20, user: "keep building JP features")
+- ☑ **N21** Particle reference (は/が/を/に/で/へ/と/も/の/から/まで/か) — collapsible, examples + audio
+- ☑ **N22** Verb conjugation reference (dict/polite/negative/past/te for key verbs) — collapsible table
+- ☐ **N23** Adjective conjugation (い-adj / な-adj forms) — collapsible
+- ☐ **N24** Adaptive review — track per-item familiarity (right/wrong) in localStorage so the quiz prioritises weak items + shows a "due" count
+- N21: particles.js — 12 core particles (は/が/を/に/で/へ/と/も/の/から/まで/か) with role + tap-to-hear example sentence. SW v141.
+- N22: verbs.js — conjugation reference for 7 verbs (ru/u/irregular) showing polite/negative/past/te forms in a grid; dict form audio.

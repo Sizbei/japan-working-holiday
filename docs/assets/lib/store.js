@@ -42,6 +42,7 @@ export const KEYS = {
   dictCache: 'jwh-dict-cache-v1',
   quizStats: 'jwh-quiz-stats-v1',
   phraseCollapseSeed: 'jwh-phrase-collapse-seed-v1',
+  checkPhaseCollapseSeed: 'jwh-check-phase-collapse-seed-v1',
   phraseFavView: 'jwh-phrase-favview-v1',
   userPhrases: 'jwh-phrases-user-v1',
   ankiDeck: 'jwh-anki-deck-v1',

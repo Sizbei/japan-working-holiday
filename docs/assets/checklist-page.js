@@ -7,7 +7,7 @@ import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
 import { makeSortable } from './dnd.js';
-import { mountAccordion } from './collapse.js';
+import { mountAccordion, setCollapsed } from './collapse.js';
 import { celebrate } from './celebrate.js';
 import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
@@ -36,6 +36,7 @@ function wireComposerDue() {
 export function mountChecklist(data, today) {
   DATA = data;
   migratePriorityOnce();   // persist the v1→v2 priority migration once (not on every render)
+  seedPhaseCollapseOnce(); // first visit: collapse all phases but the first one with open work
   renderCheckTools();
   renderCheckToolbar();
   renderChecklist(today);
@@ -44,6 +45,17 @@ export function mountChecklist(data, today) {
 
 // ---- dependency-aware checklist with due dates ----
 function loadChecks() { return get(KEYS.checklist, {}) || {}; }
+// First visit only: collapse every phase so the "all" view opens as a clean overview — progress
+// bar + smart-view pills + one collapsed header per phase (each showing its done/total) — instead
+// of one 20,000px+ scroll of 80+ verbose tasks. Drill into a phase, or use the Today/Upcoming/
+// Overdue pills for what's actionable. Persists to the shared collapse set; user toggles stick.
+function seedPhaseCollapseOnce() {
+  if (getRaw(KEYS.checkPhaseCollapseSeed) === '1') return;
+  const phases = DATA.checklist || [];
+  phases.forEach((p, pi) => setCollapsed(`chk-phase-${pi}`, true));
+  setCollapsed('chk-phase-mine', true);
+  setRaw(KEYS.checkPhaseCollapseSeed, '1');
+}
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }
 function loadTags() { return get(KEYS.tags, {}) || {}; }

@@ -7,6 +7,7 @@ export const KEYS = {
   going: 'jwh-going-v1',
   calFilters: 'jwh-calfilters-v1',
   calGoingOnly: 'jwh-cal-goingonly-v1',
+  calShowTasks: 'jwh-cal-showtasks-v1',
   eventOverrides: 'jwh-event-overrides-v1',
   places: 'jwh-places-v1',
   mapFilters: 'jwh-mapfilters-v1',

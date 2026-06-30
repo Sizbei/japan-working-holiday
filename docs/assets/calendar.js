@@ -17,6 +17,7 @@ import { approxCoord } from './lib/geo.js';
 import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
+import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
@@ -29,6 +30,8 @@ let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view s
 let TODAY = '2026-06-15';
 let hiddenCats = new Set();
 let goingOnly = false;            // when on, the calendar shows only events you've marked ✓ Going
+let showTasks = true;             // checklist tasks with a user-set due date appear on the calendar (filterable)
+let _taskCache = null;            // per-render memo of task pseudo-events
 let popEl = null, popCleanup = null;
 let _sidePanelEv = null;          // currently open event id (null = closed)
 let _sidePanelTrigger = null;     // element that opened the panel (focus restore)
@@ -70,7 +73,35 @@ export function allEvents() {
 // re-read allEvents(), regardless of listener registration order. (Every event writer —
 // calendar saveUser/saveOverrides, map pushEvent/removeEvent, plan, deletePlace — dispatches
 // jwh:data-changed.) render() still nulls it too, as belt-and-suspenders.
-document.addEventListener('jwh:data-changed', () => { _evCache = null; });
+document.addEventListener('jwh:data-changed', () => { _evCache = null; _taskCache = null; });
+
+// ---- checklist tasks as a display-only calendar layer ----
+// Only OPEN tasks with a USER-SET due date appear (KEYS.due) — never the baked `dueBy` estimates,
+// mirroring the notifications rule (curated dates only, no flood). Tasks are NOT real events: they
+// carry data-task (not data-ev) so drag/reschedule/export ignore them; clicking jumps to the
+// checklist. Memoized per render; invalidated alongside _evCache on any data change.
+function allTasks() {
+  if (_taskCache) return _taskCache;
+  if (!showTasks) return (_taskCache = []);
+  const due = get(KEYS.due, {}) || {};
+  const done = get(KEYS.checklist, {}) || {};
+  _taskCache = checklistItems(DATA)
+    .filter(it => due[it.id] && !done[it.id] && parseISO(due[it.id]))
+    .map(it => ({ taskId: it.id, title: it.task, date: due[it.id] }));
+  return _taskCache;
+}
+function tasksOn(iso) { return showTasks ? allTasks().filter(t => t.date.slice(0, 10) === iso) : []; }
+function taskChipHTML(t) {
+  return `<button type="button" class="cal-chip cal-task" data-task="${esc(t.taskId)}" title="Checklist task due — ${esc(t.title)}"><span class="cc-t">☑ ${esc(t.title)}</span></button>`;
+}
+// jump from a calendar task chip to the checklist item it represents
+function gotoTask(taskId) {
+  dismissPopover();
+  if (location.hash !== '#/checklist') location.hash = '#/checklist';
+  // let the route transition swap views before scrolling/focusing the target row
+  setTimeout(() => revealChecklistItem(taskId), 60);
+}
+
 function catOf(e) { return e.category || 'personal'; }
 function visible(e) { return !hiddenCats.has(catOf(e)) && (!goingOnly || isGoing(e.id)); }
 
@@ -90,6 +121,7 @@ export function mountCalendar(data, today) {
   TODAY = today || nowISO();
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   goingOnly = getRaw(KEYS.calGoingOnly, '') === 'on';   // off by default (keep suggestions visible); the ✓ Going toggle persists your choice
+  showTasks = getRaw(KEYS.calShowTasks, '') !== 'off';  // on by default; the ☑ Tasks toggle persists your choice
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
@@ -148,7 +180,8 @@ function buildLegend() {
   if (!el) return;
   const present = [...new Set(allEvents().map(catOf))].sort();
   const goPill = `<button class="lg lg-going${goingOnly ? ' active' : ''}" id="lgGoing" type="button" aria-pressed="${goingOnly}" title="Show only the events you're going to">✓ Going</button>`;
-  el.innerHTML = goPill + present.map(c =>
+  const taskPill = `<button class="lg lg-task${showTasks ? ' active' : ''}" id="lgTasks" type="button" aria-pressed="${showTasks}" title="Show checklist tasks that have a due date">☑ Tasks</button>`;
+  el.innerHTML = goPill + taskPill + present.map(c =>
     `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
   ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
   const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild, but never auto-scroll the page
@@ -177,6 +210,10 @@ function buildLegend() {
   $('#lgGoing')?.addEventListener('click', () => {
     goingOnly = !goingOnly; setRaw(KEYS.calGoingOnly, goingOnly ? 'on' : 'off');
     buildLegend(); render(); $('#lgGoing')?.focus({ preventScroll: true });
+  });
+  $('#lgTasks')?.addEventListener('click', () => {
+    showTasks = !showTasks; setRaw(KEYS.calShowTasks, showTasks ? 'on' : 'off'); _taskCache = null;
+    buildLegend(); render(); $('#lgTasks')?.focus({ preventScroll: true });
   });
   $('#lgAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
@@ -251,7 +288,7 @@ function jumpToDate(iso) {
 }
 
 function render() {
-  _evCache = null;   // invalidate the per-render event cache (data may have changed since last render)
+  _evCache = null; _taskCache = null;   // invalidate the per-render caches (data may have changed since last render)
   dismissPopover();
   const mEl = $('#calModeMonth'), wEl = $('#calModeWeek'), aEl = $('#calModeAgenda');
   mEl?.classList.toggle('active', mode === 'month'); mEl?.setAttribute('aria-pressed', String(mode === 'month'));
@@ -386,18 +423,23 @@ function monthHTML() {
     const date = c.iso;
     const weekend = (i % 7 === 0) || (i % 7 === 6);
     const evs = c.inMonth ? eventsOn(date, true) : [];
+    const tks = c.inMonth ? tasksOn(date) : [];
     const isToday = date === TODAY;
     const hasBook = evs.some(e => e.bookBy);
     const seasonStart = evs.find(e => e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP);
-    const chips = evs.slice(0, 3).map(e => {
-      const ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' ›' : '';
+    // events first, then task chips; cap the cell at 3 with a "+N more" overflow (opens the popover)
+    const all = [...evs.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
+    const chips = all.slice(0, 3).map(x => {
+      if (x.tk) return taskChipHTML(x.tk);
+      const e = x.ev, ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' ›' : '';
       return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cc-t">${esc(e.title)}${ong}</span></button>`;
     }).join('');
-    const more = evs.length > 3 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${evs.length - 3} more</button>` : '';
+    const more = all.length > 3 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${all.length - 3} more</button>` : '';
     const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
+    const aria = `${esc(date)}, ${evs.length} event${evs.length === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
     const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', weekend && 'weekend', seasonStart && 'season-start'].filter(Boolean).join(' ');
     return `<div class="${cls}"${seasonStart ? ` style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${esc(date)}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${esc(date)}, ${evs.length} event${evs.length === 1 ? '' : 's'}">${c.day}</button>${bk}</span>
+      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
       ${chips}${more}</div>`;
   }).join('');
   return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
@@ -443,8 +485,10 @@ function wirePanel() {
 }
 
 function agendaHTML() {
-  const upcoming = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY)
-    .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
+  // merge upcoming events + checklist tasks (with a due date) into one date-sorted stream
+  const evRows = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY).map(e => ({ date: e.date, ev: e }));
+  const tkRows = allTasks().filter(t => t.date.slice(0, 10) >= TODAY).map(t => ({ date: t.date, tk: t }));
+  const upcoming = [...evRows, ...tkRows].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
   if (!upcoming.length) {
     const hidden = hiddenCats.size > 0;
     return `<div class="empty empty-state">
@@ -454,9 +498,17 @@ function agendaHTML() {
     </div>`;
   }
   let last = '';
-  return `<div class="agenda">${upcoming.map(e => {
-    const mk = e.date.slice(0, 7);
-    const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+e.date.slice(5, 7) - 1]} ${e.date.slice(0, 4)}</div>`) : '';
+  return `<div class="agenda">${upcoming.map(x => {
+    const mk = x.date.slice(0, 7);
+    const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+x.date.slice(5, 7) - 1]} ${x.date.slice(0, 4)}</div>`) : '';
+    if (x.tk) {
+      const t = x.tk;
+      return head + `<div class="agenda-row agenda-task" data-task="${esc(t.taskId)}">
+        <span class="agenda-date cat-task">${esc(fmtShort(t.date))}</span>
+        <span class="agenda-body"><button type="button" class="agenda-title" data-task="${esc(t.taskId)}">☑ ${esc(t.title)}</button>
+          <span class="agenda-area">checklist task</span></span></div>`;
+    }
+    const e = x.ev;
     return head + `<div class="agenda-row" data-ev="${esc(e.id)}">
       <span class="agenda-date cat-${esc(catOf(e))}">${esc(fmtShort(e.date))}</span>
       <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
@@ -469,7 +521,11 @@ function wireAgenda() {
   // the .agenda-title button is the keyboard trigger (native Enter/Space); its click bubbles to the
   // row. A mouse click anywhere on the row (except the +G link) also opens the detail.
   $$('#calView .agenda-row').forEach(r => {
-    r.addEventListener('click', (e) => { if (e.target.closest('[data-stop]')) return; const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openSidePanel(ev, e.target.closest('button') || r); });
+    r.addEventListener('click', (e) => {
+      if (e.target.closest('[data-stop]')) return;
+      if (r.dataset.task) { gotoTask(r.dataset.task); return; }
+      const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openSidePanel(ev, e.target.closest('button') || r);
+    });
   });
 }
 
@@ -478,7 +534,14 @@ function wireCells() {
   $$('#calView .cal-cell[data-day]').forEach(c => {
     // the .cal-date button is the keyboard-focusable trigger; its click bubbles here. A chip click
     // opens the event; any other click on the cell (the date button or empty space) opens the day popover.
-    c.addEventListener('click', (e) => { if (e.target.closest('.cal-chip')) { const chip = e.target.closest('.cal-chip'); const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return; } dayPopover(c.dataset.day, c); });
+    c.addEventListener('click', (e) => {
+      const chip = e.target.closest('.cal-chip');
+      if (chip) {
+        if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
+        const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return;
+      }
+      dayPopover(c.dataset.day, c);
+    });
   });
 }
 // drag a USER event chip onto another day to reschedule (baked events are fixed)
@@ -520,13 +583,21 @@ function dismissPopover() {
 function dayPopover(date, anchor) {
   dismissPopover();
   const evs = eventsOn(date);
-  const rows = evs.length ? evs.map(e => `
+  const tks = tasksOn(date);
+  const evRows = evs.map(e => `
     <div class="pop-row">
       <span class="pop-sw cat-${esc(catOf(e))}"></span>
       <span class="pop-body"><button class="pop-open" data-ev="${esc(e.id)}">${esc(e.title)}</button>
         ${e.bookBy ? `<span class="pop-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
       <a class="pop-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar">+G</a>
-    </div>`).join('') : `<p class="pop-empty">Nothing booked this day.</p>`;
+    </div>`).join('');
+  const tkRows = tks.map(t => `
+    <div class="pop-row">
+      <span class="pop-sw cat-task"></span>
+      <span class="pop-body"><button class="pop-task" data-task="${esc(t.taskId)}">☑ ${esc(t.title)}</button>
+        <span class="pop-book">checklist task</span></span>
+    </div>`).join('');
+  const rows = (evs.length || tks.length) ? evRows + tkRows : `<p class="pop-empty">Nothing booked this day.</p>`;
   popEl = document.createElement('div');
   popEl.className = 'cal-pop';
   popEl.setAttribute('role', 'dialog');
@@ -541,6 +612,7 @@ function dayPopover(date, anchor) {
   popEl.style.top = (flipUp ? window.scrollY + r.top - popEl.offsetHeight - 6 : top) + 'px';
   popEl.style.left = Math.max(window.scrollX + 8, left) + 'px';
   popEl.querySelectorAll('.pop-open').forEach(b => b.addEventListener('click', () => { const ev = allEvents().find(x => x.id === b.dataset.ev); dismissPopover(); if (ev) openSidePanel(ev, anchor); }));
+  popEl.querySelectorAll('.pop-task').forEach(b => b.addEventListener('click', () => gotoTask(b.dataset.task)));
   popEl.querySelector('.pop-add').addEventListener('click', () => { dismissPopover(); openModal(null, date); });
   const onDoc = (e) => { if (popEl && !popEl.contains(e.target) && e.target !== anchor) dismissPopover(); };
   const onKey = (e) => {

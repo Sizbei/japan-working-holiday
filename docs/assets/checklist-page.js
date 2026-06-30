@@ -150,6 +150,29 @@ export function checklistItems(data) {
   return out;
 }
 
+// Jump to a checklist item from elsewhere (e.g. clicking a task chip on the calendar): expand its
+// phase, drop any smart-view/hide-done filter that could hide it, re-render, then scroll + flash it.
+export function revealChecklistItem(id) {
+  if (!DATA || !id) return;
+  let accId = null;
+  (DATA.checklist || []).forEach((p, pi) => { if ((p.items || []).some(it => it.id === id)) accId = `chk-phase-${pi}`; });
+  if (!accId && loadChecklistCustom().some(c => c.id === id)) accId = 'chk-phase-mine';
+  if (accId) setCollapsed(accId, false);
+  setRaw(KEYS.checkSmartView, 'all');                  // a Today/Overdue view could hide it
+  if (hideDone()) setRaw(KEYS.checkHideDone, '');      // and so could Hide-done
+  renderCheckTools();
+  renderChecklist();
+  requestAnimationFrame(() => {
+    const esc2 = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+    const li = $(`#checkPhases .check-item[data-id="${esc2}"]`);
+    if (!li) return;
+    li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    li.classList.add('flash');
+    setTimeout(() => li.classList.remove('flash'), 1500);
+    li.querySelector('input[type=checkbox]')?.focus({ preventScroll: true });
+  });
+}
+
 // reconcile a phase's items against a saved id order (unknown/new ids append). Pure.
 function orderItems(items, savedOrder) {
   if (!savedOrder || !savedOrder.length) return items;

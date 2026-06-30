@@ -2605,6 +2605,17 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .cal-legend .lg-going { font-weight: 700; }
 .cal-legend .lg-going::before { display: none; }
 .cal-legend .lg-going.active { background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+/* the "☑ Tasks" filter pill — same treatment as ✓ Going */
+.cal-legend .lg-task { font-weight: 700; }
+.cal-legend .lg-task::before { display: none; }
+.cal-legend .lg-task.active { background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+/* checklist tasks surfaced on the calendar — a distinct indigo "to-do" layer, not a category-coloured event */
+.cal-chip.cal-task { background: color-mix(in srgb, var(--indigo) 15%, transparent); color: var(--indigo-ink); box-shadow: inset 2px 0 0 var(--indigo); font-weight: 700; }
+.cat-task { background: var(--indigo); }                         /* agenda-date pill + popover swatch */
+.agenda-row.agenda-task .agenda-title { color: var(--indigo-ink); }
+/* brief highlight when jumping to a checklist item from a calendar task chip */
+.check-item.flash { animation: ckFlash 1.4s var(--ease-out); }
+@keyframes ckFlash { 0%, 100% { background: transparent; } 15%, 55% { background: color-mix(in srgb, var(--indigo) 16%, transparent); } }
 /* per-category legend dot colour */
 .cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival); }
 .cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks); }

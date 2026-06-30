@@ -253,7 +253,20 @@ td:nth-child(2) { color: var(--red); font-weight: 500; white-space: nowrap; }
 .chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
 
 /* ---- Domain sections ---- */
-.domain { margin-bottom: 1.75rem; }
+.domain { margin-bottom: 1.75rem; scroll-margin-top: calc(var(--header-h) + var(--nav-h) + 3.4rem); }
+/* sticky table-of-contents for the long Explore page (offsets below the topbar + route-nav) */
+.domain-nav { position: sticky; top: calc(var(--header-h) + var(--nav-h)); z-index: 3; display: flex; gap: .4rem;
+  overflow-x: auto; padding: .5rem 0; margin: 0 0 1.25rem; background: var(--bg); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.domain-nav::-webkit-scrollbar { display: none; }
+.dn-chip { flex: 0 0 auto; white-space: nowrap; font-size: .74rem; font-weight: 600; border: 1px solid var(--line);
+  background: var(--bg-soft); color: var(--ink-soft); border-radius: 100px; padding: .35rem .75rem; cursor: pointer;
+  transition: border-color var(--t-hover), color var(--t-hover); }
+.dn-chip:hover { border-color: var(--indigo); color: var(--ink); }
+.dn-chip:active { transform: scale(var(--press-scale)); }
+@media (max-width: 560px) {   /* route-nav becomes a fixed bottom bar here, so only clear the topbar */
+  .domain-nav { top: var(--header-h); }
+  .domain { scroll-margin-top: calc(var(--header-h) + 3.6rem); }
+}
 .domain-head { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; }
 .domain-head .d-icon { font-size: 1.4rem; }
 .finding { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem 1.4rem; margin-bottom: .9rem; box-shadow: var(--shadow); }

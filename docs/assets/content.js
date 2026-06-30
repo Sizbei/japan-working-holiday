@@ -254,17 +254,22 @@ function renderDomains() {
   const wrap = $('#domains');
   if (!wrap) return;
   const domains = DATA.domains || [];
-  let any = false;
-  wrap.innerHTML = domains.map(d => {
-    const found = (d.findings || []).filter(matches);
-    if (!found.length) return '';
-    any = true;
-    return `<section class="domain" id="d-${esc(d.key)}">
+  const visible = domains.filter(d => (d.findings || []).filter(matches).length);
+  const any = visible.length > 0;
+  // sticky table-of-contents so the long page is navigable without scrolling (reflects active filter)
+  const nav = visible.length > 1
+    ? `<nav class="domain-nav" aria-label="Jump to a topic">${visible.map(d =>
+        `<button type="button" class="dn-chip" data-jump="d-${esc(d.key)}">${esc(d.icon || '•')} ${esc(d.title)}</button>`).join('')}</nav>`
+    : '';
+  wrap.innerHTML = nav + visible.map(d =>
+    `<section class="domain" id="d-${esc(d.key)}">
       <h3 class="domain-head"><span class="d-icon">${esc(d.icon || '•')}</span>${esc(d.title)}</h3>
-      ${found.map(findingHTML).join('')}
-    </section>`;
-  }).join('');
+      ${(d.findings || []).filter(matches).map(findingHTML).join('')}
+    </section>`).join('');
   wrap.setAttribute('aria-busy', 'false');
+  const reduceM = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.reduceMotion === 'on';
+  wrap.querySelectorAll('.dn-chip').forEach(b => b.addEventListener('click',
+    () => document.getElementById(b.dataset.jump)?.scrollIntoView({ behavior: reduceM ? 'auto' : 'smooth', block: 'start' })));
   if (!any) {
     const filtered = !!query || activeConf !== 'all';
     wrap.innerHTML = `<div class="empty empty-state">

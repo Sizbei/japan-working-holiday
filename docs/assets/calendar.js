@@ -147,7 +147,7 @@ function buildLegend() {
   el.innerHTML = present.map(c =>
     `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
   ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
-  const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus();   // buildLegend replaced the button → restore keyboard focus
+  const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild, but never auto-scroll the page
   $$('#calLegend .lg').forEach(b => {
     // single click toggles this category; double click isolates it (show only this). A 200ms timer
     // lets the dblclick cancel the pending single-click toggle so the two don't fight.
@@ -173,7 +173,7 @@ function buildLegend() {
   $('#lgAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
     persistFilters(); buildLegend(); render();
-    $('#lgAll')?.focus();
+    $('#lgAll')?.focus({ preventScroll: true });
   });
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
@@ -390,9 +390,8 @@ function wirePanel() {
   $$('#calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
   }));
-  // auto-scroll the first upcoming (non-overdue) deadline into view
-  const next = $('#calPanel .cp-deadline .cp-dot.sev-due-soon, #calPanel .cp-deadline .cp-dot.sev-upcoming');
-  if (next) next.closest('.cp-deadline').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  // (removed the auto-scroll-to-next-deadline: it fired on every render — incl. legend-filter clicks —
+  //  and jolted the viewport. The panel is short; no auto-positioning needed.)
 }
 
 function agendaHTML() {

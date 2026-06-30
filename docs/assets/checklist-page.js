@@ -88,8 +88,8 @@ function renderCheckTools() {
     </div>
     <button type="button" class="ct-toggle ${hd ? 'on' : ''}" data-hidedone aria-pressed="${hd}">${hd ? '☑' : '☐'} Hide done</button>
     ${tagFilter ? `<button type="button" class="ct-tagpill" data-cleartag style="--h:${tagHue(tagFilter)}" aria-label="Clear tag filter ${esc(tagFilter)}" title="Clear tag filter">🏷 ${esc(tagFilter)} <span aria-hidden="true">✕</span></button>` : ''}`;
-  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.view; setRaw(KEYS.checkSmartView, v); renderCheckTools(); renderChecklist(); $(`#checkTools [data-view="${v}"]`)?.focus(); }));   // restore keyboard focus after the innerHTML rebuild
-  el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); $('#checkTools [data-hidedone]')?.focus(); });
+  el.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.view; setRaw(KEYS.checkSmartView, v); renderCheckTools(); renderChecklist(); $(`#checkTools [data-view="${v}"]`)?.focus({ preventScroll: true }); }));   // restore keyboard focus after the rebuild without auto-scrolling
+  el.querySelector('[data-hidedone]')?.addEventListener('click', () => { setRaw(KEYS.checkHideDone, hideDone() ? '' : 'on'); renderCheckTools(); renderChecklist(); $('#checkTools [data-hidedone]')?.focus({ preventScroll: true }); });
   el.querySelector('[data-cleartag]')?.addEventListener('click', () => { tagFilter = ''; renderCheckTools(); renderChecklist(); });
 }
 function saveDue(s) { set(KEYS.due, s); }

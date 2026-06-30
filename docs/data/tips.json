@@ -1890,7 +1890,11 @@
         "https://fuchu-ichigogari.com/en/strawberry-picking-tokyo/"
       ],
       "confidence": "medium"
-    }
+    },
+    {"id": "ev-pokemon-go-community-day-jul2026", "title": "Pokémon GO Community Day", "date": "2026-07-18", "category": "convention", "area": "Citywide parks (Yoyogi · Ueno · Shinjuku Gyoen)", "bookingNotes": "Niantic's monthly 3-hour event (usually 2–5pm local): one featured Pokémon spawns everywhere + bonuses, and Tokyo parks fill with players. Free. Exact date + featured Pokémon are announced ~2 weeks ahead — verify on the official events page before you plan around it.", "sources": ["https://pokemongolive.com/events"], "confidence": "low"},
+    {"id": "ev-pokemon-go-community-day-aug2026", "title": "Pokémon GO Community Day", "date": "2026-08-15", "category": "convention", "area": "Citywide parks (Yoyogi · Ueno · Shinjuku Gyoen)", "bookingNotes": "Monthly Community Day (see July entry). Summer ones are popular — go early for shade. Date is an estimate (~3rd Sat); confirm on the official site.", "sources": ["https://pokemongolive.com/events"], "confidence": "low"},
+    {"id": "ev-pikmin-bloom-community-day-jul2026", "title": "Pikmin Bloom Community Day", "date": "2026-07-26", "category": "convention", "area": "Anywhere you walk (parks, riversides)", "bookingNotes": "Niantic's monthly walking event: extra seedlings, a special decor Pikmin, and big-flower bonuses if you log lots of steps that day. Great excuse for a long Tokyo walk. Date set ~monthly — verify on the Pikmin Bloom site/app.", "sources": ["https://pikminbloom.com/"], "confidence": "low"},
+    {"id": "ev-pokemon-cafe-nihonbashi", "title": "Pokémon Café Nihonbashi — reserve & visit", "date": "2026-07-08", "category": "convention", "area": "Nihonbashi (Takashimaya S.C. East Bldg)", "bookingNotes": "Themed café (Pikachu latte art, course menus) + café-exclusive merch. ADVANCE online reservation is required and books out ~weeks ahead — reserve the moment your dates are set. Pair with the Pokémon Center Mega Tokyo in Ikebukuro (Sunshine City) the same trip. Date here is just a placeholder for 'do this early'.", "sources": ["https://www.pokemoncenter-online.com/cafe/"], "confidence": "medium"}
   ],
   "homeNotes": [
     "You're a Canadian citizen departing from Seattle — your WHV is already in hand, so pre-departure is logistics, not eligibility.",

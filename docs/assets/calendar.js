@@ -6,7 +6,7 @@
 // a popover. Tag-filtered .ics/Google export + .ics import.
 
 import { $, $$, esc } from './lib/dom.js';
-import { KEYS, get, set } from './lib/store.js';
+import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
@@ -28,6 +28,7 @@ let mode = 'month';        // 'month' | 'week' | 'agenda'
 let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
 let TODAY = '2026-06-15';
 let hiddenCats = new Set();
+let goingOnly = false;            // when on, the calendar shows only events you've marked ✓ Going
 let popEl = null, popCleanup = null;
 let _sidePanelEv = null;          // currently open event id (null = closed)
 let _sidePanelTrigger = null;     // element that opened the panel (focus restore)
@@ -71,7 +72,7 @@ export function allEvents() {
 // jwh:data-changed.) render() still nulls it too, as belt-and-suspenders.
 document.addEventListener('jwh:data-changed', () => { _evCache = null; });
 function catOf(e) { return e.category || 'personal'; }
-function visible(e) { return !hiddenCats.has(catOf(e)); }
+function visible(e) { return !hiddenCats.has(catOf(e)) && (!goingOnly || isGoing(e.id)); }
 
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
@@ -88,6 +89,7 @@ export function mountCalendar(data, today) {
   DATA = data;
   TODAY = today || nowISO();
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
+  goingOnly = getRaw(KEYS.calGoingOnly, '') === 'on';   // off by default (keep suggestions visible); the ✓ Going toggle persists your choice
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
@@ -144,7 +146,8 @@ function buildLegend() {
   const el = $('#calLegend');
   if (!el) return;
   const present = [...new Set(allEvents().map(catOf))].sort();
-  el.innerHTML = present.map(c =>
+  const goPill = `<button class="lg lg-going${goingOnly ? ' active' : ''}" id="lgGoing" type="button" aria-pressed="${goingOnly}" title="Show only the events you're going to">✓ Going</button>`;
+  el.innerHTML = goPill + present.map(c =>
     `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
   ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
   const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild, but never auto-scroll the page
@@ -169,6 +172,10 @@ function buildLegend() {
       if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
       persistFilters(); buildLegend(); render(); focusLg(c);
     });
+  });
+  $('#lgGoing')?.addEventListener('click', () => {
+    goingOnly = !goingOnly; setRaw(KEYS.calGoingOnly, goingOnly ? 'on' : 'off');
+    buildLegend(); render(); $('#lgGoing')?.focus({ preventScroll: true });
   });
   $('#lgAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));

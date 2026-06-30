@@ -2599,6 +2599,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   background: var(--lg-cat, var(--line));
   flex: 0 0 auto;
 }
+/* the "✓ Going" filter pill — no category dot; fills indigo when active */
+.cal-legend .lg-going { font-weight: 700; }
+.cal-legend .lg-going::before { display: none; }
+.cal-legend .lg-going.active { background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
 /* per-category legend dot colour */
 .cal-legend .lg.cat-festival   { --lg-cat: var(--c-festival); }
 .cal-legend .lg.cat-fireworks  { --lg-cat: var(--c-fireworks); }

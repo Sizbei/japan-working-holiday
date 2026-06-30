@@ -5586,7 +5586,7 @@
     },
     {
       "id": "gaijinpot",
-      "furnished": true, "shortTerm": true,
+      "furnished": false, "shortTerm": false,
       "name": "GaijinPot Housing Service — apartments + share",
       "provider": "GaijinPot",
       "area": "All Tokyo",
@@ -5905,7 +5905,7 @@
     },
     {
       "id": "comeonup-shimokitazawa",
-      "furnished": true, "shortTerm": true,
+      "furnished": true, "shortTerm": false,
       "name": "Come on UP Shimokitazawa",
       "provider": "Come on UP",
       "area": "Setagaya — Kitazawa (Shimokitazawa)",
@@ -6324,7 +6324,7 @@
     },
     {
       "id": "interwhao",
-      "furnished": true, "shortTerm": true,
+      "furnished": true, "shortTerm": false,
       "name": "Interwhao — no deposit/key-money share houses",
       "provider": "Interwhao",
       "providerUrl": "https://www.interwhao.co.jp/english/",
@@ -6619,7 +6619,7 @@
     },
     {
       "id": "apartment-japan",
-      "furnished": false, "shortTerm": false,
+      "furnished": true, "shortTerm": true,
       "name": "Apartment Japan — book a private apartment from abroad (no guarantor, no JP bank)",
       "provider": "Apartment Japan",
       "providerUrl": "https://apartment-japan.com/",

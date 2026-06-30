@@ -17,6 +17,7 @@ import { mountPronunciation } from './pronunciation.js';
 import { mountParticles } from './particles.js';
 import { mountVerbs } from './verbs.js';
 import { mountAdjectives } from './adjectives.js';
+import { setCollapsed } from './collapse.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -87,6 +88,18 @@ function boot() {
       mountParticles();              // particle reference (collapsible) on #/phrases
       mountVerbs();                  // verb-conjugation reference (collapsible) on #/phrases
       mountAdjectives();             // adjective-conjugation reference (collapsible) on #/phrases
+      // First visit: collapse every phrases-page section except the first phrase category, so the
+      // page opens as a compact, scannable menu instead of a multi-thousand-px wall. One-time;
+      // afterwards each section's open/closed state persists per the user's own toggles.
+      if (get(KEYS.phraseCollapseSeed, false) !== true) {
+        $$('#view-phrases .acc[data-acc]').forEach((a, i) => {
+          if (i === 0) return;                       // keep the first (Daily) phrase category open
+          a.classList.add('is-collapsed');
+          a.querySelector('.acc-head')?.setAttribute('aria-expanded', 'false');
+          setCollapsed(a.dataset.acc, true);         // persist so it stays collapsed on return
+        });
+        set(KEYS.phraseCollapseSeed, true);
+      }
       mountDashboard(data, today);   // reads calendar + content, so mount last
       mountRooms(data);              // share-room finder (#/rooms)
       mountMap(data);                // map page (#/map)

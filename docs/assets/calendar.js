@@ -197,7 +197,7 @@ function removeEventByKey(id) {
 }
 function onCalKeydown(e) {
   if (location.hash !== '#/calendar') return;
-  if (document.querySelector('.modal-overlay')) return;     // a modal owns the keyboard
+  if (document.querySelector('[aria-modal="true"]')) return;   // any open dialog (event editor/app/date-picker) owns the keyboard
   if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;

@@ -41,6 +41,46 @@ export function mountChecklist(data, today) {
   renderCheckToolbar();
   renderChecklist(today);
   wireCheckSettingsListener();
+  wireCheckKeyboard();
+}
+
+// Keyboard shortcuts — parity with the calendar (arrow/j-k to move between tasks, then act on the
+// focused row). The checkbox is the focusable anchor per row; Space toggles it natively. Reuses the
+// existing row buttons via .click() so behaviour and data flow stay single-path.
+let _checkKbWired = false;
+function visibleChecks() {
+  return $$('#checkPhases input[type=checkbox]').filter(cb => cb.offsetParent !== null);   // skip collapsed accordions
+}
+function onCheckKeydown(e) {
+  if (location.hash !== '#/checklist') return;
+  if (document.querySelector('[aria-modal="true"]')) return;   // any open dialog (calendar/app/date-picker) owns the keyboard
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  // bail on text entry, but NOT on the task checkboxes (those are our nav anchors)
+  const isText = (tag === 'input' && !['checkbox', 'radio'].includes(e.target.type)) || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
+  if (isText) return;
+  const row = e.target.closest?.('.check-item');
+  if (['ArrowDown', 'ArrowUp', 'j', 'k'].includes(e.key)) {
+    const boxes = visibleChecks();
+    if (!boxes.length) return;
+    const cur = row?.querySelector('input[type=checkbox]');
+    const idx = cur ? boxes.indexOf(cur) : -1;
+    const down = e.key === 'ArrowDown' || e.key === 'j';
+    const next = idx < 0 ? boxes[0] : boxes[idx + (down ? 1 : -1)];
+    if (next) { e.preventDefault(); next.focus({ preventScroll: true }); }
+    return;
+  }
+  if (!row) return;
+  const act = (sel) => { const b = row.querySelector(sel); if (b) { e.preventDefault(); b.click(); } };
+  if (e.key === 'e' || e.key === 'E') return act('.check-edit');
+  if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') return act('.check-del');
+  if (e.key === 'p' || e.key === 'P') return act('.ci-flag');
+  if (e.key === 'd' || e.key === 'D') return act('.ci-due');
+}
+function wireCheckKeyboard() {
+  if (_checkKbWired) return;
+  _checkKbWired = true;
+  document.addEventListener('keydown', onCheckKeydown);
 }
 
 // ---- dependency-aware checklist with due dates ----
@@ -468,11 +508,15 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
 }
 function wireChecklist() {
   $$('#checkPhases input[type=checkbox]').forEach(cb => cb.addEventListener('change', () => {
+    const id = cb.dataset.cid;
     const state = { ...loadChecks() };
-    if (cb.checked) state[cb.dataset.cid] = true; else delete state[cb.dataset.cid];
+    if (cb.checked) state[id] = true; else delete state[id];
     saveChecks(state);
     renderChecklist();                 // re-render so dependent locks update
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+    // keep keyboard focus on the toggled row (or nearest visible) so you can keep arrowing
+    const esc2 = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+    ($(`#cb-${esc2}`) || $('#checkPhases input[type=checkbox]'))?.focus({ preventScroll: true });
   }));
   $$('#checkPhases .ci-flag').forEach(btn => btn.addEventListener('click', () => {
     const id = btn.dataset.flag, p = loadPriority();

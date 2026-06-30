@@ -135,6 +135,12 @@ function openHelp() {
     <div class="kh-row"><kbd>n</kbd><span>New event on the focused day</span></div>
     <div class="kh-row"><kbd>−</kbd> <kbd>Del</kbd><span>Remove the focused / open event</span></div>
     <div class="kh-row"><kbd>t</kbd><span>Jump to today</span></div>
+    <p class="kh-sub">On the checklist</p>
+    <div class="kh-row"><kbd>↑</kbd><kbd>↓</kbd> <kbd>j</kbd><kbd>k</kbd><span>Move between tasks</span></div>
+    <div class="kh-row"><kbd>Space</kbd><span>Tick / untick the focused task</span></div>
+    <div class="kh-row"><kbd>d</kbd><span>Set a due date</span></div>
+    <div class="kh-row"><kbd>p</kbd><span>Cycle priority (P1→P4)</span></div>
+    <div class="kh-row"><kbd>e</kbd> <kbd>−</kbd><span>Edit / remove your own task</span></div>
     <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
     <p class="kh-hint">Tap 🔍 on the Checklist & Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>

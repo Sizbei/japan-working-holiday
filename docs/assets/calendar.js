@@ -32,6 +32,7 @@ let popEl = null, popCleanup = null;
 let _sidePanelEv = null;          // currently open event id (null = closed)
 let _sidePanelTrigger = null;     // element that opened the panel (focus restore)
 let _sidePanelCleanup = null;     // remove side-panel document listeners
+let _legendTimer = null;          // discriminate legend single-click (toggle) from double-click (isolate)
 
 const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
 const SPAN_CAP = 10;
@@ -144,14 +145,31 @@ function buildLegend() {
   if (!el) return;
   const present = [...new Set(allEvents().map(catOf))].sort();
   el.innerHTML = present.map(c =>
-    `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}">${esc(c)}</button>`
+    `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
   ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
-  $$('#calLegend .lg').forEach(b => b.addEventListener('click', () => {
-    const c = b.dataset.cat;
-    if (hiddenCats.has(c)) hiddenCats.delete(c); else hiddenCats.add(c);
-    persistFilters(); buildLegend(); render();
-    $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus();   // buildLegend replaced the button → restore keyboard focus
-  }));
+  const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus();   // buildLegend replaced the button → restore keyboard focus
+  $$('#calLegend .lg').forEach(b => {
+    // single click toggles this category; double click isolates it (show only this). A 200ms timer
+    // lets the dblclick cancel the pending single-click toggle so the two don't fight.
+    b.addEventListener('click', () => {
+      if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; return; }
+      const c = b.dataset.cat;
+      _legendTimer = setTimeout(() => {
+        _legendTimer = null;
+        if (hiddenCats.has(c)) hiddenCats.delete(c); else hiddenCats.add(c);
+        persistFilters(); buildLegend(); render(); focusLg(c);
+      }, 200);
+    });
+    b.addEventListener('dblclick', () => {
+      if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; }
+      const c = b.dataset.cat;
+      const others = present.filter(x => x !== c);
+      const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
+      hiddenCats.clear();
+      if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
+      persistFilters(); buildLegend(); render(); focusLg(c);
+    });
+  });
   $('#lgAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
     persistFilters(); buildLegend(); render();
@@ -513,6 +531,10 @@ function openSidePanel(ev, trigger) {
   _sidePanelEv = ev.id;
   const panel = $('#calSidePanel');
   if (!panel) return;
+  // Portal to <body>: the panel is position:fixed but lives inside <main> (z-index:1), which
+  // traps its z-index:101 in main's stacking context — so the sticky route-nav (z40) and topbar
+  // (z50) paint OVER the panel's header + close button. Reparenting to body lets z-index:101 win.
+  if (panel.parentElement !== document.body) document.body.appendChild(panel);
 
   const isBaked = ev.source !== 'user';
   const going = isGoing(ev.id);
@@ -564,6 +586,12 @@ function openSidePanel(ev, trigger) {
     panel.querySelector('#spEdit')?.addEventListener('click', () => { closeSidePanel(); openModal(ev); });
     panel.querySelector('#spDel')?.addEventListener('click', () => { deleteUserEvent(ev.id); });  // single-path: deleteUserEvent→saveUser→jwh:data-changed→render; auto-close below
   }
+
+  // Source links: open reliably in a new tab on click (user-initiated window.open can't be popup-
+  // blocked). Keep the href for middle-click / new-tab / screen readers.
+  panel.querySelectorAll('.sp-body .modal-src a[href]').forEach(a => {
+    a.addEventListener('click', (e) => { e.preventDefault(); window.open(a.href, '_blank', 'noopener'); });
+  });
 
   // Esc closes
   const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); } };

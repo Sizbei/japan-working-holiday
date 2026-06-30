@@ -1135,6 +1135,9 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 #rooms{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 var(--gutter); }
 .room-count{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); }
 #roomFilters{ display:flex; flex-wrap:wrap; gap: var(--s3); align-items:center; margin-bottom: var(--s5); }
+.room-reset{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); background:none; border:none; cursor:pointer; padding:.25rem .4rem; border-radius: var(--r-sm); text-decoration:underline; text-underline-offset:3px; }
+.room-reset:hover{ color: var(--red); }
+.room-reset:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 #roomSearch{ flex:1; min-width:240px; font-family: var(--mono); font-size:.82rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
 #roomSearch:focus{ outline:none; box-shadow: var(--ring); }
 .chip.toggle{ cursor:pointer; }

@@ -124,10 +124,12 @@ function transitText(r) {
 }
 function flagBadges(r) {
   const out = [];
-  if (r.noKeyMoney) out.push('NO KEY MONEY');
+  if (r.noKeyMoney) out.push('NO KEY MONEY');     // headline foreigner-friendly flags lead
   if (r._noGuarantor) out.push('NO GUARANTOR');
   if (r._bookAbroad) out.push('BOOK FROM ABROAD');
   if (r._women) out.push('WOMEN-ONLY');
+  if (r.furnished) out.push('FURNISHED');          // then the two new filter-match badges
+  if (r.shortTerm) out.push('SHORT-TERM OK');
   return out.map(x => `<span class="room-flag">${esc(x)}</span>`).join('');
 }
 function card(r, status) {
@@ -173,9 +175,25 @@ function restoreFocus(key) {
 }
 
 // ---- render ----
+// any filter narrowing the list? (drives the Reset button's visibility — sort isn't a filter)
+function anyFilterActive(f) {
+  return !!(f.q || f.ceiling !== Infinity || f.room !== 'all' || f.lines.length
+    || f.noKey || f.noGuar || f.abroad || f.women || f.furnished || f.shortTerm || f.savedOnly);
+}
+function clearAllFilters() {
+  const s = $('#roomSearch'); if (s) s.value = '';
+  const b = $('#roomBudget'); if (b) b.value = '200000';
+  $$('#roomTypeF .chip').forEach(c => { const on = c.dataset.room === 'all'; c.classList.toggle('active', on); c.setAttribute('aria-pressed', String(on)); });
+  $$('#roomLines .chip').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+  ['#roomNoKey', '#roomNoGuar', '#roomAbroad', '#roomWomen', '#roomFurnished', '#roomShortTerm', '#roomSavedOnly']
+    .forEach(sel => { const el = $(sel); if (el) { el.classList.remove('active'); el.setAttribute('aria-pressed', 'false'); } });
+  updateBudgetLabel(); render();
+}
+
 function render() {
   const grid = $('#roomsGrid'); if (!grid) return;
   const f = readFilters();
+  $('#roomReset')?.toggleAttribute('hidden', !anyFilterActive(f));   // show Reset only when something's filtered
   const status = allStatus();                       // read once per render (not per room)
   const key = focusKey();                            // capture focus before the rebuild
   const subset = sortRooms(ROOMS.filter(r => matches(r, f, status)), f.sort);
@@ -259,6 +277,7 @@ function wireControls() {
   ['#roomNoKey', '#roomNoGuar', '#roomAbroad', '#roomWomen', '#roomFurnished', '#roomShortTerm', '#roomSavedOnly'].forEach(sel => {
     $(sel)?.addEventListener('click', () => { const on = $(sel).classList.toggle('active'); $(sel).setAttribute('aria-pressed', on ? 'true' : 'false'); render(); });
   });
+  $('#roomReset')?.addEventListener('click', clearAllFilters);
   updateBudgetLabel();
 
   const grid = $('#roomsGrid');

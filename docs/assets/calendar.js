@@ -98,6 +98,7 @@ export function mountCalendar(data, today) {
   render();
   document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
   document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
+  document.addEventListener('keydown', onCalKeydown);      // Notion-style: ←→↑↓ move days, Enter open, − remove, t today, n new
   // right-click an event → context menu (delegated on document: the day popover lives on <body>,
   // outside #calView, so a view-scoped listener would miss its .pop-open events).
   document.addEventListener('contextmenu', (e) => {
@@ -184,6 +185,46 @@ function buildLegend() {
   });
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
+
+// ---- Notion-style keyboard shortcuts (active only on #/calendar) ----
+// remove the focused/open event: user events delete; baked events leave your Going list (researched
+// suggestions can't be deleted, only un-followed).
+function removeEventByKey(id) {
+  const ev = allEvents().find(x => x.id === id);
+  if (!ev) return;
+  if (ev.source === 'user') deleteUserEvent(id);            // → saveUser → data-changed → render + side-panel auto-close
+  else if (isGoing(id)) toggleGoing(id);                    // baked + going → drop from your Going list
+}
+function onCalKeydown(e) {
+  if (location.hash !== '#/calendar') return;
+  if (document.querySelector('.modal-overlay')) return;     // a modal owns the keyboard
+  if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+
+  if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') {
+    const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev]');
+    const id = _sidePanelEv || chip?.dataset.ev;
+    if (id) { e.preventDefault(); removeEventByKey(id); }
+    return;
+  }
+  if (e.key === 't' || e.key === 'T') {
+    e.preventDefault(); const t = parseISO(TODAY); if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; mode = 'month'; render(); }
+    $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;
+  }
+  if (e.key === 'n' || e.key === 'N') {
+    e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk-dayhd[data-day]')?.dataset.day || TODAY; openModal(null, day); return;
+  }
+  if (mode === 'month' && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+    const cells = $$('#calView .cal-date[data-day]');
+    if (!cells.length) return;
+    const idx = cells.indexOf(e.target.closest?.('.cal-date'));
+    if (idx < 0) { e.preventDefault(); cells[0].focus({ preventScroll: true }); return; }
+    const delta = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' ? -7 : 7;
+    const next = cells[idx + delta];
+    if (next) { e.preventDefault(); next.focus({ preventScroll: true }); }
+  }
+}
 
 function renderMiniNav() {
   const host = $('#calMiniNav'); if (!host) return;

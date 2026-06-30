@@ -130,6 +130,11 @@ function openHelp() {
     <div class="kh-row"><kbd>[</kbd> <kbd>]</kbd><span>Previous / next page</span></div>
     <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere + search everything (command palette)</span></div>
     <div class="kh-row"><kbd>⌘Z</kbd> <kbd>Ctrl+Z</kbd><span>Undo the last calendar delete</span></div>
+    <p class="kh-sub">On the calendar</p>
+    <div class="kh-row"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd><span>Move between days (month view)</span></div>
+    <div class="kh-row"><kbd>n</kbd><span>New event on the focused day</span></div>
+    <div class="kh-row"><kbd>−</kbd> <kbd>Del</kbd><span>Remove the focused / open event</span></div>
+    <div class="kh-row"><kbd>t</kbd><span>Jump to today</span></div>
     <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
     <p class="kh-hint">Tap 🔍 on the Checklist & Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>

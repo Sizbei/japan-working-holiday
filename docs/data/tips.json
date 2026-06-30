@@ -5374,6 +5374,7 @@
   "rooms": [
     {
       "id": "oakhouse-social",
+      "furnished": true, "shortTerm": true,
       "name": "Oakhouse — Social Residences",
       "provider": "Oakhouse",
       "area": "Citywide (Nakano, Kawasaki, Yokohama, Saitama hubs)",
@@ -5400,6 +5401,7 @@
     },
     {
       "id": "sakura-house",
+      "furnished": true, "shortTerm": true,
       "name": "Sakura House — Share houses & dorms",
       "provider": "Sakura House",
       "area": "Central (Shinjuku, Ikebukuro, Asakusa, Takadanobaba)",
@@ -5426,6 +5428,7 @@
     },
     {
       "id": "borderless-house",
+      "furnished": true, "shortTerm": true,
       "name": "Borderless House — International share houses",
       "provider": "Borderless House",
       "area": "Nakano, Koenji, Oji, Kuramae, Gakugei-daigaku",
@@ -5452,6 +5455,7 @@
     },
     {
       "id": "social-apartment",
+      "furnished": true, "shortTerm": true,
       "name": "Social Apartment — Design share (Global Agents)",
       "provider": "Social Apartment",
       "area": "Komazawa, Nakameguro, Tama-area, Yokohama",
@@ -5478,6 +5482,7 @@
     },
     {
       "id": "hituji",
+      "furnished": true, "shortTerm": true,
       "name": "Hituji Real Estate — Share-house aggregator",
       "provider": "Hituji Real Estate",
       "area": "All Tokyo (many operators)",
@@ -5503,6 +5508,7 @@
     },
     {
       "id": "tokyo-sharehouse",
+      "furnished": true, "shortTerm": true,
       "name": "Tokyo Sharehouse — Portal",
       "provider": "Tokyo Sharehouse",
       "area": "All Tokyo",
@@ -5528,6 +5534,7 @@
     },
     {
       "id": "oakhouse-nakano",
+      "furnished": true, "shortTerm": true,
       "name": "Oakhouse — west Chuo-line houses (Nakano/Koenji)",
       "provider": "Oakhouse",
       "area": "Nakano / Koenji / Higashi-Nakano",
@@ -5553,6 +5560,7 @@
     },
     {
       "id": "comingle",
+      "furnished": true, "shortTerm": true,
       "name": "Comingle / C's share — budget houses",
       "provider": "Comingle",
       "area": "Kita / Adachi / Itabashi (north)",
@@ -5578,6 +5586,7 @@
     },
     {
       "id": "gaijinpot",
+      "furnished": true, "shortTerm": true,
       "name": "GaijinPot Housing Service — apartments + share",
       "provider": "GaijinPot",
       "area": "All Tokyo",
@@ -5603,6 +5612,7 @@
     },
     {
       "id": "oak-hostel-soft",
+      "furnished": true, "shortTerm": true,
       "name": "Hostel soft-landing (first 1–2 weeks)",
       "provider": "Various (Oak Hostel, Sakura Hotel, Nui)",
       "area": "Asakusa / Kuramae / Shinjuku",
@@ -5628,6 +5638,7 @@
     },
     {
       "id": "social-residence-setagaya",
+      "furnished": true, "shortTerm": true,
       "name": "Oakhouse — Setagaya houses (Sangenjaya/Shimokita-adjacent)",
       "provider": "Oakhouse",
       "area": "Setagaya (Sangenjaya, Gotokuji, Kyodo)",
@@ -5653,6 +5664,7 @@
     },
     {
       "id": "women-only",
+      "furnished": true, "shortTerm": true,
       "name": "Women-only share houses",
       "provider": "Oakhouse / Sakura / Hituji (filter)",
       "area": "Citywide",
@@ -5678,6 +5690,7 @@
     },
     {
       "id": "monthly-mansion",
+      "furnished": true, "shortTerm": true,
       "name": "Monthly furnished apartment (no share)",
       "provider": "Hundred Stay / MonthlyMansion / Tokyo Monthly",
       "area": "Central wards",
@@ -5703,6 +5716,7 @@
     },
     {
       "id": "sakura-private-apt",
+      "furnished": true, "shortTerm": true,
       "name": "Sakura House — Private apartments",
       "provider": "Sakura House",
       "area": "Central + west",
@@ -5729,6 +5743,7 @@
     },
     {
       "id": "oakhouse-fastroom-koenji",
+      "furnished": true, "shortTerm": true,
       "name": "FASTROOM KOENJI",
       "provider": "Oakhouse",
       "area": "Koenji / Suginami (Chuo line)",
@@ -5760,6 +5775,7 @@
     },
     {
       "id": "oakhouse-oak-terrace-sangenjaya",
+      "furnished": true, "shortTerm": true,
       "name": "OAK TERRACE SANGENJAYA",
       "provider": "Oakhouse",
       "area": "Setagaya (Sangenjaya / Shimokita-adjacent)",
@@ -5791,6 +5807,7 @@
     },
     {
       "id": "xross-sa073-koenji-1",
+      "furnished": true, "shortTerm": true,
       "name": "SA073 TOKYO β Koenji 1 (formerly SA-Xross Koenji 2)",
       "provider": "Cross House (XROSS HOUSE)",
       "area": "Koenji / Nakano-ku (Chuo line)",
@@ -5823,6 +5840,7 @@
     },
     {
       "id": "xross-sa119-nogata-15",
+      "furnished": true, "shortTerm": true,
       "name": "SA119 TOKYO β Nogata 15 (formerly SA-Xross Koenji 3)",
       "provider": "Cross House (XROSS HOUSE)",
       "area": "Nogata / Nakano-ku (near Koenji)",
@@ -5856,6 +5874,7 @@
     },
     {
       "id": "xross-n3-nakano-sakaue-1",
+      "furnished": true, "shortTerm": true,
       "name": "N3 XROSS Nakano Sakaue 1",
       "provider": "Cross House (XROSS HOUSE)",
       "area": "Nakano-sakaue / Shinjuku-ku edge",
@@ -5886,6 +5905,7 @@
     },
     {
       "id": "comeonup-shimokitazawa",
+      "furnished": true, "shortTerm": true,
       "name": "Come on UP Shimokitazawa",
       "provider": "Come on UP",
       "area": "Setagaya — Kitazawa (Shimokitazawa)",
@@ -5917,6 +5937,7 @@
     },
     {
       "id": "comeonup-todoroki",
+      "furnished": true, "shortTerm": true,
       "name": "Come on UP Todoroki",
       "provider": "Come on UP",
       "area": "Setagaya — Todoroki/Oyamadai",
@@ -5949,6 +5970,7 @@
     },
     {
       "id": "sakura-house-higashi-koenji",
+      "furnished": true, "shortTerm": true,
       "name": "SAKURA HOUSE HIGASHI KOENJI",
       "provider": "Sakura House",
       "area": "Higashi-Koenji / Suginami",
@@ -5979,6 +6001,7 @@
     },
     {
       "id": "borderless-roppongi1",
+      "furnished": true, "shortTerm": true,
       "name": "Borderless House Roppongi1 (Nishi-Azabu)",
       "provider": "Borderless House",
       "providerUrl": "https://www.borderless-house.com/jp/tokyo/",
@@ -6010,6 +6033,7 @@
     },
     {
       "id": "borderless-komagome",
+      "furnished": true, "shortTerm": true,
       "name": "Borderless House Komagome",
       "provider": "Borderless House",
       "providerUrl": "https://www.borderless-house.com/jp/tokyo/",
@@ -6041,6 +6065,7 @@
     },
     {
       "id": "borderless-ikebukuro-oyama1",
+      "furnished": true, "shortTerm": true,
       "name": "Borderless House Ikebukuro-Oyama1",
       "provider": "Borderless House",
       "providerUrl": "https://www.borderless-house.com/jp/tokyo/",
@@ -6072,6 +6097,7 @@
     },
     {
       "id": "social-apt-world-neighbors-gokokuji",
+      "furnished": true, "shortTerm": true,
       "name": "World Neighbors Gokokuji (Social Apartment)",
       "provider": "Social Apartment (Global Agents)",
       "providerUrl": "https://www.social-apartment.com/eng/builds/tokyo",
@@ -6103,6 +6129,7 @@
     },
     {
       "id": "social-apt-neighbors-shibuya-kamiyamacho",
+      "furnished": true, "shortTerm": true,
       "name": "Neighbors Shibuya Kamiyamacho (Social Apartment)",
       "provider": "Social Apartment (Global Agents)",
       "providerUrl": "https://www.social-apartment.com/eng/builds/tokyo",
@@ -6134,6 +6161,7 @@
     },
     {
       "id": "sharehouse180",
+      "furnished": true, "shortTerm": true,
       "name": "SHARE HOUSE 180° — community houses (Kamiitabashi etc.)",
       "provider": "SHARE HOUSE 180°",
       "providerUrl": "https://www.sharehouse180.net/en/houses/area/kanto/tokyo/",
@@ -6165,6 +6193,7 @@
     },
     {
       "id": "stay-and-tokyo",
+      "furnished": true, "shortTerm": true,
       "name": "Stay and Tokyo (TOKYOSTAY) — Otsuka-area share houses & apartments, all-in rent",
       "provider": "Stay and Tokyo",
       "providerUrl": "https://stayandtokyo.com/",
@@ -6197,6 +6226,7 @@
     },
     {
       "id": "xross-house",
+      "furnished": true, "shortTerm": true,
       "name": "XROSS HOUSE — budget no-guarantor share houses & furnished apartments",
       "provider": "XROSS HOUSE",
       "providerUrl": "https://x-house.co.jp/en/",
@@ -6230,6 +6260,7 @@
     },
     {
       "id": "gg-house",
+      "furnished": true, "shortTerm": true,
       "name": "GG House — cheap private rooms, young crowd",
       "provider": "GG House",
       "providerUrl": "https://gghouse.co.jp/en/",
@@ -6262,6 +6293,7 @@
     },
     {
       "id": "modern-living-japan",
+      "furnished": true, "shortTerm": true,
       "name": "Modern Living Japan — central no-deposit share",
       "provider": "Modern Living Japan",
       "providerUrl": "https://modernlivingjapan.com/en",
@@ -6292,6 +6324,7 @@
     },
     {
       "id": "interwhao",
+      "furnished": true, "shortTerm": true,
       "name": "Interwhao — no deposit/key-money share houses",
       "provider": "Interwhao",
       "providerUrl": "https://www.interwhao.co.jp/english/",
@@ -6322,6 +6355,7 @@
     },
     {
       "id": "jf-plaza",
+      "furnished": true, "shortTerm": true,
       "name": "J&F Plaza (J&F House) — cheap, but guarantor-co may apply",
       "provider": "J&F Plaza",
       "providerUrl": "https://jafplaza.com/?lang=en",
@@ -6354,6 +6388,7 @@
     },
     {
       "id": "arden-share-style",
+      "furnished": true, "shortTerm": true,
       "name": "Arden (Share Style) — curated / women-only houses",
       "provider": "Share Style (Arden)",
       "providerUrl": "https://share-style.net/",
@@ -6385,6 +6420,7 @@
     },
     {
       "id": "sakura-hotel-monthly",
+      "furnished": true, "shortTerm": true,
       "name": "Sakura Hotel & Hostel — monthly plan (soft landing)",
       "provider": "Sakura Hotel & Hostel",
       "providerUrl": "https://www.sakura-hotel.co.jp/",
@@ -6416,6 +6452,7 @@
     },
     {
       "id": "unplan-kagurazaka",
+      "furnished": true, "shortTerm": true,
       "name": "UNPLAN Kagurazaka — design hostel (soft landing)",
       "provider": "UNPLAN",
       "providerUrl": "https://unplan.jp/en/kagurazaka/",
@@ -6446,6 +6483,7 @@
     },
     {
       "id": "ur-danchi",
+      "furnished": false, "shortTerm": false,
       "name": "UR danchi — public rental (no key money / no guarantor / no agent fee)",
       "provider": "UR (Urban Renaissance Agency)",
       "providerUrl": "https://www.ur-net.go.jp/chintai/",
@@ -6480,6 +6518,7 @@
     },
     {
       "id": "village-house",
+      "furnished": false, "shortTerm": false,
       "name": "Village House — budget apartments (no key money / no deposit / no fees)",
       "provider": "Village House",
       "providerUrl": "https://www.villagehouse.jp/en/",
@@ -6513,6 +6552,7 @@
     },
     {
       "id": "metroresidences",
+      "furnished": true, "shortTerm": true,
       "name": "MetroResidences — furnished serviced apartments (no guarantor)",
       "provider": "MetroResidences",
       "providerUrl": "https://www.metroresidences.com/jp-en/",
@@ -6545,6 +6585,7 @@
     },
     {
       "id": "leopalace21",
+      "furnished": true, "shortTerm": true,
       "name": "Leopalace21 — monthly furnished mansions (no guarantor)",
       "provider": "Leopalace21",
       "providerUrl": "https://www.leopalace21.com/en/",
@@ -6578,6 +6619,7 @@
     },
     {
       "id": "apartment-japan",
+      "furnished": false, "shortTerm": false,
       "name": "Apartment Japan — book a private apartment from abroad (no guarantor, no JP bank)",
       "provider": "Apartment Japan",
       "providerUrl": "https://apartment-japan.com/",
@@ -6609,6 +6651,7 @@
     },
     {
       "id": "athearth",
+      "furnished": false, "shortTerm": false,
       "name": "AtHearth — foreigner-focused agency (guarantor-company route, apply from abroad)",
       "provider": "AtHearth",
       "providerUrl": "https://www.athearth.com/",
@@ -6640,6 +6683,7 @@
     },
     {
       "id": "wagaya-japan",
+      "furnished": false, "shortTerm": false,
       "name": "Wagaya Japan — multilingual no-guarantor apartment portal",
       "provider": "Wagaya Japan",
       "providerUrl": "https://wagaya-japan.com/en/",

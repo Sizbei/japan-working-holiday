@@ -83,6 +83,7 @@ function readFilters() {
     sort: $('#roomSort')?.value || 'newcomer',
     noKey: isOn('#roomNoKey'), noGuar: isOn('#roomNoGuar'),
     abroad: isOn('#roomAbroad'), women: isOn('#roomWomen'), savedOnly: isOn('#roomSavedOnly'),
+    furnished: isOn('#roomFurnished'), shortTerm: isOn('#roomShortTerm'),
   };
 }
 
@@ -96,6 +97,8 @@ function matches(r, f, status) {
   if (f.noGuar && !r._noGuarantor) return false;
   if (f.abroad && !r._bookAbroad) return false;
   if (f.women && !r._women) return false;
+  if (f.furnished && !r.furnished) return false;
+  if (f.shortTerm && !r.shortTerm) return false;
   if (f.savedOnly && !(status[r.id] && status[r.id].saved)) return false;
   return true;
 }
@@ -253,7 +256,7 @@ function wireControls() {
     $$('#roomTypeF .chip').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
     ch.classList.add('active'); ch.setAttribute('aria-pressed', 'true'); render();
   }));
-  ['#roomNoKey', '#roomNoGuar', '#roomAbroad', '#roomWomen', '#roomSavedOnly'].forEach(sel => {
+  ['#roomNoKey', '#roomNoGuar', '#roomAbroad', '#roomWomen', '#roomFurnished', '#roomShortTerm', '#roomSavedOnly'].forEach(sel => {
     $(sel)?.addEventListener('click', () => { const on = $(sel).classList.toggle('active'); $(sel).setAttribute('aria-pressed', on ? 'true' : 'false'); render(); });
   });
   updateBudgetLabel();

@@ -3042,7 +3042,11 @@
       { "id": "visa", "label": "WHV application", "amount": 0, "note": "Free for Canadians at the embassy/consulate.", "confidence": "high" },
       { "id": "deposit", "label": "Move-in (deposit + first month, foreigner-friendly share house)", "amount": 120000, "note": "Foreigner-friendly operators waive key money/guarantor; budget ~one month rent + a low contract/deposit fee.", "confidence": "medium" },
       { "id": "sim", "label": "SIM / eSIM setup", "amount": 4000, "note": "Prepaid data eSIM on arrival, then a longer plan once you have an address.", "confidence": "medium" },
-      { "id": "furnish", "label": "Bedding / starter kit", "amount": 20000, "note": "Futon/bedding, kitchen basics, hangers — most share houses are furnished but bedding is on you.", "confidence": "low" }
+      { "id": "furnish", "label": "Bedding / starter kit", "amount": 20000, "note": "Futon/bedding, kitchen basics, hangers — most share houses are furnished but bedding is on you.", "confidence": "low" },
+      { "id": "wdjf-ticket", "label": "World DJ Festival ticket", "amount": 18000, "note": "Purchased.", "confidence": "high" },
+      { "id": "ultra-ticket", "label": "Ultra Japan ticket", "amount": 18000, "note": "Estimate — confirm your ticket type (1-day GA ~¥15k, 2-day pass ~¥28k).", "confidence": "low" },
+      { "id": "makoto-stay", "label": "Initial accommodation — Makoto Guest House (7 nights)", "amount": 13500, "note": "≈ $86 USD for 7 nights while flat-hunting.", "confidence": "high" },
+      { "id": "arrival-incidentals", "label": "Arrival incidentals (food + local transit)", "amount": 4500, "note": "First-days spend: ¥1,500 food + ¥3,000 transit, separate from the steady-state monthly estimates.", "confidence": "high" }
     ],
     "monthly": [
       { "id": "rent", "label": "Rent (share house)", "amount": 60000, "note": "Foreigner-friendly share houses run ~¥45–95k/mo; private room in a Tokyo hub.", "confidence": "medium" },

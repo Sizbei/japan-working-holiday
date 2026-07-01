@@ -566,14 +566,16 @@ function wireAgenda() {
 function wireCells() {
   $$('#calView .cal-cell[data-day]').forEach(c => {
     // the .cal-date button is the keyboard-focusable trigger; its click bubbles here. A chip click
-    // opens the event; any other click on the cell (the date button or empty space) opens the day popover.
+    // opens the event; on a day WITH items, a bare click peeks the day popover; on an EMPTY day it
+    // goes straight to the new-event editor (Notion-style — no empty popover in the way).
     c.addEventListener('click', (e) => {
       const chip = e.target.closest('.cal-chip');
       if (chip) {
         if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
         const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return;
       }
-      dayPopover(c.dataset.day, c);
+      if (c.querySelector('.cal-chip, .cal-more')) dayPopover(c.dataset.day, c);   // day has events/tasks → peek
+      else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
 }

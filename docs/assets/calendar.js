@@ -675,8 +675,8 @@ function closeSidePanel() {
   const trig = _sidePanelTrigger;
   _sidePanelEv = null;
   _sidePanelTrigger = null;
-  if (trig && document.contains(trig)) trig.focus();
-  else $('#calAdd')?.focus();
+  if (trig && document.contains(trig)) trig.focus({ preventScroll: true });
+  else $('#calAdd')?.focus({ preventScroll: true });
 }
 
 function openSidePanel(ev, trigger) {
@@ -732,8 +732,8 @@ function openSidePanel(ev, trigger) {
     </div>`;
 
   panel.hidden = false;
-  // rAF so the hidden→visible transition actually fires
-  requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('is-open'); }); });
+  void panel.offsetWidth;              // force one reflow so the translateX transition fires immediately (no rAF-throttle latency)
+  panel.classList.add('is-open');
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
@@ -760,7 +760,7 @@ function openSidePanel(ev, trigger) {
   _sidePanelCleanup = () => document.removeEventListener('keydown', onKey, true);
 
   // focus first focusable element inside the panel
-  setTimeout(() => { panel.querySelector('#spClose, button, [href]')?.focus(); }, 40);
+  setTimeout(() => { panel.querySelector('#spClose, button, [href]')?.focus({ preventScroll: true }); }, 40);
 }
 
 // Auto-close side panel when the open event disappears (delete / external change)

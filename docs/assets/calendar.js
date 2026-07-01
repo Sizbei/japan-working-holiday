@@ -573,16 +573,26 @@ function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return 
 function panelHTML() {
   const monthKey = `${viewY}-${pad(viewM + 1)}`;
   const evs = allEvents().filter(visible);
-  // deadlines: events with bookBy in or before the visible month, whose event date is still upcoming
+  // Up next: DISCRETE events starting in the viewed month, today-or-later. Excludes the 'seasonal'
+  // bucket — that's the evergreen/ongoing/permanent layer (teamLab, "retro hunting (ongoing)") which
+  // carries a placeholder date and reads as "now", not an actionable upcoming event.
+  const upnext = evs.filter(e => catOf(e) !== 'seasonal' && e.date.slice(0, 7) === monthKey && e.date.slice(0, 10) >= TODAY)
+    .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
+  // Book by: curated deadlines through the month, still upcoming
   const deadlines = evs.filter(e => e.bookBy && /^\d{4}-\d{2}-\d{2}$/.test(e.bookBy) && e.bookBy.slice(0, 7) <= monthKey && (e.endDate || e.date).slice(0, 10) >= TODAY)
-    .sort((a, b) => a.bookBy.localeCompare(b.bookBy));
-  const inMonth = evs.filter(e => {
-    const s = e.date.slice(0, 7), en = (e.endDate || e.date).slice(0, 7);
-    return s <= monthKey && en >= monthKey;
-  });
-  const tally = {};
-  inMonth.forEach(e => { tally[catOf(e)] = (tally[catOf(e)] || 0) + 1; });
-  const dl = deadlines.length ? deadlines.map(e => {
+    .sort((a, b) => a.bookBy.localeCompare(b.bookBy)).slice(0, 5);
+  // Tasks due: open checklist items with a user-set due date in the viewed month
+  const tasks = allTasks().filter(t => t.date.slice(0, 7) === monthKey).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
+
+  const upHTML = upnext.length ? upnext.map(e => {
+    const d = daysBetween(TODAY, e.date.slice(0, 10));
+    const cd = d == null ? '' : d <= 0 ? 'now' : `${d}d`;
+    return `<button class="cp-up" data-ev="${esc(e.id)}">
+      <span class="cp-cd cat-${safeCat(e)}">${esc(cd)}<small>${esc(fmtShort(e.date))}</small></span>
+      <span class="cp-uptt">${esc(e.title)}${isGoing(e.id) ? '<span class="cp-going">✓ going</span>' : ''}</span></button>`;
+  }).join('') : `<p class="cp-empty">Nothing left this month — you're clear. 🎏</p>`;
+
+  const dlHTML = deadlines.map(e => {
     const sev = sevOf(e.bookBy), days = daysBetween(TODAY, e.bookBy);
     const badge = days < 0 ? 'overdue' : `${days}d`;
     return `<button class="cp-deadline" data-ev="${esc(e.id)}">
@@ -590,21 +600,23 @@ function panelHTML() {
       <span class="cp-body"><span class="cp-title">${esc(e.title)}</span>
         <span class="cp-sub">book by ${esc(fmtShort(e.bookBy))}</span></span>
       <span class="cp-badge sev-${sev}">${esc(badge)}</span></button>`;
-  }).join('') : `<p class="cp-empty">No book-by deadlines through ${MONTHS[viewM]} — you're clear. 🎏</p>`;
-  const tallyHTML = Object.keys(tally).sort((a, b) => tally[b] - tally[a]).map(c =>
-    `<div class="cp-tally"><span class="cp-bar cat-${esc(c)}" style="width:${Math.min(tally[c] * 10, 120)}px"></span><span class="cp-tlabel">${esc(c)} ${tally[c]}</span></div>`).join('');
-  return `<h3 class="cp-head">Deadlines through ${MONTHS[viewM]} <span class="cp-count">${deadlines.length}</span></h3>
-    <div class="cp-list">${dl}</div>
-    <hr class="cp-hr">
-    <h3 class="cp-head">Happening in ${MONTHS[viewM]}</h3>
-    <div class="cp-tallies">${tallyHTML || '<p class="cp-empty">Nothing this month.</p>'}</div>`;
+  }).join('');
+
+  const taskHTML = tasks.map(t => `<button class="cp-task" data-task="${esc(t.taskId)}">
+    <span class="cp-tbox" aria-hidden="true"></span>
+    <span class="cp-ttt">${esc(t.title)}</span>
+    <span class="cp-tdue">${esc(fmtShort(t.date))}</span></button>`).join('');
+
+  return `<h3 class="cp-head">Up next</h3>
+    <div class="cp-list">${upHTML}</div>
+    ${deadlines.length ? `<hr class="cp-hr"><h3 class="cp-head">Book by <span class="cp-count">${deadlines.length}</span></h3><div class="cp-list">${dlHTML}</div>` : ''}
+    ${tasks.length ? `<hr class="cp-hr"><h3 class="cp-head">Tasks due <span class="cp-count">${tasks.length}</span></h3><div class="cp-list">${taskHTML}</div>` : ''}`;
 }
 function wirePanel() {
-  $$('#calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
+  $$('#calPanel .cp-up, #calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
   }));
-  // (removed the auto-scroll-to-next-deadline: it fired on every render — incl. legend-filter clicks —
-  //  and jolted the viewport. The panel is short; no auto-positioning needed.)
+  $$('#calPanel .cp-task').forEach(b => b.addEventListener('click', () => gotoTask(b.dataset.task)));
 }
 
 function agendaHTML() {

@@ -717,8 +717,8 @@ function closeSidePanel() {
   const trig = _sidePanelTrigger;
   _sidePanelEv = null;
   _sidePanelTrigger = null;
-  if (trig && document.contains(trig)) trig.focus();
-  else $('#calAdd')?.focus();
+  if (trig && document.contains(trig)) trig.focus({ preventScroll: true });
+  else $('#calAdd')?.focus({ preventScroll: true });
 }
 
 function openSidePanel(ev, trigger) {
@@ -735,30 +735,37 @@ function openSidePanel(ev, trigger) {
   const isBaked = ev.source !== 'user';
   const going = isGoing(ev.id);
   const dateRange = esc(fmtDate(ev.date)) + (ev.endDate ? ' – ' + esc(fmtDate(ev.endDate)) : '');
+  // friendly countdown chip: "in N days" / today / tomorrow / on now / past, + "· N-day" duration
+  const startISO = ev.date.slice(0, 10), endISO = (ev.endDate || ev.date).slice(0, 10);
+  const dTo = daysBetween(TODAY, startISO);
+  let cd = '';
+  if (dTo != null) cd = dTo > 1 ? `in ${dTo} days` : dTo === 1 ? 'tomorrow' : dTo === 0 ? 'today' : (endISO >= TODAY ? 'on now' : 'past');
+  const span = ev.endDate ? (daysBetween(startISO, endISO) ?? 0) + 1 : 0;
+  const cdFull = [cd, span > 1 ? `${span}-day` : ''].filter(Boolean).join(' · ');
+  const goBtn = `<button class="btn sp-going${going ? ' is-going' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>`;
+  const gcal = `<a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">Google Cal</a>`;
   const actions = isBaked
-    ? `<button class="btn ${going ? 'primary' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>
-       ${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}
-       <button class="btn" id="spPlan">＋ Add to day plan</button>
-       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
-       <button class="btn" id="spCopy">Copy to my events</button>`
-    : `<button class="btn" id="spEdit">Edit</button>
-       <button class="btn ${going ? 'primary' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>
-       <a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">+ Google Calendar</a>
-       <button class="btn danger" id="spDel">Delete</button>`;
+    ? `${goBtn}<div class="sp-sec">${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}<button class="btn" id="spPlan">＋ Day plan</button>${gcal}<button class="btn" id="spCopy">Copy</button></div>`
+    : `${goBtn}<div class="sp-sec"><button class="btn" id="spEdit">Edit</button>${gcal}<button class="btn danger" id="spDel">Delete</button></div>`;
 
   panel.innerHTML = `
     <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
-    <div class="sp-inner" role="dialog" aria-modal="true" aria-label="${esc(ev.title)}">
-      <div class="sp-head">
+    <div class="sp-inner" role="dialog" aria-modal="true" aria-label="${esc(ev.title)}" style="--cat:var(--c-${safeCat(ev)}-ink)">
+      <div class="sp-band">
+        <div class="sp-cattop">
+          <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(ev.category || 'event')}</span>
+          <button class="sp-close" id="spClose" aria-label="Close">✕</button>
+        </div>
         <h2 class="sp-title">${esc(ev.title)}</h2>
-        <button class="sp-close" id="spClose" aria-label="Close">✕</button>
+        ${cdFull ? `<span class="sp-cd">${esc(cdFull)}</span>` : ''}
       </div>
       <div class="sp-body">
-        <div class="sp-row"><span class="sp-icon" aria-hidden="true">📅</span><span>${dateRange}</span></div>
-        ${ev.area ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">📍</span><span>${esc(ev.area)}</span></div>` : ''}
-        ${ev.category ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">🏷</span><span>${esc(ev.category)}</span></div>` : ''}
-        ${ev.cost ? `<div class="sp-row"><span class="sp-icon" aria-hidden="true">💴</span><span>${esc(ev.cost)}</span></div>` : ''}
-        ${ev.bookBy ? `<div class="sp-row sp-bookby"><span class="sp-icon" aria-hidden="true">🎟️</span><span>Book by <b>${esc(fmtDate(ev.bookBy))}</b></span></div>` : ''}
+        <div class="sp-meta">
+          <span class="sp-k">When</span><span class="sp-v">${dateRange}</span>
+          ${ev.area ? `<span class="sp-k">Where</span><span class="sp-v">${esc(ev.area)}</span>` : ''}
+          ${ev.cost ? `<span class="sp-k">Cost</span><span class="sp-v">${esc(ev.cost)}</span>` : ''}
+          ${ev.bookBy ? `<span class="sp-k">Book by</span><span class="sp-v sp-bookby">${esc(fmtDate(ev.bookBy))}</span>` : ''}
+        </div>
         ${(ev.note || ev.bookingNotes || ev.why) ? `<p class="sp-note">${esc(ev.note || ev.bookingNotes || ev.why || '')}</p>` : ''}
         ${ev.moved ? '<p class="sp-moved">↩ You rescheduled this from its researched date.</p>' : ''}
         ${srcline(ev.sources)}
@@ -767,8 +774,8 @@ function openSidePanel(ev, trigger) {
     </div>`;
 
   panel.hidden = false;
-  // rAF so the hidden→visible transition actually fires
-  requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('is-open'); }); });
+  void panel.offsetWidth;              // force one reflow so the translateX transition fires immediately (no rAF-throttle latency)
+  panel.classList.add('is-open');
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
@@ -795,7 +802,7 @@ function openSidePanel(ev, trigger) {
   _sidePanelCleanup = () => document.removeEventListener('keydown', onKey, true);
 
   // focus first focusable element inside the panel
-  setTimeout(() => { panel.querySelector('#spClose, button, [href]')?.focus(); }, 40);
+  setTimeout(() => { panel.querySelector('#spClose, button, [href]')?.focus({ preventScroll: true }); }, 40);
 }
 
 // Auto-close side panel when the open event disappears (delete / external change)

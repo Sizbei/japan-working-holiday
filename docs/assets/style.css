@@ -263,9 +263,10 @@ td:nth-child(2) { color: var(--red); font-weight: 500; white-space: nowrap; }
   transition: border-color var(--t-hover), color var(--t-hover); }
 .dn-chip:hover { border-color: var(--indigo); color: var(--ink); }
 .dn-chip:active { transform: scale(var(--press-scale)); }
-@media (max-width: 560px) {   /* route-nav becomes a fixed bottom bar here, so only clear the topbar */
+@media (max-width: 820px) {   /* route-nav is a drawer on mobile → sticky bars clear only the topbar (no nav bar below it) */
   .domain-nav { top: var(--header-h); }
   .domain { scroll-margin-top: calc(var(--header-h) + 3.6rem); }
+  .check-progress { top: var(--header-h); }
 }
 .domain-head { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; }
 .domain-head .d-icon { font-size: 1.4rem; }
@@ -901,12 +902,11 @@ html.gated{ overflow: hidden; }
   #calView{ order:-1; }                                   /* the month grid is the primary content — show it first, not buried under the rail */
   .cal-mininav{ display:none; }                           /* redundant with the grid + the toolbar's ‹ › month nav on a phone */
   .cal-panel{ position: static; max-height:none; }
-  .cal-legend{ top: calc(var(--header-h) + var(--nav-h)); }   /* route-nav still sticky at top on tablets */
+  .cal-legend{ top: var(--header-h); }   /* route-nav is a drawer on mobile → only the topbar is sticky above the legend */
 }
 @media (max-width: 560px){
   .cal-meter i{ width:4px; height:4px; }
   .cal-ticket{ font-size:.55rem; }
-  .cal-legend{ top: var(--header-h); }   /* route-nav becomes a fixed bottom bar here */
 }
 
 /* ---- single reduced-motion contract (tokens collapse to instant; callbacks still fire) ---- */
@@ -1007,6 +1007,12 @@ html.js-router .view.is-active { display: block; }
 .route-nav a:active { transform: scale(var(--press-scale)); }
 .route-nav a[aria-current="page"] { color: var(--ink); font-weight: 800; }
 .route-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+/* hamburger + drawer backdrop (shown only on mobile via the media query below) */
+.nav-toggle{ display:none; align-items:center; justify-content:center; width:38px; height:38px; margin-right:.15rem; border:1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft); color: var(--ink); font-size:1.15rem; line-height:1; cursor:pointer; flex:none; }
+.nav-toggle:hover{ border-color: var(--indigo); }
+.nav-backdrop{ position: fixed; inset:0; background: var(--scrim); z-index: 190; animation: overlayIn var(--t-base); }
+html.nav-open{ overflow: hidden; }
 
 /* stable regions keep their own snapshot — only the active view cross-fades */
 .topbar    { view-transition-name: jwh-topbar; }
@@ -1121,22 +1127,22 @@ html.js-router .view.is-active { display: block; }
 /* widget drag handle now lives on the .widget (not the <h3>) — pin it top-right */
 .widget > .dnd-handle{ position: absolute; top: .55rem; right: .55rem; z-index: 2; }
 
-@media (max-width: 560px){
-  /* route-nav = a fixed, horizontally-scrollable single-row bottom tab bar (13 routes don't fit one
-     non-scrolling row at 360px; the old space-around made them wrap to a tall bar that overlapped content) */
+/* mobile/tablet: the route-nav is a left slide-in DRAWER opened by the hamburger (a 10-item bar
+   doesn't belong crammed into a phone header or a scrolly bottom strip) */
+@media (max-width: 820px){
+  .nav-toggle{ display:inline-flex; }
   .route-nav{
-    position: fixed; bottom: 0; left: 0; right: 0; top: auto;
-    border-top: 1px solid var(--line); border-bottom: none;
-    flex-wrap: nowrap; justify-content: flex-start; gap: .1rem;
-    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    scroll-snap-type: x proximity;
-    padding: .25rem .35rem calc(.25rem + env(safe-area-inset-bottom, 0px));
-    z-index: 60; box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+    position: fixed; top:0; bottom:0; left:0; right:auto; width: min(80vw, 300px);
+    flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch;
+    gap: .15rem; padding: calc(var(--header-h) + .6rem) .7rem calc(.7rem + env(safe-area-inset-bottom, 0px));
+    border-bottom: none; border-right: 1px solid var(--line); box-shadow: var(--shadow-lg);
+    z-index: 200; overflow-y: auto;
+    transform: translateX(-100%); transition: transform var(--t-base);
   }
-  .route-nav::-webkit-scrollbar{ display: none; }
-  .route-nav a{ flex: 0 0 auto; white-space: nowrap; text-align: center; font-size: .72rem; padding: .4rem .55rem; border-radius: var(--r-sm); scroll-snap-align: center; }
-  .route-nav a[aria-current="page"]{ background: transparent; color: var(--red); }
-  #main{ padding-bottom: calc(2.9rem + env(safe-area-inset-bottom, 0px)); }   /* clear the single-row bottom bar */
+  .route-nav.open{ transform: translateX(0); }
+  html[data-reduce-motion="on"] .route-nav{ transition: none; }
+  .route-nav a{ width:100%; text-align:left; font-size:.95rem; padding: .7rem .9rem; border-radius: var(--r-sm); }
+  .route-nav a[aria-current="page"]{ background: color-mix(in srgb, var(--indigo) 10%, transparent); color: var(--ink); }
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1272,7 +1278,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .sug-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .sug-area{ flex:none; font-size:.7rem; color: var(--ink-soft); }
 .sug-prec{ flex:none; font-size:.66rem; font-weight:700; color: var(--ink-soft); opacity:.8; }
-.map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: var(--bg-sunk); }
+.map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: #0b0b0f; }   /* Flighty deep-black — matches the dark basemap while tiles load */
 .map-canvas.failed::after{ content:'Map offline — use the neighbourhood index below.'; display:grid; place-items:center; height:100%; color: var(--ink-soft); font-size:.85rem; }
 /* loading state — spinner while Leaflet lazy-loads (a blank canvas reads as broken) */
 .map-canvas.loading::after{ content:'Loading map…'; position:absolute; inset:0; display:grid; place-items:end center; padding-bottom:2.4rem; color: var(--ink-soft); font-size:.85rem; }

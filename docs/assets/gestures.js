@@ -30,7 +30,29 @@ export function mountGestures() {
   wireSwipe();
   wireKeyboard();
   wireLongPress();
+  wireNavDrawer();
   document.getElementById('kbdHelp')?.addEventListener('click', () => toggleHelp());   // discoverable trigger for the ? overlay
+}
+
+/* ------------------------------------------------------------- mobile hamburger nav drawer */
+function wireNavDrawer() {
+  const btn = document.getElementById('navToggle');
+  const nav = document.getElementById('routeNav');
+  const backdrop = document.getElementById('navBackdrop');
+  if (!btn || !nav || !backdrop) return;
+  const set = (open) => {
+    nav.classList.toggle('open', open);
+    backdrop.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('nav-open', open);   // lock body scroll while open
+    if (open) nav.querySelector('a[aria-current="page"], a')?.focus();
+    else btn.focus();
+  };
+  btn.addEventListener('click', () => set(!nav.classList.contains('open')));
+  backdrop.addEventListener('click', () => set(false));
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });   // pick a route → close
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false); });
+  document.addEventListener('jwh:route', () => { if (nav.classList.contains('open')) set(false); });
 }
 
 /* ----------------------------------------------------------------- swipe between pages */

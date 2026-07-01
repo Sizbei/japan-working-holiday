@@ -285,8 +285,22 @@ function initMap() {
   const el = $('#mapCanvas');
   if (!el || map || !window.L) return;
   el.classList.remove('loading');
-  map = L.map(el, { scrollWheelZoom: false }).setView([35.69, 139.73], 12);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
+  // scrollWheelZoom off (the map is a short panel in a scrollable page — plain scroll must page,
+  // not zoom); touchZoom on for mobile pinch; zoomSnap 0 for smooth trackpad-pinch (ctrl+wheel).
+  map = L.map(el, { scrollWheelZoom: false, touchZoom: true, zoomSnap: 0 }).setView([35.69, 139.73], 12);
+  // Flighty-style dark basemap — CARTO dark_matter (free, no key; retina @2x via {r}+detectRetina)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20, subdomains: 'abcd', detectRetina: true,
+    attribution: '© OpenStreetMap contributors © CARTO',
+  }).addTo(map);
+  // trackpad / laptop 2-finger pinch arrives as ctrl+wheel → zoom around the cursor; a plain wheel
+  // (no ctrl) is left alone so the page still scrolls past the map.
+  el.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    const latlng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e));
+    map.setZoomAround(latlng, map.getZoom() - e.deltaY * 0.01);
+  }, { passive: false });
   pinLayer = window.L.markerClusterGroup
     ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46, spiderfyOnMaxZoom: true })
     : L.layerGroup();

@@ -895,11 +895,11 @@ html.gated{ overflow: hidden; }
 .pop-add{ width:100%; margin-top:.5rem; background: var(--red); color:#fff; border:none; border-radius:8px; padding:.45rem; font-weight:700; font-size:.8rem; cursor:pointer; }
 .agenda-row{ position:relative; }
 
-/* mobile: sidebar above grid, single column (820/560 to match app breakpoints) */
+/* mobile: single column, GRID FIRST (it's the subject of the page), cockpit below it (820/560 to match app breakpoints) */
 @media (max-width: 820px){
   .cal-layout{ grid-template-columns: minmax(0, 1fr); }   /* minmax(0,…) so a wide child (week list) can't blow out the single column */
-  .cal-sidebar{ order:-1; }
-  .cal-mininav{ position: static; }
+  #calView{ order:-1; }                                   /* the month grid is the primary content — show it first, not buried under the rail */
+  .cal-mininav{ display:none; }                           /* redundant with the grid + the toolbar's ‹ › month nav on a phone */
   .cal-panel{ position: static; max-height:none; }
   .cal-legend{ top: calc(var(--header-h) + var(--nav-h)); }   /* route-nav still sticky at top on tablets */
 }

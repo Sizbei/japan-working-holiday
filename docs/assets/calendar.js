@@ -338,6 +338,7 @@ function render() {
     if (panel) { panel.hidden = false; panel.innerHTML = panelHTML(); wirePanel(); }
     wireCells();
     wireReschedule();
+    wireMonthSelect();
   } else if (mode === 'week') {
     view.innerHTML = weekHTML();
     if (panel) panel.hidden = true;   // the week view shows the whole week; the month deadline panel would duplicate
@@ -658,6 +659,7 @@ function wireCells() {
     // opens the event; on a day WITH items, a bare click peeks the day popover; on an EMPTY day it
     // goes straight to the new-event editor (Notion-style — no empty popover in the way).
     c.addEventListener('click', (e) => {
+      if (_calDragSelected) { _calDragSelected = false; return; }              // a range-drag just ended — don't also add/peek
       const chip = e.target.closest('.cal-chip');
       if (chip) {
         if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
@@ -667,6 +669,45 @@ function wireCells() {
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
+}
+// Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
+// that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
+let _calDragSelected = false;
+function wireMonthSelect() {
+  const grid = $('#calView .cal-grid');
+  if (!grid || grid.dataset.selWired) return;
+  grid.dataset.selWired = '1';
+  const cellAt = (x, y) => document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
+  const clear = () => $$('#calView .cal-cell.cal-selecting').forEach(c => c.classList.remove('cal-selecting'));
+  const paint = (a, b) => {
+    const lo = a < b ? a : b, hi = a < b ? b : a;
+    $$('#calView .cal-cell[data-day]').forEach(c => c.classList.toggle('cal-selecting', c.dataset.day >= lo && c.dataset.day <= hi));
+  };
+  let startDay = null, moved = false;
+  grid.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || e.target.closest('.cal-chip, .cal-more, button, a')) return;   // let chips/date-button/more work
+    const cell = e.target.closest('.cal-cell[data-day]'); if (!cell) return;
+    startDay = cell.dataset.day; moved = false;
+    try { grid.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
+    paint(startDay, startDay);
+  });
+  grid.addEventListener('pointermove', (e) => {
+    if (startDay == null) return;
+    const cell = cellAt(e.clientX, e.clientY); if (!cell) return;
+    if (cell.dataset.day !== startDay) moved = true;
+    paint(startDay, cell.dataset.day);
+  });
+  const finish = (e) => {
+    if (startDay == null) return;
+    const endDay = cellAt(e.clientX, e.clientY)?.dataset.day || startDay;
+    const s = startDay; startDay = null; clear();
+    if (!moved || endDay === s) return;                              // plain click → wireCells handles it
+    _calDragSelected = true; setTimeout(() => { _calDragSelected = false; }, 350);
+    const lo = s < endDay ? s : endDay, hi = s < endDay ? endDay : s;
+    openModal(null, lo, hi);
+  };
+  grid.addEventListener('pointerup', finish);
+  grid.addEventListener('pointercancel', () => { startDay = null; clear(); });
 }
 // drag a USER event chip onto another day to reschedule (baked events are fixed)
 function wireReschedule() {

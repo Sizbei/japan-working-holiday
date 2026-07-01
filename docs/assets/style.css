@@ -584,6 +584,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
   padding:4px; cursor:pointer; display:flex; flex-direction:column; gap:2px; overflow:hidden; transition: border-color .12s ease; }
 .cal-cell:hover{ border-color: var(--indigo); }
 .cal-cell.empty{ background: transparent; border:none; cursor: default; }
+/* drag-across-days range selection (Notion-style) */
+.cal-cell.cal-selecting{ background: color-mix(in srgb, var(--indigo) 12%, var(--bg-soft)); border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
 /* date is a real button (opens the day popover; keyboard-native) styled to look like the number */
 .cal-date{ background:none; border:none; padding:0; margin:0; font:inherit; cursor:pointer; line-height:1;
   font-size:.78rem; font-weight:700; color: var(--ink-soft); }

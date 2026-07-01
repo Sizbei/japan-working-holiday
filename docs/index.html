@@ -126,6 +126,11 @@
         <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
       </div>
     </div>
+    <form class="cal-quickadd" id="calQuickAdd" autocomplete="off">
+      <span class="cqa-plus" aria-hidden="true">＋</span>
+      <input type="text" id="calQuickInput" placeholder="Quick add — try: Ramen with Kenji Jul 3 7pm" aria-label="Quick-add an event in plain language (title, date and time)">
+      <span class="cqa-hint" id="calQuickHint" aria-live="polite"></span>
+    </form>
     <div class="cal-search">
       <input type="search" id="calSearch" placeholder="SEARCH EVENTS // fireworks, Akihabara, festival…" aria-label="Search all events" autocomplete="off">
       <ul id="calSearchResults" class="cal-search-results" aria-label="Event search results"></ul>

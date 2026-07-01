@@ -132,9 +132,12 @@ function openHelp() {
     <div class="kh-row"><kbd>⌘Z</kbd> <kbd>Ctrl+Z</kbd><span>Undo the last calendar delete</span></div>
     <p class="kh-sub">On the calendar</p>
     <div class="kh-row"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd><span>Move between days (month view)</span></div>
+    <div class="kh-row"><kbd>⇧←</kbd> <kbd>⇧→</kbd><span>Previous / next month (or week)</span></div>
+    <div class="kh-row"><kbd>m</kbd> <kbd>w</kbd> <kbd>a</kbd><span>Switch to Month / Week / Agenda</span></div>
     <div class="kh-row"><kbd>n</kbd><span>New event on the focused day</span></div>
     <div class="kh-row"><kbd>−</kbd> <kbd>Del</kbd><span>Remove the focused / open event</span></div>
     <div class="kh-row"><kbd>t</kbd><span>Jump to today</span></div>
+    <div class="kh-row"><span class="kh-tip">Quick-add box: type <em>"Ramen with Kenji Jul 3 7pm"</em> → an event</span></div>
     <p class="kh-sub">On the checklist</p>
     <div class="kh-row"><kbd>↑</kbd><kbd>↓</kbd> <kbd>j</kbd><kbd>k</kbd><span>Move between tasks</span></div>
     <div class="kh-row"><kbd>Space</kbd><span>Tick / untick the focused task</span></div>

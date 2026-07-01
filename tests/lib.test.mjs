@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { parseISO, daysBetween, daysUntil, countdown, windowStatus, fmtShort } from '../docs/assets/lib/dates.js';
 import { computeAlerts, alertCount } from '../docs/assets/lib/notify.js';
 import { toICS, parseICS, gcalUrl } from '../docs/assets/lib/ics.js';
+import { parseEvent } from '../docs/assets/lib/nlevent.js';
 
 const TODAY = '2026-06-15';
 const ARRIVAL = '2026-06-30';
@@ -672,4 +673,41 @@ test('gcal sync: setMapped is immutable — original map not mutated', () => {
   assert.equal(getMapped(m, 'y'), undefined);   // original untouched
   assert.equal(getMapped(m2, 'y'), 'g-y');
   assert.equal(getMapped(m2, 'x'), 'g-x');      // existing entry preserved
+});
+
+// ---- natural-language quick-add (parseEvent) ----
+const NL = '2026-06-30';   // a Tuesday
+test('parseEvent: month-name date + pm time, clean title', () => {
+  const r = parseEvent('Ramen with Kenji Jul 3 7pm', NL);
+  assert.equal(r.title, 'Ramen with Kenji');
+  assert.equal(r.date, '2026-07-03');
+  assert.equal(r.time, '19:00');
+});
+test('parseEvent: relative today/tomorrow', () => {
+  assert.equal(parseEvent('Call landlord today', NL).date, '2026-06-30');
+  assert.equal(parseEvent('Dentist tomorrow 9am', NL).date, '2026-07-01');
+  assert.equal(parseEvent('Dentist tomorrow 9am', NL).time, '09:00');
+});
+test('parseEvent: weekday resolves forward; "next" adds a week', () => {
+  assert.equal(parseEvent('Gym friday', NL).date, '2026-07-03');   // Tue -> coming Fri
+  assert.equal(parseEvent('Gym next friday', NL).date, '2026-07-10');
+  assert.equal(parseEvent('Trash tuesday', NL).date, '2026-06-30'); // same weekday = today
+});
+test('parseEvent: ISO and numeric M/D, past date rolls to next year', () => {
+  assert.equal(parseEvent('Flight 2026-07-11', NL).date, '2026-07-11');
+  assert.equal(parseEvent('Viewing 7/2', NL).date, '2026-07-02');
+  assert.equal(parseEvent('Party 1/5', NL).date, '2027-01-05');    // Jan already past -> next year
+});
+test('parseEvent: 24h time, no date defaults to today', () => {
+  const r = parseEvent('Standup 09:30', NL);
+  assert.equal(r.time, '09:30');
+  assert.equal(r.date, '2026-06-30');
+  assert.equal(r.title, 'Standup');
+});
+test('parseEvent: title-only, empty input safe', () => {
+  assert.equal(parseEvent('Buy futon', NL).title, 'Buy futon');
+  assert.equal(parseEvent('Buy futon', NL).date, '2026-06-30');
+  const e = parseEvent('', NL);
+  assert.equal(e.title, '');
+  assert.equal(e.date, '2026-06-30');
 });

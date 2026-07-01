@@ -18,6 +18,7 @@ import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { checklistItems, revealChecklistItem } from './checklist-page.js';
+import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
@@ -126,6 +127,7 @@ export function mountCalendar(data, today) {
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
   wireToolbar();
+  wireQuickAdd();
   buildLegend();
   render();
   document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
@@ -162,6 +164,31 @@ function wireToolbar() {
   $('#calExport')?.addEventListener('click', openExport);
   $('#calImportBtn')?.addEventListener('click', () => $('#calImport').click());
   $('#calImport')?.addEventListener('change', onImport);
+}
+// Natural-language quick-add (Fantastical-style): type "Ramen with Kenji Jul 3 7pm" → an event.
+// Creates a USER event via saveUser (device-local); a live hint previews the parsed date/time.
+function wireQuickAdd() {
+  const form = $('#calQuickAdd'), input = $('#calQuickInput'), hint = $('#calQuickHint');
+  if (!form || !input || form.dataset.wired) return;
+  form.dataset.wired = '1';
+  input.addEventListener('input', () => {
+    const v = input.value.trim();
+    const p = v ? parseEvent(v, TODAY) : null;
+    hint.textContent = (p && p.title) ? `→ ${fmtShort(p.date)}${p.time ? ' · ' + p.time : ''}` : '';
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = input.value.trim();
+    if (!v) return;
+    const p = parseEvent(v, TODAY);
+    const title = p.title || v;
+    const t = parseISO(p.date);
+    if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; }   // land on the new event's month (the saveUser render shows it)
+    saveUser([...loadUser(), { id: 'u' + Date.now(), title, date: p.date, endDate: '', time: p.time || '', category: 'personal', note: '' }]);
+    input.value = ''; hint.textContent = '';
+    dndToast(`Added: ${title} · ${fmtShort(p.date)}`);
+    input.focus();
+  });
 }
 function shift(d) {
   if (mode === 'week') { weekAnchor = addDaysISO(weekAnchor, 7 * d); render(); return; }   // week mode steps by a week
@@ -252,6 +279,12 @@ function onCalKeydown(e) {
   if (e.key === 'n' || e.key === 'N') {
     e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk-dayhd[data-day]')?.dataset.day || TODAY; openModal(null, day); return;
   }
+  // view switch (m/w/a) — Google-Calendar-style
+  if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; render(); } return; }
+  if (e.key === 'w' || e.key === 'W') { e.preventDefault(); if (mode !== 'week') { mode = 'week'; render(); } return; }
+  if (e.key === 'a' || e.key === 'A') { e.preventDefault(); if (mode !== 'agenda') { mode = 'agenda'; render(); } return; }
+  // Shift+←/→ steps the whole period (month, or week in week mode) — distinct from plain arrows (day focus)
+  if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); shift(e.key === 'ArrowLeft' ? -1 : 1); return; }
   if (mode === 'month' && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
     const cells = $$('#calView .cal-date[data-day]');
     if (!cells.length) return;

@@ -1532,6 +1532,16 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 @media (prefers-reduced-motion: reduce){ .jp-dict{ transition:none; } }
 
 /* event search (calendar page) */
+/* natural-language quick-add — the Fantastical-style single box */
+.cal-quickadd{ display:flex; align-items:center; gap:.5rem; max-width:520px; margin: var(--s3) 0 var(--s2);
+  padding:.5rem .8rem; border:1px solid var(--indigo); border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--indigo) 7%, var(--bg-soft)); transition: box-shadow var(--t-hover); }
+.cal-quickadd:focus-within{ box-shadow: var(--ring); }
+.cqa-plus{ color: var(--indigo); font-weight:700; font-size:1rem; line-height:1; flex:none; }
+#calQuickInput{ flex:1; min-width:0; border:none; background:transparent; color: var(--ink); font-family: var(--mono); font-size:.82rem; }
+#calQuickInput:focus{ outline:none; }
+#calQuickInput::placeholder{ color: var(--ink-faint); }
+.cqa-hint{ flex:none; font-family: var(--mono); font-size:.74rem; font-weight:700; color: var(--indigo-ink); white-space:nowrap; }
 .cal-search{ position: relative; margin: var(--s2) 0 var(--s3); }
 #calSearch{ width:100%; max-width:520px; font-family: var(--mono); font-size:.8rem; padding:.55rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
 #calSearch:focus{ outline:none; box-shadow: var(--ring); }
@@ -1684,6 +1694,8 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
   border-radius: var(--r-xs); padding: .12rem .35rem; color: var(--ink);
 }
 .kh-sub{ font-size: .76rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); margin: var(--s3) 0 .15rem; }
+.kh-tip{ font-size: .8rem; color: var(--ink-faint); }
+.kh-tip em{ color: var(--ink-soft); font-style: italic; }
 .kh-hint{ font-size: .82rem; color: var(--ink-faint); margin: var(--s3) 0 var(--s4); }
 .kh-close{
   display: block; width: 100%; padding: .6rem; border: 1px solid var(--line-strong);

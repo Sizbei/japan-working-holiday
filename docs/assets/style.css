@@ -16,6 +16,7 @@
   --red:           #bc002d;
   --red-soft:      #d83a5e;
   --indigo:        #223a70;
+  --flighty-blue:  #0a84ff;   /* the dark-map / route accent (matches the Flighty basemap) */
   --indigo-soft:   #3a5ba0;
   --gold:          #b8860b;
   --shu:#b6391f;            /* vermilion seal — Sumi-e accent */
@@ -1011,8 +1012,9 @@ html.js-router .view.is-active { display: block; }
 /* hamburger + drawer backdrop (shown only on mobile via the media query below) */
 .nav-toggle{ display:none; align-items:center; justify-content:center; width:38px; height:38px; margin-right:.15rem; border:1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft); color: var(--ink); font-size:1.15rem; line-height:1; cursor:pointer; flex:none; }
 .nav-toggle:hover{ border-color: var(--indigo); }
-.nav-backdrop{ position: fixed; inset:0; background: var(--scrim); z-index: 190; animation: overlayIn var(--t-base); }
+.nav-backdrop{ position: fixed; inset:0; background: var(--scrim); z-index: 190; animation: overlayIn var(--t-base); backdrop-filter: blur(2px); }
 html.nav-open{ overflow: hidden; }
+.nav-drawer-head, .nav-drawer-foot{ display: none; }   /* drawer-only chrome — shown inside the mobile drawer via the media query */
 
 /* stable regions keep their own snapshot — only the active view cross-fades */
 .topbar    { view-transition-name: jwh-topbar; }
@@ -1132,17 +1134,29 @@ html.nav-open{ overflow: hidden; }
 @media (max-width: 820px){
   .nav-toggle{ display:inline-flex; }
   .route-nav{
-    position: fixed; top:0; bottom:0; left:0; right:auto; width: min(80vw, 300px);
+    position: fixed; top:0; bottom:0; left:0; right:auto; width: min(82vw, 310px);
     flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch;
-    gap: .15rem; padding: calc(var(--header-h) + .6rem) .7rem calc(.7rem + env(safe-area-inset-bottom, 0px));
-    border-bottom: none; border-right: 1px solid var(--line); box-shadow: var(--shadow-lg);
+    gap: .12rem; padding: .5rem .6rem calc(.6rem + env(safe-area-inset-bottom, 0px));
+    background: var(--bg-elevated); border-bottom: none; border-right: 1px solid var(--line-strong);
+    border-radius: 0 var(--r-lg) var(--r-lg) 0; box-shadow: 24px 0 60px -30px rgba(30,20,10,.5);
     z-index: 200; overflow-y: auto;
     transform: translateX(-100%); transition: transform var(--t-base);
   }
   .route-nav.open{ transform: translateX(0); }
   html[data-reduce-motion="on"] .route-nav{ transition: none; }
-  .route-nav a{ width:100%; text-align:left; font-size:.95rem; padding: .7rem .9rem; border-radius: var(--r-sm); }
-  .route-nav a[aria-current="page"]{ background: color-mix(in srgb, var(--indigo) 10%, transparent); color: var(--ink); }
+  .route-nav a{ width:100%; text-align:left; font-size:.9rem; padding: .72rem .8rem; border-radius: var(--r-md); position: relative; color: var(--ink-soft); }
+  .route-nav a:hover{ background: var(--bg-sunk); }
+  .route-nav a[aria-current="page"]{ background: color-mix(in srgb, var(--flighty-blue) 12%, transparent); color: var(--ink); box-shadow: inset 3px 0 0 var(--flighty-blue); }
+  .route-nav a[aria-current="page"]::after{ display:none; }   /* the underline sweep is a horizontal-nav thing */
+  /* drawer header: brand + close */
+  .nav-drawer-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem .55rem .7rem; margin-bottom:.35rem; border-bottom:1px solid var(--line); }
+  .nav-brand{ display:inline-flex; align-items:center; gap:.4rem; font-family: var(--serif); font-weight:600; font-size:1.02rem; color: var(--ink); }
+  .nav-close{ width:34px; height:34px; flex:none; display:grid; place-items:center; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font-size:.85rem; cursor:pointer; }
+  .nav-close:hover{ border-color: var(--flighty-blue); color: var(--ink); }
+  /* drawer footer: JP kicker + live day-count */
+  .nav-drawer-foot{ display:flex; flex-direction:column; gap:.1rem; margin-top:auto; padding:.8rem .6rem calc(.4rem + env(safe-area-inset-bottom, 0px)); border-top:1px solid var(--line); }
+  .nav-foot-jp{ font-family: var(--serif-jp, serif); font-size:.9rem; color: var(--ink-faint); }
+  .nav-foot-count{ font-family: var(--mono); font-weight:700; font-size:.72rem; color: var(--flighty-blue); }
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1299,7 +1313,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* custom animated map pins + dark tiles */
 .jwh-pin{ animation: pinDrop var(--t-spring); }
-.jwh-pin-dot{ display:block; width:16px; height:16px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.45); background: var(--c-personal); transition: transform var(--t-hover); }
+.jwh-pin-dot{ display:block; width:16px; height:16px; border-radius:50%; border:2px solid #fff; background: var(--flighty-blue); box-shadow:0 0 0 2px rgba(10,132,255,.35), 0 0 9px rgba(10,132,255,.55), 0 1px 4px rgba(0,0,0,.5); transition: transform var(--t-hover); }   /* Flighty-blue with a soft glow on the dark basemap (category shown by the letter glyph inside) */
 .jwh-pin-dot:hover{ transform: scale(1.25); }
 .jwh-pin.pulse .jwh-pin-dot{ animation: pinPulse 1.8s ease-in-out infinite; }
 @keyframes pinPulse{ 0%,100%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 0 color-mix(in srgb, var(--red) 55%, transparent); } 50%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 9px transparent; } }
@@ -1314,12 +1328,16 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 #placeDate{ font-family: var(--mono); font-size:.78rem; padding:.5rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
 @media (prefers-reduced-motion: reduce){ .jwh-pin, .jwh-pin.pulse .jwh-pin-dot{ animation: none; } }
 /* pin colours for categories without a global .cat-* background */
-.jwh-pin-dot.cat-geek{ background: var(--c-geek-vivid); }
-.jwh-pin-dot.cat-build{ background: var(--c-build); }
-.jwh-pin-dot.cat-meet{ background: var(--c-meet-vivid); }
+/* pins are unified Flighty-blue on the dark map; the in-dot letter glyph (data-g) carries category */
+.jwh-pin-dot.cat-geek, .jwh-pin-dot.cat-build, .jwh-pin-dot.cat-meet{ background: var(--flighty-blue); }
 
 /* fit-all-pins toolbar */
-.map-tools{ display:flex; align-items:center; gap:.7rem; margin:.3rem 0 .6rem; }
+.map-tools{ display:flex; align-items:center; gap:.7rem; margin:.3rem 0 .6rem; flex-wrap:wrap; }
+/* day-plan route selector — draws a day's itinerary path on the map */
+.map-dayplan{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid color-mix(in srgb, var(--flighty-blue) 45%, var(--line)); background: color-mix(in srgb, var(--flighty-blue) 7%, var(--bg-soft)); border-radius: var(--r-pill); padding:.15rem .55rem .15rem .6rem; }
+.map-dayplan .mdp-i{ font-size:.82rem; }
+#mapDay{ font-family: var(--mono); font-size:.72rem; font-weight:700; color: var(--indigo-ink); background:transparent; border:none; padding:.25rem .1rem; cursor:pointer; max-width:200px; }
+#mapDay:focus{ outline:none; }
 .map-fit{ font-family: var(--mono); font-size:.72rem; font-weight:700; letter-spacing:.04em; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .7rem; cursor:pointer; transition: border-color var(--t-hover), transform var(--t-hover); }
 .map-fit:hover{ border-color: var(--indigo); transform: translateY(-1px); }
 .map-fit:active{ transform: translateY(0); }
@@ -1386,8 +1404,8 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .map-ic[disabled]{ opacity:.35; cursor:not-allowed; }
 
 /* marker-cluster bubbles tuned to theme */
-.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large{ background: color-mix(in srgb, var(--indigo) 22%, transparent); }
-.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div{ background: var(--indigo); color:#fff; font-family: var(--mono); font-weight:700; }
+.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large{ background: color-mix(in srgb, var(--flighty-blue) 28%, transparent); }
+.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div{ background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; box-shadow:0 0 8px rgba(10,132,255,.5); }
 
 /* fav / locked pin badges + approx note + highlight */
 .jwh-pin.fav .jwh-pin-dot{ box-shadow:0 0 0 2px var(--gold, #d8a200), 0 1px 5px rgba(0,0,0,.45); }
@@ -1606,8 +1624,8 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 
 /* day-plan route line markers on the map */
 .jwh-route-pin{ display:grid; place-items:center; }
-.jwh-route-pin b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background:#5a3fb5; color:#fff; font-family: var(--mono); font-size:.72rem; font-weight:700; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.5); }
-.jwh-route-pin.approx b{ background:#8a7fc0; }
+.jwh-route-pin b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-size:.72rem; font-weight:700; border:2px solid #fff; box-shadow:0 0 10px rgba(10,132,255,.6), 0 1px 4px rgba(0,0,0,.5); }
+.jwh-route-pin.approx b{ background: color-mix(in srgb, var(--flighty-blue), #fff 30%); }
 @media (prefers-reduced-motion: reduce){ .plan-days{ scroll-behavior:auto; } }
 
 /* filter empty-states */

@@ -21,7 +21,8 @@ import {
 import { searchLocal } from './lib/placesearch.js';
 import { prefersReducedMotion } from './motion.js';
 import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
-import { nowISO } from './lib/dates.js';
+import { nowISO, fmtShort } from './lib/dates.js';
+import { loadPlans, getPlan, hasPlan } from './lib/dayplan.js';
 import { searchJP } from './lib/nominatim.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
@@ -110,11 +111,13 @@ export function mountMap(data) {
   wireAddPlace();
   $('#mapFit')?.addEventListener('click', fitAllPins);
   $('#mapDrop')?.addEventListener('click', toggleArm);
+  wireDaySelect();
   document.addEventListener('jwh:route', (e) => {
     mapActive = e.detail?.route === 'map';
     if (!mapActive) return;
     ensureLeaflet();
     renderSaved();
+    populateDaySelect();              // refresh the day-plan list (plans may have changed since last visit)
     if (leafletReady) onMapShown();   // re-measure + catch up once the SPA actually reveals the container
   });
   // off the map route, just mark pins dirty — defer the expensive 200+-marker rebuild until the map is next shown
@@ -426,7 +429,10 @@ export function drawRoute(stops) {
       routeLayer.addLayer(m);
     });
     if (pts.length > 1) {
-      const line = L.polyline(pts.map(({ s }) => [s.lat, s.lng]), { color: '#5a3fb5', weight: 3, opacity: .85, dashArray: pts.some(({ s }) => s.coordKind === 'approx') ? '6 7' : null });
+      const latlngs = pts.map(({ s }) => [s.lat, s.lng]);
+      const approx = pts.some(({ s }) => s.coordKind === 'approx');
+      routeLayer.addLayer(L.polyline(latlngs, { color: '#0a84ff', weight: 9, opacity: .22, lineCap: 'round', lineJoin: 'round', interactive: false }));   // Flighty-style glow casing
+      const line = L.polyline(latlngs, { color: '#0a84ff', weight: 3.5, opacity: .95, lineCap: 'round', lineJoin: 'round', dashArray: approx ? '6 7' : null });
       routeLayer.addLayer(line);
       map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 15, animate: !prefersReducedMotion() });
     } else { map.setView([pts[0].s.lat, pts[0].s.lng], 14, { animate: !prefersReducedMotion() }); }
@@ -436,6 +442,33 @@ export function drawRoute(stops) {
   if (leafletReady) go(); else setTimeout(go, 900);
 }
 export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); }
+
+// ---- map-page day-plan picker: choose a planned day → draw its itinerary path here ----
+function populateDaySelect() {
+  const sel = $('#mapDay'), wrap = $('#mapDayWrap');
+  if (!sel || !wrap) return;
+  const plans = loadPlans();
+  const dates = Object.keys(plans).filter(hasPlan).sort();
+  if (!dates.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Day route…</option>' + dates.map(d => {
+    const p = plans[d]; const label = fmtShort(d) + (p.title ? ' · ' + p.title : '');
+    return `<option value="${esc(d)}">${esc(label)}</option>`;
+  }).join('');
+  if (prev && dates.includes(prev)) sel.value = prev;
+}
+function wireDaySelect() {
+  const sel = $('#mapDay');
+  if (!sel || sel.dataset.wired) return;
+  sel.dataset.wired = '1';
+  sel.addEventListener('change', () => {
+    const d = sel.value;
+    if (!d) { clearRoute(); return; }
+    const plan = getPlan(d);
+    if (plan) drawRoute(plan.stops);
+  });
+}
 
 // ====================================================================== popups
 const approxNote = (pt) => pt.coordKind === 'approx' ? `<div class="pin-approx">≈ neighbourhood location</div>` : '';

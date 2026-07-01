@@ -49,6 +49,7 @@ function wireNavDrawer() {
     else btn.focus();
   };
   btn.addEventListener('click', () => set(!nav.classList.contains('open')));
+  document.getElementById('navClose')?.addEventListener('click', () => set(false));
   backdrop.addEventListener('click', () => set(false));
   nav.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });   // pick a route → close
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false); });

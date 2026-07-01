@@ -441,9 +441,11 @@ export function drawRoute(stops) {
     if (pts.length > 1) {
       const latlngs = pts.map(({ s }) => [s.lat, s.lng]);
       const approx = pts.some(({ s }) => s.coordKind === 'approx');
-      routeLayer.addLayer(L.polyline(latlngs, { color: '#0a84ff', weight: 9, opacity: .22, lineCap: 'round', lineJoin: 'round', interactive: false }));   // Flighty-style glow casing
+      const casing = L.polyline(latlngs, { color: '#0a84ff', weight: 9, opacity: .22, lineCap: 'round', lineJoin: 'round', interactive: false });   // Flighty-style glow casing
+      routeLayer.addLayer(casing);
       const line = L.polyline(latlngs, { color: '#0a84ff', weight: 3.5, opacity: .95, lineCap: 'round', lineJoin: 'round', dashArray: approx ? '6 7' : null });
       routeLayer.addLayer(line);
+      if (!approx) animateDraw(casing, line);   // Flighty-style: the arc draws itself in (dashed/approx routes keep their pattern, no draw-in)
       map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 15, animate: !prefersReducedMotion() });
     } else { map.setView([pts[0].s.lat, pts[0].s.lng], 14, { animate: !prefersReducedMotion() }); }
     const dropped = all.length - pts.length;
@@ -452,6 +454,25 @@ export function drawRoute(stops) {
   if (leafletReady) go(); else setTimeout(go, 900);
 }
 export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); }
+
+// Flighty-style reveal: draw the route polyline(s) in via the SVG stroke-dashoffset trick.
+function animateDraw(...lines) {
+  if (prefersReducedMotion()) return;
+  requestAnimationFrame(() => {
+    lines.forEach(l => {
+      const p = l && l._path;                       // Leaflet's SVG <path> for this polyline
+      if (!p || !p.getTotalLength) return;
+      const len = p.getTotalLength();
+      if (!len) return;
+      p.style.transition = 'none';
+      p.style.strokeDasharray = String(len);
+      p.style.strokeDashoffset = String(len);
+      void p.getBoundingClientRect();               // reflow so 0 animates instead of snapping
+      p.style.transition = 'stroke-dashoffset 950ms cubic-bezier(.22,.61,.36,1)';
+      p.style.strokeDashoffset = '0';
+    });
+  });
+}
 
 // ---- map-page day-plan picker: choose a planned day → draw its itinerary path here ----
 function populateDaySelect() {

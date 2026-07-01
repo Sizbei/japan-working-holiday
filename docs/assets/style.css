@@ -845,11 +845,12 @@ html.gated{ overflow: hidden; }
 .cal-cell.season-start{ border-left:3px solid var(--stripe, var(--line)); }
 
 /* side panel content */
-.cp-head{ font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); margin:0 0 .5rem; display:flex; align-items:center; gap:.4rem; }
-.cp-count{ background: var(--indigo); color:#fff; border-radius:999px; font-size:.66rem; padding:0 6px; font-weight:700; }
+/* month cockpit — section labels are mono-uppercase kickers, matching the event panel's .sp-cat */
+.cp-head{ font-family: var(--mono); font-weight:700; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin:0 0 .5rem; display:flex; align-items:center; gap:.4rem; }
+.cp-count{ background: var(--indigo); color: var(--on-accent); border-radius: var(--r-pill); font-size:.66rem; padding:0 6px; font-weight:700; }
 .cp-list{ display:flex; flex-direction:column; gap:.35rem; }
 .cp-deadline{ display:flex; align-items:center; gap:.5rem; width:100%; text-align:left; cursor:pointer;
-  background: var(--bg); border:1px solid var(--line); border-radius:9px; padding:.4rem .5rem; color: var(--ink); }
+  background: var(--bg); border:1px solid var(--line); border-radius: var(--r-sm); padding:.4rem .5rem; color: var(--ink); }
 .cp-deadline:hover{ border-color: var(--indigo); }
 .cp-dot{ width:9px; height:9px; border-radius:50%; background: var(--sev, var(--line)); flex:none; }
 .cp-body{ display:flex; flex-direction:column; flex:1; min-width:0; }
@@ -858,19 +859,23 @@ html.gated{ overflow: hidden; }
 .cp-badge{ font-size:.66rem; font-weight:700; color: var(--sev, var(--ink-soft)); white-space:nowrap; }
 .cp-empty{ font-size:.8rem; color: var(--ink-soft); margin:.2rem 0; }
 .cp-hr{ border:none; border-top:1px solid var(--line); margin: var(--s4) 0; }
-/* month rail — "Up next" cards (category-coloured countdown chip supplied by cat-* class) */
+.cp-more{ font-family: var(--mono); font-size:.68rem; font-weight:700; color: var(--indigo); background:none; border:none; cursor:pointer; padding:.25rem 0 .1rem; text-align:left; }
+.cp-more:hover{ text-decoration: underline; text-underline-offset:2px; }
+/* "Up next" cards. The countdown chip fills with the category BASE colour (via the cat-* class),
+   which does NOT flip between themes — so #fff text is AA in both (unlike accents that use --on-accent). */
 .cp-up{ display:flex; align-items:flex-start; gap:.5rem; width:100%; text-align:left; cursor:pointer; background:none; border:none; padding:.15rem 0; }
 .cp-up:hover .cp-uptt{ color: var(--indigo); }
 .cp-cd{ font-family: var(--mono); font-weight:700; font-size:.62rem; color:#fff; border-radius: var(--r-sm); padding:3px 6px; white-space:nowrap; flex:none; text-align:center; line-height:1.15; min-width:36px; }
 .cp-cd small{ display:block; font-size:.92em; font-weight:400; opacity:.92; }
 .cp-uptt{ font-size:.82rem; color: var(--ink); line-height:1.3; min-width:0; }
-.cp-going{ display:block; font-family: var(--mono); font-size:.6rem; font-weight:700; color: var(--c-convention-ink); }
-/* month rail — "Tasks due" rows */
+.cp-going{ display:block; font-family: var(--mono); font-size:.6rem; font-weight:700; color: var(--ok-ink); }
+/* "Tasks due" rows — a nav affordance (opens the checklist), NOT a checkbox (which would imply "complete") */
 .cp-task{ display:flex; align-items:center; gap:.5rem; width:100%; text-align:left; cursor:pointer; background:none; border:none; padding:.2rem 0; font-size:.82rem; color: var(--ink); }
 .cp-task:hover .cp-ttt{ color: var(--indigo); }
-.cp-tbox{ width:14px; height:14px; border:2px solid var(--line-strong); border-radius:4px; flex:none; }
+.cp-task:hover .cp-tgo{ color: var(--indigo); transform: translateX(2px); }
+.cp-tdue{ font-family: var(--mono); font-size:.62rem; font-weight:700; color: var(--warn-ink); flex:none; min-width:34px; }
 .cp-ttt{ flex:1; min-width:0; line-height:1.25; }
-.cp-tdue{ font-family: var(--mono); font-size:.62rem; color: var(--warn-ink); flex:none; }
+.cp-tgo{ color: var(--ink-faint); font-weight:700; flex:none; transition: transform var(--t-hover), color var(--t-hover); }
 
 /* day popover */
 .cal-pop{ position:absolute; z-index:80; width:min(320px,92vw); background: var(--bg-soft);
@@ -1064,7 +1069,7 @@ html.js-router .view.is-active { display: block; }
 .gate-mark{ width: 44px; height: 44px; }
 
 /* mono chrome (uppercase, tracked). Prose (.intro/.lede/h2 serif) untouched. */
-.topbar-brand, .route-nav a, .widget-h, .trk-h, .cp-head{
+.topbar-brand, .route-nav a, .widget-h, .trk-h{
   font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em;
 }
 .kind-tag, .trk-when, .w-when, .cp-badge, .due-tag, th, .badge, .phase-block .window, .agenda-cat, .cd-label{
@@ -1631,7 +1636,7 @@ body { line-height: 1.7; }
 }
 
 /* --- calmer section/widget headings: sentence-case sans, clearer hierarchy --- */
-.widget-h, .trk-h, .cp-head{
+.widget-h, .trk-h{
   font-family: var(--sans); text-transform: none; letter-spacing: .01em;
 }
 .widget-h, .trk-h{ font-size: .9rem; font-weight: 700; color: var(--ink-soft); }
@@ -2773,7 +2778,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .sp-sec .btn{ flex: 1; font-size: .76rem; padding: .5rem .4rem; text-align: center; }
 .sp-going{ width: 100%; text-align: center; background: var(--cat); color: var(--on-accent); border-color: var(--cat); font-weight: 700; }
 .sp-going:hover{ border-color: var(--cat); }
-.sp-going.is-going{ background: color-mix(in srgb, var(--cat) 12%, transparent); color: var(--cat); border-color: color-mix(in srgb, var(--cat) 40%, transparent); }
+/* "✓ Going" active state: darken the label in LIGHT theme so it clears AA 4.5:1 on the tint for every
+   category (food/imported/seasonal -ink dipped to ~4.4); dark-theme -ink already passes, keep it. */
+.sp-going.is-going{ background: color-mix(in srgb, var(--cat) 14%, transparent); color: color-mix(in srgb, var(--cat), #000 22%); border-color: color-mix(in srgb, var(--cat) 40%, transparent); }
+[data-theme="dark"] .sp-going.is-going{ color: var(--cat); }
 
 /* reduce-motion: no transform transition */
 @media (prefers-reduced-motion: reduce){

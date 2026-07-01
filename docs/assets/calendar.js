@@ -456,12 +456,15 @@ function wireWeek() {
 // Only edges visible this week have grips (barHTML), so we never truncate the off-screen part.
 let _wkResizeSuppressClick = false;
 function wireWeekResize() {
-  if (isNarrowWeek()) return;
-  const view = $('#calView'); if (!view) return;
-  const days = weekDays(weekAnchor);
+  // Bind ONCE on the persistent #calView (render() only swaps its innerHTML, never the node itself),
+  // and read `days` LIVE inside each handler — capturing weekDays(weekAnchor) once would go stale
+  // after week navigation and, combined with re-binding every render, persist wrong dates.
+  const view = $('#calView'); if (!view || view.dataset.wkResizeWired) return;
+  view.dataset.wkResizeWired = '1';
   const colOf = (clientX, rect) => Math.max(0, Math.min(6, Math.floor((clientX - rect.left) / (rect.width / 7))));
   let st = null;   // { bar, ev, side, rect, moved }
   view.addEventListener('pointerdown', (e) => {
+    if (isNarrowWeek()) return;                              // narrow week is a list (no bars/grips)
     const grip = e.target.closest('.wk-resize'); if (!grip) return;
     const bar = grip.closest('.wk-bar[data-id]'); if (!bar) return;
     const evObj = allEvents().find(x => x.id === bar.dataset.id); if (!evObj || evObj.source !== 'user') return;
@@ -473,6 +476,7 @@ function wireWeekResize() {
   view.addEventListener('pointermove', (e) => {
     if (!st) return;
     st.moved = true;
+    const days = weekDays(weekAnchor);
     const col = colOf(e.clientX, st.rect);
     const s0 = days.indexOf(st.ev.date.slice(0, 10)), e0 = days.indexOf((st.ev.endDate || st.ev.date).slice(0, 10));
     let lo = s0 < 0 ? 0 : s0, hi = e0 < 0 ? 6 : e0;
@@ -484,6 +488,7 @@ function wireWeekResize() {
     const { ev, side, moved, rect } = st; st = null;
     if (!moved) return;
     _wkResizeSuppressClick = true; setTimeout(() => { _wkResizeSuppressClick = false; }, 350);
+    const days = weekDays(weekAnchor);
     const col = colOf(e.clientX, rect);
     const s0 = ev.date.slice(0, 10), en0 = (ev.endDate || ev.date).slice(0, 10);
     let start = s0, end = en0;
@@ -568,21 +573,28 @@ function monthHTML() {
   return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
 }
 
-// ---- side panel: this month's book-by deadlines + a "happening" tally ----
+// ---- month cockpit: up next · book by · tasks due ----
 function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
+// an "evergreen" event is a season-long span (start→end beyond SPAN_CAP): the ongoing/permanent
+// layer (teamLab, "retro hunting"), which reads as "now", not a discrete upcoming event. Detect by
+// SPAN, not by category — a short, genuinely-dated seasonal event should still count as upcoming.
+function isEvergreen(e) { const en = (e.endDate || '').slice(0, 10); if (!en) return false; const span = daysBetween(e.date.slice(0, 10), en); return span != null && span > SPAN_CAP; }
 function panelHTML() {
   const monthKey = `${viewY}-${pad(viewM + 1)}`;
+  const isPast = monthKey < TODAY.slice(0, 7);
   const evs = allEvents().filter(visible);
-  // Up next: DISCRETE events starting in the viewed month, today-or-later. Excludes the 'seasonal'
-  // bucket — that's the evergreen/ongoing/permanent layer (teamLab, "retro hunting (ongoing)") which
-  // carries a placeholder date and reads as "now", not an actionable upcoming event.
-  const upnext = evs.filter(e => catOf(e) !== 'seasonal' && e.date.slice(0, 7) === monthKey && e.date.slice(0, 10) >= TODAY)
-    .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
-  // Book by: curated deadlines through the month, still upcoming
-  const deadlines = evs.filter(e => e.bookBy && /^\d{4}-\d{2}-\d{2}$/.test(e.bookBy) && e.bookBy.slice(0, 7) <= monthKey && (e.endDate || e.date).slice(0, 10) >= TODAY)
-    .sort((a, b) => a.bookBy.localeCompare(b.bookBy)).slice(0, 5);
-  // Tasks due: open checklist items with a user-set due date in the viewed month
-  const tasks = allTasks().filter(t => t.date.slice(0, 7) === monthKey).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
+  // full (uncapped) lists so the count badge + "+N more" are honest, then a display slice.
+  // Up next = discrete upcoming events. Exclude the 'seasonal' category (this dataset's evergreen /
+  // ongoing / permanent bucket — teamLab, "retro hunting"; genuinely-dated seasonal things use the
+  // fireworks/festival/holiday/nature categories instead) AND any long-span residency (isEvergreen).
+  const upAll = evs.filter(e => !isEvergreen(e) && catOf(e) !== 'seasonal' && e.date.slice(0, 7) === monthKey && e.date.slice(0, 10) >= TODAY)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const deadAll = evs.filter(e => e.bookBy && /^\d{4}-\d{2}-\d{2}$/.test(e.bookBy) && e.bookBy.slice(0, 7) <= monthKey && (e.endDate || e.date).slice(0, 10) >= TODAY)
+    .sort((a, b) => a.bookBy.localeCompare(b.bookBy));
+  const taskAll = allTasks().filter(t => t.date.slice(0, 7) === monthKey).sort((a, b) => a.date.localeCompare(b.date));
+  const upnext = upAll.slice(0, 5), deadlines = deadAll.slice(0, 5), tasks = taskAll.slice(0, 6);
+  const more = (total, shown) => total > shown ? `<button type="button" class="cp-more" data-goagenda>+${total - shown} more →</button>` : '';
+  const count = (n) => n ? ` <span class="cp-count">${n}</span>` : '';
 
   const upHTML = upnext.length ? upnext.map(e => {
     const d = daysBetween(TODAY, e.date.slice(0, 10));
@@ -590,9 +602,9 @@ function panelHTML() {
     return `<button class="cp-up" data-ev="${esc(e.id)}">
       <span class="cp-cd cat-${safeCat(e)}">${esc(cd)}<small>${esc(fmtShort(e.date))}</small></span>
       <span class="cp-uptt">${esc(e.title)}${isGoing(e.id) ? '<span class="cp-going">✓ going</span>' : ''}</span></button>`;
-  }).join('') : `<p class="cp-empty">Nothing left this month — you're clear. 🎏</p>`;
+  }).join('') + more(upAll.length, upnext.length) : `<p class="cp-empty">${isPast ? 'This month has passed.' : 'Nothing more coming up this month.'}</p>`;
 
-  const dlHTML = deadlines.map(e => {
+  const dlHTML = deadlines.length ? deadlines.map(e => {
     const sev = sevOf(e.bookBy), days = daysBetween(TODAY, e.bookBy);
     const badge = days < 0 ? 'overdue' : `${days}d`;
     return `<button class="cp-deadline" data-ev="${esc(e.id)}">
@@ -600,23 +612,24 @@ function panelHTML() {
       <span class="cp-body"><span class="cp-title">${esc(e.title)}</span>
         <span class="cp-sub">book by ${esc(fmtShort(e.bookBy))}</span></span>
       <span class="cp-badge sev-${sev}">${esc(badge)}</span></button>`;
-  }).join('');
+  }).join('') + more(deadAll.length, deadlines.length) : `<p class="cp-empty">Nothing to book${isPast ? '.' : " — you're clear 🎏"}</p>`;
 
-  const taskHTML = tasks.map(t => `<button class="cp-task" data-task="${esc(t.taskId)}">
-    <span class="cp-tbox" aria-hidden="true"></span>
+  const taskHTML = tasks.length ? tasks.map(t => `<button class="cp-task" data-task="${esc(t.taskId)}" title="Open on the checklist">
+    <span class="cp-tdue">${esc(fmtShort(t.date))}</span>
     <span class="cp-ttt">${esc(t.title)}</span>
-    <span class="cp-tdue">${esc(fmtShort(t.date))}</span></button>`).join('');
+    <span class="cp-tgo" aria-hidden="true">›</span></button>`).join('') + more(taskAll.length, tasks.length) : `<p class="cp-empty">No due dates — set them on the checklist.</p>`;
 
   return `<h3 class="cp-head">Up next</h3>
     <div class="cp-list">${upHTML}</div>
-    ${deadlines.length ? `<hr class="cp-hr"><h3 class="cp-head">Book by <span class="cp-count">${deadlines.length}</span></h3><div class="cp-list">${dlHTML}</div>` : ''}
-    ${tasks.length ? `<hr class="cp-hr"><h3 class="cp-head">Tasks due <span class="cp-count">${tasks.length}</span></h3><div class="cp-list">${taskHTML}</div>` : ''}`;
+    <hr class="cp-hr"><h3 class="cp-head">Book by${count(deadAll.length)}</h3><div class="cp-list">${dlHTML}</div>
+    <hr class="cp-hr"><h3 class="cp-head">Tasks due${count(taskAll.length)}</h3><div class="cp-list">${taskHTML}</div>`;
 }
 function wirePanel() {
   $$('#calPanel .cp-up, #calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
   }));
   $$('#calPanel .cp-task').forEach(b => b.addEventListener('click', () => gotoTask(b.dataset.task)));
+  $$('#calPanel .cp-more').forEach(b => b.addEventListener('click', () => { mode = 'agenda'; render(); }));   // "+N more" → the full uncapped agenda
 }
 
 function agendaHTML() {
@@ -896,8 +909,18 @@ function openSidePanel(ev, trigger) {
     a.addEventListener('click', (e) => { e.preventDefault(); window.open(a.href, '_blank', 'noopener'); });
   });
 
-  // Esc closes
-  const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); } };
+  // Esc closes; Tab is trapped inside the dialog (it declares aria-modal — focus must not leak to the
+  // page behind it, mirroring the day popover + modal traps).
+  const onKey = (e) => {
+    if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...panel.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled && el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (!panel.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
   document.addEventListener('keydown', onKey, true);
   _sidePanelCleanup = () => document.removeEventListener('keydown', onKey, true);
 

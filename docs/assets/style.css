@@ -610,8 +610,12 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .wk-dragsel{ position:absolute; top:2px; bottom:2px; z-index:2; pointer-events:none; border-radius:8px;
   background: color-mix(in srgb, var(--indigo) 16%, transparent); border:1.5px solid var(--indigo); }
 .wk-lane{ display:grid; grid-template-columns:repeat(7,1fr); align-items:center; min-height:26px; }
-.wk-bar{ margin:0 3px; height:24px; display:flex; align-items:center; gap:6px; padding:0 8px; border-radius:7px; font-size:.76rem; font-weight:500; white-space:nowrap; overflow:hidden; cursor:pointer;
+.wk-bar{ position:relative; margin:0 3px; height:24px; display:flex; align-items:center; gap:6px; padding:0 8px; border-radius:7px; font-size:.76rem; font-weight:500; white-space:nowrap; overflow:hidden; cursor:pointer;
   background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: color-mix(in srgb, var(--cat), #000 20%); }
+/* drag-to-resize grips on your own event bars (visible on hover/focus) */
+.wk-resize{ position:absolute; top:0; bottom:0; width:9px; cursor:ew-resize; z-index:2; }
+.wk-resize-l{ left:0; } .wk-resize-r{ right:0; }
+.wk-user:hover .wk-resize, .wk-user:focus-within .wk-resize{ background: color-mix(in srgb, var(--cat) 45%, transparent); }
 .wk-bar.cont-l{ border-top-left-radius:3px; border-bottom-left-radius:3px; margin-left:0; }
 .wk-bar.cont-r{ border-top-right-radius:3px; border-bottom-right-radius:3px; margin-right:0; }
 .wk-dot{ width:7px; height:7px; border-radius:50%; background:var(--cat); flex:0 0 auto; }

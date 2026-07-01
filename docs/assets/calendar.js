@@ -421,8 +421,11 @@ function weekHTML() {
 function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
 function barHTML(p) {
   const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
-  return `<button type="button" class="wk-bar${cls}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
-    + `${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}</button>`;
+  const user = e.source === 'user';   // only your own events resize (baked spans are fixed research)
+  const gl = (user && !p.contL) ? '<span class="wk-resize wk-resize-l" aria-hidden="true"></span>' : '';   // grips only on edges visible this week
+  const gr = (user && !p.contR) ? '<span class="wk-resize wk-resize-r" aria-hidden="true"></span>' : '';
+  return `<button type="button" class="wk-bar${cls}${user ? ' wk-user' : ''}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
+    + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
 }
 function chipHTML(e) {
   return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
@@ -431,6 +434,7 @@ function wireWeek() {
   const view = $('#calView'); if (!view) return;
   $$('#calView .wk-add').forEach(b => b.addEventListener('click', () => openModal(null, b.dataset.day)));   // quick-create an all-day event on that day
   wireWeekDragCreate();
+  wireWeekResize();
   // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
   // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
   makeMovable(view, {
@@ -442,9 +446,52 @@ function wireWeek() {
   // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Going/Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.
   $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id]').forEach(el => el.addEventListener('click', () => {
+    if (_wkResizeSuppressClick) return;                       // a resize drag just ended on this bar — don't also open it
     const ev = allEvents().find(x => x.id === el.dataset.id);
     if (ev) openSidePanel(ev, el);
   }));
+}
+// Drag a USER bar's left/right edge grip to reschedule its start / end day (multi-day user events).
+// Only edges visible this week have grips (barHTML), so we never truncate the off-screen part.
+let _wkResizeSuppressClick = false;
+function wireWeekResize() {
+  if (isNarrowWeek()) return;
+  const view = $('#calView'); if (!view) return;
+  const days = weekDays(weekAnchor);
+  const colOf = (clientX, rect) => Math.max(0, Math.min(6, Math.floor((clientX - rect.left) / (rect.width / 7))));
+  let st = null;   // { bar, ev, side, rect, moved }
+  view.addEventListener('pointerdown', (e) => {
+    const grip = e.target.closest('.wk-resize'); if (!grip) return;
+    const bar = grip.closest('.wk-bar[data-id]'); if (!bar) return;
+    const evObj = allEvents().find(x => x.id === bar.dataset.id); if (!evObj || evObj.source !== 'user') return;
+    e.preventDefault(); e.stopPropagation();
+    const lane = bar.closest('#wkAllday') || bar.parentElement;
+    st = { bar, ev: evObj, side: grip.classList.contains('wk-resize-l') ? 'l' : 'r', rect: lane.getBoundingClientRect(), moved: false };
+    try { view.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
+  });
+  view.addEventListener('pointermove', (e) => {
+    if (!st) return;
+    st.moved = true;
+    const col = colOf(e.clientX, st.rect);
+    const s0 = days.indexOf(st.ev.date.slice(0, 10)), e0 = days.indexOf((st.ev.endDate || st.ev.date).slice(0, 10));
+    let lo = s0 < 0 ? 0 : s0, hi = e0 < 0 ? 6 : e0;
+    if (st.side === 'r') hi = Math.max(lo, col); else lo = Math.min(hi, col);
+    st.bar.style.gridColumn = `${lo + 1}/${hi + 2}`;         // live preview; discarded on the save re-render
+  });
+  const finish = (e) => {
+    if (!st) return;
+    const { ev, side, moved, rect } = st; st = null;
+    if (!moved) return;
+    _wkResizeSuppressClick = true; setTimeout(() => { _wkResizeSuppressClick = false; }, 350);
+    const col = colOf(e.clientX, rect);
+    const s0 = ev.date.slice(0, 10), en0 = (ev.endDate || ev.date).slice(0, 10);
+    let start = s0, end = en0;
+    if (side === 'r') end = days[col] >= s0 ? days[col] : s0;            // clamp end ≥ start
+    else start = days[col] <= en0 ? days[col] : en0;                     // clamp start ≤ end
+    saveUser(loadUser().map(x => x.id === ev.id ? { ...x, date: start, endDate: (end && end !== start) ? end : '' } : x));
+  };
+  view.addEventListener('pointerup', finish);
+  view.addEventListener('pointercancel', () => { st = null; });
 }
 // Drag across the week's all-day area to block out a date range → opens the editor pre-filled with
 // that span (a plain click = a single-day add, matching the month grid). Desktop grid only.

@@ -430,6 +430,7 @@ function chipHTML(e) {
 function wireWeek() {
   const view = $('#calView'); if (!view) return;
   $$('#calView .wk-add').forEach(b => b.addEventListener('click', () => openModal(null, b.dataset.day)));   // quick-create an all-day event on that day
+  wireWeekDragCreate();
   // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
   // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
   makeMovable(view, {
@@ -444,6 +445,47 @@ function wireWeek() {
     const ev = allEvents().find(x => x.id === el.dataset.id);
     if (ev) openSidePanel(ev, el);
   }));
+}
+// Drag across the week's all-day area to block out a date range → opens the editor pre-filled with
+// that span (a plain click = a single-day add, matching the month grid). Desktop grid only.
+function wireWeekDragCreate() {
+  if (isNarrowWeek()) return;
+  const lane = $('#wkAllday');
+  if (!lane || lane.dataset.dragWired) return;
+  lane.dataset.dragWired = '1';
+  const days = weekDays(weekAnchor);
+  // capture the grid geometry ONCE per drag (the week grid never moves mid-drag, and re-reading it
+  // live drifted the end column by ±1 when a scrollbar toggled) → start and end map with the same ruler
+  let startCol = null, ghost = null, dragRect = null;
+  const colOf = (clientX) => Math.max(0, Math.min(6, Math.floor((clientX - dragRect.left) / (dragRect.width / 7))));
+  const clearGhost = () => { if (ghost) { ghost.remove(); ghost = null; } };
+  const draw = (a, b) => {
+    if (!ghost) { ghost = document.createElement('div'); ghost.className = 'wk-dragsel'; ghost.setAttribute('aria-hidden', 'true'); lane.appendChild(ghost); }
+    const lo = Math.min(a, b), hi = Math.max(a, b);
+    ghost.style.left = `${(lo / 7) * 100}%`;
+    ghost.style.width = `${((hi - lo + 1) / 7) * 100}%`;
+  };
+  lane.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 || e.target.closest('.wk-bar, .wk-chip, button, a')) return;   // leave existing items/controls alone
+    dragRect = lane.getBoundingClientRect();
+    startCol = colOf(e.clientX);
+    try { lane.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
+    draw(startCol, startCol);
+    e.preventDefault();
+  });
+  lane.addEventListener('pointermove', (e) => {
+    if (startCol == null) return;
+    draw(startCol, colOf(e.clientX));
+  });
+  const finish = (e) => {
+    if (startCol == null) return;
+    const endCol = colOf(e.clientX);
+    const lo = Math.min(startCol, endCol), hi = Math.max(startCol, endCol);
+    startCol = null; dragRect = null; clearGhost();
+    openModal(null, days[lo], lo === hi ? '' : days[hi]);   // single col → one-day add; span → pre-fill End
+  };
+  lane.addEventListener('pointerup', finish);
+  lane.addEventListener('pointercancel', () => { startCol = null; clearGhost(); });
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -837,8 +879,8 @@ function srcline(s) {
 }
 
 // ---- add/edit modal ----
-function openModal(ev, presetDate) {
-  const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: '', time: '', category: 'personal', note: '' };
+function openModal(ev, presetDate, presetEnd) {
+  const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: presetEnd || '', time: '', category: 'personal', note: '' };
   // preserve a non-standard (e.g. imported .ics) category instead of silently rewriting it to the first option
   const cats = (e.category && !CATS.includes(e.category)) ? [e.category, ...CATS] : CATS;
   const opts = cats.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');

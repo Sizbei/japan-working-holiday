@@ -604,8 +604,11 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .wk-dn{ display:block; font-family:var(--mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
 .wk-dd{ display:block; font-family:var(--serif); font-size:1.25rem; line-height:1.1; margin-top:1px; }
 .wk-dayhd.today .wk-dd{ color:var(--red); }
-.wk-allday{ min-height:46px; padding:6px 0; display:flex; flex-direction:column; gap:4px;
+.wk-allday{ position:relative; min-height:46px; padding:6px 0; display:flex; flex-direction:column; gap:4px; cursor:crosshair;
   background-image: repeating-linear-gradient(90deg, transparent 0, transparent calc(100%/7 - 1px), var(--line) calc(100%/7 - 1px), var(--line) calc(100%/7)); }
+/* drag-across-days selection ghost (drag-to-create) */
+.wk-dragsel{ position:absolute; top:2px; bottom:2px; z-index:2; pointer-events:none; border-radius:8px;
+  background: color-mix(in srgb, var(--indigo) 16%, transparent); border:1.5px solid var(--indigo); }
 .wk-lane{ display:grid; grid-template-columns:repeat(7,1fr); align-items:center; min-height:26px; }
 .wk-bar{ margin:0 3px; height:24px; display:flex; align-items:center; gap:6px; padding:0 8px; border-radius:7px; font-size:.76rem; font-weight:500; white-space:nowrap; overflow:hidden; cursor:pointer;
   background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: color-mix(in srgb, var(--cat), #000 20%); }

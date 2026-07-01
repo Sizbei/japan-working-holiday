@@ -185,7 +185,7 @@ function onBodyClick(e) {
   if (act === 'add') return openPicker();
   const plan = getPlan(activeDate);                    // every action below needs a plan with stops
   if ((act && act !== 'add') || edit) { if (!plan?.stops?.length) return; }
-  if (act === 'map') { drawRoute(plan.stops); location.hash = '#/map'; return; }
+  if (act === 'map') { drawRoute(plan.stops, { title: plan.title, date: activeDate }); location.hash = '#/map'; return; }
   if (act === 'ics') return downloadICS();
   if (act === 'gcal') { const evs = planToEvents(plan); if (evs[0]) window.open(gcalUrl(evs[0]), '_blank', 'noopener'); return; }
   if (act === 'addcal') return addToCalendar();

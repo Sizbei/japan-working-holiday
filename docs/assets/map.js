@@ -12,7 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw } from './lib/store.js';
 import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
-import { haversineKm, estimateMinutes, format as fmtMins } from './lib/transit.js';
+import { haversineKm, estimateMinutes, format as fmtMins, legLabel, totalTransit, areaCount } from './lib/transit.js';
 import { directionsUrl } from './lib/directions.js';
 import { placesVisitedStats } from './lib/placestats.js';
 import {
@@ -118,6 +118,11 @@ export function mountMap(data) {
     ensureLeaflet();
     renderSaved();
     populateDaySelect();              // refresh the day-plan list (plans may have changed since last visit)
+    // "Today's route": default the picker to today's plan on open (keeps a prior manual pick), and
+    // (re)draw the selected day — the route is cleared when leaving the map, so redraw on return.
+    const sel = $('#mapDay'), today = nowISO();
+    if (sel && !sel.value && hasPlan(today)) sel.value = today;
+    if (sel && sel.value) { const p = getPlan(sel.value); if (p) drawRoute(p.stops, { title: p.title, date: sel.value }); }
     if (leafletReady) onMapShown();   // re-measure + catch up once the SPA actually reveals the container
   });
   // off the map route, just mark pins dirty — defer the expensive 200+-marker rebuild until the map is next shown
@@ -423,8 +428,9 @@ function focusPlace(id) {
 function announce(msg) { const el = $('#mapLive'); if (el) el.textContent = msg; }
 
 // ---- day-plan route line (numbered stops + polyline), called from plan.js ----
-export function drawRoute(stops) {
+export function drawRoute(stops, meta = {}) {
   ensureLeaflet();
+  renderRouteDetail(stops, meta);
   const go = () => {
     if (!map || !window.L) return;
     const all = stops || [];
@@ -453,7 +459,30 @@ export function drawRoute(stops) {
   };
   if (leafletReady) go(); else setTimeout(go, 900);
 }
-export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); }
+export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); const h = $('#mapRouteDetail'); if (h) { h.hidden = true; h.innerHTML = ''; } }
+
+// route detail card (paper-themed, beside the map): numbered stops + per-leg transit time + totals
+function renderRouteDetail(stops, meta = {}) {
+  const host = $('#mapRouteDetail'); if (!host) return;
+  const all = stops || [];
+  const coord = all.filter(s => typeof s.lat === 'number' && !isNaN(s.lat));
+  if (!coord.length) { host.hidden = true; host.innerHTML = ''; return; }
+  const ag = DATA && DATA.areaGeo;
+  const total = totalTransit(coord, ag), areas = areaCount(coord);
+  const title = meta.title || (meta.date ? fmtShort(meta.date) : 'Day route');
+  const parts = [];
+  all.forEach((s, i) => {
+    const hasC = typeof s.lat === 'number' && !isNaN(s.lat);
+    parts.push(`<li class="mrd-stop${hasC ? '' : ' nocoord'}"><span class="mrd-n">${i + 1}</span><span class="mrd-body"><span class="mrd-name">${esc(s.name)}</span>${hasC ? (s.area ? `<span class="mrd-area">${esc(areaOf(s.area))}</span>` : '') : '<span class="mrd-nocoord-t">no map location</span>'}</span></li>`);
+    if (i < all.length - 1) {
+      const next = all[i + 1];
+      const leg = (hasC && typeof next.lat === 'number' && !isNaN(next.lat)) ? legLabel(s, next, ag) : null;
+      parts.push(`<li class="mrd-leg${leg && leg.fuzzy ? ' fuzzy' : ''}"><span class="mrd-legt">${esc(leg ? leg.text : '·')}</span></li>`);
+    }
+  });
+  host.innerHTML = `<div class="mrd-head"><b class="mrd-title">${esc(title)}</b><span class="mrd-sum">${all.length} stop${all.length > 1 ? 's' : ''} · ≈${total} min · ${areas} area${areas > 1 ? 's' : ''}</span></div><ol class="mrd-list">${parts.join('')}</ol>`;
+  host.hidden = false;
+}
 
 // Flighty-style reveal: draw the route polyline(s) in via the SVG stroke-dashoffset trick.
 function animateDraw(...lines) {
@@ -497,7 +526,7 @@ function wireDaySelect() {
     const d = sel.value;
     if (!d) { clearRoute(); return; }
     const plan = getPlan(d);
-    if (plan) drawRoute(plan.stops);
+    if (plan) drawRoute(plan.stops, { title: plan.title, date: d });
   });
 }
 

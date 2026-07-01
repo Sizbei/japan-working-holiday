@@ -5,13 +5,15 @@
 
 import { transitionView, prefersReducedMotion } from './motion.js';
 
-export const ROUTES = ['dashboard', 'calendar', 'going', 'deadlines', 'checklist', 'packing', 'budget', 'phrases', 'explore', 'rooms', 'map', 'plan', 'emergency'];
+// deadlines/packing/phrases retired from the nav post-arrival (their views + data remain for the
+// dashboard/notifications; re-add here + in index.html to restore).
+export const ROUTES = ['dashboard', 'calendar', 'going', 'checklist', 'budget', 'explore', 'rooms', 'map', 'plan', 'emergency'];
 
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {
   main: 'dashboard', dashHome: 'dashboard',
   calendarSection: 'calendar',
-  trackerSection: 'deadlines', timeSensitiveSection: 'deadlines', topSection: 'deadlines',
+  trackerSection: 'dashboard', timeSensitiveSection: 'dashboard', topSection: 'dashboard',   // deadlines route retired → land on the dashboard
   checklist: 'checklist',
   controls: 'explore', brew: 'explore', activities: 'explore', restaurants: 'explore',
   disney: 'explore', building: 'explore', music: 'explore', geek: 'explore',
@@ -31,8 +33,8 @@ let current = null;
 
 // per-route document title so browser tabs + history entries read like real pages
 const TITLES = {
-  dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', deadlines: 'Deadlines', checklist: 'Checklist',
-  packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
+  dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', checklist: 'Checklist',
+  budget: 'Budget', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
 };
 const SITE = 'My Year in Japan';
 

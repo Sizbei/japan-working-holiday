@@ -6,7 +6,8 @@
 
 export const AREAS = ['Shibuya', 'Shinjuku', 'Akihabara', 'Nakano', 'Koenji', 'Shimokitazawa', 'Shimokita',
   'Ebisu', 'Ikebukuro', 'Harajuku', 'Aoyama', 'Omotesando', 'Daikanyama', 'Nakameguro', 'Asakusa',
-  'Ochanomizu', 'Toyosu', 'Roppongi', 'Ginza', 'Setagaya', 'Sangenjaya', 'Kichijoji', 'Ueno'];
+  'Ochanomizu', 'Toyosu', 'Roppongi', 'Ginza', 'Setagaya', 'Sangenjaya', 'Kichijoji', 'Ueno',
+  'Kita-Senju', 'Nishiarai', 'Kameari', 'Toneri', 'Adachi'];   // north Tokyo / Adachi ward (specific names before 'Adachi' so they win areaOf)
 
 export function areaOf(s) {
   const l = (s || '').toLowerCase();

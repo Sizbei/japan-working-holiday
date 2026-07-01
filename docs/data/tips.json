@@ -278,12 +278,12 @@
     },
     {
       "id": "ev-plan-shibamata",
-      "title": "Day 3 — Shibamata old-town + Mizumoto Park",
+      "title": "Day 3 — Asakusa house viewings + old-town explore",
       "date": "2026-07-02",
       "category": "personal",
-      "area": "Shibamata / Mizumoto (~20-25 min)",
-      "bookingNotes": "Soft plan. NE-Tokyo half-day, still local: Taishakuten temple + the Tora-san retro sando in the morning (shops shut ~5pm), then Mizumoto Park for a riverside wander. ~20-25 min each via Keisei — no central-Tokyo trek.",
-      "confidence": "low"
+      "area": "Asakusa (Taitō-ku)",
+      "bookingNotes": "Your house-viewing day in Asakusa. Around the viewings: Sensō-ji + Nakamise, Kaminarimon, a Sumida-river walk with Tokyo Skytree views, and Hoppy Street izakaya; Kappabashi kitchen street is a short walk if you have time. Kita-Senju ↔ Asakusa is ~15 min on the Tobu Skytree Line. (Fallback if a viewing slips: Shibamata old-town + Mizumoto Park is close by.)",
+      "confidence": "high"
     },
     {
       "id": "ev-plan-central",
@@ -1920,7 +1920,10 @@
     {"id": "ev-pikmin-bloom-community-day-jun2027", "title": "Pikmin Bloom Community Day", "date": "2027-06-12", "endDate": "2027-06-13", "category": "convention", "area": "Anywhere you walk (parks, riversides)", "bookingNotes": "Monthly weekend walking event: extra seedlings, a special decor Pikmin, and big-flower bonuses for logging steps. Pairs perfectly with exploring a new Tokyo neighbourhood on foot. Date is an estimate (~2nd weekend) — confirm in the app.", "sources": ["https://pikminbloom.com/"], "confidence": "low"},
     {"id": "ev-pikmin-bloom-5yr-anniversary", "title": "Pikmin Bloom 5-Year Anniversary Community Week", "date": "2026-11-01", "endDate": "2026-11-08", "category": "convention", "area": "Anywhere you walk", "bookingNotes": "Pikmin Bloom launched Nov 2021, so its 5-year anniversary lands around early November 2026 — expect a week-long celebration (special decor Pikmin, anniversary badges, big-flower events) like the 4.5-year Community Week. Dates estimated; verify in the app.", "sources": ["https://pikminbloom.com/"], "confidence": "low"},
     {"id": "ev-pokemon-go-tour-2027", "title": "Pokémon GO Tour 2027", "date": "2027-02-27", "endDate": "2027-02-28", "category": "convention", "area": "Anywhere you play (+ a live-event host city, TBA)", "bookingNotes": "GO Tour is Niantic's annual flagship region megaevent (late Feb / early March): a featured region's Pokédex, masses of shinies and rare spawns, plus a ticketed live event in a host city. The 2027 edition + host city aren't announced yet — dates estimated; watch the official site.", "sources": ["https://pokemongo.com/events"], "confidence": "low"},
-    {"id": "ev-pokemon-day-2027", "title": "Pokémon Day", "date": "2027-02-27", "category": "convention", "area": "Anywhere (franchise-wide)", "bookingNotes": "Feb 27 is Pokémon Day (the franchise's anniversary) — expect a Pokémon Presents broadcast plus tie-in events across Pokémon GO and the Pokémon Centers/Café in Tokyo. A good day to visit a Pokémon Center.", "sources": ["https://www.pokemon.com/"], "confidence": "low"}
+    {"id": "ev-pokemon-day-2027", "title": "Pokémon Day", "date": "2027-02-27", "category": "convention", "area": "Anywhere (franchise-wide)", "bookingNotes": "Feb 27 is Pokémon Day (the franchise's anniversary) — expect a Pokémon Presents broadcast plus tie-in events across Pokémon GO and the Pokémon Centers/Café in Tokyo. A good day to visit a Pokémon Center.", "sources": ["https://www.pokemon.com/"], "confidence": "low"},
+    {"id": "ev-asakusa-viewings", "title": "🏠 House viewings — Asakusa", "date": "2026-07-02", "category": "personal", "area": "Asakusa (Taitō-ku)", "bookingNotes": "Your booked Asakusa house viewings. Bring residence card/passport, proof of funds, and your budget + must-haves (commute, ¥, furnished?). Ask each place about the move-in 'stack' (deposit/shikikin, key money/reikin, agency fee) and short-term flexibility. Kita-Senju ↔ Asakusa is ~15 min on the Tobu Skytree Line.", "confidence": "high"},
+    {"id": "ev-adachi-nishiarai", "title": "Nishiarai Daishi + Kita-Senju food crawl", "date": "2026-07-03", "category": "personal", "area": "Nishiarai · Kita-Senju (Adachi)", "bookingNotes": "An easy Adachi day near your base. Morning: Nishiarai Daishi (Sōji-ji) temple — take the 2-stop Daishi tram; grab kusa-dango on the approach. Evening: Kita-Senju retro shōtengai food crawl — Ohashi (130-yr izakaya, niku-dōfu), Sasaya (motsuyaki), or Tanaka Shōten ramen. Pairs with the 'rest before the festival' day.", "confidence": "medium"},
+    {"id": "ev-adachi-toneri", "title": "Toneri Park + Nippori-Toneri Liner (gentle Adachi day)", "date": "2026-07-05", "category": "personal", "area": "Toneri (Adachi)", "bookingNotes": "A low-key recovery day. Ride the driverless, elevated Nippori-Toneri Liner up to Toneri Park (ponds, big lawns), or visit the Adachi Park of Living Things (butterfly house / petting zoo). Slots into the existing 'recover' day.", "confidence": "medium"}
   ],
   "homeNotes": [
     "You're a Canadian citizen departing from Seattle — your WHV is already in hand, so pre-departure is logistics, not eligibility.",
@@ -3623,6 +3626,42 @@
         "https://tokyocheapo.com/food-and-drink/restaurant-reservation-japan/"
       ],
       "confidence": "high"
+    },
+    {
+      "name": "Ohashi (大はし) — Kita-Senju",
+      "detail": "A Kita-Senju institution: a ~130-year-old izakaya famous for niku-dōfu (slow-simmered beef and tofu) and a deeply old-Tokyo atmosphere — counted among 'Tokyo's three great nikomi' izakaya. Order the nikomi (simmered offal) and a cold one.",
+      "how_or_when": "Near Kita-Senju Station. Opens late afternoon; can queue — go early. Cash-friendly.",
+      "area_or_park": "Kita-Senju",
+      "price_or_cost": "¥¥ (~¥2,000–3,500)",
+      "tier": "recommended",
+      "sources": [
+        "https://www.japan-experience.com/all-about-japan/tokyo/attractions-excursions/kitasenju"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Sasaya — motsuyaki, Kita-Senju",
+      "detail": "A classic Kita-Senju motsuyaki (grilled offal skewers) joint — smoky, cheap, convivial standing-bar energy. The kushiyaki and boiled-offal skewers (kushinikomi) are the move. Pure north-Tokyo shitamachi vibe.",
+      "how_or_when": "Kita-Senju izakaya streets. Evenings; expect a wait at peak. Cash.",
+      "area_or_park": "Kita-Senju",
+      "price_or_cost": "¥ (~¥1,500–2,500)",
+      "tier": "optional",
+      "sources": [
+        "https://flipjapanguide.com/tokyo-adachi-area-guide/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "name": "Tanaka Shōten (田中商店) — tonkotsu ramen, Adachi",
+      "detail": "A beloved Adachi ramen shop doing rich, Hakata-style tonkotsu with thin straight noodles — the negi-chāshū bowl (heaps of green onion + slightly salty chāshū) is the favourite. Worth the trip for ramen heads.",
+      "how_or_when": "Near Nishiarai / Ōyata, Adachi. Lunch and dinner; ticket machine. Cash.",
+      "area_or_park": "Adachi",
+      "price_or_cost": "¥ (~¥1,000–1,500)",
+      "tier": "optional",
+      "sources": [
+        "https://wanderlog.com/list/geoCategory/1586463/top-things-to-do-and-attractions-in-adachi"
+      ],
+      "confidence": "medium"
     }
   ],
   "disney": [
@@ -4040,6 +4079,18 @@
         "https://www.japan-guide.com/e/e3024.html"
       ],
       "confidence": "high"
+    },
+    {
+      "name": "Toneri Park + Nippori-Toneri Liner ride",
+      "detail": "Adachi's biggest park — ponds with carp and ducks, sports fields, wide lawns — reached by the Nippori-Toneri Liner, a driverless elevated train that's a fun, scenic ride in itself. Pair it with the nearby Adachi Park of Living Things (生物園), a small butterfly house and petting zoo. A good jet-lag-friendly, low-key outing.",
+      "how_or_when": "Nippori-Toneri Liner to Toneri-kōen Station. Park free; Living Things park a small fee. Daytime.",
+      "area_or_park": "Toneri",
+      "price_or_cost": "Park free",
+      "tier": "optional",
+      "sources": [
+        "https://flipjapanguide.com/tokyo-adachi-area-guide/"
+      ],
+      "confidence": "medium"
     }
   ],
   "building": [
@@ -6985,6 +7036,11 @@
     "Kichijoji": {
       "lat": 35.70314,
       "lng": 139.58031
-    }
+    },
+    "Kita-Senju": {"lat": 35.7497, "lng": 139.805},
+    "Nishiarai": {"lat": 35.7766, "lng": 139.7896},
+    "Adachi": {"lat": 35.775, "lng": 139.804},
+    "Kameari": {"lat": 35.7607, "lng": 139.8497},
+    "Toneri": {"lat": 35.8045, "lng": 139.7855}
   }
 }

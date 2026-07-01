@@ -1404,8 +1404,10 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .map-ic[disabled]{ opacity:.35; cursor:not-allowed; }
 
 /* marker-cluster bubbles tuned to theme */
-.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large{ background: color-mix(in srgb, var(--flighty-blue) 28%, transparent); }
-.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div{ background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; box-shadow:0 0 8px rgba(10,132,255,.5); }
+/* .map-canvas prefix raises specificity above the Leaflet.markercluster CDN CSS (loaded later, so it
+   wins on equal specificity — its default is green). */
+.map-canvas .marker-cluster-small, .map-canvas .marker-cluster-medium, .map-canvas .marker-cluster-large{ background: color-mix(in srgb, var(--flighty-blue) 28%, transparent); }
+.map-canvas .marker-cluster-small div, .map-canvas .marker-cluster-medium div, .map-canvas .marker-cluster-large div{ background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; box-shadow:0 0 8px rgba(10,132,255,.5); }
 
 /* fav / locked pin badges + approx note + highlight */
 .jwh-pin.fav .jwh-pin-dot{ box-shadow:0 0 0 2px var(--gold, #d8a200), 0 1px 5px rgba(0,0,0,.45); }

@@ -322,6 +322,16 @@ function initMap() {
   document.addEventListener('keydown', onKeydown);
   leafletReady = true;
   el.classList.add('ready');
+  // Cold-start fix: the canvas is often still 0×0 or short when the SPA reveals #/map, so the first
+  // invalidateSize() cached a small size and Leaflet only fetched a strip of tiles. A ResizeObserver
+  // re-invalidates whenever the container reaches (or changes to) its real height → full tile grid.
+  if (window.ResizeObserver) {
+    let last = 0;
+    new ResizeObserver(() => {
+      const h = el.offsetHeight;
+      if (h && h !== last) { last = h; map.invalidateSize({ animate: false }); }
+    }).observe(el);
+  }
   onMapShown();   // poll for real canvas size, then invalidateSize + place pins (cold-start: scripts finished after the route reveal)
 }
 async function onKeydown(e) {

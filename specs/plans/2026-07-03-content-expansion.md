@@ -50,7 +50,7 @@ then tick the stage here with a one-line note. Identity-free commits ("WHV Guide
 one PR; if it grows, split it.
 
 - [x] **S0 — Event research + bake (A1).** 15 new events Jul26–Mar27, plan doc. *(PR #13, SW v191)*
-- [ ] **S1 — Pillar cards (A2).** +10–15 tips.json cards: restaurants (listening bars, jazz
+- [x] **S1 — Pillar cards (A2).** *(12 cards baked: restaurants 14→18, geek 13→17, music 15→19; all 2026-verified, 1 medium-confidence; PR #15, SW v192)* +10–15 tips.json cards: restaurants (listening bars, jazz
       kissa, standing sushi), geek (Nakano Broadway floors, Hard-Off crawl, retro arcades),
       music (Koenji/Shimokita live houses). Verify: JSON valid, cards render on #/explore,
       correct schema (content-card, NOT findings).

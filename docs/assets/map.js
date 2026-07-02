@@ -24,6 +24,7 @@ import { askText, askDate, confirmModal, alertModal } from './lib/modal.js';
 import { nowISO, fmtShort } from './lib/dates.js';
 import { loadPlans, getPlan, hasPlan } from './lib/dayplan.js';
 import { searchJP } from './lib/nominatim.js';
+import { fetchNearby } from './lib/wiki.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let routeMarkers = [];   // {n, marker} per drawn route stop — lets the detail card fly to a stop
@@ -114,6 +115,7 @@ export function mountMap(data) {
   $('#mapFit')?.addEventListener('click', fitAllPins);
   $('#mapDrop')?.addEventListener('click', toggleArm);
   wireDaySelect();
+  wireWiki();
   // detail-card interactions: ✕ clears the route; a stop row flies the map to that pin
   $('#mapRouteDetail')?.addEventListener('click', (e) => {
     if (e.target.closest('.mrd-clear')) { const sel = $('#mapDay'); if (sel) sel.value = ''; clearRoute(); sel?.focus(); return; }   // the focused ✕ was just destroyed — hand focus to the day picker
@@ -552,6 +554,34 @@ function populateDaySelect() {
   }).join('');
   if (prev && dates.includes(prev)) sel.value = prev;
 }
+// "📖 What's here?" — Wikipedia geosearch around the current map view (home base before
+// Leaflet loads). Read-only card; links open Wikipedia. Reuses the route-detail card styling.
+function wireWiki() {
+  const btn = $('#mapWikiBtn'), card = $('#mapWiki');
+  if (!btn || !card || btn.dataset.wired) return;
+  btn.dataset.wired = '1';
+  const closeRow = `<button type="button" class="mrd-clear" id="mapWikiClose" aria-label="Close nearby articles">✕</button>`;
+  btn.addEventListener('click', async () => {
+    if (!card.hidden) { card.hidden = true; card.innerHTML = ''; return; }   // toggle off
+    const c = (map && leafletReady) ? map.getCenter() : null;
+    const home = loadPlaces().find(p => p.home && Number.isFinite(p.lat) && Number.isFinite(p.lng));
+    const [lat, lng] = c ? [c.lat, c.lng] : home ? [home.lat, home.lng] : [35.68, 139.77];
+    card.hidden = false;
+    card.innerHTML = `<div class="mrd-head"><b class="mrd-title">📖 Near this view…</b></div>`;
+    try {
+      const hits = await fetchNearby(lat, lng);
+      card.innerHTML = `<div class="mrd-head"><b class="mrd-title">📖 Near this view</b>${closeRow}</div>`
+        + (hits.length
+          ? `<ol class="mrd-list">${hits.map(h => `<li class="mrd-stop nocoord"><span class="mrd-name"><a href="${esc(h.url)}" target="_blank" rel="noopener noreferrer">${esc(h.title)} ↗</a></span>${h.dist != null ? `<span class="mrd-leg fuzzy">${esc(String(h.dist))} m</span>` : ''}</li>`).join('')}</ol>`
+          : '<p class="mrd-nocoord-t">Nothing on Wikipedia within ~1.5 km of this view.</p>');
+      announce(`${hits.length} nearby article${hits.length === 1 ? '' : 's'}.`);
+    } catch {
+      card.innerHTML = `<div class="mrd-head"><b class="mrd-title">📖 Near this view</b>${closeRow}</div><p class="mrd-nocoord-t">Wikipedia unavailable (offline?).</p>`;
+    }
+    $('#mapWikiClose')?.addEventListener('click', () => { card.hidden = true; card.innerHTML = ''; btn.focus(); });
+  });
+}
+
 function wireDaySelect() {
   const sel = $('#mapDay');
   if (!sel || sel.dataset.wired) return;

@@ -792,3 +792,20 @@ test('parseWeather: sunrise/sunset HH:MM extraction + absence', () => {
   assert.equal(w.sunset, '19:01');
   assert.equal(parseWeather({ current: { temperature_2m: 25 } }).sunrise, null);
 });
+
+// ---- lib/wiki.js (Wikipedia geosearch parse) ----
+import { parseGeoSearch } from '../docs/assets/lib/wiki.js';
+
+test('parseGeoSearch: maps, sorts by distance, drops malformed, encodes URL', () => {
+  const r = parseGeoSearch({ query: { geosearch: [
+    { title: 'Kita-Ayase Station', dist: 1092.1 },
+    { title: 'Aoi Station', dist: 672 },
+    { notitle: true },
+  ] } });
+  assert.equal(r.length, 2);
+  assert.equal(r[0].title, 'Aoi Station');
+  assert.equal(r[0].dist, 672);
+  assert.equal(r[1].url, 'https://en.wikipedia.org/wiki/Kita-Ayase%20Station'.replace('%20', '_') === r[1].url ? r[1].url : 'https://en.wikipedia.org/wiki/Kita-Ayase_Station');
+  assert.deepEqual(parseGeoSearch({}), []);
+  assert.deepEqual(parseGeoSearch(null), []);
+});

@@ -406,7 +406,10 @@ function renderPins() {
     if (!matchesText(pt, q)) return;
     shown++;
     const top = pt.kind === 'user' && (pt.fav || pt.locked);
-    const m = L.marker([pt.lat, pt.lng], { icon: divIcon(pt), riseOnHover: true });
+    // only YOUR saved pins are tab stops (with a real name for SRs) — the ~200 catalogue pins
+    // would otherwise be unnamed keyboard stops; they're all duplicated in the sidebar list
+    const m = L.marker([pt.lat, pt.lng], { icon: divIcon(pt), riseOnHover: true, keyboard: pt.kind === 'user' });
+    if (pt.kind === 'user') m.on('add', () => { const el = m.getElement(); if (el) { el.setAttribute('role', 'button'); el.setAttribute('aria-label', pt.name); } });
     m.bindPopup(popupFor(pt));
     if (pt.kind === 'user') m.on('popupopen', () => { openPlaceId = pt.id; wireUserPopup(pt); }).on('popupclose', () => { if (openPlaceId === pt.id) openPlaceId = null; });
     (top ? pinTop : pinLayer).addLayer(m);
@@ -450,7 +453,7 @@ export function drawRoute(stops, meta = {}) {
     routeLayer.clearLayers();
     routeMarkers = [];
     pts.forEach(({ s, n }) => {
-      const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(n))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000 });
+      const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(n))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000, keyboard: false });   // the detail-card legend is the accessible surface for route stops
       m.bindPopup(`<div class="pin-pop"><b>${esc(String(n))}. ${esc(s.name)}</b></div>`);
       routeLayer.addLayer(m);
       routeMarkers.push({ n, marker: m });

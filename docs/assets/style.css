@@ -3108,3 +3108,6 @@ ruby > rt {
 .expw-chip:hover{ border-color: var(--indigo); }
 .expw-chip b{ font-family: var(--mono); font-size:.68rem; color: var(--indigo-ink); }
 .expw-area{ color: var(--ink-faint); font-size:.72rem; }
+
+/* review fixes: chip title truncates with a real ellipsis (text-overflow is inert on flex items) */
+.expw-chip .expw-t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }

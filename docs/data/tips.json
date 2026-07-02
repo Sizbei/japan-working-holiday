@@ -7273,6 +7273,58 @@
     "https://wanderlog.com/list/geoCategory/1586463/top-things-to-do-and-attractions-in-adachi"
    ],
    "confidence": "medium"
+  },
+  {
+   "detail": "A ~20-seat second-floor Dogenzaka listening bar where owner Kobayashi-san spins from a wall of 10,000+ jazz, blues and soul records on a warm tube system — the archetypal Tokyo one-man vinyl bar.",
+   "confidence": "high",
+   "sources": [
+    "https://tokyojazzsite.com/directory/listing/jbs-jazz-blues-soul",
+    "https://www.timeout.com/tokyo/music/jbs"
+   ],
+   "how_or_when": "Opens in the afternoon and runs into the evening, so it works as a daytime stop too; go solo or as a pair, keep your voice low, and don't photograph the records — cash only, no reservations.",
+   "area_or_park": "Dogenzaka, Shibuya",
+   "price_or_cost": "All drinks ¥500, no cover",
+   "tier": "S",
+   "name": "JBS (Jazz, Blues, Soul)"
+  },
+  {
+   "detail": "A 1926-founded classical-music kissa in a baroque two-storey hall where every seat faces a wall of giant speakers like a cinema of sound — talking loudly and phones are banned, you just sit with coffee and a symphony.",
+   "confidence": "high",
+   "sources": [
+    "https://www.thevinylfactory.com/features/meikyoku-kissa-lion-tokyo",
+    "https://ordinarypatrons.com/2026/01/25/cafe-le-violon-and-meikyoku-kissa-lion-tokyo-classical-music-cafes-we-visited/"
+   ],
+   "how_or_when": "Open daily roughly 11:00-22:30; go on a weekday afternoon for a quiet seat, order at your table, and note there are set 'concert' request times — no photos inside, cash only.",
+   "area_or_park": "Dogenzaka, Shibuya",
+   "price_or_cost": "Coffee ~¥700-900, one drink per person expected",
+   "tier": "S",
+   "name": "Meikyoku Kissa Lion"
+  },
+  {
+   "detail": "A no-seats tachigui (standing) sushi counter run by a fish wholesaler, so you get market-fresh nigiri made to order at a fraction of sit-down prices — perfect fast solo dinner before a Shibuya gig.",
+   "confidence": "high",
+   "sources": [
+    "https://www.timeout.com/tokyo/restaurants/uogashi-nihon-ichi-shibuya-dogenzaka",
+    "https://tokyocheapo.com/restaurant/uogashi-nihonichi-standing-sushi-bar-shibuya-dogenzaka-branch/"
+   ],
+   "how_or_when": "Open from ~11:30 through late evening; order piece by piece from the chef or grab a set, expect 20-30 minutes on your feet, no reservations — avoid the 12-13:00 office rush.",
+   "area_or_park": "Dogenzaka, Shibuya",
+   "price_or_cost": "~¥75-300 per nigiri pair; a solid meal ¥1,500-2,500",
+   "tier": "A",
+   "name": "Uogashi Nihon-Ichi (Shibuya Dogenzaka)"
+  },
+  {
+   "detail": "One of Tokyo's benchmark old-school kissaten: hand-poured nel-drip coffee served in porcelain the master picks to match your order, plus a famous chiffon cake, in a hushed wood-and-copper room minutes from Shibuya's chaos.",
+   "confidence": "high",
+   "sources": [
+    "https://tokyocheapo.com/restaurant/chatei-hatou/",
+    "https://tabelog.com/en/tokyo/A1303/A130301/13001169/"
+   ],
+   "how_or_when": "Open daily roughly 11:00-23:00; expect a short queue on weekends — go on a weekday mid-afternoon, order the aged blend or a nel-drip single origin, cash preferred.",
+   "area_or_park": "Shibuya (east side, near Miyamasuzaka)",
+   "price_or_cost": "¥800-1,500 per coffee",
+   "tier": "A",
+   "name": "Chatei Hatou"
   }
  ],
  "disney": [
@@ -8108,6 +8160,58 @@
     "https://www.gearnews.com/buying-synthesizers-from-japan-synth/"
    ],
    "confidence": "high"
+  },
+  {
+   "detail": "A tiny psychedelic basement live house in Higashi-Koenji with painted walls and a fierce booking policy — garage, psych, punk and weirdo electronics most nights, and the classic first-gig venue for underground Tokyo bands.",
+   "confidence": "high",
+   "sources": [
+    "https://ufoclub.jp/schedule/",
+    "https://www.timeout.com/tokyo/music/ufo-club"
+   ],
+   "how_or_when": "Shows most nights, doors usually ~18:30-19:00; buy at the door for most gigs (¥2,000-3,000 + drink), check ufoclub.jp/schedule — it's small, so popular nights sell out.",
+   "area_or_park": "Higashi-Koenji",
+   "price_or_cost": "¥2,000-3,500 + ¥600 drink order",
+   "tier": "A",
+   "name": "U.F.O. Club"
+  },
+  {
+   "detail": "The Loft Project's ~250-capacity basement that has anchored Shimokitazawa's band scene since 1991 (35th-anniversary gigs running through 2026) — sweaty, loud, and the best room in Tokyo to catch a rock band right before they break.",
+   "confidence": "high",
+   "sources": [
+    "https://www.loft-prj.co.jp/schedule/shelter",
+    "https://www.tokyogigguide.com/en/gigs/venue/124"
+   ],
+   "how_or_when": "Gigs almost nightly, doors typically 18:00-19:00; check the Loft Project schedule page and reserve via the band or e+ for bigger names, walk-up works for weeknight multi-band bills.",
+   "area_or_park": "Shimokitazawa",
+   "price_or_cost": "¥2,500-4,000 + 1-drink (¥600)",
+   "tier": "A",
+   "name": "Shimokitazawa SHELTER"
+  },
+  {
+   "detail": "Shibuya's flagship 1,000-capacity, four-floor techno club with a serious sound system, lasers and a giant mirror ball — weekend lineups pull international techno and drum & bass headliners, the reliable big-room electronic night.",
+   "confidence": "high",
+   "sources": [
+    "https://www.womb.co.jp/en/event/",
+    "https://ra.co/clubs/1661"
+   ],
+   "how_or_when": "Open Fri/Sat (plus event nights) roughly 23:00-05:00; photo ID required (residence card works), advance tickets via RA are cheaper (~¥3,500 vs ¥5,000+ door), and it fills after 1:00.",
+   "area_or_park": "Maruyamacho, Shibuya",
+   "price_or_cost": "¥3,000-6,000 entry incl. or plus drink",
+   "tier": "A",
+   "name": "WOMB"
+  },
+  {
+   "detail": "The mothership of Tokyo record shopping: a full building of genre floors (plus satellite shops like the Punk Market nearby) of meticulously graded secondhand vinyl and CDs — the electronic/club-music floor alone can eat an afternoon.",
+   "confidence": "high",
+   "sources": [
+    "https://trulytokyo.com/disk-union/",
+    "https://recoya.net/en/stores/area/japan/tokyo/shinjuku/"
+   ],
+   "how_or_when": "Open daily ~11:00-21:00; start at the main building and work floor by floor, bring cash or IC, and check the ¥100-500 bargain bins — weekday mornings are quietest for crate-digging.",
+   "area_or_park": "Shinjuku (east side, Yamada Bldg area)",
+   "price_or_cost": "Bargain vinyl ¥100-500; graded used LPs ¥1,000-5,000",
+   "tier": "S",
+   "name": "Disk Union Shinjuku"
   }
  ],
  "geek": [
@@ -8279,6 +8383,58 @@
     "https://selfguidejapan.com/blog/anime-pilgrimage-japan"
    ],
    "confidence": "high"
+  },
+  {
+   "detail": "The original otaku mall: 30+ Mandarake specialty shops spread over floors 2-4, with Mandarake Galaxy (2F) for retro video games and the upper floors for vintage toys, doujin and oddities — denser and cheaper hunting than Akihabara.",
+   "confidence": "high",
+   "sources": [
+    "https://livejapan.com/en/in-tokyo/in-pref-tokyo/in-shinjuku/article-a0001595/",
+    "https://en.wikipedia.org/wiki/Nakano_Broadway"
+   ],
+   "how_or_when": "Most Mandarake shops open 12:00-20:00 (some floors shuttered before noon), so go early afternoon on a weekday; budget 2-3 hours and check prices per-shop since each Mandarake unit prices independently.",
+   "area_or_park": "Nakano (north exit, end of Sun Mall arcade)",
+   "price_or_cost": "Free to browse; retro carts from a few hundred yen to collector prices",
+   "tier": "S",
+   "name": "Nakano Broadway (Mandarake floors)"
+  },
+  {
+   "detail": "The most crawl-worthy central Hard Off: multiple floors of secondhand electronics whose legendary 'junk' bins turn up old keyboards, mixers, turntables, samplers and ¥100 records — untested rather than broken, so synth bargains happen.",
+   "confidence": "medium",
+   "sources": [
+    "https://tokyocheapo.com/shopping-2/hard-off-affordable-electronics-instruments-and-recycled-junk/",
+    "https://www.corner.inc/place/1223002"
+   ],
+   "how_or_when": "Open daily roughly 10:00-21:00 in the Rock Building at Sotokanda 3-11-2; head straight to the junk floor, bring cash for small buys, and test battery-powered gear in-store if you can.",
+   "area_or_park": "Akihabara (Sotokanda)",
+   "price_or_cost": "Junk-bin finds ¥100-3,000; working gear market-price minus",
+   "tier": "A",
+   "name": "Hard Off Akihabara 1st store"
+  },
+  {
+   "detail": "Tokyo's temple of retro arcade gaming: two floors of original-hardware cabinets on real CRTs — After Burner with the moving seat, ~25 Street Fighter cabs, Cave shmups, Metal Slug — mostly ¥100 a play, with regular fighting-game tournaments.",
+   "confidence": "high",
+   "sources": [
+    "https://www.tokyochase.com/articles/retro-game-center",
+    "https://wattention.com/lets-talk-subculture-vol-16-takadanobaba-game-center-mikado-tokyos-empire-of-retro-video-games/"
+   ],
+   "how_or_when": "Open daily 10:00-24:00; weekday afternoons are calm for casual play, evenings and tournament nights get serious — check their X/Twitter for event schedules before claiming a versus cab.",
+   "area_or_park": "Takadanobaba",
+   "price_or_cost": "Free entry, ¥50-100 per credit",
+   "tier": "S",
+   "name": "Game Center Mikado (Takadanobaba)"
+  },
+  {
+   "detail": "Japan's legendary vintage-synth shop, a 4th-floor room near Harajuku Station stacked with Moogs, Rolands, modular walls and rare Japanese machines — half museum, half store, and everything is playable.",
+   "confidence": "high",
+   "sources": [
+    "https://www.yelp.com/biz/five-g-music-technology-%E6%B8%8B%E8%B0%B7%E5%8C%BA-3",
+    "https://www.matrixsynth.com/2007/11/five-g-music-tech-shop-harajuku-tokyo.html"
+   ],
+   "how_or_when": "Open afternoons (typically ~11:00-20:00, check fiveg.net before going); it's one Chiyoda-line ride from Ayase to Meiji-jingumae — ask before patching anything, and browsing is welcome even if you're not buying.",
+   "area_or_park": "Harajuku (Jingumae, Le Ponte Bldg 4F)",
+   "price_or_cost": "Free to browse; synths ¥20,000 to ¥1M+",
+   "tier": "S",
+   "name": "Five G Music Technology"
   }
  ],
  "meetups": [

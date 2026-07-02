@@ -739,3 +739,28 @@ test('applyPhaseMoves: does not mutate its input', () => {
   applyPhaseMoves(g, { a: '1' });
   assert.deepEqual(g[0].items.map(i => i.id), ['a', 'b']);
 });
+
+// ---- lib/weather.js (Open-Meteo parse + WMO labels) ----
+import { parseWeather, wmoInfo } from '../docs/assets/lib/weather.js';
+
+test('parseWeather: maps a real Open-Meteo body to the view model', () => {
+  const w = parseWeather({
+    current: { temperature_2m: 22.6, apparent_temperature: 26.5, weather_code: 2 },
+    daily: { temperature_2m_max: [29.1], temperature_2m_min: [21.8], precipitation_probability_max: [40] },
+  });
+  assert.deepEqual(w, { temp: 23, feels: 27, code: 2, hi: 29, lo: 22, rainPct: 40 });
+});
+test('parseWeather: wrong/empty shapes return null; missing daily degrades to nulls', () => {
+  assert.equal(parseWeather(null), null);
+  assert.equal(parseWeather({}), null);
+  assert.equal(parseWeather({ current: { temperature_2m: 'hot' } }), null);
+  const w = parseWeather({ current: { temperature_2m: 30 } });
+  assert.equal(w.temp, 30);
+  assert.equal(w.hi, null);
+  assert.equal(w.rainPct, null);
+});
+test('wmoInfo: known and unknown codes', () => {
+  assert.equal(wmoInfo(0).label, 'Clear');
+  assert.equal(wmoInfo(95).emoji, '⛈');
+  assert.equal(wmoInfo(1234).label, 'Weather');
+});

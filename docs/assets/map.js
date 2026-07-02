@@ -319,7 +319,11 @@ function initMap() {
     if (!e.ctrlKey) return;
     e.preventDefault();
     const latlng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e));
-    map.setZoomAround(latlng, map.getZoom() - e.deltaY * 0.02);   // 0.02: a two-finger pinch should feel like a zoom, not a nudge
+    // 0.04: owner likes a STRONG pinch — a full trackpad gesture (many small deltas) sweeps several
+    // zoom levels. The per-event clamp keeps a single MOUSE ctrl+wheel notch (deltaY≈100) from
+    // teleporting 4 levels in one click.
+    const dz = Math.max(-1.2, Math.min(1.2, -e.deltaY * 0.04));
+    map.setZoomAround(latlng, map.getZoom() + dz);
   }, { passive: false });
   pinLayer = window.L.markerClusterGroup
     ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46, spiderfyOnMaxZoom: true })

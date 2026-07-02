@@ -152,6 +152,10 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 }
 .skip-link:focus { top: 0; outline: 2px solid var(--red); outline-offset: 2px; }
 
+/* the Today widget's local-weather strip (Open-Meteo) */
+.wx-strip{ font-family: var(--mono); font-size:.76rem; color: var(--ink); margin: 0 0 .45rem; }
+.wx-strip .wx-dim{ color: var(--ink-faint); }
+
 /* boot-failure banner — a direct child of <main>, visible even when no view ever activates */
 .boot-error{ margin: 1rem auto; max-width: 720px; padding: .9rem 1.1rem; border: 1px solid var(--bad-ink);
   border-radius: var(--r-md); background: color-mix(in srgb, var(--bad-ink) 10%, var(--bg-soft));

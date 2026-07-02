@@ -1340,11 +1340,17 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 #mapDay:focus{ outline:none; }
 /* route detail card: numbered stops + per-leg transit time (paper-themed, Flighty-blue route accents) */
 .map-route-detail{ background: var(--bg-soft); border:1px solid var(--line); border-left:3px solid var(--flighty-blue); border-radius: var(--r-md); padding: var(--s3) var(--s4); margin:0 0 var(--s4); box-shadow: var(--shadow); max-width:520px; }
-.mrd-head{ display:flex; align-items:baseline; justify-content:space-between; gap:.6rem; flex-wrap:wrap; margin-bottom:.55rem; }
-.mrd-title{ font-family: var(--serif); font-weight:600; font-size:1.05rem; color: var(--ink); }
+.mrd-head{ display:flex; align-items:center; gap:.55rem; margin-bottom:.55rem; }
+.mrd-title{ flex:1 1 auto; min-width:0; font-family: var(--serif); font-weight:600; font-size:1.05rem; color: var(--ink); }
+.mrd-clear{ flex:none; width:26px; height:26px; display:grid; place-items:center; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink-soft); font-size:.7rem; cursor:pointer; transition: border-color var(--t-hover), color var(--t-hover); }
+.mrd-clear:hover{ border-color: var(--flighty-blue); color: var(--ink); }
 .mrd-sum{ font-family: var(--mono); font-size:.68rem; font-weight:700; color: var(--ink-faint); }
 .mrd-list{ list-style:none; margin:0; padding:0; }
-.mrd-stop{ display:flex; align-items:flex-start; gap:.6rem; }
+.mrd-stop{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; background:none; border:none; font:inherit; color:inherit; padding:.2rem .35rem; border-radius: var(--r-sm); cursor:pointer; transition: background var(--t-hover); }
+button.mrd-stop:hover{ background: var(--bg-sunk); }
+li.mrd-stop.nocoord{ cursor:default; padding:.2rem .35rem; align-items:flex-start; }
+.mrd-go{ margin-left:auto; flex:none; color: var(--flighty-blue); font-weight:700; font-size:1rem; opacity:0; transition: opacity var(--t-hover); }
+button.mrd-stop:hover .mrd-go{ opacity:1; }
 .mrd-n{ flex:none; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; font-size:.72rem; box-shadow:0 0 6px rgba(10,132,255,.4); }
 .mrd-stop.nocoord .mrd-n{ background: var(--ink-faint); box-shadow:none; }
 .mrd-body{ display:flex; flex-direction:column; min-width:0; padding-top:1px; }
@@ -1353,6 +1359,10 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .mrd-nocoord-t{ font-size:.68rem; color: var(--warn-ink); font-style:italic; }
 .mrd-leg{ display:flex; align-items:center; gap:.4rem; margin:.15rem 0 .15rem 11px; padding:.1rem 0 .1rem .9rem; border-left:2px solid color-mix(in srgb, var(--flighty-blue) 40%, var(--line)); }
 .mrd-legt{ font-family: var(--mono); font-size:.68rem; color: var(--indigo-ink); }
+/* focus mode: while a day route is drawn, fade the catalogue/saved pins + clusters so the numbered route reads clearly */
+.jwh-pin, .marker-cluster{ transition: opacity var(--t-base), filter var(--t-base); }
+/* !important: markercluster leaves an inline style="opacity:1" on marker icons that a stylesheet rule can't beat */
+.map-canvas.route-focus .jwh-pin, .map-canvas.route-focus .marker-cluster{ opacity:.3 !important; filter: saturate(.55); }
 .map-fit{ font-family: var(--mono); font-size:.72rem; font-weight:700; letter-spacing:.04em; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.4rem .7rem; cursor:pointer; transition: border-color var(--t-hover), transform var(--t-hover); }
 .map-fit:hover{ border-color: var(--indigo); transform: translateY(-1px); }
 .map-fit:active{ transform: translateY(0); }

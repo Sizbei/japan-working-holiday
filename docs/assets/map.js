@@ -26,6 +26,7 @@ import { loadPlans, getPlan, hasPlan } from './lib/dayplan.js';
 import { searchJP } from './lib/nominatim.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
+let routeMarkers = [];   // {n, marker} per drawn route stop — lets the detail card fly to a stop
 let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false, pinsShown = false;
 const markersById = new Map();
 // milestone latches (per session) — a flourish fires only on CROSSING, not on every re-render
@@ -112,6 +113,12 @@ export function mountMap(data) {
   $('#mapFit')?.addEventListener('click', fitAllPins);
   $('#mapDrop')?.addEventListener('click', toggleArm);
   wireDaySelect();
+  // detail-card interactions: ✕ clears the route; a stop row flies the map to that pin
+  $('#mapRouteDetail')?.addEventListener('click', (e) => {
+    if (e.target.closest('.mrd-clear')) { const sel = $('#mapDay'); if (sel) sel.value = ''; clearRoute(); return; }
+    const row = e.target.closest('.mrd-stop[data-lat]');
+    if (row) focusStop(+row.dataset.lat, +row.dataset.lng, row.dataset.n);
+  });
   document.addEventListener('jwh:route', (e) => {
     mapActive = e.detail?.route === 'map';
     if (!mapActive) return;
@@ -439,11 +446,14 @@ export function drawRoute(stops, meta = {}) {
     if (!pts.length) { alertModal('These stops have no map location yet — set a pin or pick a place with coordinates.'); return; }   // don't clear a prior route or recenter on nothing
     if (!routeLayer) routeLayer = L.layerGroup().addTo(map);
     routeLayer.clearLayers();
+    routeMarkers = [];
     pts.forEach(({ s, n }) => {
       const m = L.marker([s.lat, s.lng], { icon: L.divIcon({ className: 'jwh-route-pin' + (s.coordKind === 'approx' ? ' approx' : ''), html: `<b>${esc(String(n))}</b>`, iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12] }), zIndexOffset: 1000 });
       m.bindPopup(`<div class="pin-pop"><b>${esc(String(n))}. ${esc(s.name)}</b></div>`);
       routeLayer.addLayer(m);
+      routeMarkers.push({ n, marker: m });
     });
+    $('#mapCanvas')?.classList.add('route-focus');   // dim the catalogue/saved pins so the route stands out (Flighty focus)
     if (pts.length > 1) {
       const latlngs = pts.map(({ s }) => [s.lat, s.lng]);
       const approx = pts.some(({ s }) => s.coordKind === 'approx');
@@ -459,7 +469,15 @@ export function drawRoute(stops, meta = {}) {
   };
   if (leafletReady) go(); else setTimeout(go, 900);
 }
-export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); const h = $('#mapRouteDetail'); if (h) { h.hidden = true; h.innerHTML = ''; } }
+export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); routeMarkers = []; $('#mapCanvas')?.classList.remove('route-focus'); const h = $('#mapRouteDetail'); if (h) { h.hidden = true; h.innerHTML = ''; } }
+
+// fly the map to a route stop + open its pin (from a detail-card row click)
+function focusStop(lat, lng, n) {
+  if (!map) return;
+  map.setView([lat, lng], Math.max(map.getZoom(), 15), { animate: !prefersReducedMotion() });
+  const hit = routeMarkers.find(x => String(x.n) === String(n));
+  if (hit) hit.marker.openPopup();
+}
 
 // route detail card (paper-themed, beside the map): numbered stops + per-leg transit time + totals
 function renderRouteDetail(stops, meta = {}) {
@@ -473,14 +491,17 @@ function renderRouteDetail(stops, meta = {}) {
   const parts = [];
   all.forEach((s, i) => {
     const hasC = typeof s.lat === 'number' && !isNaN(s.lat);
-    parts.push(`<li class="mrd-stop${hasC ? '' : ' nocoord'}"><span class="mrd-n">${i + 1}</span><span class="mrd-body"><span class="mrd-name">${esc(s.name)}</span>${hasC ? (s.area ? `<span class="mrd-area">${esc(areaOf(s.area))}</span>` : '') : '<span class="mrd-nocoord-t">no map location</span>'}</span></li>`);
+    const inner = `<span class="mrd-n">${i + 1}</span><span class="mrd-body"><span class="mrd-name">${esc(s.name)}</span>${hasC ? (s.area ? `<span class="mrd-area">${esc(areaOf(s.area))}</span>` : '') : '<span class="mrd-nocoord-t">no map location</span>'}</span>`;
+    parts.push(hasC
+      ? `<li><button type="button" class="mrd-stop" data-lat="${s.lat}" data-lng="${s.lng}" data-n="${i + 1}" title="Show ${esc(s.name)} on the map">${inner}<span class="mrd-go" aria-hidden="true">›</span></button></li>`
+      : `<li class="mrd-stop nocoord">${inner}</li>`);
     if (i < all.length - 1) {
       const next = all[i + 1];
       const leg = (hasC && typeof next.lat === 'number' && !isNaN(next.lat)) ? legLabel(s, next, ag) : null;
       parts.push(`<li class="mrd-leg${leg && leg.fuzzy ? ' fuzzy' : ''}"><span class="mrd-legt">${esc(leg ? leg.text : '·')}</span></li>`);
     }
   });
-  host.innerHTML = `<div class="mrd-head"><b class="mrd-title">${esc(title)}</b><span class="mrd-sum">${all.length} stop${all.length > 1 ? 's' : ''} · ≈${total} min · ${areas} area${areas > 1 ? 's' : ''}</span></div><ol class="mrd-list">${parts.join('')}</ol>`;
+  host.innerHTML = `<div class="mrd-head"><b class="mrd-title">${esc(title)}</b><span class="mrd-sum">${all.length} stop${all.length > 1 ? 's' : ''} · ≈${total} min · ${areas} area${areas > 1 ? 's' : ''}</span><button type="button" class="mrd-clear" aria-label="Clear route from the map">✕</button></div><ol class="mrd-list">${parts.join('')}</ol>`;
   host.hidden = false;
 }
 

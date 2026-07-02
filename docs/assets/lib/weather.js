@@ -28,7 +28,11 @@ export function parseWeather(j) {
   const c = j && j.current, d = j && j.daily;
   if (!c || typeof c.temperature_2m !== 'number') return null;
   const num = (arr) => (d && Array.isArray(arr) && typeof arr[0] === 'number') ? Math.round(arr[0]) : null;
+  // sunrise/sunset arrive as local ISO ("2026-07-02T04:28") — keep just HH:MM
+  const hm = (arr) => (d && Array.isArray(arr) && typeof arr[0] === 'string' && /T\d\d:\d\d/.test(arr[0])) ? arr[0].slice(11, 16) : null;
   return {
+    sunrise: hm(d && d.sunrise),
+    sunset: hm(d && d.sunset),
     temp: Math.round(c.temperature_2m),
     feels: typeof c.apparent_temperature === 'number' ? Math.round(c.apparent_temperature) : null,
     code: typeof c.weather_code === 'number' ? c.weather_code : null,
@@ -43,7 +47,7 @@ export function parseWeather(j) {
 export async function fetchWeather(lat, lng) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lng)}`
     + '&current=temperature_2m,apparent_temperature,weather_code'
-    + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+    + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset'
     + '&timezone=Asia%2FTokyo&forecast_days=1';
   const t = (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(6000) : undefined;
   const r = await fetch(url, { signal: t });

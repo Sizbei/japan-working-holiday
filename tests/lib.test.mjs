@@ -748,7 +748,7 @@ test('parseWeather: maps a real Open-Meteo body to the view model', () => {
     current: { temperature_2m: 22.6, apparent_temperature: 26.5, weather_code: 2 },
     daily: { temperature_2m_max: [29.1], temperature_2m_min: [21.8], precipitation_probability_max: [40] },
   });
-  assert.deepEqual(w, { temp: 23, feels: 27, code: 2, hi: 29, lo: 22, rainPct: 40 });
+  assert.deepEqual(w, { sunrise: null, sunset: null, temp: 23, feels: 27, code: 2, hi: 29, lo: 22, rainPct: 40 });
 });
 test('parseWeather: wrong/empty shapes return null; missing daily degrades to nulls', () => {
   assert.equal(parseWeather(null), null);
@@ -763,4 +763,32 @@ test('wmoInfo: known and unknown codes', () => {
   assert.equal(wmoInfo(0).label, 'Clear');
   assert.equal(wmoInfo(95).emoji, '⛈');
   assert.equal(wmoInfo(1234).label, 'Weather');
+});
+
+// ---- lib/quakes.js + lib/rates.js ----
+import { parseQuakes, shindo } from '../docs/assets/lib/quakes.js';
+import { parseUsdPerJpy } from '../docs/assets/lib/rates.js';
+
+test('parseQuakes: maps rows, drops malformed, labels shindo/tsunami', () => {
+  const q = parseQuakes([
+    { earthquake: { time: '2026/07/02 13:48:00', maxScale: 45, domesticTsunami: 'Watch', hypocenter: { name: '青森県東方沖', magnitude: 4.5 } } },
+    { earthquake: { hypocenter: {} } },
+    null,
+  ]);
+  assert.equal(q.length, 1);
+  assert.deepEqual(q[0], { time: '2026/07/02 13:48:00', name: '青森県東方沖', mag: 4.5, shindo: '5弱', tsunami: true });
+  assert.equal(shindo(20), '2');
+  assert.equal(shindo(99), null);
+});
+test('parseUsdPerJpy: success shape only', () => {
+  assert.equal(parseUsdPerJpy({ result: 'success', rates: { USD: 0.00615 } }), 0.00615);
+  assert.equal(parseUsdPerJpy({ result: 'error' }), null);
+  assert.equal(parseUsdPerJpy({ result: 'success', rates: { USD: '0.006' } }), null);
+  assert.equal(parseUsdPerJpy(null), null);
+});
+test('parseWeather: sunrise/sunset HH:MM extraction + absence', () => {
+  const w = parseWeather({ current: { temperature_2m: 25 }, daily: { sunrise: ['2026-07-02T04:28'], sunset: ['2026-07-02T19:01'] } });
+  assert.equal(w.sunrise, '04:28');
+  assert.equal(w.sunset, '19:01');
+  assert.equal(parseWeather({ current: { temperature_2m: 25 } }).sunrise, null);
 });

@@ -6,6 +6,7 @@
 
 import { $, esc } from './lib/dom.js';
 import { wireJpAccents } from './lang.js';
+import { fetchQuakes } from './lib/quakes.js';
 
 export function mountEmergency(data) {
   const host = $('#emergencyContent');
@@ -69,6 +70,35 @@ export function mountEmergency(data) {
     </section>`);
   }
 
+  // live JMA quake feed (P2P地震情報, keyless) — loads lazily on route entry so the static
+  // page stays fully offline-first; failure just leaves the section absent.
+  sections.push(`<section class="em-section" aria-labelledby="em-h-quakes">
+      <h3 id="em-h-quakes" class="em-h">Recent earthquakes <span class="em-note">JMA via P2P地震情報</span></h3>
+      <div id="emQuakes" class="em-quakes"><p class="em-note">Loads when online.</p></div>
+    </section>`);
+
   host.innerHTML = sections.join('');
   wireJpAccents($('#view-emergency'));
+
+  let quakesAt = 0, quakesBusy = false;
+  document.addEventListener('jwh:route', async (e) => {
+    if (e.detail?.route !== 'emergency') return;
+    if (quakesBusy || Date.now() - quakesAt < 10 * 60e3) return;   // refresh at most every 10 min
+    quakesBusy = true;
+    const el = $('#emQuakes');
+    try {
+      const qs = await fetchQuakes(5);
+      quakesAt = Date.now();
+      if (el && qs.length) {
+        el.innerHTML = `<ul class="em-qlist">${qs.map(q => `<li>
+          <span class="em-qtime">${esc(q.time.slice(5, 16))}</span>
+          <span class="em-qname" lang="ja">${esc(q.name)}</span>
+          ${q.mag != null ? `<span class="em-qmag">M${esc(String(q.mag))}</span>` : ''}
+          ${q.shindo ? `<span class="em-qshindo">震度${esc(q.shindo)}</span>` : ''}
+          ${q.tsunami ? '<span class="em-qtsu">🌊 tsunami advisory</span>' : ''}
+        </li>`).join('')}</ul>`;
+      } else if (el && !qs.length) { el.innerHTML = '<p class="em-note">No recent quakes reported.</p>'; }
+    } catch { if (el) el.innerHTML = '<p class="em-note">Feed unavailable (offline?).</p>'; }
+    finally { quakesBusy = false; }
+  });
 }

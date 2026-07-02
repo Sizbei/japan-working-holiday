@@ -9,6 +9,7 @@ import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
 import { prefersReducedMotion } from './motion.js';
 import { fetchWeather, wmoInfo } from './lib/weather.js';
+import { fetchUsdPerJpy } from './lib/rates.js';
 import { loadPlaces } from './lib/places.js';
 import { checklistItems } from './checklist-page.js';
 import { allEvents } from './calendar.js';
@@ -29,6 +30,7 @@ export function mountDashboard(data, today) {
   wireBell();
   refresh();
   refreshWeather();   // async — re-fills the Today strip when the fetch lands
+  refreshRates();     // async — the budget teaser picks the cached ¥→$ up on its next render
   document.addEventListener('jwh:data-changed', refresh);
   // Budget/packing mutations happen on their OWN routes and re-render locally; they intentionally
   // do NOT dispatch jwh:data-changed (that would trigger no-op re-renders across other listeners).
@@ -60,9 +62,12 @@ function refresh() {
 function refreshTeasers() {
   const s = summary(DATA.budget || { currency: 'JPY', oneTime: [], monthly: [] }, get(KEYS.budget, {}) || {});
   const savings = (get(KEYS.budget, {}) || {}).savings || 0;
+  const fx = get(KEYS.fx, null);
+  const usd = (fx && Number.isFinite(fx.usd) && Number.isFinite(fx.at) && Date.now() - fx.at < 48 * 3600e3) ? fx.usd : null;
+  const inUsd = (usd && s.toLand > 0) ? ` (~$${Math.round(s.toLand * usd).toLocaleString('en-US')})` : '';
   const budgetText = (s.oneTimeTotal === 0 && s.monthlyTotal === 0 && savings === 0)
     ? 'Set up your budget'
-    : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · to land ${fmtYen(s.toLand)}`;
+    : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · to land ${fmtYen(s.toLand)}${inUsd}`;
   teaser('#tBudget', budgetText, '#/budget');
 
   renderReadiness();
@@ -332,8 +337,23 @@ function renderWxStrip() {
     + ` · ${esc(i.label)}`
     + (w.hi != null && w.lo != null ? ` <span class="wx-dim">· H${esc(String(w.hi))}° L${esc(String(w.lo))}°</span>` : '')
     // "☔ 100%" is the DAY'S max, not the current sky — say so, and give SRs the word the emoji carries
-    + (w.rainPct != null && w.rainPct > 0 ? ` · <span aria-hidden="true">☔</span> <span class="sr-only">rain </span>${esc(String(w.rainPct))}% <span class="wx-dim">today</span>` : '');
+    + (w.rainPct != null && w.rainPct > 0 ? ` · <span aria-hidden="true">☔</span> <span class="sr-only">rain </span>${esc(String(w.rainPct))}% <span class="wx-dim">today</span>` : '')
+    + (w.sunrise && w.sunset ? ` <span class="wx-dim">· <span aria-hidden="true">🌅</span><span class="sr-only">sunrise </span>${esc(w.sunrise)} <span aria-hidden="true">🌇</span><span class="sr-only">sunset </span>${esc(w.sunset)}</span>` : '');
 }
+// ¥→USD for the budget teaser (er-api, keyless). 24h TTL — FX day-precision is plenty here.
+let fxInFlight = false;
+async function refreshRates() {
+  const fx = get(KEYS.fx, null);
+  if (fx && Number.isFinite(fx.at) && Date.now() - fx.at < 24 * 3600e3) return;
+  if (fxInFlight) return;
+  fxInFlight = true;
+  try {
+    const usd = await fetchUsdPerJpy();
+    if (usd) { set(KEYS.fx, { at: Date.now(), usd }); refreshTeasers(); }
+  } catch { /* offline — the teaser just shows yen only */ }
+  finally { fxInFlight = false; }
+}
+
 let wxInFlight = false;   // dedupe: mount + the boot jwh:route both call this before the cache exists
 async function refreshWeather() {
   const c = wxCache();

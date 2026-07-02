@@ -1044,6 +1044,9 @@ html.nav-open{ overflow: hidden; }
 .dnd-dragging { opacity: var(--drag-ghost-opacity); transform: scale(var(--drag-lift-scale)); box-shadow: var(--shadow-lg); position: relative; z-index: 30; pointer-events: none; }
 .dnd-grabbed { box-shadow: var(--ring); }
 .dnd-movable { cursor: grab; }
+body.dnd-noselect { user-select: none; -webkit-user-select: none; }   /* no text selection mid row-drag */
+.dnd-group .check-item { cursor: grab; }   /* whole-row drag affordance (buttons/inputs keep their own cursor) */
+.dnd-group .check-item.dnd-dragging { cursor: grabbing; }
 .dnd-over { outline: 2px dashed var(--indigo); outline-offset: -2px; background: color-mix(in srgb, var(--indigo) 8%, transparent); }
 @media (hover: none) { .dnd-handle { min-width: 44px; min-height: 44px; justify-content: center; } }
 

@@ -6,10 +6,10 @@
 import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
-import { makeSortable } from './dnd.js';
+import { makeSortableGroup } from './dnd.js';
 import { mountAccordion, setCollapsed } from './collapse.js';
 import { celebrate } from './celebrate.js';
-import { customItem, partitionCustom, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
+import { customItem, partitionCustom, applyPhaseMoves, loadChecklistCustom, saveChecklistCustom, renameById } from './lib/checklist.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { askDate, askTags, alertModal, confirmModal } from './lib/modal.js';
 import { tagsFor, allTags, setTags, tagHue } from './lib/tags.js';
@@ -184,6 +184,25 @@ function orderItems(items, savedOrder) {
 }
 function loadCheckOrder() { return get(KEYS.checkOrder, {}) || {}; }
 function saveCheckOrder(o) { set(KEYS.checkOrder, o); }
+function loadPhaseMoves() { return get(KEYS.checkMoves, {}) || {}; }
+function savePhaseMoves(m) { set(KEYS.checkMoves, m); }
+
+// A drag/keyboard move landed an item in a DIFFERENT group. Custom items genuinely change
+// phase (their stored field); baked items (from tips.json) get a display re-home in
+// KEYS.checkMoves — dragging one back to its natural phase clears the entry.
+function applyPhaseMove(id, toKey) {
+  const phases = (DATA && DATA.checklist) || [];
+  const customs = loadChecklistCustom();
+  if (customs.some(c => c.id === id)) {
+    const label = toKey === 'mine' ? 'My tasks' : (phases[+toKey]?.phase || 'My tasks');
+    saveChecklistCustom(customs.map(c => c.id === id ? { ...c, phase: label } : c));
+    return;
+  }
+  const natural = String(phases.findIndex(p => (p.items || []).some(it => it.id === id)));
+  const moves = loadPhaseMoves();
+  if (toKey === natural) delete moves[id]; else moves[id] = toKey;
+  savePhaseMoves(moves);
+}
 
 let checkSearchQ = '';   // live search/filter query (view-only; never mutates data, doesn't affect progress)
 
@@ -402,9 +421,14 @@ function renderChecklist(today) {
     const { byPhase, mine } = partitionCustom(
       loadChecklistCustom().map(c => ({ ...c, _custom: true })),
       phases.map(p => p.phase));
+    // per-group item lists (baked + custom under their phase), then re-home per drag moves
+    let groups = phases.map((p, pi) => ({ key: String(pi), items: [...(p.items || []), ...(byPhase.get(p.phase) || [])] }));
+    groups.push({ key: 'mine', items: mine });
+    groups = applyPhaseMoves(groups, loadPhaseMoves());
+    const groupItems = new Map(groups.map(g => [g.key, g.items]));
     const drag = !hd && !searching && !tagActive;   // drag is meaningless over a hidden/searched/tag-filtered view
     let html = phases.map((p, pi) => {
-      const all = [...(p.items || []), ...(byPhase.get(p.phase) || [])];
+      const all = groupItems.get(String(pi)) || [];
       const its = orderItems(all, order[pi]).filter(it => it.id).filter(it => !(hd && state[it.id])).filter(match).filter(matchTag);   // it.id guard: never render a cb-undefined row from a malformed item
       if (!its.length) return '';                           // skip a phase fully done/hidden, or with no search match
       // count over the FULL phase (not the hide-done/search-filtered list) so progress math is stable
@@ -427,12 +451,13 @@ function renderChecklist(today) {
     }).join('');
     // synthetic "My tasks" group — custom items with phase "My tasks" or an orphan label.
     // Reorder key is the string "mine" (distinct from numeric baked phase indices).
-    if (mine.length) {
-      const all = orderItems(mine, order['mine']);
+    const mineAll = groupItems.get('mine') || [];
+    if (mineAll.length) {
+      const all = orderItems(mineAll, order['mine']);
       const its = all.filter(it => !(hd && state[it.id])).filter(match).filter(matchTag);
       if (its.length) {
-        const total = mine.length;
-        const done = mine.filter(it => state[it.id]).length;
+        const total = mineAll.length;
+        const done = mineAll.filter(it => state[it.id]).length;
         html += `<section class="acc phase-block" data-acc="chk-phase-mine">
         <button type="button" class="acc-head" aria-expanded="true" aria-controls="acc-panel-chk-phase-mine" aria-label="My tasks">
           <span class="acc-chevron" aria-hidden="true">›</span>
@@ -460,11 +485,17 @@ function renderChecklist(today) {
   wireCheckEmptyAdd();
   wireChecklist();
   if (view === 'all' && !hd && !searching && !tagActive) {   // dnd reorder only in the full grouped, unsearched, unfiltered view (reordering a filtered list is meaningless)
-    $$('#checkPhases .check-list').forEach(ul => makeSortable(ul, {
+    makeSortableGroup($$('#checkPhases .check-list'), {
       itemSelector: '.check-item', handleSelector: '.dnd-handle', label: 'task',
-      idOf: el => el.dataset.id,
-      onReorder: (ids) => { const o = loadCheckOrder(); o[ul.dataset.phase] = ids; saveCheckOrder(o); },
-    }));
+      idOf: el => el.dataset.id, keyOf: ul => ul.dataset.phase,
+      onChange: ({ id, fromKey, toKey, orders }) => {
+        if (fromKey !== toKey) applyPhaseMove(id, toKey);
+        const o = loadCheckOrder();
+        orders.forEach(({ key, ids }) => { o[key] = ids; });
+        saveCheckOrder(o);
+        if (fromKey !== toKey) renderChecklist();   // group counts changed; captureCheckFocus keeps keyboard focus
+      },
+    });
   }
   // wire/restore collapse AFTER makeSortable (phase view only); force-expand while searching so matches show
   if (view === 'all') mountAccordion($('#checkPhases'), { forceExpanded: searching });

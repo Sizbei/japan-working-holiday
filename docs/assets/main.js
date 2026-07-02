@@ -29,6 +29,7 @@ import { mountPlan } from './plan.js';
 import { mountEmergency } from './emergency.js';
 import { mountPrint } from './print.js';
 import { mountEventSearch } from './eventsearch.js';
+import { mountExpWeek } from './expweek.js';
 import { mountLang } from './lang.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
@@ -112,6 +113,7 @@ function boot() {
       safe(() => mountEmergency(data));    // emergency quick-reference (#/emergency) — read-only, offline
       safe(() => mountPrint(data, today)); // 🖨 one-page printable trip summary (footer button)
       safe(() => mountEventSearch(data));  // search all events on the calendar page
+      safe(() => mountExpWeek());          // "This week" band on #/explore (display-only)
       safe(() => mountLang());             // EN/日本語 chrome toggle + hover-dictionary
       safe(() => mountBackup());           // export/import all device-local trip data
       initRouter();                        // hash-router SPA: split views, animated transitions (unwrapped — if THIS fails nothing works anyway)

@@ -264,10 +264,16 @@ function removeEventByKey(id) {
   if (!ev) return;
   if (ev.source === 'user') deleteUserEvent(id);            // → saveUser → data-changed → render + side-panel auto-close
   else if (isGoing(id)) toggleGoing(id);                    // baked + going → drop from your Going list
+  else dndToast('Researched events can’t be deleted — ✓ Going toggles whether they’re on your list.');   // a silent no-op reads as "broken"
 }
 function onCalKeydown(e) {
   if (location.hash !== '#/calendar') return;
-  if (document.querySelector('[aria-modal="true"]')) return;   // any open dialog (event editor/app/date-picker) owns the keyboard
+  // any open dialog (event editor/app/date-picker) owns the keyboard — EXCEPT our own event
+  // side panel: it's aria-modal too, and it's exactly where −/Del/Backspace should delete the
+  // open event (this guard used to kill the panel path, so Backspace "never worked")
+  const modal = document.querySelector('[aria-modal="true"]');
+  const inSidePanel = !!(modal && modal.closest('#calSidePanel'));
+  if (modal && !inSidePanel) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
@@ -278,6 +284,7 @@ function onCalKeydown(e) {
     if (id) { e.preventDefault(); removeEventByKey(id); }
     return;
   }
+  if (inSidePanel) return;   // with the panel open, ONLY the remove keys apply — arrows/n/t stay out of a dialog
   if (e.key === 't' || e.key === 'T') {
     e.preventDefault(); const t = parseISO(TODAY); if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; mode = 'month'; render(); }
     $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;

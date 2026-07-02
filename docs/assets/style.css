@@ -1649,15 +1649,21 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 #calQuickInput::placeholder{ color: var(--ink-faint); }
 .cqa-hint{ flex:none; font-family: var(--mono); font-size:.74rem; font-weight:700; color: var(--indigo-ink); white-space:nowrap; }
 .cal-search{ position: relative; margin: var(--s2) 0 var(--s3); }
-/* quick-add + search share one line (each keeps its pill identity); stacks again on phones */
-.cal-inputrow{ display:flex; gap: var(--s3); align-items:flex-start; }
-.cal-inputrow .cal-quickadd{ flex:1 1 55%; max-width:none; margin: var(--s3) 0; }
-.cal-inputrow .cal-search{ flex:1 1 45%; margin: var(--s3) 0; }
-.cal-inputrow #calSearch{ max-width:none; }
+/* quick-add + search as ONE segmented bar — two mismatched pills with a dead gap read as
+   clutter; a single pill with a hairline divider reads as one "command bar". */
+.cal-inputrow{ display:flex; gap:0; align-items:stretch; margin: var(--s3) 0;
+  border:1px solid var(--line-strong); border-radius: var(--r-pill); background: var(--bg-soft);
+  transition: border-color var(--t-hover), box-shadow var(--t-hover); }
+.cal-inputrow:focus-within{ border-color: var(--indigo); box-shadow: 0 0 0 1px var(--indigo); }
+.cal-inputrow .cal-quickadd{ flex:1 1 55%; max-width:none; margin:0; border:none; background:none; box-shadow:none; }
+.cal-inputrow .cal-quickadd:focus-within{ box-shadow:none; }
+.cal-inputrow .cal-search{ flex:1 1 45%; margin:0; border-left:1px solid var(--line); display:flex; align-items:center; }
+.cal-inputrow #calSearch{ max-width:none; border:none; background:none; }
+.cal-inputrow #calSearch:focus{ box-shadow:none; }
+.cal-inputrow .cal-search-results{ position:absolute; top:100%; left:0; right:0; z-index:50; max-width:none; }   /* drop over the page, don't stretch the bar */
 @media (max-width: 700px){
-  .cal-inputrow{ flex-direction:column; gap:0; }
-  .cal-inputrow .cal-quickadd{ margin: var(--s3) 0 var(--s2); }
-  .cal-inputrow .cal-search{ margin: 0 0 var(--s3); }
+  .cal-inputrow{ flex-direction:column; border-radius: var(--r-lg); }
+  .cal-inputrow .cal-search{ border-left:none; border-top:1px solid var(--line); }
 }
 #calSearch{ width:100%; max-width:520px; font-family: var(--mono); font-size:.8rem; padding:.55rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
 #calSearch:focus{ outline:none; box-shadow: var(--ring); }

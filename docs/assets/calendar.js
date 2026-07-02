@@ -67,7 +67,8 @@ export function allEvents() {
   const user = loadUser().map(e => ({ ...e, source: 'user' }));
   const copied = new Set(user.map(e => e.copyOf).filter(Boolean));   // "Copy to my events" takes over the baked original — hide it to avoid a duplicate chip
   const areaOv = get(KEYS.evArea, {}) || {};   // user-edited locations (Going page ✎) — works for baked AND user events
-  _evCache = [...bakedEvents().filter(e => !copied.has(e.id)), ...user]
+  const hidden = new Set(get(KEYS.evHidden, []) || []);   // baked events the user deleted (tips.json itself is immutable)
+  _evCache = [...bakedEvents().filter(e => !copied.has(e.id) && !hidden.has(e.id)), ...user]
     .filter(e => parseISO(e.date))
     .map(e => (typeof areaOv[e.id] === 'string' && areaOv[e.id]) ? { ...e, area: areaOv[e.id] } : e);
   return _evCache;
@@ -263,8 +264,19 @@ function removeEventByKey(id) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
   if (ev.source === 'user') deleteUserEvent(id);            // → saveUser → data-changed → render + side-panel auto-close
-  else if (isGoing(id)) toggleGoing(id);                    // baked + going → drop from your Going list
-  else dndToast('Researched events can’t be deleted — ✓ Going toggles whether they’re on your list.');   // a silent no-op reads as "broken"
+  else hideBakedEvent(id, ev.title);                        // baked → hide from the merged stream (undoable via the toast)
+}
+// "Delete" for a researched event: tips.json is immutable, so hide its id from allEvents()
+// (calendar, Going, map, dashboard all re-derive). The toast offers Undo.
+function hideBakedEvent(id, title) {
+  set(KEYS.evHidden, [...new Set([...(get(KEYS.evHidden, []) || []), id])]);
+  if (isGoing(id)) toggleGoing(id);                          // also drop it from Going (toggle dispatches data-changed)
+  else document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  closeSidePanel();
+  dndToast(`Deleted “${title}”`, () => {
+    set(KEYS.evHidden, (get(KEYS.evHidden, []) || []).filter(x => x !== id));
+    document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  });
 }
 function onCalKeydown(e) {
   if (location.hash !== '#/calendar') return;

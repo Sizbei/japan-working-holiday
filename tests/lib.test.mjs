@@ -711,3 +711,31 @@ test('parseEvent: title-only, empty input safe', () => {
   assert.equal(e.title, '');
   assert.equal(e.date, '2026-06-30');
 });
+
+// ---- lib/checklist.js applyPhaseMoves (cross-phase drag re-homing) ----
+import { applyPhaseMoves } from '../docs/assets/lib/checklist.js';
+
+const GROUPS = () => [
+  { key: '0', items: [{ id: 'a' }, { id: 'b' }] },
+  { key: '1', items: [{ id: 'c' }] },
+  { key: 'mine', items: [{ id: 'x' }] },
+];
+test('applyPhaseMoves: re-homes a baked item into another phase', () => {
+  const out = applyPhaseMoves(GROUPS(), { a: '1' });
+  assert.deepEqual(out[0].items.map(i => i.id), ['b']);
+  assert.deepEqual(out[1].items.map(i => i.id), ['c', 'a']);
+});
+test('applyPhaseMoves: moves into and out of the mine group', () => {
+  const out = applyPhaseMoves(GROUPS(), { b: 'mine', x: '0' });
+  assert.deepEqual(out[2].items.map(i => i.id), ['b']);
+  assert.deepEqual(out[0].items.map(i => i.id), ['a', 'x']);
+});
+test('applyPhaseMoves: stale/unknown targets and same-group moves are no-ops', () => {
+  const out = applyPhaseMoves(GROUPS(), { a: '9', c: '1', ghost: '0' });
+  assert.deepEqual(out.map(g => g.items.map(i => i.id)), [['a', 'b'], ['c'], ['x']]);
+});
+test('applyPhaseMoves: does not mutate its input', () => {
+  const g = GROUPS();
+  applyPhaseMoves(g, { a: '1' });
+  assert.deepEqual(g[0].items.map(i => i.id), ['a', 'b']);
+});

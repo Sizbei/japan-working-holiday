@@ -13,6 +13,7 @@ export const KEYS = {
   mapFilters: 'jwh-mapfilters-v1',
   dayPlans: 'jwh-dayplans-v1',
   checkOrder: 'jwh-checkorder-v1',
+  checkMoves: 'jwh-checkmoves-v1',   // baked checklist item id → the phase-group key it was dragged into
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',
   due: 'jwh-due-v1',

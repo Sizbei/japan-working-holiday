@@ -31,6 +31,25 @@ export function partitionCustom(custom, bakedPhaseLabels) {
   return { byPhase, mine };
 }
 
+// Re-home items across phase groups per the user's drag moves. `groups` is an ordered array of
+// { key, items } (baked phases keyed by index-as-string, plus 'mine'); `moves` maps itemId →
+// target group key. An item whose move names a missing group (stale data) stays put. Pure —
+// returns new arrays, no mutation.
+export function applyPhaseMoves(groups, moves) {
+  const byKey = new Map((groups || []).map(g => [String(g.key), [...(g.items || [])]]));
+  const home = new Map();
+  (groups || []).forEach(g => (g.items || []).forEach(it => home.set(it.id, String(g.key))));
+  Object.entries(moves || {}).forEach(([id, target]) => {
+    const from = home.get(id), to = String(target);
+    if (from == null || from === to || !byKey.has(to)) return;
+    const src = byKey.get(from);
+    const i = src.findIndex(it => it.id === id);
+    if (i < 0) return;
+    byKey.get(to).push(src.splice(i, 1)[0]);
+  });
+  return (groups || []).map(g => ({ key: String(g.key), items: byKey.get(String(g.key)) }));
+}
+
 // Rename a custom item in place: return a NEW array with the item whose id matches having its
 // `field` set to text.trim(). Blank/whitespace text, a missing/unknown id → array returned
 // unchanged. No mutation. Generic (field) so checklist (task) + packing (item) share it.

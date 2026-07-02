@@ -100,19 +100,27 @@ function restoreBodyFocus(body, f) {
   }
   el?.focus();
 }
-// copy a baked template into the active (empty) day — fresh stop ids, approx coords
+// copy a baked template into the active (stop-less) day — fresh stop ids, approx coords.
+// A title/note the user already gave the day is PRESERVED (review finding: a stop-less plan
+// object can carry meta the template must not discard).
 function applyTemplate(tid) {
   const t = ((DATA && DATA.planTemplates) || []).find(x => x.id === tid);
   if (!t || hasPlan(activeDate)) return;
+  const prior = getPlan(activeDate);
   const plans = loadPlans();
-  plans[activeDate] = {
-    date: activeDate, title: t.title, note: t.note || '',
-    stops: (t.stops || []).map((s, i) => ({
-      ...newStop({ name: s.name, lat: s.lat ?? null, lng: s.lng ?? null, area: s.area || '', startTime: s.startTime || '', durationMin: s.durationMin ?? 60, note: s.note || '' }),
-      coordKind: 'approx', id: 'tp' + Date.now() + '-' + i,
-    })),
-  };
-  savePlans(plans);   // dispatches jwh:data-changed → this page + dashboard/map re-derive
+  savePlans({
+    ...plans,
+    [activeDate]: {
+      date: activeDate, title: (prior && prior.title) || t.title, note: (prior && prior.note) || t.note || '',
+      stops: (t.stops || []).map((s, i) => newStop({
+        name: s.name, lat: s.lat ?? null, lng: s.lng ?? null, coordKind: 'approx',
+        area: s.area || '', startTime: s.startTime || '', durationMin: s.durationMin ?? 60, note: s.note || '',
+        id: 'tp' + Date.now() + '-' + i,
+      })),
+    },
+  });   // dispatches jwh:data-changed → this page + dashboard/map re-derive
+  // the strip (and the focused chip) was just rebuilt away — keep keyboard focus on the new plan
+  $('#planBody .stop-grab, #planBody button, #planBody [tabindex="0"]')?.focus();
 }
 
 function render() {
@@ -125,7 +133,7 @@ function render() {
     const tpls = (DATA && DATA.planTemplates) || [];
     const tplHtml = tpls.length ? `<div class="plan-tpls" role="group" aria-label="Start from a template">
         <p class="plan-tpls-h">…or start from a template:</p>
-        ${tpls.map(t => `<button type="button" class="plan-tpl" data-tpl="${esc(t.id)}">${esc(t.title)} <span class="pt-n">${t.stops.length} stops</span></button>`).join('')}
+        ${tpls.map(t => `<button type="button" class="plan-tpl" data-tpl="${esc(t.id)}">${esc(t.title)} <span class="pt-n">${(t.stops || []).length} stops</span></button>`).join('')}
       </div>` : '';
     body.innerHTML = `<div class="plan-empty">
       <p class="plan-empty-h">No plan for <b>${esc(fmtShort(activeDate))}</b> yet.</p>

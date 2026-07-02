@@ -41,7 +41,36 @@ Two tracks: **A = content only** (tips.json edits, zero code — the architectur
   a "research + open a data PR" job; the daily PR sweep already reviews and merges data PRs safely
   since content edits can't break code (JSON validation + tests gate them).
 
-## Status
+## Staged execution ledger
 
-- [x] A1 researched + baked (this PR)
-- [ ] A2–A5, B1–B4 — owner picks order; each ships as its own small PR
+Rules for every stage: branch off fresh `main` (`feat/exp-s<N>`), additive only (no existing
+behavior changes), every dynamic string through esc(), bump docs/sw.js CACHE + precache any new
+assets, `node --test tests/lib.test.mjs` green + curly guard clean + CDP smoke, PR → squash-merge,
+then tick the stage here with a one-line note. Identity-free commits ("WHV Guide"). A stage is
+one PR; if it grows, split it.
+
+- [x] **S0 — Event research + bake (A1).** 15 new events Jul26–Mar27, plan doc. *(PR #13, SW v191)*
+- [ ] **S1 — Pillar cards (A2).** +10–15 tips.json cards: restaurants (listening bars, jazz
+      kissa, standing sushi), geek (Nakano Broadway floors, Hard-Off crawl, retro arcades),
+      music (Koenji/Shimokita live houses). Verify: JSON valid, cards render on #/explore,
+      correct schema (content-card, NOT findings).
+- [ ] **S2 — Day-plan template library (B2).** 5–8 baked itineraries in tips.json
+      (`planTemplates[]`: Akihabara retro crawl, Yanaka–Nezu walk, Shimokita record day, Odaiba,
+      Kamakura day-trip) + a "start from a template" strip on #/plan that copies one into
+      jwh-dayplans-v1 for a chosen date. Verify: CDP — template copies, stops render, map route
+      draws; existing plan CRUD untouched.
+- [ ] **S3 — "This week" band on Explore (B1).** Display-only strip of the next 7 days from
+      allEvents() at the top of #/explore. Verify: CDP — matches calendar data, zero mutations.
+- [ ] **S4 — Post-arrival findings + phrase packs (A3+A4).** New domains[] findings (ward
+      office/bank/phone reality) + phrases (izakaya, barber, redelivery). Content only.
+- [ ] **S5 — Photo-spots map layer (B3).** New catalogue category riding the existing
+      pin/filter system (golden-hour spots, skyline views). Data + one filter chip.
+- [ ] **S6 — Typhoon-season emergency data (A5).** Prep list + JMA advisory note on
+      #/emergency. Content only. **Ship before August.**
+- [ ] **S7 — Year-in-review stats widget (B4).** Read-only dashboard widget from existing
+      stores: places visited, events attended (past ✓ Going), tasks done, days in.
+- [ ] **S8 — Monthly content re-research routine.** Cloud routine (like the daily PR sweep)
+      that re-runs the A1 research monthly and opens a data PR; the sweep reviews/merges it.
+- [ ] **S9 — Pollen/air-quality strip (B5a).** Open-Meteo air-quality on the weather strip.
+      **Scheduled: late January 2027** (kafun season).
+- [ ] **S10 — Sakura front tracker (B5b).** Forecast window strip. **Scheduled: late Feb 2027.**

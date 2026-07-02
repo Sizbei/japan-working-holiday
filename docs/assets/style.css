@@ -156,6 +156,15 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 .wx-strip{ font-family: var(--mono); font-size:.76rem; color: var(--ink); margin: 0 0 .45rem; }
 .wx-strip .wx-dim{ color: var(--ink-faint); }
 
+/* Emergency: live quake list (P2P地震情報) */
+.em-qlist{ list-style:none; margin:0; padding:0; }
+.em-qlist li{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; padding:.35rem 0; border-bottom:1px solid var(--line); font-size:.88rem; }
+.em-qtime{ font-family: var(--mono); font-size:.72rem; color: var(--ink-faint); flex:none; }
+.em-qname{ color: var(--ink); }
+.em-qmag{ font-family: var(--mono); font-weight:700; font-size:.78rem; color: var(--ink-soft); }
+.em-qshindo{ font-family: var(--mono); font-weight:700; font-size:.72rem; color: var(--warn-ink); }
+.em-qtsu{ font-weight:700; font-size:.78rem; color: var(--bad-ink); }
+
 /* boot-failure banner — a direct child of <main>, visible even when no view ever activates */
 .boot-error{ margin: 1rem auto; max-width: 720px; padding: .9rem 1.1rem; border: 1px solid var(--bad-ink);
   border-radius: var(--r-md); background: color-mix(in srgb, var(--bad-ink) 10%, var(--bg-soft));

@@ -157,6 +157,11 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* ONE line — the trailing sun times give way on narrow cards */
 .wx-strip .wx-dim{ color: var(--ink-faint); }
 
+/* Going: inline location editor (✎) */
+.going-loc{ background:none; border:none; color: var(--indigo-ink); font: inherit; font-size:.74rem; cursor:pointer; padding:0 .15rem; }
+.going-loc:hover{ text-decoration: underline; }
+.going-loc-in{ font: inherit; font-size:.8rem; padding:.15rem .4rem; border:1px solid var(--indigo); border-radius:6px; background: var(--bg-soft); color: var(--ink); width:min(100%, 280px); }
+
 /* Emergency: live quake list (P2P地震情報) */
 .em-qlist{ list-style:none; margin:0; padding:0; }
 .em-qlist li{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem; padding:.35rem 0; border-bottom:1px solid var(--line); font-size:.88rem; }

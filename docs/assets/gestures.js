@@ -40,11 +40,15 @@ function wireNavDrawer() {
   const nav = document.getElementById('routeNav');
   const backdrop = document.getElementById('navBackdrop');
   if (!btn || !nav || !backdrop) return;
+  let lockY = 0;
   const set = (open) => {
     nav.classList.toggle('open', open);
     backdrop.hidden = !open;
     btn.setAttribute('aria-expanded', String(open));
     document.documentElement.classList.toggle('nav-open', open);   // lock body scroll while open
+    // iOS Safari ignores overflow:hidden on html for touch scrolling — pin the body instead
+    if (open) { lockY = window.scrollY; document.body.style.position = 'fixed'; document.body.style.top = `-${lockY}px`; document.body.style.left = '0'; document.body.style.right = '0'; }
+    else { document.body.style.position = ''; document.body.style.top = ''; document.body.style.left = ''; document.body.style.right = ''; window.scrollTo({ top: lockY, behavior: 'auto' }); }
     if (open) nav.querySelector('a[aria-current="page"], a')?.focus();
     else btn.focus();
   };

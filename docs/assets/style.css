@@ -17,6 +17,8 @@
   --red-soft:      #d83a5e;
   --indigo:        #223a70;
   --flighty-blue:  #0a84ff;   /* the dark-map / route accent (matches the Flighty basemap) */
+  --flighty-blue-deep: #0069d9;   /* AA (5.2:1) under white text — use for badges/counts, not lines */
+  --flighty-blue-text: #0069d9;   /* AA as TEXT on light surfaces (dark theme overrides lighter) */
   --indigo-soft:   #3a5ba0;
   --gold:          #b8860b;
   --shu:#b6391f;            /* vermilion seal — Sumi-e accent */
@@ -118,6 +120,7 @@
   --red:#ff4d6d; --red-soft:#ff6f88; --indigo:#8fb0ff; --indigo-soft:#6e8fe0; --gold:#e0b34a;
   --red-ink:#ff6b81; --indigo-ink:#8fb0ff; --gold-ink:#e0b34a;
   --on-accent:#15151c;   /* dark-mode accents are LIGHT (indigo/red/green) → dark text for WCAG-AA (≥6:1) */
+  --flighty-blue-text:#4da3ff;   /* blue-as-text needs to LIGHTEN on dark surfaces for AA */
   --ok-fill:#2ea24a; --ok-ink:#6bd98e; --warn-fill:#d77f30; --warn-ink:#e0913f; --bad-fill:#e3567a; --bad-ink:#ff6b88;
   --c-festival-ink:#f08aa6; --c-fireworks-ink:#b598f0; --c-illumination-ink:#6fb4e8;
   --c-convention-ink:#5cc678; --c-seasonal-ink:#e0b34a; --c-nature-ink:#74c267;
@@ -1164,7 +1167,7 @@ html.nav-open{ overflow: hidden; }
   /* drawer footer: JP kicker + live day-count */
   .nav-drawer-foot{ display:flex; flex-direction:column; gap:.1rem; margin-top:auto; padding:.8rem .6rem calc(.4rem + env(safe-area-inset-bottom, 0px)); border-top:1px solid var(--line); }
   .nav-foot-jp{ font-family: var(--serif-jp, serif); font-size:.9rem; color: var(--ink-faint); }
-  .nav-foot-count{ font-family: var(--mono); font-weight:700; font-size:.72rem; color: var(--flighty-blue); }
+  .nav-foot-count{ font-family: var(--mono); font-weight:700; font-size:.72rem; color: var(--flighty-blue-text); }
 }
 
 /* clickable notification rows (navigate to the relevant view) */
@@ -1356,7 +1359,7 @@ button.mrd-stop:hover{ background: var(--bg-sunk); }
 li.mrd-stop.nocoord{ cursor:default; padding:.2rem .35rem; align-items:flex-start; }
 .mrd-go{ margin-left:auto; flex:none; color: var(--flighty-blue); font-weight:700; font-size:1rem; opacity:0; transition: opacity var(--t-hover); }
 button.mrd-stop:hover .mrd-go{ opacity:1; }
-.mrd-n{ flex:none; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; font-size:.72rem; box-shadow:0 0 6px rgba(10,132,255,.4); }
+.mrd-n{ flex:none; width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background: var(--flighty-blue-deep); color:#fff; font-family: var(--mono); font-weight:700; font-size:.72rem; box-shadow:0 0 6px rgba(10,132,255,.4); }
 .mrd-stop.nocoord .mrd-n{ background: var(--ink-faint); box-shadow:none; }
 .mrd-body{ display:flex; flex-direction:column; min-width:0; padding-top:1px; }
 .mrd-name{ font-size:.9rem; font-weight:600; color: var(--ink); line-height:1.25; }
@@ -1437,7 +1440,7 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 /* .map-canvas prefix raises specificity above the Leaflet.markercluster CDN CSS (loaded later, so it
    wins on equal specificity — its default is green). */
 .map-canvas .marker-cluster-small, .map-canvas .marker-cluster-medium, .map-canvas .marker-cluster-large{ background: color-mix(in srgb, var(--flighty-blue) 28%, transparent); }
-.map-canvas .marker-cluster-small div, .map-canvas .marker-cluster-medium div, .map-canvas .marker-cluster-large div{ background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-weight:700; box-shadow:0 0 8px rgba(10,132,255,.5); }
+.map-canvas .marker-cluster-small div, .map-canvas .marker-cluster-medium div, .map-canvas .marker-cluster-large div{ background: var(--flighty-blue-deep); color:#fff; font-family: var(--mono); font-weight:700; box-shadow:0 0 8px rgba(10,132,255,.5); }
 
 /* fav / locked pin badges + approx note + highlight */
 .jwh-pin.fav .jwh-pin-dot{ box-shadow:0 0 0 2px var(--gold, #d8a200), 0 1px 5px rgba(0,0,0,.45); }
@@ -1657,8 +1660,8 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 
 /* day-plan route line markers on the map */
 .jwh-route-pin{ display:grid; place-items:center; }
-.jwh-route-pin b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background: var(--flighty-blue); color:#fff; font-family: var(--mono); font-size:.72rem; font-weight:700; border:2px solid #fff; box-shadow:0 0 10px rgba(10,132,255,.6), 0 1px 4px rgba(0,0,0,.5); }
-.jwh-route-pin.approx b{ background: color-mix(in srgb, var(--flighty-blue), #fff 30%); }
+.jwh-route-pin b{ display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background: var(--flighty-blue-deep); color:#fff; font-family: var(--mono); font-size:.72rem; font-weight:700; border:2px solid #fff; box-shadow:0 0 10px rgba(10,132,255,.6), 0 1px 4px rgba(0,0,0,.5); }
+.jwh-route-pin.approx b{ background: color-mix(in srgb, var(--flighty-blue), #fff 30%); color:#0b2540; }   /* lighter "approx" fill → dark numeral for AA */
 @media (prefers-reduced-motion: reduce){ .plan-days{ scroll-behavior:auto; } }
 
 /* filter empty-states */

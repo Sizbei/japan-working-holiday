@@ -4,7 +4,10 @@
 // to instant under prefers-reduced-motion (callbacks still fire — never stuck).
 
 export function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the OS setting OR the app's own ⚙ "Reduce motion" toggle (guide.js sets data-reduce-motion) —
+  // every JS-driven animation funnels through here, so the toggle covers WAAPI/Leaflet/scroll too
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.dataset.reduceMotion === 'on';
 }
 
 // Run a DOM-swap inside a transition. Stable regions (topbar/hero/route-nav) carry a

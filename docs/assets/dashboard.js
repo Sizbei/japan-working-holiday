@@ -7,6 +7,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
+import { prefersReducedMotion } from './motion.js';
 import { checklistItems } from './checklist-page.js';
 import { allEvents } from './calendar.js';
 import { loadPlans } from './lib/dayplan.js';
@@ -40,6 +41,7 @@ function gcDismissed() {
 }
 
 function refresh() {
+  TODAY = nowISO();   // a tab left open across midnight must not keep computing against yesterday
   gcDismissed();
   const alerts = computeAlerts(buildItems(), TODAY, get(KEYS.dismissed, []) || []);
   renderBadge(alerts);
@@ -142,6 +144,7 @@ function buildItems() {
 // ---- countdown: hero numeral (canonical) + small topbar copy ----
 // Recomputes "today" each call so the minute-timer (mountDashboard) rolls the count over at midnight.
 function renderCountdown() {
+  if (nowISO() !== TODAY) refresh();   // midnight rolled over — recompute alerts/widgets, not just the number
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
   const arrived = c.phase === 'arrived';
   // topbar (decorative, aria-hidden in markup)
@@ -215,10 +218,14 @@ function renderPanel(alerts) {
   $$('#notifPanel .np-body').forEach(a => a.addEventListener('click', () => { panel.hidden = true; }));   // navigate (hash) + close
   $$('#notifPanel .np-x').forEach(b => b.addEventListener('click', (e) => {
     e.preventDefault(); e.stopPropagation();
+    const idx = $$('#notifPanel .np-x').indexOf(b);
     dismiss(b.dataset.dismiss);
+    // dismiss() re-rendered the panel and destroyed the focused ✕ — keep keyboard focus in the list
+    const xs = $$('#notifPanel .np-x');
+    (xs[Math.min(idx, xs.length - 1)] || $('#notifBell'))?.focus();
   }));
   // swipe-to-dismiss (pointer; tap still navigates, vertical scroll preserved)
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = prefersReducedMotion();   // honours the app's ⚙ toggle as well as the OS setting
   $$('#notifPanel .np-item').forEach(li => {
     let sx = 0, dx = 0, dragging = false;
     li.addEventListener('pointerdown', e => { sx = e.clientX; dx = 0; dragging = true; li.setPointerCapture?.(e.pointerId); });
@@ -239,6 +246,7 @@ function renderPanel(alerts) {
   $('#npClear')?.addEventListener('click', () => {
     const d = get(KEYS.dismissed, []) || [];
     set(KEYS.dismissed, [...new Set([...d, ...alerts.map(a => a.id)])]); refresh();
+    $('#notifBell')?.focus();   // the clicked button just re-rendered away
   });
 }
 

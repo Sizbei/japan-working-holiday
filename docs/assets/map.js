@@ -27,6 +27,7 @@ import { searchJP } from './lib/nominatim.js';
 
 let DATA = null, map = null, pinLayer = null, pinTop = null, routeLayer = null, leafletReady = false, leafletTried = false;
 let routeMarkers = [];   // {n, marker} per drawn route stop — lets the detail card fly to a stop
+let pendingOps = [];     // focus/route calls made before lazy Leaflet finished loading — flushed by initMap
 let armed = false, openPlaceId = null, allBounds = [], mapActive = false, pinsDirty = false, pinsShown = false;
 const markersById = new Map();
 // milestone latches (per session) — a flourish fires only on CROSSING, not on every re-render
@@ -115,7 +116,7 @@ export function mountMap(data) {
   wireDaySelect();
   // detail-card interactions: ✕ clears the route; a stop row flies the map to that pin
   $('#mapRouteDetail')?.addEventListener('click', (e) => {
-    if (e.target.closest('.mrd-clear')) { const sel = $('#mapDay'); if (sel) sel.value = ''; clearRoute(); return; }
+    if (e.target.closest('.mrd-clear')) { const sel = $('#mapDay'); if (sel) sel.value = ''; clearRoute(); sel?.focus(); return; }   // the focused ✕ was just destroyed — hand focus to the day picker
     const row = e.target.closest('.mrd-stop[data-lat]');
     if (row) focusStop(+row.dataset.lat, +row.dataset.lng, row.dataset.n);
   });
@@ -333,6 +334,7 @@ function initMap() {
   // Backspace/Delete removes the open (unlocked, user) pin — never while typing
   document.addEventListener('keydown', onKeydown);
   leafletReady = true;
+  pendingOps.splice(0).forEach(fn => { try { fn(); } catch { /* the op's target may be gone — fine */ } });
   el.classList.add('ready');
   // Cold-start fix: the canvas is often still 0×0 or short when the SPA reveals #/map, so the first
   // invalidateSize() cached a small size and Leaflet only fetched a strip of tiles. A ResizeObserver
@@ -430,7 +432,7 @@ function focusPlace(id) {
     const open = () => { map.setView(m.getLatLng(), 15, { animate: !prefersReducedMotion() }); m.openPopup(); announce('Centred map on ' + (placeById(id)?.name || 'pin')); };
     if (pinLayer.zoomToShowLayer && pinLayer.hasLayer(m)) pinLayer.zoomToShowLayer(m, open); else open();
   };
-  if (leafletReady) go(); else setTimeout(go, 900);   // allow lazy Leaflet to finish on first map visit
+  if (leafletReady) go(); else pendingOps.push(go);   // queue until lazy Leaflet finishes (a fixed timer raced slow CDNs and silently dropped the op)
 }
 function announce(msg) { const el = $('#mapLive'); if (el) el.textContent = msg; }
 
@@ -467,9 +469,9 @@ export function drawRoute(stops, meta = {}) {
     const dropped = all.length - pts.length;
     announce(dropped ? `${dropped} stop${dropped > 1 ? 's have' : ' has'} no map location and ${dropped > 1 ? 'are' : 'is'} not shown.` : 'Route drawn.');
   };
-  if (leafletReady) go(); else setTimeout(go, 900);
+  if (leafletReady) go(); else pendingOps.push(go);   // queue until lazy Leaflet finishes (a fixed timer raced slow CDNs and silently dropped the route)
 }
-export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); routeMarkers = []; $('#mapCanvas')?.classList.remove('route-focus'); const h = $('#mapRouteDetail'); if (h) { h.hidden = true; h.innerHTML = ''; } }
+export function clearRoute() { if (routeLayer) routeLayer.clearLayers(); routeMarkers = []; $('#mapCanvas')?.classList.remove('route-focus'); const h = $('#mapRouteDetail'); if (h) { h.hidden = true; h.innerHTML = ''; } announce('Route cleared.'); }
 
 // fly the map to a route stop + open its pin (from a detail-card row click)
 function focusStop(lat, lng, n) {

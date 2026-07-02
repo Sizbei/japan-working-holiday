@@ -9,6 +9,10 @@ import { transitionView, prefersReducedMotion } from './motion.js';
 // dashboard/notifications; re-add here + in index.html to restore).
 export const ROUTES = ['dashboard', 'calendar', 'going', 'checklist', 'budget', 'explore', 'rooms', 'map', 'plan', 'emergency'];
 
+// retired from the nav but still deep-linkable — dashboard teasers/notifications link here
+// (#/deadlines, #/packing) and the views stay mounted; they're just not in the swipe/nav order.
+const HIDDEN = ['deadlines', 'packing', 'phrases'];
+
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {
   main: 'dashboard', dashHome: 'dashboard',
@@ -24,7 +28,7 @@ const LEGACY = {
 // pure: parse a hash string into a route (exported for unit testing)
 export function parseRoute(hash) {
   const h = String(hash || '').replace(/^#\/?/, '');
-  if (ROUTES.includes(h)) return h;
+  if (ROUTES.includes(h) || HIDDEN.includes(h)) return h;
   if (LEGACY[h]) return LEGACY[h];
   return 'dashboard';
 }
@@ -35,6 +39,7 @@ let current = null;
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', checklist: 'Checklist',
   budget: 'Budget', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
+  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases',
 };
 const SITE = 'My Year in Japan';
 
@@ -76,6 +81,11 @@ export function initRouter() {
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
+    if (a.classList.contains('skip-link')) {       // 2.4.1: skip = focus main, NOT a navigation
+      e.preventDefault();
+      document.getElementById('main')?.focus();
+      return;
+    }
     const href = a.getAttribute('href');
     if (href.startsWith('#/')) return;             // real route link — let hashchange run
     const id = href.slice(1);

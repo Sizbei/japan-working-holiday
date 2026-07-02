@@ -2,9 +2,9 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v177';
+const CACHE = 'jwh-v178';
 const ASSETS = [
-  './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg',
+  './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js',
   'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/anim.js', 'assets/countup.js', 'assets/speak.js', 'assets/pointtosay.js', 'assets/vocab.js', 'assets/kana.js', 'assets/numbers.js', 'assets/signs.js', 'assets/phraseday.js', 'assets/quiz.js', 'assets/pronunciation.js', 'assets/particles.js', 'assets/verbs.js', 'assets/adjectives.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/going-page.js', 'assets/palette.js', 'assets/emergency.js', 'assets/print.js', 'assets/cardtranslate.js', 'assets/datepicker.js', 'assets/google-sync.js',
   'assets/lib/dom.js', 'assets/lib/furigana.js', 'assets/lib/jpdate.js', 'assets/lib/store.js', 'assets/lib/rooms.js', 'assets/lib/dates.js', 'assets/lib/homelayout.js', 'assets/lib/packing.js', 'assets/lib/budget.js',
@@ -12,7 +12,9 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // cache:'reload' here too — otherwise install fills the NEW cache version from the browser's
+  // http-cache (GH Pages max-age), and a fresh deploy can precache a stale, mixed-version build
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(a => new Request(a, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
@@ -38,6 +40,11 @@ self.addEventListener('fetch', (e) => {
         }
         return resp;
       })
-      .catch(() => caches.match(e.request).then(c => c || caches.match('index.html')))
+      .catch(() => caches.match(e.request).then(c => {
+        if (c) return c;
+        // shell fallback ONLY for page navigations — an uncached asset/JSON request must fail
+        // cleanly, not come back as HTML with a 200 (MIME/parse chaos downstream)
+        return e.request.mode === 'navigate' ? caches.match('index.html') : Response.error();
+      }))
   );
 });

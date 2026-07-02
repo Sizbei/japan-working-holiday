@@ -54,6 +54,16 @@ function wireNavDrawer() {
   nav.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });   // pick a route → close
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false); });
   document.addEventListener('jwh:route', () => { if (nav.classList.contains('open')) set(false); });
+  // trap Tab inside the open drawer — otherwise focus escapes behind the scrim while the
+  // page is scroll-locked (no-op on desktop, where .open is never set)
+  nav.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !nav.classList.contains('open')) return;
+    const f = [...nav.querySelectorAll('a[href], button:not([disabled])')].filter(el => el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 }
 
 /* ----------------------------------------------------------------- swipe between pages */
@@ -120,29 +130,34 @@ function wireKeyboard() {
     if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'k' || e.key === 'K')) {  // command palette (Ctrl/Cmd+K)
       if (e.isComposing) return;                                // don't fight an IME
       if (document.querySelector('.cmdk-overlay')) return;      // single instance
+      if (document.querySelector('[aria-modal="true"]')) return;   // an open dialog owns the keyboard
       e.preventDefault(); openPalette(); return;
     }
     if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && (e.key === 'z' || e.key === 'Z')) {  // undo (Ctrl/Cmd+Z)
       if (e.isComposing) return;                                // don't fight an IME
       if (typingTarget(document.activeElement)) return;         // native undo in a text field
-      if (document.querySelector('.modal-overlay')) return;     // a modal owns the keyboard
+      if (document.querySelector('[aria-modal="true"]')) return;   // a dialog owns the keyboard (editor, confirm, datepicker, palette)
       if (undoLastDelete()) e.preventDefault();                 // only swallow the key if we actually undid
       return;
     }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (typingTarget(document.activeElement)) return;
-    if (document.querySelector('.modal-overlay')) return;     // let modals own the keyboard
+    if (e.key === 'Escape') { closeHelp(); return; }
+    // ? still toggles the help over itself; every OTHER open dialog blocks all shortcuts
+    // (was '.modal-overlay' only — confirm dialogs/datepickers/palette let 1-9 navigate underneath)
+    const modal = document.querySelector('[aria-modal="true"]');
+    if (e.key === '?' && (!modal || modal.classList.contains('kbd-help'))) { e.preventDefault(); toggleHelp(); return; }
+    if (modal) return;
     if (e.key === '/' && !document.querySelector('.cmdk-overlay')) { e.preventDefault(); openPalette(); return; }
     if (e.key >= '1' && e.key <= String(Math.min(9, ROUTES.length))) { e.preventDefault(); go(ROUTES[+e.key - 1]); return; }
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
-    if (e.key === '?') { e.preventDefault(); toggleHelp(); return; }
-    if (e.key === 'Escape') closeHelp();
   });
 }
-let helpEl = null;
+let helpEl = null, helpReturnFocus = null;
 function toggleHelp() { helpEl ? closeHelp() : openHelp(); }
 function openHelp() {
+  helpReturnFocus = document.activeElement;   // restore focus to the ?-trigger on close
   helpEl = document.createElement('div');
   helpEl.className = 'kbd-help';
   helpEl.setAttribute('role', 'dialog'); helpEl.setAttribute('aria-modal', 'true'); helpEl.setAttribute('aria-label', 'Keyboard shortcuts');
@@ -173,9 +188,18 @@ function openHelp() {
   </div>`;
   document.body.appendChild(helpEl);
   helpEl.addEventListener('click', (e) => { if (e.target === helpEl || e.target.closest('.kh-close')) closeHelp(); });
+  // aria-modal promises an inert background — keep Tab inside (Close is the only focusable)
+  helpEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') { e.preventDefault(); helpEl.querySelector('.kh-close')?.focus(); }
+  });
   helpEl.querySelector('.kh-close')?.focus();
 }
-function closeHelp() { if (helpEl) { helpEl.remove(); helpEl = null; } }
+function closeHelp() {
+  if (!helpEl) return;
+  helpEl.remove(); helpEl = null;
+  if (helpReturnFocus?.isConnected) helpReturnFocus.focus();   // don't drop keyboard focus to <body>
+  helpReturnFocus = null;
+}
 
 /* --------------------------------------------------------------- long-press quick actions */
 // Fires ~480ms after press if the finger hasn't moved far and no drag started. Opens a small

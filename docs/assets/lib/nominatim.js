@@ -18,7 +18,10 @@ export function parseNominatim(rows) {
 // Search Japan addresses. Resolves [{name,addr,lat,lng}]; throws on HTTP error / abort / offline.
 export async function searchJP(query, signal) {
   const url = `${ENDPOINT}?format=jsonv2&countrycodes=jp&limit=5&q=${encodeURIComponent(query)}`;
-  const r = await fetch(url, { signal, headers: { 'Accept-Language': 'en' } });
+  // deadline like every other fetch in the app — a stalled request must not hang the caller forever
+  const t = (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(8000) : null;
+  const s = (signal && t && AbortSignal.any) ? AbortSignal.any([signal, t]) : (signal || t || undefined);
+  const r = await fetch(url, { signal: s, headers: { 'Accept-Language': 'en' } });
   if (!r.ok) throw new Error('nominatim ' + r.status);
   return parseNominatim(await r.json());
 }

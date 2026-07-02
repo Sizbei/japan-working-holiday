@@ -322,6 +322,7 @@ function jumpToDate(iso) {
 }
 
 function render() {
+  TODAY = nowISO();   // a tab left open across midnight must not keep highlighting yesterday
   _evCache = null; _taskCache = null;   // invalidate the per-render caches (data may have changed since last render)
   dismissPopover();
   const mEl = $('#calModeMonth'), wEl = $('#calModeWeek'), aEl = $('#calModeAgenda');
@@ -1005,7 +1006,7 @@ export function getEventMenu(node) {
   return ev ? eventMenuItems(ev) : null;
 }
 function srcline(s) {
-  const arr = (s || []).filter(Boolean);
+  const arr = (s || []).filter(u => /^https?:\/\//i.test(u));   // only real web URLs into href (no javascript:)
   return arr.length ? `<p class="modal-src">${arr.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">source ${i + 1} ↗</a>`).join('')}</p>` : '';
 }
 

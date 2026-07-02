@@ -143,11 +143,16 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 }
 .skip-link {
   position: fixed; top: -100px; left: 1rem; z-index: 100;
-  background: var(--indigo); color: #fff; padding: .6rem 1rem; border-radius: 0 0 10px 10px;
+  background: var(--indigo); color: var(--on-accent); padding: .6rem 1rem; border-radius: 0 0 10px 10px;
   text-decoration: none; font-family: var(--sans); font-size: .9rem; font-weight: 700;
   transition: top .2s ease;
 }
 .skip-link:focus { top: 0; outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* boot-failure banner — a direct child of <main>, visible even when no view ever activates */
+.boot-error{ margin: 1rem auto; max-width: 720px; padding: .9rem 1.1rem; border: 1px solid var(--bad-ink);
+  border-radius: var(--r-md); background: color-mix(in srgb, var(--bad-ink) 10%, var(--bg-soft));
+  color: var(--ink); font-size: .92rem; line-height: 1.5; }
 
 /* ---- visible focus for all interactive elements ---- */
 .chip:focus-visible,
@@ -229,7 +234,7 @@ td:nth-child(2) { color: var(--red); font-weight: 500; white-space: nowrap; }
 .sequence li:last-child { border-bottom: none; }
 .sequence li::before {
   content: counter(step); position: absolute; left: 0; top: .65rem; width: 26px; height: 26px;
-  background: var(--indigo); color: #fff; border-radius: 50%; display: grid; place-items: center;
+  background: var(--indigo); color: var(--on-accent); border-radius: 50%; display: grid; place-items: center;
   font-size: .8rem; font-weight: 700; font-family: var(--sans);
 }
 
@@ -251,7 +256,7 @@ td:nth-child(2) { color: var(--red); font-weight: 500; white-space: nowrap; }
 .filters { display: flex; gap: .4rem; flex-wrap: wrap; }
 .chip { padding: .5rem .9rem; border-radius: 100px; border: 1px solid var(--line); background: var(--bg-soft); color: var(--ink-soft); cursor: pointer; font-size: .82rem; font-family: var(--sans); transition: all .2s; }
 .chip:hover { color: var(--ink); }
-.chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+.chip.active { background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }   /* --on-accent, not #fff: dark-mode --indigo is a light pastel */
 
 /* ---- Domain sections ---- */
 .domain { margin-bottom: 1.75rem; scroll-margin-top: calc(var(--header-h) + var(--nav-h) + 3.4rem); }
@@ -445,7 +450,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .brew-add { display: flex; gap: var(--s2); padding: var(--s3) var(--s4); }
 .brew-add input { flex: 1; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: 100px; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: .9rem; }
 .brew-add input:focus { outline: 2px solid var(--indigo); border-color: transparent; }
-.brew-add button { width: 38px; height: 38px; flex-shrink: 0; border: none; border-radius: 50%; background: var(--red); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer; transition: transform .15s; }
+.brew-add button { width: 38px; height: 38px; flex-shrink: 0; border: none; border-radius: 50%; background: var(--red); color: var(--on-accent); font-size: 1.3rem; line-height: 1; cursor: pointer; transition: transform .15s; }
 .brew-add button:hover { transform: scale(1.1); }
 .brew-list { list-style: none; margin: 0; padding: 0 var(--s4) var(--s4); display: flex; flex-direction: column; gap: var(--s2); }
 .brew-card { display: flex; align-items: flex-start; gap: var(--s2); background: var(--bg); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 10px; padding: var(--s3); font-size: .92rem; }
@@ -504,7 +509,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .bell:hover{ transform: translateY(-1px); border-color: var(--indigo); }
 .bell .badge{
   position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px;
-  padding: 0 4px; border-radius: 999px; background: var(--indigo); color: #fff;
+  padding: 0 4px; border-radius: 999px; background: var(--indigo); color: var(--on-accent);
   font-size: .68rem; font-weight: 700; display: grid; place-items: center;
 }
 .bell .badge.hot{ background: var(--red); animation: bell-pulse 1.6s ease-in-out infinite; }
@@ -578,8 +583,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .cal-btn:hover{ border-color: var(--indigo); }
 .cal-btn.text{ padding:.4rem .7rem; }
 .cal-modes .cal-btn{ border:none; border-radius:0; }
-.cal-btn.active{ background: var(--indigo); color:#fff; }
-.cal-btn.primary{ background: var(--red); color:#fff; border-color: var(--red); }
+.cal-btn.active{ background: var(--indigo); color: var(--on-accent); }
+.cal-btn.primary{ background: var(--red); color: var(--on-accent); border-color: var(--red); }
 .cal-grid{ display:grid; grid-template-columns: repeat(7,1fr); gap:4px; }
 .cal-dow{ text-align:center; font-size:.72rem; font-weight:700; color: var(--ink-soft); padding:.3rem 0; text-transform:uppercase; }
 .cal-cell{ min-height: 92px; background: var(--bg-soft); border:1px solid var(--line); border-radius:10px;
@@ -746,7 +751,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .btn{ border:1px solid var(--line); background: var(--bg); color: var(--ink); cursor:pointer;
   padding:.5rem .9rem; border-radius:9px; font-family: var(--sans); font-weight:700; font-size:.84rem; text-decoration:none; }
 .btn:hover{ border-color: var(--indigo); }
-.btn.primary{ background: var(--red); color:#fff; border-color: var(--red); }
+.btn.primary{ background: var(--red); color: var(--on-accent); border-color: var(--red); }
 .btn.danger{ background: none; color: var(--bad-ink); border-color: var(--bad-ink); }
 .btn.ghost{ background: none; }
 .exp-tags{ display:flex; flex-wrap:wrap; gap:.4rem; margin:.6rem 0; }
@@ -769,7 +774,7 @@ html.gated{ overflow: hidden; }
 .gate-input{ font-size:1rem; padding:.7rem .8rem; border:1px solid var(--line); border-radius:11px;
   background: var(--bg); color: var(--ink); text-align:center; letter-spacing:.1em; }
 .gate-input:focus{ outline:2px solid var(--indigo); outline-offset:1px; }
-.gate-btn{ background: var(--red); color:#fff; border:none; border-radius:11px; padding:.7rem; font-weight:700; font-size:.95rem; cursor:pointer; margin-top:.3rem; }
+.gate-btn{ background: var(--red); color: var(--on-accent); border:none; border-radius:11px; padding:.7rem; font-weight:700; font-size:.95rem; cursor:pointer; margin-top:.3rem; }
 .gate-err{ color: var(--bad-ink); font-size:.82rem; font-weight:700; margin:.2rem 0 0; }
 @keyframes fade{ from{ opacity:0;} to{ opacity:1;} }
 @keyframes shake{ 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-7px);} 40%,80%{transform:translateX(7px);} }
@@ -894,7 +899,7 @@ html.gated{ overflow: hidden; }
 .pop-gcal,.agenda-gcal{ font-size:.68rem; font-weight:700; color: var(--indigo); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:1px 5px; flex:none; }
 .pop-gcal:hover,.agenda-gcal:hover{ border-color: var(--indigo); }
 .pop-empty{ font-size:.8rem; color: var(--ink-soft); margin:.3rem 0; }
-.pop-add{ width:100%; margin-top:.5rem; background: var(--red); color:#fff; border:none; border-radius:8px; padding:.45rem; font-weight:700; font-size:.8rem; cursor:pointer; }
+.pop-add{ width:100%; margin-top:.5rem; background: var(--red); color: var(--on-accent); border:none; border-radius:8px; padding:.45rem; font-weight:700; font-size:.8rem; cursor:pointer; }
 .agenda-row{ position:relative; }
 
 /* mobile: single column, GRID FIRST (it's the subject of the page), cockpit below it (820/560 to match app breakpoints) */
@@ -1140,9 +1145,12 @@ html.nav-open{ overflow: hidden; }
     background: var(--bg-elevated); border-bottom: none; border-right: 1px solid var(--line-strong);
     border-radius: 0 var(--r-lg) var(--r-lg) 0; box-shadow: 24px 0 60px -30px rgba(30,20,10,.5);
     z-index: 200; overflow-y: auto;
-    transform: translateX(-100%); transition: transform var(--t-base);
+    /* visibility keeps the CLOSED drawer's links out of the tab order (transform alone leaves
+       them focusable off-screen); the 0s delay hides it only after the slide-out finishes */
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform var(--t-base), visibility 0s var(--t-base);
   }
-  .route-nav.open{ transform: translateX(0); }
+  .route-nav.open{ transform: translateX(0); visibility: visible; transition: transform var(--t-base); }
   html[data-reduce-motion="on"] .route-nav{ transition: none; }
   .route-nav a{ width:100%; text-align:left; font-size:.9rem; padding: .72rem .8rem; border-radius: var(--r-md); position: relative; color: var(--ink-soft); }
   .route-nav a:hover{ background: var(--bg-sunk); }
@@ -1317,12 +1325,9 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .jwh-pin-dot:hover{ transform: scale(1.25); }
 .jwh-pin.pulse .jwh-pin-dot{ animation: pinPulse 1.8s ease-in-out infinite; }
 @keyframes pinPulse{ 0%,100%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 0 color-mix(in srgb, var(--red) 55%, transparent); } 50%{ box-shadow:0 1px 5px rgba(0,0,0,.45), 0 0 0 9px transparent; } }
-/* "Tokyo at night": invert the bright OSM raster, then warm it to amber/sodium-lamp
-   rather than the default cold grey. sepia()+saturate() inject warmth; a small +hue-rotate
-   biases the remaining colour toward amber. Markers/popups live in sibling Leaflet panes
-   (.leaflet-marker-pane / .leaflet-popup-pane), NOT .leaflet-tile, so they stay legible. */
-[data-theme="dark"] .leaflet-tile{ filter: invert(1) hue-rotate(186deg) brightness(.82) contrast(.92) sepia(.45) saturate(1.5) hue-rotate(8deg); }
-[data-theme="dark"] .leaflet-container{ background: #181410; }
+/* Basemap is CARTO dark_matter ("Tokyo at night" already) in BOTH themes — no filter needed.
+   The old OSM-raster invert turned the dark tiles LIGHT in dark theme, erasing the Flighty look. */
+[data-theme="dark"] .leaflet-container{ background: #0b0b0f; }
 .map-add-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
 .map-add-row #placeSearch{ flex:1; min-width:200px; }
 #placeDate{ font-family: var(--mono); font-size:.78rem; padding:.5rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
@@ -1371,7 +1376,7 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 /* drop-a-pin arm state */
 #mapDrop.armed{ background: var(--red); color: var(--on-accent); border-color: var(--red); }
 .map-canvas.arming{ cursor: crosshair; }
-.map-canvas.arming::before{ content:'Tap the map to drop a pin'; position:absolute; z-index:500; top:8px; left:50%; transform:translateX(-50%); background: var(--red); color:#fff; font-family: var(--mono); font-size:.66rem; padding:.25rem .55rem; border-radius: var(--r-pill); pointer-events:none; }
+.map-canvas.arming::before{ content:'Tap the map to drop a pin'; position:absolute; z-index:500; top:8px; left:50%; transform:translateX(-50%); background: var(--red); color: var(--on-accent); font-family: var(--mono); font-size:.66rem; padding:.25rem .55rem; border-radius: var(--r-pill); pointer-events:none; }
 .map-canvas{ position:relative; }
 
 /* category + area filters */
@@ -1516,6 +1521,7 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
   .map-fit, .map-ic, .map-chip, .map-sgo, .tabetai-star{ min-height:44px; }
   .map-arealbl select, .place-sug button, .map-find{ min-height:44px; }
   .pin-acts button, .pin-acts a{ min-height:40px; }
+  .mrd-stop, .mrd-clear{ min-height:44px; } .mrd-clear{ min-width:44px; }
   .plan-chip, .plan-btn, .plan-add, .dur-btn, .mv, .stop-del, .pk-item{ min-height:44px; }
 }
 
@@ -1970,6 +1976,11 @@ html[data-reduce-motion="on"] *::after{
   animation-duration: .001ms !important; animation-iteration-count: 1 !important;
   transition-duration: .001ms !important; scroll-behavior: auto !important;
 }
+/* view-transition pseudos live on the root, so the * rule above misses them (the OS
+   media query already kills them — this covers the app toggle) */
+html[data-reduce-motion="on"]::view-transition-group(*),
+html[data-reduce-motion="on"]::view-transition-old(*),
+html[data-reduce-motion="on"]::view-transition-new(*){ animation: none !important; }
 
 /* ============================================================
    SUMI-E vibe — scoped to the Map page (#view-map) only.
@@ -2357,7 +2368,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .bdg-add { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-top: var(--s4); padding: 0 var(--s3); }
 .bdg-add-label { flex: 1; min-width: 10rem; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); }
 .bdg-add-amt { width: 7rem; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); font: inherit; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
-.bdg-add-btn { background: var(--red); color: #fff; border: none; font: inherit; font-weight: 700; padding: .5rem 1rem; border-radius: var(--r-pill); cursor: pointer; }
+.bdg-add-btn { background: var(--red); color: var(--on-accent); border: none; font: inherit; font-weight: 700; padding: .5rem 1rem; border-radius: var(--r-pill); cursor: pointer; }
 .bdg-add-btn:hover { filter: brightness(1.06); }
 .bdg-group .acc-count { color: var(--ink); font-variant-numeric: tabular-nums; }
 .bdg-tools { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
@@ -2536,7 +2547,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   border-color: var(--red);
   color: var(--red);
 }
-.cal-actions .cal-btn.primary:hover{ background: var(--red); color: #fff; }
+.cal-actions .cal-btn.primary:hover{ background: var(--red); color: var(--on-accent); }
 
 /* ---- Month grid (Notion-style: one continuous hairline, flat cells, stable 6 rows) ---- */
 .cal-grid{ gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; grid-auto-rows: minmax(88px, 1fr); }

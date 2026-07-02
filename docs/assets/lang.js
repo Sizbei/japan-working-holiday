@@ -129,7 +129,9 @@ function cacheGet(word) {
 }
 function cachePut(word, val) {
   const c = get(KEYS.dictCache, {}) || {};
-  if (!Object.prototype.hasOwnProperty.call(c, word) && Object.keys(c).length >= DICT_CACHE_CAP) return;
+  if (!Object.prototype.hasOwnProperty.call(c, word) && Object.keys(c).length >= DICT_CACHE_CAP) {
+    delete c[Object.keys(c)[0]];   // FIFO-evict the oldest entry so new words keep caching at the cap
+  }
   c[word] = val; set(KEYS.dictCache, c);
 }
 

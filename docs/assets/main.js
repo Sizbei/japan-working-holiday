@@ -65,68 +65,86 @@ function boot() {
       const today = nowISO();
       const m = data.meta || {};
       setText('#footGen', m.generated || '');
-      seedOnce();                    // one-time: tick already-done items + drop a home base (before any mount reads them)
-      seedNearby();                  // one-time: drop the near-base neighborhood pins (+ the festival venue)
-      fixHousingSeed();              // one-time: un-tick the wrongly-seeded long-term share-house items
-      seedDayPlanJul4();             // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
-      mountCalendar(data, today);
-      mountGoogleSync(() => allEvents());
-      mountGoingPage();              // dedicated "Going To" page (#/going) — events marked ✓ Going
-      mountTracker(data);
-      renderContent(data, today);
-      mountPacking(data);            // packing page (#/packing) — categorized super-checklist
-      mountBudget(data);             // budget planner (#/budget) — one-time + monthly cost estimate
-      mountPhrases(data);            // phrasebook (#/phrases) — curated survival-Japanese phrases
-      mountPointToSay(data);         // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
-      mountVocab(data);              // JLPT N5 starter vocabulary (themed, collapsible) on #/phrases
-      mountKana();                   // hiragana/katakana reference chart (collapsible) on #/phrases
-      mountNumbers();                // numbers/money/counters/dates reference (collapsible) on #/phrases
-      mountSigns(data);              // daily-life kanji signs recognition grid (collapsible) on #/phrases
-      mountPhraseDay(data);          // "phrase of the day" dashboard widget (deterministic by date)
-      mountQuiz(data);               // multiple-choice self-test (JP↔EN) on #/phrases
-      mountPronunciation();          // pronunciation tips + "today in Japanese" (collapsible) on #/phrases
-      mountParticles();              // particle reference (collapsible) on #/phrases
-      mountVerbs();                  // verb-conjugation reference (collapsible) on #/phrases
-      mountAdjectives();             // adjective-conjugation reference (collapsible) on #/phrases
+      // Each mount is isolated: one feature throwing must NOT blank the whole app — the router
+      // still starts and every other page keeps working. Failures log to the console.
+      const safe = (fn) => { try { fn(); } catch (err) { console.error('[boot]', err); } };
+      safe(seedOnce);                      // one-time: tick already-done items + drop a home base (before any mount reads them)
+      safe(seedNearby);                    // one-time: drop the near-base neighborhood pins (+ the festival venue)
+      safe(fixHousingSeed);                // one-time: un-tick the wrongly-seeded long-term share-house items
+      safe(seedDayPlanJul4);               // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
+      safe(() => mountCalendar(data, today));
+      safe(() => mountGoogleSync(() => allEvents()));
+      safe(() => mountGoingPage());        // dedicated "Going To" page (#/going) — events marked ✓ Going
+      safe(() => mountTracker(data));
+      safe(() => renderContent(data, today));
+      safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist
+      safe(() => mountBudget(data));       // budget planner (#/budget) — one-time + monthly cost estimate
+      safe(() => mountPhrases(data));      // phrasebook (#/phrases) — curated survival-Japanese phrases
+      safe(() => mountPointToSay(data));   // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
+      safe(() => mountVocab(data));        // JLPT N5 starter vocabulary (themed, collapsible) on #/phrases
+      safe(() => mountKana());             // hiragana/katakana reference chart (collapsible) on #/phrases
+      safe(() => mountNumbers());          // numbers/money/counters/dates reference (collapsible) on #/phrases
+      safe(() => mountSigns(data));        // daily-life kanji signs recognition grid (collapsible) on #/phrases
+      safe(() => mountPhraseDay(data));    // "phrase of the day" dashboard widget (deterministic by date)
+      safe(() => mountQuiz(data));         // multiple-choice self-test (JP↔EN) on #/phrases
+      safe(() => mountPronunciation());    // pronunciation tips + "today in Japanese" (collapsible) on #/phrases
+      safe(() => mountParticles());        // particle reference (collapsible) on #/phrases
+      safe(() => mountVerbs());            // verb-conjugation reference (collapsible) on #/phrases
+      safe(() => mountAdjectives());       // adjective-conjugation reference (collapsible) on #/phrases
       // First visit: collapse every phrases-page section except the first phrase category, so the
       // page opens as a compact, scannable menu instead of a multi-thousand-px wall. One-time;
       // afterwards each section's open/closed state persists per the user's own toggles.
-      if (get(KEYS.phraseCollapseSeed, false) !== true) {
-        $$('#view-phrases .acc[data-acc]').forEach((a, i) => {
-          if (i === 0) return;                       // keep the first (Daily) phrase category open
-          a.classList.add('is-collapsed');
-          a.querySelector('.acc-head')?.setAttribute('aria-expanded', 'false');
-          setCollapsed(a.dataset.acc, true);         // persist so it stays collapsed on return
-        });
-        set(KEYS.phraseCollapseSeed, true);
-      }
-      mountDashboard(data, today);   // reads calendar + content, so mount last
-      mountRooms(data);              // share-room finder (#/rooms)
-      mountMap(data);                // map page (#/map)
-      mountPlan(data);               // day itinerary planner (#/plan)
-      mountEmergency(data);          // emergency quick-reference (#/emergency) — read-only, offline
-      mountPrint(data, today);       // 🖨 one-page printable trip summary (footer button)
-      mountEventSearch(data);        // search all events on the calendar page
-      mountLang();                   // EN/日本語 chrome toggle + hover-dictionary
-      mountBackup();                 // export/import all device-local trip data
-      initRouter();                  // hash-router SPA: split views, animated transitions
-      mountAnim();                   // first-visit route-view entrance cascade (reduce-motion gated)
-      mountCountUp();                // count-up the readiness score on first dashboard view (reduce-motion gated)
-      mountGestures();               // swipe between pages, keyboard shortcuts, long-press menus
-      mountPalette(data);            // ⌘K / "/" command palette — jump to any route or content
-      mountGuide();                  // ⚙ Guide & Settings overlay (tutorial + theme/arcade/reduce-motion toggles)
-      initKonami();                  // ↑↑↓↓←→←→ b a → arcade mode
-      mountEaster();                 // hidden interactions + seasonal/2am eggs + mini-synth + console art
-      stagger($$('.hero > *'), { y: 14, step: 60 });   // signature hero entrance, once
+      safe(() => {
+        if (get(KEYS.phraseCollapseSeed, false) !== true) {
+          $$('#view-phrases .acc[data-acc]').forEach((a, i) => {
+            if (i === 0) return;                     // keep the first (Daily) phrase category open
+            a.classList.add('is-collapsed');
+            a.querySelector('.acc-head')?.setAttribute('aria-expanded', 'false');
+            setCollapsed(a.dataset.acc, true);       // persist so it stays collapsed on return
+          });
+          set(KEYS.phraseCollapseSeed, true);
+        }
+      });
+      safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
+      safe(() => mountRooms(data));        // share-room finder (#/rooms)
+      safe(() => mountMap(data));          // map page (#/map)
+      safe(() => mountPlan(data));         // day itinerary planner (#/plan)
+      safe(() => mountEmergency(data));    // emergency quick-reference (#/emergency) — read-only, offline
+      safe(() => mountPrint(data, today)); // 🖨 one-page printable trip summary (footer button)
+      safe(() => mountEventSearch(data));  // search all events on the calendar page
+      safe(() => mountLang());             // EN/日本語 chrome toggle + hover-dictionary
+      safe(() => mountBackup());           // export/import all device-local trip data
+      initRouter();                        // hash-router SPA: split views, animated transitions (unwrapped — if THIS fails nothing works anyway)
+      safe(() => mountAnim());             // first-visit route-view entrance cascade (reduce-motion gated)
+      safe(() => mountCountUp());          // count-up the readiness score on first dashboard view (reduce-motion gated)
+      safe(() => mountGestures());         // swipe between pages, keyboard shortcuts, long-press menus
+      safe(() => mountPalette(data));      // ⌘K / "/" command palette — jump to any route or content
+      safe(() => mountGuide());            // ⚙ Guide & Settings overlay (tutorial + theme/arcade/reduce-motion toggles)
+      safe(() => initKonami());            // ↑↑↓↓←→←→ b a → arcade mode
+      safe(() => mountEaster());           // hidden interactions + seasonal/2am eggs + mini-synth + console art
+      safe(() => stagger($$('.hero > *'), { y: 14, step: 60 }));   // signature hero entrance, once
     })
     .catch(err => {
-      const d = $('#domains');
-      if (d) d.innerHTML = `<div class="empty">Could not load data (${esc(err.message)}). If local, serve over HTTP: <code>python3 -m http.server</code>.</div>`;
+      // Data (or the router) failed: show the error where it's actually VISIBLE — the views are all
+      // hidden until the router activates one, so writing into a view would show a blank page.
+      bootError(`Could not load trip data (${err.message}). Check your connection and reload — if running locally, serve over HTTP: python3 -m http.server`);
+      try { initRouter(); } catch { /* keep at least the visible error */ }
     });
   registerSW();
 }
 
 function setText(sel, txt) { const el = $(sel); if (el) el.textContent = txt; }
+
+// Boot-failure banner: prepended to <main> (a direct child, OUTSIDE the router-hidden views)
+// so it is visible even when no view ever activates.
+function bootError(msg) {
+  const host = $('#main') || document.body;
+  const d = document.createElement('div');
+  d.className = 'boot-error';
+  d.setAttribute('role', 'alert');
+  d.innerHTML = `<b>⚠ ${esc(msg)}</b>`;
+  host.prepend(d);
+}
 
 // One-time seed (guarded by jwh-seed-v1): tick the items the owner has already completed
 // (visa granted, passport ready, first accommodation booked, NCD permit in hand) and drop a
@@ -220,7 +238,13 @@ function registerSW() {
   // auto-reload once when a new SW takes control, so users never get stuck on a stale build
   let reloaded = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloaded) return; reloaded = true; location.reload();
+    if (reloaded) return;
+    // don't yank the page out from under in-progress input (typing / an open dialog) —
+    // the fresh build simply lands on the user's next natural reload instead
+    const el = document.activeElement;
+    const typing = el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
+    if (typing || document.querySelector('[aria-modal="true"]')) return;
+    reloaded = true; location.reload();
   });
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }

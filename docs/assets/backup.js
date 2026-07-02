@@ -44,8 +44,17 @@ function restore(file, statusEl) {
       const incoming = new Set(keys);
       const existing = [];
       for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(PREFIX)) existing.push(k); }
+      // write-first, delete-after: if a write throws (storage quota), the current data must
+      // survive. A snapshot rolls back any keys the write pass already overwrote.
+      const snapshot = {};
+      existing.forEach(k => { snapshot[k] = localStorage.getItem(k); });
+      try {
+        keys.forEach(k => { if (!KEEP.has(k)) localStorage.setItem(k, data[k]); });
+      } catch {
+        Object.entries(snapshot).forEach(([k, v]) => { try { localStorage.setItem(k, v); } catch { /* rollback is best-effort */ } });
+        throw new Error('the backup did not fit in this browser’s storage — nothing was changed');
+      }
       existing.forEach(k => { if (!incoming.has(k) && !KEEP.has(k)) localStorage.removeItem(k); });
-      keys.forEach(k => { if (!KEEP.has(k)) localStorage.setItem(k, data[k]); });
       if (statusEl) statusEl.textContent = `Restored ${keys.length} items — reloading…`;
       setTimeout(() => location.reload(), 600);
     } catch (e) {

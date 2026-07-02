@@ -177,11 +177,13 @@ function renderCountdown() {
   if (nowISO() !== TODAY) refresh();   // midnight rolled over — recompute alerts/widgets, not just the number
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
   const arrived = c.phase === 'arrived';
+  // day-in-Japan counts INCLUSIVELY (landing day = day 1) — matches the Settling-in widget
+  const dayN = arrived ? (c.days ?? 0) + 1 : c.days;
   // topbar (decorative, aria-hidden in markup)
   const el = $('#countdown');
   if (el) {
-    const unit = arrived ? (c.days === 1 ? 'DAY IN' : 'DAYS IN') : (c.days === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
-    const html = `<span class="cd-num">${c.days ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
+    const unit = arrived ? (dayN === 1 ? 'DAY IN' : 'DAYS IN') : (dayN === 1 ? 'DAY TO NRT' : 'DAYS TO NRT');
+    const html = `<span class="cd-num">${dayN ?? ''}</span><span class="cd-label">${unit}</span><span class="cd-credit">CREDIT 01</span>`;
     if (el.innerHTML !== html) el.innerHTML = html;
     el.classList.toggle('arrived', arrived);
   }
@@ -189,10 +191,10 @@ function renderCountdown() {
   // minute-timer never re-announces the same number to screen readers.
   const hero = $('#heroCount');
   if (hero) {
-    const num = String(c.days ?? '');
+    const num = String(dayN ?? '');
     const numEl = hero.querySelector('.hc-num');
     if (numEl.textContent !== num) {
-      const unit = arrived ? (c.days === 1 ? 'day in Japan' : 'days in Japan') : (c.days === 1 ? 'day until I land' : 'days until I land');
+      const unit = arrived ? (dayN === 1 ? 'day in Japan' : 'days in Japan') : (dayN === 1 ? 'day until I land' : 'days until I land');
       numEl.textContent = num;
       hero.querySelector('.hc-unit').textContent = unit;
     }

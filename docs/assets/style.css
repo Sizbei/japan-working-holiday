@@ -153,7 +153,8 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 .skip-link:focus { top: 0; outline: 2px solid var(--red); outline-offset: 2px; }
 
 /* the Today widget's local-weather strip (Open-Meteo) */
-.wx-strip{ font-family: var(--mono); font-size:.76rem; color: var(--ink); margin: 0 0 .45rem; }
+.wx-strip{ font-family: var(--mono); font-size:.76rem; color: var(--ink); margin: 0 0 .45rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* ONE line — the trailing sun times give way on narrow cards */
 .wx-strip .wx-dim{ color: var(--ink-faint); }
 
 /* Emergency: live quake list (P2P地震情報) */
@@ -2146,7 +2147,7 @@ html[data-reduce-motion="on"]::view-transition-new(*){ animation: none !importan
 #view-dashboard .hc-date{ font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); letter-spacing: .06em; margin-top: .2rem; }
 
 /* ---- needs-me strip ---- */
-#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s4); margin-top: var(--s5); }   /* 4 widgets → balanced 2×2 (was repeat(3) → orphaned 4th) */
+#view-dashboard .needs-me{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); margin-top: var(--s5); }   /* 6 widgets → balanced 2×3 (repeat(2) left tall half-empty rows) */
 #view-dashboard .needs-me .widget{ border-radius: var(--r-md); }
 
 
@@ -2232,13 +2233,17 @@ html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1){ grid-c
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2){ grid-column: span 3; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3){ grid-column: span 6; }
 html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(4){ grid-column: span 6; }   /* 4th widget fills its own row (was an orphaned 1/6 sliver) */
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(5),
+html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(6){ grid-column: span 3; }   /* widgets 5+6 share a row (unspec'd = 1/6 slivers) */
 @media (max-width: 860px){
   html[data-home="bento"] #view-dashboard .needs-me{ grid-template-columns: 1fr; }
   /* reset the bento spans at matching (:nth-of-type) specificity, else they force implicit columns */
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(1),
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(2),
   html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(3),
-  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(4){ grid-column: auto; }
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(4),
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(5),
+  html[data-home="bento"] #view-dashboard .needs-me .widget:nth-of-type(6){ grid-column: auto; }
 }
 
 /* ============ PACKING PAGE (super-checklist) ============ */

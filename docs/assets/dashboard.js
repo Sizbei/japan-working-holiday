@@ -8,6 +8,8 @@ import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { countdown, windowStatus, fmtShort, nowISO } from './lib/dates.js';
 import { computeAlerts } from './lib/notify.js';
 import { prefersReducedMotion } from './motion.js';
+import { fetchWeather, wmoInfo } from './lib/weather.js';
+import { loadPlaces } from './lib/places.js';
 import { checklistItems } from './checklist-page.js';
 import { allEvents } from './calendar.js';
 import { loadPlans } from './lib/dayplan.js';
@@ -26,11 +28,12 @@ export function mountDashboard(data, today) {
   setInterval(renderCountdown, 60000);   // roll the countdown over at midnight without a reload (spec §6)
   wireBell();
   refresh();
+  refreshWeather();   // async — re-fills the Today strip when the fetch lands
   document.addEventListener('jwh:data-changed', refresh);
   // Budget/packing mutations happen on their OWN routes and re-render locally; they intentionally
   // do NOT dispatch jwh:data-changed (that would trigger no-op re-renders across other listeners).
   // So landing back on the dashboard is the natural refresh trigger for their teasers.
-  document.addEventListener('jwh:route', (e) => { if (e.detail && e.detail.route === 'dashboard') refreshTeasers(); });
+  document.addEventListener('jwh:route', (e) => { if (e.detail && e.detail.route === 'dashboard') { refreshTeasers(); refreshWeather(); } });
 }
 
 function gcDismissed() {
@@ -299,9 +302,54 @@ function renderToday() {
   const checks = get(KEYS.checklist, {}) || {};
   checklistItems(DATA).filter(it => due[it.id] === TODAY && !checks[it.id]).slice(0, 2)
     .forEach(it => bits.push(`<li><a href="#/checklist"><span class="w-when">due</span> ${esc(clip(it.task, 46))}</a></li>`));
-  el.querySelector('.widget-body').innerHTML = bits.length
+  el.querySelector('.widget-body').innerHTML = `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
     ? `<ul>${bits.join('')}</ul>`
-    : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`;
+    : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`);
+  renderWxStrip();   // fill from cache synchronously; refreshWeather() re-fills when a fetch lands
+}
+
+// ---- local weather strip (Open-Meteo, keyless) — top of the Today widget ----
+const WX_FRESH_MS = 30 * 60e3;    // don't re-fetch more than every 30 min
+const WX_MAX_AGE_MS = 3 * 3600e3; // never show a reading older than 3h (hide instead of lying)
+// shape-validated cache read — get()'s type guard is inert with a null fallback, and a backup
+// import can write ANY shape into jwh-wx-v1, so validate the fields this module dereferences
+function wxCache() {
+  const c = get(KEYS.weather, null);
+  if (!c || typeof c !== 'object' || Array.isArray(c)) return null;
+  if (!Number.isFinite(c.at) || c.at - Date.now() > 60e3) return null;   // non-numeric/NaN or future 'at' would defeat the age math
+  if (!c.data || typeof c.data !== 'object' || typeof c.data.temp !== 'number') return null;
+  return c;
+}
+function renderWxStrip() {
+  const el = $('#wxStrip');
+  if (!el) return;
+  const c = wxCache();
+  if (!c || Date.now() - c.at > WX_MAX_AGE_MS) { el.hidden = true; return; }
+  const w = c.data, i = wmoInfo(w.code);
+  el.hidden = false;
+  el.innerHTML = `<span aria-hidden="true">${esc(i.emoji)}</span> ${esc(String(w.temp))}°`
+    + (w.feels != null && w.feels !== w.temp ? ` <span class="wx-dim">feels ${esc(String(w.feels))}°</span>` : '')
+    + ` · ${esc(i.label)}`
+    + (w.hi != null && w.lo != null ? ` <span class="wx-dim">· H${esc(String(w.hi))}° L${esc(String(w.lo))}°</span>` : '')
+    // "☔ 100%" is the DAY'S max, not the current sky — say so, and give SRs the word the emoji carries
+    + (w.rainPct != null && w.rainPct > 0 ? ` · <span aria-hidden="true">☔</span> <span class="sr-only">rain </span>${esc(String(w.rainPct))}% <span class="wx-dim">today</span>` : '');
+}
+let wxInFlight = false;   // dedupe: mount + the boot jwh:route both call this before the cache exists
+async function refreshWeather() {
+  const c = wxCache();
+  if (c && Date.now() - c.at < WX_FRESH_MS) { renderWxStrip(); return; }
+  if (wxInFlight) return;
+  wxInFlight = true;
+  try {   // everything after the flag is inside try — a throw anywhere must not wedge the flag
+    const home = loadPlaces().find(p => p.home && Number.isFinite(p.lat) && Number.isFinite(p.lng));
+    // ~1km precision is plenty for weather — don't hand a third party the exact address
+    const rnd = (v) => Math.round(v * 100) / 100;
+    const [lat, lng] = home ? [rnd(home.lat), rnd(home.lng)] : [35.68, 139.77];
+    const data = await fetchWeather(lat, lng);
+    if (data) set(KEYS.weather, { at: Date.now(), data });
+  } catch { /* offline / API down — a fresh-enough cached strip stays; a stale one hides */ }
+  finally { wxInFlight = false; }
+  renderWxStrip();
 }
 function renderTeasers(alerts) {
   const book = alerts.find(a => a.kind === 'book');

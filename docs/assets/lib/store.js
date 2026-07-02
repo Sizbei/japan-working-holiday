@@ -14,6 +14,7 @@ export const KEYS = {
   dayPlans: 'jwh-dayplans-v1',
   checkOrder: 'jwh-checkorder-v1',
   checkMoves: 'jwh-checkmoves-v1',   // baked checklist item id → the phase-group key it was dragged into
+  weather: 'jwh-wx-v1',              // { at: epoch-ms, data: parseWeather() } — dashboard strip cache
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',
   due: 'jwh-due-v1',

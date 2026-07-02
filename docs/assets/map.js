@@ -303,7 +303,11 @@ function initMap() {
   el.classList.remove('loading');
   // scrollWheelZoom off (the map is a short panel in a scrollable page — plain scroll must page,
   // not zoom); touchZoom on for mobile pinch; zoomSnap 0 for smooth trackpad-pinch (ctrl+wheel).
-  map = L.map(el, { scrollWheelZoom: false, touchZoom: true, zoomSnap: 0 }).setView([35.69, 139.73], 12);
+  // default view: YOUR neighborhood (the ⛩️ home-base pin) rather than generic central Tokyo —
+  // when a day plan is selected, the auto-drawn route re-fits the view right after this anyway.
+  const home = loadPlaces().find(p => p.home && typeof p.lat === 'number' && typeof p.lng === 'number');
+  map = L.map(el, { scrollWheelZoom: false, touchZoom: true, zoomSnap: 0 })
+    .setView(home ? [home.lat, home.lng] : [35.69, 139.73], home ? 14 : 12);
   // Flighty-style dark basemap — CARTO dark_matter (free, no key; retina @2x via {r}+detectRetina)
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 20, subdomains: 'abcd', detectRetina: true,
@@ -315,7 +319,7 @@ function initMap() {
     if (!e.ctrlKey) return;
     e.preventDefault();
     const latlng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e));
-    map.setZoomAround(latlng, map.getZoom() - e.deltaY * 0.01);
+    map.setZoomAround(latlng, map.getZoom() - e.deltaY * 0.02);   // 0.02: a two-finger pinch should feel like a zoom, not a nudge
   }, { passive: false });
   pinLayer = window.L.markerClusterGroup
     ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46, spiderfyOnMaxZoom: true })

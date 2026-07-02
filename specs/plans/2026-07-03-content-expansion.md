@@ -54,7 +54,7 @@ one PR; if it grows, split it.
       kissa, standing sushi), geek (Nakano Broadway floors, Hard-Off crawl, retro arcades),
       music (Koenji/Shimokita live houses). Verify: JSON valid, cards render on #/explore,
       correct schema (content-card, NOT findings).
-- [ ] **S2 — Day-plan template library (B2).** 5–8 baked itineraries in tips.json
+- [x] **S2 — Day-plan template library (B2).** *(5 templates baked; empty-day strip applies with fresh ids/approx coords; never overwrites; PR #16, SW v193)* 5–8 baked itineraries in tips.json
       (`planTemplates[]`: Akihabara retro crawl, Yanaka–Nezu walk, Shimokita record day, Odaiba,
       Kamakura day-trip) + a "start from a template" strip on #/plan that copies one into
       jwh-dayplans-v1 for a chosen date. Verify: CDP — template copies, stops render, map route

@@ -10882,5 +10882,213 @@
    "lat": 35.8045,
    "lng": 139.7855
   }
- }
+ },
+ "planTemplates": [
+  {
+   "id": "tpl-akiba",
+   "title": "Akihabara retro crawl",
+   "note": "Cash for the retro shops; consoles are cheaper on upper floors.",
+   "stops": [
+    {
+     "name": "Radio Kaikan",
+     "lat": 35.6982,
+     "lng": 139.7714,
+     "area": "Akihabara",
+     "startTime": "11:00",
+     "durationMin": 90,
+     "note": "10 floors of figures/cards — start at the top."
+    },
+    {
+     "name": "Super Potato",
+     "lat": 35.6996,
+     "lng": 139.7712,
+     "area": "Akihabara",
+     "startTime": "13:00",
+     "durationMin": 60,
+     "note": "Retro-game mecca; 5F arcade."
+    },
+    {
+     "name": "BEEP Akihabara",
+     "lat": 35.701,
+     "lng": 139.7717,
+     "area": "Akihabara",
+     "startTime": "14:30",
+     "durationMin": 45,
+     "note": "Basement PC-98/retro software shrine."
+    },
+    {
+     "name": "Yodobashi Akiba",
+     "lat": 35.6987,
+     "lng": 139.7745,
+     "area": "Akihabara",
+     "startTime": "16:00",
+     "durationMin": 90,
+     "note": "Synth floor + everything else."
+    }
+   ]
+  },
+  {
+   "id": "tpl-yanaka",
+   "title": "Yanaka–Nezu old-town walk",
+   "note": "Go weekday morning — quiet streets, cats out.",
+   "stops": [
+    {
+     "name": "Nippori Station (Fabric Town side)",
+     "lat": 35.7281,
+     "lng": 139.7707,
+     "area": "Nippori",
+     "startTime": "10:00",
+     "durationMin": 20,
+     "note": ""
+    },
+    {
+     "name": "Yanaka Ginza",
+     "lat": 35.7276,
+     "lng": 139.7666,
+     "area": "Yanaka",
+     "startTime": "10:30",
+     "durationMin": 75,
+     "note": "Menchi-katsu + shitamachi browsing."
+    },
+    {
+     "name": "Nezu Shrine",
+     "lat": 35.7204,
+     "lng": 139.7607,
+     "area": "Nezu",
+     "startTime": "12:30",
+     "durationMin": 60,
+     "note": "Vermilion torii tunnel."
+    },
+    {
+     "name": "Ueno Park",
+     "lat": 35.7148,
+     "lng": 139.7737,
+     "area": "Ueno",
+     "startTime": "14:00",
+     "durationMin": 120,
+     "note": "Museums or just wander to the station."
+    }
+   ]
+  },
+  {
+   "id": "tpl-shimokita",
+   "title": "Shimokitazawa record day",
+   "note": "Most shops open ~12:00 — sleep in.",
+   "stops": [
+    {
+     "name": "Shimokitazawa Station",
+     "lat": 35.6614,
+     "lng": 139.6683,
+     "area": "Shimokitazawa",
+     "startTime": "12:00",
+     "durationMin": 15,
+     "note": ""
+    },
+    {
+     "name": "Disk Union Shimokitazawa",
+     "lat": 35.662,
+     "lng": 139.6687,
+     "area": "Shimokitazawa",
+     "startTime": "12:15",
+     "durationMin": 90,
+     "note": "Multiple genre floors; check the used bins."
+    },
+    {
+     "name": "Vintage crawl (east side alleys)",
+     "lat": 35.6608,
+     "lng": 139.669,
+     "area": "Shimokitazawa",
+     "startTime": "14:30",
+     "durationMin": 90,
+     "note": "Thrift + curry smells."
+    },
+    {
+     "name": "SHELTER (evening show)",
+     "lat": 35.6613,
+     "lng": 139.6672,
+     "area": "Shimokitazawa",
+     "startTime": "19:00",
+     "durationMin": 150,
+     "note": "Check the schedule; buy at the door early."
+    }
+   ]
+  },
+  {
+   "id": "tpl-odaiba",
+   "title": "Odaiba bay afternoon",
+   "note": "Rinkai line or Yurikamome for the views.",
+   "stops": [
+    {
+     "name": "Odaiba Kaihin Park",
+     "lat": 35.63,
+     "lng": 139.7768,
+     "area": "Odaiba",
+     "startTime": "14:00",
+     "durationMin": 60,
+     "note": "Beach boardwalk + Rainbow Bridge view."
+    },
+    {
+     "name": "Unicorn Gundam (DiverCity)",
+     "lat": 35.6251,
+     "lng": 139.7756,
+     "area": "Odaiba",
+     "startTime": "15:30",
+     "durationMin": 45,
+     "note": "Transformation shows on the hour (check times)."
+    },
+    {
+     "name": "Aqua City sunset deck",
+     "lat": 35.627,
+     "lng": 139.7743,
+     "area": "Odaiba",
+     "startTime": "17:30",
+     "durationMin": 90,
+     "note": "Golden hour over the bridge."
+    }
+   ]
+  },
+  {
+   "id": "tpl-kamakura",
+   "title": "Kamakura day trip",
+   "note": "~1h from Tokyo; JR Yokosuka line. Start early, beat the tour buses.",
+   "stops": [
+    {
+     "name": "Kamakura Station",
+     "lat": 35.3192,
+     "lng": 139.5467,
+     "area": "Kamakura",
+     "startTime": "09:30",
+     "durationMin": 15,
+     "note": ""
+    },
+    {
+     "name": "Great Buddha (Kotoku-in)",
+     "lat": 35.3167,
+     "lng": 139.5358,
+     "area": "Hase",
+     "startTime": "10:15",
+     "durationMin": 60,
+     "note": "Enoden to Hase, then walk."
+    },
+    {
+     "name": "Hasedera Temple",
+     "lat": 35.3126,
+     "lng": 139.5333,
+     "area": "Hase",
+     "startTime": "11:30",
+     "durationMin": 75,
+     "note": "Bay view from the terrace."
+    },
+    {
+     "name": "Komachi-dori street food",
+     "lat": 35.3211,
+     "lng": 139.5511,
+     "area": "Kamakura",
+     "startTime": "13:30",
+     "durationMin": 90,
+     "note": "Lunch + omiyage crawl back to the station."
+    }
+   ]
+  }
+ ]
 }

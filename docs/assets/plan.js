@@ -18,7 +18,7 @@ import { toICS, gcalUrl } from './lib/ics.js';
 import { directionsUrl, waypointsUrl } from './lib/directions.js';
 import { KEYS, get, set } from './lib/store.js';
 import {
-  loadPlans, getPlan, hasPlan, newStop, planToEvents,
+  loadPlans, savePlans, getPlan, hasPlan, newStop, planToEvents,
   upsertStop, removeStop, patchStop, reorderStops,
 } from './lib/dayplan.js';
 import { makeSortable } from './dnd.js';
@@ -100,16 +100,38 @@ function restoreBodyFocus(body, f) {
   }
   el?.focus();
 }
+// copy a baked template into the active (empty) day — fresh stop ids, approx coords
+function applyTemplate(tid) {
+  const t = ((DATA && DATA.planTemplates) || []).find(x => x.id === tid);
+  if (!t || hasPlan(activeDate)) return;
+  const plans = loadPlans();
+  plans[activeDate] = {
+    date: activeDate, title: t.title, note: t.note || '',
+    stops: (t.stops || []).map((s, i) => ({
+      ...newStop({ name: s.name, lat: s.lat ?? null, lng: s.lng ?? null, area: s.area || '', startTime: s.startTime || '', durationMin: s.durationMin ?? 60, note: s.note || '' }),
+      coordKind: 'approx', id: 'tp' + Date.now() + '-' + i,
+    })),
+  };
+  savePlans(plans);   // dispatches jwh:data-changed → this page + dashboard/map re-derive
+}
+
 function render() {
   const body = $('#planBody'); if (!body) return;
   const focus = captureBodyFocus(body);
   const plan = getPlan(activeDate);
   const stops = plan ? plan.stops : [];
   if (!stops.length) {
+    // additive template library (S2): only offered on an EMPTY day — never overwrites a plan
+    const tpls = (DATA && DATA.planTemplates) || [];
+    const tplHtml = tpls.length ? `<div class="plan-tpls" role="group" aria-label="Start from a template">
+        <p class="plan-tpls-h">…or start from a template:</p>
+        ${tpls.map(t => `<button type="button" class="plan-tpl" data-tpl="${esc(t.id)}">${esc(t.title)} <span class="pt-n">${t.stops.length} stops</span></button>`).join('')}
+      </div>` : '';
     body.innerHTML = `<div class="plan-empty">
       <p class="plan-empty-h">No plan for <b>${esc(fmtShort(activeDate))}</b> yet.</p>
       <p>Add your first stop — pull from your saved pins, the catalogue, upcoming events, or type your own.</p>
-      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button></div>`;
+      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>${tplHtml}</div>`;
+    body.querySelectorAll('[data-tpl]').forEach(b => b.addEventListener('click', () => applyTemplate(b.dataset.tpl)));
     restoreBodyFocus(body, focus);
     return;
   }

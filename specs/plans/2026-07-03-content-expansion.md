@@ -59,7 +59,7 @@ one PR; if it grows, split it.
       Kamakura day-trip) + a "start from a template" strip on #/plan that copies one into
       jwh-dayplans-v1 for a chosen date. Verify: CDP — template copies, stops render, map route
       draws; existing plan CRUD untouched.
-- [ ] **S3 — "This week" band on Explore (B1).** Display-only strip of the next 7 days from
+- [x] **S3 — "This week" band on Explore (B1).** *(expweek.js display-only module; 8-chip cap, hides when empty; PR #17, SW v194)* Display-only strip of the next 7 days from
       allEvents() at the top of #/explore. Verify: CDP — matches calendar data, zero mutations.
 - [ ] **S4 — Post-arrival findings + phrase packs (A3+A4).** New domains[] findings (ward
       office/bank/phone reality) + phrases (izakaya, barber, redelivery). Content only.

@@ -3099,3 +3099,12 @@ ruby > rt {
   font: inherit; font-size:.84rem; cursor:pointer; }
 .plan-tpl:hover{ border-color: var(--indigo); }
 .plan-tpl .pt-n{ font-family: var(--mono); font-size:.66rem; color: var(--ink-faint); }
+
+/* Explore: "This week" band (S3) */
+.exp-week{ margin: 0 0 var(--s4); }
+.expw-h{ font-family: var(--mono); font-weight:700; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin:0 0 .4rem; }
+.expw-row{ display:flex; gap:.45rem; overflow-x:auto; padding-bottom:.25rem; }
+.expw-chip{ flex:none; display:inline-flex; align-items:baseline; gap:.4rem; padding:.4rem .75rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); text-decoration:none; font-size:.8rem; max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.expw-chip:hover{ border-color: var(--indigo); }
+.expw-chip b{ font-family: var(--mono); font-size:.68rem; color: var(--indigo-ink); }
+.expw-area{ color: var(--ink-faint); font-size:.72rem; }

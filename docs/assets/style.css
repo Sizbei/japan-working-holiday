@@ -1630,6 +1630,16 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 #calQuickInput::placeholder{ color: var(--ink-faint); }
 .cqa-hint{ flex:none; font-family: var(--mono); font-size:.74rem; font-weight:700; color: var(--indigo-ink); white-space:nowrap; }
 .cal-search{ position: relative; margin: var(--s2) 0 var(--s3); }
+/* quick-add + search share one line (each keeps its pill identity); stacks again on phones */
+.cal-inputrow{ display:flex; gap: var(--s3); align-items:flex-start; }
+.cal-inputrow .cal-quickadd{ flex:1 1 55%; max-width:none; margin: var(--s3) 0; }
+.cal-inputrow .cal-search{ flex:1 1 45%; margin: var(--s3) 0; }
+.cal-inputrow #calSearch{ max-width:none; }
+@media (max-width: 700px){
+  .cal-inputrow{ flex-direction:column; gap:0; }
+  .cal-inputrow .cal-quickadd{ margin: var(--s3) 0 var(--s2); }
+  .cal-inputrow .cal-search{ margin: 0 0 var(--s3); }
+}
 #calSearch{ width:100%; max-width:520px; font-family: var(--mono); font-size:.8rem; padding:.55rem .9rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); }
 #calSearch:focus{ outline:none; box-shadow: var(--ring); }
 .cal-search-results{ list-style:none; margin:.3rem 0 0; padding:0; max-width:520px; }

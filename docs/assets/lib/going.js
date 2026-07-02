@@ -13,6 +13,15 @@ export function loadGoing() {
   return new Set(Array.isArray(a) ? a : SEED);
 }
 export function isGoing(id) { return !!id && loadGoing().has(id); }
+export function setGoing(id, on = true) {
+  if (!id) return false;
+  const g = loadGoing();
+  if (on === g.has(id)) return on;   // already in the wanted state — no write, no dispatch
+  if (on) g.add(id); else g.delete(id);
+  set(KEYS.going, [...g]);
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  return on;
+}
 export function toggleGoing(id) {
   if (!id) return false;
   const g = loadGoing();

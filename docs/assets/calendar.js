@@ -66,7 +66,10 @@ export function allEvents() {
   if (_evCache) return _evCache;
   const user = loadUser().map(e => ({ ...e, source: 'user' }));
   const copied = new Set(user.map(e => e.copyOf).filter(Boolean));   // "Copy to my events" takes over the baked original — hide it to avoid a duplicate chip
-  _evCache = [...bakedEvents().filter(e => !copied.has(e.id)), ...user].filter(e => parseISO(e.date));
+  const areaOv = get(KEYS.evArea, {}) || {};   // user-edited locations (Going page ✎) — works for baked AND user events
+  _evCache = [...bakedEvents().filter(e => !copied.has(e.id)), ...user]
+    .filter(e => parseISO(e.date))
+    .map(e => (typeof areaOv[e.id] === 'string' && areaOv[e.id]) ? { ...e, area: areaOv[e.id] } : e);
   return _evCache;
 }
 // Invalidate the memo on ANY mutation, order-independently: this listener is registered at

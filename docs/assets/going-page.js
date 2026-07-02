@@ -8,6 +8,7 @@ import { fmtShort, nowISO, daysBetween } from './lib/dates.js';
 import { allEvents } from './calendar.js';
 import { gcalUrl } from './lib/ics.js';
 import { isGoing, toggleGoing } from './lib/going.js';
+import { get, set, KEYS } from './lib/store.js';
 
 let TODAY = nowISO();
 let fCat = 'all', fUpcoming = true;   // session filter state
@@ -50,6 +51,30 @@ function render() {
   bar?.querySelectorAll('[data-fcat]').forEach(b => b.addEventListener('click', () => { fCat = b.dataset.fcat; render(); }));
   bar?.querySelector('[data-upcoming]')?.addEventListener('click', () => { fUpcoming = !fUpcoming; render(); });
   wrap.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => toggleGoing(b.dataset.remove)));   // dispatches → render listener fires
+  // ✎ location: swap the area line for an inline input; Enter saves (blank clears), Escape cancels.
+  // Saved to KEYS.evArea (works for baked AND user events) — allEvents() merges it app-wide.
+  wrap.querySelectorAll('[data-loc]').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.loc, host = b.closest('.going-area');
+    if (!host || host.querySelector('input')) return;
+    const cur = goingEvents().find(e => e.id === id)?.area || '';
+    host.innerHTML = `📍 <input class="going-loc-in" type="text" value="${esc(cur)}" placeholder="e.g. Shibuya — Harmonica Yokocho" aria-label="Location">`;
+    const input = host.querySelector('input');
+    input.focus(); input.select();
+    let done = false;   // Enter fires save then blur — don't double-save/render
+    const save = () => {
+      if (done) return; done = true;
+      const v = input.value.trim();
+      const m = { ...(get(KEYS.evArea, {}) || {}) };
+      if (v) m[id] = v; else delete m[id];
+      set(KEYS.evArea, m);
+      document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // re-renders this list + calendar/map re-derive
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); save(); }
+      else if (e.key === 'Escape') { e.preventDefault(); done = true; render(); }
+    });
+    input.addEventListener('blur', save);
+  }));
 }
 
 function rowHTML(e) {
@@ -61,7 +86,7 @@ function rowHTML(e) {
     <div class="going-date cat-${esc(cat)}"><b>${esc(fmtShort(e.date))}</b><span class="going-when">${esc(rel)}</span></div>
     <div class="going-main">
       <div class="going-title">${esc(e.title)}</div>
-      ${e.area ? `<div class="going-area">📍 ${esc(e.area)}</div>` : ''}
+      <div class="going-area">${e.area ? `📍 ${esc(e.area)} ` : ''}<button type="button" class="going-loc" data-loc="${esc(e.id)}" aria-label="${e.area ? 'Edit' : 'Add'} location for ${esc(e.title)}">${e.area ? '✎' : '📍 add location'}</button></div>
       <span class="going-cat cat-${esc(cat)}">${esc(cat)}</span>
     </div>
     <div class="going-acts">

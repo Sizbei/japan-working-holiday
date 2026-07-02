@@ -16,6 +16,7 @@ export const KEYS = {
   checkMoves: 'jwh-checkmoves-v1',   // baked checklist item id → the phase-group key it was dragged into
   weather: 'jwh-wx-v1',              // { at: epoch-ms, data: parseWeather() } — dashboard strip cache
   fx: 'jwh-fx-v1',                   // { at: epoch-ms, usd: USD-per-JPY } — budget teaser cache
+  evArea: 'jwh-evarea-v1',           // event id → user-edited location/area (Going page ✎)
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',
   due: 'jwh-due-v1',

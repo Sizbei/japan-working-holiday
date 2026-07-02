@@ -62,10 +62,6 @@ function refreshTeasers() {
     : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · to land ${fmtYen(s.toLand)}`;
   teaser('#tBudget', budgetText, '#/budget');
 
-  const p = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
-  const packText = p.total === 0 ? 'Start your packing list' : `${p.pct}% packed · ${p.done}/${p.total}`;
-  teaser('#tPacking', packText, '#/packing');
-
   renderReadiness();
 }
 
@@ -90,6 +86,32 @@ function renderReadiness() {
     : 'tight';
 
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
+
+  // Post-arrival, "trip readiness" (packing + visa prep) is a finished story — the score that
+  // matters now is settling in: the landing/first-14-days/first-month/setup checklist phases.
+  if (c.phase === 'arrived') {
+    const SETTLE = ['Landing Day', 'First 14 Days', 'First Month', 'Ongoing Setup'];
+    const items = (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || []);
+    const done = items.filter(it => checks[it.id]).length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 100;
+    const tone = pct >= 75 ? 'good' : pct >= 40 ? 'ok' : 'low';
+    const bLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[budgetReady] || 'unset';
+    const h = el.querySelector('.widget-h [data-i18n]');
+    if (h) { h.textContent = 'Settling in'; h.dataset.i18n = 'head.readiness.arrived'; }
+    el.querySelector('.widget-body').innerHTML = `
+    <div class="rdy" data-tone="${esc(tone)}">
+      <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(pct))}">${esc(String(pct))}</span><span class="rdy-pct">%</span><span class="sr-only"> settled in</span></div>
+      <div class="rdy-meta">
+        <div class="rdy-days">Day ${esc(String((c.days ?? 0) + 1))} in Japan</div>
+        <div class="rdy-parts">
+          <a href="#/checklist">Settling-in tasks ${esc(String(done))}/${esc(String(items.length))}</a>
+          <span aria-hidden="true">·</span>
+          <a href="#/budget">Budget ${esc(bLabel)}</a>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
 
   const r = readiness({ checklistPct, packingPct: pk.pct, budgetReady, daysToArrival: c.days });
   const budgetLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[r.parts[2].status] || 'unset';
@@ -252,10 +274,34 @@ function renderPanel(alerts) {
 
 // ---- home: promoted "needs me" cards + demoted teasers ----
 function renderWidgets(alerts) {
+  renderToday();
   fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'), 3);
   renderProgress();
   renderGoingWidget();
   renderTeasers(alerts);
+}
+
+// "Today" — the post-arrival lead widget: today's day plan, today's events, tasks due today.
+function renderToday() {
+  const el = $('#wToday');
+  if (!el) return;
+  const bits = [];
+  const plan = (loadPlans() || {})[TODAY];
+  if (plan && plan.stops && plan.stops.length) {
+    const t = plan.stops.find(s => s.startTime)?.startTime || '';
+    bits.push(`<li><a href="#/plan"><span class="w-when">${esc(t || 'plan')}</span> ${esc(clip(plan.title || 'Day plan', 38))} · ${plan.stops.length} stop${plan.stops.length === 1 ? '' : 's'}</a> <a class="wt-map" href="#/map" aria-label="Show today's route on the map">🧭</a></li>`);
+  }
+  allEvents()
+    .filter(e => { const d = (e.date || '').slice(0, 10); const end = (e.endDate || '').slice(0, 10); return d === TODAY || (d < TODAY && end >= TODAY); })
+    .slice(0, 3)
+    .forEach(e => bits.push(`<li><a href="#/calendar"><span class="w-when">${esc(e.time || 'today')}</span> ${esc(clip(e.title, 46))}</a></li>`));
+  const due = get(KEYS.due, {}) || {};
+  const checks = get(KEYS.checklist, {}) || {};
+  checklistItems(DATA).filter(it => due[it.id] === TODAY && !checks[it.id]).slice(0, 2)
+    .forEach(it => bits.push(`<li><a href="#/checklist"><span class="w-when">due</span> ${esc(clip(it.task, 46))}</a></li>`));
+  el.querySelector('.widget-body').innerHTML = bits.length
+    ? `<ul>${bits.join('')}</ul>`
+    : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`;
 }
 function renderTeasers(alerts) {
   const book = alerts.find(a => a.kind === 'book');

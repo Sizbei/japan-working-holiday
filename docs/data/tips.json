@@ -2708,6 +2708,26 @@
      "sources": [
       "https://japan-workingholiday.com/money-credit-card"
      ]
+    },
+    {
+     "tip": "Open a JP Post Bank account first — it accepts residents under 6 months",
+     "why": "Most major banks (SMBC, MUFG) informally require 6+ months of residence; Yucho (JP Post) is the standard first account for new arrivals.",
+     "how": "Bring zairyu card (with registered address), passport, and hanko or signature to any post office bank counter; ask for a 'futsu yokin' account. Sony Bank and SMBC Prestia are the follow-up options once settled.",
+     "impact": "high",
+     "confidence": "medium",
+     "sources": [
+      "https://www.jp-bank.japanpost.jp/"
+     ]
+    },
+    {
+     "tip": "Expect your first-year National Health Insurance premium to be near the minimum",
+     "why": "NHI premiums are based on PREVIOUS year's Japan income — a new arrival's is ¥0, so year one is roughly ¥1,500–2,500/month, not the scary full rates online.",
+     "how": "Enroll at the Adachi ward office the same visit as address registration; payment slips arrive by mail — pay at any konbini.",
+     "impact": "high",
+     "confidence": "medium",
+     "sources": [
+      "https://www.city.adachi.tokyo.jp/"
+     ]
     }
    ]
   },
@@ -2766,6 +2786,27 @@
      "impact": "~$10–20 vs paying for an unused virtual number",
      "confidence": "high",
      "sources": []
+    },
+    {
+     "tip": "Mobile Suica works on US iPhones — set it up before buying any plastic card",
+     "why": "iPhone 8+/watch supports Suica natively in Apple Wallet regardless of where the phone was bought; top up by credit card and skip deposit + card-shortage issues.",
+     "how": "Wallet app → + → Transit Card → Suica. Set as Express Transit. Android from the US generally LACKS the FeliCa chip — plastic Welcome Suica instead.",
+     "impact": "high",
+     "confidence": "high",
+     "sources": [
+      "https://www.jreast.co.jp/multi/en/welcomesuica/"
+     ]
+    },
+    {
+     "tip": "Get a povo or IIJmio SIM — both accept fresh zairyu cards",
+     "why": "Big-three carrier contracts want a Japanese credit card; povo 2.0 (au) is topping-up-based with no monthly commitment, IIJmio takes foreign cards and has cheap data tiers.",
+     "how": "povo: eSIM signup in-app with zairyu card photo. IIJmio: online, ~¥850/mo for 5GB. Do it after address registration so the card shows an address.",
+     "impact": "high",
+     "confidence": "medium",
+     "sources": [
+      "https://povo.jp/",
+      "https://www.iijmio.jp/"
+     ]
     }
    ]
   },
@@ -2800,6 +2841,26 @@
      "confidence": "high",
      "sources": [
       "https://www.japan-guide.com/e/e2018.html"
+     ]
+    },
+    {
+     "tip": "Price a commuter pass (teikiken) only AFTER your real commute settles",
+     "why": "A 1-month Ayase↔work teikiken pays off around 15 round trips; if you work irregular days, plain mobile-Suica pay-per-ride can be cheaper.",
+     "how": "Buy in Suica app (Ticket → Commuter Pass) once you know the route; 3-month passes discount ~5%, 6-month ~10%.",
+     "impact": "medium",
+     "confidence": "high",
+     "sources": [
+      "https://www.jreast.co.jp/"
+     ]
+    },
+    {
+     "tip": "Ayase is on the Chiyoda line — through-service reaches Omotesando/Otemachi with no transfer",
+     "why": "The JR Joban local and Metro Chiyoda line share the Ayase platforms; one seat to central Tokyo beats changing at Kita-Senju in rush hour.",
+     "how": "Board any Yoyogi-Uehara-bound train; for JR-only fares check the app — the Ayase interchange has odd fare rules worth knowing once.",
+     "impact": "medium",
+     "confidence": "high",
+     "sources": [
+      "https://www.tokyometro.jp/"
      ]
     }
    ]
@@ -2864,6 +2925,26 @@
      "confidence": "high",
      "sources": [
       "https://www.japan-guide.com/e/e2025.html"
+     ]
+    },
+    {
+     "tip": "Learn Adachi-ku's garbage split before your first bag goes out",
+     "why": "Wrong-day or wrong-category bags get stickered and left — and neighbours notice; Adachi splits burnable / non-burnable / recyclables (cans-bottles-PET) / large items.",
+     "how": "Grab the English collection calendar for your block at the ward office (or the Adachi app); large items need a paid pickup reservation.",
+     "impact": "medium",
+     "confidence": "high",
+     "sources": [
+      "https://www.city.adachi.tokyo.jp/"
+     ]
+    },
+    {
+     "tip": "Apply for a MyNumber card in month 1 — it unlocks everything later",
+     "why": "The card (not just the paper number) becomes ID for banking upgrades, konbini certificates, and ward paperwork; issuance takes ~1 month, so applying early avoids blocked tasks later.",
+     "how": "The application form is mailed after address registration, or apply online with the QR code; pickup at the ward office by appointment.",
+     "impact": "medium",
+     "confidence": "high",
+     "sources": [
+      "https://www.kojinbango-card.go.jp/"
      ]
     }
    ]
@@ -6054,6 +6135,76 @@
     ]
    ],
    "en": "Does it contain wheat?"
+  },
+  {
+   "id": "ph-izakaya-i-ll-start-with-a-draft-beer",
+   "cat": "Izakaya",
+   "jp": "とりあえず生で",
+   "read": "toriaezu nama de",
+   "en": "I'll start with a draft beer"
+  },
+  {
+   "id": "ph-izakaya-what-do-you-recommend",
+   "cat": "Izakaya",
+   "jp": "おすすめは何ですか？",
+   "read": "osusume wa nan desu ka?",
+   "en": "What do you recommend?"
+  },
+  {
+   "id": "ph-izakaya-check-please",
+   "cat": "Izakaya",
+   "jp": "お会計お願いします",
+   "read": "okaikei onegaishimasu",
+   "en": "Check, please"
+  },
+  {
+   "id": "ph-izakaya-one-more-drink-please",
+   "cat": "Izakaya",
+   "jp": "もう一杯ください",
+   "read": "mou ippai kudasai",
+   "en": "One more (drink), please"
+  },
+  {
+   "id": "ph-barber-about-this-length-please",
+   "cat": "Barber",
+   "jp": "このくらいの長さでお願いします",
+   "read": "kono kurai no nagasa de onegaishimasu",
+   "en": "About this length, please"
+  },
+  {
+   "id": "ph-barber-shorter-on-the-sides-please",
+   "cat": "Barber",
+   "jp": "横は短めにしてください",
+   "read": "yoko wa mijikame ni shite kudasai",
+   "en": "Shorter on the sides, please"
+  },
+  {
+   "id": "ph-barber-just-a-trim-please",
+   "cat": "Barber",
+   "jp": "少し切りそろえるだけでお願いします",
+   "read": "sukoshi kirisoroeru dake de onegaishimasu",
+   "en": "Just a trim, please"
+  },
+  {
+   "id": "ph-deliveries-i-d-like-to-request-redeliver",
+   "cat": "Deliveries",
+   "jp": "再配達をお願いしたいのですが",
+   "read": "saihaitatsu o onegai shitai no desu ga",
+   "en": "I'd like to request redelivery"
+  },
+  {
+   "id": "ph-deliveries-can-i-pick-it-up-at-a-conveni",
+   "cat": "Deliveries",
+   "jp": "コンビニ受け取りにできますか？",
+   "read": "konbini uketori ni dekimasu ka?",
+   "en": "Can I pick it up at a convenience store?"
+  },
+  {
+   "id": "ph-deliveries-i-m-here-to-pick-up-a-package",
+   "cat": "Deliveries",
+   "jp": "荷物を受け取りに来ました",
+   "read": "nimotsu o uketori ni kimashita",
+   "en": "I'm here to pick up a package"
   }
  ],
  "pointToSay": [

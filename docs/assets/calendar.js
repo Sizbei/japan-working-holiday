@@ -12,7 +12,7 @@ import { toICS, gcalUrl, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
 import { upsertStop, newStop } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
-import { isGoing, toggleGoing } from './lib/going.js';
+import { isGoing, toggleGoing, setGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { makeMovable, dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
@@ -185,9 +185,11 @@ function wireQuickAdd() {
     const title = p.title || v;
     const t = parseISO(p.date);
     if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; }   // land on the new event's month (the saveUser render shows it)
-    saveUser([...loadUser(), { id: 'u' + Date.now(), title, date: p.date, endDate: '', time: p.time || '', category: 'personal', note: '' }]);
+    const id = 'u' + Date.now();
+    setGoing(id, true);   // a quick-added event is a plan you're making — mark it ✓ Going up front
+    saveUser([...loadUser(), { id, title, date: p.date, endDate: '', time: p.time || '', category: 'personal', note: '' }]);
     input.value = ''; hint.textContent = '';
-    dndToast(`Added: ${title} · ${fmtShort(p.date)}`);
+    dndToast(`Added ✓ Going: ${title} · ${fmtShort(p.date)}`);
     input.focus();
   });
 }

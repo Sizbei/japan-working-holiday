@@ -5,19 +5,7 @@ import { mountGate } from './gate.js';
 import { renderContent } from './content.js';
 import { mountPacking } from './packing.js';
 import { mountBudget } from './budget.js';
-import { mountPhrases } from './phrases.js';
-import { mountPointToSay } from './pointtosay.js';
-import { mountVocab } from './vocab.js';
-import { mountKana } from './kana.js';
-import { mountNumbers } from './numbers.js';
-import { mountSigns } from './signs.js';
 import { mountPhraseDay } from './phraseday.js';
-import { mountQuiz } from './quiz.js';
-import { mountPronunciation } from './pronunciation.js';
-import { mountParticles } from './particles.js';
-import { mountVerbs } from './verbs.js';
-import { mountAdjectives } from './adjectives.js';
-import { setCollapsed } from './collapse.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
@@ -80,32 +68,18 @@ function boot() {
       safe(() => renderContent(data, today));
       safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist
       safe(() => mountBudget(data));       // budget planner (#/budget) — one-time + monthly cost estimate
-      safe(() => mountPhrases(data));      // phrasebook (#/phrases) — curated survival-Japanese phrases
-      safe(() => mountPointToSay(data));   // "point & show" big-text cards for staff (pharmacy/medication, lost, etc.)
-      safe(() => mountVocab(data));        // JLPT N5 starter vocabulary (themed, collapsible) on #/phrases
-      safe(() => mountKana());             // hiragana/katakana reference chart (collapsible) on #/phrases
-      safe(() => mountNumbers());          // numbers/money/counters/dates reference (collapsible) on #/phrases
-      safe(() => mountSigns(data));        // daily-life kanji signs recognition grid (collapsible) on #/phrases
-      safe(() => mountPhraseDay(data));    // "phrase of the day" dashboard widget (deterministic by date)
-      safe(() => mountQuiz(data));         // multiple-choice self-test (JP↔EN) on #/phrases
-      safe(() => mountPronunciation());    // pronunciation tips + "today in Japanese" (collapsible) on #/phrases
-      safe(() => mountParticles());        // particle reference (collapsible) on #/phrases
-      safe(() => mountVerbs());            // verb-conjugation reference (collapsible) on #/phrases
-      safe(() => mountAdjectives());       // adjective-conjugation reference (collapsible) on #/phrases
-      // First visit: collapse every phrases-page section except the first phrase category, so the
-      // page opens as a compact, scannable menu instead of a multi-thousand-px wall. One-time;
-      // afterwards each section's open/closed state persists per the user's own toggles.
-      safe(() => {
-        if (get(KEYS.phraseCollapseSeed, false) !== true) {
-          $$('#view-phrases .acc[data-acc]').forEach((a, i) => {
-            if (i === 0) return;                     // keep the first (Daily) phrase category open
-            a.classList.add('is-collapsed');
-            a.querySelector('.acc-head')?.setAttribute('aria-expanded', 'false');
-            setCollapsed(a.dataset.acc, true);       // persist so it stays collapsed on return
-          });
-          set(KEYS.phraseCollapseSeed, true);
-        }
-      });
+      safe(() => mountPhraseDay(data));    // "phrase of the day" dashboard widget (deterministic by date) — stays eager
+      // EF1: the 12 phrases-page modules (~76KB) lazy-load on first #/phrases entry —
+      // they were parse+mount cost on EVERY boot for the least-visited route.
+      let phrasesLoaded = false;
+      const loadPhrases = () => {
+        if (phrasesLoaded) return;
+        phrasesLoaded = true;
+        import('./phrasesboot.js').then(m => m.mountPhrasesBundle(data))
+          .catch(err => { phrasesLoaded = false; console.error('[boot] phrases bundle', err); });
+      };
+      document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'phrases') loadPhrases(); });
+      if (/#\/?phrases/.test(location.hash)) loadPhrases();   // direct load / reload on the page
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
       safe(() => mountRooms(data));        // share-room finder (#/rooms)
       safe(() => mountMap(data));          // map page (#/map)

@@ -37,8 +37,15 @@ export function mountPlan(data) {
   renderRail();
   render();
   $('#planBody')?.addEventListener('click', onBodyClick);
-  document.addEventListener('jwh:data-changed', () => { renderRail(); render(); });
-  document.addEventListener('jwh:plan-goto', (e) => { const d = e.detail?.date; if (d) { activeDate = d; renderRail(); render(); scrollActiveIntoView(); } });   // long-press a calendar day → plan it
+  // EF3: hidden → dirty-mark; render on next entry (a plan edit can only happen ON the page,
+  // but cross-page writers — templates seed, map pushEvent, backup restore — dispatch too)
+  let planDirty = false;
+  document.addEventListener('jwh:data-changed', () => {
+    if (document.getElementById('view-plan')?.classList.contains('is-active')) { renderRail(); render(); }
+    else planDirty = true;
+  });
+  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'plan' && planDirty) { planDirty = false; renderRail(); render(); } });
+  document.addEventListener('jwh:plan-goto', (e) => { const d = e.detail?.date; if (d) { activeDate = d; planDirty = false; renderRail(); render(); scrollActiveIntoView(); } });   // fresh render — clear dirty so the route listener doesn't repeat it (review)   // long-press a calendar day → plan it
   // the route line is drawn on demand (Show route on map); clear it only when leaving BOTH
   // plan and map (never auto-load Leaflet on #/plan).
   document.addEventListener('jwh:route', (e) => { const r = e.detail?.route; if (r !== 'plan' && r !== 'map') clearRoute(); });

@@ -10,6 +10,7 @@ import { enrich, LINE_LABELS } from './lib/rooms.js';
 import { showModal } from './lib/modal.js';
 
 let DATA = null;
+let roomsDirty = false;   // EF3: data changed while the view was hidden
 let ROOMS = [];
 let rendered = false;
 const noteTimers = new Map();   // per-room debounced note saves (module-scope so a toggle can flush them)
@@ -47,11 +48,15 @@ function saveNote(id, val) {
 export function mountRooms(data) {
   DATA = data;
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'rooms') ensureRendered(); });
-  document.addEventListener('jwh:data-changed', () => { if (rendered) render(); });
+  document.addEventListener('jwh:data-changed', () => {
+    if (!rendered) return;
+    if (document.getElementById('view-rooms')?.classList.contains('is-active')) render();
+    else roomsDirty = true;   // consumed by ensureRendered() on the next entry (review: a second route listener double-rendered)
+  });
 }
 
 function ensureRendered() {
-  if (rendered) { render(); return; }            // revisit: cheap re-render picks up any external change
+  if (rendered) { if (roomsDirty) { roomsDirty = false; render(); } return; }   // revisit: re-render ONLY if data changed while hidden (EF3)
   ROOMS = enrich(DATA.rooms || []);
   buildLineChips();
   wireControls();

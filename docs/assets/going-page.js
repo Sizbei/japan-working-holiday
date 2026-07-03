@@ -16,7 +16,13 @@ let fCat = 'all', fUpcoming = true;   // session filter state
 export function mountGoingPage() {
   TODAY = nowISO();
   render();
-  document.addEventListener('jwh:data-changed', render);   // a ✓ Going toggle anywhere refreshes this list
+  // EF3: a ✓ Going toggle anywhere refreshes this list — immediately when visible, else on entry
+  let goingDirty = false;
+  document.addEventListener('jwh:data-changed', () => {
+    if (document.getElementById('view-going')?.classList.contains('is-active')) render();
+    else goingDirty = true;
+  });
+  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'going' && goingDirty) { goingDirty = false; render(); } });
 }
 
 function goingEvents() {
@@ -24,6 +30,7 @@ function goingEvents() {
 }
 
 function render() {
+  TODAY = nowISO();   // a tab open across midnight must not filter/label against yesterday (review note)
   const wrap = $('#goingList'); if (!wrap) return;
   const all = goingEvents();
   const cats = [...new Set(all.map(e => e.category || 'personal'))].sort();

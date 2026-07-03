@@ -29,6 +29,11 @@ function render() {
 
 export function mountExpWeek() {
   render();
-  document.addEventListener('jwh:data-changed', render);
-  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'explore') render(); });   // fresh "today" on entry
+  // EF3: hidden → dirty; the existing render-on-entry doubles as the catch-up
+  let dirty = false;
+  document.addEventListener('jwh:data-changed', () => {
+    if (document.getElementById('view-explore')?.classList.contains('is-active')) render();
+    else dirty = true;
+  });
+  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'explore') { dirty = false; render(); } });   // fresh "today" + catch-up on entry
 }

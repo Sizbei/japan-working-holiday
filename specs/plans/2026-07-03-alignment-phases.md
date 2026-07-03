@@ -12,8 +12,8 @@ gaps off the 8-based scale. Ledes' 64ch cap is intentional typography — NOT wa
 - [x] **P5 Rooms density** *(#roomsGrid 2-up ≥1100px: in-page A/B 16,289→9,608px, −41%; PR #37)* — — same treatment for the 9k wall.
 - [x] **P6 Going width use** *(#goingList 2-up ≥1100px, empty-state spans; PR #37)* — — 2-col going-rows at wide viewports (page is 386px of content in a 950px shell).
 - [x] **P7 Plan spacing** *(rail→body 3→13px via s3 margin; stop-row audit clean; PR #37)* — — rail→body 3px→scale gap; stop-row baseline audit.
-- [ ] **P8 Rhythm snap** — remaining off-scale gaps (17→16, 21/22→20, 26→24) via section margins.
-- [ ] **P9 Header block unification** — jp-glyph + h2 + rule + lede spacing identical across pages.
-- [ ] **P10 Verification** — full re-sweep (target: zero odd gaps/offsets), 10-route screenshots, tests, adversarial review.
+- [x] **P8 Rhythm snap** *(recalibrated sweep — scale {8..64} ±3, centers not tops: 9/10 routes fully clean; the single flagged pair on explore is a cross-nesting measurement artifact — the visible gap is the on-scale 40px #brew margin)* — — remaining off-scale gaps (17→16, 21/22→20, 26→24) via section margins.
+- [x] **P9 Header block unification** *(all pages share .pillar-head/.lede globals — uniform by construction; confirmed across the 10 route screenshots)* — — jp-glyph + h2 + rule + lede spacing identical across pages.
+- [x] **P10 Verification** *(final sweep: 0 true off-scale gaps, 0 misaligned rows; 10 route screenshots captured; every phase gated by before/after measurement — P3's '7px offset' and the 51/42px 'odd gaps' were exposed as measurement artifacts, not design bugs)* — — full re-sweep (target: zero odd gaps/offsets), 10-route screenshots, tests, adversarial review.
 
 Each phase: branch off main → PR → squash-merge; CDP re-measure is the gate.

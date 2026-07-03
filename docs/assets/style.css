@@ -594,7 +594,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .rdy-parts a:hover{ text-decoration: underline; }
 
 /* ---- Calendar ---- */
-#calendarSection,#trackerSection{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 1.5rem; }
+#calendarSection,#trackerSection{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0; }   /* AL1: main already gutters — the extra 1.5rem made this page's edge jump 25px vs others */
 .cal-toolbar{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:space-between; margin-bottom: var(--s4); }
 .cal-nav{ display:flex; align-items:center; gap:.3rem; }
 .cal-label{ font-family: var(--serif); font-size:1.15rem; font-weight:600; min-width: 9.5rem; text-align:center; }
@@ -1211,7 +1211,7 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 /* ============================================================
    FIND A ROOM (#/rooms)
    ============================================================ */
-#rooms{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 var(--gutter); }
+#rooms{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0; }   /* AL1 */
 .room-count{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); }
 #roomFilters{ display:flex; flex-wrap:wrap; gap: var(--s3); align-items:center; margin-bottom: var(--s5); }
 .room-reset{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); background:none; border:none; cursor:pointer; padding:.25rem .4rem; border-radius: var(--r-sm); text-decoration:underline; text-underline-offset:3px; }
@@ -1284,7 +1284,7 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 @keyframes cardExpand{ from{ opacity:0; transform: translateY(-4px);} to{ opacity:1; transform:none;} }
 
 /* map page */
-#map{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0 var(--gutter); }
+#map{ max-width: var(--maxw); margin: 0 auto var(--s12); padding: 0; }   /* AL1 */
 .map-frame{ width:100%; height: 400px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: var(--bg-sunk); }
 .map-osm{ font-size:.78rem; margin:.5rem 0 var(--s6); }
 .map-osm a{ color: var(--indigo-ink); }
@@ -1763,7 +1763,7 @@ html.js-router #view-checklist,
 html.js-router #view-packing,
 html.js-router #view-budget,
 html.js-router #view-phrases,
-html.js-router #view-emergency{ max-width: var(--maxw-read); margin-inline: auto; }
+html.js-router #view-emergency{ max-width: var(--maxw-read); margin-inline: 0; }   /* AL2: Notion-style — narrow pages keep their reading width but share the SAME left edge as every other page (centering made the edge jump on nav) */
 #view-deadlines .block, #view-checklist .block{ background: transparent; border: none; box-shadow: none; padding: 0; }
 
 /* each route reads as its own page: a touch of top breathing room under the sticky nav */

@@ -458,6 +458,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 }
 
 /* ============ Brainstorm & Brew ============ */
+#brew{ margin-bottom: var(--s10); }   /* P2: brew sat flush against #discoverBar (0px) */
 .brew-wrap { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
 @media (min-width: 820px) { .brew-wrap { grid-template-columns: 1.3fr 1fr; align-items: start; } }
 .brew-pad, .brew-ideas { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }

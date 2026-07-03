@@ -156,6 +156,11 @@ function wireKeyboard() {
     if (e.key >= '1' && e.key <= String(Math.min(9, ROUTES.length))) { e.preventDefault(); go(ROUTES[+e.key - 1]); return; }
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
+    // common utility shortcuts — keys unused by the calendar (m/w/a/n/t) + checklist (j/k/d/p/e) layers
+    if (e.key === '0' && ROUTES.length >= 10) { e.preventDefault(); go(ROUTES[9]); return; }        // the 10th page (Emergency)
+    if (e.key === 'b' || e.key === 'B') { e.preventDefault(); document.getElementById('notifBell')?.click(); return; }   // notifications
+    if (e.key === '\\') { e.preventDefault(); document.getElementById('themeToggle')?.click(); return; }                 // light/dark
+    if (e.key === ',') { e.preventDefault(); document.getElementById('guideBtn')?.click(); return; }                     // guide & settings (⌘, convention)
   });
 }
 let helpEl = null, helpReturnFocus = null;
@@ -170,6 +175,10 @@ function openHelp() {
     <h2 class="kh-title">Keyboard shortcuts</h2>
     <div class="kh-grid">${rows}</div>
     <div class="kh-row"><kbd>[</kbd> <kbd>]</kbd><span>Previous / next page</span></div>
+    <div class="kh-row"><kbd>0</kbd><span>Emergency page</span></div>
+    <div class="kh-row"><kbd>b</kbd><span>Notifications</span></div>
+    <div class="kh-row"><kbd>\\</kbd><span>Light / dark theme</span></div>
+    <div class="kh-row"><kbd>,</kbd><span>Guide &amp; settings</span></div>
     <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere + search everything (command palette)</span></div>
     <div class="kh-row"><kbd>⌘Z</kbd> <kbd>Ctrl+Z</kbd><span>Undo the last calendar delete</span></div>
     <p class="kh-sub">On the calendar</p>

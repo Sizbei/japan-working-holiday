@@ -859,8 +859,9 @@ function dayPopover(date, anchor) {
   };
   const onScroll = () => dismissPopover();
   const thisPop = popEl;   // guard: if the popover was dismissed before this task ran, don't attach unremovable listeners
-  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus(); }, 0);
-  popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
+  const mainEl = document.getElementById('main');   // app-shell: content scrolls INSIDE main, not the window
+  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); mainEl?.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus(); }, 0);
+  popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); mainEl?.removeEventListener('scroll', onScroll); };
 }
 
 // ---- slide-in side panel (replaces openDetail as the event-detail surface) ----

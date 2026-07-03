@@ -67,7 +67,10 @@ function activate(route, { scroll = true } = {}) {
   // on the mobile scrollable bottom bar, keep the current tab in view (no-op on the desktop wrap nav)
   activeNav?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   if (scroll && route !== current) {
-    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+    // desktop app-shell: MAIN is the scroll container; the window barely scrolls (footer sliver)
+    document.getElementById('main')?.scrollTo({ top: 0, behavior });
+    window.scrollTo({ top: 0, behavior });
   }
   current = route;
   document.dispatchEvent(new CustomEvent('jwh:route', { detail: { route } }));

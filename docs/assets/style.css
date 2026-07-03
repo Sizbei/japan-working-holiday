@@ -3118,3 +3118,17 @@ ruby > rt {
 
 /* Photo-spots map layer (S5) */
 .cat-photo{ background: var(--gold); }
+
+/* ============ APP SHELL (≥821px) — chrome stays put, MAIN scrolls internally ============
+   (owner: "internal scrolling over overall site scrolling"). Body keeps only a sliver of
+   scroll for the footer. Sticky offsets inside main become container-relative, which also
+   fixes the mini-month starting 54px below the grid (its old 3.2rem offset was tuned for
+   page-level scrolling). Mobile keeps normal page scroll. */
+@media (min-width: 821px){
+  main{ height: calc(100dvh - var(--header-h) - var(--nav-h)); overflow-y: auto; overscroll-behavior: contain; }
+  .cal-legend{ top: 0; }
+  .domain-nav{ top: 0; }
+  .check-progress{ top: 0; }
+  .cal-mininav{ top: 0; }
+  .cal-panel{ top: 0; }   /* this layout displaces sticky by its offset even at rest — 0 = flush with the grid header */
+}

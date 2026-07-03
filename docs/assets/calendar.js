@@ -375,7 +375,24 @@ function render() {
     wireAgenda();
   }
   renderMiniNav();
+  requestAnimationFrame(alignRail);
 }
+
+// align the sidebar rail to the GRID's real height (owner: "aligned so we just scroll") — the
+// rail scrolls internally instead of running past the month. Boot renders while the view is
+// hidden (rects are 0), so this also re-runs on every entry to #/calendar. Non-month uncaps.
+function alignRail() {
+  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-grid');
+  if (!p) return;
+  if (mode === 'month' && g && g.offsetHeight > 300) {
+    p.style.maxHeight = Math.round(g.getBoundingClientRect().bottom - p.getBoundingClientRect().top) + 'px';
+  } else { p.style.maxHeight = ''; }
+}
+document.addEventListener('jwh:route', (e) => {
+  if (e.detail?.route !== 'calendar') return;
+  requestAnimationFrame(alignRail);
+  setTimeout(alignRail, 300);   // again after the view transition settles — the rAF can land mid-swap
+});
 
 // ---- WEEK view (all-day lane + per-day add; bars/drag land in later stages) ----
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

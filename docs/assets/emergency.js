@@ -70,6 +70,16 @@ export function mountEmergency(data) {
     </section>`);
   }
 
+  // typhoon & flood season prep (expansion ledger S6) — static data, offline-first like the rest
+  const ty = em.typhoon;
+  if (ty && Array.isArray(ty.items) && ty.items.length) {
+    sections.push(`<section class="em-section" aria-labelledby="em-h-typhoon">
+      <h3 id="em-h-typhoon" class="em-h">${esc(ty.title || 'Typhoon season')}</h3>
+      ${ty.note ? `<p class="em-note">${esc(ty.note)}</p>` : ''}
+      <ul class="em-carry">${ty.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+    </section>`);
+  }
+
   // live JMA quake feed (P2P地震情報, keyless) — loads lazily on route entry so the static
   // page stays fully offline-first; failure just leaves the section absent.
   sections.push(`<section class="em-section" aria-labelledby="em-h-quakes">

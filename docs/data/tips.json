@@ -7242,7 +7242,19 @@
     "read": "えいごをはなせるひとはいますか · eigo o hanaseru hito wa imasu ka",
     "en": "Is there someone who speaks English?"
    }
-  ]
+  ],
+  "typhoon": {
+   "title": "Typhoon & flood season (Aug–Oct)",
+   "note": "Adachi-ku sits in the Arakawa floodplain — much of it is a 'zero-meter' zone. In a major Arakawa flood forecast, the ward's guidance is to evacuate EARLY (west/upland or vertically to 3F+), not to shelter on the ground floor.",
+   "items": [
+    "Know the JMA alert levels: 3 = elderly/at-risk groups evacuate, 4 = EVERYONE evacuates, 5 = life-threatening, act immediately. Level 4 is the 'go now' line.",
+    "Before the season: 2–3 days of water (3L/day) + shelf food, mobile battery, cash (ATMs/pay apps die in blackouts), headlamp.",
+    "When one approaches (usually 2–3 days' notice): charge everything, fill the bathtub (toilet/washing water), bring balcony items inside, check the last trains — rail companies pre-announce 計画運休 (planned shutdowns).",
+    "Confirm your evacuation site + route on the Adachi hazard map BEFORE the season (ward office paper copy or city.adachi.tokyo.jp); note it in your phone in English and Japanese.",
+    "Apps/pages: JMA (jma.go.jp/en) for warnings, Tokyo's disaster-prep guide 東京防災, NHK World for English live coverage. Safety-tips app pushes alerts in English.",
+    "After it passes: rivers stay dangerous for a day+ — stay off the Arakawa levee paths until levels drop."
+   ]
+  }
  },
  "restaurants": [
   {

@@ -1234,8 +1234,9 @@ a.np-body:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); 
 #roomSearch:focus{ outline:none; box-shadow: var(--ring); }
 .chip.toggle{ cursor:pointer; }
 .chip.toggle.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
-/* P5: rooms was a single column of full-width cards → 9.1k px wall; 2-up at ≥1100px */
-@media (min-width: 1100px){ #roomsGrid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: var(--s4); align-items: stretch; } }
+/* P5 REVERTED: #roomsGrid already carries .grid (1/2/3/4-col at 560/920/1400) — the P5 override
+   forced 2-col at ≥1100, which is LESS dense than .grid's native 4-col (measured 9608 vs 8307px
+   at 1500) and made columns DROP 3→2 as the window widened past 1100. Letting .grid govern. */
 .room-card{ background: var(--bg-soft); border:1px solid var(--line); border-left:4px solid var(--line); border-radius: var(--r-md); padding: var(--s5); box-shadow: var(--shadow); display:flex; flex-direction:column; gap:.4rem; }
 .room-card.tier-budget{ border-left-color: var(--ok-fill); }
 .room-card.tier-mid{ border-left-color: var(--indigo); }

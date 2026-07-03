@@ -920,6 +920,17 @@ function openSidePanel(ev, trigger) {
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
   panel.querySelector('#spBackdrop')?.addEventListener('click', closeSidePanel);
+  // Notion-style click-away: the backdrop lives inside the panel's transform stacking context,
+  // so it never actually covers the page — catch outside pointerdowns at the document instead.
+  // Clicking another event chip just switches the panel; open dialogs are left alone.
+  if (!document._spAway) {
+    document._spAway = true;
+    document.addEventListener('pointerdown', (e) => {
+      if (!_sidePanelEv) return;
+      if (e.target.closest('.sp-inner, [data-ev], .modal-overlay, .app-modal, .dp-overlay, .lp-menu')) return;
+      closeSidePanel();
+    });
+  }
   panel.querySelector('#spGoing')?.addEventListener('click', () => { toggleGoingEv(ev); openSidePanel(ev, _sidePanelTrigger); });
   if (isBaked) {
     panel.querySelector('#spReset')?.addEventListener('click', () => { const { [ev.id]: _d, ...o } = loadOverrides(); saveOverrides(o); closeSidePanel(); });

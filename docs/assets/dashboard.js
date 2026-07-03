@@ -117,7 +117,8 @@ function renderReadiness() {
           <a href="#/budget">Budget ${esc(bLabel)}</a>
         </div>
       </div>
-    </div>`;
+    </div>
+    ${yearStatsHTML()}`;
     return;
   }
 
@@ -342,6 +343,16 @@ function renderWxStrip() {
     + (w.rainPct != null && w.rainPct > 0 ? ` · <span aria-hidden="true">☔</span> <span class="sr-only">rain </span>${esc(String(w.rainPct))}% <span class="wx-dim">today</span>` : '')
     + (w.sunrise && w.sunset ? ` <span class="wx-dim">· <span aria-hidden="true">🌅</span><span class="sr-only">sunrise </span>${esc(w.sunrise)} <span aria-hidden="true">🌇</span><span class="sr-only">sunset </span>${esc(w.sunset)}</span>` : '');
 }
+// "year so far" stat strip (expansion ledger S7) — read-only, derived from existing stores;
+// fills the Settling-in card's spare space instead of orphaning a 7th grid cell
+function yearStatsHTML() {
+  const visited = loadPlaces().filter(p => p.visited).length;
+  const attended = allEvents().filter(e => isGoing(e.id) && (e.endDate || e.date).slice(0, 10) < TODAY).length;
+  const tasksDone = Object.keys(get(KEYS.checklist, {}) || {}).length;
+  const st = (n, label) => `<span class="ys-stat"><b>${esc(String(n))}</b> ${esc(label)}</span>`;
+  return `<div class="ys-strip">${st(visited, 'places visited')}<span aria-hidden="true">·</span>${st(attended, 'events attended')}<span aria-hidden="true">·</span>${st(tasksDone, 'tasks done')}</div>`;
+}
+
 // ¥→USD for the budget teaser (er-api, keyless). 24h TTL — FX day-precision is plenty here.
 let fxInFlight = false;
 async function refreshRates() {

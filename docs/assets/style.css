@@ -157,6 +157,10 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* ONE line — the trailing sun times give way on narrow cards */
 .wx-strip .wx-dim{ color: var(--ink-faint); }
 
+/* Settling-in: "year so far" stat strip (S7) */
+.ys-strip{ display:flex; gap:.5rem; align-items:baseline; flex-wrap:wrap; margin-top:.55rem; padding-top:.5rem; border-top:1px dashed var(--line); font-size:.74rem; color: var(--ink-faint); }
+.ys-strip .ys-stat b{ font-family: var(--mono); font-size:.9rem; color: var(--ink); }
+
 /* Going: inline location editor (✎) */
 .going-loc{ background:none; border:none; color: var(--indigo-ink); font: inherit; font-size:.74rem; cursor:pointer; padding:0 .15rem; }
 .going-loc:hover{ text-decoration: underline; }

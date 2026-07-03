@@ -67,7 +67,7 @@ one PR; if it grows, split it.
       pin/filter system (golden-hour spots, skyline views). Data + one filter chip.
 - [x] **S6 — Typhoon-season emergency data (A5).** *(6-item prep list + Adachi/Arakawa floodplain note on #/emergency; shipped well before August; PR #23, SW v200)* Prep list + JMA advisory note on
       #/emergency. Content only. **Ship before August.**
-- [ ] **S7 — Year-in-review stats widget (B4).** Read-only dashboard widget from existing
+- [x] **S7 — Year-in-review stats widget (B4).** *(stat strip inside the Settling-in card — places visited / events attended / tasks done; no 7th grid orphan; PR #29, SW v205)* Read-only dashboard widget from existing
       stores: places visited, events attended (past ✓ Going), tasks done, days in.
 - [ ] **S8 — Monthly content re-research routine.** Cloud routine (like the daily PR sweep)
       that re-runs the A1 research monthly and opens a data PR; the sweep reviews/merges it.

@@ -75,11 +75,13 @@ function boot() {
       const loadPhrases = () => {
         if (phrasesLoaded) return;
         phrasesLoaded = true;
-        import('./phrasesboot.js').then(m => m.mountPhrasesBundle(data))
-          .catch(err => { phrasesLoaded = false; console.error('[boot] phrases bundle', err); });
+        const view = document.getElementById('view-phrases');
+        view?.setAttribute('aria-busy', 'true');   // dims + disables the static toolbar until the mounts land (see CSS)
+        import('./phrasesboot.js').then(m => { m.mountPhrasesBundle(data); view?.removeAttribute('aria-busy'); })
+          .catch(err => { phrasesLoaded = false; view?.removeAttribute('aria-busy'); console.error('[boot] phrases bundle', err); });
       };
       document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'phrases') loadPhrases(); });
-      if (/#\/?phrases/.test(location.hash)) loadPhrases();   // direct load / reload on the page
+      if (/^#\/?phrases$/.test(location.hash)) loadPhrases();   // direct load / reload on the page (exact match)
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
       safe(() => mountRooms(data));        // share-room finder (#/rooms)
       safe(() => mountMap(data));          // map page (#/map)

@@ -2,7 +2,7 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v206';
+const CACHE = 'jwh-v207';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js',
@@ -26,6 +26,25 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
+  // EF2: tips.json is 156KB gz and was re-downloaded on EVERY load (page fetches no-store;
+  // this handler re-fetched with cache:'reload'). Stale-while-revalidate instead: serve the
+  // SW-cached copy instantly, refresh the cache in the background. Trade-off (deliberate,
+  // owner-approved in the efficiency plan): a data deploy shows on the NEXT load, not the
+  // current one. Code/asset updates keep the network-first guarantee below.
+  if (url.pathname.endsWith('/data/tips.json')) {
+    e.respondWith(caches.match(e.request).then(cached => {
+      const net = fetch(e.request, { cache: 'reload' }).then(resp => {
+        if (resp && resp.ok && resp.status === 200 && resp.type !== 'opaque') {
+          const copy = resp.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+        }
+        return resp;
+      });
+      if (cached) { e.waitUntil(net.catch(() => {})); return cached; }   // instant paint; refresh lands for next visit
+      return net.catch(() => caches.match('data/tips.json'));            // first load / cold cache: network (or precache)
+    }));
+    return;
+  }
   e.respondWith(
     // cache:'reload' bypasses the BROWSER http-cache so network-first truly hits the network —
     // otherwise a deploy can be shadowed by the browser's own cached copy (GH Pages sends

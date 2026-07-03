@@ -24,13 +24,14 @@ function reveal() {
   if (!view) return;
   const route = view.id || 'view';
   if (shown.has(route)) return;          // first visit only
-  shown.add(route);
-  if (reduced() || typeof Element.prototype.animate !== 'function') return;
+  if (reduced() || typeof Element.prototype.animate !== 'function') { shown.add(route); return; }
   // Pick ONE strategy per view so motion never compounds (a block rising AND its rows rising):
   // stagger list rows on list-heavy views, else cascade the top-level cards/blocks.
   const rows = visibleSlice(view, LIST_SEL, 16);
   const useRows = rows.length >= 3;
   const targets = useRows ? rows : visibleSlice(view, CARD_SEL, 12);
+  if (!targets.length) return;           // lazy view still importing (EF1) — don't burn its one animation on an empty shell
+  shown.add(route);
   const step = useRows ? 32 : 45;        // rows are smaller/more numerous → tighter stagger
   targets.forEach((el, i) => {
     el.animate(

@@ -358,6 +358,7 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 .grid { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
 @media (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 920px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1400px) { .grid { grid-template-columns: repeat(4, 1fr); } }   /* P4: wide screens got 3 squat columns + a 25.8k-px scroll wall */
 .grid.cols-2 { grid-template-columns: 1fr; }
 @media (min-width: 700px) { .grid.cols-2 { grid-template-columns: repeat(2, 1fr); } }
 

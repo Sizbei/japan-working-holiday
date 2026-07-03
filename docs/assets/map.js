@@ -70,8 +70,8 @@ function fromHomeLine(pt) {
 }
 
 // ---- filter state (persisted) ----
-const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet' };
-const CAT_GLYPH = { music: '🎵', geek: '🕹️', build: '🏙️', food: '🍜', meet: '👥', disney: '🏰', seasonal: '🎏', personal: '📍', stay: '🏠', event: '📅', mine: '⭐' };
+const SRC_CAT = { music: 'music', livemusic: 'music', geek: 'geek', building: 'build', restaurants: 'food', activities: 'seasonal', disney: 'disney', meetups: 'meet', photoSpots: 'photo' };
+const CAT_GLYPH = { photo: '📷', music: '🎵', geek: '🕹️', build: '🏙️', food: '🍜', meet: '👥', disney: '🏰', seasonal: '🎏', personal: '📍', stay: '🏠', event: '📅', mine: '⭐' };
 // emoji by calendar category (events) — shown beside event names in lists + popups
 const EVENT_EMOJI = { festival: '🎏', fireworks: '🎆', illumination: '✨', convention: '🎫', seasonal: '🍡', nature: '🌿', holiday: '🎌', food: '🍜', disney: '🏰', music: '🎵', personal: '📌', imported: '📅' };
 // emoji by source pillar — shown beside catalogue places in the area index
@@ -86,7 +86,7 @@ const isKaomoji = (g) => !!g && [...g].length > 2;
 const FILTER_CATS = [
   { key: 'event', label: 'Events' }, { key: 'music', label: 'Music' }, { key: 'food', label: 'Food' },
   { key: 'geek', label: 'Geek' }, { key: 'build', label: 'Buildings' }, { key: 'meet', label: 'Meetups' },
-  { key: 'disney', label: 'Disney' }, { key: 'stay', label: 'Stays' }, { key: 'mine', label: 'Yours' },
+  { key: 'disney', label: 'Disney' }, { key: 'photo', label: 'Photo' }, { key: 'stay', label: 'Stays' }, { key: 'mine', label: 'Yours' },
 ];
 function filters() { return { hidden: [], area: 'all', text: '', ...(get(KEYS.mapFilters, {}) || {}) }; }
 function setFilters(f) { set(KEYS.mapFilters, f); }
@@ -245,8 +245,10 @@ export function placesModel() {
     if (seenId.has(id) || seenName.has(nm)) return; seenId.add(id); seenName.add(nm);
     const area = i.area || i.area_or_park || '';
     const c = centroid(DATA.areaGeo, areaOf(area)), j = jitter(i.name);
+    // catalogue items that carry REAL coords (photoSpots) pin exactly; others centroid+jitter
+    const exact = typeof i.lat === 'number' && typeof i.lng === 'number';
     out.push({ id, kind: 'catalogue', pillar, name: i.name, area, group: areaOf(area),
-      lat: c.lat + j.dy, lng: c.lng + j.dx, cat: SRC_CAT[pillar], coordKind: 'approx' });
+      lat: exact ? i.lat : c.lat + j.dy, lng: exact ? i.lng : c.lng + j.dx, cat: SRC_CAT[pillar], coordKind: exact ? 'exact' : 'approx' });
   }));
   (DATA.rooms || []).forEach(r => {
     if (!r.name) return;
@@ -398,7 +400,7 @@ function glyphFor(pt) {
   if (pt.kind === 'user' && pt.home) return '⛩️';
   if (pt.kind === 'user' && pt.emoji && !isKaomoji(pt.emoji)) return pt.emoji;
   const b = bucketOf(pt);
-  return ({ event: 'E', music: '♪', food: 'F', geek: 'G', build: 'B', meet: 'M', disney: 'D', stay: 'H', mine: '★' })[b] || '•';
+  return ({ event: 'E', music: '♪', food: 'F', geek: 'G', build: 'B', meet: 'M', disney: 'D', stay: 'H', mine: '★', photo: '✦' })[b] || '•';
 }
 
 function renderPins() {

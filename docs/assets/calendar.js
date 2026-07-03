@@ -135,7 +135,13 @@ export function mountCalendar(data, today) {
   buildLegend();
   render();
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route !== 'calendar') { closeSidePanel(); dismissPopover(); } });   // the side panel + day popover are portaled to <body> (fixed) — close them when leaving the calendar so they don't hang over other pages
-  document.addEventListener('jwh:data-changed', render);   // panel re-renders here; render() never dispatches changed → no loop
+  // EF3: while the calendar is hidden, a data change marks it dirty instead of re-rendering
+  // the whole month grid (render on next entry). The _evCache invalidation listener above is
+  // separate and stays unconditional — other pages read allEvents() fresh.
+  document.addEventListener('jwh:data-changed', () => {
+    if (document.getElementById('view-calendar')?.classList.contains('is-active')) render();
+    else _calDirty = true;
+  });
   document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
   document.addEventListener('keydown', onCalKeydown);      // Notion-style: ←→↑↓ move days, Enter open, − remove, t today, n new
   // right-click an event → context menu (delegated on document: the day popover lives on <body>,
@@ -388,8 +394,10 @@ function alignRail() {
     p.style.maxHeight = Math.round(g.getBoundingClientRect().bottom - p.getBoundingClientRect().top) + 'px';
   } else { p.style.maxHeight = ''; }
 }
+let _calDirty = false;
 document.addEventListener('jwh:route', (e) => {
   if (e.detail?.route !== 'calendar') return;
+  if (_calDirty) { _calDirty = false; render(); }   // EF3: catch up on changes made while hidden
   requestAnimationFrame(alignRail);
   setTimeout(alignRail, 300);   // again after the view transition settles — the rAF can land mid-swap
 });

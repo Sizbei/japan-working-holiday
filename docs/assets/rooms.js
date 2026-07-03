@@ -47,7 +47,13 @@ function saveNote(id, val) {
 export function mountRooms(data) {
   DATA = data;
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'rooms') ensureRendered(); });
-  document.addEventListener('jwh:data-changed', () => { if (rendered) render(); });
+  let roomsDirty = false;   // EF3: hidden → dirty; catch up on entry
+  document.addEventListener('jwh:data-changed', () => {
+    if (!rendered) return;
+    if (document.getElementById('view-rooms')?.classList.contains('is-active')) render();
+    else roomsDirty = true;
+  });
+  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'rooms' && roomsDirty && rendered) { roomsDirty = false; render(); } });
 }
 
 function ensureRendered() {

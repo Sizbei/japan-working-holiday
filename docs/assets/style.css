@@ -3136,3 +3136,6 @@ ruby > rt {
   .cal-mininav{ top: 0; }
   .cal-panel{ top: 0; }   /* this layout displaces sticky by its offset even at rest — 0 = flush with the grid header */
 }
+
+/* EF1 review: while the phrases bundle lazy-loads, its static toolbar is visibly inert */
+#view-phrases[aria-busy="true"] .jtools, #view-phrases[aria-busy="true"] button{ opacity:.45; pointer-events:none; }

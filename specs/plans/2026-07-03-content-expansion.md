@@ -65,7 +65,7 @@ one PR; if it grows, split it.
       office/bank/phone reality) + phrases (izakaya, barber, redelivery). Content only.
 - [x] **S5 — Photo-spots map layer (B3).** *(8 exact-coord spots + Photo filter chip + catalogue exact-coord passthrough; PR #20, SW v197)* New catalogue category riding the existing
       pin/filter system (golden-hour spots, skyline views). Data + one filter chip.
-- [ ] **S6 — Typhoon-season emergency data (A5).** Prep list + JMA advisory note on
+- [x] **S6 — Typhoon-season emergency data (A5).** *(6-item prep list + Adachi/Arakawa floodplain note on #/emergency; shipped well before August; PR #23, SW v200)* Prep list + JMA advisory note on
       #/emergency. Content only. **Ship before August.**
 - [ ] **S7 — Year-in-review stats widget (B4).** Read-only dashboard widget from existing
       stores: places visited, events attended (past ✓ Going), tasks done, days in.

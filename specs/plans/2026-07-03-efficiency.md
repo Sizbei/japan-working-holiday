@@ -17,8 +17,8 @@ before/after metrics, extensive review (critics on anything non-trivial).
       revalidate in the background (data at most one visit stale). NOTE: softens the
       "updates always land when online" guarantee to "…by the next load" for tips.json only —
       flag to owner in the PR.
-- [ ] **EF3 — Don't re-render hidden views.** calendar/checklist re-render on every
+- [x] **EF3 — Don't re-render hidden views.** *(dispatch cost 10ms→~0-2ms; adversarially reviewed pre-merge, SIGN-OFF; double-render findings fixed; PR #33, SW v208)* calendar/checklist re-render on every
       jwh:data-changed even when off-route (map already defers via pinsDirty). Dirty-flag +
       render-on-entry, preserving the single-path data flow.
-- [ ] **EF4 — boot double-work audit.** mount + first jwh:route both trigger refresh paths
+- [x] **EF4 — boot double-work audit.** *(audit found only the documented-intentional dashboard teaser dual-trigger, sub-ms — closed with no action)* mount + first jwh:route both trigger refresh paths
       (dashboard refresh ran twice pre-weather-dedup; sweep for remaining doubles).

@@ -154,7 +154,11 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 
 /* the Today widget's local-weather strip (Open-Meteo) */
 .wx-strip{ font-family: var(--mono); font-size:.76rem; color: var(--ink); margin: 0 0 .45rem;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* ONE line — the trailing sun times give way on narrow cards */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  position: relative; }   /* ONE line — sun times give way on narrow cards. position:relative is
+                             load-bearing: the .sr-only spans (rain/sunrise/sunset) are absolute
+                             and would otherwise anchor to .widget at their far-right nowrap
+                             position, escaping this clip and adding ~108px of mobile page overflow */
 .wx-strip .wx-dim{ color: var(--ink-faint); }
 
 /* Settling-in: "year so far" stat strip (S7) */
@@ -569,7 +573,10 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .dash{ display:grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4);
   max-width: var(--maxw); margin: 0 auto var(--s8); padding: 0 1.5rem; }
 .widget{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius);
-  padding: var(--s3); box-shadow: var(--shadow); min-height: 104px; position: relative; }
+  padding: var(--s3); box-shadow: var(--shadow); min-height: 104px; position: relative;
+  min-width: 0; }   /* grid items default to min-width:auto (min-content) — the nowrap weather strip
+                       otherwise blows the widget past a 390px viewport; this lets the track shrink
+                       so .wx-strip's overflow:hidden/ellipsis actually clips */
 .widget-h{ margin:0 0 .4rem; font-size:.76rem; text-transform: uppercase; letter-spacing:.04em; color: var(--ink-soft); }
 .widget-body ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.4rem; }
 .widget-body li{ font-size:.83rem; line-height:1.3; border-left:3px solid var(--line); padding-left:.5rem; }

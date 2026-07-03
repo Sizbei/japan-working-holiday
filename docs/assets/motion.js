@@ -12,14 +12,23 @@ export function prefersReducedMotion() {
 
 // Run a DOM-swap inside a transition. Stable regions (topbar/hero/route-nav) carry a
 // view-transition-name so they don't cross-fade — only the swapped view does.
+let vtActive = false;
 export function transitionView(updateFn) {
-  if (prefersReducedMotion() || !document.startViewTransition) {
+  // skip a fresh transition while one is already running (rapid nav / held-down ]) — starting a
+  // second one aborts the first, and its ready/updateCallbackDone promises reject UNHANDLED
+  // ("Transition was aborted because of invalid state"). Just swap instantly instead.
+  if (prefersReducedMotion() || !document.startViewTransition || vtActive) {
     updateFn();
     return Promise.resolve();
   }
   try {
-    return document.startViewTransition(updateFn).finished.catch(() => {});
+    vtActive = true;
+    const vt = document.startViewTransition(updateFn);
+    vt.ready.catch(() => {});               // all three promises reject on abort — swallow each
+    vt.updateCallbackDone.catch(() => {});
+    return vt.finished.catch(() => {}).finally(() => { vtActive = false; });
   } catch {
+    vtActive = false;
     updateFn();
     return Promise.resolve();
   }

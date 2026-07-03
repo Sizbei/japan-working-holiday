@@ -69,7 +69,7 @@ one PR; if it grows, split it.
       #/emergency. Content only. **Ship before August.**
 - [x] **S7 — Year-in-review stats widget (B4).** *(stat strip inside the Settling-in card — places visited / events attended / tasks done; no 7th grid orphan; PR #29, SW v205)* Read-only dashboard widget from existing
       stores: places visited, events attended (past ✓ Going), tasks done, days in.
-- [ ] **S8 — Monthly content re-research routine.** Cloud routine (like the daily PR sweep)
+- [x] **S8 — Monthly content re-research routine.** *(cloud routine trig_01HJBB1KZMRHTY5QfZBwk8zm: 1st of each month 10:00 JST → research → data PR → the daily sweep reviews/merges; first run Aug 1)* Cloud routine (like the daily PR sweep)
       that re-runs the A1 research monthly and opens a data PR; the sweep reviews/merges it.
 - [ ] **S9 — Pollen/air-quality strip (B5a).** Open-Meteo air-quality on the weather strip.
       **Scheduled: late January 2027** (kafun season).

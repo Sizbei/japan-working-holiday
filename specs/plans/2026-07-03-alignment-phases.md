@@ -8,10 +8,10 @@ gaps off the 8-based scale. Ledes' 64ch cap is intentional typography — NOT wa
 - [ ] **P1 Dashboard row balance** — 5 teasers into a balanced grid (no empty cells); hero→widgets gap 37→32.
 - [x] **P2 Explore section rhythm** — the 51/42px gaps decoded as s12(48)/s10(40) separators + borders → ON-scale composites (sweep tolerance now includes 40/48); the real bug was the brew→#discoverBar 0px collision, fixed with an s10 margin.
 - [x] **P3 Explore toolbar** — FALSE POSITIVE: the row is align-items:center and the centers match exactly (delta 0.0px); the sweep compared tops of different-height elements. Closed by precision measurement; sweep gate updated to compare centers.
-- [ ] **P4 Explore density** — pillar card grids one column denser at ≥1400px (shrink the 25k wall).
-- [ ] **P5 Rooms density** — same treatment for the 9k wall.
-- [ ] **P6 Going width use** — 2-col going-rows at wide viewports (page is 386px of content in a 950px shell).
-- [ ] **P7 Plan spacing** — rail→body 3px→scale gap; stop-row baseline audit.
+- [x] **P4 Explore density** *(4-col pillar grids ≥1400px, −870px; the remaining wall is the findings library — reading lists by design; PR #36)* — — pillar card grids one column denser at ≥1400px (shrink the 25k wall).
+- [x] **P5 Rooms density** *(#roomsGrid 2-up ≥1100px: in-page A/B 16,289→9,608px, −41%; PR #37)* — — same treatment for the 9k wall.
+- [x] **P6 Going width use** *(#goingList 2-up ≥1100px, empty-state spans; PR #37)* — — 2-col going-rows at wide viewports (page is 386px of content in a 950px shell).
+- [x] **P7 Plan spacing** *(rail→body 3→13px via s3 margin; stop-row audit clean; PR #37)* — — rail→body 3px→scale gap; stop-row baseline audit.
 - [ ] **P8 Rhythm snap** — remaining off-scale gaps (17→16, 21/22→20, 26→24) via section margins.
 - [ ] **P9 Header block unification** — jp-glyph + h2 + rule + lede spacing identical across pages.
 - [ ] **P10 Verification** — full re-sweep (target: zero odd gaps/offsets), 10-route screenshots, tests, adversarial review.

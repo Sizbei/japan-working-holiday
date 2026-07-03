@@ -30,6 +30,7 @@ function goingEvents() {
 }
 
 function render() {
+  TODAY = nowISO();   // a tab open across midnight must not filter/label against yesterday (review note)
   const wrap = $('#goingList'); if (!wrap) return;
   const all = goingEvents();
   const cats = [...new Set(all.map(e => e.category || 'personal'))].sort();

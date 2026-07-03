@@ -2168,7 +2168,7 @@ html[data-reduce-motion="on"]::view-transition-new(*){ animation: none !importan
 
 
 /* ---- teasers ---- */
-#view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s3); margin-top: var(--s4); }
+#view-dashboard .dash-teasers{ display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s3); margin-top: var(--s4); }   /* P1: 4 teasers → one full row (3-col left two dead cells) */
 #view-dashboard .teaser{ border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: .55rem .8rem; }
 #view-dashboard .teaser-h{ display: block; font-family: var(--mono); font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: .4rem; }
 #view-dashboard .teaser-body a{ font-family: var(--serif); font-size: .92rem; color: var(--ink); text-decoration: none; display: flex; justify-content: space-between; gap: .5rem; align-items: center; min-height: 44px; }

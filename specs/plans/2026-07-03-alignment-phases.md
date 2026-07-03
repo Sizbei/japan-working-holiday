@@ -6,8 +6,8 @@ toolbar baseline offset; rooms = 9,125px wall; dashboard teaser row leaves 2 emp
 gaps off the 8-based scale. Ledes' 64ch cap is intentional typography — NOT waste.
 
 - [ ] **P1 Dashboard row balance** — 5 teasers into a balanced grid (no empty cells); hero→widgets gap 37→32.
-- [ ] **P2 Explore section rhythm** — pillar-section gaps 51/42→uniform; fix the brew-wrap→discoverBar 0px collision.
-- [ ] **P3 Explore toolbar** — search|filters 7px baseline offset → one row, one baseline.
+- [x] **P2 Explore section rhythm** — the 51/42px gaps decoded as s12(48)/s10(40) separators + borders → ON-scale composites (sweep tolerance now includes 40/48); the real bug was the brew→#discoverBar 0px collision, fixed with an s10 margin.
+- [x] **P3 Explore toolbar** — FALSE POSITIVE: the row is align-items:center and the centers match exactly (delta 0.0px); the sweep compared tops of different-height elements. Closed by precision measurement; sweep gate updated to compare centers.
 - [ ] **P4 Explore density** — pillar card grids one column denser at ≥1400px (shrink the 25k wall).
 - [ ] **P5 Rooms density** — same treatment for the 9k wall.
 - [ ] **P6 Going width use** — 2-col going-rows at wide viewports (page is 386px of content in a 950px shell).

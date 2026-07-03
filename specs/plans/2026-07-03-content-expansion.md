@@ -63,7 +63,7 @@ one PR; if it grows, split it.
       allEvents() at the top of #/explore. Verify: CDP — matches calendar data, zero mutations.
 - [x] **S4 — Post-arrival findings + phrase packs (A3+A4).** *(8 findings across 4 domains + 10 phrases in 3 packs; authored directly after 2 research agents stalled — 2026-policy facts flagged medium; PR #19, SW v196)* New domains[] findings (ward
       office/bank/phone reality) + phrases (izakaya, barber, redelivery). Content only.
-- [ ] **S5 — Photo-spots map layer (B3).** New catalogue category riding the existing
+- [x] **S5 — Photo-spots map layer (B3).** *(8 exact-coord spots + Photo filter chip + catalogue exact-coord passthrough; PR #20, SW v197)* New catalogue category riding the existing
       pin/filter system (golden-hour spots, skyline views). Data + one filter chip.
 - [ ] **S6 — Typhoon-season emergency data (A5).** Prep list + JMA advisory note on
       #/emergency. Content only. **Ship before August.**

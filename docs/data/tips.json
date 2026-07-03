@@ -11241,5 +11241,103 @@
     }
    ]
   }
+ ],
+ "photoSpots": [
+  {
+   "name": "Shibuya Sky sunset deck",
+   "detail": "Open-air rooftop over the scramble — THE Tokyo skyline shot.",
+   "how_or_when": "Book the sunset slot days ahead online; tripods banned, bring a wrist strap.",
+   "area_or_park": "Shibuya",
+   "lat": 35.6591,
+   "lng": 139.7027,
+   "price_or_cost": "¥2,500",
+   "tier": "S",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Tokyo Metropolitan Gov. North Observatory",
+   "detail": "Free 45F view — Fuji silhouette on clear winter evenings.",
+   "how_or_when": "Free; go 30 min before sunset, weekdays quieter.",
+   "area_or_park": "Shinjuku",
+   "lat": 35.6896,
+   "lng": 139.6917,
+   "price_or_cost": "free",
+   "tier": "A",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Senso-ji + Kaminarimon at dawn",
+   "detail": "Empty Nakamise and lantern shots before the crowds.",
+   "how_or_when": "Before 7:00 the approach is nearly empty; temple grounds always open.",
+   "area_or_park": "Asakusa",
+   "lat": 35.7118,
+   "lng": 139.7967,
+   "price_or_cost": "free",
+   "tier": "S",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Nakameguro canal walk",
+   "detail": "Canal-side frames — sakura in spring, lanterns + reflections at dusk.",
+   "how_or_when": "Golden hour year-round; peak (and packed) late March.",
+   "area_or_park": "Nakameguro",
+   "lat": 35.644,
+   "lng": 139.6993,
+   "price_or_cost": "free",
+   "tier": "A",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Tokyo Station from KITTE rooftop",
+   "detail": "Free garden terrace facing the red-brick Marunouchi facade.",
+   "how_or_when": "Blue hour; terrace open till 23:00 (KITTE hours).",
+   "area_or_park": "Marunouchi",
+   "lat": 35.6796,
+   "lng": 139.7645,
+   "price_or_cost": "free",
+   "tier": "A",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Yuyake Dandan sunset stairs",
+   "detail": "Yanaka's 'sunset stairs' over the shitamachi rooftops.",
+   "how_or_when": "Face west ~30 min before sunset; pairs with the Yanaka Ginza walk.",
+   "area_or_park": "Yanaka",
+   "lat": 35.7277,
+   "lng": 139.766,
+   "price_or_cost": "free",
+   "tier": "B",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Rainbow Bridge from Odaiba beach",
+   "detail": "Bridge + skyline across the bay — classic golden-hour panorama.",
+   "how_or_when": "West-facing: sunset colors behind the bridge; night mode after.",
+   "area_or_park": "Odaiba",
+   "lat": 35.63,
+   "lng": 139.7768,
+   "price_or_cost": "free",
+   "tier": "A",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "name": "Arakawa riverbank at Kita-Senju",
+   "detail": "Wide river-and-sky sunsets 10 min from home; fireworks vantage in summer.",
+   "how_or_when": "Cycle or walk the levee path; best light 1h before sunset.",
+   "area_or_park": "Kita-Senju",
+   "lat": 35.758,
+   "lng": 139.805,
+   "price_or_cost": "free",
+   "tier": "B",
+   "confidence": "high",
+   "sources": []
+  }
  ]
 }

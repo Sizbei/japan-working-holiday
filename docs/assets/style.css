@@ -3111,3 +3111,6 @@ ruby > rt {
 
 /* review fixes: chip title truncates with a real ellipsis (text-overflow is inert on flex items) */
 .expw-chip .expw-t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+
+/* Photo-spots map layer (S5) */
+.cat-photo{ background: var(--gold); }

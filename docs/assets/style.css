@@ -831,7 +831,7 @@ html.gated{ overflow: hidden; }
 .cal-layout > *{ min-width: 0; }   /* grid children can't force their track wider than the column */
 .cal-sidebar{ display:flex; flex-direction:column; gap: var(--s3); min-width: 0; overflow: hidden; }
 .cal-panel{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s4);
-  position: sticky; top: 3.2rem; max-height: calc(100vh - 4rem); overflow:auto; }
+  position: sticky; top: 3.2rem; max-height: min(calc(100vh - 4rem), 700px); overflow:auto; }   /* ≈ the month grid's height, so the rail can't run far past it */
 
 /* mini-month navigator */
 .cal-mininav{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s3);
@@ -883,7 +883,8 @@ html.gated{ overflow: hidden; }
 .cp-deadline:hover{ border-color: var(--indigo); }
 .cp-dot{ width:9px; height:9px; border-radius:50%; background: var(--sev, var(--line)); flex:none; }
 .cp-body{ display:flex; flex-direction:column; flex:1; min-width:0; }
-.cp-title{ font-size:.8rem; font-weight:600; line-height:1.25; }
+.cp-title{ font-size:.8rem; font-weight:600; line-height:1.25;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }   /* long festival names clamp to 2 lines instead of a 7-line tower */
 .cp-sub{ font-size:.7rem; color: var(--ink-soft); }
 .cp-badge{ font-size:.66rem; font-weight:700; color: var(--sev, var(--ink-soft)); white-space:nowrap; }
 .cp-empty{ font-size:.8rem; color: var(--ink-soft); margin:.2rem 0; }
@@ -2868,7 +2869,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .sp-close:hover{ border-color: var(--indigo); color: var(--ink); }
 
 /* body — mono-labelled meta grid + note + source pills */
-.sp-body{ padding: var(--s4); display: flex; flex-direction: column; gap: var(--s4); flex: 1; }
+/* Notion-style: content flows top-down and the actions sit right under it — flex:1 used to
+   push actions to the panel's very bottom, leaving a dead zone after short descriptions */
+.sp-body{ padding: var(--s4); display: flex; flex-direction: column; gap: var(--s4); }
+.sp-actions{ border-top: 1px solid var(--line); }
 .sp-meta{ display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; }
 .sp-k{ font-family: var(--mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); padding-top: 3px; }
 .sp-v{ font-size: .875rem; color: var(--ink); line-height: 1.4; }

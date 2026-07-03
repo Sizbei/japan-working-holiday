@@ -320,6 +320,16 @@
    "confidence": "low"
   },
   {
+   "id": "ev26-flight-oz271-sea-icn",
+   "title": "✈️ OZ271 SEA → ICN (Asiana)",
+   "date": "2026-06-29",
+   "category": "personal",
+   "area": "Seattle → Incheon",
+   "bookingNotes": "Dep Jun 29 16:10 PDT → arr Jun 30 04:30 KST (imported from your Google Calendar).",
+   "confidence": "high",
+   "sources": []
+  },
+  {
    "id": "ev-plan-arrival",
    "title": "Day 1 — Arrival: NRT → Makoto (soft plan)",
    "date": "2026-06-30",
@@ -332,10 +342,10 @@
    "id": "ev-sakura-house-makoto-stay",
    "title": "Makoto Guesthouse — initial stay",
    "date": "2026-06-30",
-   "endDate": "2026-07-07",
+   "endDate": "2026-07-11",
    "category": "personal",
    "area": "Adachi-ku, Tokyo (Towa, near Ayase / Kameari station)",
-   "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. Far northeast Tokyo, BUT better-connected than it feels: Ayase is on the Chiyoda line + JR Joban, so Ueno is ~20 min and central Tokyo ~25-35 min direct (not the full hour). Nearby for your first week (see Explore › Activities): Kameari KochiKame statues (1 stop), Shibamata old-town + Taishakuten, Mizumoto Park, Tateishi izakaya alley, Kita-Senju food hub, Nishiarai Daishi. Find long-term housing before checkout.",
+   "bookingNotes": "Makoto Guesthouse (Booking.com) — 2-3-9 Towa, Adachi-ku; ~10 min from Kameari/Ayase. Arrival through Jul 7. Far northeast Tokyo, BUT better-connected than it feels: Ayase is on the Chiyoda line + JR Joban, so Ueno is ~20 min and central Tokyo ~25-35 min direct (not the full hour). Nearby for your first week (see Explore › Activities): Kameari KochiKame statues (1 stop), Shibamata old-town + Taishakuten, Mizumoto Park, Tateishi izakaya alley, Kita-Senju food hub, Nishiarai Daishi. Find long-term housing before checkout. EXTENDED: second booking runs Jul 7–11 (from your Google Calendar) — checkout is Jul 11, long-term housing deadline moves with it.",
    "confidence": "high"
   },
   {
@@ -355,6 +365,16 @@
     "https://www.visamind.com/en/japan/guides/working-holiday-guide"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ev26-flight-oz102-icn-nrt",
+   "title": "✈️ OZ102 ICN → NRT (Asiana)",
+   "date": "2026-06-30",
+   "category": "personal",
+   "area": "Incheon → Narita",
+   "bookingNotes": "Dep 08:25 → arr 10:50 JST — the landing leg (imported from your Google Calendar).",
+   "confidence": "high",
+   "sources": []
   },
   {
    "id": "ev-plan-kameari",

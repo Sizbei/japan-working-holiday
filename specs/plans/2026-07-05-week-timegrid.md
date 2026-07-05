@@ -28,3 +28,9 @@ NO time field — so today nearly everything is all-day. Fixing the data is half
       untouched. Verify: click-to-open, click-empty-to-add-at-time, mobile still list, 0 console errors.
 - [x] **WG4** Verify + iterate. Full week-view CDP (desktop grid + mobile list), no page overflow,
       tests, curly guard. Screenshot to owner; iterate on spacing/typography.
+
+
+## Post-merge adversarial review (2 critics, both NO → fixed)
+- MAJOR fixed: line-311 keyboard-n selector .wk-dayhd→.wk2-dayhd; .wk2-dayhd.dnd-over CSS; copyBakedToUser now carries time/endTime; per-day keyboard add restored (＋ button in each day header, focusable).
+- Also fixed: timed .ics + gcalUrl export (floating DTSTART/DTEND + ctz=Asia/Tokyo when time present); .wk2-scroll tabindex=0; .wk2-ev explicit aria-label. (+3 export tests, 86 total.)
+- Cleared by critics: contrast BOTH themes (7.8–10:1), reduce-motion, responsive/overflow, timedOf/layoutDay edges, openModal 4th-param call sites. now-line browser-local time left as LOW (owner is JST). PR #45.

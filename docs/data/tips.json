@@ -753,6 +753,96 @@
    "sources": []
   },
   {
+   "id": "ev26-hok-d1-sapporo",
+   "date": "2026-07-15",
+   "title": "🍛 Sapporo — arrive + Susukino soup curry",
+   "category": "personal",
+   "area": "Sapporo (Susukino)",
+   "bookingNotes": "Land CTS 17:00 (Peach). JR Rapid Airport → Sapporo (~37 min, every ~15). Check in, drop bags. 18:30 Susukino soup curry — Garaku or Suage+ (short line, worth it). Wander Tanukikoji. Early night. Sapporo 1/3. (Sapporo City Jazz may have a set tonight.)",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d2-sapporo",
+   "date": "2026-07-16",
+   "title": "🍜 Sapporo city day",
+   "category": "personal",
+   "area": "Sapporo",
+   "bookingNotes": "08:00 Nijō Market uni-don (order at stalls, not sit-down). Odori Park → TV Tower. Red-brick Gov Office + Hokkaido Shrine (Maruyama). Miso-ramen lunch. PM Shiroi Koibito Park OR Sapporo Beer Museum (free, cheap tasting). 19:00 jingisukan lamb (Daruma, Susukino). 20:30 Mt. Moiwa Ropeway night view (tram→Moiwa Sanroku→free shuttle; check forecast — cloud = no view). Sapporo 2/3.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d3-otaru",
+   "date": "2026-07-17",
+   "title": "🦑 Otaru day trip",
+   "category": "personal",
+   "area": "Otaru",
+   "bookingNotes": "09:00 JR Sapporo → Otaru (~32–45 min, sit LEFT for coast). Sankaku Market breakfast. Otaru Canal + stone warehouses. Sakaimachi St — glass, music boxes, LeTAO cheesecake. Sushi lunch on Sushiya-dōri (splurge). Optional: JR to Yoichi (~25 min) Nikka Whisky tour+tasting. 17:30 back. Pack for the move. Sapporo 3/3.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d4-furano",
+   "date": "2026-07-18",
+   "title": "🌸 Sapporo → Furano (lavender begins)",
+   "category": "personal",
+   "area": "Furano",
+   "bookingNotes": "09:30 checkout. JR Sapporo → Furano: seasonal direct LEX (~2h) OR via Takikawa + Furano line (~2.5h) — CONFIRM which runs the 18th. Furano curry / omurice lunch. Norokko sightseeing train one stop → Lavender-batake stn. Farm Tomita at full bloom — striped hills, greenhouse, lavender soft-serve (mandatory); golden hour after 16:00. Last Norokko back (short seasonal timetable — check). Furano 1/2.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d5-biei",
+   "date": "2026-07-19",
+   "title": "🌻 Biei flower country",
+   "category": "personal",
+   "area": "Biei",
+   "bookingNotes": "08:30 JR Furano → Biei (~40 min). Twinkle Bus Biei day ticket. Shikisai-no-oka — patchwork flower hills + Tokachi peaks, alpacas. Lunch on the patchwork road. Twinkle Bus (Blue Pond route) → Shirogane Blue Pond (turquoise; best sunny). Shirahige Waterfall if timing lines up. 16:30 JR back to Furano. ⚠ Twinkle Bus = fixed seasonal schedule, limited departures — SCREENSHOT the Jul 2026 timetable the night before. Furano 2/2.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d6-asahidake",
+   "date": "2026-07-20",
+   "title": "♨️ Furano → Asahidake Onsen",
+   "category": "personal",
+   "area": "Asahidake Onsen",
+   "bookingNotes": "10:00 checkout. JR Furano → Asahikawa (~1h15). Asahikawa shoyu-ramen lunch (Baikohken / Tenkin) + stock snacks/water (little retail up top). 13:00 Ideyu-go / Route 66 bus, Asahikawa Stn → Asahidake Onsen (~1h30–45, only a few/day — CONFIRM). Check into onsen ryokan. First soak. Kaiseki dinner (usually included — confirm). Second soak. Don't over-schedule. Asahidake 1/2.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d7-hike",
+   "date": "2026-07-21",
+   "title": "⛰ Daisetsuzan / Asahidake hike",
+   "category": "personal",
+   "area": "Asahidake (Daisetsuzan)",
+   "bookingNotes": "07:30 big ryokan breakfast, layer up (~10–18°C up top, weather flips). 08:30 Asahidake Ropeway → Sugatami (1,600m). Sugatami alpine loop ~1.5h — volcanic vents, alpine ponds, July wildflowers. Decision: easy day back, or push Asahidake summit 2,291m (~3h up, rocky/steep — boots+water+sun, ONLY if clear & stable). Ropeway down, onsen, ryokan dinner. ⚠ Check ropeway live-cam + mountain weather before the summit. Asahidake 2/2.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d8-return",
+   "date": "2026-07-22",
+   "title": "🚄 Asahidake → Sapporo",
+   "category": "personal",
+   "area": "Sapporo",
+   "bookingNotes": "09:30 checkout. Route 66 bus → Asahikawa Stn (~1h30–45; CONFIRM the AM departure — miss it and next is hours). Optional Asahiyama Zoo (3+h, local bus) or easy lunch. 13:30 JR Asahikawa → Sapporo (Lilac / Kamui LEX ~1h25). Check into Sapporo hotel. Last-night dinner + anything missed. Sapporo night.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
+   "id": "ev26-hok-d9-sapporo",
+   "date": "2026-07-23",
+   "title": "🍺 Sapporo — Odori beer gardens open",
+   "category": "personal",
+   "area": "Sapporo",
+   "bookingNotes": "Sapporo Summer Festival beer gardens OPEN in Odori Park today — catch the opening evening. Souvenir run at Sapporo Stn (Hokkaido dairy sweets, Royce', melon). This is the BONUS day: the draft itinerary departed today, but your real flight is tomorrow (Jul 24). Sapporo night.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
    "id": "mus-fuji-rock-festival-26",
    "title": "Fuji Rock Festival '26",
    "date": "2026-07-24",

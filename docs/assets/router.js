@@ -73,6 +73,7 @@ function activate(route, { scroll = true } = {}) {
     window.scrollTo({ top: 0, behavior });
   }
   current = route;
+  document.body.dataset.route = route;   // lets CSS scope per-route (e.g. the calendar opts out of the app-shell internal scroll)
   document.dispatchEvent(new CustomEvent('jwh:route', { detail: { route } }));
 }
 

@@ -3130,6 +3130,13 @@ ruby > rt {
   .check-progress{ top: 0; }
   .cal-mininav{ top: 0; }
   .cal-panel{ top: 0; }   /* this layout displaces sticky by its offset even at rest — 0 = flush with the grid header */
+
+  /* Calendar opts OUT of the app-shell internal scroll: the whole page scrolls as one, topbar + nav
+     scroll away with it (owner: "i don't like just the calendar part scrolling"). */
+  body[data-route="calendar"] main{ height: auto; overflow: visible; }
+  body[data-route="calendar"] .topbar{ position: static; }
+  body[data-route="calendar"] .route-nav{ position: static; }
+  body[data-route="calendar"] .cal-legend{ top: 0; }   /* legend still sticks to the viewport top while the page scrolls */
 }
 
 /* EF1 review: while the phrases bundle lazy-loads, its static toolbar is visibly inert */

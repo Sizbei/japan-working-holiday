@@ -374,7 +374,9 @@
    "area": "Incheon → Narita",
    "bookingNotes": "Dep 08:25 → arr 10:50 JST — the landing leg (imported from your Google Calendar).",
    "confidence": "high",
-   "sources": []
+   "sources": [],
+   "time": "08:25",
+   "endTime": "10:50"
   },
   {
    "id": "ev-plan-kameari",
@@ -750,7 +752,9 @@
    "area": "Narita (NRT) → New Chitose (CTS)",
    "bookingNotes": "Peach · dep 15:10 → arr 17:00 (1h50m). Booking ID 1744421191. Little Japan checkout is 10:00 the SAME day — allow ~2h Asakusabashi→Narita (Keisei/NEX). Start of the Hokkaido leg.",
    "confidence": "high",
-   "sources": []
+   "sources": [],
+   "time": "15:10",
+   "endTime": "17:00"
   },
   {
    "id": "ev26-hok-d1-sapporo",
@@ -867,7 +871,9 @@
    "area": "New Chitose (CTS) → Narita (NRT)",
    "bookingNotes": "Jetstar · dep 10:30 → arr 12:10 (1h40m). Booking ID 1744421190. End of the Hokkaido leg (Jul 15–24) — you'll need Tokyo accommodation from Jul 24 onward.",
    "confidence": "high",
-   "sources": []
+   "sources": [],
+   "time": "10:30",
+   "endTime": "12:10"
   },
   {
    "id": "ev-sumida-river-fireworks-festival-sumidagawa-ha",

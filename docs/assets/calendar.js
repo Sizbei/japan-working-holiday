@@ -21,7 +21,7 @@ import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
-import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
+import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
 import { searchJP } from './lib/nominatim.js';
 
 let DATA = null;
@@ -435,36 +435,76 @@ function weekListHTML() {
     </section>`;
   }).join('') + `</div>`;
 }
+const WK_HH = 44;   // px per hour in the time grid
+
+// a single-day event's timed placement, or null if it's all-day (goes to the band).
+// no endTime, or a bad one → a default 60-min block.
+function timedOf(e) {
+  if (isMultiDay(e)) return null;
+  const start = parseHM(e.time);
+  if (start == null) return null;
+  let end = parseHM(e.endTime);
+  if (end == null || end <= start) end = Math.min(24 * 60, start + 60);
+  return { startMin: start, endMin: end };
+}
+
 function weekHTML() {
   if (isNarrowWeek()) return weekListHTML();
   const days = weekDays(weekAnchor);
   const hd = days.map(d => {
     const t = parseISO(d), dow = t.getUTCDay();
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
-    return `<div class="wk-dayhd${cls}" data-day="${esc(d)}"><span class="wk-dn">${DOW[dow]}</span><span class="wk-dd">${t.getUTCDate()}</span></div>`;
+    return `<div class="wk2-dayhd${cls}" data-day="${esc(d)}"><span class="wk2-dn">${DOW[dow]}</span><span class="wk2-dd">${t.getUTCDate()}</span></div>`;
   }).join('');
 
-  // visible events overlapping the week → multi-day BARS (lane-packed) + single-day CHIPS.
-  // allEvents()+clampSpan span events across columns without the month grid's SPAN_CAP flood-guard.
   const evs = allEvents().filter(visible);
-  const packed = packLanes(evs.filter(isMultiDay), days);          // [{ev,lane,col0,col1,contL,contR}]
+  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring)
+  const packed = packLanes(evs.filter(isMultiDay), days);
   const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);
   let lanes = '';
   for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
+  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid
+  const bandCols = Array.from({ length: 7 }, () => []);
+  const timedCols = Array.from({ length: 7 }, () => []);
+  evs.filter(e => !isMultiDay(e)).forEach(e => {
+    const i = days.indexOf(e.date.slice(0, 10)); if (i < 0) return;
+    const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
+  });
+  const chips = bandCols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
 
-  const cols = Array.from({ length: 7 }, () => []);
-  evs.filter(e => !isMultiDay(e)).forEach(e => { const i = days.indexOf(e.date.slice(0, 10)); if (i >= 0) cols[i].push(e); });
-  const chips = cols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
+  // hour gutter (JST, 24h) — a label sits at the top of each hour block
+  const hours = Array.from({ length: 24 }, (_, h) => `<div class="wk2-hr" style="height:${WK_HH}px"><span>${String(h).padStart(2, '0')}</span></div>`).join('');
 
-  // always-visible per-day add (one ＋ per column, even when bars cover the day)
-  const addrow = days.map(d => `<button type="button" class="wk-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button>`).join('');
+  // 7 day columns: hour rules (bg gradient) + absolutely-positioned timed blocks + now-line on today
+  const nowMin = (() => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); })();
+  const dayCols = days.map((d, i) => {
+    const laid = layoutDay(timedCols[i]);
+    const blocks = laid.map(b => {
+      const top = Math.round(b.startMin / 60 * WK_HH);
+      const h = Math.max(20, Math.round((b.endMin - b.startMin) / 60 * WK_HH));
+      const w = 100 / b.cols, left = b.col * w;
+      const tm = b.ev.time + (b.ev.endTime ? '–' + b.ev.endTime : '');
+      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" title="${esc(b.ev.title)}">`
+        + `<span class="wk2-etime">${esc(tm)}</span><span class="wk2-et">${esc(b.ev.title)}</span></button>`;
+    }).join('');
+    const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
+    return `<div class="wk2-col${d === TODAY ? ' today' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
+  }).join('');
 
-  return `<div class="wk-grid">
-    <div class="wk-daysrow">${hd}</div>
-    <div class="wk-addrow" aria-label="Add an event">${addrow}</div>
-    <div class="wk-allday" id="wkAllday">
-      ${lanes || '<div class="wk-lane"></div>'}
-      <div class="wk-chips">${chips}</div>
+  return `<div class="wk2">
+    <div class="wk2-head"><div class="wk2-corner"></div>${hd}</div>
+    <div class="wk2-band">
+      <div class="wk2-blabel">all-day</div>
+      <div class="wk2-bcols" id="wkAllday">
+        ${lanes || '<div class="wk-lane"></div>'}
+        <div class="wk-chips">${chips}</div>
+      </div>
+    </div>
+    <div class="wk2-scroll" id="wkScroll">
+      <div class="wk2-inner" style="height:${24 * WK_HH}px">
+        <div class="wk2-hours">${hours}</div>
+        ${dayCols}
+      </div>
     </div>
   </div>`;
 }
@@ -492,12 +532,28 @@ function wireWeek() {
   makeMovable(view, {
     itemSelector: '.wk-chip[data-id]', label: 'event',
     idOf: el => el.dataset.id,
-    targetSelector: '.wk-dayhd[data-day]', keyOf: t => t.dataset.day,
+    targetSelector: '.wk2-dayhd[data-day]', keyOf: t => t.dataset.day,
     onMove: rescheduleEvent,
   });
+  // click an EMPTY spot in a day column → new event at that day + rounded hour (grid view only)
+  $$('#calView .wk2-col[data-day]').forEach(col => col.addEventListener('click', (e) => {
+    if (e.target.closest('.wk2-ev')) return;                  // a block owns its own click → panel
+    const rect = col.getBoundingClientRect();
+    const min = Math.max(0, Math.min(23 * 60, Math.round((e.clientY - rect.top) / WK_HH * 60 / 30) * 30));
+    const hh = String(Math.floor(min / 60)).padStart(2, '0'), mm = String(min % 60).padStart(2, '0');
+    openModal(null, col.dataset.day, '', `${hh}:${mm}`);
+  }));
+  // auto-scroll the hour grid to ~7am (or an hour before "now" if today is in view)
+  const scroll = $('#wkScroll');
+  if (scroll && !scroll.dataset.scrolled) {
+    scroll.dataset.scrolled = '1';
+    const days = weekDays(weekAnchor);
+    const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
+    scroll.scrollTop = target * WK_HH;
+  }
   // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Going/Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.
-  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id]').forEach(el => el.addEventListener('click', () => {
+  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id], #calView .wk2-ev[data-id]').forEach(el => el.addEventListener('click', () => {
     if (_wkResizeSuppressClick) return;                       // a resize drag just ended on this bar — don't also open it
     const ev = allEvents().find(x => x.id === el.dataset.id);
     if (ev) openSidePanel(ev, el);
@@ -1073,8 +1129,8 @@ function srcline(s) {
 }
 
 // ---- add/edit modal ----
-function openModal(ev, presetDate, presetEnd) {
-  const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: presetEnd || '', time: '', category: 'personal', note: '' };
+function openModal(ev, presetDate, presetEnd, presetTime) {
+  const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: presetEnd || '', time: presetTime || '', endTime: '', category: 'personal', note: '' };
   // preserve a non-standard (e.g. imported .ics) category instead of silently rewriting it to the first option
   const cats = (e.category && !CATS.includes(e.category)) ? [e.category, ...CATS] : CATS;
   const opts = cats.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
@@ -1085,7 +1141,11 @@ function openModal(ev, presetDate, presetEnd) {
       <label>Title<input name="title" value="${esc(e.title)}" required></label>
       <div class="row2">
         <label>Date<input name="date" type="date" value="${esc((e.date || '').slice(0, 10))}" required></label>
-        <label>End (optional)<input name="endDate" type="date" value="${esc((e.endDate || '').slice(0, 10))}"></label>
+        <label>End date (optional)<input name="endDate" type="date" value="${esc((e.endDate || '').slice(0, 10))}"></label>
+      </div>
+      <div class="row2">
+        <label>Start time (optional)<input name="time" type="time" value="${esc(e.time || '')}"></label>
+        <label>End time (optional)<input name="endTime" type="time" value="${esc(e.endTime || '')}"></label>
       </div>
       <div class="row2">
         <label>Category<select name="category">${opts}</select></label>
@@ -1110,6 +1170,8 @@ function openModal(ev, presetDate, presetEnd) {
     const obj = Object.fromEntries(new FormData(sub.target).entries());
     if (!obj.title.trim() || !obj.date) return;
     if (obj.endDate && obj.endDate < obj.date) { alertModal('End date can’t be before the start date.'); return; }   // else the event is invisible on the grid but counts in alerts
+    if (obj.endTime && !obj.time) { alertModal('Add a start time before an end time.'); return; }
+    if (obj.time && obj.endTime && !obj.endDate && obj.endTime <= obj.time) { alertModal('End time must be after the start time (same day).'); return; }
     const u = (ev && ev.id)
       ? loadUser().map(x => x.id === ev.id ? { ...x, ...obj } : x)
       : [...loadUser(), { id: 'u' + Date.now(), ...obj }];

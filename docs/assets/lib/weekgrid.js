@@ -102,3 +102,44 @@ export function packLanes(events, days) {
 
   return items;
 }
+
+/**
+ * Parse "HH:MM" (24h) → minutes since midnight, or null if not a valid time.
+ * Pure. Used by the week time-grid to place timed events.
+ */
+export function parseHM(s) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(s || '').trim());
+  if (!m) return null;
+  const h = +m[1], mi = +m[2];
+  if (h > 23 || mi > 59) return null;
+  return h * 60 + mi;
+}
+
+/**
+ * Lay out a day's timed events into side-by-side columns for overlaps.
+ * Input: [{ id, startMin, endMin }] (endMin > startMin). Output: same items with
+ * { col, cols } added — col = 0-based column, cols = total columns in that overlap
+ * cluster. Greedy interval partitioning (the "meeting rooms" algorithm). Pure.
+ */
+export function layoutDay(events) {
+  const items = [...(events || [])].sort((a, b) => a.startMin - b.startMin || a.endMin - b.endMin);
+  let cluster = [];
+  let clusterEnd = -1;
+  const out = [];
+  const flush = () => {
+    const cols = cluster.reduce((m, it) => Math.max(m, it.col + 1), 0);
+    cluster.forEach(it => { it.cols = cols; out.push(it); });
+    cluster = [];
+  };
+  for (const it of items) {
+    if (cluster.length && it.startMin >= clusterEnd) flush();
+    // assign the lowest free column within the current cluster
+    const taken = new Set(cluster.filter(c => c.endMin > it.startMin).map(c => c.col));
+    let col = 0; while (taken.has(col)) col++;
+    it.col = col;
+    cluster.push(it);
+    clusterEnd = Math.max(clusterEnd, it.endMin);
+  }
+  flush();
+  return out;
+}

@@ -389,7 +389,7 @@ function render() {
 // rail scrolls internally instead of running past the month. Boot renders while the view is
 // hidden (rects are 0), so this also re-runs on every entry to #/calendar. Non-month uncaps.
 function alignRail() {
-  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-grid');
+  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-weeks');
   if (!p) return;
   if (mode === 'month' && g && g.offsetHeight > 300) {
     p.style.maxHeight = Math.round(g.getBoundingClientRect().bottom - p.getBoundingClientRect().top) + 'px';
@@ -653,33 +653,50 @@ function wireWeekDragCreate() {
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
+const MONTH_LANES = 3;        // max spanning-bar lanes shown per week (overflow → "+N more")
+const MONTH_SINGLES = 2;      // single-day chips shown per cell before overflow
+
+// Notion-style month: 6 week-rows. Multi-day events render as ONE continuous bar per week
+// (lane-packed, with ‹/› arrows where they wrap), reusing the week view's packLanes(); single-day
+// events stay as chips below the reserved bar lanes.
 function monthHTML() {
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  // stable 6-row grid: monthGrid() yields 42 cells {iso, day, inMonth}; out-of-month days render dimmed
-  const cells = monthGrid(viewY, viewM).flat().map((c, i) => {
-    const date = c.iso;
-    const weekend = (i % 7 === 0) || (i % 7 === 6);
-    const evs = c.inMonth ? eventsOn(date, true) : [];
-    const tks = c.inMonth ? tasksOn(date) : [];
-    const isToday = date === TODAY;
-    const hasBook = evs.some(e => e.bookBy);
-    const seasonStart = evs.find(e => e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP);
-    // events first, then task chips; cap the cell at 3 with a "+N more" overflow (opens the popover)
-    const all = [...evs.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
-    const chips = all.slice(0, 3).map(x => {
-      if (x.tk) return taskChipHTML(x.tk);
-      const e = x.ev, ong = e.endDate && daysBetween(e.date.slice(0, 10), e.endDate.slice(0, 10)) > SPAN_CAP ? ' ›' : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cc-t">${esc(e.title)}${ong}</span></button>`;
+  const weeks = monthGrid(viewY, viewM);                    // 6 rows of {iso, day, inMonth}
+  const multi = allEvents().filter(e => visible(e) && isMultiDay(e));
+
+  const rows = weeks.map(week => {
+    const days = week.map(c => c.iso);
+    const packed = packLanes(multi, days);                  // [{ev,lane,col0,col1,contL,contR}]
+    const laneN = Math.min(MONTH_LANES, packed.reduce((m, p) => Math.max(m, p.lane + 1), 0));
+    const bars = packed.filter(p => p.lane < MONTH_LANES).map(p => {
+      const e = p.ev, cont = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
+      return `<button class="cal-bar cat-${esc(catOf(e))}${cont}" data-ev="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};grid-row:${p.lane + 1}" title="${esc(e.title)}">`
+        + `${p.contL ? '<span class="cal-bar-arr" aria-hidden="true">‹</span>' : ''}<span class="cal-bar-t">${esc(e.title)}</span>${p.contR ? '<span class="cal-bar-arr" aria-hidden="true">›</span>' : ''}</button>`;
     }).join('');
-    const more = all.length > 3 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${all.length - 3} more</button>` : '';
-    const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
-    const aria = `${esc(date)}, ${evs.length} event${evs.length === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
-    const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', weekend && 'weekend', seasonStart && 'season-start'].filter(Boolean).join(' ');
-    return `<div class="${cls}"${seasonStart ? ` style="--stripe:var(--c-${esc(catOf(seasonStart))})"` : ''} data-day="${esc(date)}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
-      ${chips}${more}</div>`;
+    const cells = week.map((c, i) => {
+      const date = c.iso, weekend = (i === 0 || i === 6), isToday = date === TODAY;
+      const singles = c.inMonth ? eventsOn(date, true).filter(e => !isMultiDay(e)) : [];
+      const tks = c.inMonth ? tasksOn(date) : [];
+      const hasBook = singles.some(e => e.bookBy);
+      const hiddenBars = packed.filter(p => p.lane >= MONTH_LANES && p.col0 <= i && p.col1 >= i).length;   // bars past the lane cap that cover this day
+      const items = [...singles.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
+      const chips = items.slice(0, MONTH_SINGLES).map(x => x.tk
+        ? taskChipHTML(x.tk)
+        : `<button class="cal-chip cat-${esc(catOf(x.ev))}" data-ev="${esc(x.ev.id)}" title="${esc(x.ev.title)}"><span class="cc-t">${esc(x.ev.title)}</span></button>`).join('');
+      const moreN = (items.length - Math.min(items.length, MONTH_SINGLES)) + hiddenBars;
+      const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
+      const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
+      const barsHere = packed.filter(p => p.col0 <= i && p.col1 >= i).length;
+      const aria = `${esc(date)}, ${singles.length + barsHere} event${(singles.length + barsHere) === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
+      const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', weekend && 'weekend'].filter(Boolean).join(' ');
+      return `<div class="${cls}" data-day="${esc(date)}">
+        <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
+        <div class="cal-barspace" aria-hidden="true"></div>
+        ${chips}${more}</div>`;
+    }).join('');
+    return `<div class="cal-week" style="--lanes:${laneN}"><div class="cal-cells">${cells}</div><div class="cal-bars">${bars}</div></div>`;
   }).join('');
-  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
+  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-weeks">${rows}</div>`;
 }
 
 // ---- month cockpit: up next · book by · tasks due ----
@@ -803,12 +820,16 @@ function wireCells() {
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
+  // multi-day BARS live in the .cal-bars overlay (siblings of the cells), so wire them directly → popover
+  $$('#calView .cal-bar[data-ev]').forEach(b => b.addEventListener('click', () => {
+    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
+  }));
 }
 // Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
 // that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
 let _calDragSelected = false;
 function wireMonthSelect() {
-  const grid = $('#calView .cal-grid');
+  const grid = $('#calView .cal-weeks');
   if (!grid || grid.dataset.selWired) return;
   grid.dataset.selWired = '1';
   const cellAt = (x, y) => document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
@@ -955,6 +976,7 @@ function positionSidePanel(panel) {
   const trig = _sidePanelTrigger;
   const W = 320, gap = 10, m = 8;
   const vw = window.innerWidth, vh = window.innerHeight;
+  const sx = window.scrollX, sy = window.scrollY;                    // the card is DOCUMENT-anchored → add scroll so it scrolls WITH the page (owner: "fixed in place", not floating in the viewport)
   card.style.width = W + 'px';
   const r = (trig && document.contains(trig)) ? trig.getBoundingClientRect() : null;
   let left, top;
@@ -968,10 +990,12 @@ function positionSidePanel(panel) {
       top = r.top;
     }
   } else { left = vw - W - m; top = 72; }                            // no trigger → top-right fallback
-  card.style.left = Math.max(m, Math.min(left, vw - W - m)) + 'px';
-  card.style.top = '0px';                                            // set, then correct with real height below
-  const ch = Math.min(card.offsetHeight, vh * 0.7);
-  card.style.top = Math.max(m, Math.min(top, vh - ch - m)) + 'px';
+  left = Math.max(m, Math.min(left, vw - W - m));
+  card.style.left = (left + sx) + 'px';
+  card.style.top = (sy) + 'px';                                      // set, then correct with real height below
+  const ch = Math.min(card.offsetHeight, vh * 0.85);
+  top = Math.max(m, Math.min(top, vh - ch - m));                     // start on-screen, but in doc coords so it travels with the event on scroll
+  card.style.top = (top + sy) + 'px';
 }
 
 function openSidePanel(ev, trigger) {

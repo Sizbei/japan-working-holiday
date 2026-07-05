@@ -652,6 +652,17 @@
    "confidence": "medium"
   },
   {
+   "id": "ev26-stay-little-japan",
+   "title": "🏠 Little Japan hostel — Asakusabashi",
+   "date": "2026-07-10",
+   "endDate": "2026-07-15",
+   "category": "personal",
+   "area": "Asakusabashi (Taito-ku)",
+   "bookingNotes": "Check-in Fri Jul 10 15:00–22:00 · checkout Wed Jul 15 by 10:00. 1 dorm bed, 5 nights. 3-10-8 Asakusabashi, Taito-ku (near Asakusabashi stn, Sōbu/Asakusa lines). Bridges Makoto checkout (Jul 10) → your Sapporo flight (Jul 15).",
+   "confidence": "high",
+   "sources": []
+  },
+  {
    "id": "ev-circus-tokyo-shibuya-underground-nights",
    "title": "Circus Tokyo — underground club nights (Shibuya)",
    "date": "2026-07-11",
@@ -732,6 +743,16 @@
    "confidence": "high"
   },
   {
+   "id": "ev26-flight-nrt-cts",
+   "title": "✈️ NRT → CTS (Peach) — Tokyo to Sapporo",
+   "date": "2026-07-15",
+   "category": "personal",
+   "area": "Narita (NRT) → New Chitose (CTS)",
+   "bookingNotes": "Peach · dep 15:10 → arr 17:00 (1h50m). Booking ID 1744421191. Little Japan checkout is 10:00 the SAME day — allow ~2h Asakusabashi→Narita (Keisei/NEX). Start of the Hokkaido leg.",
+   "confidence": "high",
+   "sources": []
+  },
+  {
    "id": "mus-fuji-rock-festival-26",
    "title": "Fuji Rock Festival '26",
    "date": "2026-07-24",
@@ -747,6 +768,16 @@
     "https://www.smash-uk.com/"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ev26-flight-cts-nrt",
+   "title": "✈️ CTS → NRT (Jetstar) — Sapporo to Tokyo",
+   "date": "2026-07-24",
+   "category": "personal",
+   "area": "New Chitose (CTS) → Narita (NRT)",
+   "bookingNotes": "Jetstar · dep 10:30 → arr 12:10 (1h40m). Booking ID 1744421190. End of the Hokkaido leg (Jul 15–24) — you'll need Tokyo accommodation from Jul 24 onward.",
+   "confidence": "high",
+   "sources": []
   },
   {
    "id": "ev-sumida-river-fireworks-festival-sumidagawa-ha",

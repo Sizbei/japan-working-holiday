@@ -3153,3 +3153,37 @@ ruby > rt {
 
 /* EF1 review: while the phrases bundle lazy-loads, its static toolbar is visibly inert */
 #view-phrases[aria-busy="true"] .jtools, #view-phrases[aria-busy="true"] button{ opacity:.45; pointer-events:none; }
+
+/* ===== Week view — hour-by-hour time grid (desktop) ===== */
+.wk2{ --wk-gutter: 52px; --wk-hh: 44px; display:flex; flex-direction:column; border:1px solid var(--line); border-radius: var(--r-md); overflow:hidden; background: var(--bg-soft); }
+.wk2-head{ display:grid; grid-template-columns: var(--wk-gutter) repeat(7, minmax(0,1fr)); border-bottom:1px solid var(--line); }
+.wk2-corner{ border-right:1px solid var(--line); }
+.wk2-dayhd{ padding:.4rem .5rem; text-align:center; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:1px; }
+.wk2-dayhd.weekend{ background: color-mix(in srgb, var(--ink) 3%, transparent); }
+.wk2-dayhd.today{ background: color-mix(in srgb, var(--red) 8%, transparent); }
+.wk2-dn{ font-family: var(--mono); font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); }
+.wk2-dd{ font-family: var(--serif); font-size:1.1rem; font-weight:600; color: var(--ink); line-height:1; }
+.wk2-dayhd.today .wk2-dd{ color: var(--red); }
+/* all-day band */
+.wk2-band{ display:grid; grid-template-columns: var(--wk-gutter) 1fr; border-bottom:1px solid var(--line-strong); max-height:132px; overflow-y:auto; }
+.wk2-blabel{ font-family: var(--mono); font-size:.56rem; letter-spacing:.05em; text-transform:uppercase; color: var(--ink-faint); padding:.4rem .3rem; border-right:1px solid var(--line); display:flex; align-items:flex-start; justify-content:flex-end; }
+.wk2-bcols{ padding:.25rem .1rem; display:flex; flex-direction:column; gap:2px; min-width:0; }
+/* scrollable hour grid */
+.wk2-scroll{ overflow-y:auto; max-height: min(62vh, 560px); overscroll-behavior: contain; }
+.wk2-inner{ position:relative; display:grid; grid-template-columns: var(--wk-gutter) repeat(7, minmax(0,1fr)); }
+.wk2-hours{ border-right:1px solid var(--line); }
+.wk2-hr{ position:relative; }
+.wk2-hr span{ position:absolute; top:-.5em; right:.4rem; font-family: var(--mono); font-size:.62rem; color: var(--ink-faint); background: var(--bg-soft); padding:0 .15rem; }
+.wk2-hr:first-child span{ top:.15rem; }
+.wk2-col{ position:relative; border-left:1px solid var(--line);
+  background-image: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px var(--wk-hh)); }
+.wk2-col.today{ background-color: color-mix(in srgb, var(--red) 4%, transparent); }
+.wk2-ev{ position:absolute; overflow:hidden; text-align:left; cursor:pointer; border:none; border-left:3px solid var(--cat);
+  background: color-mix(in srgb, var(--cat) 16%, var(--bg-soft)); color: var(--ink); border-radius:6px; padding:2px 5px;
+  display:flex; flex-direction:column; gap:0; line-height:1.15; box-shadow: 0 1px 2px rgba(0,0,0,.08); z-index:1; }
+.wk2-ev:hover{ background: color-mix(in srgb, var(--cat) 26%, var(--bg-soft)); box-shadow: var(--shadow); z-index:2; }
+.wk2-etime{ font-family: var(--mono); font-size:.58rem; color: color-mix(in srgb, var(--cat), var(--ink) 55%); white-space:nowrap; }
+.wk2-et{ font-size:.72rem; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wk2-now{ position:absolute; left:0; right:0; height:2px; background: var(--red); z-index:3; pointer-events:none; }
+.wk2-now-dot{ position:absolute; left:-4px; top:-3px; width:8px; height:8px; border-radius:50%; background: var(--red); }
+@media (max-width: 700px){ .wk2{ display:none; } }   /* mobile keeps the .wk-list view (rendered by weekListHTML) */

@@ -2615,6 +2615,26 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 
 /* ---- Month grid (Notion-style: one continuous hairline, flat cells, stable 6 rows) ---- */
 .cal-grid{ gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; grid-auto-rows: minmax(88px, 1fr); }
+
+/* ===== Notion-style month: week-rows with connected multi-day BARS ===== */
+.cal-weeks{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r-sm); overflow:hidden; }
+.cal-week{ position:relative; --laneH:21px; }
+.cal-cells{ display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+/* MC2 bigger: base cell taller; grows by the week's bar-lane count so single-day chips clear the bars */
+.cal-week .cal-cell{ min-height: calc(122px + var(--lanes,0) * var(--laneH)); }
+.cal-barspace{ height: calc(var(--lanes,0) * var(--laneH)); flex:none; }
+/* the bar overlay shares the cells' 7-col track so grid-column lines up exactly; starts below the date row */
+.cal-bars{ position:absolute; inset:27px 0 auto 0; display:grid; grid-template-columns:repeat(7,1fr); gap:1px; grid-auto-rows:var(--laneH); pointer-events:none; z-index:1; }
+.cal-bar{ pointer-events:auto; margin:0 3px 2px; display:flex; align-items:center; gap:3px; min-width:0;
+  border:none; border-left:3px solid var(--chip-cat, var(--line)); border-radius:4px; padding:0 6px;
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 20%, var(--bg-elevated)); color:var(--ink);
+  font-size:.68rem; font-weight:600; line-height:1; white-space:nowrap; overflow:hidden; text-align:left; cursor:pointer; }
+.cal-bar:hover{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated)); }
+.cal-bar-t{ overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.cal-bar-arr{ opacity:.6; flex:none; font-weight:700; }
+.cal-bar.cont-l{ border-top-left-radius:0; border-bottom-left-radius:0; border-left:none; margin-left:0; }
+.cal-bar.cont-r{ border-top-right-radius:0; border-bottom-right-radius:0; margin-right:0; }
+
 .cal-dowrow{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; padding: 0 1px; }
 .cal-dow{
   font-size: .68rem;
@@ -2695,32 +2715,32 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   flex: 0 0 auto;
 }
 /* per-category: set --chip-cat so border-left + dot both pick up the colour */
-.cal-chip.cat-festival   { --chip-cat: var(--c-festival); }
-.cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks); }
-.cal-chip.cat-illumination{ --chip-cat: var(--c-illumination); }
-.cal-chip.cat-convention { --chip-cat: var(--c-convention); }
-.cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal); }
-.cal-chip.cat-nature     { --chip-cat: var(--c-nature); }
-.cal-chip.cat-holiday    { --chip-cat: var(--c-holiday); }
-.cal-chip.cat-food       { --chip-cat: var(--c-food); }
-.cal-chip.cat-disney     { --chip-cat: var(--c-disney); }
-.cal-chip.cat-music      { --chip-cat: var(--c-music); }
-.cal-chip.cat-personal   { --chip-cat: var(--c-personal); }
-.cal-chip.cat-imported   { --chip-cat: var(--c-imported); }
+:is(.cal-chip,.cal-bar).cat-festival   { --chip-cat: var(--c-festival); }
+:is(.cal-chip,.cal-bar).cat-fireworks  { --chip-cat: var(--c-fireworks); }
+:is(.cal-chip,.cal-bar).cat-illumination{ --chip-cat: var(--c-illumination); }
+:is(.cal-chip,.cal-bar).cat-convention { --chip-cat: var(--c-convention); }
+:is(.cal-chip,.cal-bar).cat-seasonal   { --chip-cat: var(--c-seasonal); }
+:is(.cal-chip,.cal-bar).cat-nature     { --chip-cat: var(--c-nature); }
+:is(.cal-chip,.cal-bar).cat-holiday    { --chip-cat: var(--c-holiday); }
+:is(.cal-chip,.cal-bar).cat-food       { --chip-cat: var(--c-food); }
+:is(.cal-chip,.cal-bar).cat-disney     { --chip-cat: var(--c-disney); }
+:is(.cal-chip,.cal-bar).cat-music      { --chip-cat: var(--c-music); }
+:is(.cal-chip,.cal-bar).cat-personal   { --chip-cat: var(--c-personal); }
+:is(.cal-chip,.cal-bar).cat-imported   { --chip-cat: var(--c-imported); }
 
 /* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
-[data-theme="dark"] .cal-chip.cat-festival   { --chip-cat: var(--c-festival-ink); }
-[data-theme="dark"] .cal-chip.cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
-[data-theme="dark"] .cal-chip.cat-illumination{ --chip-cat: var(--c-illumination-ink); }
-[data-theme="dark"] .cal-chip.cat-convention { --chip-cat: var(--c-convention-ink); }
-[data-theme="dark"] .cal-chip.cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
-[data-theme="dark"] .cal-chip.cat-nature     { --chip-cat: var(--c-nature-ink); }
-[data-theme="dark"] .cal-chip.cat-holiday    { --chip-cat: var(--c-holiday-ink); }
-[data-theme="dark"] .cal-chip.cat-food       { --chip-cat: var(--c-food-ink); }
-[data-theme="dark"] .cal-chip.cat-disney     { --chip-cat: var(--c-disney-ink); }
-[data-theme="dark"] .cal-chip.cat-music      { --chip-cat: var(--c-music-ink); }
-[data-theme="dark"] .cal-chip.cat-personal   { --chip-cat: var(--c-personal-ink); }
-[data-theme="dark"] .cal-chip.cat-imported   { --chip-cat: var(--c-imported-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-festival   { --chip-cat: var(--c-festival-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-illumination{ --chip-cat: var(--c-illumination-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-convention { --chip-cat: var(--c-convention-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-nature     { --chip-cat: var(--c-nature-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-holiday    { --chip-cat: var(--c-holiday-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-food       { --chip-cat: var(--c-food-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-disney     { --chip-cat: var(--c-disney-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-music      { --chip-cat: var(--c-music-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-personal   { --chip-cat: var(--c-personal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-imported   { --chip-cat: var(--c-imported-ink); }
 
 /* chip title truncates with an ellipsis (flex child needs min-width:0) */
 .cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -2833,8 +2853,9 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* Desktop (≥700px): a full-viewport transparent CONTAINER whose click-away backdrop closes it;
    the actual detail is the .sp-inner CARD, anchored beside the clicked event by JS (flip left/right). */
 .cal-sidepanel{
-  position: fixed;
-  inset: 0;
+  position: absolute;   /* DOCUMENT-anchored (not fixed) so the card scrolls WITH the page and stays
+                           pinned to its event (owner: "fixed in place", not floating in the viewport) */
+  top: 0; left: 0;
   z-index: 101;   /* above grid (z-index 1) and popover (80), below modal (120) */
   pointer-events: none;   /* desktop: the container is click-through so real clicks reach events
                              (to switch) / the calendar (to close via the document handler); only
@@ -2858,7 +2879,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   z-index: 1;
   pointer-events: auto;   /* the card re-enables clicks (the container is click-through on desktop) */
   width: 320px;
-  max-height: 70vh;
+  max-height: 85vh;
   background: var(--bg-elevated);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-md);

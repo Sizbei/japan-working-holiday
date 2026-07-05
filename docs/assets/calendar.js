@@ -289,8 +289,9 @@ function onCalKeydown(e) {
   // any open dialog (event editor/app/date-picker) owns the keyboard — EXCEPT our own event
   // side panel: it's aria-modal too, and it's exactly where −/Del/Backspace should delete the
   // open event (this guard used to kill the panel path, so Backspace "never worked")
-  const modal = document.querySelector('[aria-modal="true"]');
-  const inSidePanel = !!(modal && modal.closest('#calSidePanel'));
+  const sp = document.getElementById('calSidePanel');
+  const inSidePanel = !!(sp && !sp.hidden && sp.classList.contains('is-open'));   // the popover is role=dialog, not aria-modal — detect it directly
+  const modal = document.querySelector('[aria-modal="true"]');                    // a genuine modal (event editor / day popover)
   if (modal && !inSidePanel) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
   const tag = (e.target.tagName || '').toLowerCase();
@@ -944,6 +945,35 @@ function closeSidePanel() {
   else $('#calAdd')?.focus({ preventScroll: true });
 }
 
+// Anchor the detail CARD beside the clicked event, flipping to the side with room so the event
+// stays visible (owner: "on the left if the event is on the right"). Desktop only — ≤699px is a
+// bottom sheet (CSS), so we clear any inline coords there.
+function positionSidePanel(panel) {
+  const card = panel.querySelector('.sp-inner');
+  if (!card) return;
+  if (!window.matchMedia('(min-width: 700px)').matches) { card.style.left = card.style.top = card.style.width = ''; return; }
+  const trig = _sidePanelTrigger;
+  const W = 320, gap = 10, m = 8;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  card.style.width = W + 'px';
+  const r = (trig && document.contains(trig)) ? trig.getBoundingClientRect() : null;
+  let left, top;
+  if (r && r.width && r.height) {
+    if (r.width > vw * 0.5) {                                        // a wide multi-day bar: no room beside it → sit just below, left-aligned
+      left = r.left; top = r.bottom + gap;
+    } else {
+      const mid = (r.left + r.right) / 2;
+      const placeLeft = mid > vw * 0.55 || (vw - r.right - gap) < W; // right-ish event or no room right → go left
+      left = placeLeft ? r.left - gap - W : r.right + gap;
+      top = r.top;
+    }
+  } else { left = vw - W - m; top = 72; }                            // no trigger → top-right fallback
+  card.style.left = Math.max(m, Math.min(left, vw - W - m)) + 'px';
+  card.style.top = '0px';                                            // set, then correct with real height below
+  const ch = Math.min(card.offsetHeight, vh * 0.7);
+  card.style.top = Math.max(m, Math.min(top, vh - ch - m)) + 'px';
+}
+
 function openSidePanel(ev, trigger) {
   if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
   _sidePanelTrigger = trigger || document.activeElement;
@@ -973,7 +1003,7 @@ function openSidePanel(ev, trigger) {
 
   panel.innerHTML = `
     <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
-    <div class="sp-inner" role="dialog" aria-modal="true" aria-label="${esc(ev.title)}" style="--cat:var(--c-${safeCat(ev)}-ink)">
+    <div class="sp-inner" role="dialog" aria-label="${esc(ev.title)}" style="--cat:var(--c-${safeCat(ev)}-ink)">
       <div class="sp-band">
         <div class="sp-cattop">
           <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(ev.category || 'event')}</span>
@@ -982,7 +1012,7 @@ function openSidePanel(ev, trigger) {
         <h2 class="sp-title">${esc(ev.title)}</h2>
         ${cdFull ? `<span class="sp-cd">${esc(cdFull)}</span>` : ''}
       </div>
-      <div class="sp-body">
+      <div class="sp-body" tabindex="0">
         <div class="sp-meta">
           <span class="sp-k">When</span><span class="sp-v">${dateRange}</span>
           ${ev.area ? `<span class="sp-k">Where</span><span class="sp-v">${esc(ev.area)}</span>` : ''}
@@ -997,24 +1027,30 @@ function openSidePanel(ev, trigger) {
     </div>`;
 
   panel.hidden = false;
-  void panel.offsetWidth;              // force one reflow so the translateX transition fires immediately (no rAF-throttle latency)
+  positionSidePanel(panel);            // desktop: anchor the card beside the clicked event (flip L/R)
+  void panel.offsetWidth;              // force one reflow so the entrance transition fires immediately
   panel.classList.add('is-open');
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
-  panel.querySelector('#spBackdrop')?.addEventListener('click', closeSidePanel);
-  // Notion-style click-away: the backdrop lives inside the panel's transform stacking context,
-  // so it never actually covers the page — catch outside pointerdowns at the document instead.
-  // Clicking another event chip just switches the panel; open dialogs are left alone.
+  // click-away + reposition-on-resize, bound ONCE at the document/window level. Desktop: the container
+  // is pointer-events:none so a real click lands on an event (→ switch) or empty space (→ close);
+  // mobile: the backdrop tap also lands here (its own click listener would double-close → stole focus).
   if (!document._spAway) {
     document._spAway = true;
     document.addEventListener('pointerdown', (e) => {
       if (!_sidePanelEv) return;
-      if (e.target.closest('.sp-inner, [data-ev], .modal-overlay, .app-modal, .dp-overlay, .lp-menu')) return;
+      if (e.target.closest('.sp-inner, [data-ev], .wk2-ev, .wk-bar, .wk-chip, .wkl-ev, .modal-overlay, .app-modal, .dp-overlay, .lp-menu')) return;   // clicking any event switches (its handler reopens); everything else closes
       closeSidePanel();
     });
+    window.addEventListener('resize', () => { const p = $('#calSidePanel'); if (p && !p.hidden && p.classList.contains('is-open')) positionSidePanel(p); });   // re-anchor / reset inline coords across the desktop↔mobile breakpoint
   }
-  panel.querySelector('#spGoing')?.addEventListener('click', () => { toggleGoingEv(ev); openSidePanel(ev, _sidePanelTrigger); });
+  panel.querySelector('#spGoing')?.addEventListener('click', () => {
+    const id = ev.id;
+    toggleGoingEv(ev);                                                            // synchronous jwh:data-changed → the calendar re-renders → the trigger node is replaced
+    const fresh = document.querySelector(`#calView [data-ev="${id}"], #calView [data-id="${id}"]`) || _sidePanelTrigger;   // re-anchor to the NEW element (else the popover jumped to the corner)
+    openSidePanel(ev, fresh);
+  });
   if (isBaked) {
     panel.querySelector('#spReset')?.addEventListener('click', () => { const { [ev.id]: _d, ...o } = loadOverrides(); saveOverrides(o); closeSidePanel(); });
     panel.querySelector('#spPlan')?.addEventListener('click', () => { addEventToPlan(ev); closeSidePanel(); });
@@ -1030,8 +1066,9 @@ function openSidePanel(ev, trigger) {
     a.addEventListener('click', (e) => { e.preventDefault(); window.open(a.href, '_blank', 'noopener'); });
   });
 
-  // Esc closes; Tab is trapped inside the dialog (it declares aria-modal — focus must not leak to the
-  // page behind it, mirroring the day popover + modal traps).
+  // Esc closes; Tab is contained inside the dialog for keyboard convenience while it's open. It is a
+  // role=dialog but NOT aria-modal — the background stays live (click another event to switch), so we
+  // don't claim modality to AT; we just keep Tab from wandering behind an open popover.
   const onKey = (e) => {
     if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); return; }
     if (e.key !== 'Tab') return;

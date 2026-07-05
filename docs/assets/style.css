@@ -2830,51 +2830,48 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* ============================================================
    CALENDAR SIDE PANEL — slide-in event detail (Task 3)
    ============================================================ */
+/* Desktop (≥700px): a full-viewport transparent CONTAINER whose click-away backdrop closes it;
+   the actual detail is the .sp-inner CARD, anchored beside the clicked event by JS (flip left/right). */
 .cal-sidepanel{
   position: fixed;
-  top: var(--header-h);
-  right: 0;
-  bottom: 0;
-  width: min(360px, 92vw);
-  background: var(--bg-elevated);
-  border-left: 1px solid var(--line);
-  box-shadow: var(--shadow-lg);
+  inset: 0;
   z-index: 101;   /* above grid (z-index 1) and popover (80), below modal (120) */
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform var(--dur-2) var(--ease-out);
-  overflow: hidden;
+  pointer-events: none;   /* desktop: the container is click-through so real clicks reach events
+                             (to switch) / the calendar (to close via the document handler); only
+                             the .sp-inner card below re-enables pointer-events. Mobile overrides. */
 }
 .cal-sidepanel[hidden]{ display: none; }
-.cal-sidepanel.is-open{ transform: translateX(0); }
 
-/* exit is slightly faster */
-.cal-sidepanel:not(.is-open){ transition: transform 150ms ease-in; }
-
-/* backdrop (subtle, outside the panel itself) */
+/* backdrop — desktop: transparent AND click-through (pointer-events:none) so you can click another
+   event to switch; the document pointerdown handler does the click-away close. Mobile re-enables it. */
 .sp-backdrop{
   position: fixed;
   inset: 0;
-  background: color-mix(in srgb, #000 28%, transparent);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity var(--dur-2) var(--ease-out);
-  pointer-events: auto;
-}
-.cal-sidepanel.is-open .sp-backdrop{ opacity: 1; }
-.cal-sidepanel:not(.is-open) .sp-backdrop{ transition: opacity 150ms ease-in; }
-
-/* inner (fills the panel, scrollable) — opaque layer above the fixed page-scrim backdrop */
-.sp-inner{
-  position: relative;
+  background: transparent;
   z-index: 0;
+  pointer-events: none;
+}
+
+/* the CARD — content-sized, positioned by JS (inline top/left/width); actions pin to its bottom */
+.sp-inner{
+  position: absolute;
+  z-index: 1;
+  pointer-events: auto;   /* the card re-enables clicks (the container is click-through on desktop) */
+  width: 320px;
+  max-height: 70vh;
   background: var(--bg-elevated);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
+  transform-origin: top center;
+  opacity: 0;
+  transform: scale(.97) translateY(4px);
+  transition: opacity var(--t-hover), transform var(--t-hover);
 }
+.cal-sidepanel.is-open .sp-inner{ opacity: 1; transform: none; }
 
 /* header band — category-tinted (--cat is set inline per event on .sp-inner) */
 .sp-band{ padding: var(--s4) var(--s4) var(--s3); background: color-mix(in srgb, var(--cat) 8%, var(--bg-soft)); border-bottom: 1px solid var(--line); }
@@ -2889,8 +2886,8 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* body — mono-labelled meta grid + note + source pills */
 /* Notion-style: content flows top-down and the actions sit right under it — flex:1 used to
    push actions to the panel's very bottom, leaving a dead zone after short descriptions */
-.sp-body{ padding: var(--s4); display: flex; flex-direction: column; gap: var(--s4); }
-.sp-actions{ border-top: 1px solid var(--line); }
+/* body scrolls; the actions footer stays pinned at the card's bottom (owner: "Going on the bottom") */
+.sp-body{ padding: var(--s4); display: flex; flex-direction: column; gap: var(--s4); flex: 1; min-height: 0; overflow-y: auto; }
 .sp-meta{ display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; }
 .sp-k{ font-family: var(--mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); padding-top: 3px; }
 .sp-v{ font-size: .875rem; color: var(--ink); line-height: 1.4; }
@@ -2912,40 +2909,24 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .sp-going.is-going{ background: color-mix(in srgb, var(--cat) 14%, transparent); color: color-mix(in srgb, var(--cat), #000 22%); border-color: color-mix(in srgb, var(--cat) 40%, transparent); }
 [data-theme="dark"] .sp-going.is-going{ color: var(--cat); }
 
-/* reduce-motion: no transform transition */
-@media (prefers-reduced-motion: reduce){
-  .cal-sidepanel,
-  .cal-sidepanel:not(.is-open),
-  .sp-backdrop,
-  .cal-sidepanel:not(.is-open) .sp-backdrop{
-    transition: none;
-  }
-}
-html[data-reduce-motion="on"] .cal-sidepanel,
-html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open),
-html[data-reduce-motion="on"] .sp-backdrop,
-html[data-reduce-motion="on"] .cal-sidepanel:not(.is-open) .sp-backdrop{
-  transition: none;
-}
+/* reduce-motion: no entrance transition */
+@media (prefers-reduced-motion: reduce){ .sp-inner{ transition: none; } }
+html[data-reduce-motion="on"] .sp-inner{ transition: none; }
 
-/* mobile: bottom sheet (<700px — matches existing week-mode breakpoint) */
+/* mobile: the card becomes a full-width BOTTOM SHEET, over a dimmed backdrop (<700px) */
 @media (max-width: 699px){
-  .cal-sidepanel{
-    top: auto;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    max-height: 80vh;
-    border-left: none;
-    border-top: 1px solid var(--line);
+  .cal-sidepanel{ pointer-events: auto; }   /* bottom sheet: the dim backdrop must catch taps to close */
+  .sp-backdrop{ background: color-mix(in srgb, #000 28%, transparent); pointer-events: auto; }
+  .sp-inner{
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto;
+    width: 100%; max-height: 82vh;
+    border: none; border-top: 1px solid var(--line);
     border-radius: var(--r-md) var(--r-md) 0 0;
-    transform: translateY(100%);
-    overflow-y: auto;
+    transform: translateY(100%); opacity: 1;
+    transition: transform var(--dur-2) var(--ease-out);
   }
-  .cal-sidepanel.is-open{ transform: translateY(0); }
-  .cal-sidepanel:not(.is-open){ transition: transform 150ms ease-in; }
-  .sp-inner{ height: auto; overflow-y: visible; }
+  .cal-sidepanel.is-open .sp-inner{ transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce){ .sp-inner{ transition: none; } }
 }
 
 /* ============================================================

@@ -809,3 +809,29 @@ test('parseGeoSearch: maps, sorts by distance, drops malformed, encodes URL', ()
   assert.deepEqual(parseGeoSearch({}), []);
   assert.deepEqual(parseGeoSearch(null), []);
 });
+
+// ---- lib/weekgrid.js time-grid helpers (parseHM, layoutDay) ----
+import { parseHM, layoutDay } from '../docs/assets/lib/weekgrid.js';
+
+test('parseHM: valid times → minutes, junk → null', () => {
+  assert.equal(parseHM('00:00'), 0);
+  assert.equal(parseHM('15:10'), 910);
+  assert.equal(parseHM('9:05'), 545);
+  assert.equal(parseHM('23:59'), 1439);
+  assert.equal(parseHM('24:00'), null);
+  assert.equal(parseHM('12:60'), null);
+  assert.equal(parseHM('noon'), null);
+  assert.equal(parseHM(''), null);
+});
+test('layoutDay: non-overlapping = single column each; overlaps split', () => {
+  const a = layoutDay([{ id: 'a', startMin: 600, endMin: 660 }, { id: 'b', startMin: 700, endMin: 760 }]);
+  assert.equal(a.find(x => x.id === 'a').cols, 1);
+  assert.equal(a.find(x => x.id === 'b').cols, 1);
+  const o = layoutDay([{ id: 'a', startMin: 600, endMin: 720 }, { id: 'b', startMin: 660, endMin: 780 }]);
+  assert.equal(o.find(x => x.id === 'a').cols, 2);
+  assert.equal(o.find(x => x.id === 'a').col, 0);
+  assert.equal(o.find(x => x.id === 'b').col, 1);
+  // a third overlapping all three → 3 cols
+  const t = layoutDay([{ id: 'a', startMin: 600, endMin: 720 }, { id: 'b', startMin: 610, endMin: 730 }, { id: 'c', startMin: 620, endMin: 700 }]);
+  assert.equal(Math.max(...t.map(x => x.cols)), 3);
+});

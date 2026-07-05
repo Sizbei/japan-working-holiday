@@ -21,7 +21,7 @@ import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
-import { weekDays, isMultiDay, packLanes } from './lib/weekgrid.js';
+import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
 import { searchJP } from './lib/nominatim.js';
 
 let DATA = null;

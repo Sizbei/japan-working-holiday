@@ -797,6 +797,33 @@
    "sources": []
   },
   {
+   "id": "ev26-hok-farm-tomita-lavender-peak-bloom",
+   "title": "💜 Farm Tomita Lavender — Peak Bloom",
+   "date": "2026-07-18",
+   "category": "seasonal",
+   "area": "Furano / Nakafurano — Farm Tomita",
+   "bookingNotes": "Mid-to-late July is the peak 'purple carpet' window when early and late lavender varieties overlap, landing right on the traveler's Jul 18 Furano day.",
+   "confidence": "high",
+   "sources": [
+    "https://www.farm-tomita.co.jp/en/east/",
+    "https://www.kyuhoshi.com/lavender-season-in-hokkaido/"
+   ]
+  },
+  {
+   "id": "ev26-hok-furano-biei-norokko-train-final-year-202",
+   "title": "🚂 Furano–Biei Norokko Train (final-year 2026)",
+   "date": "2026-07-18",
+   "category": "seasonal",
+   "area": "Furano / Biei — JR Furano Line (incl. seasonal Lavender Farm Station)",
+   "bookingNotes": "Nostalgic slow open-window sightseeing train through the lavender fields, running daily Jun 13–Aug 11; 2026 is its farewell season before retirement.",
+   "confidence": "high",
+   "sources": [
+    "https://www.jrhokkaido.co.jp/global/english/travel/furanobiei/train/index.html",
+    "https://watabi.org/en/articles/furano-biei-norokko-last-year-2026"
+   ],
+   "endDate": "2026-08-11"
+  },
+  {
    "id": "ev26-hok-d5-biei",
    "date": "2026-07-19",
    "title": "🌻 Biei flower country",
@@ -807,6 +834,19 @@
    "sources": []
   },
   {
+   "id": "ev26-hok-shikisai-no-oka-biei-s-flower-hills-at-p",
+   "title": "🌈 Shikisai-no-oka — Biei's Flower Hills at Peak",
+   "date": "2026-07-19",
+   "category": "seasonal",
+   "area": "Biei / Shikisai-no-oka panoramic flower gardens",
+   "bookingNotes": "Mid-July is peak bloom for the 15-hectare striped hills of lavender, lupines, poppies and salvia (plus a tractor-bus tour and alpacas), matching the traveler's Jul 19 Biei day.",
+   "confidence": "high",
+   "sources": [
+    "https://www.shikisainooka.jp/en/",
+    "https://nisade.com/news/flower-calendar-in-furano-area-in-summer"
+   ]
+  },
+  {
    "id": "ev26-hok-d6-asahidake",
    "date": "2026-07-20",
    "title": "♨️ Furano → Asahidake Onsen",
@@ -815,6 +855,33 @@
    "bookingNotes": "10:00 checkout. JR Furano → Asahikawa (~1h15). Asahikawa shoyu-ramen lunch (Baikohken / Tenkin) + stock snacks/water (little retail up top). 13:00 Ideyu-go / Route 66 bus, Asahikawa Stn → Asahidake Onsen (~1h30–45, only a few/day — CONFIRM). Check into onsen ryokan. First soak. Kaiseki dinner (usually included — confirm). Second soak. Don't over-schedule. Asahidake 1/2.",
    "confidence": "high",
    "sources": []
+  },
+  {
+   "id": "ev26-hok-sapporo-city-jazz-park-jazz-live-summer-",
+   "title": "🎷 Sapporo City Jazz — Park Jazz Live (summer series)",
+   "date": "2026-07-20",
+   "category": "music",
+   "area": "Sapporo / Odori Park & ~10 city venues",
+   "bookingNotes": "Free open-air summer jazz series with 200+ musicians across the city; official 2026 live dates include Jul 13 and Jul 20 (Odori Park), though the traveler is at Asahidake on the 20th. (Date estimated — verify closer.)",
+   "confidence": "medium",
+   "sources": [
+    "https://sapporocityjazz.jp/",
+    "https://www.sapporo.travel/en/event/event-list/sapporo_city_jazz/"
+   ]
+  },
+  {
+   "id": "ev26-hok-asahidake-ropeway-alpine-flower-season",
+   "title": "🏔️ Asahidake Ropeway — Alpine Flower Season",
+   "date": "2026-07-20",
+   "category": "nature",
+   "area": "Asahidake Onsen / Daisetsuzan — Sugatami Pond upper station (1,600m)",
+   "bookingNotes": "Short alpine summer peaks in July–August: colorful alpine wildflowers across the tundra above 1,600m with easy boardwalk hikes, right on the traveler's Asahidake days.",
+   "confidence": "high",
+   "sources": [
+    "https://asahidake.hokkaido.jp/en/",
+    "https://www.japan-guide.com/e/e6776.html"
+   ],
+   "endDate": "2026-07-21"
   },
   {
    "id": "ev26-hok-d7-hike",
@@ -847,6 +914,20 @@
    "sources": []
   },
   {
+   "id": "ev26-hok-sapporo-summer-festival-odori-park-beer-",
+   "title": "🍺 Sapporo Summer Festival — Odori Park Beer Gardens",
+   "date": "2026-07-23",
+   "category": "festival",
+   "area": "Sapporo / Odori Park (5–11 chome)",
+   "bookingNotes": "Japan's largest beer garden — six venues, 9,000+ seats stretching across Odori Park — opens exactly as the traveler returns to Sapporo on Jul 22–24.",
+   "confidence": "high",
+   "sources": [
+    "https://japancheapo.com/events/sapporo-summer-festival/",
+    "https://www.sapporo.travel/en/event/event-list/sapporo_summer_festival/"
+   ],
+   "endDate": "2026-08-18"
+  },
+  {
    "id": "mus-fuji-rock-festival-26",
    "title": "Fuji Rock Festival '26",
    "date": "2026-07-24",
@@ -874,6 +955,20 @@
    "sources": [],
    "time": "10:30",
    "endTime": "12:10"
+  },
+  {
+   "id": "ev26-hok-otaru-ushio-tide-festival",
+   "title": "🎆 Otaru Ushio (Tide) Festival",
+   "date": "2026-07-24",
+   "category": "festival",
+   "area": "Otaru / Port No. 3 Wharf, Canal & Sakaimachi",
+   "bookingNotes": "Otaru's biggest summer festival — mikoshi parades, dancing and harbor fireworks; opening day Jul 24 falls while the traveler is back in Sapporo (Otaru is ~30 min away).",
+   "confidence": "high",
+   "sources": [
+    "https://japancheapo.com/events/otaru-tide-festival/",
+    "https://hokkaido.a4jp.com/otaru-ushio-festival-ushio-matsuri/"
+   ],
+   "endDate": "2026-07-26"
   },
   {
    "id": "ev-sumida-river-fireworks-festival-sumidagawa-ha",

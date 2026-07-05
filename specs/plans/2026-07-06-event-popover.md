@@ -8,17 +8,17 @@ content flow). Decisions: mobile = bottom sheet (already the CSS behavior); widt
 
 ## Stages
 
-- [ ] **EP1 Anchored flip-positioning (≥700px).** Repurpose `.cal-sidepanel`: the fixed container
+- [x] **EP1 Anchored flip-positioning (≥700px).** Repurpose `.cal-sidepanel`: the fixed container
       holds a transparent (no-dim) backdrop + a content-sized `.sp-inner` card (width 320, max-height
       70vh) positioned via inline top/left computed in `openSidePanel` from the trigger's rect:
       place LEFT of the event when it's in the right ~55% or there's no room right, else RIGHT;
       clamp both axes into the viewport. Entrance = fade/scale (reduce-motion gated), not the slide.
-- [ ] **EP2 Actions pinned to the bottom.** `.sp-body` becomes `flex:1; min-height:0; overflow-y:auto`
+- [x] **EP2 Actions pinned to the bottom.** `.sp-body` becomes `flex:1; min-height:0; overflow-y:auto`
       so it scrolls; `.sp-actions` is the always-visible footer (Going hero + secondary row). Because
       the card is content-sized with a max-height, short events have no dead zone AND long ones keep
       Going reachable at the bottom.
-- [ ] **EP3 Keep + mobile.** Click-away/Escape/focus-restore unchanged. ≤699px keeps the existing
+- [x] **EP3 Keep + mobile.** Click-away/Escape/focus-restore unchanged. ≤699px keeps the existing
       bottom-sheet CSS (dim backdrop, slide-up, actions at bottom) — JS skips inline positioning there.
-- [ ] **EP4 Verify.** CDP: click a RIGHT-side event → popover flips LEFT (event visible); click a
+- [x] **EP4 Verify.** CDP: click a RIGHT-side event → popover flips LEFT (event visible); click a
       LEFT event → popover RIGHT; actions pinned at bottom on a long note; mobile still a bottom sheet;
       screenshots both flips; tests + guard. Adversarial review after.

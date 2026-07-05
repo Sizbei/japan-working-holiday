@@ -944,6 +944,31 @@ function closeSidePanel() {
   else $('#calAdd')?.focus({ preventScroll: true });
 }
 
+// Anchor the detail CARD beside the clicked event, flipping to the side with room so the event
+// stays visible (owner: "on the left if the event is on the right"). Desktop only — ≤699px is a
+// bottom sheet (CSS), so we clear any inline coords there.
+function positionSidePanel(panel) {
+  const card = panel.querySelector('.sp-inner');
+  if (!card) return;
+  if (!window.matchMedia('(min-width: 700px)').matches) { card.style.left = card.style.top = card.style.width = ''; return; }
+  const trig = _sidePanelTrigger;
+  const W = 320, gap = 10, m = 8;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  card.style.width = W + 'px';
+  const r = (trig && document.contains(trig)) ? trig.getBoundingClientRect() : null;
+  let left, top;
+  if (r && r.width && r.height) {
+    const mid = (r.left + r.right) / 2;
+    const placeLeft = mid > vw * 0.55 || (vw - r.right - gap) < W;   // right-ish event or no room right → go left
+    left = placeLeft ? r.left - gap - W : r.right + gap;
+    top = r.top;
+  } else { left = vw - W - m; top = 72; }                            // no trigger → top-right fallback
+  card.style.left = Math.max(m, Math.min(left, vw - W - m)) + 'px';
+  card.style.top = '0px';                                            // set, then correct with real height below
+  const ch = Math.min(card.offsetHeight, vh * 0.7);
+  card.style.top = Math.max(m, Math.min(top, vh - ch - m)) + 'px';
+}
+
 function openSidePanel(ev, trigger) {
   if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
   _sidePanelTrigger = trigger || document.activeElement;
@@ -997,7 +1022,8 @@ function openSidePanel(ev, trigger) {
     </div>`;
 
   panel.hidden = false;
-  void panel.offsetWidth;              // force one reflow so the translateX transition fires immediately (no rAF-throttle latency)
+  positionSidePanel(panel);            // desktop: anchor the card beside the clicked event (flip L/R)
+  void panel.offsetWidth;              // force one reflow so the entrance transition fires immediately
   panel.classList.add('is-open');
 
   // wire actions
@@ -1010,7 +1036,7 @@ function openSidePanel(ev, trigger) {
     document._spAway = true;
     document.addEventListener('pointerdown', (e) => {
       if (!_sidePanelEv) return;
-      if (e.target.closest('.sp-inner, [data-ev], .modal-overlay, .app-modal, .dp-overlay, .lp-menu')) return;
+      if (e.target.closest('.sp-inner, [data-ev], .wk2-ev, .wk-bar, .wk-chip, .wkl-ev, .modal-overlay, .app-modal, .dp-overlay, .lp-menu')) return;   // clicking any event switches (its handler reopens); everything else closes
       closeSidePanel();
     });
   }

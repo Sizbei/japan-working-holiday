@@ -2616,9 +2616,23 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* ---- Month grid (Notion-style: one continuous hairline, flat cells, stable 6 rows) ---- */
 .cal-grid{ gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; grid-auto-rows: minmax(88px, 1fr); }
 
+/* ===== "Ongoing this season" strip: season-long spans pulled out of the grid ===== */
+.cal-ongoing{ background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--r-sm); padding:.5rem .65rem; margin-bottom:.7rem; }
+.cal-ong-lab{ font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; margin-bottom:.45rem; }
+.cal-ong-lab span{ font-weight:400; text-transform:none; letter-spacing:0; }
+.cal-ong-pills{ display:flex; flex-wrap:wrap; gap:.4rem; }
+.cal-opill{ display:inline-flex; align-items:center; gap:.4rem; max-width:100%; font:inherit; font-size:.76rem; padding:.26rem .6rem;
+  border:1px solid var(--line-strong); border-radius:999px; background:var(--bg-elevated); color:var(--ink-soft); cursor:pointer; overflow:hidden; }
+.cal-opill > :last-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cal-opill:hover{ border-color:var(--chip-cat, var(--line-strong)); color:var(--ink); }
+.cal-opill:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
+.cal-ong-dot{ width:7px; height:7px; border-radius:50%; background:var(--chip-cat, var(--line)); flex:none; }
+
 /* ===== Notion-style month: week-rows with connected multi-day BARS ===== */
 .cal-weeks{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r-sm); overflow:hidden; }
 .cal-week{ position:relative; --laneH:21px; }
+/* clip cell content so a busy day's chips/"+N more" can't bleed into the next week's bar band */
+.cal-week .cal-cell{ overflow:hidden; }
 .cal-cells{ display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
 /* MC2 bigger: base cell taller; grows by the week's bar-lane count so single-day chips clear the bars */
 .cal-week .cal-cell{ min-height: calc(122px + var(--lanes,0) * var(--laneH)); }
@@ -2715,32 +2729,32 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   flex: 0 0 auto;
 }
 /* per-category: set --chip-cat so border-left + dot both pick up the colour */
-:is(.cal-chip,.cal-bar).cat-festival   { --chip-cat: var(--c-festival); }
-:is(.cal-chip,.cal-bar).cat-fireworks  { --chip-cat: var(--c-fireworks); }
-:is(.cal-chip,.cal-bar).cat-illumination{ --chip-cat: var(--c-illumination); }
-:is(.cal-chip,.cal-bar).cat-convention { --chip-cat: var(--c-convention); }
-:is(.cal-chip,.cal-bar).cat-seasonal   { --chip-cat: var(--c-seasonal); }
-:is(.cal-chip,.cal-bar).cat-nature     { --chip-cat: var(--c-nature); }
-:is(.cal-chip,.cal-bar).cat-holiday    { --chip-cat: var(--c-holiday); }
-:is(.cal-chip,.cal-bar).cat-food       { --chip-cat: var(--c-food); }
-:is(.cal-chip,.cal-bar).cat-disney     { --chip-cat: var(--c-disney); }
-:is(.cal-chip,.cal-bar).cat-music      { --chip-cat: var(--c-music); }
-:is(.cal-chip,.cal-bar).cat-personal   { --chip-cat: var(--c-personal); }
-:is(.cal-chip,.cal-bar).cat-imported   { --chip-cat: var(--c-imported); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-festival   { --chip-cat: var(--c-festival); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-fireworks  { --chip-cat: var(--c-fireworks); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-illumination{ --chip-cat: var(--c-illumination); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-convention { --chip-cat: var(--c-convention); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-seasonal   { --chip-cat: var(--c-seasonal); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-nature     { --chip-cat: var(--c-nature); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-holiday    { --chip-cat: var(--c-holiday); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-food       { --chip-cat: var(--c-food); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-disney     { --chip-cat: var(--c-disney); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-music      { --chip-cat: var(--c-music); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-personal   { --chip-cat: var(--c-personal); }
+:is(.cal-chip,.cal-bar,.cal-opill).cat-imported   { --chip-cat: var(--c-imported); }
 
 /* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-festival   { --chip-cat: var(--c-festival-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-illumination{ --chip-cat: var(--c-illumination-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-convention { --chip-cat: var(--c-convention-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-nature     { --chip-cat: var(--c-nature-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-holiday    { --chip-cat: var(--c-holiday-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-food       { --chip-cat: var(--c-food-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-disney     { --chip-cat: var(--c-disney-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-music      { --chip-cat: var(--c-music-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-personal   { --chip-cat: var(--c-personal-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-bar).cat-imported   { --chip-cat: var(--c-imported-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-festival   { --chip-cat: var(--c-festival-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-illumination{ --chip-cat: var(--c-illumination-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-convention { --chip-cat: var(--c-convention-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-nature     { --chip-cat: var(--c-nature-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-holiday    { --chip-cat: var(--c-holiday-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-food       { --chip-cat: var(--c-food-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-disney     { --chip-cat: var(--c-disney-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-music      { --chip-cat: var(--c-music-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-personal   { --chip-cat: var(--c-personal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill).cat-imported   { --chip-cat: var(--c-imported-ink); }
 
 /* chip title truncates with an ellipsis (flex child needs min-width:0) */
 .cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

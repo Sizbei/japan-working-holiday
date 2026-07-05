@@ -654,15 +654,23 @@ function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
 const MONTH_LANES = 3;        // max spanning-bar lanes shown per week (overflow → "+N more")
-const MONTH_SINGLES = 2;      // single-day chips shown per cell before overflow
+const MONTH_SINGLES = 3;      // single-day chips shown per cell before overflow
 
 // Notion-style month: 6 week-rows. Multi-day events render as ONE continuous bar per week
 // (lane-packed, with ‹/› arrows where they wrap), reusing the week view's packLanes(); single-day
-// events stay as chips below the reserved bar lanes.
+// events stay as chips below the reserved bar lanes. Season-long spans (isEvergreen) are pulled OUT
+// of the grid into an "Ongoing this season" strip — as full-width bars they'd flood every week row
+// (3 beer gardens = the whole lane budget in July), burying the genuine dated events.
 function monthHTML() {
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const weeks = monthGrid(viewY, viewM);                    // 6 rows of {iso, day, inMonth}
-  const multi = allEvents().filter(e => visible(e) && isMultiDay(e));
+  const gridLo = weeks[0][0].iso, gridHi = weeks[5][6].iso; // visible date window (incl. spill days)
+  const ongoing = allEvents().filter(e => visible(e) && isEvergreen(e)
+    && e.date.slice(0, 10) <= gridHi && (e.endDate || e.date).slice(0, 10) >= gridLo);
+  const strip = ongoing.length ? `<div class="cal-ongoing"><div class="cal-ong-lab">☀ Ongoing this season <span>— open all month, tap for details</span></div><div class="cal-ong-pills">`
+    + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
+    + `</div></div>` : '';
+  const multi = allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e));
 
   const rows = weeks.map(week => {
     const days = week.map(c => c.iso);
@@ -696,7 +704,7 @@ function monthHTML() {
     }).join('');
     return `<div class="cal-week" style="--lanes:${laneN}"><div class="cal-cells">${cells}</div><div class="cal-bars">${bars}</div></div>`;
   }).join('');
-  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-weeks">${rows}</div>`;
+  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-weeks">${rows}</div>`;
 }
 
 // ---- month cockpit: up next · book by · tasks due ----
@@ -822,6 +830,10 @@ function wireCells() {
   });
   // multi-day BARS live in the .cal-bars overlay (siblings of the cells), so wire them directly → popover
   $$('#calView .cal-bar[data-ev]').forEach(b => b.addEventListener('click', () => {
+    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
+  }));
+  // "Ongoing this season" strip pills → popover
+  $$('#calView .cal-opill[data-ev]').forEach(b => b.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
   }));
 }

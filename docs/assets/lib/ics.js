@@ -28,8 +28,19 @@ export function toICS(events, calName = 'My Year in Japan') {
     const start = dstamp(e.date);
     if (!start) continue;
     const end = dstamp(nextDay(e.endDate ? e.endDate : e.date));
-    out.push('BEGIN:VEVENT', `UID:${esc(e.id || start + '-' + (e.title || ''))}@jwh`,
-      `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${end}`, `SUMMARY:${esc(e.title)}`);
+    // timed event → floating local DTSTART/DTEND (HHMMSS, no Z) so a 10:00 event imports at 10:00
+    // in the reader's calendar; otherwise all-day VALUE=DATE (unchanged, round-trips with parseICS)
+    const hm = (t) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '')); return m ? m[1].padStart(2, '0') + m[2] + '00' : null; };
+    const st = e.time ? hm(e.time) : null;
+    if (st) {
+      const et = hm(e.endTime) || null;
+      const endStamp = et && et > st ? `${start}T${et}` : `${start}T${String((+st.slice(0, 2) + 1) % 24).padStart(2, '0')}${st.slice(2)}`;
+      out.push('BEGIN:VEVENT', `UID:${esc(e.id || start + '-' + (e.title || ''))}@jwh`,
+        `DTSTART:${start}T${st}`, `DTEND:${endStamp}`, `SUMMARY:${esc(e.title)}`);
+    } else {
+      out.push('BEGIN:VEVENT', `UID:${esc(e.id || start + '-' + (e.title || ''))}@jwh`,
+        `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${end}`, `SUMMARY:${esc(e.title)}`);
+    }
     const desc = descOf(e);
     if (desc) out.push(`DESCRIPTION:${esc(desc)}`);
     if (e.area) out.push(`LOCATION:${esc(e.area)}`);
@@ -83,9 +94,12 @@ export function gcalUrl(e) {
   const s = dstamp(e.date);
   if (!s) return '#';
   const en = dstamp(nextDay(e.endDate ? e.endDate : e.date));
-  const p = new URLSearchParams({
-    action: 'TEMPLATE', text: e.title || '', dates: `${s}/${en}`,
-    details: descOf(e), location: e.area || '',
-  });
-  return 'https://calendar.google.com/calendar/render?' + p.toString();
+  const hm = (t) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '')); return m ? m[1].padStart(2, '0') + m[2] + '00' : null; };
+  const st = e.time ? hm(e.time) : null;   // timed → pin to Asia/Tokyo wall-clock; else all-day
+  const params = { action: 'TEMPLATE', text: e.title || '', details: descOf(e), location: e.area || '' };
+  if (st) {
+    const et = hm(e.endTime); const endStamp = et && et > st ? `${s}T${et}` : `${s}T${String((+st.slice(0, 2) + 1) % 24).padStart(2, '0')}${st.slice(2)}`;
+    params.dates = `${s}T${st}/${endStamp}`; params.ctz = 'Asia/Tokyo';
+  } else { params.dates = `${s}/${en}`; }
+  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams(params).toString();
 }

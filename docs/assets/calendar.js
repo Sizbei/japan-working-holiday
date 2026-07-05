@@ -308,7 +308,7 @@ function onCalKeydown(e) {
     $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;
   }
   if (e.key === 'n' || e.key === 'N') {
-    e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk-dayhd[data-day]')?.dataset.day || TODAY; openModal(null, day); return;
+    e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk2-dayhd[data-day], .wk2-add[data-day]')?.dataset.day || TODAY; openModal(null, day); return;
   }
   // view switch (m/w/a) — Google-Calendar-style
   if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; render(); } return; }
@@ -454,7 +454,7 @@ function weekHTML() {
   const hd = days.map(d => {
     const t = parseISO(d), dow = t.getUTCDay();
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
-    return `<div class="wk2-dayhd${cls}" data-day="${esc(d)}"><span class="wk2-dn">${DOW[dow]}</span><span class="wk2-dd">${t.getUTCDate()}</span></div>`;
+    return `<div class="wk2-dayhd${cls}" data-day="${esc(d)}"><span class="wk2-dn">${DOW[dow]}</span><span class="wk2-dd">${t.getUTCDate()}</span><button type="button" class="wk2-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button></div>`;
   }).join('');
 
   const evs = allEvents().filter(visible);
@@ -484,8 +484,9 @@ function weekHTML() {
       const h = Math.max(20, Math.round((b.endMin - b.startMin) / 60 * WK_HH));
       const w = 100 / b.cols, left = b.col * w;
       const tm = b.ev.time + (b.ev.endTime ? '–' + b.ev.endTime : '');
-      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" title="${esc(b.ev.title)}">`
-        + `<span class="wk2-etime">${esc(tm)}</span><span class="wk2-et">${esc(b.ev.title)}</span></button>`;
+      const aria = `${b.ev.time}${b.ev.endTime ? ' to ' + b.ev.endTime : ''}, ${b.ev.title}`;
+      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" aria-label="${esc(aria)}">`
+        + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(b.ev.title)}</span></button>`;
     }).join('');
     const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
     return `<div class="wk2-col${d === TODAY ? ' today' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
@@ -500,7 +501,7 @@ function weekHTML() {
         <div class="wk-chips">${chips}</div>
       </div>
     </div>
-    <div class="wk2-scroll" id="wkScroll">
+    <div class="wk2-scroll" id="wkScroll" tabindex="0" role="group" aria-label="Hour grid — scroll through the day">
       <div class="wk2-inner" style="height:${24 * WK_HH}px">
         <div class="wk2-hours">${hours}</div>
         ${dayCols}
@@ -524,7 +525,7 @@ function chipHTML(e) {
 }
 function wireWeek() {
   const view = $('#calView'); if (!view) return;
-  $$('#calView .wk-add').forEach(b => b.addEventListener('click', () => openModal(null, b.dataset.day)));   // quick-create an all-day event on that day
+  $$('#calView .wk-add, #calView .wk2-add').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); openModal(null, b.dataset.day); }));   // per-day add (mobile list ＋ and desktop day-header ＋) — keyboard-reachable
   wireWeekDragCreate();
   wireWeekResize();
   // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
@@ -1071,7 +1072,7 @@ function addEventToChecklist(ev) {
   dndToast('Added to checklist');
 }
 function copyBakedToUser(ev) {
-  saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);
+  saveUser([...loadUser(), { id: 'u' + Date.now(), title: ev.title, date: ev.date.slice(0, 10), endDate: (ev.endDate || '').slice(0, 10), time: ev.time || '', endTime: ev.endTime || '', category: ev.category || 'personal', note: ev.bookingNotes || ev.why || '', area: ev.area || '', bookBy: ev.bookBy || '', copyOf: ev.id }]);   // carry time so a copied flight stays in the grid (review)
 }
 let pendingUndo = null, undoTimer = null;
 function clearPending() { pendingUndo = null; if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; } }

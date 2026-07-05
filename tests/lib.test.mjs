@@ -835,3 +835,25 @@ test('layoutDay: non-overlapping = single column each; overlaps split', () => {
   const t = layoutDay([{ id: 'a', startMin: 600, endMin: 720 }, { id: 'b', startMin: 610, endMin: 730 }, { id: 'c', startMin: 620, endMin: 700 }]);
   assert.equal(Math.max(...t.map(x => x.cols)), 3);
 });
+
+// ---- ics.js timed export (review fix) ----
+test('toICS: timed event emits floating DTSTART/DTEND, all-day unchanged', () => {
+  const timed = toICS([{ id: 'f1', title: 'Flight', date: '2026-06-30', time: '08:25', endTime: '10:50' }]);
+  assert.match(timed, /DTSTART:20260630T082500/);
+  assert.match(timed, /DTEND:20260630T105000/);
+  assert.ok(!/VALUE=DATE:20260630/.test(timed), 'timed event must not be all-day');
+  const allday = toICS([{ id: 'a1', title: 'Stay', date: '2026-07-10', endDate: '2026-07-15' }]);
+  assert.match(allday, /DTSTART;VALUE=DATE:20260710/);
+});
+test('toICS: timed with no endTime → default +1h', () => {
+  const t = toICS([{ id: 'h', title: 'Haircut', date: '2026-07-07', time: '10:00' }]);
+  assert.match(t, /DTSTART:20260707T100000/);
+  assert.match(t, /DTEND:20260707T110000/);
+});
+test('gcalUrl: timed event carries a timed dates param + Tokyo tz', () => {
+  const u = gcalUrl({ id: 'f', title: 'Flight', date: '2026-07-15', time: '15:10', endTime: '17:00' });
+  assert.match(decodeURIComponent(u), /dates=20260715T151000\/20260715T170000/);
+  assert.match(u, /ctz=Asia%2FTokyo/);
+  const a = gcalUrl({ id: 'a', title: 'Stay', date: '2026-07-10', endDate: '2026-07-15' });
+  assert.match(decodeURIComponent(a), /dates=20260710\/20260716/);
+});

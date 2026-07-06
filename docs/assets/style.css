@@ -840,6 +840,11 @@ html.gated{ overflow: hidden; }
 /* layout: sidebar + main (2-col; #calSidePanel is fixed-position, not a grid column) */
 .cal-layout{ display:grid; grid-template-columns: 220px minmax(0,1fr); gap: var(--s4); align-items:start; }
 .cal-layout > *{ min-width: 0; }   /* grid children can't force their track wider than the column */
+/* collapsed: hide the side panels, give the grid the full width (toggle lives in the toolbar) */
+.cal-layout.side-collapsed{ grid-template-columns: minmax(0,1fr); }
+.cal-layout.side-collapsed .cal-sidebar{ display:none; }
+.cal-sidetoggle{ font-size:1rem; line-height:1; }
+.cal-sidetoggle[aria-expanded="false"]{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
 .cal-sidebar{ display:flex; flex-direction:column; gap: var(--s3); min-width: 0; overflow: hidden; }
 .cal-panel{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s4);
   position: sticky; top: 3.2rem; max-height: min(calc(100vh - 4rem), 700px); overflow:auto; }   /* ≈ the month grid's height, so the rail can't run far past it */

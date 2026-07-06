@@ -9,6 +9,7 @@ export const KEYS = {
   calGoingOnly: 'jwh-cal-goingonly-v1',
   calShowTasks: 'jwh-cal-showtasks-v1',
   calSources: 'jwh-cal-sources-v1',
+  calSidebar: 'jwh-cal-sidebar-v1',
   eventOverrides: 'jwh-event-overrides-v1',
   places: 'jwh-places-v1',
   mapFilters: 'jwh-mapfilters-v1',

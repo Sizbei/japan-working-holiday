@@ -22,14 +22,14 @@ import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { agendaHTML, wireAgenda } from './calendar-agenda.js';
-import { weekHTML, wireWeek, weekLabel } from './calendar-week.js';
+import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
 import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
 
 let DATA = null;
 export let viewY = 2026, viewM = 5;
-let mode = 'month';        // 'month' | 'week' | 'agenda'
+let mode = 'month';        // 'month' | 'week' | 'day' | 'agenda'
 export let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
 export let TODAY = '2026-06-15';
 export let hiddenCats = new Set();
@@ -172,6 +172,7 @@ function wireToolbar() {
   $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });
   $('#calModeMonth')?.addEventListener('click', () => { mode = 'month'; render(); });
   $('#calModeWeek')?.addEventListener('click', () => { mode = 'week'; render(); });
+  $('#calModeDay')?.addEventListener('click', () => { mode = 'day'; render(); });
   $('#calModeAgenda')?.addEventListener('click', () => { mode = 'agenda'; render(); });
   $('#calAdd')?.addEventListener('click', () => openModal(null, TODAY));
   $('#calExport')?.addEventListener('click', openExport);
@@ -207,6 +208,7 @@ function wireQuickAdd() {
 }
 function shift(d) {
   if (mode === 'week') { weekAnchor = addDaysISO(weekAnchor, 7 * d); render(); return; }   // week mode steps by a week
+  if (mode === 'day') { weekAnchor = addDaysISO(weekAnchor, d); render(); return; }          // day mode steps by a day
   viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render();
 }
 
@@ -306,11 +308,14 @@ function onCalKeydown(e) {
     $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;
   }
   if (e.key === 'n' || e.key === 'N') {
-    e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk2-dayhd[data-day], .wk2-add[data-day]')?.dataset.day || TODAY; openModal(null, day); return;
+    // fall back to the shown day in week/day mode (weekAnchor), not TODAY — after a mode switch, render()
+    // drops focus to <body> so there's no focused cell to read.
+    e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk2-dayhd[data-day], .wk2-add[data-day]')?.dataset.day || ((mode === 'day' || mode === 'week') ? weekAnchor : TODAY); openModal(null, day); return;
   }
   // view switch (m/w/a) — Google-Calendar-style
   if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; render(); } return; }
   if (e.key === 'w' || e.key === 'W') { e.preventDefault(); if (mode !== 'week') { mode = 'week'; render(); } return; }
+  if (e.key === 'd' || e.key === 'D') { e.preventDefault(); if (mode !== 'day') { mode = 'day'; render(); } return; }
   if (e.key === 'a' || e.key === 'A') { e.preventDefault(); if (mode !== 'agenda') { mode = 'agenda'; render(); } return; }
   // Shift+←/→ steps the whole period (month, or week in week mode) — distinct from plain arrows (day focus)
   if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); shift(e.key === 'ArrowLeft' ? -1 : 1); return; }
@@ -345,7 +350,7 @@ function renderMiniNav() {
 function jumpToDate(iso) {
   const t = parseISO(iso); if (!t) return;
   viewY = t.getUTCFullYear(); viewM = t.getUTCMonth();
-  if (mode === 'week') weekAnchor = iso;
+  if (mode === 'week' || mode === 'day') weekAnchor = iso;
   render();
 }
 
@@ -353,13 +358,14 @@ function render() {
   TODAY = nowISO();   // a tab left open across midnight must not keep highlighting yesterday
   _evCache = null; _taskCache = null;   // invalidate the per-render caches (data may have changed since last render)
   dismissPopover();
-  const mEl = $('#calModeMonth'), wEl = $('#calModeWeek'), aEl = $('#calModeAgenda');
+  const mEl = $('#calModeMonth'), wEl = $('#calModeWeek'), dEl = $('#calModeDay'), aEl = $('#calModeAgenda');
   mEl?.classList.toggle('active', mode === 'month'); mEl?.setAttribute('aria-pressed', String(mode === 'month'));
   wEl?.classList.toggle('active', mode === 'week'); wEl?.setAttribute('aria-pressed', String(mode === 'week'));
+  dEl?.classList.toggle('active', mode === 'day'); dEl?.setAttribute('aria-pressed', String(mode === 'day'));
   aEl?.classList.toggle('active', mode === 'agenda'); aEl?.setAttribute('aria-pressed', String(mode === 'agenda'));
   const label = $('#calLabel');
-  if (label) label.textContent = mode === 'agenda' ? `Agenda — from ${MONTHS[viewM]} ${viewY}` : mode === 'week' ? weekLabel() : `${MONTHS[viewM]} ${viewY}`;
-  const unit = mode === 'week' ? 'week' : 'month';   // prev/next step by week in week mode
+  if (label) label.textContent = mode === 'agenda' ? `Agenda — from ${MONTHS[viewM]} ${viewY}` : mode === 'week' ? weekLabel() : mode === 'day' ? fmtDate(weekAnchor) : `${MONTHS[viewM]} ${viewY}`;
+  const unit = mode === 'week' ? 'week' : mode === 'day' ? 'day' : 'month';   // prev/next step by week/day in those modes
   $('#calPrev')?.setAttribute('aria-label', 'Previous ' + unit); $('#calNext')?.setAttribute('aria-label', 'Next ' + unit);
   const view = $('#calView'); if (!view) return;
   const panel = $('#calPanel');
@@ -373,6 +379,10 @@ function render() {
     view.innerHTML = weekHTML();
     if (panel) panel.hidden = true;   // the week view shows the whole week; the month deadline panel would duplicate
     wireWeek();
+  } else if (mode === 'day') {
+    view.innerHTML = dayHTML();
+    if (panel) panel.hidden = true;   // single day — no month deadline panel
+    wireWeek();                       // same wiring; drag/resize read the column count from the DOM (1 in day mode)
   } else {
     view.innerHTML = agendaHTML();
     if (panel) panel.hidden = true;   // agenda already lists everything; panel would duplicate

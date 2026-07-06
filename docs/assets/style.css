@@ -3184,6 +3184,9 @@ ruby > rt {
 /* scrollable hour grid */
 .wk2-scroll{ overflow-y:auto; max-height: min(62vh, 560px); overscroll-behavior: contain; }
 .wk2-inner{ position:relative; display:grid; grid-template-columns: var(--wk-gutter) repeat(7, minmax(0,1fr)); }
+/* Day view: one full-width column — collapse every 7-col track (header, hour grid, all-day lanes + chips) */
+.wk2.is-day .wk2-head, .wk2.is-day .wk2-inner{ grid-template-columns: var(--wk-gutter) minmax(0,1fr); }
+.wk2.is-day .wk-lane, .wk2.is-day .wk-chips{ grid-template-columns: 1fr; }
 .wk2-hours{ border-right:1px solid var(--line); }
 .wk2-hr{ position:relative; }
 .wk2-hr span{ position:absolute; top:-.5em; right:.4rem; font-family: var(--mono); font-size:.62rem; color: var(--ink-faint); background: var(--bg-soft); padding:0 .15rem; }

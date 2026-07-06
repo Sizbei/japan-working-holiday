@@ -75,7 +75,7 @@ function wireNavDrawer() {
 // begin inside something that scrolls/pans horizontally (map, agenda, chip rails, inputs).
 // don't hijack horizontal drags that belong to the calendar grid, drag handles, rails, the
 // map, or form fields — only the page background swipes between routes.
-const NO_SWIPE = '.leaflet-container, .cal-agenda, .cal-cell, .cal-chip, .plan-days, .stop-list, .map-side, .map-slist, .dnd-handle, .dnd-movable, input, textarea, select, .modal-overlay, [data-no-swipe]';
+const NO_SWIPE = '.leaflet-container, .cal-agenda, .cal-cell, .cal-chip, .wk2-scroll, .wk2-inner, .wk2-col, .wk2-band, .wk2-head, .plan-days, .stop-list, .map-side, .map-slist, .dnd-handle, .dnd-movable, input, textarea, select, .modal-overlay, [data-no-swipe]';
 
 function wireSwipe() {
   const main = document.getElementById('main');
@@ -156,7 +156,7 @@ function wireKeyboard() {
     if (e.key >= '1' && e.key <= String(Math.min(9, ROUTES.length))) { e.preventDefault(); go(ROUTES[+e.key - 1]); return; }
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
-    // common utility shortcuts — keys unused by the calendar (m/w/a/n/t) + checklist (j/k/d/p/e) layers
+    // common utility shortcuts — keys unused by the calendar (m/w/d/a/n/t) + checklist (j/k/d/p/e) layers
     if (e.key === '0' && ROUTES.length >= 10) { e.preventDefault(); go(ROUTES[9]); return; }        // the 10th page (Emergency)
     if (e.key === 'b' || e.key === 'B') { e.preventDefault(); document.getElementById('notifBell')?.click(); return; }   // notifications
     if (e.key === '\\') { e.preventDefault(); document.getElementById('themeToggle')?.click(); return; }                 // light/dark
@@ -184,7 +184,7 @@ function openHelp() {
     <p class="kh-sub">On the calendar</p>
     <div class="kh-row"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd><span>Move between days (month view)</span></div>
     <div class="kh-row"><kbd>⇧←</kbd> <kbd>⇧→</kbd><span>Previous / next month (or week)</span></div>
-    <div class="kh-row"><kbd>m</kbd> <kbd>w</kbd> <kbd>a</kbd><span>Switch to Month / Week / Agenda</span></div>
+    <div class="kh-row"><kbd>m</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>a</kbd><span>Switch to Month / Week / Day / Agenda</span></div>
     <div class="kh-row"><kbd>n</kbd><span>New event on the focused day</span></div>
     <div class="kh-row"><kbd>−</kbd> <kbd>Del</kbd><span>Remove the focused / open event</span></div>
     <div class="kh-row"><kbd>t</kbd><span>Jump to today</span></div>

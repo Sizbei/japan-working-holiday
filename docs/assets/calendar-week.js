@@ -51,9 +51,9 @@ function timedOf(e) {
   return { startMin: start, endMin: end };
 }
 
-export function weekHTML() {
-  if (isNarrowWeek()) return weekListHTML();
-  const days = weekDays(weekAnchor);
+// the shared time-grid builder — `days` is the array of ISO dates to show (7 for week, 1 for day).
+// isDay adds the .is-day class so the CSS collapses the 7-col tracks to a single full-width column.
+function gridHTML(days, isDay) {
   const hd = days.map(d => {
     const t = parseISO(d), dow = t.getUTCDay();
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
@@ -67,8 +67,8 @@ export function weekHTML() {
   let lanes = '';
   for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
   // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid
-  const bandCols = Array.from({ length: 7 }, () => []);
-  const timedCols = Array.from({ length: 7 }, () => []);
+  const bandCols = Array.from({ length: days.length }, () => []);
+  const timedCols = Array.from({ length: days.length }, () => []);
   evs.filter(e => !isMultiDay(e)).forEach(e => {
     const i = days.indexOf(e.date.slice(0, 10)); if (i < 0) return;
     const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
@@ -95,7 +95,7 @@ export function weekHTML() {
     return `<div class="wk2-col${d === TODAY ? ' today' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
   }).join('');
 
-  return `<div class="wk2">
+  return `<div class="wk2${isDay ? ' is-day' : ''}">
     <div class="wk2-head"><div class="wk2-corner"></div>${hd}</div>
     <div class="wk2-band">
       <div class="wk2-blabel">all-day</div>
@@ -112,6 +112,17 @@ export function weekHTML() {
     </div>
   </div>`;
 }
+export function weekHTML() {
+  if (isNarrowWeek()) return weekListHTML();
+  return gridHTML(weekDays(weekAnchor), false);
+}
+// single-day view: the same time-grid with one full-width column (works at any width, so no list fallback).
+export function dayHTML() {
+  return gridHTML([weekAnchor], true);
+}
+// the ISO dates actually rendered in the grid, in column order — 7 for week, 1 for day. Reading from
+// the DOM keeps the drag/resize column math correct in BOTH modes (and is inherently live).
+const gridDays = () => $$('#calView .wk2-dayhd[data-day]').map(el => el.dataset.day);
 function barHTML(p) {
   const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
   const user = e.source === 'user';   // only your own events resize (baked spans are fixed research)
@@ -148,7 +159,7 @@ export function wireWeek() {
   const scroll = $('#wkScroll');
   if (scroll && !scroll.dataset.scrolled) {
     scroll.dataset.scrolled = '1';
-    const days = weekDays(weekAnchor);
+    const days = gridDays();
     const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
     scroll.scrollTop = target * WK_HH;
   }
@@ -169,7 +180,7 @@ function wireWeekResize() {
   // after week navigation and, combined with re-binding every render, persist wrong dates.
   const view = $('#calView'); if (!view || view.dataset.wkResizeWired) return;
   view.dataset.wkResizeWired = '1';
-  const colOf = (clientX, rect) => Math.max(0, Math.min(6, Math.floor((clientX - rect.left) / (rect.width / 7))));
+  const colOf = (clientX, rect, n) => Math.max(0, Math.min(n - 1, Math.floor((clientX - rect.left) / (rect.width / n))));
   let st = null;   // { bar, ev, side, rect, moved }
   view.addEventListener('pointerdown', (e) => {
     if (isNarrowWeek()) return;                              // narrow week is a list (no bars/grips)
@@ -184,10 +195,10 @@ function wireWeekResize() {
   view.addEventListener('pointermove', (e) => {
     if (!st) return;
     st.moved = true;
-    const days = weekDays(weekAnchor);
-    const col = colOf(e.clientX, st.rect);
+    const days = gridDays();
+    const col = colOf(e.clientX, st.rect, days.length);
     const s0 = days.indexOf(st.ev.date.slice(0, 10)), e0 = days.indexOf((st.ev.endDate || st.ev.date).slice(0, 10));
-    let lo = s0 < 0 ? 0 : s0, hi = e0 < 0 ? 6 : e0;
+    let lo = s0 < 0 ? 0 : s0, hi = e0 < 0 ? days.length - 1 : e0;
     if (st.side === 'r') hi = Math.max(lo, col); else lo = Math.min(hi, col);
     st.bar.style.gridColumn = `${lo + 1}/${hi + 2}`;         // live preview; discarded on the save re-render
   });
@@ -196,8 +207,8 @@ function wireWeekResize() {
     const { ev, side, moved, rect } = st; st = null;
     if (!moved) return;
     _wkResizeSuppressClick = true; setTimeout(() => { _wkResizeSuppressClick = false; }, 350);
-    const days = weekDays(weekAnchor);
-    const col = colOf(e.clientX, rect);
+    const days = gridDays();
+    const col = colOf(e.clientX, rect, days.length);
     const s0 = ev.date.slice(0, 10), en0 = (ev.endDate || ev.date).slice(0, 10);
     let start = s0, end = en0;
     if (side === 'r') end = days[col] >= s0 ? days[col] : s0;            // clamp end ≥ start
@@ -214,17 +225,18 @@ function wireWeekDragCreate() {
   const lane = $('#wkAllday');
   if (!lane || lane.dataset.dragWired) return;
   lane.dataset.dragWired = '1';
-  const days = weekDays(weekAnchor);
+  const days = gridDays();          // 7 (week) or 1 (day) — column count drives the ruler below
+  const n = days.length;
   // capture the grid geometry ONCE per drag (the week grid never moves mid-drag, and re-reading it
   // live drifted the end column by ±1 when a scrollbar toggled) → start and end map with the same ruler
   let startCol = null, ghost = null, dragRect = null;
-  const colOf = (clientX) => Math.max(0, Math.min(6, Math.floor((clientX - dragRect.left) / (dragRect.width / 7))));
+  const colOf = (clientX) => Math.max(0, Math.min(n - 1, Math.floor((clientX - dragRect.left) / (dragRect.width / n))));
   const clearGhost = () => { if (ghost) { ghost.remove(); ghost = null; } };
   const draw = (a, b) => {
     if (!ghost) { ghost = document.createElement('div'); ghost.className = 'wk-dragsel'; ghost.setAttribute('aria-hidden', 'true'); lane.appendChild(ghost); }
     const lo = Math.min(a, b), hi = Math.max(a, b);
-    ghost.style.left = `${(lo / 7) * 100}%`;
-    ghost.style.width = `${((hi - lo + 1) / 7) * 100}%`;
+    ghost.style.left = `${(lo / n) * 100}%`;
+    ghost.style.width = `${((hi - lo + 1) / n) * 100}%`;
   };
   lane.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 || e.target.closest('.wk-bar, .wk-chip, button, a')) return;   // leave existing items/controls alone

@@ -2742,6 +2742,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 
 /* chip title truncates with an ellipsis (flex child needs min-width:0) */
 .cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* single-day timed events: lighter (transparent) chip led by its time, Notion-style */
+.cal-chip.timed{ background: transparent; }
+.cal-chip.timed:hover{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 12%, var(--bg-elevated)); }
+.cal-chip .cc-time{ font-family: var(--mono); font-size: .92em; color: var(--ink-faint); flex: 0 0 auto; }
 /* +N more — a real, keyboard-focusable control that opens the day popover */
 .cal-more{ display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer;
   color: var(--ink-soft); font-size: .62rem; font-weight: 600; padding: 0 0 0 6px; line-height: 1.4; }

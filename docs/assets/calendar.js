@@ -21,7 +21,7 @@ import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
-import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
+import { weekDays, isMultiDay, packLanes, parseHM, layoutDay, fmt12 } from './lib/weekgrid.js';
 import { searchJP } from './lib/nominatim.js';
 
 let DATA = null;
@@ -689,7 +689,9 @@ function monthHTML() {
       if (x.tk) return taskChipHTML(x.tk);
       const e = x.ev;
       const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+      const t = x.end ? '' : fmt12(e.time);   // single-day timed → lead with the time (Notion-style)
+      const time = t ? `<span class="cc-time">${esc(t)}</span>` : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}${t ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
     const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';

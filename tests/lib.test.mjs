@@ -811,7 +811,7 @@ test('parseGeoSearch: maps, sorts by distance, drops malformed, encodes URL', ()
 });
 
 // ---- lib/weekgrid.js time-grid helpers (parseHM, layoutDay) ----
-import { parseHM, layoutDay } from '../docs/assets/lib/weekgrid.js';
+import { parseHM, layoutDay, fmt12 } from '../docs/assets/lib/weekgrid.js';
 
 test('parseHM: valid times → minutes, junk → null', () => {
   assert.equal(parseHM('00:00'), 0);
@@ -822,6 +822,15 @@ test('parseHM: valid times → minutes, junk → null', () => {
   assert.equal(parseHM('12:60'), null);
   assert.equal(parseHM('noon'), null);
   assert.equal(parseHM(''), null);
+});
+test('fmt12: 24h "HH:MM" → compact 12h label; junk → ""', () => {
+  assert.equal(fmt12('13:10'), '1:10 PM');
+  assert.equal(fmt12('09:00'), '9 AM');
+  assert.equal(fmt12('00:00'), '12 AM');
+  assert.equal(fmt12('12:00'), '12 PM');
+  assert.equal(fmt12('23:59'), '11:59 PM');
+  assert.equal(fmt12('x'), '');
+  assert.equal(fmt12(''), '');
 });
 test('layoutDay: non-overlapping = single column each; overlaps split', () => {
   const a = layoutDay([{ id: 'a', startMin: 600, endMin: 660 }, { id: 'b', startMin: 700, endMin: 760 }]);

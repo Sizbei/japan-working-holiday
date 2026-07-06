@@ -14,22 +14,24 @@ import { upsertStop, newStop } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
 import { isGoing, toggleGoing, setGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
-import { makeMovable, dndToast } from './dnd.js';
+import { dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
-import { weekDays, isMultiDay, packLanes, parseHM, layoutDay, fmt12 } from './lib/weekgrid.js';
 import { searchJP } from './lib/nominatim.js';
+import { agendaHTML, wireAgenda } from './calendar-agenda.js';
+import { weekHTML, wireWeek, weekLabel } from './calendar-week.js';
+import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule } from './calendar-month.js';
 
 let DATA = null;
-let viewY = 2026, viewM = 5;
+export let viewY = 2026, viewM = 5;
 let mode = 'month';        // 'month' | 'week' | 'agenda'
-let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
-let TODAY = '2026-06-15';
-let hiddenCats = new Set();
+export let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
+export let TODAY = '2026-06-15';
+export let hiddenCats = new Set();
 let showTasks = true;             // checklist tasks with a user-set due date appear on the calendar (filterable)
 let _taskCache = null;            // per-render memo of task pseudo-events
 let popEl = null, popCleanup = null;
@@ -39,10 +41,11 @@ let _sidePanelCleanup = null;     // remove side-panel document listeners
 let _legendTimer = null;          // discriminate legend single-click (toggle) from double-click (isolate)
 
 const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
-const SPAN_CAP = 10;
+export const SPAN_CAP = 10;
 
-function loadUser() { return get(KEYS.events, []) || []; }
-function saveUser(a) { set(KEYS.events, a); changed(); }
+export function loadUser() { return get(KEYS.events, []) || []; }
+export function saveUser(a) { set(KEYS.events, a); changed(); }
+export function goAgenda() { mode = 'agenda'; render(); }
 function changed() { document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
 
 function loadOverrides() { return get(KEYS.eventOverrides, {}) || {}; }
@@ -84,7 +87,7 @@ document.addEventListener('jwh:data-changed', () => { _evCache = null; _taskCach
 // mirroring the notifications rule (curated dates only, no flood). Tasks are NOT real events: they
 // carry data-task (not data-ev) so drag/reschedule/export ignore them; clicking jumps to the
 // checklist. Memoized per render; invalidated alongside _evCache on any data change.
-function allTasks() {
+export function allTasks() {
   if (_taskCache) return _taskCache;
   if (!showTasks) return (_taskCache = []);
   const due = get(KEYS.due, {}) || {};
@@ -94,20 +97,20 @@ function allTasks() {
     .map(it => ({ taskId: it.id, title: it.task, date: due[it.id] }));
   return _taskCache;
 }
-function tasksOn(iso) { return showTasks ? allTasks().filter(t => t.date.slice(0, 10) === iso) : []; }
-function taskChipHTML(t) {
+export function tasksOn(iso) { return showTasks ? allTasks().filter(t => t.date.slice(0, 10) === iso) : []; }
+export function taskChipHTML(t) {
   return `<button type="button" class="cal-chip cal-task" data-task="${esc(t.taskId)}" title="Checklist task due — ${esc(t.title)}"><span class="cc-t">☑ ${esc(t.title)}</span></button>`;
 }
 // jump from a calendar task chip to the checklist item it represents
-function gotoTask(taskId) {
+export function gotoTask(taskId) {
   dismissPopover();
   if (location.hash !== '#/checklist') location.hash = '#/checklist';
   // let the route transition swap views before scrolling/focusing the target row
   setTimeout(() => revealChecklistItem(taskId), 60);
 }
 
-function catOf(e) { return e.category || 'personal'; }
-function visible(e) { return !hiddenCats.has(catOf(e)); }
+export function catOf(e) { return e.category || 'personal'; }
+export function visible(e) { return !hiddenCats.has(catOf(e)); }
 
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
@@ -396,495 +399,11 @@ document.addEventListener('jwh:route', (e) => {
   setTimeout(alignRail, 300);   // again after the view transition settles — the rAF can land mid-swap
 });
 
-// ---- WEEK view (all-day lane + per-day add; bars/drag land in later stages) ----
-const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-function weekLabel() {
-  const days = weekDays(weekAnchor);
-  const a = parseISO(days[0]), b = parseISO(days[6]);
-  const am = MONTHS[a.getUTCMonth()].slice(0, 3), bm = MONTHS[b.getUTCMonth()].slice(0, 3);
-  return am === bm
-    ? `${am} ${a.getUTCDate()} – ${b.getUTCDate()}, ${b.getUTCFullYear()}`
-    : `${am} ${a.getUTCDate()} – ${bm} ${b.getUTCDate()}, ${b.getUTCFullYear()}`;
-}
-const isNarrowWeek = () => window.matchMedia('(max-width: 700px)').matches;
-// mobile: a vertical day-by-day list (the 7-col grid is unusable on a phone; a vertical list also
-// avoids the horizontal route-swipe conflict). Each day lists its overlapping events; multi-day
-// events get a continues marker. Reuses the per-day ＋ (.wk-add) + click→openSidePanel wiring.
-function weekListHTML() {
-  const days = weekDays(weekAnchor);
-  const evs = allEvents().filter(visible);
-  return `<div class="wk-list">` + days.map(d => {
-    const t = parseISO(d), dow = t.getUTCDay();
-    const dayEvs = evs.filter(e => { const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s; return s <= d && en >= d; })
-      .sort((a, b) => a.date.localeCompare(b.date));
-    const rows = dayEvs.map(e => {
-      const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s;
-      const cont = isMultiDay(e) ? (d === s ? `<span class="wkl-cont">→ ${esc(fmtShort(en))}</span>` : d === en ? '<span class="wkl-cont">ends</span>' : '<span class="wkl-cont">ongoing ┄</span>') : '';
-      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${cont}</button>`;
-    }).join('') || '<p class="wkl-empty">No events</p>';
-    const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
-    return `<section class="wkl-day${cls}">
-      <div class="wkl-head"><span class="wkl-dn">${DOW[dow]} ${t.getUTCDate()}</span>${d === TODAY ? '<span class="wkl-today">TODAY</span>' : ''}<button type="button" class="wk-add wkl-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button></div>
-      <div class="wkl-evs">${rows}</div>
-    </section>`;
-  }).join('') + `</div>`;
-}
-const WK_HH = 44;   // px per hour in the time grid
-
-// a single-day event's timed placement, or null if it's all-day (goes to the band).
-// no endTime, or a bad one → a default 60-min block.
-function timedOf(e) {
-  if (isMultiDay(e)) return null;
-  const start = parseHM(e.time);
-  if (start == null) return null;
-  let end = parseHM(e.endTime);
-  if (end == null || end <= start) end = Math.min(24 * 60, start + 60);
-  return { startMin: start, endMin: end };
-}
-
-function weekHTML() {
-  if (isNarrowWeek()) return weekListHTML();
-  const days = weekDays(weekAnchor);
-  const hd = days.map(d => {
-    const t = parseISO(d), dow = t.getUTCDay();
-    const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
-    return `<div class="wk2-dayhd${cls}" data-day="${esc(d)}"><span class="wk2-dn">${DOW[dow]}</span><span class="wk2-dd">${t.getUTCDate()}</span><button type="button" class="wk2-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button></div>`;
-  }).join('');
-
-  const evs = allEvents().filter(visible);
-  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring)
-  const packed = packLanes(evs.filter(isMultiDay), days);
-  const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);
-  let lanes = '';
-  for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
-  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid
-  const bandCols = Array.from({ length: 7 }, () => []);
-  const timedCols = Array.from({ length: 7 }, () => []);
-  evs.filter(e => !isMultiDay(e)).forEach(e => {
-    const i = days.indexOf(e.date.slice(0, 10)); if (i < 0) return;
-    const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
-  });
-  const chips = bandCols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
-
-  // hour gutter (JST, 24h) — a label sits at the top of each hour block
-  const hours = Array.from({ length: 24 }, (_, h) => `<div class="wk2-hr" style="height:${WK_HH}px"><span>${String(h).padStart(2, '0')}</span></div>`).join('');
-
-  // 7 day columns: hour rules (bg gradient) + absolutely-positioned timed blocks + now-line on today
-  const nowMin = (() => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); })();
-  const dayCols = days.map((d, i) => {
-    const laid = layoutDay(timedCols[i]);
-    const blocks = laid.map(b => {
-      const top = Math.round(b.startMin / 60 * WK_HH);
-      const h = Math.max(20, Math.round((b.endMin - b.startMin) / 60 * WK_HH));
-      const w = 100 / b.cols, left = b.col * w;
-      const tm = b.ev.time + (b.ev.endTime ? '–' + b.ev.endTime : '');
-      const aria = `${b.ev.time}${b.ev.endTime ? ' to ' + b.ev.endTime : ''}, ${b.ev.title}`;
-      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" aria-label="${esc(aria)}">`
-        + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(b.ev.title)}</span></button>`;
-    }).join('');
-    const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
-    return `<div class="wk2-col${d === TODAY ? ' today' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
-  }).join('');
-
-  return `<div class="wk2">
-    <div class="wk2-head"><div class="wk2-corner"></div>${hd}</div>
-    <div class="wk2-band">
-      <div class="wk2-blabel">all-day</div>
-      <div class="wk2-bcols" id="wkAllday">
-        ${lanes || '<div class="wk-lane"></div>'}
-        <div class="wk-chips">${chips}</div>
-      </div>
-    </div>
-    <div class="wk2-scroll" id="wkScroll" tabindex="0" role="group" aria-label="Hour grid — scroll through the day">
-      <div class="wk2-inner" style="height:${24 * WK_HH}px">
-        <div class="wk2-hours">${hours}</div>
-        ${dayCols}
-      </div>
-    </div>
-  </div>`;
-}
 // a category guaranteed to have a --c-* token (an imported .ics could carry an arbitrary one →
 // var(--c-<unknown>) would be undefined and the bar would render unstyled/unreadable)
-function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
-function barHTML(p) {
-  const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
-  const user = e.source === 'user';   // only your own events resize (baked spans are fixed research)
-  const gl = (user && !p.contL) ? '<span class="wk-resize wk-resize-l" aria-hidden="true"></span>' : '';   // grips only on edges visible this week
-  const gr = (user && !p.contR) ? '<span class="wk-resize wk-resize-r" aria-hidden="true"></span>' : '';
-  return `<button type="button" class="wk-bar${cls}${user ? ' wk-user' : ''}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
-    + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
-}
-function chipHTML(e) {
-  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
-}
-function wireWeek() {
-  const view = $('#calView'); if (!view) return;
-  $$('#calView .wk-add, #calView .wk2-add').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); openModal(null, b.dataset.day); }));   // per-day add (mobile list ＋ and desktop day-header ＋) — keyboard-reachable
-  wireWeekDragCreate();
-  wireWeekResize();
-  // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
-  // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
-  makeMovable(view, {
-    itemSelector: '.wk-chip[data-id]', label: 'event',
-    idOf: el => el.dataset.id,
-    targetSelector: '.wk2-dayhd[data-day]', keyOf: t => t.dataset.day,
-    onMove: rescheduleEvent,
-  });
-  // click an EMPTY spot in a day column → new event at that day + rounded hour (grid view only)
-  $$('#calView .wk2-col[data-day]').forEach(col => col.addEventListener('click', (e) => {
-    if (e.target.closest('.wk2-ev')) return;                  // a block owns its own click → panel
-    const rect = col.getBoundingClientRect();
-    const min = Math.max(0, Math.min(23 * 60, Math.round((e.clientY - rect.top) / WK_HH * 60 / 30) * 30));
-    const hh = String(Math.floor(min / 60)).padStart(2, '0'), mm = String(min % 60).padStart(2, '0');
-    openModal(null, col.dataset.day, '', `${hh}:${mm}`);
-  }));
-  // auto-scroll the hour grid to ~7am (or an hour before "now" if today is in view)
-  const scroll = $('#wkScroll');
-  if (scroll && !scroll.dataset.scrolled) {
-    scroll.dataset.scrolled = '1';
-    const days = weekDays(weekAnchor);
-    const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
-    scroll.scrollTop = target * WK_HH;
-  }
-  // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Going/Reset/Copy; user → edit modal).
-  // A real drag releases over a day header, so it never also fires this.
-  $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id], #calView .wk2-ev[data-id]').forEach(el => el.addEventListener('click', () => {
-    if (_wkResizeSuppressClick) return;                       // a resize drag just ended on this bar — don't also open it
-    const ev = allEvents().find(x => x.id === el.dataset.id);
-    if (ev) openSidePanel(ev, el);
-  }));
-}
-// Drag a USER bar's left/right edge grip to reschedule its start / end day (multi-day user events).
-// Only edges visible this week have grips (barHTML), so we never truncate the off-screen part.
-let _wkResizeSuppressClick = false;
-function wireWeekResize() {
-  // Bind ONCE on the persistent #calView (render() only swaps its innerHTML, never the node itself),
-  // and read `days` LIVE inside each handler — capturing weekDays(weekAnchor) once would go stale
-  // after week navigation and, combined with re-binding every render, persist wrong dates.
-  const view = $('#calView'); if (!view || view.dataset.wkResizeWired) return;
-  view.dataset.wkResizeWired = '1';
-  const colOf = (clientX, rect) => Math.max(0, Math.min(6, Math.floor((clientX - rect.left) / (rect.width / 7))));
-  let st = null;   // { bar, ev, side, rect, moved }
-  view.addEventListener('pointerdown', (e) => {
-    if (isNarrowWeek()) return;                              // narrow week is a list (no bars/grips)
-    const grip = e.target.closest('.wk-resize'); if (!grip) return;
-    const bar = grip.closest('.wk-bar[data-id]'); if (!bar) return;
-    const evObj = allEvents().find(x => x.id === bar.dataset.id); if (!evObj || evObj.source !== 'user') return;
-    e.preventDefault(); e.stopPropagation();
-    const lane = bar.closest('#wkAllday') || bar.parentElement;
-    st = { bar, ev: evObj, side: grip.classList.contains('wk-resize-l') ? 'l' : 'r', rect: lane.getBoundingClientRect(), moved: false };
-    try { view.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
-  });
-  view.addEventListener('pointermove', (e) => {
-    if (!st) return;
-    st.moved = true;
-    const days = weekDays(weekAnchor);
-    const col = colOf(e.clientX, st.rect);
-    const s0 = days.indexOf(st.ev.date.slice(0, 10)), e0 = days.indexOf((st.ev.endDate || st.ev.date).slice(0, 10));
-    let lo = s0 < 0 ? 0 : s0, hi = e0 < 0 ? 6 : e0;
-    if (st.side === 'r') hi = Math.max(lo, col); else lo = Math.min(hi, col);
-    st.bar.style.gridColumn = `${lo + 1}/${hi + 2}`;         // live preview; discarded on the save re-render
-  });
-  const finish = (e) => {
-    if (!st) return;
-    const { ev, side, moved, rect } = st; st = null;
-    if (!moved) return;
-    _wkResizeSuppressClick = true; setTimeout(() => { _wkResizeSuppressClick = false; }, 350);
-    const days = weekDays(weekAnchor);
-    const col = colOf(e.clientX, rect);
-    const s0 = ev.date.slice(0, 10), en0 = (ev.endDate || ev.date).slice(0, 10);
-    let start = s0, end = en0;
-    if (side === 'r') end = days[col] >= s0 ? days[col] : s0;            // clamp end ≥ start
-    else start = days[col] <= en0 ? days[col] : en0;                     // clamp start ≤ end
-    saveUser(loadUser().map(x => x.id === ev.id ? { ...x, date: start, endDate: (end && end !== start) ? end : '' } : x));
-  };
-  view.addEventListener('pointerup', finish);
-  view.addEventListener('pointercancel', () => { st = null; });
-}
-// Drag across the week's all-day area to block out a date range → opens the editor pre-filled with
-// that span (a plain click = a single-day add, matching the month grid). Desktop grid only.
-function wireWeekDragCreate() {
-  if (isNarrowWeek()) return;
-  const lane = $('#wkAllday');
-  if (!lane || lane.dataset.dragWired) return;
-  lane.dataset.dragWired = '1';
-  const days = weekDays(weekAnchor);
-  // capture the grid geometry ONCE per drag (the week grid never moves mid-drag, and re-reading it
-  // live drifted the end column by ±1 when a scrollbar toggled) → start and end map with the same ruler
-  let startCol = null, ghost = null, dragRect = null;
-  const colOf = (clientX) => Math.max(0, Math.min(6, Math.floor((clientX - dragRect.left) / (dragRect.width / 7))));
-  const clearGhost = () => { if (ghost) { ghost.remove(); ghost = null; } };
-  const draw = (a, b) => {
-    if (!ghost) { ghost = document.createElement('div'); ghost.className = 'wk-dragsel'; ghost.setAttribute('aria-hidden', 'true'); lane.appendChild(ghost); }
-    const lo = Math.min(a, b), hi = Math.max(a, b);
-    ghost.style.left = `${(lo / 7) * 100}%`;
-    ghost.style.width = `${((hi - lo + 1) / 7) * 100}%`;
-  };
-  lane.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || e.target.closest('.wk-bar, .wk-chip, button, a')) return;   // leave existing items/controls alone
-    dragRect = lane.getBoundingClientRect();
-    startCol = colOf(e.clientX);
-    try { lane.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
-    draw(startCol, startCol);
-    e.preventDefault();
-  });
-  lane.addEventListener('pointermove', (e) => {
-    if (startCol == null) return;
-    draw(startCol, colOf(e.clientX));
-  });
-  const finish = (e) => {
-    if (startCol == null) return;
-    const endCol = colOf(e.clientX);
-    const lo = Math.min(startCol, endCol), hi = Math.max(startCol, endCol);
-    startCol = null; dragRect = null; clearGhost();
-    openModal(null, days[lo], lo === hi ? '' : days[hi]);   // single col → one-day add; span → pre-fill End
-  };
-  lane.addEventListener('pointerup', finish);
-  lane.addEventListener('pointercancel', () => { startCol = null; clearGhost(); });
-}
-
-function pad(n) { return String(n).padStart(2, '0'); }
-function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
-
-const MONTH_SINGLES = 3;      // chips shown per cell before "+N more"
-
-// Condensed month: a flat 6×7 grid of day cells with chips. A multi-day event renders as ONE chip
-// anchored to the first in-month day it covers (with a "→ end" hint, and a leading "‹" if it
-// started earlier); nothing on the in-between days. Season-long spans (isEvergreen) are pulled into
-// an "Ongoing this season" strip above the grid so ~8 all-summer events don't pile onto day one.
-function monthHTML() {
-  const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const weeks = monthGrid(viewY, viewM);                    // 6 rows of {iso, day, inMonth}
-  const gridLo = weeks[0][0].iso, gridHi = weeks[5][6].iso; // visible window (incl. spill days)
-  const ongoing = allEvents().filter(e => visible(e) && isEvergreen(e)
-    && e.date.slice(0, 10) <= gridHi && (e.endDate || e.date).slice(0, 10) >= gridLo);
-  const strip = ongoing.length ? `<div class="cal-ongoing"><div class="cal-ong-lab">☀ Ongoing this season <span>— open all month, tap for details</span></div><div class="cal-ong-pills">`
-    + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
-    + `</div></div>` : '';
-
-  // multi-day (non-evergreen) events → one chip anchored to the first in-month day they cover
-  const monthFirst = `${viewY}-${pad(viewM + 1)}-01`, monthKey = monthFirst.slice(0, 7);
-  const anchored = new Map();   // iso → [{ ev, cont, end }]
-  allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e)).forEach(e => {
-    const s = e.date.slice(0, 10), en = (e.endDate || e.date).slice(0, 10);
-    const anchor = s >= monthFirst ? s : monthFirst;                  // start day, or clamp to the 1st
-    if (anchor > en || anchor.slice(0, 7) !== monthKey) return;       // ended before this month / not this month
-    if (!anchored.has(anchor)) anchored.set(anchor, []);
-    anchored.get(anchor).push({ ev: e, cont: s < monthFirst, end: en });
-  });
-
-  const cells = weeks.flat().map((c, i) => {
-    const date = c.iso, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
-    const past = c.inMonth && date < TODAY;
-    // single-day events on this date, timed first (ascending), then all-day
-    const singles = c.inMonth
-      ? allEvents().filter(e => visible(e) && !isMultiDay(e) && e.date.slice(0, 10) === date)
-        .sort((a, b) => (a.time || '~').localeCompare(b.time || '~'))
-      : [];
-    const multis = c.inMonth ? (anchored.get(date) || []) : [];
-    const tks = c.inMonth ? tasksOn(date) : [];
-    const hasBook = singles.some(e => e.bookBy);
-    const items = [...singles.map(e => ({ ev: e })), ...multis, ...tks.map(t => ({ tk: t }))];
-    const chips = items.slice(0, MONTH_SINGLES).map(x => {
-      if (x.tk) return taskChipHTML(x.tk);
-      const e = x.ev;
-      const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
-      const t = x.end ? '' : fmt12(e.time);   // single-day timed → lead with the time (Notion-style)
-      const time = t ? `<span class="cc-time">${esc(t)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${t ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
-    }).join('');
-    const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
-    const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
-    const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
-    const nEv = singles.length + multis.length;
-    const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
-    const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
-    return `<div class="${cls}" data-day="${esc(date)}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
-      ${chips}${more}</div>`;
-  }).join('');
-  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
-}
-
-// ---- month cockpit: up next · book by · tasks due ----
-function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
-// an "evergreen" event is a season-long span (start→end beyond SPAN_CAP): the ongoing/permanent
-// layer (teamLab, "retro hunting"), which reads as "now", not a discrete upcoming event. Detect by
-// SPAN, not by category — a short, genuinely-dated seasonal event should still count as upcoming.
-function isEvergreen(e) { const en = (e.endDate || '').slice(0, 10); if (!en) return false; const span = daysBetween(e.date.slice(0, 10), en); return span != null && span > SPAN_CAP; }
-function panelHTML() {
-  const monthKey = `${viewY}-${pad(viewM + 1)}`;
-  const isPast = monthKey < TODAY.slice(0, 7);
-  const evs = allEvents().filter(visible);
-  // full (uncapped) lists so the count badge + "+N more" are honest, then a display slice.
-  // Up next = discrete upcoming events. Exclude the 'seasonal' category (this dataset's evergreen /
-  // ongoing / permanent bucket — teamLab, "retro hunting"; genuinely-dated seasonal things use the
-  // fireworks/festival/holiday/nature categories instead) AND any long-span residency (isEvergreen).
-  const upAll = evs.filter(e => !isEvergreen(e) && catOf(e) !== 'seasonal' && e.date.slice(0, 7) === monthKey && e.date.slice(0, 10) >= TODAY)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  const deadAll = evs.filter(e => e.bookBy && /^\d{4}-\d{2}-\d{2}$/.test(e.bookBy) && e.bookBy.slice(0, 7) <= monthKey && (e.endDate || e.date).slice(0, 10) >= TODAY)
-    .sort((a, b) => a.bookBy.localeCompare(b.bookBy));
-  const taskAll = allTasks().filter(t => t.date.slice(0, 7) === monthKey).sort((a, b) => a.date.localeCompare(b.date));
-  const upnext = upAll.slice(0, 5), deadlines = deadAll.slice(0, 5), tasks = taskAll.slice(0, 6);
-  const more = (total, shown) => total > shown ? `<button type="button" class="cp-more" data-goagenda>+${total - shown} more →</button>` : '';
-  const count = (n) => n ? ` <span class="cp-count">${n}</span>` : '';
-
-  const upHTML = upnext.length ? upnext.map(e => {
-    const d = daysBetween(TODAY, e.date.slice(0, 10));
-    const cd = d == null ? '' : d <= 0 ? 'now' : `${d}d`;
-    return `<button class="cp-up" data-ev="${esc(e.id)}">
-      <span class="cp-cd cat-${safeCat(e)}">${esc(cd)}<small>${esc(fmtShort(e.date))}</small></span>
-      <span class="cp-uptt">${esc(e.title)}</span></button>`;
-  }).join('') + more(upAll.length, upnext.length) : `<p class="cp-empty">${isPast ? 'This month has passed.' : 'Nothing more coming up this month.'}</p>`;
-
-  const dlHTML = deadlines.length ? deadlines.map(e => {
-    const sev = sevOf(e.bookBy), days = daysBetween(TODAY, e.bookBy);
-    const badge = days < 0 ? 'overdue' : `${days}d`;
-    return `<button class="cp-deadline" data-ev="${esc(e.id)}">
-      <span class="cp-dot sev-${sev}"></span>
-      <span class="cp-body"><span class="cp-title">${esc(e.title)}</span>
-        <span class="cp-sub">book by ${esc(fmtShort(e.bookBy))}</span></span>
-      <span class="cp-badge sev-${sev}">${esc(badge)}</span></button>`;
-  }).join('') + more(deadAll.length, deadlines.length) : `<p class="cp-empty">Nothing to book${isPast ? '.' : " — you're clear 🎏"}</p>`;
-
-  const taskHTML = tasks.length ? tasks.map(t => `<button class="cp-task" data-task="${esc(t.taskId)}" title="Open on the checklist">
-    <span class="cp-tdue">${esc(fmtShort(t.date))}</span>
-    <span class="cp-ttt">${esc(t.title)}</span>
-    <span class="cp-tgo" aria-hidden="true">›</span></button>`).join('') + more(taskAll.length, tasks.length) : `<p class="cp-empty">No due dates — set them on the checklist.</p>`;
-
-  return `<h3 class="cp-head">Up next</h3>
-    <div class="cp-list">${upHTML}</div>
-    <hr class="cp-hr"><h3 class="cp-head">Book by${count(deadAll.length)}</h3><div class="cp-list">${dlHTML}</div>
-    <hr class="cp-hr"><h3 class="cp-head">Tasks due${count(taskAll.length)}</h3><div class="cp-list">${taskHTML}</div>`;
-}
-function wirePanel() {
-  $$('#calPanel .cp-up, #calPanel .cp-deadline').forEach(b => b.addEventListener('click', () => {
-    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
-  }));
-  $$('#calPanel .cp-task').forEach(b => b.addEventListener('click', () => gotoTask(b.dataset.task)));
-  $$('#calPanel .cp-more').forEach(b => b.addEventListener('click', () => { mode = 'agenda'; render(); }));   // "+N more" → the full uncapped agenda
-}
-
-function agendaHTML() {
-  // merge upcoming events + checklist tasks (with a due date) into one date-sorted stream
-  const evRows = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY).map(e => ({ date: e.date, ev: e }));
-  const tkRows = allTasks().filter(t => t.date.slice(0, 10) >= TODAY).map(t => ({ date: t.date, tk: t }));
-  const upcoming = [...evRows, ...tkRows].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
-  if (!upcoming.length) {
-    const hidden = hiddenCats.size > 0;
-    return `<div class="empty empty-state">
-      <div class="empty-emoji" aria-hidden="true">📭</div>
-      <p class="empty-h">No upcoming events${hidden ? ' in the shown categories' : ''}.</p>
-      ${hidden ? '<p class="empty-sub">Some categories are filtered out — tap a greyed legend chip above to show them.</p>' : ''}
-    </div>`;
-  }
-  let last = '';
-  return `<div class="agenda">${upcoming.map(x => {
-    const mk = x.date.slice(0, 7);
-    const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+x.date.slice(5, 7) - 1]} ${x.date.slice(0, 4)}</div>`) : '';
-    if (x.tk) {
-      const t = x.tk;
-      return head + `<div class="agenda-row agenda-task" data-task="${esc(t.taskId)}">
-        <span class="agenda-date cat-task">${esc(fmtShort(t.date))}</span>
-        <span class="agenda-body"><button type="button" class="agenda-title" data-task="${esc(t.taskId)}">☑ ${esc(t.title)}</button>
-          <span class="agenda-area">checklist task</span></span></div>`;
-    }
-    const e = x.ev;
-    return head + `<div class="agenda-row" data-ev="${esc(e.id)}">
-      <span class="agenda-date cat-${esc(catOf(e))}">${esc(fmtShort(e.date))}</span>
-      <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
-        ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
-        ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
-      <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;
-  }).join('')}</div>`;
-}
-function wireAgenda() {
-  // the .agenda-title button is the keyboard trigger (native Enter/Space); its click bubbles to the
-  // row. A mouse click anywhere on the row (except the +G link) also opens the detail.
-  $$('#calView .agenda-row').forEach(r => {
-    r.addEventListener('click', (e) => {
-      if (e.target.closest('[data-stop]')) return;
-      if (r.dataset.task) { gotoTask(r.dataset.task); return; }
-      const ev = allEvents().find(x => x.id === r.dataset.ev); if (ev) openSidePanel(ev, e.target.closest('button') || r);
-    });
-  });
-}
-
-// ---- day popover ----
-function wireCells() {
-  $$('#calView .cal-cell[data-day]').forEach(c => {
-    // the .cal-date button is the keyboard-focusable trigger; its click bubbles here. A chip click
-    // opens the event; on a day WITH items, a bare click peeks the day popover; on an EMPTY day it
-    // goes straight to the new-event editor (Notion-style — no empty popover in the way).
-    c.addEventListener('click', (e) => {
-      if (_calDragSelected) { _calDragSelected = false; return; }              // a range-drag just ended — don't also add/peek
-      const chip = e.target.closest('.cal-chip');
-      if (chip) {
-        if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
-        const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return;
-      }
-      if (c.querySelector('.cal-chip, .cal-more')) dayPopover(c.dataset.day, c);   // day has events/tasks → peek
-      else openModal(null, c.dataset.day);                                        // empty day → add straight away
-    });
-  });
-  // "Ongoing this season" strip pills → popover
-  $$('#calView .cal-opill[data-ev]').forEach(b => b.addEventListener('click', () => {
-    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
-  }));
-}
-// Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
-// that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
-let _calDragSelected = false;
-function wireMonthSelect() {
-  const grid = $('#calView .cal-grid');
-  if (!grid || grid.dataset.selWired) return;
-  grid.dataset.selWired = '1';
-  const cellAt = (x, y) => document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
-  const clear = () => $$('#calView .cal-cell.cal-selecting').forEach(c => c.classList.remove('cal-selecting'));
-  const paint = (a, b) => {
-    const lo = a < b ? a : b, hi = a < b ? b : a;
-    $$('#calView .cal-cell[data-day]').forEach(c => c.classList.toggle('cal-selecting', c.dataset.day >= lo && c.dataset.day <= hi));
-  };
-  let startDay = null, moved = false;
-  grid.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || e.target.closest('.cal-chip, .cal-more, button, a')) return;   // let chips/date-button/more work
-    const cell = e.target.closest('.cal-cell[data-day]'); if (!cell) return;
-    startDay = cell.dataset.day; moved = false;
-    try { grid.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
-    paint(startDay, startDay);
-  });
-  grid.addEventListener('pointermove', (e) => {
-    if (startDay == null) return;
-    const cell = cellAt(e.clientX, e.clientY); if (!cell) return;
-    if (cell.dataset.day !== startDay) moved = true;
-    paint(startDay, cell.dataset.day);
-  });
-  const finish = (e) => {
-    if (startDay == null) return;
-    const endDay = cellAt(e.clientX, e.clientY)?.dataset.day || startDay;
-    const s = startDay; startDay = null; clear();
-    if (!moved || endDay === s) return;                              // plain click → wireCells handles it
-    _calDragSelected = true; setTimeout(() => { _calDragSelected = false; }, 350);
-    const lo = s < endDay ? s : endDay, hi = s < endDay ? endDay : s;
-    openModal(null, lo, hi);
-  };
-  grid.addEventListener('pointerup', finish);
-  grid.addEventListener('pointercancel', () => { startDay = null; clear(); });
-}
-// drag a USER event chip onto another day to reschedule (baked events are fixed)
-function wireReschedule() {
-  const view = $('#calView');
-  if (!view) return;
-  makeMovable(view, {
-    itemSelector: '.cal-chip[data-ev]', label: 'event',
-    canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
-    idOf: el => el.dataset.ev,
-    targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,
-    onMove: rescheduleEvent,
-  });
-}
+export function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
 // shared reschedule (month grid + week chips): user → edit date (keep span); baked → date override.
-function rescheduleEvent(id, day) {
+export function rescheduleEvent(id, day) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
   if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
@@ -907,7 +426,7 @@ function dismissPopover() {
   if (popCleanup) { popCleanup(); popCleanup = null; }
   if (popEl) { popEl.remove(); popEl = null; }
 }
-function dayPopover(date, anchor) {
+export function dayPopover(date, anchor) {
   dismissPopover();
   const evs = eventsOn(date);
   const tks = tasksOn(date);
@@ -1005,7 +524,7 @@ function positionSidePanel(panel) {
   card.style.top = (top + sy) + 'px';
 }
 
-function openSidePanel(ev, trigger) {
+export function openSidePanel(ev, trigger) {
   if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
   _sidePanelTrigger = trigger || document.activeElement;
   _sidePanelEv = ev.id;
@@ -1198,7 +717,7 @@ function srcline(s) {
 }
 
 // ---- add/edit modal ----
-function openModal(ev, presetDate, presetEnd, presetTime) {
+export function openModal(ev, presetDate, presetEnd, presetTime) {
   const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: presetEnd || '', time: presetTime || '', endTime: '', category: 'personal', note: '' };
   // preserve a non-standard (e.g. imported .ics) category instead of silently rewriting it to the first option
   const cats = (e.category && !CATS.includes(e.category)) ? [e.category, ...CATS] : CATS;

@@ -34,6 +34,7 @@ export let weekAnchor = '2026-06-15';   // any ISO date inside the week the week
 export let TODAY = '2026-06-15';
 export let hiddenCats = new Set();
 let showTasks = true;             // checklist tasks with a user-set due date appear on the calendar (filterable)
+let showUser = true, showBaked = true;   // source "calendars": My events (user) / Researched (baked) visibility
 let _taskCache = null;            // per-render memo of task pseudo-events
 let popEl = null, popCleanup = null;
 let _sidePanelEv = null;          // currently open event id (null = closed)
@@ -111,7 +112,13 @@ export function gotoTask(taskId) {
 }
 
 export function catOf(e) { return e.category || 'personal'; }
-export function visible(e) { return !hiddenCats.has(catOf(e)); }
+export function visible(e) {
+  if (hiddenCats.has(catOf(e))) return false;
+  const isUser = e.source === 'user';   // baked events (incl. overrides) are 'baked'; user + imported .ics are 'user'
+  if (isUser && !showUser) return false;
+  if (!isUser && !showBaked) return false;
+  return true;
+}
 
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
@@ -129,12 +136,13 @@ export function mountCalendar(data, today) {
   TODAY = today || nowISO();
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   showTasks = getRaw(KEYS.calShowTasks, '') !== 'off';  // on by default; the ☑ Tasks toggle persists your choice
+  const src = get(KEYS.calSources, {}) || {}; showUser = src.showUser !== false; showBaked = src.showBaked !== false;   // both on by default
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
   wireToolbar();
   wireQuickAdd();
-  buildLegend();
+  buildCalendars();
   render();
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route !== 'calendar') { closeSidePanel(); dismissPopover(); } });   // the side panel + day popover are portaled to <body> (fixed) — close them when leaving the calendar so they don't hang over other pages
   // EF3: while the calendar is hidden, a data change marks it dirty instead of re-rendering
@@ -218,17 +226,27 @@ export function goToDate(iso) {
   viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; render();
 }
 
-// ---- legend doubles as category filter (built from categories actually present) ----
-function buildLegend() {
-  const el = $('#calLegend');
+// ---- the "Calendars" sidebar list: source (My events / Researched) + per-category filters ----
+function buildCalendars() {
+  const el = $('#calCalendars');
   if (!el) return;
   const present = [...new Set(allEvents().map(catOf))].sort();
-  const taskPill = `<button class="lg lg-task${showTasks ? ' active' : ''}" id="lgTasks" type="button" aria-pressed="${showTasks}" title="Show checklist tasks that have a due date">☑ Tasks</button>`;
-  el.innerHTML = taskPill + present.map(c =>
-    `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
-  ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
-  const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild, but never auto-scroll the page
-  $$('#calLegend .lg').forEach(b => {
+  // btnCls (e.g. cat-festival) goes on the row so the category :is() rule sets --chip-cat, which the
+  // child swatch inherits; swCls (sw-user/sw-baked/sw-task) colours the source/task swatches directly.
+  const row = (attrs, btnCls, swCls, name, on) =>
+    `<button class="calrow${btnCls ? ' ' + btnCls : ''}${on ? '' : ' off'}" role="switch" aria-checked="${on}" type="button" ${attrs}><span class="cal-sw${swCls ? ' ' + swCls : ''}"></span><span class="cal-nm">${name}</span></button>`;
+  el.innerHTML =
+    `<div class="cal-cals-head"><span>Calendars</span><button class="cal-cals-all" id="calAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button></div>`
+    + row('id="calSrcUser"', '', 'sw-user', 'My events', showUser)
+    + row('id="calSrcBaked"', '', 'sw-baked', 'Researched', showBaked)
+    + `<div class="cal-cals-div" role="separator"></div>`
+    + present.map(c => row(`data-cat="${esc(c)}" title="Click to toggle · double-click to show only ${esc(c)}"`, `cat-${esc(c)}`, '', esc(c), !hiddenCats.has(c))).join('')
+    + `<div class="cal-cals-div" role="separator"></div>`
+    + row('id="lgTasks"', '', 'sw-task', '☑ Tasks', showTasks);
+
+  const focusRow = (sel) => $(sel)?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild
+  const catSel = (c) => `#calCalendars .calrow[data-cat="${window.CSS ? CSS.escape(c) : c}"]`;
+  $$('#calCalendars .calrow[data-cat]').forEach(b => {
     // single click toggles this category; double click isolates it (show only this). A 200ms timer
     // lets the dblclick cancel the pending single-click toggle so the two don't fight.
     b.addEventListener('click', () => {
@@ -237,7 +255,7 @@ function buildLegend() {
       _legendTimer = setTimeout(() => {
         _legendTimer = null;
         if (hiddenCats.has(c)) hiddenCats.delete(c); else hiddenCats.add(c);
-        persistFilters(); buildLegend(); render(); focusLg(c);
+        persistFilters(); buildCalendars(); render(); focusRow(catSel(c));
       }, 200);
     });
     b.addEventListener('dblclick', () => {
@@ -247,20 +265,22 @@ function buildLegend() {
       const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
       hiddenCats.clear();
       if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
-      persistFilters(); buildLegend(); render(); focusLg(c);
+      persistFilters(); buildCalendars(); render(); focusRow(catSel(c));
     });
   });
+  $('#calSrcUser')?.addEventListener('click', () => { showUser = !showUser; persistSources(); buildCalendars(); render(); focusRow('#calSrcUser'); });
+  $('#calSrcBaked')?.addEventListener('click', () => { showBaked = !showBaked; persistSources(); buildCalendars(); render(); focusRow('#calSrcBaked'); });
   $('#lgTasks')?.addEventListener('click', () => {
     showTasks = !showTasks; setRaw(KEYS.calShowTasks, showTasks ? 'on' : 'off'); _taskCache = null;
-    buildLegend(); render(); $('#lgTasks')?.focus({ preventScroll: true });
+    buildCalendars(); render(); focusRow('#lgTasks');
   });
-  $('#lgAll')?.addEventListener('click', () => {
+  $('#calAll')?.addEventListener('click', () => {
     if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
-    persistFilters(); buildLegend(); render();
-    $('#lgAll')?.focus({ preventScroll: true });
+    persistFilters(); buildCalendars(); render(); focusRow('#calAll');
   });
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
+function persistSources() { set(KEYS.calSources, { showUser, showBaked }); }
 
 // ---- Notion-style keyboard shortcuts (active only on #/calendar) ----
 // remove the focused/open event: user events delete; baked events leave your Going list (researched

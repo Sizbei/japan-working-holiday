@@ -1,69 +1,109 @@
 # Calendar month view — condensed simplification (2026-07-06)
 
-**Goal:** Revert the month grid from the Notion-style spanning **connected bars** back to the earlier **condensed chip** layout, remove the **✓ Going** control from the calendar, and **dim past days**.
+**Goal:** Replace the Notion-style spanning **connected bars** in the month grid with a **condensed chip** layout, remove the **✓ Going filter** from the calendar, and **dim past days**.
 
-**Why:** The connected multi-day bars read as elongated and overlap badly (season-long beer gardens span every week, short stays stack lanes). The pre-bars condensed design was cleaner. The ✓ Going *filter* doesn't earn its place on a calendar. Past-day dimming is a standard calendar affordance that's currently missing.
+**Why:** The connected multi-day bars read as elongated and overlap badly. The pre-bars condensed design was cleaner. The ✓ Going *filter pill* doesn't earn its place on a calendar. Past-day dimming is a standard affordance that's missing.
 
-**Relationship to the parity spec** (`2026-07-06-calendar-notion-parity-design.md`): this **supersedes that spec's month-bar direction** (Phase 1's "all-day/multi-day → filled bar" and any lane/bar machinery). The other parity phases still stand and compose cleanly: Day view, Calendars sidebar, layout chrome, and the timed **dot-chip** styling for single-day timed events (dot + time prefix) — a dot-chip is condensed and fits this direction.
+> **Revision note:** hardened after an adversarial review (3 blind critics vs. the real code). The `goingOnly` removal was verified clean; the multi-day logic (§2) had a blocker cluster that is now redesigned; §4 now names exactly what to remove vs. keep. See "Verified facts" and "Cleanup" at the end.
 
-## Global constraints (from CLAUDE.md — bind this work)
+**Relationship to the parity spec** (`2026-07-06-calendar-notion-parity-design.md`): this **supersedes that spec's month-bar direction**. The other parity phases still stand and compose: Day view, Calendars sidebar, layout chrome, and the single-day timed **dot-chip** styling.
+
+## Global constraints (from CLAUDE.md)
 
 - Zero-build, dependency-free; `esc()` before `innerHTML`; single-path data flow (`saveUser()` → `jwh:data-changed` → `render()`); never `render()` at a mutation site; `render()` never dispatches `jwh:data-changed`.
-- Bump `CACHE` in `docs/sw.js` on any asset change.
+- Bump `CACHE` in `docs/sw.js` (currently `jwh-v228`) on any asset change.
 - Restore keyboard focus across `innerHTML` rebuilds; real `<button>` controls.
-- `SPAN_CAP = 10` convention: season-long events don't flood the grid.
+- Clean up orphans this change creates (dead CSS/JS) — do not leave dangling selectors.
+- `SPAN_CAP = 10`: season-long events don't flood the grid.
 
 ## Design
 
-### 1. Remove the connected-bar machinery
+### 1. Rebuild `monthHTML()` as a flat condensed grid (NOT a byte-for-byte revert)
 
-Delete from `monthHTML()` and CSS the entire spanning-bar layer introduced in PR #49:
-- **JS:** the `.cal-bars` overlay, `packLanes(multi, days)` usage in the month path, the per-week `--lanes`/`laneN` computation, `.cal-barspace`, and the `.cal-weeks` / `.cal-week` / `.cal-cells` bar-row structure. Revert `monthHTML()` to a **flat condensed grid**: one `.cal-grid` of `.cal-cell`s (7-col), chips only — the structure that existed before `68a21ab`.
-- **Wiring:** `wireMonthSelect()` and `alignRail()` currently query `.cal-weeks`; point them back at the flat `.cal-grid` container. `wireCells()` chip/`+N more`/day-click wiring is unchanged (it queries `.cal-cell`/`.cal-chip`).
-- **CSS:** remove `.cal-bars`, `.cal-bar*`, `.cal-barspace`, and the `.cal-week{--laneH}` / `.cal-week .cal-cell{min-height: calc(122px + …)}` rules. Drop `.cal-bar` from the `:is(.cal-chip,.cal-bar,.cal-opill)` category-colour groups. Revert `.cal-cell` `min-height` to the condensed pre-bars value (smaller cells) — pin the exact px in the plan against `68a21ab~1`.
+The layout returns to the pre-`68a21ab` **structure** — a flat `.cal-grid` of 42 `.cal-cell`s (6×7), chips only, no bar overlay. **But the multi-day handling is new (§2), not the old `eventsOn(date, true)` pass-through** — see §2 for why a literal revert is wrong.
 
-### 2. Multi-day events → start-day-only chip + range hint
+- **JS:** remove from `monthHTML()` the `.cal-bars` overlay, `packLanes(multi, days)` (month path only — week view keeps its `packLanes` call, so the import stays), the per-week `--lanes`/`laneN` computation, `.cal-barspace`, and the `.cal-weeks`/`.cal-week`/`.cal-cells` week-row structure. Return `<div class="cal-dowrow">…</div><div class="cal-grid">…</div>`.
+- **Wiring:** `wireMonthSelect()` (calendar.js:844) and `alignRail()` (calendar.js:392) query `.cal-weeks`; repoint both to `.cal-grid`. Verified: neither depends on `.cal-week` rows or `--lanes` (alignRail reads only `offsetHeight`/`getBoundingClientRect().bottom`; wireMonthSelect attaches to the container then queries `.cal-cell[data-day]`). `wireCells()` day/chip/`+N more` wiring works on `.cal-cell`/`.cal-chip` (both persist) — **but delete its now-dead `.cal-bar[data-ev]` loop** (calendar.js:832-834; empty NodeList after bars go).
+- **CSS / row height:** the flat `.cal-grid` already resolves to condensed ~88px rows via the existing `.cal-grid{ grid-auto-rows: minmax(88px,1fr) }` (style.css:2617) + the `minmax(66px,1fr)` mobile rule (style.css:825). The bars-era `.cal-week .cal-cell{ min-height: calc(122px + var(--lanes)*var(--laneH)) }` override becomes inert (no `.cal-week` emitted) — remove it along with the other dead rules (see Cleanup). No new `min-height` on `.cal-cell` is needed; the auto-rows govern.
 
-A multi-day event renders **one** chip, not a bar, and only once:
-- On its **start day** when the start is within the visible grid → `● {title} → {fmtShort(endDate)}` (e.g. `Little Japan hostel → Jul 15`).
-- When the event **started before** the visible grid (spilled in from a prior month) → render on the **first visible grid day** with a leading `‹` continuation marker: `‹ {title} → {fmtShort(endDate)}`.
-- **Nothing on the in-between days.** Full span stays visible on click (popover) and in Agenda/Week views.
+### 2. Multi-day events → ONE anchored chip (start day, or first in-month day)
 
-Implementation: reuse `isMultiDay(e)`, `daysBetween`, `fmtShort`. In the per-cell single-day collection, include a multi-day event `e` for cell `iso` iff `startISO(e) === iso` OR (`startISO(e) < gridLo && iso === gridLo`). This replaces the old behavior where only `> SPAN_CAP` events were start-day-only and short multi-day events repeated on every day — now **all** non-evergreen multi-day are start-day-only.
+**Do NOT source multi-day events from `eventsOn`.** With `capLong=true`, `eventsOn` returns a multi-day event on *every* covered day (except `>SPAN_CAP`, which it returns start-day-only) — a faithful revert would reintroduce short stays repeated across cells, which is exactly what we're removing (review Finding 1.3). Instead, split the per-cell content:
 
-Chip markup gains a `.cc-range` span for the `→ …` / `‹` hint (escaped). Sorting within a cell: timed single-day first (ascending), then all-day/multi-day (matches the parity spec's bucket-don't-literal-sort rule).
+- **Single-day events for cell `iso`:** `allEvents().filter(e => visible(e) && !isMultiDay(e) && e.date.slice(0,10) === iso)`.
+- **Multi-day non-evergreen events:** collect once (`allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e))`) and compute each one's **anchor cell** = the first day of the *view month* it covers:
+  ```js
+  const s = e.date.slice(0,10);
+  const en = (e.endDate || e.date).slice(0,10);
+  const monthFirst = `${viewY}-${pad(viewM+1)}-01`;
+  const anchor = s >= monthFirst ? s : monthFirst;         // start day, or clamp to the 1st
+  const showThisMonth = anchor <= en && anchor.slice(0,7) === monthFirst.slice(0,7);
+  const contFromBefore = s < monthFirst;                   // started in a prior month → '‹'
+  // if showThisMonth: place the chip on the cell whose iso === anchor
+  ```
+  This anchors on an **in-month** day (July 1–31), sidestepping the out-of-month first grid cell entirely (review blocker 1.1 — `gridLo` is June 28 for July 2026). `anchor <= en` is the overlap guard so a stay that *ended* before this month never shows (review 1.2). An event starting in a later month (`s.slice(0,7) !== month`) is excluded.
+- **Chip markup:** `● {esc(title)} <span class="cc-range">→ {esc(fmtShort(en))}</span>`, with a leading `‹ ` (in `.cc-range`) when `contFromBefore`. Multi-day anchored chips join that cell's item list alongside single-day chips + task chips, then the existing cap-at-3 + `+N more` applies.
+- **Ordering within a cell:** single-day timed first (ascending by time — bucket, don't literal-sort on `e.time`), then single-day all-day, then multi-day anchors, then tasks.
+
+Worked examples (July 2026 view): a stay Jul 10–15 → one chip on Jul 10 `→ Jul 15`; a stay Jun 20–Jul 5 → one `‹ … → Jul 5` chip on **Jul 1**; a stay Jun 20–Jun 25 → not shown (ended before July); an Aug event → not shown.
 
 ### 3. Season-long (evergreen) events stay in the Ongoing strip
 
-Events with span `> SPAN_CAP` (`isEvergreen`, e.g. the summer beer gardens, teamLab) remain in the **"Ongoing this season" pill strip** above the grid (already built, PR #50) and are **excluded from day cells** — otherwise ~8 of them would pile onto the first visible day. This is the one multi-day treatment that is NOT a start-day chip, by design. `monthHTML` keeps the `ongoing`/`strip` block; only the short-multi-day bar path is removed.
+Events with span `> SPAN_CAP` (`isEvergreen`) remain in the **"Ongoing this season" pill strip** above the grid (already built, PR #50) and are **excluded from day cells** (`!isEvergreen` in §2's multi-day filter) — otherwise ~8 of them would pile onto the anchor day. Keep the `ongoing`/`strip` block and its `gridLo/gridHi` window computation in `monthHTML`. *(Open decision: if the owner prefers no strip, evergreen events would instead become a single `‹ … ›` anchored chip and the strip is deleted. Default = keep the strip.)*
 
-*(Open decision recorded: if the owner prefers zero strip, evergreen events would instead become a single `‹ … ›` chip on the first visible day and the strip is deleted. Default = keep the strip.)*
+### 4. Remove the ✓ Going FILTER from the calendar (keep the Going controls)
 
-### 4. Remove ✓ Going from the calendar
+**Remove exactly these:**
+- The filter pill `#lgGoing` (calendar.js:222) + its click handler (calendar.js:250-252).
+- The `goingOnly` state: declaration (33), the clause in `visible()` (111 → `return !hiddenCats.has(catOf(e))`), and the boot load (128). Verified: `goingOnly` is read at exactly those sites and nowhere else — every view funnels through the shared `visible()`, so all views update correctly.
+- The green read-only marker `cp-going` in the up-next cockpit (calendar.js:738: `${isGoing(e.id) ? '<span class="cp-going">✓ going</span>' : ''}` → drop the ternary).
+- Dead CSS: `.cal-legend .lg-going` / `::before` / `.active` (style.css:2801-2803) and `.cp-going` (style.css:914).
 
-- **Filter pill:** delete `#lgGoing` (calendar.js:222) + its handler (calendar.js:250-252) and the `goingOnly` state read/persist in the calendar. `visible(e)` drops its `goingOnly` clause → `return !hiddenCats.has(catOf(e))` (plus the source checks if the Calendars-sidebar phase has landed).
-- **Markers:** remove the green `✓ going` tag rendered on cockpit/up-next rows (`isGoing(e.id) ? '<span class="cp-going">✓ going</span>'`, panelHTML) and any equivalent in agenda rows.
-- **Keep** `isGoing()` and the underlying going data — it's still used by the Going page and dashboard. Only the calendar's *filter pill* and *inline markers* are removed. `KEYS.calGoingOnly` may be left defined but unused (no migration).
+**KEEP (do NOT touch) — these are how a user marks Going and feed the Going page/dashboard:**
+- `#spGoing` side-panel button (calendar.js:1034) + handler (1084).
+- `#mdGoingU` event-editor button (calendar.js:1233) + handler (1241).
+- The context-menu Going item via `eventMenuSpec` (calendar.js:1190).
+- `isGoing()` / `toggleGoing()` and all going data.
+
+There is **no** `isGoing` marker in `agendaHTML` — the earlier "any equivalent in agenda rows" was a phantom; ignore it. `KEYS.calGoingOnly` may be left defined but unread (no migration).
 
 ### 5. Dim past days
 
-Add a `.cal-cell.past` class for **in-month** days strictly before `TODAY` (`c.inMonth && date < TODAY`):
-- Subtle dim: a slightly sunk background (lighter than `.out`) and the `.cal-date` number in `--ink-faint`.
-- **Do not** dim today (keeps its pill) or future days. Out-of-month `.out` dimming is unchanged; a cell can be both `out` and `past` (out styling wins visually).
-- Past days remain fully interactive (you can still click to add/inspect) — dimming is visual only.
+Add `.cal-cell.past` for **in-month** days strictly before `TODAY` (`c.inMonth && date < TODAY`; both are `YYYY-MM-DD`, a sound lexicographic compare — verified):
+- Subtle dim: slightly sunk background + `.cal-date` number in `--ink-faint`.
+- **Do not** dim today (`=== TODAY`, keeps its pill) or future days.
+- **Specificity:** `.cal-cell.past` and `.cal-cell.out` are equal specificity (0,0,2,0), so an appended `.past` rule would override `.out` by source order. To make the spec's "out wins" hold, scope the new rule as **`.cal-cell.past:not(.out)`** (review 2.2). Past days stay fully interactive; dimming is visual only.
 
 ## Data model / keys
 
-- **No new keys.** `KEYS.calGoingOnly` becomes unused (left in place). No event-shape change.
-- **No new pure helpers** (reuses `isMultiDay`, `daysBetween`, `fmtShort`, `isEvergreen`).
+- **No new keys.** `KEYS.calGoingOnly` becomes unused (left in place). No event-shape change. No new pure helpers (reuses `isMultiDay`, `daysBetween`, `fmtShort`, `isEvergreen`, `pad`).
+
+## Cleanup (orphans this change creates — remove them, per CLAUDE.md)
+
+- JS: the `.cal-bar[data-ev]` loop in `wireCells()` (calendar.js:832-834).
+- CSS: `.cal-bars`, `.cal-bar*`, `.cal-barspace`, `.cal-weeks`, `.cal-week`, `.cal-week .cal-cell{overflow…}`, `.cal-cells`, `.cal-week{--laneH}` + the `min-height: calc(122px…)` override; drop `.cal-bar` from the `:is(.cal-chip,.cal-bar,.cal-opill)` category groups (keeps `.cal-chip`/`.cal-opill`; opill dots stay colored — verified). Dead going CSS per §4.
+- New CSS deliverables: `.cc-range` (mono/dim inline hint) and `.cal-cell.past:not(.out)`.
+- Pre-existing dead code **not** in scope: `.cal-cell.season-start`/`--stripe` (style.css:887) was orphaned by the bars PR, not by this change — leave it unless doing a separate sweep.
 
 ## Testing
 
-- `node --test tests/lib.test.mjs` stays green (pure lib unchanged; if any bar-only helper usage is removed, no lib export is deleted).
-- Manual/CDP on July 2026: no spanning bars anywhere; a 5-day stay shows one `→ Jul 15` chip on its start day and nothing on in-between days; an event spilling from June shows `‹ … → …` on the first visible cell; the Ongoing strip still lists the season-long events; no ✓ Going pill in the toolbar and no green going markers; past days (Jul 1–5, today = Jul 6) are visibly dimmed while Jul 6+ are not; SW bumped; no console errors.
+- `node --test tests/lib.test.mjs` stays green — verified: it imports only pure libs; nothing tests `packLanes`/`monthHTML`/`visible`/`isGoing`/bars.
+- Manual/CDP on July 2026 (today = Jul 6): no spanning bars; a 5-day stay shows one `→ Jul 15` chip on its start day, nothing on in-between days; a June→July stay shows `‹ … → Jul 5` on **Jul 1** only; a stay that ended in June does not appear; the Ongoing strip still lists season-long events; **no ✓ Going pill** in the toolbar and no green `✓ going` marker, but `＋/✓ Going` still works in the side panel, editor, and right-click menu; Jul 1–5 dimmed, Jul 6+ not; SW bumped; no console errors.
+
+## Verified facts (established by the review — build on these)
+
+- `goingOnly` has a single reader chokepoint (`visible()`); removing it correctly affects all views. No dangling references anywhere (gestures/dashboard/agenda clean).
+- `eventsOn(iso, true)` returns multi-day events on every covered day except `>SPAN_CAP` — so §2 must bypass it.
+- Dropping `.cal-bar` from the `:is()` groups keeps `.cal-opill` dot coloring (custom-property inheritance).
+- Tests stay green; `.cal-grid`/`.cal-cell` CSS survives on `main`.
+
+## Rejected / non-issues
+
+- "Any equivalent Going marker in agenda rows" — **rejected**, `agendaHTML` renders none.
+- "Revert min-height to 92px" — **dropped**, the flat `.cal-grid` auto-rows (88px) already govern; no `.cal-cell` min-height needed.
 
 ## Out of scope
 
-- The other parity phases (Day view, Calendars sidebar, chrome) — tracked in the parity spec.
+- The other parity phases (Day view, Calendars sidebar, chrome).
 - Removing `isGoing`/going data or the Going page.
-- Any change to Week/Agenda multi-day rendering (they already show full spans and read fine).
+- Week/Agenda multi-day rendering (they show full spans and read fine).

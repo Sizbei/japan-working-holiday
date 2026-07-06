@@ -30,7 +30,6 @@ let mode = 'month';        // 'month' | 'week' | 'agenda'
 let weekAnchor = '2026-06-15';   // any ISO date inside the week the week-view shows
 let TODAY = '2026-06-15';
 let hiddenCats = new Set();
-let goingOnly = false;            // when on, the calendar shows only events you've marked ✓ Going
 let showTasks = true;             // checklist tasks with a user-set due date appear on the calendar (filterable)
 let _taskCache = null;            // per-render memo of task pseudo-events
 let popEl = null, popCleanup = null;
@@ -108,7 +107,7 @@ function gotoTask(taskId) {
 }
 
 function catOf(e) { return e.category || 'personal'; }
-function visible(e) { return !hiddenCats.has(catOf(e)) && (!goingOnly || isGoing(e.id)); }
+function visible(e) { return !hiddenCats.has(catOf(e)); }
 
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
@@ -125,7 +124,6 @@ export function mountCalendar(data, today) {
   DATA = data;
   TODAY = today || nowISO();
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
-  goingOnly = getRaw(KEYS.calGoingOnly, '') === 'on';   // off by default (keep suggestions visible); the ✓ Going toggle persists your choice
   showTasks = getRaw(KEYS.calShowTasks, '') !== 'off';  // on by default; the ☑ Tasks toggle persists your choice
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
@@ -219,9 +217,8 @@ function buildLegend() {
   const el = $('#calLegend');
   if (!el) return;
   const present = [...new Set(allEvents().map(catOf))].sort();
-  const goPill = `<button class="lg lg-going${goingOnly ? ' active' : ''}" id="lgGoing" type="button" aria-pressed="${goingOnly}" title="Show only the events you're going to">✓ Going</button>`;
   const taskPill = `<button class="lg lg-task${showTasks ? ' active' : ''}" id="lgTasks" type="button" aria-pressed="${showTasks}" title="Show checklist tasks that have a due date">☑ Tasks</button>`;
-  el.innerHTML = goPill + taskPill + present.map(c =>
+  el.innerHTML = taskPill + present.map(c =>
     `<button class="lg cat-${esc(c)} ${hiddenCats.has(c) ? 'off' : ''}" data-cat="${esc(c)}" aria-pressed="${!hiddenCats.has(c)}" title="Click to toggle · double-click to show only ${esc(c)}">${esc(c)}</button>`
   ).join('') + `<button class="lg-all" id="lgAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button>`;
   const focusLg = (c) => $('#calLegend .lg[data-cat="' + (window.CSS ? CSS.escape(c) : c) + '"]')?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild, but never auto-scroll the page
@@ -246,10 +243,6 @@ function buildLegend() {
       if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
       persistFilters(); buildLegend(); render(); focusLg(c);
     });
-  });
-  $('#lgGoing')?.addEventListener('click', () => {
-    goingOnly = !goingOnly; setRaw(KEYS.calGoingOnly, goingOnly ? 'on' : 'off');
-    buildLegend(); render(); $('#lgGoing')?.focus({ preventScroll: true });
   });
   $('#lgTasks')?.addEventListener('click', () => {
     showTasks = !showTasks; setRaw(KEYS.calShowTasks, showTasks ? 'on' : 'off'); _taskCache = null;
@@ -389,7 +382,7 @@ function render() {
 // rail scrolls internally instead of running past the month. Boot renders while the view is
 // hidden (rects are 0), so this also re-runs on every entry to #/calendar. Non-month uncaps.
 function alignRail() {
-  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-weeks');
+  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-grid');
   if (!p) return;
   if (mode === 'month' && g && g.offsetHeight > 300) {
     p.style.maxHeight = Math.round(g.getBoundingClientRect().bottom - p.getBoundingClientRect().top) + 'px';
@@ -653,58 +646,62 @@ function wireWeekDragCreate() {
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 
-const MONTH_LANES = 3;        // max spanning-bar lanes shown per week (overflow → "+N more")
-const MONTH_SINGLES = 3;      // single-day chips shown per cell before overflow
+const MONTH_SINGLES = 3;      // chips shown per cell before "+N more"
 
-// Notion-style month: 6 week-rows. Multi-day events render as ONE continuous bar per week
-// (lane-packed, with ‹/› arrows where they wrap), reusing the week view's packLanes(); single-day
-// events stay as chips below the reserved bar lanes. Season-long spans (isEvergreen) are pulled OUT
-// of the grid into an "Ongoing this season" strip — as full-width bars they'd flood every week row
-// (3 beer gardens = the whole lane budget in July), burying the genuine dated events.
+// Condensed month: a flat 6×7 grid of day cells with chips. A multi-day event renders as ONE chip
+// anchored to the first in-month day it covers (with a "→ end" hint, and a leading "‹" if it
+// started earlier); nothing on the in-between days. Season-long spans (isEvergreen) are pulled into
+// an "Ongoing this season" strip above the grid so ~8 all-summer events don't pile onto day one.
 function monthHTML() {
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const weeks = monthGrid(viewY, viewM);                    // 6 rows of {iso, day, inMonth}
-  const gridLo = weeks[0][0].iso, gridHi = weeks[5][6].iso; // visible date window (incl. spill days)
+  const gridLo = weeks[0][0].iso, gridHi = weeks[5][6].iso; // visible window (incl. spill days)
   const ongoing = allEvents().filter(e => visible(e) && isEvergreen(e)
     && e.date.slice(0, 10) <= gridHi && (e.endDate || e.date).slice(0, 10) >= gridLo);
   const strip = ongoing.length ? `<div class="cal-ongoing"><div class="cal-ong-lab">☀ Ongoing this season <span>— open all month, tap for details</span></div><div class="cal-ong-pills">`
     + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
     + `</div></div>` : '';
-  const multi = allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e));
 
-  const rows = weeks.map(week => {
-    const days = week.map(c => c.iso);
-    const packed = packLanes(multi, days);                  // [{ev,lane,col0,col1,contL,contR}]
-    const laneN = Math.min(MONTH_LANES, packed.reduce((m, p) => Math.max(m, p.lane + 1), 0));
-    const bars = packed.filter(p => p.lane < MONTH_LANES).map(p => {
-      const e = p.ev, cont = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
-      return `<button class="cal-bar cat-${esc(catOf(e))}${cont}" data-ev="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};grid-row:${p.lane + 1}" title="${esc(e.title)}">`
-        + `${p.contL ? '<span class="cal-bar-arr" aria-hidden="true">‹</span>' : ''}<span class="cal-bar-t">${esc(e.title)}</span>${p.contR ? '<span class="cal-bar-arr" aria-hidden="true">›</span>' : ''}</button>`;
+  // multi-day (non-evergreen) events → one chip anchored to the first in-month day they cover
+  const monthFirst = `${viewY}-${pad(viewM + 1)}-01`, monthKey = monthFirst.slice(0, 7);
+  const anchored = new Map();   // iso → [{ ev, cont, end }]
+  allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e)).forEach(e => {
+    const s = e.date.slice(0, 10), en = (e.endDate || e.date).slice(0, 10);
+    const anchor = s >= monthFirst ? s : monthFirst;                  // start day, or clamp to the 1st
+    if (anchor > en || anchor.slice(0, 7) !== monthKey) return;       // ended before this month / not this month
+    if (!anchored.has(anchor)) anchored.set(anchor, []);
+    anchored.get(anchor).push({ ev: e, cont: s < monthFirst, end: en });
+  });
+
+  const cells = weeks.flat().map((c, i) => {
+    const date = c.iso, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
+    const past = c.inMonth && date < TODAY;
+    // single-day events on this date, timed first (ascending), then all-day
+    const singles = c.inMonth
+      ? allEvents().filter(e => visible(e) && !isMultiDay(e) && e.date.slice(0, 10) === date)
+        .sort((a, b) => (a.time || '~').localeCompare(b.time || '~'))
+      : [];
+    const multis = c.inMonth ? (anchored.get(date) || []) : [];
+    const tks = c.inMonth ? tasksOn(date) : [];
+    const hasBook = singles.some(e => e.bookBy);
+    const items = [...singles.map(e => ({ ev: e })), ...multis, ...tks.map(t => ({ tk: t }))];
+    const chips = items.slice(0, MONTH_SINGLES).map(x => {
+      if (x.tk) return taskChipHTML(x.tk);
+      const e = x.ev;
+      const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
-    const cells = week.map((c, i) => {
-      const date = c.iso, weekend = (i === 0 || i === 6), isToday = date === TODAY;
-      const singles = c.inMonth ? eventsOn(date, true).filter(e => !isMultiDay(e)) : [];
-      const tks = c.inMonth ? tasksOn(date) : [];
-      const hasBook = singles.some(e => e.bookBy);
-      const hiddenBars = packed.filter(p => p.lane >= MONTH_LANES && p.col0 <= i && p.col1 >= i).length;   // bars past the lane cap that cover this day
-      const items = [...singles.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
-      const chips = items.slice(0, MONTH_SINGLES).map(x => x.tk
-        ? taskChipHTML(x.tk)
-        : `<button class="cal-chip cat-${esc(catOf(x.ev))}" data-ev="${esc(x.ev.id)}" title="${esc(x.ev.title)}"><span class="cc-t">${esc(x.ev.title)}</span></button>`).join('');
-      const moreN = (items.length - Math.min(items.length, MONTH_SINGLES)) + hiddenBars;
-      const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
-      const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
-      const barsHere = packed.filter(p => p.col0 <= i && p.col1 >= i).length;
-      const aria = `${esc(date)}, ${singles.length + barsHere} event${(singles.length + barsHere) === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
-      const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', weekend && 'weekend'].filter(Boolean).join(' ');
-      return `<div class="${cls}" data-day="${esc(date)}">
-        <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
-        <div class="cal-barspace" aria-hidden="true"></div>
-        ${chips}${more}</div>`;
-    }).join('');
-    return `<div class="cal-week" style="--lanes:${laneN}"><div class="cal-cells">${cells}</div><div class="cal-bars">${bars}</div></div>`;
+    const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
+    const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
+    const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
+    const nEv = singles.length + multis.length;
+    const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
+    const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
+    return `<div class="${cls}" data-day="${esc(date)}">
+      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
+      ${chips}${more}</div>`;
   }).join('');
-  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-weeks">${rows}</div>`;
+  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
 }
 
 // ---- month cockpit: up next · book by · tasks due ----
@@ -735,7 +732,7 @@ function panelHTML() {
     const cd = d == null ? '' : d <= 0 ? 'now' : `${d}d`;
     return `<button class="cp-up" data-ev="${esc(e.id)}">
       <span class="cp-cd cat-${safeCat(e)}">${esc(cd)}<small>${esc(fmtShort(e.date))}</small></span>
-      <span class="cp-uptt">${esc(e.title)}${isGoing(e.id) ? '<span class="cp-going">✓ going</span>' : ''}</span></button>`;
+      <span class="cp-uptt">${esc(e.title)}</span></button>`;
   }).join('') + more(upAll.length, upnext.length) : `<p class="cp-empty">${isPast ? 'This month has passed.' : 'Nothing more coming up this month.'}</p>`;
 
   const dlHTML = deadlines.length ? deadlines.map(e => {
@@ -828,10 +825,6 @@ function wireCells() {
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
-  // multi-day BARS live in the .cal-bars overlay (siblings of the cells), so wire them directly → popover
-  $$('#calView .cal-bar[data-ev]').forEach(b => b.addEventListener('click', () => {
-    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
-  }));
   // "Ongoing this season" strip pills → popover
   $$('#calView .cal-opill[data-ev]').forEach(b => b.addEventListener('click', () => {
     const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
@@ -841,7 +834,7 @@ function wireCells() {
 // that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
 let _calDragSelected = false;
 function wireMonthSelect() {
-  const grid = $('#calView .cal-weeks');
+  const grid = $('#calView .cal-grid');
   if (!grid || grid.dataset.selWired) return;
   grid.dataset.selWired = '1';
   const cellAt = (x, y) => document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');

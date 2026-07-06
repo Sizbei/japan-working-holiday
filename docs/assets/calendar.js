@@ -35,6 +35,7 @@ export let TODAY = '2026-06-15';
 export let hiddenCats = new Set();
 let showTasks = true;             // checklist tasks with a user-set due date appear on the calendar (filterable)
 let showUser = true, showBaked = true;   // source "calendars": My events (user) / Researched (baked) visibility
+let sideCollapsed = false;               // hide the sidebar (mini-nav + Calendars + cockpit) to give the grid full width
 let _taskCache = null;            // per-render memo of task pseudo-events
 let popEl = null, popCleanup = null;
 let _sidePanelEv = null;          // currently open event id (null = closed)
@@ -137,12 +138,14 @@ export function mountCalendar(data, today) {
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   showTasks = getRaw(KEYS.calShowTasks, '') !== 'off';  // on by default; the ☑ Tasks toggle persists your choice
   const src = get(KEYS.calSources, {}) || {}; showUser = src.showUser !== false; showBaked = src.showBaked !== false;   // both on by default
+  sideCollapsed = getRaw(KEYS.calSidebar, '') === 'collapsed';   // sidebar visibility persists
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
   wireToolbar();
   wireQuickAdd();
   buildCalendars();
+  applySidebar();   // apply the persisted collapsed/expanded state to the layout + toggle button
   render();
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route !== 'calendar') { closeSidePanel(); dismissPopover(); } });   // the side panel + day popover are portaled to <body> (fixed) — close them when leaving the calendar so they don't hang over other pages
   // EF3: while the calendar is hidden, a data change marks it dirty instead of re-rendering
@@ -174,7 +177,19 @@ export function mountCalendar(data, today) {
   window.matchMedia('(max-width: 700px)').addEventListener('change', () => { if (mode === 'week') render(); });
 }
 
+// show/hide the left side panels; the toolbar toggle IS the reachability (no floating popover)
+function applySidebar() {
+  document.querySelector('.cal-layout')?.classList.toggle('side-collapsed', sideCollapsed);
+  const btn = $('#calSideToggle');
+  if (!btn) return;
+  const lbl = sideCollapsed ? 'Show side panels' : 'Hide side panels';
+  btn.setAttribute('aria-expanded', String(!sideCollapsed));
+  btn.setAttribute('aria-label', lbl); btn.title = lbl;
+  btn.textContent = sideCollapsed ? '⊞' : '⊟';
+}
+
 function wireToolbar() {
+  $('#calSideToggle')?.addEventListener('click', () => { sideCollapsed = !sideCollapsed; setRaw(KEYS.calSidebar, sideCollapsed ? 'collapsed' : ''); applySidebar(); });
   $('#calPrev')?.addEventListener('click', () => shift(-1));
   $('#calNext')?.addEventListener('click', () => shift(1));
   $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });

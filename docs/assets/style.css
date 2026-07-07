@@ -2580,6 +2580,31 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 }
 .cal-nav .cal-btn:hover{ background: var(--bg-soft); border-color: var(--line); color: var(--ink); }
 
+/* prev/next chevrons: compact circular icon buttons */
+#calPrev, #calNext{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1;
+}
+#calPrev:hover, #calNext:hover,
+#calPrev:focus-visible, #calNext:focus-visible{
+  border-color: var(--line-strong);
+  background: var(--bg-elevated);
+  color: var(--ink);
+}
+@media (hover: none){
+  #calPrev, #calNext{ min-width: 44px; min-height: 44px; }
+}
+
 /* segmented mode control */
 .cal-modes{
   background: var(--bg-soft);

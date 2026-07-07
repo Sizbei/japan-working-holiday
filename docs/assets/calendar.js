@@ -138,7 +138,8 @@ export function mountCalendar(data, today) {
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value
   showTasks = getRaw(KEYS.calShowTasks, '') !== 'off';  // on by default; the ☑ Tasks toggle persists your choice
   const src = get(KEYS.calSources, {}) || {}; showUser = src.showUser !== false; showBaked = src.showBaked !== false;   // both on by default
-  sideCollapsed = getRaw(KEYS.calSidebar, '') === 'collapsed';   // sidebar visibility persists
+  const sb = getRaw(KEYS.calSidebar, '');
+  sideCollapsed = sb === 'collapsed' ? true : sb === 'expanded' ? false : window.matchMedia('(max-width: 820px)').matches;   // sidebar visibility persists; no stored pref → collapsed on mobile
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
@@ -180,6 +181,7 @@ export function mountCalendar(data, today) {
 // show/hide the left side panels; the toolbar toggle IS the reachability (no floating popover)
 function applySidebar() {
   document.querySelector('.cal-layout')?.classList.toggle('side-collapsed', sideCollapsed);
+  if (sideCollapsed && document.getElementById('calSidebar')?.contains(document.activeElement)) $('#calSideToggle')?.focus();   // don't strand focus inside a display:none sidebar
   const btn = $('#calSideToggle');
   if (!btn) return;
   const lbl = sideCollapsed ? 'Show side panels' : 'Hide side panels';
@@ -189,7 +191,7 @@ function applySidebar() {
 }
 
 function wireToolbar() {
-  $('#calSideToggle')?.addEventListener('click', () => { sideCollapsed = !sideCollapsed; setRaw(KEYS.calSidebar, sideCollapsed ? 'collapsed' : ''); applySidebar(); });
+  $('#calSideToggle')?.addEventListener('click', () => { sideCollapsed = !sideCollapsed; setRaw(KEYS.calSidebar, sideCollapsed ? 'collapsed' : 'expanded'); applySidebar(); });
   $('#calPrev')?.addEventListener('click', () => shift(-1));
   $('#calNext')?.addEventListener('click', () => shift(1));
   $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });

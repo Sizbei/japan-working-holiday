@@ -114,6 +114,7 @@
     <p class="lede" data-i18n="lede.calendar">Researched events are baked in (colour-coded by type); click any day to add your own. Edit, delete, import an .ics, or export just the tags you want.</p>
     <div class="cal-toolbar">
       <div class="cal-nav">
+        <button id="calSideToggle" class="cal-btn cal-sidetoggle" aria-label="Hide side panels" aria-expanded="true" aria-controls="calSidebar" title="Hide side panels">⊟</button>
         <button id="calPrev" class="cal-btn" aria-label="Previous month">‹</button>
         <span id="calLabel" class="cal-label" role="status" aria-live="polite" aria-atomic="true">—</span>
         <button id="calNext" class="cal-btn" aria-label="Next month">›</button>
@@ -123,6 +124,7 @@
         <div class="cal-modes">
           <button id="calModeMonth" class="cal-btn text active">Month</button>
           <button id="calModeWeek" class="cal-btn text">Week</button>
+          <button id="calModeDay" class="cal-btn text">Day</button>
           <button id="calModeAgenda" class="cal-btn text">Agenda</button>
         </div>
         <button id="calAdd" class="cal-btn primary">+ Add</button>
@@ -144,10 +146,10 @@
         <span id="calSearchStatus" class="sr-only" role="status" aria-live="polite"></span>
       </div>
     </div>
-    <div class="cal-legend" id="calLegend" role="group" aria-label="Filter by category"></div>
     <div class="cal-layout">
-      <aside class="cal-sidebar" aria-label="Calendar navigation">
+      <aside id="calSidebar" class="cal-sidebar" aria-label="Calendar navigation">
         <div id="calMiniNav" class="cal-mininav"></div>
+        <div id="calCalendars" class="cal-cals" role="group" aria-label="Calendars — filter by source and category"></div>
         <aside id="calPanel" class="cal-panel" aria-label="This month — up next, book-by and tasks due"></aside>
       </aside>
       <div id="calView"></div>

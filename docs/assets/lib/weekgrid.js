@@ -116,6 +116,20 @@ export function parseHM(s) {
 }
 
 /**
+ * Format a "HH:MM" 24h time as a compact 12h label: "13:10" → "1:10 PM",
+ * "09:00" → "9 AM", "00:00" → "12 AM", "12:00" → "12 PM". Whole hours drop ":00".
+ * Returns '' for invalid input. Pure.
+ */
+export function fmt12(hm) {
+  const mins = parseHM(hm);
+  if (mins == null) return '';
+  const h = Math.floor(mins / 60), mi = mins % 60;
+  const ap = h < 12 ? 'AM' : 'PM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return mi === 0 ? `${h12} ${ap}` : `${h12}:${String(mi).padStart(2, '0')} ${ap}`;
+}
+
+/**
  * Lay out a day's timed events into side-by-side columns for overlaps.
  * Input: [{ id, startMin, endMin }] (endMin > startMin). Output: same items with
  * { col, cols } added — col = 0-based column, cols = total columns in that overlap

@@ -54,13 +54,13 @@
   </div>
   <a href="#/dashboard" data-route="dashboard" data-i18n="nav.dashboard">Dashboard</a>
   <a href="#/calendar" data-route="calendar" data-i18n="nav.calendar">Calendar</a>
+  <a href="#/plan" data-route="plan" data-i18n="nav.plan">Plan a Day</a>
+  <a href="#/map" data-route="map" data-i18n="nav.map">Map</a>
+  <a href="#/explore" data-route="explore" data-i18n="nav.explore">Explore</a>
   <a href="#/going" data-route="going" data-i18n="nav.going">Going</a>
   <a href="#/checklist" data-route="checklist" data-i18n="nav.checklist">Checklist</a>
   <a href="#/budget" data-route="budget" data-i18n="nav.budget">Budget</a>
-  <a href="#/explore" data-route="explore" data-i18n="nav.explore">Explore</a>
   <a href="#/rooms" data-route="rooms" data-i18n="nav.rooms">Rooms</a>
-  <a href="#/map" data-route="map" data-i18n="nav.map">Map</a>
-  <a href="#/plan" data-route="plan" data-i18n="nav.plan">Plan a Day</a>
   <a href="#/emergency" data-route="emergency" data-i18n="nav.emergency">Emergency</a>
   <div class="nav-drawer-foot" aria-hidden="true"><span class="nav-foot-jp" lang="ja">私の一年</span><span class="nav-foot-count">2026 — 2027</span></div>
 </nav>
@@ -137,7 +137,7 @@
     <div class="cal-inputrow">
       <form class="cal-quickadd" id="calQuickAdd" autocomplete="off">
         <span class="cqa-plus" aria-hidden="true">＋</span>
-        <input type="text" id="calQuickInput" placeholder="Quick add — try: Ramen with Kenji Jul 3 7pm" aria-label="Quick-add an event in plain language (title, date and time) — added as ✓ Going">
+        <input type="text" id="calQuickInput" placeholder="Quick add — try: Ramen with Kenji Fri 7pm" aria-label="Quick-add an event in plain language (title, date and time) — added as ✓ Going">
         <span class="cqa-hint" id="calQuickHint" aria-live="polite"></span>
       </form>
       <div class="cal-search">
@@ -218,7 +218,7 @@
   <!-- ============ PACKING ============ -->
   <section id="packing">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">荷造り</span><h2 data-i18n="head.packing">What to Pack</h2></div>
-    <p class="lede" data-i18n="lede.packing">A categorized packing list for the Canada → Tokyo move — documents, money, electronics, clothing, health, a day-one bag and more. Add your own items; progress saves on this device.</p>
+    <p class="lede" data-i18n="lede.packing">The Canada → Tokyo packing list — kept for reference (and the eventual move back): documents, money, electronics, clothing, health, a day-one bag and more. Add your own items; progress saves on this device.</p>
     <div class="check-progress" id="packProgress">
       <span class="pct" id="packPct" role="status" aria-live="polite">0%</span>
       <div class="bar"><i id="packBar"></i></div>
@@ -238,7 +238,7 @@
   <!-- ============ BUDGET ============ -->
   <section id="budget">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">予算</span><h2 data-i18n="head.budget">Budget Planner</h2></div>
-    <p class="lede" data-i18n="lede.budget">Estimate the one-time setup costs and the monthly running costs for the year, set your starting savings and any income, and see the bottom line — total to land, monthly burn, net, and how many months your savings last. It's a planner of editable estimates, not an expense tracker. All numbers save on this device.</p>
+    <p class="lede" data-i18n="lede.budget">Track the monthly running costs of living here — set your savings and any income, and see the bottom line: monthly burn, net, and how many months of runway are left (setup costs still itemized separately). It's a planner of editable estimates, not an expense tracker. All numbers save on this device.</p>
     <div class="bdg-summary" id="budgetSummary" role="status" aria-live="polite"></div>
     <div class="bdg-inputs">
       <label class="bdg-input">
@@ -436,7 +436,7 @@
   <div class="view" id="view-rooms" data-route="rooms">
   <section id="rooms">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">部屋探し</span><h2 data-i18n="head.rooms">Find a Room</h2></div>
-    <p class="lede" data-i18n="lede.rooms" data-i18n-html>Foreigner-friendly share houses &amp; apartments — no key money, no guarantor, book from abroad. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count" role="status" aria-live="polite"></span></p>
+    <p class="lede" data-i18n="lede.rooms" data-i18n-html>Foreigner-friendly share houses &amp; apartments — no key money, no guarantor — tour a few before committing. These are starting points (no provider has a public listings API); hit the links for live availability. <span id="roomCount" class="room-count" role="status" aria-live="polite"></span></p>
     <div id="roomFilters">
       <input type="search" id="roomSearch" placeholder="FILTER ROOMS // nakano · women · oakhouse · dorm…" aria-label="Filter rooms">
       <label class="room-budget" for="roomBudget">Budget <output id="roomBudgetVal">Any</output>

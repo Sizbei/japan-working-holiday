@@ -905,3 +905,85 @@ test('usageSummary: ranks routes, totals visits/edits, flags never-used; guards 
   assert.equal(s.daysUsed, 1);
   assert.deepEqual(s.neverUsed, ['budget']);
 });
+
+// ---- 縁 People (trip PRM) pure lib — invented names only (public repo) ----
+import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel } from '../docs/assets/lib/people.js';
+
+const _people = () => [
+  newPerson({ name: 'Aria', tags: ['music', 'Ramen Nerd'], metDate: '2026-07-04', nextPlan: 'Knock Kōenji', lastSeen: '2026-07-06', star: true }, '2026-07-08', 'p1'),
+  newPerson({ name: 'Bex', tags: ['share house'], metDate: '2026-07-01', notes: 'combini fried chicken', lastSeen: '2026-07-05' }, '2026-07-08', 'p2'),
+  newPerson({ name: 'Cy', tags: ['music'], metDate: '2026-07-05', neighborhood: 'Somewhere' }, '2026-07-08', 'p3'),  // no lastSeen
+];
+
+test('searchPeople matches notes, tags, and nextPlan', () => {
+  const ppl = _people();
+  assert.deepEqual(searchPeople(ppl, 'combini').map(p => p.name), ['Bex']);      // notes
+  assert.deepEqual(searchPeople(ppl, 'ramen').map(p => p.name), ['Aria']);       // tag (case-insensitive)
+  assert.deepEqual(searchPeople(ppl, 'kōenji').map(p => p.name), ['Aria']);      // nextPlan
+  assert.equal(searchPeople(ppl, '').length, 3);                                  // empty → all
+});
+
+test('sortPeople: starred first, then mode; missing lastSeen sorts last', () => {
+  const ppl = _people();
+  assert.deepEqual(sortPeople(ppl, 'met').map(p => p.name), ['Aria', 'Cy', 'Bex']);   // Aria starred → leads despite Cy being newer
+  const byName = sortPeople(ppl, 'name').map(p => p.name);
+  assert.equal(byName[0], 'Aria');                                                     // starred leads name mode too
+  const bySeen = sortPeople(ppl, 'seen').map(p => p.name);
+  assert.equal(bySeen[0], 'Aria');                                                     // starred first
+  assert.equal(bySeen[bySeen.length - 1], 'Cy');                                       // no lastSeen → last
+});
+
+test('tagSet: unique, lowercase, sorted', () => {
+  assert.deepEqual(tagSet(_people()), ['music', 'ramen nerd', 'share house']);
+});
+
+test('initialsOf: CJK first char, latin 1–2 chars', () => {
+  assert.equal(initialsOf('山田'), '山');       // kanji → first char
+  assert.equal(initialsOf('さくら'), 'さ');      // hiragana → first char
+  assert.equal(initialsOf('Aria Vale'), 'AV');
+  assert.equal(initialsOf('Bex'), 'BE');
+  assert.equal(initialsOf(''), '?');
+});
+
+test('hueOf: deterministic + a valid palette name', () => {
+  assert.equal(hueOf('p1'), hueOf('p1'));            // stable across calls
+  assert.equal(hueOf('p1712000000000'), hueOf('p1712000000000'));   // stable for a realistic id
+  assert.match(hueOf('p2'), /^(music|festival|convention|food|fireworks|illumination|nature|seasonal|personal|disney)$/);
+});
+
+test('flagOf: known name/code, empty on unknown', () => {
+  assert.equal(flagOf('JP'), '🇯🇵');
+  assert.equal(flagOf('australia'), '🇦🇺');
+  assert.equal(flagOf('Canadian'), '🇨🇦');
+  assert.equal(flagOf('Freedonia'), '');
+  assert.equal(flagOf(''), '');
+});
+
+test('leavesLabel: future countdown, past, empty', () => {
+  assert.equal(leavesLabel('2026-08-20', '2026-07-08'), '⏳ leaves Aug 20 — 6 weeks');
+  assert.equal(leavesLabel('2026-07-05', '2026-07-08'), 'left Jul 5');
+  assert.equal(leavesLabel('2026-07-08', '2026-07-08'), 'left Jul 8');   // today = departing/gone
+  assert.equal(leavesLabel('', '2026-07-08'), '');
+});
+
+test('newPerson: name required, metDate defaults to today, tags normalized', () => {
+  assert.throws(() => newPerson({ name: '   ' }, '2026-07-08', 'p9'), /name required/);
+  const p = newPerson({ name: 'Dex' }, '2026-07-08', 'p9');
+  assert.equal(p.metDate, '2026-07-08');
+  assert.equal(p.star, false);
+  assert.equal(p.seenCount, 0);
+  const t = newPerson({ name: 'Ela', tags: ['Music', 'music', ' Climbing '] }, '2026-07-08', 'p10');
+  assert.deepEqual(t.tags, ['music', 'climbing']);   // lowercased + deduped
+});
+test('sortPeople/searchPeople: malformed restored people never throw (missing name, non-string dates)', () => {
+  const bad = [
+    { id: 'x1', metDate: '2026-07-01' },                          // no name
+    { id: 'x2', name: 'Aria', metDate: '2026-07-01' },            // date tie → secondary name compare
+    { id: 'x3', name: 'Bex', metDate: 20260702, lastSeen: null }, // numeric date, null lastSeen
+  ];
+  for (const mode of ['met', 'name', 'seen']) {
+    const out = sortPeople(bad, mode);
+    assert.equal(out.length, 3);                                   // sorted without throwing
+  }
+  assert.doesNotThrow(() => searchPeople(bad, 'aria'));
+});

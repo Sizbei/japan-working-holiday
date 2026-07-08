@@ -11,7 +11,7 @@ import { getEventMenu, undoLastDelete } from './calendar.js';
 import { openPalette } from './palette.js';
 
 const PAGE_LABEL = {
-  dashboard: 'Home', calendar: 'Calendar', going: 'Going To', deadlines: 'Deadlines', checklist: 'Checklist',
+  dashboard: 'Home', calendar: 'Calendar', going: 'Going To', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
   packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a day', emergency: 'Emergency',
 };
 
@@ -157,7 +157,7 @@ function wireKeyboard() {
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
     // common utility shortcuts — keys unused by the calendar (m/w/d/a/n/t) + checklist (j/k/d/p/e) layers
-    if (e.key === '0' && ROUTES.length >= 10) { e.preventDefault(); go(ROUTES[9]); return; }        // the 10th page (Emergency)
+    if (e.key === '0') { e.preventDefault(); go('emergency'); return; }        // 0 = Emergency, always (11 routes; 1-9 cover the first nine)
     if (e.key === 'b' || e.key === 'B') { e.preventDefault(); document.getElementById('notifBell')?.click(); return; }   // notifications
     if (e.key === '\\') { e.preventDefault(); document.getElementById('themeToggle')?.click(); return; }                 // light/dark
     if (e.key === ',') { e.preventDefault(); document.getElementById('guideBtn')?.click(); return; }                     // guide & settings (⌘, convention)

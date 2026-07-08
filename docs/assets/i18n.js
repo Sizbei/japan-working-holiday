@@ -107,6 +107,7 @@ export const GLOSSARY = {
   '部屋': { r: 'へや · heya', m: 'room' },
   '参加予定': { r: 'さんかよてい · sanka yotei', m: 'planned attendance — events you’re going to' },
   '地図': { r: 'ちず · chizu', m: 'map' },
+  '縁': { r: 'えん · en', m: 'connection / fate — the ties between people' },
   'プラン': { r: 'puran', m: 'plan (itinerary)' },
   '一日': { r: 'いちにち · ichinichi', m: 'one day' },
   '一年の計画': { r: 'いちねんのけいかく · ichinen no keikaku', m: 'a year’s plan' },

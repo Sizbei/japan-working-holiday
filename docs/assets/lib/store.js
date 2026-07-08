@@ -11,6 +11,7 @@ export const KEYS = {
   calSources: 'jwh-cal-sources-v1',
   calSidebar: 'jwh-cal-sidebar-v1',
   usage: 'jwh-usage-v1',
+  people: 'jwh-people-v1',
   eventOverrides: 'jwh-event-overrides-v1',
   places: 'jwh-places-v1',
   mapFilters: 'jwh-mapfilters-v1',

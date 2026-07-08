@@ -9,6 +9,7 @@ import { mountPhraseDay } from './phraseday.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountGoingPage } from './going-page.js';
+import { mountPeople } from './people.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
 import { mountRooms } from './rooms.js';
@@ -65,6 +66,7 @@ function boot() {
       safe(() => mountCalendar(data, today));
       safe(() => mountGoogleSync(() => allEvents()));
       safe(() => mountGoingPage());        // dedicated "Going To" page (#/going) — events marked ✓ Going
+      safe(() => mountPeople());           // 縁 People (#/people) — device-local trip PRM
       safe(() => mountTracker(data));
       safe(() => renderContent(data, today));
       safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist

@@ -1,5 +1,7 @@
 # Calendar — Notion-parity design (2026-07-06)
 
+> **STATUS: IMPLEMENTED (2026-07-08).** All phases shipped — Phase 1 timed dot-chips (PR #54), Phase 2 module split (PRs #55/#56), Phase 3 Day view (PR #57), Phase 4 Calendars sidebar (PR #58), Phase 5 chrome (PRs #59/#60). Two deviations from this document, both deliberate: (1) the month **spanning-bars** direction was superseded by the condensed-chip layout (`2026-07-06-calendar-month-condensed-design.md`, PR #53) and ✓ Going was removed from the calendar there, so Phase 4 shipped without re-homing it; (2) Phase 5's icon-rail + floating Filter popover was scoped down to a toolbar collapse toggle — the toggle itself keeps the filter reachable in every state, making the popover redundant risk. This file is kept as the design record.
+
 **Goal:** Bring the calendar to feature/interaction parity with Notion Calendar on the axes that make sense for a **local, zero-build, identity-free** app — not account sync — while splitting the oversized `calendar.js` so each feature lands as a small diff.
 
 **Architecture:** Keep the hash-router SPA + single-data-file model. `calendar.js` becomes a thin coordinator that imports focused view modules. The new Day view reuses (and genuinely parameterizes) the week time-grid engine. The "calendars" concept reuses the existing category-filter state (`hiddenCats`) plus one new source-visibility toggle.

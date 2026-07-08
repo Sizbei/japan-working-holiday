@@ -886,17 +886,6 @@ html.gated{ overflow: hidden; }
 
 /* enhanced cells */
 .cal-row{ display:flex; align-items:center; justify-content:space-between; gap:2px; }
-.cal-cluster{ display:inline-flex; align-items:center; gap:3px; }
-.cal-ticket{ font-size:.6rem; line-height:1; filter: saturate(1.2); }
-.cal-meter{ display:inline-flex; gap:2px; align-items:center; }
-.cal-meter i{ width:5px; height:5px; border-radius:50%; background: currentColor; display:block; }
-.cal-meter.cat-festival{ color:var(--c-festival);} .cal-meter.cat-fireworks{ color:var(--c-fireworks);}
-.cal-meter.cat-illumination{ color:var(--c-illumination);} .cal-meter.cat-convention{ color:var(--c-convention);}
-.cal-meter.cat-seasonal{ color:var(--c-seasonal);} .cal-meter.cat-nature{ color:var(--c-nature);}
-.cal-meter.cat-holiday{ color:var(--c-holiday);} .cal-meter.cat-food{ color:var(--c-food);}
-.cal-meter.cat-disney{ color:var(--c-disney);} .cal-meter.cat-music{ color:var(--c-music);}
-.cal-meter.cat-personal{ color:var(--c-personal);} .cal-meter.cat-imported{ color:var(--c-imported);}
-.cal-cell.season-start{ border-left:3px solid var(--stripe, var(--line)); }
 
 /* side panel content */
 /* month cockpit — section labels are mono-uppercase kickers, matching the event panel's .sp-cat */
@@ -956,10 +945,7 @@ html.gated{ overflow: hidden; }
   .cal-mininav{ display:none; }                           /* redundant with the grid + the toolbar's ‹ › month nav on a phone */
   .cal-panel{ position: static; max-height:none; }
 }
-@media (max-width: 560px){
-  .cal-meter i{ width:4px; height:4px; }
-  .cal-ticket{ font-size:.55rem; }
-}
+
 
 /* ---- single reduced-motion contract (tokens collapse to instant; callbacks still fire) ---- */
 @media (prefers-reduced-motion: reduce) {

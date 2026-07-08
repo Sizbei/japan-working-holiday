@@ -3,10 +3,12 @@
 // how-to-use tutorial plus toggleable settings (theme, arcade mode, reduce motion). All
 // settings persist to localStorage and apply via data-attributes on <html>.
 
-import { $, $$ } from './lib/dom.js';
-import { KEYS, getRaw, setRaw } from './lib/store.js';
+import { $, $$, esc } from './lib/dom.js';
+import { KEYS, get, getRaw, setRaw } from './lib/store.js';
 import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/homelayout.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
+import { usageSummary } from './lib/usage.js';
+import { ROUTES, routeLabel } from './router.js';
 
 const LISTCTL_OPTS = [
   { v: LISTCTL.QUICKLINE, label: 'Quick-line' },
@@ -49,6 +51,23 @@ function row(id, label, sub, on) {
     <div class="set-text"><span class="set-label">${label}</span><span class="set-sub">${sub}</span></div>
     <button type="button" class="set-switch" id="${id}" role="switch" aria-checked="${on ? 'true' : 'false'}" aria-label="${label}"><span class="set-knob" aria-hidden="true"></span></button>
   </div>`;
+}
+
+// "Your usage" — private, per-device aggregates (lib/usage.js) so the owner can see which
+// pages actually earn their keep. Hidden until there's at least one recorded visit.
+function usageSectionHTML() {
+  const s = usageSummary(get(KEYS.usage, null), ROUTES);
+  if (!s.totalVisits) return '';
+  const max = s.routes[0]?.n || 1;
+  const rows = s.routes.slice(0, 10).map(r =>
+    `<div class="use-row"><span class="use-name">${esc(routeLabel(r.route))}</span><span class="use-bar"><i style="width:${Math.max(4, Math.round(r.n / max * 100))}%"></i></span><span class="use-n">${r.n}</span></div>`).join('');
+  const never = s.neverUsed.map(r => esc(routeLabel(r))).join(', ');
+  return `<section class="guide-sec">
+    <h3 class="guide-h">Your usage <span class="use-sub">— this device only, never leaves it</span></h3>
+    <p class="use-stats">${s.daysUsed} day${s.daysUsed === 1 ? '' : 's'} active · ${s.totalVisits} page visit${s.totalVisits === 1 ? '' : 's'} · ${s.edits} edit${s.edits === 1 ? '' : 's'}</p>
+    <div class="use-list">${rows}</div>
+    ${never ? `<p class="use-hint">Never opened on this device: ${never} — candidates to improve or retire.</p>` : ''}
+  </section>`;
 }
 
 function openGuide() {
@@ -101,6 +120,7 @@ function openGuide() {
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
     </section>
+    ${usageSectionHTML()}
   </div>`;
   document.body.appendChild(ov);
   ov.addEventListener('click', (e) => { if (e.target === ov || e.target.closest('.guide-x')) closeGuide(); });

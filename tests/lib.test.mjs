@@ -866,3 +866,42 @@ test('gcalUrl: timed event carries a timed dates param + Tokyo tz', () => {
   const a = gcalUrl({ id: 'a', title: 'Stay', date: '2026-07-10', endDate: '2026-07-15' });
   assert.match(decodeURIComponent(a), /dates=20260710\/20260716/);
 });
+
+// ---- lib/usage.js (private, per-device usage counters) ----
+import { bumpUsage, usageSummary, normalizeUsage } from '../docs/assets/lib/usage.js';
+
+test('bumpUsage: counts routes + acts, stamps days, never mutates the input', () => {
+  const start = normalizeUsage(null);
+  const a = bumpUsage(start, 'route', 'calendar', '2026-07-08');
+  const b = bumpUsage(a, 'route', 'calendar', '2026-07-08');
+  const c = bumpUsage(b, 'act', 'edits', '2026-07-09');
+  assert.equal(c.routes.calendar.n, 2);
+  assert.equal(c.routes.calendar.last, '2026-07-08');
+  assert.equal(c.acts.edits.n, 1);
+  assert.deepEqual(Object.keys(c.days).sort(), ['2026-07-08', '2026-07-09']);
+  assert.deepEqual(start, normalizeUsage(null));           // input untouched (immutability)
+  assert.equal(a.routes.calendar.n, 1);                    // intermediate untouched too
+});
+test('bumpUsage: prunes the oldest day stamps beyond the cap', () => {
+  let u = normalizeUsage(null);
+  for (let i = 0; i < 405; i++) {
+    const d = new Date(Date.UTC(2026, 0, 1) + i * 86400000).toISOString().slice(0, 10);
+    u = bumpUsage(u, 'route', 'dashboard', d);
+  }
+  assert.equal(Object.keys(u.days).length, 400);
+  assert.ok(!u.days['2026-01-01']);                         // oldest pruned
+  assert.equal(u.routes.dashboard.n, 405);                  // counts survive pruning
+});
+test('usageSummary: ranks routes, totals visits/edits, flags never-used; guards corrupt input', () => {
+  let u = normalizeUsage('corrupt string');                 // corrupt stored value → fresh state
+  u = bumpUsage(u, 'route', 'map', '2026-07-08');
+  u = bumpUsage(u, 'route', 'calendar', '2026-07-08');
+  u = bumpUsage(u, 'route', 'calendar', '2026-07-08');
+  u = bumpUsage(u, 'act', 'edits', '2026-07-08');
+  const s = usageSummary(u, ['calendar', 'map', 'budget']);
+  assert.deepEqual(s.routes.map(r => r.route), ['calendar', 'map']);   // ranked desc by visits
+  assert.equal(s.totalVisits, 3);
+  assert.equal(s.edits, 1);
+  assert.equal(s.daysUsed, 1);
+  assert.deepEqual(s.neverUsed, ['budget']);
+});

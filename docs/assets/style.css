@@ -2006,6 +2006,16 @@ html[data-nightowl] .crt::before{ opacity: calc(var(--crt-opacity, .05) + .03); 
 .guide-list{ margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: .5rem; }
 .guide-list li{ font-size: .92rem; line-height: 1.55; color: var(--ink); }
 .guide-list b{ font-weight: 700; }
+/* "Your usage" — private per-device counters (⚙ Guide) */
+.use-sub{ text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-faint); }
+.use-stats{ font-family: var(--mono); font-size: .78rem; color: var(--ink-soft); margin: 0 0 .55rem; }
+.use-list{ display: flex; flex-direction: column; gap: 3px; }
+.use-row{ display: grid; grid-template-columns: 92px 1fr 2.2rem; align-items: center; gap: .5rem; font-size: .8rem; }
+.use-name{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.use-bar{ height: 8px; background: var(--bg-sunk); border-radius: 999px; overflow: hidden; }
+.use-bar i{ display: block; height: 100%; background: var(--indigo); border-radius: 999px; }
+.use-n{ font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); text-align: right; }
+.use-hint{ font-size: .8rem; color: var(--ink-faint); margin: .55rem 0 0; line-height: 1.45; }
 
 .set-row{ display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
   padding: .7rem 0; border-top: 1px solid var(--line); }

@@ -32,6 +32,7 @@ import { mountCountUp } from './countup.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
 import { get, set, KEYS } from './lib/store.js';
+import { bumpUsage } from './lib/usage.js';
 
 // Clickjacking defense: a static host can't send X-Frame-Options and frame-ancestors is
 // ignored in a <meta> CSP, so bust out of any (cross-origin) frame before rendering.
@@ -92,6 +93,12 @@ function boot() {
       safe(() => mountExpWeek());          // "This week" band on #/explore (display-only)
       safe(() => mountLang());             // EN/日本語 chrome toggle + hover-dictionary
       safe(() => mountBackup());           // export/import all device-local trip data
+      // Local usage counters (aggregates only, never leaves this device — see ⚙ Guide → "Your usage").
+      // Registered BEFORE initRouter so the boot route counts as the first visit.
+      safe(() => {
+        document.addEventListener('jwh:route', (e) => set(KEYS.usage, bumpUsage(get(KEYS.usage, null), 'route', e.detail.route, nowISO())));
+        document.addEventListener('jwh:data-changed', () => set(KEYS.usage, bumpUsage(get(KEYS.usage, null), 'act', 'edits', nowISO())));
+      });
       initRouter();                        // hash-router SPA: split views, animated transitions (unwrapped — if THIS fails nothing works anyway)
       safe(() => mountAnim());             // first-visit route-view entrance cascade (reduce-motion gated)
       safe(() => mountCountUp());          // count-up the readiness score on first dashboard view (reduce-motion gated)

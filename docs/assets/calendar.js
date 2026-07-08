@@ -1,9 +1,9 @@
 'use strict';
-// Editable calendar — enhanced month grid + side deadline panel.
-// Merges baked events (tips.json, read-only) with user events (localStorage, CRUD).
-// Grid cells show a density meter + ticket glyph; the legend doubles as a category
-// filter; the side panel lists this month's book-by deadlines; clicking a day opens
-// a popover. Tag-filtered .ics/Google export + .ics import.
+// Editable calendar — coordinator/state owner for the split view modules
+// (calendar-month/-week/-agenda/-editor.js). Merges baked events (tips.json,
+// read-only) with user events (localStorage, CRUD). The sidebar Calendars list
+// filters by source + category; the cockpit lists book-by deadlines; clicking a
+// day opens a popover. Month/Week/Day/Agenda modes; .ics/Google export + import.
 
 import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';

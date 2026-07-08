@@ -7,12 +7,13 @@
 import { blip } from './lib/audio.js';
 import { dndToast } from './dnd.js';
 import { getRaw, KEYS } from './lib/store.js';
+import { prefersReducedMotion } from './motion.js';
 
 export function celebrate(message) {
   if (getRaw(KEYS.celebrations, '') === 'off') return;   // user disabled celebrations in Settings
   blip('1up');                                           // sound-gated inside audio.js (no-op unless Sound on)
   dndToast(message);
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (prefersReducedMotion()) return;
   const wrap = document.createElement('div');
   wrap.className = 'confetti'; wrap.setAttribute('aria-hidden', 'true');
   const colors = ['#bc002d', '#223a70', '#b8860b', '#1e8e3e', '#a8228d'];

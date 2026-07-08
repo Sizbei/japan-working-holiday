@@ -25,6 +25,9 @@ export function mountGoingPage() {
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'going' && goingDirty) { goingDirty = false; render(); } });
 }
 
+// CSS.escape for building an attribute selector from user-derived category values (safe fallback for old engines)
+const cssEsc = (s) => (window.CSS && CSS.escape) ? CSS.escape(String(s)) : String(s).replace(/"/g, '\\"');
+
 function goingEvents() {
   return allEvents().filter(e => isGoing(e.id)).sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -37,6 +40,11 @@ function render() {
   if (!cats.includes(fCat) && fCat !== 'all') fCat = 'all';   // a removed-last-of-category resets the filter
 
   const bar = $('#goingFilters');
+  // capture which filter chip has focus so we can restore it after innerHTML rebuild (chip is destroyed)
+  const focused = bar?.contains(document.activeElement) ? document.activeElement : null;
+  const focusSel = focused == null ? null
+    : (focused.dataset.upcoming !== undefined ? '[data-upcoming]'
+      : (focused.dataset.fcat != null ? `[data-fcat="${cssEsc(focused.dataset.fcat)}"]` : null));
   if (bar) bar.innerHTML = [
     `<button type="button" class="chip ${fCat === 'all' ? 'active' : ''}" data-fcat="all" aria-pressed="${fCat === 'all'}">All</button>`,
     ...cats.map(c => `<button type="button" class="chip going-fcat ${fCat === c ? 'active' : ''}" data-fcat="${esc(c)}" aria-pressed="${fCat === c}"><span class="going-fdot cat-${esc(c)}" aria-hidden="true"></span>${esc(c)}</button>`),
@@ -57,6 +65,8 @@ function render() {
 
   bar?.querySelectorAll('[data-fcat]').forEach(b => b.addEventListener('click', () => { fCat = b.dataset.fcat; render(); }));
   bar?.querySelector('[data-upcoming]')?.addEventListener('click', () => { fUpcoming = !fUpcoming; render(); });
+  // restore keyboard focus to the same chip after the rebuild (fallback: first chip)
+  if (focusSel) (bar?.querySelector(focusSel) || bar?.querySelector('.chip'))?.focus();
   wrap.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => toggleGoing(b.dataset.remove)));   // dispatches → render listener fires
   // ✎ location: swap the area line for an inline input; Enter saves (blank clears), Escape cancels.
   // Saved to KEYS.evArea (works for baked AND user events) — allEvents() merges it app-wide.

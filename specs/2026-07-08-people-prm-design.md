@@ -17,24 +17,39 @@
   id: 'p<timestamp>',
   name: 'Kenji',            // required
   reading: '健二',           // optional — kana/kanji or nickname
+  star: true,                // ★ "this person's special" — single toggle, no rating scale
   metDate: '2026-07-04',     // required (defaults today)
   metPlace: 'Fuji Rock',     // optional
   metContext: 'camped in the next tent, lent us a tarp',  // optional — the hook
-  from: 'Osaka', speaks: 'JP, EN', birthday: '11-12',     // all optional; birthday MM-DD or YYYY-MM-DD
-  contact: 'LINE @kenji_mod · IG @knj.modular',           // free text, one line
-  tags: ['music', 'ramen nerd'],                          // free-form, lowercase
+  nationality: 'JP',         // optional country → flag emoji on the card
+  from: 'Osaka',             // hometown (distinct from nationality and from…)
+  neighborhood: 'Nakameguro',// …where they live/hang in Tokyo — "who's near me right now?"
+  leaves: '2026-08-20',      // optional — traveler friends expire; card shows "⏳ leaves Aug 20 — 6 weeks"
+  nextPlan: 'Knock Kōenji — he offered to take us',   // the open promise; card shows it as a "▸" pill
+  addressAs: 'Kenji — casual, first name',            // Japan etiquette cheat line (san/kun/keigo)
+  metThrough: 'Mia',         // connection trail, plain string (no graph)
+  food: 'vegetarian-ish',    // dietary/favourite-spot notes — hangouts = eating
+  speaks: 'JP, EN', birthday: '11-12',                 // optional; birthday MM-DD or YYYY-MM-DD
+  contact: 'LINE @kenji_mod · IG @knj.modular',        // free text, one line
+  tags: ['music', 'ramen nerd'],                       // free-form, lowercase
   notes: '…', notesUpdated: '2026-07-06',
-  lastSeen: '2026-07-06', lastSeenWhere: 'Shimokitazawa', // optional
+  seenCount: 3,              // auto-increments with ✓ Seen today
+  lastSeen: '2026-07-06', lastSeenWhere: 'Shimokitazawa',
 }
 ```
 
-No schema server, no photos (storage + privacy), no relationship graph. Tags are free-form strings; the filter row is derived from tags present.
+**Card renders (v2 mock, owner-approved fields):** ★ top-right (starred cards get a warm amber border), flag + `hometown → lives neighborhood · languages` subline, met line, **⏳ leaves countdown** (amber, when set), **▸ next-plan pill** (indigo — it takes the notes preview's slot when both exist), tag chips, footer `seen <date> · ×N` + contact. **Panel adds rows:** nationality · lives · address-as · next-plan · leaves · met-through · food · seen ×N.
+
+**Star behaviours:** toggle on card + panel; a "★ starred" filter chip leads the tag row; starred people sort to the top within any sort mode.
+
+No schema server, no photos (storage + privacy), no relationship graph, no rating scales. Brainstorm-rejected: emoji avatars, job field. Tags are free-form strings; the filter row is derived from tags present.
 
 ## Behaviours
 
 - **CRUD** via the site's modal pattern (focus-trapped, label-outside inputs, all 6 input states). Add defaults `metDate` = today. Delete = `confirmModal` + the calendar-style undo toast if cheap to reuse.
 - **✓ Seen today** sets `lastSeen` = today (one tap, no form). "＋ Note" appends to notes and stamps `notesUpdated`.
-- **Search** across name/reading/place/context/notes/tags/from. **Sort**: recently met (default) · name · recently seen. **Tag filter** single-select chips (All resets).
+- **Search** across name/reading/place/context/notes/tags/from/neighborhood/nextPlan. **Sort**: recently met (default) · name · recently seen — starred first within each. **Filter chips**: All · ★ starred · then tags.
+- **✓ Seen today** also increments `seenCount`. **Leaves**: card shows a compact countdown; past-`leaves` people stay but the line becomes "left <date>" (they're memories, not clutter — no auto-delete).
 - **Contact links**: if the contact text contains an `@handle` or URL, render as link where safe; otherwise plain text. (No deep LINE integration — out of scope.)
 - **Birthday**: shown on the card month-of; optionally surfaces as a dashboard "Today" line when it's their birthday (v1.1 — not in v1).
 - **Data events**: mutations dispatch `jwh:data-changed` (consistent with the rest of the site); the page re-renders through the single path.

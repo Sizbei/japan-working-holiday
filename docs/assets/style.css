@@ -995,7 +995,7 @@ html.gated{ overflow: hidden; }
 /* press feedback */
 .btn:active, .cal-btn:active, .chip:active, .cal-chip:active, .pop-add:active { transform: scale(var(--press-scale)); }
 /* touch targets when no hover */
-@media (hover: none) { .btn, .cal-btn, .chip { min-height: 44px; } .bell { min-height: 44px; min-width: 44px; } }
+@media (hover: none) { .btn, .cal-btn, .chip, .calrow { min-height: 44px; } .bell { min-height: 44px; min-width: 44px; } }
 
 /* add-button pop + checkbox check use spring/fast */
 .brew-add button { transition: transform var(--t-spring), background var(--t-hover); }
@@ -3125,6 +3125,13 @@ ruby > rt {
 .wk2-dayhd:hover .wk2-add, .wk2-add:focus-visible{ opacity:1; }
 .wk2-add:hover{ background:var(--bg-sunk); color:var(--ink); }
 .wk2-add:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
+/* touch: the ＋ can't be revealed on hover, so show it always and grow the tap target to 44px.
+   The glyph itself stays small; the 44px absolute box (no visible fill) just widens the hit area,
+   pinned to the header's top-right corner so it doesn't reflow the row or sit on the centred date. */
+@media (hover: none){
+  .wk2-add{ opacity:1; top:0; right:0; width:44px; height:44px; min-width:44px; min-height:44px;
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem; }
+}
 .wk2-scroll:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; }
 .wk2-dayhd.weekend{ background: color-mix(in srgb, var(--ink) 3%, transparent); }
 .wk2-dayhd.today{ background: color-mix(in srgb, var(--red) 8%, transparent); }

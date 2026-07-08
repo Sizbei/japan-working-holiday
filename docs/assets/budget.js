@@ -206,6 +206,9 @@ function wireRows() {
   // remove: hide a baked line, or drop a custom line entirely
   $$('#budgetGroups .bdg-del').forEach(btn => btn.addEventListener('click', () => {
     const id = btn.dataset.del;
+    // capture the clicked button's index so render() can restore keyboard focus (the button is destroyed)
+    const dels = $$('#budgetGroups .bdg-del');
+    const idx = dels.indexOf(btn);
     const s = load();
     const customGroup = findCustom(s, id);
     if (customGroup) {
@@ -218,6 +221,9 @@ function wireRows() {
     }
     save(s);
     render();
+    // restore focus to the same-index delete button (or the last one, or the groups container)
+    const after = $$('#budgetGroups .bdg-del');
+    (after[idx] || after[after.length - 1] || $('#budgetGroups'))?.focus();
   }));
 
   // add a custom line — id is GENERATED (never from the label, which is free user text)

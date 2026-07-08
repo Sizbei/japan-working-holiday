@@ -39,9 +39,13 @@ export function mountDashboard(data, today) {
 }
 
 function gcDismissed() {
-  // drop dismissed ids whose encoded @date is in the past (and legacy bare ids that can no longer match)
+  // Keep a dismissal until 90 days AFTER its encoded @date, so a dismissed overdue item STAYS
+  // dismissed (not resurrected the next day) while storage stays bounded. A RESCHEDULED date yields
+  // a new @date → a new id → a fresh, non-dismissed alert (this gc never touches that new id).
+  // Legacy bare ids (no @date) can no longer match a computed alert id, so drop them.
   const d = get(KEYS.dismissed, []) || [];
-  const keep = d.filter(id => { const at = String(id).lastIndexOf('@'); return at >= 0 && String(id).slice(at + 1) >= TODAY; });
+  const cutoff = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
+  const keep = d.filter(id => { const at = String(id).lastIndexOf('@'); return at >= 0 && String(id).slice(at + 1) >= cutoff; });
   if (keep.length !== d.length) set(KEYS.dismissed, keep);
 }
 
@@ -64,10 +68,13 @@ function refreshTeasers() {
   const savings = (get(KEYS.budget, {}) || {}).savings || 0;
   const fx = get(KEYS.fx, null);
   const usd = (fx && Number.isFinite(fx.usd) && Number.isFinite(fx.at) && Date.now() - fx.at < 48 * 3600e3) ? fx.usd : null;
-  const inUsd = (usd && s.toLand > 0) ? ` (~$${Math.round(s.toLand * usd).toLocaleString('en-US')})` : '';
+  const arrived = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO()).phase === 'arrived';
+  // "to land" is a paid sunk cost once arrived — show monthly burn instead. USD twin follows suit.
+  const yenFig = arrived ? s.monthlyTotal : s.toLand;
+  const inUsd = (usd && yenFig > 0) ? ` (~$${Math.round(yenFig * usd).toLocaleString('en-US')})` : '';
   const budgetText = (s.oneTimeTotal === 0 && s.monthlyTotal === 0 && savings === 0)
     ? 'Set up your budget'
-    : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · to land ${fmtYen(s.toLand)}${inUsd}`;
+    : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · ${arrived ? `burn ${fmtYen(s.monthlyTotal)}/mo` : `to land ${fmtYen(s.toLand)}`}${inUsd}`;
   teaser('#tBudget', budgetText, '#/budget');
 
   renderReadiness();
@@ -169,7 +176,10 @@ function buildItems() {
     if (start >= TODAY) items.push({ id: 'ev-' + e.id + '@' + start, title: e.title, when: start, kind: 'event', detail: e.area }); // future starts only — not already-running seasons
     if (e.bookBy && e.source === 'user') items.push({ id: 'bk-' + e.id + '@' + e.bookBy, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });   // baked book-by already covered by bookByTimeline — don't double-count
   });
-  return items;
+  // Drop dead history: a deadline/book/task more than 30 days past isn't actionable — it's just
+  // clutter that re-floods the bell. Future + ≤30-day-past items are kept (still worth surfacing).
+  const floor = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  return items.filter(it => it.when >= floor);
 }
 
 // ---- countdown: hero numeral (canonical) + small topbar copy ----
@@ -402,7 +412,7 @@ function teaser(sel, text, route) {
 function renderGoingWidget() {
   const el = $('#wGoing');
   if (!el) return;
-  const going = allEvents().filter(e => isGoing(e.id)).sort((a, b) => a.date.localeCompare(b.date));
+  const going = allEvents().filter(e => isGoing(e.id) && (e.endDate || e.date).slice(0, 10) >= TODAY).sort((a, b) => a.date.localeCompare(b.date));
   const body = going.length
     ? `<ul>${going.slice(0, 2).map(e => {
         const c = countdown(e.date.slice(0, 10), TODAY);
@@ -426,7 +436,13 @@ function renderProgress() {
   const el = $('#wProgress');
   if (!el) return;
   const checks = get(KEYS.checklist, {}) || {};
-  const all = checklistItems(DATA);
+  // Post-arrival, scope to the same settling-in phases the readiness widget counts, so the two
+  // widgets agree. Pre-arrival, count every checklist item (the full yearlong plan).
+  const arrived = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO()).phase === 'arrived';
+  const SETTLE = ['Landing Day', 'First 14 Days', 'First Month', 'Ongoing Setup'];
+  const all = arrived
+    ? (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || [])
+    : checklistItems(DATA);
   const done = all.filter(it => checks[it.id]).length;
   const pct = all.length ? Math.round((done / all.length) * 100) : 0;
   el.querySelector('.widget-body').innerHTML = `

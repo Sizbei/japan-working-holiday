@@ -5,7 +5,7 @@
 
 import { $, $$, esc, srcLinks } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
-import { fmtShort, windowStatus, nowISO } from './lib/dates.js';
+import { fmtShort, windowStatus, nowISO, countdown } from './lib/dates.js';
 import { makeSortableGroup } from './dnd.js';
 import { mountAccordion, setCollapsed } from './collapse.js';
 import { celebrate } from './celebrate.js';
@@ -37,6 +37,7 @@ export function mountChecklist(data, today) {
   DATA = data;
   migratePriorityOnce();   // persist the v1→v2 priority migration once (not on every render)
   seedPhaseCollapseOnce(); // first visit: collapse all phases but the first one with open work
+  seedArrivedCollapseOnce(today); // post-arrival, once: collapse the finished pre-departure + landing-day phases
   renderCheckTools();
   renderCheckToolbar();
   renderChecklist(today);
@@ -95,6 +96,20 @@ function seedPhaseCollapseOnce() {
   phases.forEach((p, pi) => setCollapsed(`chk-phase-${pi}`, true));
   setCollapsed('chk-phase-mine', true);
   setRaw(KEYS.checkPhaseCollapseSeed, '1');
+}
+// Post-arrival one-time seed: the pre-departure prep and the landing-day sprint are finished
+// stories once you're in Japan — collapse them so the checklist opens on what's still actionable
+// (First 14 Days / First Month / seasonal). Runs once ever, guarded by its own flag, and only
+// once actually arrived; user toggles thereafter stick (shared collapse set).
+const ARRIVED_SEED_KEY = 'jwh-checklist-arrived-seed-v1';
+function seedArrivedCollapseOnce(today) {
+  if (getRaw(ARRIVED_SEED_KEY) === '1') return;
+  if (countdown(DATA.meta?.arrival_date || '2026-06-30', today || nowISO()).phase !== 'arrived') return;
+  const DONE = ['Pre-Departure', 'Landing Day'];
+  (DATA.checklist || []).forEach((p, pi) => {
+    if (DONE.some(d => (p.phase || '').startsWith(d))) setCollapsed(`chk-phase-${pi}`, true);
+  });
+  setRaw(ARRIVED_SEED_KEY, '1');
 }
 function saveChecks(s) { set(KEYS.checklist, s); }
 function loadDue() { return get(KEYS.due, {}) || {}; }

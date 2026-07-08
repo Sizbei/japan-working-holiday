@@ -25,6 +25,7 @@ export function attachCardTranslate(triggerEl, fields, mountEl) {
       mountEl.innerHTML = '<span class="ct-load">訳しています…</span>';
       try {
         const parts = await Promise.all((fields || []).filter(Boolean).map(tField));
+        // CONTRACT: parts must be pre-escaped via esc() (tField already does); never join raw strings into this innerHTML.
         const html = parts.filter(Boolean).join('<br>');
         mountEl.innerHTML = (html || 'translation unavailable') + '<div class="ct-tag">machine translation · MyMemory</div>';
         mountEl.dataset.done = '1';

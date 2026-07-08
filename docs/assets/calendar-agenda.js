@@ -2,11 +2,11 @@
 import { $$, esc } from './lib/dom.js';
 import { MONTHS, fmtShort } from './lib/dates.js';
 import { gcalUrl } from './lib/ics.js';
-import { allEvents, visible, allTasks, catOf, gotoTask, openSidePanel, TODAY, hiddenCats } from './calendar.js';
+import { allEvents, visible, isEvergreen, allTasks, catOf, gotoTask, openSidePanel, TODAY, hiddenCats } from './calendar.js';
 
 export function agendaHTML() {
   // merge upcoming events + checklist tasks (with a due date) into one date-sorted stream
-  const evRows = allEvents().filter(e => visible(e) && (e.endDate || e.date).slice(0, 10) >= TODAY).map(e => ({ date: e.date, ev: e }));
+  const evRows = allEvents().filter(e => visible(e) && !isEvergreen(e) && (e.endDate || e.date).slice(0, 10) >= TODAY).map(e => ({ date: e.date, ev: e }));
   const tkRows = allTasks().filter(t => t.date.slice(0, 10) >= TODAY).map(t => ({ date: t.date, tk: t }));
   const upcoming = [...evRows, ...tkRows].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
   if (!upcoming.length) {

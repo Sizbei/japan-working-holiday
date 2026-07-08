@@ -7,7 +7,7 @@ import { transitionView, prefersReducedMotion } from './motion.js';
 
 // deadlines/packing/phrases retired from the nav post-arrival (their views + data remain for the
 // dashboard/notifications; re-add here + in index.html to restore).
-export const ROUTES = ['dashboard', 'calendar', 'going', 'checklist', 'budget', 'explore', 'rooms', 'map', 'plan', 'emergency'];
+export const ROUTES = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'going', 'checklist', 'budget', 'rooms', 'emergency'];
 
 // retired from the nav but still deep-linkable — dashboard teasers/notifications link here
 // (#/deadlines, #/packing) and the views stay mounted; they're just not in the swipe/nav order.

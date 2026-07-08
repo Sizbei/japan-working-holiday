@@ -245,6 +245,62 @@
    "action": "Shinjuku Gyoen timed entry reservations open ~2027-03-20; Meguro River/Chidorigafuchi viewing fills fast. FLAG bloom dates are 'low' confidence — verify the official kaika/mankai forecast in early March and book the moment slots release.",
    "leadTime": "~1-2 weeks before peak; verify forecast",
    "confidence": "low"
+  },
+  {
+   "id": "book-shibuya-halloween-avoid-2026",
+   "when": "2026-10-24",
+   "what": "Shibuya Halloween (Oct 31) — book a ticketed event instead",
+   "action": "If you want a Halloween night out, book a ticketed event (a club in Shinjuku/Roppongi or a costume party) in advance — Shibuya streets are a no-go (street-drinking ban, Hachiko walled off). Carry your residence card.",
+   "leadTime": "~1 week ahead",
+   "confidence": "high"
+  },
+  {
+   "id": "book-kawaguchiko-autumn-leaves-festival-2026",
+   "when": "2026-11-05",
+   "what": "Kawaguchiko Autumn Leaves Festival & Momiji Corridor (Mt. Fuji views)",
+   "action": "Reserve the Shinjuku highway bus or Fuji Excursion seat in advance for peak-color weekends — they sell out. Weekday strongly advised. Clear mornings give the best Fuji reflection. Peak dates weather-dependent — verify closer.",
+   "leadTime": "~1-2 weeks ahead for peak weekends",
+   "confidence": "medium"
+  },
+  {
+   "id": "book-showa-kinen-park-koyo-night-illumination-2026",
+   "when": "2026-11-13",
+   "what": "Showa Kinen Park koyo peak + Autumn Night Illumination",
+   "action": "Check the official site for the night-illumination ticketing window — recent years used timed reservations; secure one a few days ahead for peak weekends. Peak/illumination dates estimated — verify closer.",
+   "leadTime": "~a few days ahead for peak weekends",
+   "confidence": "medium"
+  },
+  {
+   "id": "book-design-festa-vol-64-autumn-2026",
+   "when": "2026-11-14",
+   "what": "Design Festa Vol.64 (Autumn) — independent art & craft fair",
+   "action": "Tickets via Design Festa Office Gallery (Harajuku), online ticketing, or convenience stores. No lottery. Confirm Vol.64 exact dates closer — Nov 15-16 reported but verify on the official Design Festa site.",
+   "leadTime": "~1 week ahead",
+   "confidence": "medium"
+  },
+  {
+   "id": "book-tokyo-festival-of-modular-2026",
+   "when": "2026-11-14",
+   "what": "Tokyo Festival of Modular 2026 (modular synth festival)",
+   "action": "Exact 2026 dates/venue/price unconfirmed — 'late November' is the best estimate; verify closer via the official FoM Facebook/site. Tickets sell via the festival site once announced.",
+   "leadTime": "~1 week ahead once announced",
+   "confidence": "low"
+  },
+  {
+   "id": "book-wonder-festival-2027-winter",
+   "when": "2027-02-01",
+   "what": "Wonder Festival 2027 [Winter] (figures & garage kits, ~Feb 8)",
+   "action": "Reported Feb 8, 2027 (one-day Sunday, 10:00-17:00) — verify on the official wonfes.jp site. Buy the advance Guide Book before the event for entry and access to limited one-day garage kits.",
+   "leadTime": "~1 week ahead",
+   "confidence": "medium"
+  },
+  {
+   "id": "book-design-festa-vol-65-spring-2027",
+   "when": "2027-05-21",
+   "what": "Design Festa Vol.65 (Spring) — independent art & craft fair",
+   "action": "Spring 2027 edition; late-May is the pattern (Vol.63 was May 23-24, 2026), so May 22-23, 2027 is an estimate — verify on the official Design Festa site. Tickets via Office Gallery Harajuku, online, or convenience stores.",
+   "leadTime": "~1 week ahead",
+   "confidence": "low"
   }
  ],
  "calendar": [
@@ -427,7 +483,7 @@
    "id": "ev-teamlab-borderless-azabudai-hills",
    "title": "teamLab Borderless — Azabudai Hills (permanent digital art)",
    "date": "2026-07-01",
-   "endDate": "",
+   "endDate": "2027-06-29",
    "category": "seasonal",
    "area": "Azabudai Hills / Kamiyacho (Garden Plaza B, B1F; ~5 min from Kamiyacho Stn)",
    "cost": "~¥3,800–4,800 adult (dynamic pricing by date/time)",
@@ -472,7 +528,7 @@
    "id": "ev-vent-omotesando-techno-club-nights",
    "title": "VENT Omotesando — weekend techno/house club nights",
    "date": "2026-07-03",
-   "endDate": "",
+   "endDate": "2027-06-29",
    "category": "music",
    "area": "Omotesando / Minami-Aoyama (Festae Omotesando Bldg B1F)",
    "cost": "Door ~¥2,000–3,500 depending on lineup; cash + ID (20+) required",
@@ -512,7 +568,7 @@
    "id": "ev-farmers-market-unu-aoyama",
    "title": "Farmer's Market @ UNU (Aoyama / Omotesando)",
    "date": "2026-07-04",
-   "endDate": "",
+   "endDate": "2027-06-29",
    "category": "festival",
    "area": "Aoyama / Omotesando (plaza in front of United Nations University)",
    "cost": "Free entry; pay vendors (produce, natural wine, street food)",
@@ -530,7 +586,7 @@
    "id": "ev-womb-shibuya-club-nights",
    "title": "WOMB Shibuya — techno/house club nights",
    "date": "2026-07-04",
-   "endDate": "",
+   "endDate": "2027-06-29",
    "category": "music",
    "area": "Shibuya (Maruyamacho)",
    "cost": "Door typically ~¥3,000–4,000 (more for headliners); cash + ID (20+)",
@@ -1432,7 +1488,7 @@
    "id": "ev26-kanda-used-book-festival",
    "title": "Kanda Used Book Festival",
    "date": "2026-10-23",
-   "category": "geek",
+   "category": "convention",
    "area": "Jimbocho (Yasukuni-dori book district)",
    "bookingNotes": "A 500 m 'book corridor' of around a million secondhand titles in the world's largest bookstore district; 2026 dates estimated from the annual late-Oct-to-Nov-3 pattern. (Date estimated — verify closer.)",
    "confidence": "medium",

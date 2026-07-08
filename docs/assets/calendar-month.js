@@ -4,7 +4,7 @@ import { daysBetween, fmtShort } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
-import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, SPAN_CAP, openModal, openSidePanel, dayPopover, gotoTask, rescheduleEvent, goAgenda } from './calendar.js';
+import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, rescheduleEvent, goAgenda } from './calendar.js';
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -70,10 +70,6 @@ export function monthHTML() {
 
 // ---- month cockpit: up next · book by · tasks due ----
 function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }
-// an "evergreen" event is a season-long span (start→end beyond SPAN_CAP): the ongoing/permanent
-// layer (teamLab, "retro hunting"), which reads as "now", not a discrete upcoming event. Detect by
-// SPAN, not by category — a short, genuinely-dated seasonal event should still count as upcoming.
-function isEvergreen(e) { const en = (e.endDate || '').slice(0, 10); if (!en) return false; const span = daysBetween(e.date.slice(0, 10), en); return span != null && span > SPAN_CAP; }
 export function panelHTML() {
   const monthKey = `${viewY}-${pad(viewM + 1)}`;
   const isPast = monthKey < TODAY.slice(0, 7);

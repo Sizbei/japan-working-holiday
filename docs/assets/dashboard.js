@@ -113,7 +113,8 @@ function renderReadiness() {
     const bLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[budgetReady] || 'unset';
     const h = el.querySelector('.widget-h [data-i18n]');
     if (h) { h.textContent = 'Settling in'; h.dataset.i18n = 'head.readiness.arrived'; }
-    el.querySelector('.widget-body').innerHTML = `
+    const bodyA = el.querySelector('.widget-body');
+    if (bodyA) bodyA.innerHTML = `
     <div class="rdy" data-tone="${esc(tone)}">
       <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(pct))}">${esc(String(pct))}</span><span class="rdy-pct">%</span><span class="sr-only"> settled in</span></div>
       <div class="rdy-meta">
@@ -136,7 +137,8 @@ function renderReadiness() {
     ? `Day ${(c.days ?? 0) + 1} in Japan`
     : `${c.days ?? '—'} day${c.days === 1 ? '' : 's'} to Tokyo`;
 
-  el.querySelector('.widget-body').innerHTML = `
+  const bodyB = el.querySelector('.widget-body');
+  if (bodyB) bodyB.innerHTML = `
     <div class="rdy" data-tone="${esc(r.tone)}">
       <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(r.score))}">${esc(String(r.score))}</span><span class="rdy-pct">%</span><span class="sr-only"> ready — ${esc(toneWord)}</span></div>
       <div class="rdy-meta">
@@ -204,10 +206,16 @@ function renderCountdown() {
   if (hero) {
     const num = String(dayN ?? '');
     const numEl = hero.querySelector('.hc-num');
-    if (numEl.textContent !== num) {
+    if (numEl?.textContent !== num) {
       const unit = arrived ? (dayN === 1 ? 'day in Japan' : 'days in Japan') : (dayN === 1 ? 'day until I land' : 'days until I land');
-      numEl.textContent = num;
-      hero.querySelector('.hc-unit').textContent = unit;
+      if (numEl) numEl.textContent = num;
+      const unitEl = hero.querySelector('.hc-unit');
+      if (unitEl) unitEl.textContent = unit;
+    }
+    // sub-label was hardcoded "NRT · 2026-06-30" — post-arrival it should read the settled-in phase
+    if (arrived) {
+      const dateEl = hero.querySelector('.hc-date');
+      if (dateEl) dateEl.textContent = 'Tokyo · since Jun 30';
     }
     hero.classList.toggle('arrived', arrived);
   }
@@ -217,6 +225,8 @@ function renderCountdown() {
 function wireBell() {
   const bell = $('#notifBell'), panel = $('#notifPanel');
   if (!bell || !panel) return;
+  if (bell.dataset.wired) return;   // guard: the two document-level listeners must mount once
+  bell.dataset.wired = '1';
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-label', 'Notifications');
   const close = (restoreFocus) => { panel.hidden = true; bell.setAttribute('aria-expanded', 'false'); if (restoreFocus) bell.focus(); };
@@ -406,7 +416,8 @@ function renderTeasers(alerts) {
 function teaser(sel, text, route) {
   const el = $(sel);
   if (!el) return;
-  el.querySelector('.teaser-body').innerHTML = `<a href="${route}">${esc(text)} <span class="teaser-go" aria-hidden="true">→</span></a>`;
+  const body = el.querySelector('.teaser-body');
+  if (body) body.innerHTML = `<a href="${route}">${esc(text)} <span class="teaser-go" aria-hidden="true">→</span></a>`;
 }
 // curated "events I'm going to" — the ones the user has marked ✓ Going (not the auto upcoming stream)
 function renderGoingWidget() {

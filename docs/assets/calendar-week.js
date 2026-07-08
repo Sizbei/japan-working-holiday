@@ -3,7 +3,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { parseISO, MONTHS, fmtShort } from './lib/dates.js';
 import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
 import { makeMovable } from './dnd.js';
-import { weekAnchor, TODAY, allEvents, visible, safeCat, openModal, openSidePanel, rescheduleEvent, saveUser, loadUser } from './calendar.js';
+import { weekAnchor, TODAY, allEvents, visible, safeCat, isEvergreen, openModal, openSidePanel, rescheduleEvent, saveUser, loadUser } from './calendar.js';
 
 // ---- WEEK view (all-day lane + per-day add; bars/drag land in later stages) ----
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -21,7 +21,7 @@ const isNarrowWeek = () => window.matchMedia('(max-width: 700px)').matches;
 // events get a continues marker. Reuses the per-day ＋ (.wk-add) + click→openSidePanel wiring.
 function weekListHTML() {
   const days = weekDays(weekAnchor);
-  const evs = allEvents().filter(visible);
+  const evs = allEvents().filter(e => visible(e) && !isEvergreen(e));   // evergreen residencies live in the month view's Ongoing strip, not the band
   return `<div class="wk-list">` + days.map(d => {
     const t = parseISO(d), dow = t.getUTCDay();
     const dayEvs = evs.filter(e => { const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s; return s <= d && en >= d; })
@@ -60,7 +60,7 @@ function gridHTML(days, isDay) {
     return `<div class="wk2-dayhd${cls}" data-day="${esc(d)}"><span class="wk2-dn">${DOW[dow]}</span><span class="wk2-dd">${t.getUTCDate()}</span><button type="button" class="wk2-add" data-day="${esc(d)}" aria-label="Add event on ${esc(fmtShort(d))}">＋</button></div>`;
   }).join('');
 
-  const evs = allEvents().filter(visible);
+  const evs = allEvents().filter(e => visible(e) && !isEvergreen(e));   // evergreen residencies live in the month view's Ongoing strip, not the band
   // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring)
   const packed = packLanes(evs.filter(isMultiDay), days);
   const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);

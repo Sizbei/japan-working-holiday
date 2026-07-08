@@ -45,6 +45,10 @@ let _legendTimer = null;          // discriminate legend single-click (toggle) f
 
 export const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
 export const SPAN_CAP = 10;
+// an "evergreen" event is a season-long span (start→end beyond SPAN_CAP): the ongoing/permanent
+// layer (teamLab, club residencies, beer gardens). These belong in the month view's "Ongoing this
+// season" strip — the week/day band and the agenda exclude them (they'd flood every row for months).
+export function isEvergreen(e) { const en = (e.endDate || '').slice(0, 10); if (!en) return false; const span = daysBetween(e.date.slice(0, 10), en); return span != null && span > SPAN_CAP; }
 
 export function loadUser() { return get(KEYS.events, []) || []; }
 export function saveUser(a) { set(KEYS.events, a); changed(); }
@@ -132,7 +136,9 @@ function eventsOn(iso, capLong = false) {
   });
 }
 
+let _calMounted = false;
 export function mountCalendar(data, today) {
+  if (_calMounted) return; _calMounted = true;   // mount-once: document/window listeners below must not double-register
   DATA = data;
   TODAY = today || nowISO();
   const cf = get(KEYS.calFilters, []); hiddenCats = new Set(Array.isArray(cf) ? cf : []);   // guard a corrupted (non-array) stored value

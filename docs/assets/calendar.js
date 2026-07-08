@@ -257,16 +257,27 @@ function buildCalendars() {
     + row('id="calSrcUser"', '', 'sw-user', 'My events', showUser)
     + row('id="calSrcBaked"', '', 'sw-baked', 'Researched', showBaked)
     + `<div class="cal-cals-div" role="separator"></div>`
-    + present.map(c => row(`data-cat="${esc(c)}" title="Click to toggle · double-click to show only ${esc(c)}"`, `cat-${esc(c)}`, '', esc(c), !hiddenCats.has(c))).join('')
+    + present.map(c => row(`data-cat="${esc(c)}" title="Click to toggle · double-click or Shift+Enter to show only ${esc(c)}"`, `cat-${esc(c)}`, '', esc(c), !hiddenCats.has(c))).join('')
     + `<div class="cal-cals-div" role="separator"></div>`
     + row('id="lgTasks"', '', 'sw-task', '☑ Tasks', showTasks);
 
   const focusRow = (sel) => $(sel)?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild
   const catSel = (c) => `#calCalendars .calrow[data-cat="${window.CSS ? CSS.escape(c) : c}"]`;
+  // "show only this" (or un-isolate back to all if it's already the only one shown) — shared by
+  // double-click AND Shift+activation (Shift+click / Shift+Enter, the keyboard path to isolate).
+  const isolate = (c) => {
+    if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; }
+    const others = present.filter(x => x !== c);
+    const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
+    hiddenCats.clear();
+    if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
+    persistFilters(); buildCalendars(); render(); focusRow(catSel(c));
+  };
   $$('#calCalendars .calrow[data-cat]').forEach(b => {
-    // single click toggles this category; double click isolates it (show only this). A 200ms timer
+    // single click toggles this category; double click / Shift+activate isolates it. A 200ms timer
     // lets the dblclick cancel the pending single-click toggle so the two don't fight.
-    b.addEventListener('click', () => {
+    b.addEventListener('click', (e) => {
+      if (e.shiftKey) { isolate(b.dataset.cat); return; }     // Enter/Space fire click with shiftKey intact
       if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; return; }
       const c = b.dataset.cat;
       _legendTimer = setTimeout(() => {
@@ -275,15 +286,7 @@ function buildCalendars() {
         persistFilters(); buildCalendars(); render(); focusRow(catSel(c));
       }, 200);
     });
-    b.addEventListener('dblclick', () => {
-      if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; }
-      const c = b.dataset.cat;
-      const others = present.filter(x => x !== c);
-      const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
-      hiddenCats.clear();
-      if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
-      persistFilters(); buildCalendars(); render(); focusRow(catSel(c));
-    });
+    b.addEventListener('dblclick', () => isolate(b.dataset.cat));
   });
   $('#calSrcUser')?.addEventListener('click', () => { showUser = !showUser; persistSources(); buildCalendars(); render(); focusRow('#calSrcUser'); });
   $('#calSrcBaked')?.addEventListener('click', () => { showBaked = !showBaked; persistSources(); buildCalendars(); render(); focusRow('#calSrcBaked'); });

@@ -63,7 +63,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   labels visible). Fix: real mode CHANGES reset the window scroll (data re-renders keep it —
   verified 120px preserved). After: winY 0, head fully visible, 7/7 labels. Mini-matrix green.
   (PR #96)
-- [ ] **16. Agenda view Notion-list parity** — date group headers, weight hierarchy, hover rows.
+- [x] **16. Agenda view Notion-list parity** — VERIFIED NO-CHANGE: month group headers (serif) +
+  700-weight date labels + 600 titles + 400 meta = hierarchy present; `.agenda-row:hover`
+  exists (indigo border, the deliberate site-wide interactive-row pattern shared with
+  .check-item); full-row click already opens the event panel (wireAgenda). The probe's
+  "hoverable:false" was a selector heuristic miss, not a defect. Zero deltas → no fix. (no PR)
 - [ ] **17. Dark-theme audit (bounded checklist, may span 2 ticks)** — measure each against dark
   bg per the harness contrast procedure: (a) chip tint+ink ratio, (b) `.moff` dim vs focal,
   (c) crimson today square, (d) tick visibility, (e) chip hover tint. Stage ticks when all five

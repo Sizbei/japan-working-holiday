@@ -51,6 +51,14 @@ Evidence: full-route screenshot sweep 2026-07-10 (scratchpad `sweep-*.png`), 0 c
   a11y pass (contrast/focus/aria), Opus critic panel over the loop's accumulated diff; fix or
   log every finding.
 
+- [ ] **21. (Arc E) Map layout & sidebar** — "Your pins" list rhythm (row density, icons,
+  hover/focus states), filter chip rows (two stacked rows read noisy), search box + "＋ drop a
+  pin" affordances; sidebar↔map proportions at 1300px.
+- [ ] **22. (Arc E) Pins, clusters & popup cards** — marker/cluster styling on-palette, popup
+  card typography/actions parity with the calendar side-panel language; selected-pin state.
+- [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch
+  targets, geocoding feedback states (loading/empty/error), keyboard reachability of the pin list.
+
 ## Working notes
 - Screenshot evidence in session scratchpad: `sweep-dashboard/going/checklist/budget/explore/people/map/plan/rooms/packing/emergency/deadlines/phrases.png`.
 - Not-yet-reviewed shots: people, checklist, packing, emergency, deadlines, phrases — review before

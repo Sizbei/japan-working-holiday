@@ -14,7 +14,10 @@ that sit under it:
 | A — Global chrome | 2 (nav crowding), 9 (topbar icon states) | one visual language above every page |
 | B — Page layouts | 3 (budget defaults), 4 (going), 5+6 (plan-a-day, PAIRED), 8 (rooms), 10+11 (dashboard, PAIRED), 12 (explore), 13 (checklist), 14 (people) | the sweep's "visually weird / bad UI" findings |
 | C — Calendar family | 7 (map tiles — verified first, may be a non-bug), 15 (week chrome), 16 (agenda parity), 17 (dark audit), 18 (mobile audit) | finish the Notion-parity arc on every calendar surface |
-| D — Motion + close | 19 (motion pass 2), 20 (final regression + critic panel) | polish, then prove it |
+| E — The map | 21 (layout & sidebar), 22 (pins/clusters/popups), 23 (controls & touch) | owner-added: the map is a whole surface, not one tile check |
+| D — Motion + close | 19 (motion pass 2), 20 (final regression + critic panel) | polish, then prove it — always LAST |
+
+Order: A → B → C → E → D (the close stays last). Map stages load Leaflet — verify on #/map with the lazy-load settled before probing.
 
 Pairing rule: 5+6 and 10+11 are same-file/same-surface pairs — one PR each. Everything else is
 one stage = one PR (small blast radius, easy revert). Never merge stages across arcs.

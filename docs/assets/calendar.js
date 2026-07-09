@@ -388,10 +388,10 @@ function onCalKeydown(e) {
     e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk2-dayhd[data-day], .wk2-add[data-day]')?.dataset.day || ((mode === 'day' || mode === 'week') ? weekAnchor : TODAY); openModal(null, day); return;
   }
   // view switch (m/w/a) — Google-Calendar-style
-  if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; render(); } return; }
-  if (e.key === 'w' || e.key === 'W') { e.preventDefault(); if (mode !== 'week') { mode = 'week'; render(); } return; }
-  if (e.key === 'd' || e.key === 'D') { e.preventDefault(); if (mode !== 'day') { mode = 'day'; render(); } return; }
-  if (e.key === 'a' || e.key === 'A') { e.preventDefault(); if (mode !== 'agenda') { mode = 'agenda'; render(); } return; }
+  if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; _kbSwitch = true; render(); } return; }
+  if (e.key === 'w' || e.key === 'W') { e.preventDefault(); if (mode !== 'week') { mode = 'week'; _kbSwitch = true; render(); } return; }
+  if (e.key === 'd' || e.key === 'D') { e.preventDefault(); if (mode !== 'day') { mode = 'day'; _kbSwitch = true; render(); } return; }
+  if (e.key === 'a' || e.key === 'A') { e.preventDefault(); if (mode !== 'agenda') { mode = 'agenda'; _kbSwitch = true; render(); } return; }
   // Shift+←/→ steps the whole period (month, or week in week mode) — distinct from plain arrows (day focus)
   if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); shift(e.key === 'ArrowLeft' ? -1 : 1); return; }
   if (mode === 'month' && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
@@ -511,14 +511,18 @@ function render() {
   // mode switches get a soft entrance (200ms ease-out rise) — data re-renders in the SAME mode
   // stay instant so quick-add/toggles never feel laggy
   if (_lastMode !== mode) {
-    if (_lastMode !== null && !prefersReducedMotion()) {
+    // no animation for KEYBOARD-initiated switches (m/w/d/a — repeated constantly, animation
+    // makes them feel slow); pointer clicks on the mode buttons keep the soft entrance
+    if (_lastMode !== null && !_kbSwitch && !prefersReducedMotion()) {
       view.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }],
         { duration: 200, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
     }
     _lastMode = mode;
   }
+  _kbSwitch = false;
 }
 let _lastMode = null;
+let _kbSwitch = false;   // set by the m/w/d/a keyboard shortcuts before render()
 
 // align the sidebar rail to the GRID's real height (owner: "aligned so we just scroll") — the
 // rail scrolls internally instead of running past the month. Boot renders while the view is

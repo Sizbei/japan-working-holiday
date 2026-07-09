@@ -74,10 +74,14 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   = 6.61:1 (the #92 fix confirmed live) ✓; (d) tick worst 7.66:1 (holiday) ≥3:1 non-text ✓;
   (e) 46% hover tint ink worst 17.28:1 ✓. Visual check clean. No fix needed; one tick of the
   two budgeted. (no PR)
-- [ ] **18. Mobile (≤820) endless-month audit (bounded checklist, may span 2 ticks)** — at 600px
-  AND 800px (drawer band): (a) chip legibility, (b) dow row, (c) positioning on entry,
-  (d) quick-add, (e) popover reachability with TRUSTED touch input (pointer-capture seam burned
-  us once). Stage ticks when all five verified/fixed.
+- [x] **18. Mobile (≤820) endless-month audit** — at 600 AND 800px, trusted touch input:
+  (a) chips 10.9px/18px → bumped to 24px tall under (hover:none); (c) entry lands on today ✓;
+  (d) quick-add present ✓; (e) popover opens via trusted TOUCH tap ✓ (pointer-capture seam
+  holds). TWO fixes shipped: (b) dow row was static and invisible on mobile (0 labels) → sticky
+  top:0 ≤820px; date-button touch target 52×14 → 58×24 (WCAG 2.5.8 24px; the 44px gate was a
+  deliberate compromise — a 44px date would eat half the cell, and the huge cell-body popover
+  target is the primary touch surface). Desktop verified byte-identical behavior. One tick of
+  two budgeted. (PR #99)
 - [ ] **19. Motion pass 2** — dashboard widget entrance stagger (50ms/item), toast timing/position
   vs design principles, checklist celebration timing; gate everything on reduce-motion.
 - [ ] **20. Final sweep (explicitly 2–3 ticks; cannot ship a subset — the deliverable is the

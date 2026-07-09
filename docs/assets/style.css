@@ -3393,6 +3393,18 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
    (No font-size transition — animating a layout property reflows ~60 cells per crossing.) */
 .cal-grid.cal-endless .cal-cell:not(.moff):not(.today) .cal-date{ font-size: .84rem; color: var(--ink); }
 .cal-grid.cal-endless .cal-cell.today .cal-date{ min-width: 24px; height: 24px; font-size: .78rem; }
+/* stage 18 — mobile (≤820): the dow row was position:static and scrolled off with the endless
+   grid (0 day labels visible on entry); the topbar scrolls away on mobile so top:0 is free */
+@media (max-width: 820px){
+  body[data-route="calendar"] .cal-dowrow{ position: sticky; top: 0; z-index: 4; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
+}
+/* stage 18 — touch targets: date button measured 52×14px and chips 18px — below the 24px WCAG
+   2.5.8 minimum. (44px would eat half the cell; 24px + the huge cell-body popover target is the
+   deliberate compromise, noted in the loop backlog.) */
+@media (hover: none){
+  .cal-grid.cal-endless .cal-cell .cal-date{ padding: 6px 8px; }   /* .cal-cell bumps specificity over the later hover-pill padding rule */
+  .cal-grid.cal-endless .cal-chip{ min-height: 24px; }
+}
 /* normal mode: the page scrolls — pin the reacting chrome so "the rest of the page reacts"
    stays VISIBLE: toolbar (label/‹›/Today) on top, dow row flush under it, sidebar (mini-nav +
    cockpit) beside the grid. --cal-tb-h is measured by alignRail() (flex-wrap: 1–2 rows). */

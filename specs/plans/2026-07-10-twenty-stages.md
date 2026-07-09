@@ -40,10 +40,13 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   sizes {34,38}→{38×38} (lang-toggle was small), radii {r-sm,10px}→{10px}, rest shadows 1→0
   (theme-toggle was the only one), hover unified to the family lift+indigo (moon keeps its -12°
   tilt, gear keeps its spin). Titles/aria all present (verified). (PR #94)
-- [ ] **10. Dashboard hero balance** — large dead space right of the title block; tighten hero
-  height / let the sun motif or countdown fill the column.
-- [ ] **11. Dashboard widget row rhythm** — bottom teaser cards: equalize paddings/heights,
-  consistent title/label hierarchy.
+- [x] **10. Dashboard hero balance** — VERIFIED NON-ISSUE: fresh measurement shows dead-right =
+  22px (the sun motif fills the column, hero-main content reaches x=1243 of 1265); hero 354px.
+  The sweep impression didn't convert to a single measured delta → no fix (vibes rule). (no PR)
+- [x] **11. Dashboard widget row rhythm** — VERIFIED NO-CHANGE: row 1 heights 187/187/187, row 2
+  198/198/198 (grid-stretch equal within rows), padding uniform 12.75px, title font uniform
+  15.3px; teasers all 99px with identical 9.35/13.6px padding; left edges aligned (hero offset =
+  its scroll-rail). Zero measured deltas → no fix. (no PR)
 - [ ] **12. Explore finding cards** — hover/focus affordance (cards read static), tighten
   source-link row, audit HIGH/MEDIUM/LOW badge colors for contrast.
 - [ ] **13. Checklist visual pass** — FIRST review its (never-reviewed) sweep shot and write

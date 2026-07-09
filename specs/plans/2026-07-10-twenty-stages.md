@@ -4,7 +4,11 @@ Owner: "run through the site and let's run 20 stages of improvements … brainst
 fixes and visually weird things and bad UI choices." Loop fires every 30 min; each stage = small,
 verified, shipped (branch → PR → squash → SW bump). Tick stages off here with the PR number.
 Lenses: Notion parity · design fixes · visually weird · bad UI choices.
-Evidence: full-route screenshot sweep 2026-07-10 (scratchpad `sweep-*.png`), 0 console errors.
+Evidence: 13-of-14-surface screenshot sweep 2026-07-10 (session scratchpad — NOT durable).
+**Stage descriptions below are sweep HYPOTHESES, not established findings** — the pipeline's
+evidence step re-verifies each on fresh screenshots before fixing; a hypothesis that doesn't
+reproduce gets ticked "verified non-issue" with evidence. Parity reference (durable):
+`specs/2026-07-10-notion-parity-spec.md`. Harness: `specs/verification-harness.md`.
 
 - [x] **1. Calendar breath + motion + tick fix** — cell/chip spacing, fixed centered tick, popover
   + mode-switch entrances, chip hover transition. (PR #86)
@@ -34,22 +38,33 @@ Evidence: full-route screenshot sweep 2026-07-10 (scratchpad `sweep-*.png`), 0 c
   consistent title/label hierarchy.
 - [ ] **12. Explore finding cards** — hover/focus affordance (cards read static), tighten
   source-link row, audit HIGH/MEDIUM/LOW badge colors for contrast.
-- [ ] **13. Checklist visual pass** — row density/phase-header hierarchy parity with the
-  calendar's new breath; verify locked-item affordance still reads.
-- [ ] **14. People page breath** — mirror the calendar breath (card paddings/grid gap); drift-strip
-  styling refinement.
-- [ ] **15. Week view chrome parity** — sticky toolbar behavior in week mode, time-gutter/dow
-  header alignment, past-column tint consistency with month.
+- [ ] **13. Checklist visual pass** — FIRST review its (never-reviewed) sweep shot and write
+  measured findings here; fix against the page's OWN spacing scale (not the calendar's — the
+  own-scale gate governs); verify locked-item affordance still reads. Clean page → tick
+  "verified no-change".
+- [ ] **14. People page review** — page is freshly designed (#68/#71/#82): review its
+  never-reviewed shot first, write measured findings, fix only measured inconsistencies against
+  its OWN scale. Expect small or no changes; "verified no-change" is a valid outcome.
+- [ ] **15. Week view chrome parity** — START by diffing against what #83/#85 already shipped
+  (past-column dimming, aligned rows) and cite the RESIDUAL gap; then: sticky toolbar behavior
+  in week mode, time-gutter/dow header alignment vs `specs/2026-07-10-notion-parity-spec.md`
+  week section. No residual gap → "verified no-issue".
 - [ ] **16. Agenda view Notion-list parity** — date group headers, weight hierarchy, hover rows.
-- [ ] **17. Dark-theme audit of the Notion calendar** — ticks, `.moff` dim levels, red today square,
-  32% chip tints, hover tint: all against dark bg (WCAG AA).
-- [ ] **18. Mobile (≤820) endless-month audit** — chip legibility, dow row, positioning on entry,
-  quick-add, popover reachability with touch (no hover).
+- [ ] **17. Dark-theme audit (bounded checklist, may span 2 ticks)** — measure each against dark
+  bg per the harness contrast procedure: (a) chip tint+ink ratio, (b) `.moff` dim vs focal,
+  (c) crimson today square, (d) tick visibility, (e) chip hover tint. Stage ticks when all five
+  have measured numbers and any failures are fixed.
+- [ ] **18. Mobile (≤820) endless-month audit (bounded checklist, may span 2 ticks)** — at 600px
+  AND 800px (drawer band): (a) chip legibility, (b) dow row, (c) positioning on entry,
+  (d) quick-add, (e) popover reachability with TRUSTED touch input (pointer-capture seam burned
+  us once). Stage ticks when all five verified/fixed.
 - [ ] **19. Motion pass 2** — dashboard widget entrance stagger (50ms/item), toast timing/position
   vs design principles, checklist celebration timing; gate everything on reduce-motion.
-- [ ] **20. Final sweep** — full behavioral regression (all routes, both themes, compact, mobile),
-  a11y pass (contrast/focus/aria), Opus critic panel over the loop's accumulated diff; fix or
-  log every finding.
+- [ ] **20. Final sweep (explicitly 2–3 ticks; cannot ship a subset — the deliverable is the
+  verdict)** — behavioral regression over ALL 14 surfaces (11 ROUTES + deadlines/packing/phrases;
+  see harness doc) × light/dark × normal/compact + 600px; a11y pass (contrast/focus/aria);
+  Opus critic panel over the loop's accumulated diff; written verdict here — unfixed findings
+  logged, not buried.
 
 - [ ] **21. (Arc E) Map layout & sidebar** — "Your pins" list rhythm (row density, icons,
   hover/focus states), filter chip rows (two stacked rows read noisy), search box + "＋ drop a
@@ -59,7 +74,15 @@ Evidence: full-route screenshot sweep 2026-07-10 (scratchpad `sweep-*.png`), 0 c
 - [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch
   targets, geocoding feedback states (loading/empty/error), keyboard reachability of the pin list.
 
+- [ ] **24. Un-reviewed surfaces: emergency + deadlines + packing + phrases** — emergency is a
+  FULL nav route (crisis usability — worst page to skip); the other three are deep-linked from
+  the dashboard (bell → deadlines, teaser → packing). Review each shot, write measured findings
+  here, fix the top issues per page or tick "verified clean".
+
 ## Working notes
+- **Vibes-word rule (stages 10/11/13/14/16):** "balance/rhythm/breath/parity" must be converted,
+  during the stage's evidence step, into ≥2 concrete measured deltas (px/ratio/count) written
+  into this file BEFORE fixing; the PR body carries before/after numbers. No deltas → no fix.
 - Screenshot evidence in session scratchpad: `sweep-dashboard/going/checklist/budget/explore/people/map/plan/rooms/packing/emergency/deadlines/phrases.png`.
 - Not-yet-reviewed shots: people, checklist, packing, emergency, deadlines, phrases — review before
   their stages; add findings here.

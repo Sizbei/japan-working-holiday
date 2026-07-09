@@ -3383,6 +3383,10 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
    calendar.js sets .moff); past days inside it stay bright — Notion doesn't fade the past */
 .cal-grid.cal-endless .cal-cell.past:not(.out) .cal-date{ color: var(--ink-soft); }
 .cal-grid.cal-endless .cal-cell.moff:not(.today) .cal-date{ color: var(--ink-faint); }
+/* …and GROW: the focal month's numbers are larger (Notion), outside months stay small */
+.cal-grid.cal-endless .cal-date{ transition: font-size .15s ease; }
+.cal-grid.cal-endless .cal-cell:not(.moff):not(.today) .cal-date{ font-size: .84rem; }
+.cal-grid.cal-endless .cal-cell.today .cal-date{ min-width: 24px; height: 24px; font-size: .78rem; }
 /* normal mode: the page scrolls — pin the reacting chrome so "the rest of the page reacts"
    stays VISIBLE: toolbar (label/‹›/Today) on top, dow row flush under it, sidebar (mini-nav +
    cockpit) beside the grid. --cal-tb-h is measured by alignRail() (flex-wrap: 1–2 rows). */

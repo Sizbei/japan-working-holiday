@@ -11,10 +11,11 @@ import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { nowISO, fmtShort } from './lib/dates.js';
 import { confirmModal } from './lib/modal.js';
 import { prefersReducedMotion } from './motion.js';
-import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthdayMonth } from './lib/people.js';
+import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthdayMonth, driftingPeople, driftLabel, toVCard } from './lib/people.js';
 
 const VIEW_KEY = 'jwh-people-view-v1';
 let TODAY = nowISO();
+let DATA = null;   // tips.json (read-only): baked calendar events feed the "met at…" picker — people.js must NOT import calendar.js
 let query = '', sortMode = 'met', filter = 'all', view = 'cards';   // filter: 'all' | 'star' | tag
 
 // ---------- store ----------
@@ -23,8 +24,9 @@ const save = (list) => { set(KEYS.people, list); document.dispatchEvent(new Cust
 const byId = (id) => load().find(p => p.id === id);
 
 // ---------- mount ----------
-export function mountPeople() {
+export function mountPeople(data) {
   TODAY = nowISO();
+  DATA = data || null;
   view = (getRaw(VIEW_KEY, 'cards') === 'list') ? 'list' : 'cards';
   render();
   let dirty = false;
@@ -33,6 +35,11 @@ export function mountPeople() {
   });
   document.addEventListener('jwh:route', (e) => {
     if (e.detail?.route === 'people') { TODAY = nowISO(); if (dirty) { dirty = false; } render(); }
+  });
+  // the calendar event panel's "縁 met here" names land here (cross-module via event, no import)
+  document.addEventListener('jwh:people-open', (e) => {
+    const id = e.detail?.id;
+    if (id && byId(id)) openDrawer(id);
   });
 }
 const isActive = () => document.getElementById('view-people')?.classList.contains('is-active');
@@ -46,6 +53,7 @@ function render() {
 
   renderBar();
   renderFilters(all);
+  renderDrift(all);
 
   // derive the visible set through search → filter → sort
   let list = searchPeople(all, query);
@@ -90,6 +98,7 @@ function renderBar() {
         <option value="seen" ${sortMode === 'seen' ? 'selected' : ''}>recently seen</option>
       </select>
     </label>
+    <button type="button" class="ppl-vcf" id="pplVcf" title="Export everyone as a vCard (.vcf) — import into your phone contacts">⤓ vCard</button>
     <button type="button" class="ppl-add" id="pplAdd">＋ Add person</button>`;
 
   const search = $('#pplSearch', bar);
@@ -99,6 +108,7 @@ function renderBar() {
   }));
   $('#pplSort', bar).addEventListener('change', (e) => { sortMode = e.target.value; renderList(); });
   $('#pplAdd', bar).addEventListener('click', () => openEditor(null));
+  $('#pplVcf', bar).addEventListener('click', downloadVCard);
 }
 
 // re-render just the list (keeps the search input focused while typing)
@@ -113,6 +123,19 @@ function renderList() {
   if (!all.length) { host.innerHTML = emptyHTML(); wireEmpty(host); return; }
   host.innerHTML = list.length ? (view === 'list' ? listHTML(list) : gridHTML(list)) : noResultsHTML();
   wireCards(host);
+}
+
+// ---------- drifting strip (page-level, deliberately NEVER the notifications bell) ----------
+function renderDrift(all) {
+  const host = $('#pplDrift'); if (!host) return;
+  const drifting = driftingPeople(all, TODAY);
+  if (!drifting.length) { host.innerHTML = ''; return; }
+  host.innerHTML = `<div class="ppl-drift-strip" role="group" aria-label="People you haven't seen in a while">
+    <span class="ppl-drift-k" aria-hidden="true">☾ Drifting:</span>
+    ${drifting.slice(0, 8).map(d => `<button type="button" class="ppl-driftp" data-drift="${esc(d.id)}">${esc(d.name)} <small>(${esc(driftLabel(d.days))})</small></button>`).join(' ')}
+    ${drifting.length > 8 ? `<span class="ppl-drift-more">+${drifting.length - 8} more</span>` : ''}
+  </div>`;
+  $$('[data-drift]', host).forEach(b => b.addEventListener('click', () => openDrawer(b.dataset.drift, b)));
 }
 
 function renderFilters(all) {
@@ -248,6 +271,28 @@ function wireCards(host) {
   });
 }
 
+// ---------- vCard export (download helper pattern from calendar-editor) ----------
+function downloadVCard() {
+  const list = load();
+  if (!list.length) return;
+  const blob = new Blob([toVCard(list)], { type: 'text/vcard' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'people.vcf';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// ---------- "met at…" event pool (baked tips.json + user events; NO calendar.js import) ----------
+// The picker is title+date only, so skipping the calendar's date-override merge is fine —
+// an override moves an event, it doesn't rename it.
+function eventPool() {
+  const norm = (e) => ({ id: String(e?.id || ''), title: String(e?.title || ''), date: String(e?.date || '').slice(0, 10) });
+  const user = (get(KEYS.events, []) || []).map(norm);
+  const baked = (DATA?.calendar || []).map(norm);
+  return [...user, ...baked].filter(e => e.id && e.title);
+}
+
 // ---------- mutations ----------
 function toggleStar(id) {
   const list = load().map(p => p.id === id ? { ...p, star: !p.star } : p);
@@ -316,6 +361,7 @@ function openDrawer(id, opener) {
   $('[data-act="star"]', wrap)?.addEventListener('click', () => { toggleStar(id); reopen(id); });
   $('[data-act="edit"]', wrap)?.addEventListener('click', () => { closeDrawer(); openEditor(byId(id)); });
   $('[data-act="note"]', wrap)?.addEventListener('click', () => openNote(id));
+  $('[data-act="event"]', wrap)?.addEventListener('click', () => gotoMetEvent(id));
   $('[data-act="delete"]', wrap)?.addEventListener('click', () => { const o = drawerOpener; closeDrawer(); deletePerson(id, o); });
 
   setTimeout(() => (drawer.querySelector('[data-act="seen"]') || drawer).focus(), 20);
@@ -331,6 +377,7 @@ function reopen(id) {
   $('[data-act="star"]', drawer)?.addEventListener('click', () => { toggleStar(id); reopen(id); });
   $('[data-act="edit"]', drawer)?.addEventListener('click', () => { closeDrawer(); openEditor(byId(id)); });
   $('[data-act="note"]', drawer)?.addEventListener('click', () => openNote(id));
+  $('[data-act="event"]', drawer)?.addEventListener('click', () => gotoMetEvent(id));
   $('[data-act="delete"]', drawer)?.addEventListener('click', () => { const o = opener; closeDrawer(); deletePerson(id, o); });
   drawerOpener = opener;
   (drawer.querySelector('[data-act="seen"]') || drawer).focus();
@@ -365,8 +412,9 @@ function drawerBody(p) {
   const seenVal = p.lastSeen
     ? `×${p.seenCount || 0} · last ${esc(fmtShort(p.lastSeen))}${p.lastSeenWhere ? ', ' + esc(p.lastSeenWhere) : ''}`
     : ((p.seenCount || 0) ? `×${p.seenCount}` : 'not seen yet');
+  const evBtn = p.metEventId ? ` <button type="button" class="ppl-evgo" data-act="event">📅 event</button>` : '';
   const rows = [
-    fRow('met', p.metDate ? `${esc(fmtShort(p.metDate))}${p.metPlace ? ' · ' + esc(p.metPlace) : ''}${p.metContext ? ` <small>— ${esc(p.metContext)}</small>` : ''}` : ''),
+    fRow('met', p.metDate ? `${esc(fmtShort(p.metDate))}${p.metPlace ? ' · ' + esc(p.metPlace) : ''}${p.metContext ? ` <small>— ${esc(p.metContext)}</small>` : ''}${evBtn}` : (p.metEventId ? evBtn.trim() : '')),
     fRow('nationality', p.nationality ? `${flag ? flag + ' ' : ''}${esc(p.nationality)}${p.from ? ` <small>· from ${esc(p.from)}</small>` : ''}` : (p.from ? `<small>from ${esc(p.from)}</small>` : '')),
     fRow('lives', p.neighborhood ? esc(p.neighborhood) : ''),
     fRow('address as', p.addressAs ? esc(p.addressAs) : ''),
@@ -397,6 +445,15 @@ function drawerBody(p) {
       <button type="button" class="ppl-btn" data-act="note">＋ Note</button>
       <button type="button" class="ppl-btn danger" data-act="delete">Delete</button>
     </div>`;
+}
+
+// drawer "📅 event" → jump to the calendar and open that event's side panel (event bus, no import)
+function gotoMetEvent(id) {
+  const evId = byId(id)?.metEventId;
+  if (!evId) return;
+  closeDrawer(true);
+  if (location.hash !== '#/calendar') location.hash = '#/calendar';
+  requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:cal-showevent', { detail: { id: evId } })));
 }
 
 // ---------- ＋ Note (small modal) ----------
@@ -446,6 +503,9 @@ function openEditor(person) {
         </div>
         <label>Context (the hook)<input name="metContext" value="${v('metContext')}" placeholder="camped in the next tent…" autocomplete="off"></label>
         <label>Met through<input name="metThrough" value="${v('metThrough')}" autocomplete="off"></label>
+        <label>Met at event <small>(links to the calendar)</small><input name="metEventQ" id="pplEvQ" value="${esc(linkedEventTitle(p.metEventId))}" placeholder="search calendar events…" autocomplete="off"></label>
+        <input type="hidden" name="metEventId" value="${v('metEventId')}">
+        <div id="pplEvSug" class="ppl-evsug" hidden></div>
       </fieldset>
       <fieldset class="ppl-fs"><legend>Staying in touch</legend>
         <label>Contact<input name="contact" value="${v('contact')}" placeholder="LINE @handle · https://…" autocomplete="off"></label>
@@ -464,6 +524,7 @@ function openEditor(person) {
       <div class="modal-actions"><button type="submit" class="btn primary">${editing ? 'Save' : 'Add'}</button></div>
     </form>`;
   const ov = modalShell(body);
+  wireEventPicker(ov);
   $('#pplForm', ov).addEventListener('submit', (e) => {
     e.preventDefault();
     const o = Object.fromEntries(new FormData(e.target).entries());
@@ -472,6 +533,7 @@ function openEditor(person) {
     const fields = {
       name: o.name, reading: o.reading, star: !!o.star,
       metDate: o.metDate, metPlace: o.metPlace, metContext: o.metContext, metThrough: o.metThrough,
+      metEventId: String(o.metEventQ || '').trim() ? o.metEventId : '',   // clearing the text clears the link
       nationality: o.nationality, from: o.from, neighborhood: o.neighborhood, addressAs: o.addressAs,
       contact: o.contact, speaks: o.speaks, birthday: o.birthday, leaves: o.leaves,
       nextPlan: o.nextPlan, food: o.food, tags, notes: o.notes,
@@ -484,6 +546,34 @@ function openEditor(person) {
     }
     save(list);
     closeShell(ov, true);
+  });
+}
+
+// title shown in the picker input for an existing link (pool lookup; deleted event → note)
+function linkedEventTitle(id) {
+  if (!id) return '';
+  return eventPool().find(e => e.id === id)?.title || '(linked event no longer exists)';
+}
+// lite typeahead over eventPool() — top 6 title matches; picking one fills the hidden metEventId
+function wireEventPicker(ov) {
+  const q = $('#pplEvQ', ov), sug = $('#pplEvSug', ov), idField = ov.querySelector('input[name="metEventId"]');
+  if (!q || !sug || !idField) return;
+  const pool = eventPool();
+  q.addEventListener('input', () => {
+    idField.value = '';   // typing invalidates the previous pick until a new one is chosen
+    const needle = q.value.trim().toLowerCase();
+    if (!needle) { sug.hidden = true; sug.innerHTML = ''; return; }
+    const hits = pool.filter(e => e.title.toLowerCase().includes(needle)).slice(0, 6);
+    sug.innerHTML = hits.length
+      ? hits.map(e => `<button type="button" class="ppl-evopt" data-eid="${esc(e.id)}" data-title="${esc(e.title)}">${esc(e.title)} <small>${esc(fmtShort(e.date) || e.date)}</small></button>`).join('')
+      : '<span class="ppl-evnone">no matching events</span>';
+    sug.hidden = false;
+    $$('.ppl-evopt', sug).forEach(b => b.addEventListener('click', () => {
+      idField.value = b.dataset.eid;
+      q.value = b.dataset.title;
+      sug.hidden = true; sug.innerHTML = '';
+      q.focus();
+    }));
   });
 }
 

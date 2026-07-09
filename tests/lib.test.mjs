@@ -1086,3 +1086,55 @@ test('panel fixes: runway gated on confidence + savings anchored to entry date',
   const s3 = spendSummary(dense, 190000, 100000, 0, '2026-07-15', '2026-07-10');
   assert.equal(s3.savingsNow, 100000 - 12000);              // only Jul 10-15 (6×2000)
 });
+
+// ---- People v1.1: drifting + vCard + event link ----
+import { driftingPeople, driftLabel, toVCard } from '../docs/assets/lib/people.js';
+
+test('driftingPeople: >14d since last contact; metDate fallback; left people excluded; most-drifted first', () => {
+  const t = '2026-07-09';
+  const list = [
+    { id: 'p1', name: 'Aiko', lastSeen: '2026-07-05' },                       // 4d — fresh
+    { id: 'p2', name: 'Bram', lastSeen: '2026-06-20' },                       // 19d — drifting
+    { id: 'p3', name: 'Chie', metDate: '2026-05-01' },                        // never seen → metDate (69d)
+    { id: 'p4', name: 'Dario', lastSeen: '2026-06-01', leaves: '2026-07-01' }, // left already
+    { id: 'p5', name: 'Eri', lastSeen: '2026-06-01', leaves: '2026-08-01' },   // still here (38d)
+    { id: 'p6', name: 'Fen' },                                                 // no dates at all
+  ];
+  const out = driftingPeople(list, t);
+  assert.deepEqual(out.map(x => x.id), ['p3', 'p5', 'p2']);
+  assert.equal(out[0].days, 69);
+});
+test('driftingPeople: threshold boundary is exclusive; malformed records never throw', () => {
+  const t = '2026-07-15';
+  assert.equal(driftingPeople([{ id: 'a', name: 'x', lastSeen: '2026-07-01' }], t).length, 0);   // exactly 14d
+  assert.equal(driftingPeople([{ id: 'a', name: 'x', lastSeen: '2026-06-30' }], t).length, 1);   // 15d
+  assert.deepEqual(driftingPeople([{ lastSeen: 42 }, null, { name: 'y', metDate: 'soon' }], t), []);
+});
+test('driftLabel spans: days → weeks → months', () => {
+  assert.equal(driftLabel(13), '13 d');
+  assert.equal(driftLabel(15), '2 wks');   // drifting entries start past 14d — weeks from there
+  assert.equal(driftLabel(21), '3 wks');
+  assert.equal(driftLabel(90), '3 mo');
+});
+test('toVCard: FN/N + TEL vs URL vs handle-in-NOTE; BDAY only with a full date; escaping; CRLF', () => {
+  const v = toVCard([
+    { name: 'Kenji; Barber', contact: '+81 90-1234-5678', birthday: '1994-04-20', metDate: '2026-07-02', metPlace: 'Koenji' },
+    { name: 'Mia', contact: 'LINE @mia_tokyo', birthday: '04-20', notes: 'ramen,\nlate nights' },
+    { name: 'Site Guy', contact: 'https://example.com/a' },
+    { name: '', contact: '000' },   // nameless → skipped
+  ]);
+  assert.ok(v.includes('FN:Kenji\\; Barber'));   // vesc escapes the semicolon
+  assert.ok(v.includes('TEL;TYPE=CELL:+81 90-1234-5678'));
+  assert.ok(v.includes('BDAY:1994-04-20'));
+  assert.ok(v.includes('NOTE:Met 2026-07-02 · Koenji'));
+  assert.ok(v.includes('Birthday: 04-20\\nContact: LINE @mia_tokyo\\nramen\\,\\nlate nights'));
+  assert.ok(v.includes('URL:https://example.com/a'));
+  assert.equal((v.match(/BEGIN:VCARD/g) || []).length, 3);
+  assert.ok(v.endsWith('END:VCARD\r\n'));
+  assert.ok(!v.includes('\n\r') && v.split('\r\n').every(l => !l.includes('\n') || l === ''));
+  assert.equal(toVCard([]), '');
+});
+test('newPerson carries metEventId (event link) and defaults it empty', () => {
+  assert.equal(newPerson({ name: 'Aiko', metEventId: ' ev-x ' }, '2026-07-09').metEventId, 'ev-x');
+  assert.equal(newPerson({ name: 'Aiko' }, '2026-07-09').metEventId, '');
+});

@@ -165,6 +165,14 @@ export function mountCalendar(data, today) {
     else _calDirty = true;
   });
   document.addEventListener('jwh:cal-quickadd', (e) => { const d = e.detail?.date; if (d) { if (location.hash !== '#/calendar') location.hash = '#/calendar'; openModal(null, d); } });   // long-press a day → add event
+  // People drawer "📅 event" → open that event's side panel (cross-module via event, no import)
+  document.addEventListener('jwh:cal-showevent', (e) => {
+    const id = e.detail?.id; if (!id) return;
+    const ev = allEvents().find(x => x.id === id);
+    if (!ev) { dndToast('That event no longer exists.'); return; }
+    if (location.hash !== '#/calendar') location.hash = '#/calendar';
+    requestAnimationFrame(() => openSidePanel(ev));
+  });
   document.addEventListener('keydown', onCalKeydown);      // Notion-style: ←→↑↓ move days, Enter open, − remove, t today, n new
   // right-click an event → context menu (delegated on document: the day popover lives on <body>,
   // outside #calView, so a view-scoped listener would miss its .pop-open events).
@@ -673,6 +681,15 @@ function positionSidePanel(panel) {
   card.style.top = (top + sy) + 'px';
 }
 
+// 縁: people whose "met at" links to this event (reads jwh-people-v1 via store — calendar
+// imports nothing from people.js; names are user-typed → esc()'d)
+function metHereLine(evId) {
+  const linked = (get(KEYS.people, []) || []).filter(p => p && p.metEventId === evId && p.name);
+  if (!linked.length) return '';
+  return `<p class="sp-en">縁 Met here: ${linked.map(p =>
+    `<button type="button" class="sp-enp" data-pid="${esc(p.id)}">${esc(String(p.name))}</button>`).join('<span aria-hidden="true"> · </span>')}</p>`;
+}
+
 export function openSidePanel(ev, trigger) {
   if (_sidePanelCleanup) { _sidePanelCleanup(); _sidePanelCleanup = null; }
   _sidePanelTrigger = trigger || document.activeElement;
@@ -720,6 +737,7 @@ export function openSidePanel(ev, trigger) {
         </div>
         ${(ev.note || ev.bookingNotes || ev.why) ? `<p class="sp-note">${esc(ev.note || ev.bookingNotes || ev.why || '')}</p>` : ''}
         ${ev.moved ? '<p class="sp-moved">↩ You rescheduled this from its researched date.</p>' : ''}
+        ${metHereLine(ev.id)}
         ${srcline(ev.sources)}
       </div>
       <div class="sp-actions">${actions}</div>
@@ -732,6 +750,11 @@ export function openSidePanel(ev, trigger) {
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
+  panel.querySelectorAll('.sp-enp').forEach(b => b.addEventListener('click', () => {   // 縁: name → open that person's drawer on #/people
+    closeSidePanel();
+    if (location.hash !== '#/people') location.hash = '#/people';
+    requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:people-open', { detail: { id: b.dataset.pid } })));
+  }));
   // click-away + reposition-on-resize, bound ONCE at the document/window level. Desktop: the container
   // is pointer-events:none so a real click lands on an event (→ switch) or empty space (→ close);
   // mobile: the backdrop tap also lands here (its own click listener would double-close → stole focus).

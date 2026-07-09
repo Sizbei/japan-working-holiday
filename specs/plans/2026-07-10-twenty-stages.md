@@ -35,8 +35,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   or slow tiles): verify + scope any tile filter to `[data-theme="dark"]`.
 - [ ] **8. Rooms badge overload** — listing cards drown in colored mono badges; keep 2–3 primary
   + "+N more" disclosure.
-- [ ] **9. Topbar icon row** — moon (theme) button shows a stuck glow/highlight circle; unify the
-  5 icon buttons' rest/hover/active states + titles.
+- [x] **9. Topbar icon row** — the "stuck glow" hypothesis was a NON-ISSUE (it's the yellow moon
+  emoji reading as a halo at small scale, not a stuck state). Real measured inconsistencies fixed:
+  sizes {34,38}→{38×38} (lang-toggle was small), radii {r-sm,10px}→{10px}, rest shadows 1→0
+  (theme-toggle was the only one), hover unified to the family lift+indigo (moon keeps its -12°
+  tilt, gear keeps its spin). Titles/aria all present (verified). (PR #94)
 - [ ] **10. Dashboard hero balance** — large dead space right of the title block; tighten hero
   height / let the sun motif or countdown fill the column.
 - [ ] **11. Dashboard widget row rhythm** — bottom teaser cards: equalize paddings/heights,

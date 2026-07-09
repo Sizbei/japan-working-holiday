@@ -12,6 +12,7 @@ import { fetchWeather, wmoInfo } from './lib/weather.js';
 import { fetchUsdPerJpy } from './lib/rates.js';
 import { loadPlaces } from './lib/places.js';
 import { checklistItems } from './checklist-page.js';
+import { isBirthday } from './lib/people.js';
 import { allEvents } from './calendar.js';
 import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';
@@ -330,7 +331,11 @@ function renderToday() {
   const checks = get(KEYS.checklist, {}) || {};
   checklistItems(DATA).filter(it => due[it.id] === TODAY && !checks[it.id]).slice(0, 2)
     .forEach(it => bits.push(`<li><a href="#/checklist"><span class="w-when">due</span> ${esc(clip(it.task, 46))}</a></li>`));
-  el.querySelector('.widget-body').innerHTML = `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
+  // 縁 birthdays — device-local People data; only ever appears ON the day (zero ambient noise)
+  (get(KEYS.people, []) || []).filter(p => isBirthday(p.birthday, TODAY)).slice(0, 2)
+    .forEach(p => bits.push(`<li><a href="#/people"><span class="w-when">🎂</span> ${esc(clip(String(p.name || ''), 40))}’s birthday</a></li>`));
+  const body = el.querySelector('.widget-body'); if (!body) return;
+  body.innerHTML = `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
     ? `<ul>${bits.join('')}</ul>`
     : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`);
   renderWxStrip();   // fill from cache synchronously; refreshWeather() re-fills when a fetch lands

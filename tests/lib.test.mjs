@@ -907,7 +907,7 @@ test('usageSummary: ranks routes, totals visits/edits, flags never-used; guards 
 });
 
 // ---- 縁 People (trip PRM) pure lib — invented names only (public repo) ----
-import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel } from '../docs/assets/lib/people.js';
+import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthday, isBirthdayMonth } from '../docs/assets/lib/people.js';
 
 const _people = () => [
   newPerson({ name: 'Aria', tags: ['music', 'Ramen Nerd'], metDate: '2026-07-04', nextPlan: 'Knock Kōenji', lastSeen: '2026-07-06', star: true }, '2026-07-08', 'p1'),
@@ -997,4 +997,15 @@ test('compact-pages parity: settings control, CSS rules, and store key stay in s
   assert.ok(guide.includes('applyCompact'), 'guide.js must export/apply the compact attribute');
   assert.ok(css.includes('[data-compact="on"] .pillar-head'), 'style.css must style compact mini-titles');
   assert.ok(css.includes('[data-compact="on"] .lede'), 'style.css must hide ledes in compact');
+});
+
+test('isBirthday/isBirthdayMonth: MM-DD and YYYY-MM-DD both work; junk never matches', () => {
+  assert.equal(isBirthday('11-12', '2026-11-12'), true);
+  assert.equal(isBirthday('1990-11-12', '2026-11-12'), true);
+  assert.equal(isBirthday('11-12', '2026-11-13'), false);
+  assert.equal(isBirthday('', '2026-11-12'), false);
+  assert.equal(isBirthday('soon', '2026-11-12'), false);
+  assert.equal(isBirthdayMonth('11-12', '2026-11-01'), true);
+  assert.equal(isBirthdayMonth('1990-07-20', '2026-07-09'), true);
+  assert.equal(isBirthdayMonth('11-12', '2026-10-31'), false);
 });

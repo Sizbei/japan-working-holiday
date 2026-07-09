@@ -53,16 +53,25 @@ export function monthByCat(items, ym) {
   return out;
 }
 
+const CONFIDENT_DAYS = 14;   // distinct logged days in the window before runway-from-actuals is honest
+
 /**
  * Actuals summary. Returns null when there are no spends in the trailing 30 days —
  * callers fall back to the planner's estimated-burn copy.
+ * Runway honesty (adversarial-review findings):
+ *  - `confident` is false until CONFIDENT_DAYS distinct days are logged in the window — a week-one
+ *    burn extrapolated from three coffees would show absurd runway; callers must gate on it.
+ *  - savings are anchored: spends logged on/after `savingsAsOf` are SUBTRACTED from the stated
+ *    savings before dividing (a figure typed at arrival drifts optimistic forever otherwise).
+ *    No savingsAsOf → all logged spends count against it.
  */
-export function spendSummary(items, plannedMonthly, savings, income, todayIso) {
+export function spendSummary(items, plannedMonthly, savings, income, todayIso, savingsAsOf) {
   const today = String(todayIso).slice(0, 10);
   const from = addDays(today, -30);
   const trailing = (items || []).filter(it => { const d = String(it?.date || '').slice(0, 10); return d > from && d <= today; });
   if (!trailing.length) return null;
   const trailing30 = trailing.reduce((s, it) => s + (+it.amount || 0), 0);
+  const sampleDays = new Set(trailing.map(it => String(it.date).slice(0, 10))).size;
   const dailyRate = trailing30 / 30;
   const ym = today.slice(0, 7);
   const daysInMonth = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate();
@@ -70,8 +79,12 @@ export function spendSummary(items, plannedMonthly, savings, income, todayIso) {
   const projectedMonth = Math.round(dailyRate * daysInMonth);
   const actualMonthlyBurn = Math.round(dailyRate * 30);
   const net = (+income || 0) - actualMonthlyBurn;
-  const actualRunwayMonths = net < 0 ? Math.floor((+savings || 0) / -net) : Infinity;
-  return { actualThisMonth, dailyRate, projectedMonth, vsPlan: projectedMonth - (+plannedMonthly || 0), actualMonthlyBurn, actualRunwayMonths };
+  const asOf = String(savingsAsOf || '').slice(0, 10);
+  const spentSince = (items || []).reduce((s, it) => s + ((!asOf || String(it?.date || '') >= asOf) ? (+it.amount || 0) : 0), 0);
+  const savingsNow = Math.max(0, (+savings || 0) - spentSince);
+  const actualRunwayMonths = net < 0 ? Math.floor(savingsNow / -net) : Infinity;
+  return { actualThisMonth, dailyRate, projectedMonth, vsPlan: projectedMonth - (+plannedMonthly || 0),
+    actualMonthlyBurn, actualRunwayMonths, savingsNow, sampleDays, confident: sampleDays >= CONFIDENT_DAYS };
 }
 
 // keep ~MAX_MONTHS of history; prune older (returns a NEW array — never mutates)

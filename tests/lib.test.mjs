@@ -1046,7 +1046,7 @@ test('spendSummary: trailing-30d actuals drive burn + runway; empty → null (pl
   const s = spendSummary(items, 190000, 900000, 0, '2026-07-09');
   assert.equal(s.actualThisMonth, 30000);
   assert.equal(s.actualMonthlyBurn, 30000);            // 30k over 30d → 1k/day → 30k monthly
-  assert.equal(s.actualRunwayMonths, 30);              // 900k / 30k
+  assert.equal(s.actualRunwayMonths, 29);              // (900k − 30k already spent) / 30k — savings are anchored now
   assert.ok(s.vsPlan < 0);                             // projected 31k < planned 190k
   assert.equal(spendSummary([], 190000, 900000, 0, '2026-07-09'), null);
   assert.equal(spendSummary([{ date: '2026-01-01', amount: 500 }], 1, 1, 0, '2026-07-09'), null);  // outside window
@@ -1061,4 +1061,28 @@ test('parseSpend: sub-0.5 decimals cannot mint a ¥0 entry; income>burn → Infi
   assert.equal(parseSpend('0.4 x', '2026-07-09'), null);
   const s = spendSummary([{ date: '2026-07-08', amount: 30000 }], 190000, 900000, 500000, '2026-07-09');
   assert.equal(s.actualRunwayMonths, Infinity);   // income 500k > burn 30k
+});
+
+test('panel fixes: leap-day birthdays fold to Feb 28 in non-leap years; impossible dates rejected', () => {
+  assert.equal(isBirthday('02-29', '2026-02-28'), true);    // 2026 not leap → celebrate the 28th
+  assert.equal(isBirthday('02-29', '2028-02-29'), true);    // 2028 leap → the real day
+  assert.equal(isBirthday('02-29', '2028-02-28'), false);
+  assert.equal(isBirthdayMonth('11-31', '2026-11-05'), false);  // invalid day → no phantom badge
+  assert.equal(isBirthdayMonth('13-05', '2026-01-05'), false);  // invalid month
+});
+test('panel fixes: runway gated on confidence + savings anchored to entry date', () => {
+  // 3 entries on 3 days = not confident → callers hide runway
+  const sparse = [{date:'2026-07-07',amount:500},{date:'2026-07-08',amount:600},{date:'2026-07-09',amount:550}];
+  const s1 = spendSummary(sparse, 190000, 900000, 0, '2026-07-09');
+  assert.equal(s1.confident, false);
+  assert.equal(s1.sampleDays, 3);
+  // 15 distinct days → confident; savings reduced by spends since savingsAsOf
+  const dense = Array.from({length:15},(_,i)=>({date:`2026-07-${String(i+1).padStart(2,'0')}`,amount:2000}));
+  const s2 = spendSummary(dense, 190000, 100000, 0, '2026-07-15', '2026-07-01');
+  assert.equal(s2.confident, true);
+  assert.equal(s2.savingsNow, 100000 - 30000);              // 15×2000 logged since the anchor
+  assert.equal(s2.actualRunwayMonths, 2);              // floor(70k/30k) — unanchored would say 3
+  // spends BEFORE the anchor don't count against savings
+  const s3 = spendSummary(dense, 190000, 100000, 0, '2026-07-15', '2026-07-10');
+  assert.equal(s3.savingsNow, 100000 - 12000);              // only Jul 10-15 (6×2000)
 });

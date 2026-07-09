@@ -3362,3 +3362,4 @@ ruby > rt {
 .sp-del:hover{ color: var(--crimson, #bc002d); }
 .sp-empty{ color: var(--ink-faint); font-size:.85rem; font-style:italic; margin:.3rem 0 0; }
 @media (hover: none){ .sp-del, .sp-mv{ min-width:44px; min-height:44px; } }
+.sp-foot{ font-family: var(--mono); font-size:.64rem; color: var(--ink-faint); margin:.55rem 0 0; }

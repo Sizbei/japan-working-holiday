@@ -76,10 +76,10 @@ function refreshTeasers() {
   const inUsd = (usd && yenFig > 0) ? ` (~$${Math.round(yenFig * usd).toLocaleString('en-US')})` : '';
   // actuals beat estimates: with real spends in the trailing 30 days, show measured burn + runway
   const bs = get(KEYS.budget, {}) || {};
-  const sp = arrived ? spendSummary((get(KEYS.spend, {}) || {}).items || [], s.monthlyTotal, bs.savings || 0, bs.monthlyIncome || 0, nowISO()) : null;
+  const sp = arrived ? spendSummary((get(KEYS.spend, {}) || {}).items || [], s.monthlyTotal, bs.savings || 0, bs.monthlyIncome || 0, nowISO(), bs.savingsAsOf) : null;
   // real logged spends ALWAYS beat the onboarding nudge — actuals are the feature's whole premise
   const budgetText = sp
-    ? `spent ${fmtYen(sp.actualThisMonth)}${s.monthlyTotal > 0 ? ` of ${fmtYen(s.monthlyTotal)}` : ''} · runway ${sp.actualRunwayMonths === Infinity ? '∞' : sp.actualRunwayMonths + ' mo'}`
+    ? `spent ${fmtYen(sp.actualThisMonth)}${s.monthlyTotal > 0 ? ` of ${fmtYen(s.monthlyTotal)}` : ''}${sp.confident ? ` · runway ~${sp.actualRunwayMonths === Infinity ? '∞' : sp.actualRunwayMonths + ' mo'} (logged)` : ' · keep logging for real runway'}`
     : (s.oneTimeTotal === 0 && s.monthlyTotal === 0 && savings === 0)
       ? 'Set up your budget'
       : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · ${arrived ? `burn ${fmtYen(s.monthlyTotal)}/mo` : `to land ${fmtYen(s.toLand)}`}${inUsd}`;

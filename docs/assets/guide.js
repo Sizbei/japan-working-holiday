@@ -17,6 +17,12 @@ const LISTCTL_OPTS = [
 
 // Reflect the persisted home-layout theme onto <html data-home>. Exported so main.js can call
 // it as early as possible in boot (before the dashboard paints) to avoid a layout flash.
+// Compact pages: <html data-compact="on"> shrinks every pillar-head to a one-line mini-title
+// (kanji + lede hidden) and lets the calendar height-lock to the viewport. Applied early in boot.
+export function applyCompact() {
+  document.documentElement.dataset.compact = getRaw(KEYS.compact, '') === 'on' ? 'on' : '';
+}
+
 export function applyHomeLayout() {
   document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
 }
@@ -76,6 +82,7 @@ function openGuide() {
   const dark = document.documentElement.dataset.theme === 'dark';
   const arcade = document.documentElement.dataset.arcade === 'on';
   const reduce = document.documentElement.dataset.reduceMotion === 'on';
+  const compact = document.documentElement.dataset.compact === 'on';
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
   const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
@@ -117,6 +124,7 @@ function openGuide() {
       ${row('setTheme', 'Dark mode', 'Easier on the eyes at night', dark)}
       ${row('setArcade', 'Arcade mode', 'Extra retro CRT glow &amp; pixel flair', arcade)}
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
+      ${row('setCompact', 'Compact pages', 'Small titles, more content — the calendar fits one screen', compact)}
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
     </section>
@@ -142,6 +150,13 @@ function openGuide() {
     document.documentElement.dataset.reduceMotion = on ? '' : 'on';
     setRaw(KEYS.reduceMotion, on ? '' : 'on');
     setSwitch('setReduce', !on);
+  });
+  $('#setCompact', ov)?.addEventListener('click', () => {
+    const on = document.documentElement.dataset.compact === 'on';
+    setRaw(KEYS.compact, on ? '' : 'on');
+    applyCompact();
+    setSwitch('setCompact', !on);
+    document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // active views re-render so compact-aware bits (month chip cap) flip instantly
   });
   $('#setCelebrate', ov)?.addEventListener('click', () => {
     const on = getRaw(KEYS.celebrations, '') !== 'off';        // currently on?

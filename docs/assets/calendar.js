@@ -442,6 +442,7 @@ function render() {
 // rail scrolls internally instead of running past the month. Boot renders while the view is
 // hidden (rects are 0), so this also re-runs on every entry to #/calendar. Non-month uncaps.
 function alignRail() {
+  if (document.documentElement.dataset.compact === 'on') { document.querySelector('.cal-panel')?.style.removeProperty('max-height'); return; }   // compact: the height-locked layout + the panel's own CSS max-height govern; document-geometry math would misfire
   const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-grid');
   if (!p) return;
   if (mode === 'month' && g && g.offsetHeight > 300) {
@@ -651,6 +652,11 @@ export function openSidePanel(ev, trigger) {
       closeSidePanel();
     });
     window.addEventListener('resize', () => { const p = $('#calSidePanel'); if (p && !p.hidden && p.classList.contains('is-open')) positionSidePanel(p); });   // re-anchor / reset inline coords across the desktop↔mobile breakpoint
+    // compact viewport-fit: the grid scrolls INSIDE main (window.scrollY stays 0), so the
+    // document-anchored panel would visibly detach from its chip — dismiss on internal scroll,
+    // mirroring the day-popover (which already listens on #main).
+    document.getElementById('main')?.addEventListener('scroll', () => { if (document.documentElement.dataset.compact === 'on' && _sidePanelEv) closeSidePanel(); }, { passive: true });
+    document.addEventListener('scroll', (e) => { if (document.documentElement.dataset.compact === 'on' && _sidePanelEv && e.target?.classList?.contains('cal-grid')) closeSidePanel(); }, { capture: true, passive: true });
   }
   panel.querySelector('#spGoing')?.addEventListener('click', () => {
     const id = ev.id;

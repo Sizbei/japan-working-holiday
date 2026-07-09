@@ -2757,7 +2757,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
    relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
    --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
 .cal-chip{
-  background: color-mix(in srgb, var(--chip-cat, var(--line)) 26%, var(--bg-elevated));   /* was 14% — owner: more contrast (ink on 26% tint still ≥12:1, AA-safe) */
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated));   /* was 14%, then 26% — owner keeps asking for more contrast (ink on 32% ≥11:1, AA-safe) */
   color: var(--ink);
   border: none;
   border-radius: 4px;
@@ -2772,13 +2772,14 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   width: 100%;
   text-align: left;
 }
-/* category dot inside the chip — set per cat via --chip-cat */
+/* category LINE inside the chip (Notion-style vertical tick — was a 5px dot) */
 .cal-chip::before{
   content: '';
   display: block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  width: 3px;
+  align-self: stretch;
+  margin: 2px 0;
+  border-radius: 2px;
   background: var(--chip-cat, var(--line));
   flex: 0 0 auto;
 }
@@ -3385,7 +3386,7 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .cal-grid.cal-endless .cal-cell.moff:not(.today) .cal-date{ color: var(--ink-faint); }
 /* …and GROW: the focal month's numbers are larger (Notion), outside months stay small */
 .cal-grid.cal-endless .cal-date{ transition: font-size .15s ease; }
-.cal-grid.cal-endless .cal-cell:not(.moff):not(.today) .cal-date{ font-size: .84rem; }
+.cal-grid.cal-endless .cal-cell:not(.moff):not(.today) .cal-date{ font-size: .84rem; color: var(--ink); }
 .cal-grid.cal-endless .cal-cell.today .cal-date{ min-width: 24px; height: 24px; font-size: .78rem; }
 /* normal mode: the page scrolls — pin the reacting chrome so "the rest of the page reacts"
    stays VISIBLE: toolbar (label/‹›/Today) on top, dow row flush under it, sidebar (mini-nav +
@@ -3450,3 +3451,12 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .wk2-col.past .wk2-ev:hover, .wk2-col.past .wk2-ev:focus-visible{ opacity: 1; }
 .wk-bar.wk-past{ opacity: .5; }
 .wk-bar.wk-past:hover, .wk-bar.wk-past:focus-visible{ opacity: 1; }
+
+/* ===== chip hover + aligned date row ===== */
+/* hover tint on chips that aren't dimmed (past chips keep their opacity-restore hover) */
+.cal-grid.cal-endless .cal-cell:not(.past) .cal-chip:hover,
+.cal-grid.cal-endless .cal-cell:not(.past) .cal-chip:focus-visible{
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 46%, var(--bg-elevated)); }
+/* every cell's date row is the same height as today's 24px square — the red square must not
+   push ITS chips lower than the neighbours' */
+.cal-grid.cal-endless .cal-row{ min-height: 24px; align-items: center; }

@@ -640,7 +640,7 @@ export function dayPopover(date, anchor) {
   const onScroll = () => dismissPopover();
   const thisPop = popEl;   // guard: if the popover was dismissed before this task ran, don't attach unremovable listeners
   const mainEl = document.getElementById('main');   // app-shell: content scrolls INSIDE main, not the window
-  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); mainEl?.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus(); }, 0);
+  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); mainEl?.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus({ preventScroll: true }); }, 0);   // preventScroll: a bare focus() + html scroll-behavior:smooth started a window scroll whose FIRST tick hit onScroll and dismissed the popover it was focusing
   popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); mainEl?.removeEventListener('scroll', onScroll); };
 }
 

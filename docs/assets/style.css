@@ -3334,3 +3334,31 @@ ruby > rt {
 @media (hover:none){
   .ppl-star, .ppl-lstar, .ppl-x, .ppl-segbtn, .ppl-btn, .ppl-add{ min-height:44px; min-width:44px; }
 }
+
+/* ===== Spend log (budget actuals) ===== */
+.spend-card{ background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding: var(--s4); margin: var(--s3) 0 var(--s4); }
+.sp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.3rem; }
+.sp-h{ font-family: var(--sans); font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; color: var(--indigo); margin:0; }
+.sp-nav{ display:flex; gap:4px; }
+.sp-mv{ border:1px solid var(--line); background:none; border-radius:7px; width:26px; height:26px; cursor:pointer; color: var(--ink-soft); }
+.sp-mv:disabled{ opacity:.35; cursor:default; }
+.sp-total{ font-family: var(--mono); font-size:1.3rem; }
+.sp-total .sp-of{ font-size:.76rem; color: var(--ink-faint); }
+.sp-bar{ height:8px; background: var(--bg-sunk); border-radius:999px; overflow:hidden; margin:.4rem 0 .6rem; }
+.sp-bar i{ display:block; height:100%; background: var(--indigo); border-radius:999px; transition: width .3s var(--ease-out, ease-out); }
+.sp-bar i.over{ background: var(--crimson, #bc002d); }
+.sp-add{ display:flex; align-items:center; gap:.5rem; background: var(--bg-elevated); border:1px solid var(--line); border-radius:999px; padding:.4rem .9rem; margin-bottom:.5rem; }
+.sp-add:focus-within{ border-color: var(--indigo); }
+.sp-plus{ color: var(--indigo); font-weight:700; }
+.sp-add input{ flex:1; border:none; background:none; font: inherit; font-family: var(--mono); font-size:.82rem; color: var(--ink); outline:none; min-width:0; }
+.sp-hint{ font-family: var(--mono); font-size:.68rem; color: var(--crimson, #bc002d); flex:none; }
+.sp-list{ list-style:none; margin:0; padding:0; }
+.sp-row{ display:flex; align-items:center; gap:.6rem; padding:.3rem 0; border-bottom:1px dashed var(--line); font-size:.85rem; }
+.sp-row:last-child{ border-bottom:none; }
+.sp-date{ font-family: var(--mono); font-size:.7rem; color: var(--ink-faint); flex:none; width:3.4rem; }
+.sp-note{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sp-amt{ font-family: var(--mono); font-weight:700; }
+.sp-del{ border:none; background:none; color: var(--ink-faint); cursor:pointer; font-size:.7rem; padding:2px 6px; border-radius:6px; }
+.sp-del:hover{ color: var(--crimson, #bc002d); }
+.sp-empty{ color: var(--ink-faint); font-size:.85rem; font-style:italic; margin:.3rem 0 0; }
+@media (hover: none){ .sp-del, .sp-mv{ min-width:44px; min-height:44px; } }

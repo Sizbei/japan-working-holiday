@@ -3363,3 +3363,30 @@ ruby > rt {
 .sp-empty{ color: var(--ink-faint); font-size:.85rem; font-style:italic; margin:.3rem 0 0; }
 @media (hover: none){ .sp-del, .sp-mv{ min-width:44px; min-height:44px; } }
 .sp-foot{ font-family: var(--mono); font-size:.64rem; color: var(--ink-faint); margin:.55rem 0 0; }
+
+/* ===== Endless month ===== */
+/* auto rows: grid-auto-rows minmax() would force 88px separators — cells carry the floor instead */
+.cal-grid.cal-endless{ grid-auto-rows: auto; }
+.cal-grid.cal-endless .cal-cell{ min-height: 88px; }
+.cal-msep{ grid-column: 1 / -1; font-family: var(--serif); font-size: 1.05rem; font-weight: 600;
+  padding: .9rem .4rem .3rem; background: var(--bg-soft); color: var(--ink);
+  border-bottom: 2px solid var(--line-strong); }
+/* normal mode: the page scrolls — pin the reacting chrome so "the rest of the page reacts"
+   stays VISIBLE: toolbar (label/‹›/Today) on top, dow row flush under it, sidebar (mini-nav +
+   cockpit) beside the grid. --cal-tb-h is measured by alignRail() (flex-wrap: 1–2 rows). */
+@media (min-width: 821px){
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-toolbar{
+    position: sticky; top: 0; z-index: 6; background: var(--bg);
+    padding: .35rem 0; box-shadow: 0 1px 0 var(--line); margin-bottom: var(--s3); }
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-dowrow{
+    position: sticky; top: var(--cal-tb-h, 3.1rem); z-index: 4; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-sidebar{
+    position: sticky; top: var(--cal-tb-h, 3.1rem);
+    max-height: calc(100vh - var(--cal-tb-h, 3.1rem));
+    overflow-y: auto; }
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-sidebar > *{ flex: none; }   /* same guard as compact: max-height would flex-crush the mini-cal */
+  /* scroll targets (‹ › separators, arrow-key focused cells) must clear the pinned toolbar + dow row */
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-msep,
+  html:not([data-compact="on"]) body[data-route="calendar"] .cal-cell{
+    scroll-margin-top: calc(var(--cal-tb-h, 3.1rem) + 2rem); scroll-margin-bottom: .5rem; }
+}

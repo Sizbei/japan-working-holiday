@@ -20,10 +20,11 @@ import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/chec
 import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
 import { openMenu } from './lib/menu.js';
+import { prefersReducedMotion } from './motion.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { agendaHTML, wireAgenda } from './calendar-agenda.js';
 import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
-import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule } from './calendar-month.js';
+import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
 
@@ -155,6 +156,7 @@ export function mountCalendar(data, today) {
   applySidebar();   // apply the persisted collapsed/expanded state to the layout + toggle button
   render();
   document.addEventListener('jwh:route', (e) => { if (e.detail?.route !== 'calendar') { closeSidePanel(); dismissPopover(); } });   // the side panel + day popover are portaled to <body> (fixed) — close them when leaving the calendar so they don't hang over other pages
+  window.addEventListener('resize', () => requestAnimationFrame(alignRail));   // toolbar can wrap to two rows — keep --cal-tb-h (sticky-chrome offset) exact
   // EF3: while the calendar is hidden, a data change marks it dirty instead of re-rendering
   // the whole month grid (render on next entry). The _evCache invalidation listener above is
   // separate and stays unconditional — other pages read allEvents() fresh.
@@ -210,7 +212,11 @@ function wireToolbar() {
   });
   $('#calPrev')?.addEventListener('click', () => shift(-1));
   $('#calNext')?.addEventListener('click', () => shift(1));
-  $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });
+  $('#calToday')?.addEventListener('click', () => {
+    const t = parseISO(TODAY); weekAnchor = TODAY;
+    if (mode === 'month') { scrollToDay(TODAY, !prefersReducedMotion()); return; }   // endless: navigate by scroll
+    viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render();
+  });
   $('#calModeMonth')?.addEventListener('click', () => { mode = 'month'; render(); });
   $('#calModeWeek')?.addEventListener('click', () => { mode = 'week'; render(); });
   $('#calModeDay')?.addEventListener('click', () => { mode = 'day'; render(); });
@@ -238,19 +244,22 @@ function wireQuickAdd() {
     const p = parseEvent(v, TODAY);
     const title = p.title || v;
     const t = parseISO(p.date);
-    if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; }   // land on the new event's month (the saveUser render shows it)
+    if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; }
     const id = 'u' + Date.now();
     setGoing(id, true);   // a quick-added event is a plan you're making — mark it ✓ Going up front
     saveUser([...loadUser(), { id, title, date: p.date, endDate: '', time: p.time || '', category: 'personal', note: '' }]);
     input.value = ''; hint.textContent = '';
     dndToast(`Added ✓ Going: ${title} · ${fmtShort(p.date)}`);
-    input.focus();
+    input.focus({ preventScroll: true });                                       // a bare focus() yanked the endless grid back to the top
+    requestAnimationFrame(() => scrollToDay(p.date, !prefersReducedMotion()));  // land on the new event
   });
 }
 function shift(d) {
   if (mode === 'week') { weekAnchor = addDaysISO(weekAnchor, 7 * d); render(); return; }   // week mode steps by a week
   if (mode === 'day') { weekAnchor = addDaysISO(weekAnchor, d); render(); return; }          // day mode steps by a day
-  viewM += d; while (viewM < 0) { viewM += 12; viewY--; } while (viewM > 11) { viewM -= 12; viewY++; } render();
+  // endless month: ‹ › scroll to the neighbouring month's separator; the scroll handler updates the label
+  let y = viewY, m = viewM + d; while (m < 0) { m += 12; y--; } while (m > 11) { m -= 12; y++; }
+  scrollToMonth(`${y}-${String(m + 1).padStart(2, '0')}`, !prefersReducedMotion());
 }
 
 // jump the month view to a given ISO date (used by event search)
@@ -360,7 +369,9 @@ function onCalKeydown(e) {
   }
   if (inSidePanel) return;   // with the panel open, ONLY the remove keys apply — arrows/n/t stay out of a dialog
   if (e.key === 't' || e.key === 'T') {
-    e.preventDefault(); const t = parseISO(TODAY); if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; mode = 'month'; render(); }
+    e.preventDefault(); weekAnchor = TODAY;
+    if (mode !== 'month') { const t = parseISO(TODAY); if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); } mode = 'month'; render(); }
+    scrollToDay(TODAY, !prefersReducedMotion());
     $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;
   }
   if (e.key === 'n' || e.key === 'N') {
@@ -379,10 +390,18 @@ function onCalKeydown(e) {
     const cells = $$('#calView .cal-date[data-day]');
     if (!cells.length) return;
     const idx = cells.indexOf(e.target.closest?.('.cal-date'));
-    if (idx < 0) { e.preventDefault(); cells[0].focus({ preventScroll: true }); return; }
+    // endless grid: cells span the whole trip year — entry lands on TODAY (cells[0] is the top of
+    // the range), and focus must be followed by a scroll or it walks off-screen invisibly
+    if (idx < 0) {
+      e.preventDefault();
+      const start = $('#calView .cal-cell.today .cal-date') || cells[0];
+      start.focus({ preventScroll: true });
+      (start.closest('.cal-cell') || start).scrollIntoView({ block: 'nearest' });   // scroll the CELL — nearest on the small date button leaves only a sliver of the row visible
+      return;
+    }
     const delta = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' ? -7 : 7;
     const next = cells[idx + delta];
-    if (next) { e.preventDefault(); next.focus({ preventScroll: true }); }
+    if (next) { e.preventDefault(); next.focus({ preventScroll: true }); (next.closest('.cal-cell') || next).scrollIntoView({ block: 'nearest' }); }
   }
 }
 
@@ -405,9 +424,8 @@ function renderMiniNav() {
 
 function jumpToDate(iso) {
   const t = parseISO(iso); if (!t) return;
-  viewY = t.getUTCFullYear(); viewM = t.getUTCMonth();
-  if (mode === 'week' || mode === 'day') weekAnchor = iso;
-  render();
+  if (mode === 'week' || mode === 'day') { weekAnchor = iso; viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render(); return; }
+  scrollToDay(iso, !prefersReducedMotion());   // endless month: navigate by scrolling, not re-rendering
 }
 
 function render() {
@@ -426,11 +444,35 @@ function render() {
   const view = $('#calView'); if (!view) return;
   const panel = $('#calPanel');
   if (mode === 'month') {
+    // endless grid: a re-render (data change) must not teleport the user — capture + restore scroll
+    const oldGrid = view.querySelector('.cal-grid');
+    const gridTop = oldGrid?.scrollTop || 0;
+    const mainEl = document.getElementById('main');
+    const pageTop = mainEl?.scrollTop || 0, winTop = window.scrollY || 0;
     view.innerHTML = monthHTML();
     if (panel) { panel.hidden = false; panel.innerHTML = panelHTML(); wirePanel(); }
     wireCells();
     wireReschedule();
     wireMonthSelect();
+    // "the rest of the page reacts": scrolling updates the label, mini-nav and cockpit for the month in view
+    wireEndless((y, m) => {
+      viewY = y; viewM = m;
+      const lb = $('#calLabel'); if (lb) lb.textContent = `${MONTHS[viewM]} ${viewY}`;
+      // announce to screen readers only after scrolling settles — a live #calLabel would queue
+      // an announcement for every month crossed in one fling through the 19-month grid
+      clearTimeout(_liveT);
+      _liveT = setTimeout(() => { const n = document.getElementById('calLive'); if (n) n.textContent = `${MONTHS[viewM]} ${viewY}`; }, 600);
+      renderMiniNav();
+      if (panel && !panel.hidden) { panel.innerHTML = panelHTML(); wirePanel(); }
+    });
+    if (oldGrid) {   // restore (same-session re-render)
+      const g = view.querySelector('.cal-grid'); if (g) g.scrollTop = gridTop;
+      if (mainEl) mainEl.scrollTop = pageTop;
+      if (winTop) window.scrollTo(0, winTop);
+    } else {
+      _endlessNeedsPos = true;   // first render may happen while the view is hidden (boot) — scrollIntoView would no-op
+      requestAnimationFrame(positionEndless);
+    }
   } else if (mode === 'week') {
     view.innerHTML = weekHTML();
     if (panel) panel.hidden = true;   // the week view shows the whole week; the month deadline panel would duplicate
@@ -452,17 +494,49 @@ function render() {
 // rail scrolls internally instead of running past the month. Boot renders while the view is
 // hidden (rects are 0), so this also re-runs on every entry to #/calendar. Non-month uncaps.
 function alignRail() {
-  if (document.documentElement.dataset.compact === 'on') { document.querySelector('.cal-panel')?.style.removeProperty('max-height'); return; }   // compact: the height-locked layout + the panel's own CSS max-height govern; document-geometry math would misfire
-  const p = document.querySelector('.cal-panel'), g = document.querySelector('.cal-grid');
-  if (!p) return;
-  if (mode === 'month' && g && g.offsetHeight > 300) {
-    p.style.maxHeight = Math.round(g.getBoundingClientRect().bottom - p.getBoundingClientRect().top) + 'px';
-  } else { p.style.maxHeight = ''; }
+  // endless month: the grid spans the whole trip year, so grid-bottom geometry is meaningless —
+  // the panel's own CSS max-height (min(100vh−4rem, 700px)) governs in every mode now.
+  document.querySelector('.cal-panel')?.style.removeProperty('max-height');
+  // sticky-chrome offset: the dow row + sidebar pin under the toolbar in normal desktop mode;
+  // measure its real height (flex-wrap can make it 1–2 rows) so the CSS offset stays exact
+  const tb = document.querySelector('#view-calendar .cal-toolbar');
+  if (tb?.offsetHeight) document.getElementById('calendarSection')?.style.setProperty('--cal-tb-h', tb.offsetHeight + 'px');
+}
+let _endlessNeedsPos = false;
+let _entryPos = false;   // set on each entry to #/calendar; consumed once the endless grid is visible
+let _liveT = 0;          // debounce for the #calLive month announcement
+function positionEndless() {
+  if ((!_endlessNeedsPos && !_entryPos) || mode !== 'month') return;
+  const grid = $('#calView .cal-grid');
+  if (!grid || grid.offsetParent === null) return;   // still hidden (view-transition class toggle is async) — the 300ms retry catches it
+  if (_endlessNeedsPos) {
+    const day = weekAnchor || TODAY;
+    scrollToDay(day, false);   // first render: land on today
+    // web-font load reflows the months of rows ABOVE today (serif separators) and the scroll
+    // drifts — re-center once metrics are final (no-op when fonts were already cached).
+    // Skip if the user has already scrolled away (reflow alone doesn't move scrollY).
+    const y0 = window.scrollY, g0 = $('#calView .cal-grid')?.scrollTop || 0;
+    document.fonts?.ready?.then(() => {
+      const g = $('#calView .cal-grid')?.scrollTop || 0;
+      if (Math.abs(window.scrollY - y0) > 80 || Math.abs(g - g0) > 80) return;
+      scrollToDay(day, false);
+    });
+  } else {
+    scrollToMonth(`${viewY}-${String(viewM + 1).padStart(2, '0')}`, false);   // re-entry: restore the month you were viewing
+  }
+  _endlessNeedsPos = false; _entryPos = false;
 }
 let _calDirty = false;
 document.addEventListener('jwh:route', (e) => {
   if (e.detail?.route !== 'calendar') return;
   if (_calDirty) { _calDirty = false; render(); }   // EF3: catch up on changes made while hidden
+  if (mode === 'month') {
+    _entryPos = true;
+    requestAnimationFrame(positionEndless);
+    setTimeout(positionEndless, 300);   // again after the view transition settles — the rAF can land while the view is still hidden
+  } else {
+    window.scrollTo(0, 0);   // the router no longer resets the window for #/calendar (endless month owns it) — non-month modes still start at top
+  }
   requestAnimationFrame(alignRail);
   setTimeout(alignRail, 300);   // again after the view transition settles — the rAF can land mid-swap
 });

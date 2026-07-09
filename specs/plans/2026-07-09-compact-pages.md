@@ -1,32 +1,56 @@
-# Compact pages + Notion viewport-fit calendar — plan (2026-07-09)
+# Compact pages + Notion viewport-fit calendar — plan v2 (2026-07-09)
 
-**Owner asks:** (1) a toggle to hide the big title card (kanji + serif title + lede — ~140px/page); (2) with it hidden, the calendar fits **one viewport like Notion Calendar** — no document scroll.
-**Decisions (owner-picked):** global setting (⚙ Guide → "Compact pages") · full app-shell viewport fit on the calendar (desktop).
+**Owner asks:** (1) toggle the big title card off (kanji + serif title + lede ≈ 140px/page); (2) with it off, the calendar fits **one viewport like Notion** — no document scroll.
+**Decisions (owner):** global ⚙ setting · full viewport fit on desktop.
 
-**Key tension managed:** PR #48 deliberately made `#/calendar` scroll as one document (`body[data-route="calendar"] main { height:auto; overflow:visible }` + static topbar/nav, style.css:3110-3112). Compact mode OVERRIDES that trio under `html[data-compact="on"]` only — both behaviors coexist; default stays exactly as today.
+> **v2 after adversarial review (2 Opus critics, both DO NOT SIGN OFF on v1).** v1's two central mechanisms were wrong: the "reveal `#routeH1` in the topbar" premise was false (`#routeH1` lives inside `<main>`, index.html:70-71 — not in the topbar), and the height-lock's flex chain omitted two `display:block` ancestors so nothing would have compressed. v1's sr-only treatment also created invisible kanji tab stops (lang.js:82-89 promotes every `.jp` to a focusable button — WCAG 2.4.7). All resolved by design changes below, not patches.
 
-## S1 — Global toggle + title hiding
+## Design (v2)
+
+**Compact ≠ title-less. Compact = mini-title.** Under `html[data-compact="on"]`, every `.pillar-head` collapses to a **single small visible line** (the `h2` at ~0.95rem, margins collapsed); the kanji `.jp` span and the `.lede` go `display:none`. Wins vs v1:
+- Focus/orientation uniform on all 13 routes (the router's `h1,h2,h3` focus target stays *visible* — no explore/deadlines divergence, no wrong-heading capture).
+- `display:none` removes the kanji from tab order — kills the invisible-tab-stop WCAG violation outright (`wireJpAccents` can't focus a `display:none` node).
+- `#routeH1` untouched (stays sr-only). No topbar surgery.
+- Reclaims ~115 of the ~140px.
+**Known accepted loss:** `#goingCount` / `#roomCount` live inside their ledes → hidden in compact (write-only nodes, nothing breaks; the info exists on the pages themselves).
+
+**Viewport fit = a complete var-independent flex column** (not `calc(100dvh − --header-h − --nav-h)`, whose vars under-subtract when the 11-link nav wraps at 821–1080px → hard clip under `overflow:hidden`):
+```
+html[data-compact="on"] body[data-route="calendar"] (>820px only):
+  body            height:100dvh; display:flex; flex-direction:column   ← self-corrects on nav wrap
+  main            flex:1; min-height:0; overflow:hidden
+  #view-calendar.is-active, #calendarSection, #calView
+                  display:flex; flex-direction:column; min-height:0    ← the two block ancestors v1 omitted
+  .cal-layout     flex:1; min-height:0                                  (stays grid: sidebar | calView)
+  .cal-grid       flex:1; min-height:0; overflow-y:auto; grid-auto-rows:minmax(56px,1fr)
+  .cal-sidebar    overflow-y:auto; max-height:100%
+  .wk2            flex:1; min-height:0;  .wk2-scroll  flex:1; min-height:0  (replaces the 62vh cap in compact)
+  agenda host     overflow-y:auto
+```
+**Busy-month reality (critic #5):** `1fr` rows can't shrink below cell min-content (~99px with 3 chips + "+N more"), so row-sizing alone cannot fit July. Pair with **content compression in JS**: `MONTH_SINGLES` becomes compact-aware (`dataset.compact==='on' ? 2 : 3`) so the "+N more" count stays accurate. (Rejected: CSS `nth-of-type` hiding — it desyncs the +N count; the mobile rule at style.css:828 has that flaw as precedent, don't copy it.)
+
+**Side panel on internal scroll (critic #3):** `positionSidePanel` anchors via `window.scrollY` (calendar.js:583) and has **no scroll listener** — in compact the grid scrolls internally and the panel would visibly detach. Fix: mirror the day-popover's existing pattern (calendar.js:530-533 listens on `window` AND `#main`) — dismiss the side panel on `#main`/grid scroll in compact.
+
+**alignRail:** no-op in compact (its document-geometry math assumes page scroll); `.cal-panel`'s CSS fallback (`max-height:min(calc(100vh−4rem),700px); overflow:auto`, style.css:850) takes over — internal scroll, harmless.
+
+## Stages
+
+### S1 — Toggle + mini-title (all routes)
 - `lib/store.js`: `compact: 'jwh-compact-v1'` (raw `'on'|''`).
-- `guide.js`: settings row **"Compact pages — hide the big page titles"** (same `row()` switch pattern); `applyCompact()` sets `document.documentElement.dataset.compact`; export + call **early in main.js boot** (the `applyHomeLayout` pattern — no flash).
-- CSS under `html[data-compact="on"]`:
-  - `.pillar-head` → **sr-only treatment** (absolute clip), NOT `display:none` — the router focuses the view's `h1,h2,h3` on navigation (router.js:59-60) and AT must still announce it.
-  - `.lede` → `display:none`. Reduce `main` top padding.
-  - `#routeH1` (topbar, currently `sr-only`, text set per-route by router.js:53-54) → **becomes visible**: small serif page name in the topbar so orientation survives. Stays hidden on dashboard (router already sets `rh.hidden`).
-- Verify: toggle flips live + persists across reload; every route still moves focus to its heading; no boot flash; dashboard unaffected.
+- `guide.js`: settings row "Compact pages — small titles, more content"; `applyCompact()` → `html[data-compact]`; export; call early in main.js boot (applyHomeLayout pattern, no flash).
+- CSS: compact `.pillar-head` → single-line small h2; `.pillar-head .jp`, `.lede` → `display:none`; reduce `main` top padding.
+- **Parity test** (critic nit): mirror the home-layout guard (lib.test.mjs:337-357) — assert the settings control + KEYS entry exist together.
+- Verify: toggle live + persists; focus lands on the (visible) mini-title on every route; a Tab pass shows NO invisible stops; dashboard hero unaffected.
 
-## S2 — Calendar viewport fit (compact + >820px only)
-Under `html[data-compact="on"] body[data-route="calendar"]`:
-- Re-assert sticky topbar/nav; `main` → `height: calc(100dvh - var(--header-h) - var(--nav-h))`, `overflow:hidden`, internal flex column; the calendar section's toolbar rows keep natural height; `.cal-layout` gets `flex:1; min-height:0`.
-- **Month:** `.cal-grid` fills the remaining height (`grid-auto-rows: minmax(64px, 1fr)`, `overflow-y:auto` as the short-window fallback so cells never collapse below usable). "+N more" counts already cap cell content.
-- **Week/Day:** `.wk2-scroll` already scrolls internally — cap `.wk2` to the available height (its 132px band + flex column), no change to behavior.
-- **Agenda:** internal `overflow-y:auto`.
-- **Sidebar:** `.cal-sidebar` → `overflow-y:auto; max-height:100%`. Guard `alignRail()` (calendar.js:388) to no-op in compact (its document-geometry math assumes page scroll).
-- **Toolbar densify:** quick-add + search row merges into the toolbar row (CSS order/flex only — exact selectors pinned at build) to buy ~50px.
-- ≤820px: viewport-fit does NOT apply (cells would be microscopic) — titles still hide, page still scrolls.
-- Verify headless (1300×900 AND 1300×700): `document.scrollingElement.scrollHeight === clientHeight` (no page scroll) in month/week/day/agenda; month grid fully visible at 900; internal grid scroll engages at 700; **non-compact + mobile behavior byte-identical to today** (regression gate for PR #48 behavior).
+### S2 — Calendar viewport fit (compact ∧ >820px)
+- The flex column above, exactly as specified (every ancestor threaded).
+- `MONTH_SINGLES` compact-aware (JS, keeps +N honest).
+- Side-panel scroll-dismiss on `#main`/grid scroll (compact only).
+- alignRail compact guard.
+- Toolbar densify: quick-add + search share the toolbar row (selectors pinned at build).
+- Verify headless at **1300×900 and 1300×700**: `scrollingElement.scrollHeight === clientHeight` on month/week/day/agenda; July (busy) fits at 900 with 2-chip cells; at 700 the grid scrolls *internally* (never clips); side panel dismisses on internal scroll; **non-compact and ≤820px byte-identical to today** (PR #48 regression gate); the nav-wrap width (~1000px) doesn't clip (the flex approach self-corrects — verify explicitly).
 
-## S3 — Review + ship
-- Opus critic over the diff: focus/AT on sr-only pillar-heads across all 13 routes; sticky-offset rules that assumed the old header stack; `alignRail` guard; the PR #48 coexistence matrix (compact×route×width); popover/drawer positioning on a now-height-locked page (calendar popover is document-anchored — verify it still lands right when `main` is the scroller).
-- SW bump; live smoke.
+### S3 — Review + ship
+Opus critic over the diff (focus matrix across routes; compact×route×width matrix; the flex chain in computed reality; popover + People-drawer behavior in the locked layout); SW bump; live smoke.
 
-**Out of scope:** mobile viewport-fit; per-page collapse memory; hiding the toolbar rows themselves.
+**Out of scope:** mobile viewport-fit; per-page collapse memory; topbar page-name (dropped with v1's false premise — the mini-title IS the orientation).

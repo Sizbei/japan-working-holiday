@@ -560,7 +560,11 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .countdown.arrived{ color: var(--red); background: color-mix(in srgb, var(--red) 12%, transparent); }
 .cd-num{ font-size: 1.05rem; font-weight: 900; }
 .topbar-right{ display: flex; align-items: center; gap: .4rem; }
-.topbar .theme-toggle{ position: static; top: auto; right: auto; width: 38px; height: 38px; border-radius: 10px; }   /* match the bell/kbd/guide siblings (was a 42px circle) */
+.topbar .theme-toggle{ position: static; top: auto; right: auto; width: 38px; height: 38px; border-radius: 10px;
+  box-shadow: none; font-size: 1.05rem; transition: transform .15s ease, border-color .15s ease; }   /* stage 9: join the bell/kbd/guide family — it was the only icon with a shadow and its own font size */
+.topbar .theme-toggle:hover{ transform: translateY(-1px) rotate(-12deg); border-color: var(--indigo); }   /* family lift + its moon-tilt personality */
+.topbar .lang-toggle{ min-width: 38px; height: 38px; border-radius: 10px; transition: transform .15s ease, border-color .15s ease; }   /* stage 9: was 34px with a different radius token */
+.topbar .lang-toggle:hover{ transform: translateY(-1px); border-color: var(--indigo); }
 /* keyboard-shortcuts trigger — discoverable affordance for the ? overlay (desktop/pointer only) */
 .kbd-trigger{ background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
   width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;

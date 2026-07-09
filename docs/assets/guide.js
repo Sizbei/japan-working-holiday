@@ -18,10 +18,24 @@ const LISTCTL_OPTS = [
 // Reflect the persisted home-layout theme onto <html data-home>. Exported so main.js can call
 // it as early as possible in boot (before the dashboard paints) to avoid a layout flash.
 // Compact pages: <html data-compact="on"> shrinks every pillar-head to a one-line mini-title
-// (kanji + lede hidden) and lets the calendar height-lock to the viewport. Applied early in boot.
+// (kanji + lede hidden), merges the route-nav INTO the topbar (desktop only — on mobile the nav
+// is a drawer and must stay put), and lets the calendar height-lock to the viewport.
 export function applyCompact() {
   document.documentElement.dataset.compact = getRaw(KEYS.compact, '') === 'on' ? 'on' : '';
+  relocateNav();
 }
+// Move #routeNav into the .topbar in compact desktop; restore it to its original slot (right after
+// the topbar) otherwise. Element identity is preserved, so router/gesture queries keep working.
+const DESKTOP = window.matchMedia('(min-width: 821px)');
+function relocateNav() {
+  const nav = document.getElementById('routeNav'), topbar = document.querySelector('.topbar');
+  if (!nav || !topbar) return;
+  const wantInBar = document.documentElement.dataset.compact === 'on' && DESKTOP.matches;
+  const inBar = nav.parentElement === topbar;
+  if (wantInBar && !inBar) topbar.insertBefore(nav, topbar.querySelector('.countdown'));
+  else if (!wantInBar && inBar) topbar.parentNode.insertBefore(nav, topbar.nextSibling);
+}
+DESKTOP.addEventListener('change', relocateNav);   // crossing 820px must restore the drawer / re-merge
 
 export function applyHomeLayout() {
   document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));

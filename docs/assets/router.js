@@ -56,7 +56,8 @@ function activate(route, { scroll = true } = {}) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('is-active'));
     target.classList.add('is-active');
   }).then(() => {
-    const h = target.querySelector('h1, h2, h3');
+    // prefer a VISIBLE heading (compact hides some page titles; focusing a display:none node is a silent no-op)
+    const h = [...target.querySelectorAll('h1, h2, h3')].find(x => x.offsetParent !== null) || target.querySelector('h1, h2, h3');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
   });
   let activeNav = null;

@@ -2800,6 +2800,21 @@
     "https://pokemongo.com/events"
    ],
    "confidence": "low"
+  },
+  {
+   "id": "ev26-shumi-no-bungu-matsuri",
+   "title": "✒️ 趣味の文具祭 2026 (Hobby Stationery Festival)",
+   "date": "2026-07-11",
+   "endDate": "2026-07-12",
+   "category": "convention",
+   "area": "Asakusabashi (Hulic Hall, 1 min from JR Asakusabashi West Exit)",
+   "cost": "Sat advance ¥1,980 · after-3PM ¥1,650 · Sun advance ¥1,430 / door ¥1,750",
+   "bookingNotes": "Stationery fest by the quarterly magazine 趣味の文具箱 — ¥200 pencils to ¥2M fountain pens, meet makers. Planned arrival Sat 12:00; official Sat hours are 13:00–18:00 (Sun 10:00–17:00). Advance tickets are digital.",
+   "confidence": "high",
+   "sources": [
+    "https://www.shumibunfes.com/"
+   ],
+   "time": "12:00"
   }
  ],
  "homeNotes": [

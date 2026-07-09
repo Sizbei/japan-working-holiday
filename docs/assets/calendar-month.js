@@ -276,7 +276,17 @@ export function wireMonthSelect() {
     if (startDay == null) return;
     const endDay = cellAt(e.clientX, e.clientY)?.dataset.day || startDay;
     const s = startDay; startDay = null; clear();
-    if (!moved || endDay === s) return;                              // plain click → wireCells handles it
+    if (!moved || endDay === s) {
+      // plain click on the cell BODY. setPointerCapture retargets the ensuing click at the GRID,
+      // so the per-cell click listener never fires for real pointers — handle the peek/add here.
+      // (Chips/buttons never reach this: pointerdown skips them, so their own clicks still work.)
+      const cell = $(`#calView .cal-cell[data-day="${s}"]`);
+      if (cell) {
+        if (cell.querySelector('.cal-chip, .cal-more')) dayPopover(s, cell);   // day has items → peek
+        else openModal(null, s);                                               // empty day → add
+      }
+      return;
+    }
     _calDragSelected = true; setTimeout(() => { _calDragSelected = false; }, 350);
     const lo = s < endDay ? s : endDay, hi = s < endDay ? endDay : s;
     openModal(null, lo, hi);

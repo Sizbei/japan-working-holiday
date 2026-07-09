@@ -371,7 +371,15 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 /* Compact chrome: the topbar + route-nav shrink too (Notion-density). CRITICAL: --header-h/--nav-h
    drive the calendar height-lock AND every sticky offset — they are re-declared here to the new
    REAL rendered heights (verified by measurement; adjust together or the layout gaps/overlaps). */
-html[data-compact="on"]{ --header-h: 2.75rem; --nav-h: 2.35rem; }
+html[data-compact="on"]{ --header-h: 2.9rem; }
+@media (min-width: 821px){
+  html[data-compact="on"]{ --nav-h: 0rem; }   /* the nav lives INSIDE the topbar (relocated by applyCompact) */
+  [data-compact="on"] .topbar .route-nav{ position: static; flex: 1 1 auto; min-width: 0; justify-content: center;
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0; border: none; background: none; }
+  [data-compact="on"] .topbar .route-nav::-webkit-scrollbar{ display: none; }
+  [data-compact="on"] .topbar .nav-drawer-head, [data-compact="on"] .topbar .nav-drawer-foot{ display: none; }
+  [data-compact="on"] .topbar .countdown{ margin-left: var(--s2); }
+}
 [data-compact="on"] .topbar{ padding: .22rem clamp(1rem, 3vw, 2rem); gap: var(--s3); }
 [data-compact="on"] .topbar-brand{ font-size: .72rem; }
 [data-compact="on"] .countdown{ font-size: .68rem; padding: .12rem .5rem; }
@@ -379,6 +387,13 @@ html[data-compact="on"]{ --header-h: 2.75rem; --nav-h: 2.35rem; }
 [data-compact="on"] .topbar .bell, [data-compact="on"] .guide-trigger, [data-compact="on"] .topbar button{ transform: scale(.88); }
 [data-compact="on"] .route-nav{ padding: .18rem var(--gutter); }
 [data-compact="on"] .route-nav a{ font-size: .78rem; padding: .28rem .68rem; }
+/* C: on the calendar the month label IS the title — the mini pillar-head goes entirely */
+[data-compact="on"] #calendarSection > .pillar-head{ display: none; }
+[data-compact="on"] .cal-label{ font-size: 1.2rem; }
+.cal-label{ margin: 0; }               /* it's an h2 now — kill default heading margins in both modes */
+.cal-more-btn{ display: none; }        /* the ⋯ exists only in compact */
+[data-compact="on"] .cal-more-btn{ display: inline-flex; }
+[data-compact="on"] #calImportBtn, [data-compact="on"] #calExport, [data-compact="on"] #calGoogle{ display: none; }
 
 /* ---- responsive card grids (maximize area) ---- */
 .grid { display: grid; gap: var(--s4); grid-template-columns: 1fr; }

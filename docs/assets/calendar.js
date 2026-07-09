@@ -198,6 +198,15 @@ function applySidebar() {
 
 function wireToolbar() {
   $('#calSideToggle')?.addEventListener('click', () => { sideCollapsed = !sideCollapsed; setRaw(KEYS.calSidebar, sideCollapsed ? 'collapsed' : 'expanded'); applySidebar(); });
+  // compact: Import/Export/Google collapse into a ⋯ menu (items just trigger the hidden buttons, so
+  // their existing wiring — file input, export dialog, google sync — is untouched)
+  $('#calMore')?.addEventListener('click', () => {
+    openMenu([
+      { label: 'Import .ics…', run: () => $('#calImport')?.click() },
+      { label: 'Export…', run: () => $('#calExport')?.click() },
+      { label: 'Google…', run: () => $('#calGoogle')?.click() },
+    ], 0, 0, { anchor: $('#calMore'), label: 'More calendar actions' });
+  });
   $('#calPrev')?.addEventListener('click', () => shift(-1));
   $('#calNext')?.addEventListener('click', () => shift(1));
   $('#calToday')?.addEventListener('click', () => { const t = parseISO(TODAY); viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); weekAnchor = TODAY; render(); });

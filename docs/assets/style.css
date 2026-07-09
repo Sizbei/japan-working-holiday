@@ -3124,7 +3124,7 @@ ruby > rt {
   /* ===== Compact + calendar: Notion one-viewport fit — rescind the opt-out above and thread a
      complete flex chain so the month grid compresses. main keeps overflow-y:auto as the safety
      valve (nav-wrap under-subtraction degrades to a scrollbar, never a hard clip). ===== */
-  html[data-compact="on"] body[data-route="calendar"] main{ height: calc(100dvh - var(--header-h) - var(--nav-h)); overflow-y: auto; }
+  html[data-compact="on"] body[data-route="calendar"] main{ height: calc(100dvh - var(--header-h) - var(--nav-h)); overflow-y: auto; padding-bottom: var(--s3); }   /* the page-scroll 4rem bottom padding is dead weight in a height-locked layout */
   html[data-compact="on"] body[data-route="calendar"] .topbar{ position: sticky; }
   html[data-compact="on"] body[data-route="calendar"] .route-nav{ position: sticky; }
   html[data-compact="on"] body[data-route="calendar"] #view-calendar.is-active{ height: 100%; display: flex; flex-direction: column; min-height: 0; }
@@ -3134,18 +3134,14 @@ ruby > rt {
   html[data-compact="on"] body[data-route="calendar"] .cal-layout{ flex: 1; min-height: 0; align-items: stretch; grid-template-rows: minmax(0, 1fr); }   /* base align-items:start would let children take content height — the chain must stretch */
   html[data-compact="on"] body[data-route="calendar"] .cal-layout > *{ min-height: 0; max-height: 100%; }
   html[data-compact="on"] body[data-route="calendar"] #calView{ display: flex; flex-direction: column; min-height: 0; }
-  html[data-compact="on"] body[data-route="calendar"] .cal-grid{ flex: 1; min-height: 0; overflow-y: auto; grid-auto-rows: minmax(56px, 1fr); }
-  /* denser cells so a busy month genuinely fits (~80px min-content → ~64px) */
-  html[data-compact="on"] body[data-route="calendar"] .cal-cell{ padding: 3px 4px 3px; gap: 2px; }
-  html[data-compact="on"] body[data-route="calendar"] .cal-chip{ min-height: 14px; font-size: .6rem; padding: 0 5px; }
-  html[data-compact="on"] body[data-route="calendar"] .cal-date{ font-size: .66rem; }
-  html[data-compact="on"] body[data-route="calendar"] .cal-more{ font-size: .6rem; }
+  html[data-compact="on"] body[data-route="calendar"] .cal-grid{ flex: 1; min-height: 0; overflow-y: auto; grid-auto-rows: minmax(88px, 1fr); }   /* normal-size cells: grow to fill tall screens, scroll internally on short ones — never shrink content */
   /* the Ongoing strip collapses to ONE horizontally-scrollable pill row (it was ~5 rows tall) */
   html[data-compact="on"] body[data-route="calendar"] .cal-ong-pills{ flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
   html[data-compact="on"] body[data-route="calendar"] .cal-opill{ flex: none; font-size: .7rem; padding: .16rem .5rem; }
   html[data-compact="on"] body[data-route="calendar"] .cal-ongoing{ padding: .35rem .55rem; margin-bottom: .45rem; }
   html[data-compact="on"] body[data-route="calendar"] .cal-ong-lab{ margin-bottom: .25rem; }
   html[data-compact="on"] body[data-route="calendar"] .cal-sidebar{ overflow-y: auto; max-height: 100%; }
+  html[data-compact="on"] body[data-route="calendar"] .cal-sidebar > *{ flex: none; }   /* the mini-cal was flex-crushed to a sliver — children keep natural height, the sidebar scrolls */
   html[data-compact="on"] body[data-route="calendar"] .wk2{ flex: 1; min-height: 0; }
   html[data-compact="on"] body[data-route="calendar"] .wk2-scroll{ flex: 1; min-height: 0; max-height: none; }
   html[data-compact="on"] body[data-route="calendar"] #calView > .agenda, html[data-compact="on"] body[data-route="calendar"] #calView > .empty{ overflow-y: auto; min-height: 0; }

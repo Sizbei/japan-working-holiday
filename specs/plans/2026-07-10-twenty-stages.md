@@ -56,10 +56,13 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
 - [ ] **14. People page review** — page is freshly designed (#68/#71/#82): review its
   never-reviewed shot first, write measured findings, fix only measured inconsistencies against
   its OWN scale. Expect small or no changes; "verified no-change" is a valid outcome.
-- [ ] **15. Week view chrome parity** — START by diffing against what #83/#85 already shipped
-  (past-column dimming, aligned rows) and cite the RESIDUAL gap; then: sticky toolbar behavior
-  in week mode, time-gutter/dow header alignment vs `specs/2026-07-10-notion-parity-spec.md`
-  week section. No residual gap → "verified no-issue".
+- [x] **15. Week view chrome parity** — diffed vs #83/#85: past-column dimming ✓ (5 cols + 1 bar
+  measured), gutter alignment ✓ (delta 0px), now-line ✓, today column ✓, toolbar sticky ✓. ONE
+  residual: switching month→week inherited the endless grid's ~2200px window scroll, which
+  clamped against the short week page and buried the day-name header at −138px (0 of 7 day
+  labels visible). Fix: real mode CHANGES reset the window scroll (data re-renders keep it —
+  verified 120px preserved). After: winY 0, head fully visible, 7/7 labels. Mini-matrix green.
+  (PR #96)
 - [ ] **16. Agenda view Notion-list parity** — date group headers, weight hierarchy, hover rows.
 - [ ] **17. Dark-theme audit (bounded checklist, may span 2 ticks)** — measure each against dark
   bg per the harness contrast procedure: (a) chip tint+ink ratio, (b) `.moff` dim vs focal,

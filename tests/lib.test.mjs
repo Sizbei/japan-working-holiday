@@ -987,3 +987,14 @@ test('sortPeople/searchPeople: malformed restored people never throw (missing na
   }
   assert.doesNotThrow(() => searchPeople(bad, 'aria'));
 });
+
+test('compact-pages parity: settings control, CSS rules, and store key stay in sync', () => {
+  const css = readFileSync(new URL('../docs/assets/style.css', import.meta.url), 'utf8');
+  const guide = readFileSync(new URL('../docs/assets/guide.js', import.meta.url), 'utf8');
+  const store = readFileSync(new URL('../docs/assets/lib/store.js', import.meta.url), 'utf8');
+  assert.ok(store.includes('compact:'), 'store.js KEYS must define compact');
+  assert.ok(guide.includes("setCompact"), 'guide.js must render the Compact pages switch');
+  assert.ok(guide.includes('applyCompact'), 'guide.js must export/apply the compact attribute');
+  assert.ok(css.includes('[data-compact="on"] .pillar-head'), 'style.css must style compact mini-titles');
+  assert.ok(css.includes('[data-compact="on"] .lede'), 'style.css must hide ledes in compact');
+});

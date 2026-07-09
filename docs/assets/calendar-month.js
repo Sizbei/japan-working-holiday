@@ -8,7 +8,9 @@ import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskC
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-const MONTH_SINGLES = 3;      // chips shown per cell before "+N more"
+// chips shown per cell before "+N more" — compact mode shows fewer so a busy month can actually
+// FIT one viewport (1fr rows can't shrink below cell min-content; content must compress instead)
+const MONTH_SINGLES = () => document.documentElement.dataset.compact === 'on' ? 2 : 3;
 
 // Condensed month: a flat 6×7 grid of day cells with chips. A multi-day event renders as ONE chip
 // anchored to the first in-month day it covers (with a "→ end" hint, and a leading "‹" if it
@@ -47,7 +49,8 @@ export function monthHTML() {
     const tks = c.inMonth ? tasksOn(date) : [];
     const hasBook = singles.some(e => e.bookBy);
     const items = [...singles.map(e => ({ ev: e })), ...multis, ...tks.map(t => ({ tk: t }))];
-    const chips = items.slice(0, MONTH_SINGLES).map(x => {
+    const CAP = MONTH_SINGLES();
+    const chips = items.slice(0, CAP).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
       const e = x.ev;
       const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
@@ -55,7 +58,7 @@ export function monthHTML() {
       const time = t ? `<span class="cc-time">${esc(t)}</span>` : '';
       return `<button class="cal-chip cat-${esc(catOf(e))}${t ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
-    const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
+    const moreN = items.length - Math.min(items.length, CAP);
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
     const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
     const nEv = singles.length + multis.length;

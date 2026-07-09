@@ -2741,7 +2741,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   font-weight: 700;
   padding: 0 4px;
 }
-[data-theme="dark"] .cal-cell.today .cal-date{ color: var(--on-accent); }
+[data-theme="dark"] .cal-cell.today .cal-date{ color: #fff; }   /* --on-accent is near-black: on the crimson square it measured 2.75:1 (AA fail); white = 6.6:1 */
 
 .cal-date{
   font-size: .72rem;
@@ -2757,7 +2757,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
    relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
    --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
 .cal-chip{
-  background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated));   /* was 14%, then 26% — owner keeps asking for more contrast (ink on 32% ≥11:1, AA-safe) */
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated));   /* was 14%, then 26% — owner keeps asking for more contrast (measured worst-category: 9.2:1 light / 6.2:1 dark — AA-safe) */
   color: var(--ink);
   border: none;
   border-radius: 4px;
@@ -3384,8 +3384,8 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
    calendar.js sets .moff); past days inside it stay bright — Notion doesn't fade the past */
 .cal-grid.cal-endless .cal-cell.past:not(.out) .cal-date{ color: var(--ink-soft); }
 .cal-grid.cal-endless .cal-cell.moff:not(.today) .cal-date{ color: var(--ink-faint); }
-/* …and GROW: the focal month's numbers are larger (Notion), outside months stay small */
-.cal-grid.cal-endless .cal-date{ transition: font-size .15s ease; }
+/* …and GROW: the focal month's numbers are larger (Notion), outside months stay small.
+   (No font-size transition — animating a layout property reflows ~60 cells per crossing.) */
 .cal-grid.cal-endless .cal-cell:not(.moff):not(.today) .cal-date{ font-size: .84rem; color: var(--ink); }
 .cal-grid.cal-endless .cal-cell.today .cal-date{ min-width: 24px; height: 24px; font-size: .78rem; }
 /* normal mode: the page scrolls — pin the reacting chrome so "the rest of the page reacts"

@@ -228,9 +228,11 @@ export function wireCells() {
     // goes straight to the new-event editor (Notion-style — no empty popover in the way).
     c.addEventListener('click', (e) => {
       if (_calDragSelected) { _calDragSelected = false; return; }              // a range-drag just ended — don't also add/peek
-      // date number or "+N more" → zoom into that WEEK (Notion-style; +more especially — a
-      // crowded day reads better on the week timeline than in the little popover)
-      if (e.target.closest('.cal-date, .cal-more')) { goWeek(c.dataset.day); return; }
+      if (_plainClickDone) { _plainClickDone = false; return; }               // finish() already handled this click (pointer-capture fallback browsers)
+      // date number or "+N more" → zoom into that WEEK — POINTER only (e.detail 0 = keyboard
+      // activation, which keeps the popover: it has tasks, per-event +G and add-event that the
+      // week view lacks — the only keyboard path to them)
+      if (e.detail > 0 && e.target.closest('.cal-date, .cal-more')) { goWeek(c.dataset.day); return; }
       const chip = e.target.closest('.cal-chip');
       if (chip) {
         if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
@@ -248,6 +250,7 @@ export function wireCells() {
 // Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
 // that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
 let _calDragSelected = false;
+let _plainClickDone = false;   // set by finish()'s plain-click branch; consumed by the cell click listener
 export function wireMonthSelect() {
   const grid = $('#calView .cal-grid');
   if (!grid || grid.dataset.selWired) return;
@@ -282,6 +285,7 @@ export function wireMonthSelect() {
       // (Chips/buttons never reach this: pointerdown skips them, so their own clicks still work.)
       const cell = $(`#calView .cal-cell[data-day="${s}"]`);
       if (cell) {
+        _plainClickDone = true; setTimeout(() => { _plainClickDone = false; }, 0);   // if capture FAILED, the click still lands on the cell — don't double-handle
         if (cell.querySelector('.cal-chip, .cal-more')) dayPopover(s, cell);   // day has items → peek
         else openModal(null, s);                                               // empty day → add
       }

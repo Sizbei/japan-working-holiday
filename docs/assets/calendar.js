@@ -201,10 +201,11 @@ function wireToolbar() {
   // compact: Import/Export/Google collapse into a ⋯ menu (items just trigger the hidden buttons, so
   // their existing wiring — file input, export dialog, google sync — is untouched)
   $('#calMore')?.addEventListener('click', () => {
+    const g = $('#calGoogle');   // disabled when Google sync isn't configured — .click() would be a silent no-op
     openMenu([
       { label: 'Import .ics…', run: () => $('#calImport')?.click() },
       { label: 'Export…', run: () => $('#calExport')?.click() },
-      { label: 'Google…', run: () => $('#calGoogle')?.click() },
+      ...(g && !g.disabled ? [{ label: 'Google…', run: () => g.click() }] : []),
     ], 0, 0, { anchor: $('#calMore'), label: 'More calendar actions' });
   });
   $('#calPrev')?.addEventListener('click', () => shift(-1));

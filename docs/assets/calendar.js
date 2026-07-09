@@ -463,8 +463,10 @@ function render() {
       clearTimeout(_liveT);
       _liveT = setTimeout(() => { const n = document.getElementById('calLive'); if (n) n.textContent = `${MONTHS[viewM]} ${viewY}`; }, 600);
       renderMiniNav();
+      dimFocus();
       if (panel && !panel.hidden) { panel.innerHTML = panelHTML(); wirePanel(); }
     });
+    dimFocus();   // initial focal state (re-renders too — cells are rebuilt without .moff)
     if (oldGrid) {   // restore (same-session re-render)
       const g = view.querySelector('.cal-grid'); if (g) g.scrollTop = gridTop;
       if (mainEl) mainEl.scrollTop = pageTop;
@@ -505,6 +507,11 @@ function alignRail() {
 let _endlessNeedsPos = false;
 let _entryPos = false;   // set on each entry to #/calendar; consumed once the endless grid is visible
 let _liveT = 0;          // debounce for the #calLive month announcement
+// Notion focal month: dim the date numbers of every cell OUTSIDE the labeled month
+function dimFocus() {
+  const ym = `${viewY}-${String(viewM + 1).padStart(2, '0')}`;
+  for (const c of $$('#calView .cal-cell[data-day]')) c.classList.toggle('moff', c.dataset.day.slice(0, 7) !== ym);
+}
 function positionEndless() {
   if ((!_endlessNeedsPos && !_entryPos) || mode !== 'month') return;
   const grid = $('#calView .cal-grid');

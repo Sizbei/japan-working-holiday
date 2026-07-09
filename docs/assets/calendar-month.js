@@ -97,7 +97,7 @@ export function monthHTML() {
     const nEv = singles.length + multis.length;
     const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
     const dayN = date.slice(8, 10).replace(/^0/, '');
-    const label = date.slice(8, 10) === '01' ? `${esc(MONTHS_LONG[+date.slice(5, 7) - 1].slice(0, 3))} ${dayN}` : dayN;
+    const label = date.slice(8, 10) === '01' ? `${esc(MONTHS_LONG[+date.slice(5, 7) - 1])} ${dayN}` : dayN;   // "July 1" — the inline month transition (Notion-style)
     const cls = ['cal-cell', isToday && 'today', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
     cells += `<div class="${cls}" data-day="${esc(date)}">
       <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${label}</button>${bk}</span>

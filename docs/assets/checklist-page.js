@@ -105,7 +105,7 @@ const ARRIVED_SEED_KEY = 'jwh-checklist-arrived-seed-v1';
 function seedArrivedCollapseOnce(today) {
   if (getRaw(ARRIVED_SEED_KEY) === '1') return;
   if (countdown(DATA.meta?.arrival_date || '2026-06-30', today || nowISO()).phase !== 'arrived') return;
-  const DONE = ['Pre-Departure', 'Landing Day'];
+  const DONE = ['Done —'];   // the pre-arrival + landing archive phase
   (DATA.checklist || []).forEach((p, pi) => {
     if (DONE.some(d => (p.phase || '').startsWith(d))) setCollapsed(`chk-phase-${pi}`, true);
   });

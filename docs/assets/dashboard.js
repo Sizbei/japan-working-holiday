@@ -103,9 +103,9 @@ function renderReadiness() {
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
 
   // Post-arrival, "trip readiness" (packing + visa prep) is a finished story — the score that
-  // matters now is settling in: the landing/first-14-days/first-month/setup checklist phases.
+  // matters now is settling in: the Do Now / dependency-bucket / Later checklist phases.
   if (c.phase === 'arrived') {
-    const SETTLE = ['Landing Day', 'First 14 Days', 'First Month', 'Ongoing Setup'];
+    const SETTLE = ['Do Now', 'Needs Residence', 'Needs Number', 'Later'];
     const items = (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || []);
     const done = items.filter(it => checks[it.id]).length;
     const pct = items.length ? Math.round((done / items.length) * 100) : 100;
@@ -450,7 +450,7 @@ function renderProgress() {
   // Post-arrival, scope to the same settling-in phases the readiness widget counts, so the two
   // widgets agree. Pre-arrival, count every checklist item (the full yearlong plan).
   const arrived = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO()).phase === 'arrived';
-  const SETTLE = ['Landing Day', 'First 14 Days', 'First Month', 'Ongoing Setup'];
+  const SETTLE = ['Do Now', 'Needs Residence', 'Needs Number', 'Later'];
   const all = arrived
     ? (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || [])
     : checklistItems(DATA);

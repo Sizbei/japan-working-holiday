@@ -8,7 +8,7 @@ import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskC
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-const MONTH_SINGLES = 3;      // chips shown per cell before "+N more"
+const MONTH_SINGLES = 4;      // chips shown per cell before "+N more" (owner: 4, not 3)
 
 // ENDLESS month: one continuous week-grid spanning the whole data range (the trip year —
 // ~60 weeks, cheap enough to render whole; no virtual windowing). Month-separator rows sit above

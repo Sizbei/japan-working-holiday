@@ -368,6 +368,18 @@ main { padding: var(--s6) var(--s4) var(--s12); }
 [data-compact="on"] .block h2 { font-size: .88rem; font-weight: 600; }   /* subsections stay BELOW the .95rem mini page title — no hierarchy inversion */
 [data-compact="on"] main { padding-top: var(--s4); }
 
+/* Compact chrome: the topbar + route-nav shrink too (Notion-density). CRITICAL: --header-h/--nav-h
+   drive the calendar height-lock AND every sticky offset — they are re-declared here to the new
+   REAL rendered heights (verified by measurement; adjust together or the layout gaps/overlaps). */
+html[data-compact="on"]{ --header-h: 2.75rem; --nav-h: 2.35rem; }
+[data-compact="on"] .topbar{ padding: .22rem clamp(1rem, 3vw, 2rem); gap: var(--s3); }
+[data-compact="on"] .topbar-brand{ font-size: .72rem; }
+[data-compact="on"] .countdown{ font-size: .68rem; padding: .12rem .5rem; }
+[data-compact="on"] .countdown *{ font-size: inherit; }
+[data-compact="on"] .topbar .bell, [data-compact="on"] .guide-trigger, [data-compact="on"] .topbar button{ transform: scale(.88); }
+[data-compact="on"] .route-nav{ padding: .18rem var(--gutter); }
+[data-compact="on"] .route-nav a{ font-size: .78rem; padding: .28rem .68rem; }
+
 /* ---- responsive card grids (maximize area) ---- */
 .grid { display: grid; gap: var(--s4); grid-template-columns: 1fr; }
 @media (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }

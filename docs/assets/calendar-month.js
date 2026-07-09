@@ -4,7 +4,7 @@ import { daysBetween, fmtShort } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
-import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, rescheduleEvent, goAgenda } from './calendar.js';
+import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, rescheduleEvent, goAgenda, goWeek } from './calendar.js';
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -228,12 +228,15 @@ export function wireCells() {
     // goes straight to the new-event editor (Notion-style — no empty popover in the way).
     c.addEventListener('click', (e) => {
       if (_calDragSelected) { _calDragSelected = false; return; }              // a range-drag just ended — don't also add/peek
+      // date number or "+N more" → zoom into that WEEK (Notion-style; +more especially — a
+      // crowded day reads better on the week timeline than in the little popover)
+      if (e.target.closest('.cal-date, .cal-more')) { goWeek(c.dataset.day); return; }
       const chip = e.target.closest('.cal-chip');
       if (chip) {
         if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
         const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return;
       }
-      if (c.querySelector('.cal-chip, .cal-more')) dayPopover(c.dataset.day, c);   // day has events/tasks → peek
+      if (c.querySelector('.cal-chip, .cal-more')) dayPopover(c.dataset.day, c);   // day has events/tasks → peek (pointer path; keyboard = Enter on the date → week)
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });

@@ -108,25 +108,41 @@ export function monthHTML() {
 }
 
 // ---- endless-scroll reactions ----
-export function scrollToMonth(ym, smooth) {
-  const sep = $(`#calView .cal-msep[data-ym="${ym}"]`);
-  sep?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+function scrollTargetTo(el, smooth, align) {
+  if (!el) return;
+  const grid = $('#calView .cal-grid');
+  const behavior = smooth ? 'smooth' : 'auto';
+  if (grid && grid.scrollHeight > grid.clientHeight + 4) {
+    // compact: the grid scrolls internally — scrollIntoView scrolls EVERY ancestor and would
+    // drag the window past the app shell (footer sliver); move only the grid
+    const delta = el.getBoundingClientRect().top - grid.getBoundingClientRect().top
+      - (align === 'center' ? (grid.clientHeight - el.getBoundingClientRect().height) / 2 : 0);
+    grid.scrollTo({ top: grid.scrollTop + delta, behavior });
+  } else {
+    el.scrollIntoView({ behavior, block: align });   // normal mode: the window scrolls (scroll-margin clears the sticky chrome)
+  }
 }
-export function scrollToDay(iso, smooth) {
-  const cell = $(`#calView .cal-cell[data-day="${iso}"]`);
-  cell?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
-}
+export function scrollToMonth(ym, smooth) { scrollTargetTo($(`#calView .cal-msep[data-ym="${ym}"]`), smooth, 'start'); }
+export function scrollToDay(iso, smooth) { scrollTargetTo($(`#calView .cal-cell[data-day="${iso}"]`), smooth, 'center'); }
 // watch scrolling; report the month whose separator is closest above the viewport top → the
 // coordinator updates label / mini-nav / cockpit ("the rest of the page reacts").
 export function wireEndless(onMonth) {
   const grid = $('#calView .cal-grid'); if (!grid) return;
   let raf = 0, lastYm = '';
   const topline = () => {
+    // month of the day cell at the READING LINE (middle of the grid's visible box, middle
+    // column). The sentinels mark week TOPS and a week can straddle two months — the cell
+    // under the line is what the user is actually looking at, in both scroll modes.
+    const gr = grid.getBoundingClientRect();
+    const x = gr.left + gr.width / 2;
+    const y = (Math.max(gr.top, 0) + Math.min(gr.bottom, window.innerHeight)) / 2;
+    const day = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]')?.dataset.day;
+    if (day) return day.slice(0, 7);
+    // fallback (overlay under the line, empty region): last month sentinel above it
     const seps = $$('#calView .cal-msep');
     if (!seps.length) return '';
     let cur = seps[0].dataset.ym;
-    const th = Math.max(160, window.innerHeight * 0.35);   // proportional: a centered 'today' must attribute to ITS month
-    for (const s of seps) { if (s.getBoundingClientRect().top <= th) cur = s.dataset.ym; else break; }
+    for (const s of seps) { if (s.getBoundingClientRect().top <= y) cur = s.dataset.ym; else break; }
     return cur;
   };
   const onScroll = () => {

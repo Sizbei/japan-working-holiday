@@ -103,6 +103,16 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   the dashboard (bell → deadlines, teaser → packing). Review each shot, write measured findings
   here, fix the top issues per page or tick "verified clean".
 
+## Mid-loop critic (Arc C gate, 2026-07-10)
+Opus critic over #93/#94/#96/#99: **#93, #94, #96 SIGN-OFF** (compact-nav scoping verified no
+drawer leak; icon family exact; scroll-reset traced clean through goWeek/t/data-render paths).
+**#99 NO-SIGN-OFF → fixed same tick (PR #100):** the mobile dowrow pinned at top:0 UNDERNEATH
+the sticky mobile topbar (my "topbar scrolls away on mobile" premise was false — its static rule
+is desktop-only, and my probe tested viewport presence, not occlusion). Now `top: var(--header-h)`;
+re-verified with elementFromPoint occlusion checks at 600+800px. Logged minors (pre-existing,
+no-fix): zero `(hover:hover)` gates repo-wide vs the plan's gate (plan-vs-practice drift);
+38px topbar icons on touch (family standard).
+
 ## Working notes
 - **Vibes-word rule (stages 10/11/13/14/16):** "balance/rhythm/breath/parity" must be converted,
   during the stage's evidence step, into ≥2 concrete measured deltas (px/ratio/count) written

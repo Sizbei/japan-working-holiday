@@ -68,10 +68,12 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   exists (indigo border, the deliberate site-wide interactive-row pattern shared with
   .check-item); full-row click already opens the event panel (wireAgenda). The probe's
   "hoverable:false" was a selector heuristic miss, not a defect. Zero deltas → no fix. (no PR)
-- [ ] **17. Dark-theme audit (bounded checklist, may span 2 ticks)** — measure each against dark
-  bg per the harness contrast procedure: (a) chip tint+ink ratio, (b) `.moff` dim vs focal,
-  (c) crimson today square, (d) tick visibility, (e) chip hover tint. Stage ticks when all five
-  have measured numbers and any failures are fixed.
+- [x] **17. Dark-theme audit** — ALL FIVE PASS, measured live in dark theme (WCAG formula on
+  computed colors): (a) chip ink worst 17.29:1 across 8 categories (fireworks) ≥4.5 ✓;
+  (b) `.moff` 4.92:1 vs focal 12.34:1 (dim reads, both AA) ✓; (c) today square #fff on #bc002d
+  = 6.61:1 (the #92 fix confirmed live) ✓; (d) tick worst 7.66:1 (holiday) ≥3:1 non-text ✓;
+  (e) 46% hover tint ink worst 17.28:1 ✓. Visual check clean. No fix needed; one tick of the
+  two budgeted. (no PR)
 - [ ] **18. Mobile (≤820) endless-month audit (bounded checklist, may span 2 ticks)** — at 600px
   AND 800px (drawer band): (a) chip legibility, (b) dow row, (c) positioning on entry,
   (d) quick-add, (e) popover reachability with TRUSTED touch input (pointer-capture seam burned

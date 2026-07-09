@@ -375,8 +375,9 @@ html[data-compact="on"]{ --header-h: 2.9rem; }
 @media (min-width: 821px){
   html[data-compact="on"]{ --nav-h: 0rem; }   /* the nav lives INSIDE the topbar (relocated by applyCompact) */
   [data-compact="on"] .topbar .route-nav{ position: static; flex: 1 1 auto; min-width: 0; justify-content: center;
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0; border: none; background: none; }
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0; border: none; background: none; gap: .25rem; }
   [data-compact="on"] .topbar .route-nav::-webkit-scrollbar{ display: none; }
+  [data-compact="on"] .topbar .route-nav a{ white-space: nowrap; flex: none; padding: .28rem .46rem; }   /* stage 2: flex shrink was wrapping "Plan a Day" onto 3 lines; tighter padding fits all 11 links at 1300px (was 48px over) */
   [data-compact="on"] .topbar .nav-drawer-head, [data-compact="on"] .topbar .nav-drawer-foot{ display: none; }
   [data-compact="on"] .topbar .countdown{ margin-left: var(--s2); }
 }

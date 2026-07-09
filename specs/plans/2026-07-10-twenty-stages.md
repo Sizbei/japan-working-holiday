@@ -12,9 +12,14 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
 
 - [x] **1. Calendar breath + motion + tick fix** — cell/chip spacing, fixed centered tick, popover
   + mode-switch entrances, chip hover transition. (PR #86)
-- [ ] **2. Topbar nav crowding (~1300px)** — "Plan a Day" wraps to 3 lines, "Emergency" truncates
-  (visible in compact sweep + owner screenshot). Tighten label spacing/size, consider shorter
-  labels ("Plan", "SOS"?? keep honest), prevent wrap; verify 1100–1600px.
+- [x] **2. Topbar nav crowding (~1300px)** — reproduced (compact relocated nav: "Plan a Day"
+  wrapped to 3 lines, nav 77px tall; row scrolled with ends clipped). Fixed: links nowrap +
+  flex:none, padding .68→.46rem, row gap .25rem — measured: wrapped 1→0, navH 77→32px,
+  overflow at 1300px 48→6px (both end links fully visible), 1600px 0. 1100px scrolls cleanly
+  by design. (PR #93)
+- [ ] **2b. (appended) Nav edge-fade affordance** — below ~1240px the compact nav row scrolls
+  with hidden scrollbar and no visual hint; add scroll-edge fades (needs a JS scrollable-state
+  class — CSS alone can't detect overflow).
 - [ ] **3. Budget empty-state honesty** — with savings/income unset the header screams
   `NET −¥190,000` / `RUNWAY 0 mo` in crimson. Unset → em-dash + "set your savings below" hint;
   alarm colors only when real numbers produce them.

@@ -67,11 +67,13 @@ function renderSpend() {
     <div class="sp-total"><b>${fmtYen(total)}</b>${planned > 0 ? ` <span class="sp-of">of ${fmtYen(planned)} planned</span>` : ''}</div>
     ${planned > 0 ? `<div class="sp-bar" role="img" aria-label="${pct}% of planned monthly burn"><i style="width:${pct}%" class="${total > planned ? 'over' : ''}"></i></div>` : ''}
     ${isNow ? `<form id="spendAdd" class="sp-add" autocomplete="off"><span class="sp-plus" aria-hidden="true">＋</span><input type="text" id="spendInput" placeholder="1200 ramen · ¥3,400 drinks yesterday · 1.2k combini" aria-label="Quick-add a spend — amount then note, optional trailing date word"><span class="sp-hint" id="spendHint" aria-live="polite"></span></form>` : ''}
-    ${rows ? `<ul class="sp-list">${rows}</ul>` : `<p class="sp-empty">${isNow ? 'Nothing logged yet — add your first spend above.' : 'Nothing logged this month.'}</p>`}`;
+    ${rows ? `<ul class="sp-list">${rows}</ul>` : `<p class="sp-empty">${isNow ? 'Nothing logged yet — add your first spend above.' : 'Nothing logged this month.'}</p>`}
+    <p class="sp-foot">history kept 18 months · runway counts spends since your savings entry · this device only</p>`;
   card.querySelectorAll('.sp-mv').forEach(b => b.addEventListener('click', () => {
     const d = new Date(Date.UTC(+yy, +mm - 1 + (+b.dataset.mv), 1));
     const next = d.toISOString().slice(0, 7);
-    if (next <= nowISO().slice(0, 7)) { spendYm = next; renderSpend(); }
+    const floorYm = items.length ? items.reduce((m, it) => { const y = String(it.date || '').slice(0, 7); return y && y < m ? y : m; }, nowISO().slice(0, 7)) : nowISO().slice(0, 7);
+    if (next <= nowISO().slice(0, 7) && next >= floorYm) { spendYm = next; renderSpend(); }   // clamp to real data — no infinite empty past
   }));
   card.querySelector('#spendAdd')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -95,7 +97,9 @@ function wireInputs() {
     clearTimeout(t);
     t = setTimeout(() => {
       const s = load();
-      s.savings = clampInt($('#budgetSavings')?.value);
+      const nextSavings = clampInt($('#budgetSavings')?.value);
+      if (nextSavings !== s.savings) s.savingsAsOf = nowISO();   // anchor: runway subtracts spends logged from this date
+      s.savings = nextSavings;
       s.monthlyIncome = clampInt($('#budgetIncome')?.value);
       s.cadRate = clampRate($('#budgetCadRate')?.value);   // yen-per-1-CAD; 0/blank → CAD twins hidden
       save(s);

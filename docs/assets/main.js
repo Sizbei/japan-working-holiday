@@ -99,7 +99,12 @@ function boot() {
       // Local usage counters (aggregates only, never leaves this device — see ⚙ Guide → "Your usage").
       // Registered BEFORE initRouter so the boot route counts as the first visit.
       safe(() => {
-        document.addEventListener('jwh:route', (e) => set(KEYS.usage, bumpUsage(get(KEYS.usage, null), 'route', e.detail.route, nowISO())));
+        let _lastUsageRoute = null;   // same-route re-activations (legacy anchors, re-clicked tabs) must not inflate counts
+        document.addEventListener('jwh:route', (e) => {
+          if (e.detail.route === _lastUsageRoute) return;
+          _lastUsageRoute = e.detail.route;
+          set(KEYS.usage, bumpUsage(get(KEYS.usage, null), 'route', e.detail.route, nowISO()));
+        });
         document.addEventListener('jwh:data-changed', () => set(KEYS.usage, bumpUsage(get(KEYS.usage, null), 'act', 'edits', nowISO())));
       });
       initRouter();                        // hash-router SPA: split views, animated transitions (unwrapped — if THIS fails nothing works anyway)

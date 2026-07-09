@@ -101,7 +101,7 @@ function seedPhaseCollapseOnce() {
 // stories once you're in Japan — collapse them so the checklist opens on what's still actionable
 // (First 14 Days / First Month / seasonal). Runs once ever, guarded by its own flag, and only
 // once actually arrived; user toggles thereafter stick (shared collapse set).
-const ARRIVED_SEED_KEY = 'jwh-checklist-arrived-seed-v1';
+const ARRIVED_SEED_KEY = 'jwh-checklist-arrived-seed-v2'   /* v2: phases renamed by the Do-Now restructure — v1 flags fired against the OLD names */;
 function seedArrivedCollapseOnce(today) {
   if (getRaw(ARRIVED_SEED_KEY) === '1') return;
   if (countdown(DATA.meta?.arrival_date || '2026-06-30', today || nowISO()).phase !== 'arrived') return;

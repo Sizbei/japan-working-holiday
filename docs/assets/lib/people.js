@@ -183,11 +183,22 @@ function birthdayMD(birthday) {
   const parts = String(birthday || '').trim().split('-');
   if (parts.length < 2) return null;
   const m = parts[parts.length - 2].padStart(2, '0'), d = parts[parts.length - 1].padStart(2, '0');
-  return /^\d{2}$/.test(m) && /^\d{2}$/.test(d) ? `${m}-${d}` : null;
+  if (!/^\d{2}$/.test(m) || !/^\d{2}$/.test(d)) return null;
+  if (+m < 1 || +m > 12 || +d < 1) return null;
+  const dim = new Date(Date.UTC(2000, +m, 0)).getUTCDate();   // per-month maxima (2000 is leap → 02-29 stays a valid birthday)
+  if (+d > dim) return null;                                   // '11-31' etc: no phantom month badges
+  return `${m}-${d}`;
 }
 export function isBirthday(birthday, todayIso) {
-  const md = birthdayMD(birthday);
-  return !!md && String(todayIso).slice(5, 10) === md;
+  let md = birthdayMD(birthday);
+  if (!md) return false;
+  // Feb-29 birthdays: in non-leap years celebrate on Feb 28 (otherwise they'd silently never fire)
+  if (md === '02-29') {
+    const y = +String(todayIso).slice(0, 4);
+    const leap = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+    if (!leap) md = '02-28';
+  }
+  return String(todayIso).slice(5, 10) === md;
 }
 export function isBirthdayMonth(birthday, todayIso) {
   const md = birthdayMD(birthday);

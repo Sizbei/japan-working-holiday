@@ -26,6 +26,7 @@ export function newPerson(fields = {}, todayIso = '', id = '') {
     nextPlan: str(fields.nextPlan),
     addressAs: str(fields.addressAs),
     metThrough: str(fields.metThrough),
+    metEventId: str(fields.metEventId),   // optional link to a calendar event ("met at…")
     food: str(fields.food),
     speaks: str(fields.speaks),
     birthday: str(fields.birthday),
@@ -175,6 +176,61 @@ export function leavesLabel(leaves, todayIso) {
   else if (d < 60) { const w = Math.round(d / 7); span = `${w} week${w === 1 ? '' : 's'}`; }
   else { const mo = Math.round(d / 30); span = `${mo} month${mo === 1 ? '' : 's'}`; }
   return `⏳ leaves ${when} — ${span}`;
+}
+
+// ---- drifting ----
+// People you haven't seen in a while: last contact (lastSeen, else metDate) more than
+// `threshold` days before todayIso. Excludes people who have already left Tokyo — you can't
+// grab coffee with someone gone. Most-drifted first. Shape-tolerant (restored backups).
+export function driftingPeople(list, todayIso, threshold = 14) {
+  const out = [];
+  for (const p of list || []) {
+    const ref = ds(p?.lastSeen) || ds(p?.metDate);
+    const days = daysApart(ref, todayIso);
+    if (days === null || days <= threshold) continue;
+    const untilLeaves = daysApart(todayIso, ds(p?.leaves));
+    if (untilLeaves !== null && untilLeaves <= 0) continue;   // left on/before today
+    out.push({ id: str(p?.id), name: nm(p), days });
+  }
+  return out.sort((a, b) => b.days - a.days);
+}
+// compact staleness span for the strip: '16 d' · '3 wks' · '2 mo'
+export function driftLabel(days) {
+  const d = +days || 0;
+  if (d < 14) return `${d} d`;
+  if (d < 60) return `${Math.round(d / 7)} wks`;
+  return `${Math.round(d / 30)} mo`;
+}
+
+// ---- vCard export ----
+// vCard 3.0 (CRLF per RFC 2426). Contact heuristic: phone-shaped → TEL, URL → URL, anything
+// else (a LINE/IG handle) goes into NOTE. Year-less birthdays (MM-DD) also go into NOTE —
+// BDAY requires a full date in 3.0. Nameless records are skipped.
+const vesc = (s) => String(s ?? '').replace(/\r/g, '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/[,;]/g, (m) => '\\' + m);   // strip stray CR (pasted \r\n notes) before escaping
+export function toVCard(list) {
+  const cards = [];
+  for (const p of list || []) {
+    const name = nm(p).trim();
+    if (!name) continue;
+    const L = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${vesc(name)}`, `N:;${vesc(name)};;;`];
+    const contact = str(p?.contact);
+    const isPhone = /^\+?[\d\s().-]{6,}$/.test(contact);
+    const isUrl = /^https?:\/\//i.test(contact);
+    if (isPhone) L.push(`TEL;TYPE=CELL:${vesc(contact)}`);
+    else if (isUrl) L.push(`URL:${vesc(contact)}`);
+    const bd = str(p?.birthday);
+    const note = [];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(bd)) L.push(`BDAY:${bd}`);
+    else if (bd) note.push(`Birthday: ${bd}`);
+    const met = [str(p?.metDate).slice(0, 10), str(p?.metPlace)].filter(Boolean).join(' · ');
+    if (met) note.push(`Met ${met}`);
+    if (contact && !isPhone && !isUrl) note.push(`Contact: ${contact}`);
+    if (str(p?.notes)) note.push(str(p?.notes));
+    if (note.length) L.push(`NOTE:${vesc(note.join('\n'))}`);
+    L.push('END:VCARD');
+    cards.push(L.join('\r\n'));
+  }
+  return cards.length ? cards.join('\r\n') + '\r\n' : '';
 }
 
 // Birthday helpers. `birthday` is user-typed: accepts 'MM-DD' or 'YYYY-MM-DD' (last two segments

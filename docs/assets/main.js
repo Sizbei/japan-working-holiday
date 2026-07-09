@@ -67,7 +67,7 @@ function boot() {
       safe(() => mountCalendar(data, today));
       safe(() => mountGoogleSync(() => allEvents()));
       safe(() => mountGoingPage());        // dedicated "Going To" page (#/going) — events marked ✓ Going
-      safe(() => mountPeople());           // 縁 People (#/people) — device-local trip PRM
+      safe(() => mountPeople(data));       // 縁 People (#/people) — device-local trip PRM (data feeds the "met at…" event picker)
       safe(() => mountTracker(data));
       safe(() => renderContent(data, today));
       safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist

@@ -508,7 +508,17 @@ function render() {
   }
   renderMiniNav();
   requestAnimationFrame(alignRail);
+  // mode switches get a soft entrance (200ms ease-out rise) — data re-renders in the SAME mode
+  // stay instant so quick-add/toggles never feel laggy
+  if (_lastMode !== mode) {
+    if (_lastMode !== null && !prefersReducedMotion()) {
+      view.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 200, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+    }
+    _lastMode = mode;
+  }
 }
+let _lastMode = null;
 
 // align the sidebar rail to the GRID's real height (owner: "aligned so we just scroll") — the
 // rail scrolls internally instead of running past the month. Boot renders while the view is

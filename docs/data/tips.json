@@ -2815,6 +2815,64 @@
     "https://www.shumibunfes.com/"
    ],
    "time": "12:00"
+  },
+  {
+   "id": "ev26-stay-nariya-sapporo",
+   "title": "🏠 Stay: Sapporo Guest House Nariya",
+   "date": "2026-07-15",
+   "endDate": "2026-07-18",
+   "category": "personal",
+   "area": "Sapporo",
+   "confidence": "high",
+   "sources": [],
+   "bookingNotes": "Hokkaido trip base #1 — check in after the NRT→CTS flight lands; out the morning of the Furano leg."
+  },
+  {
+   "id": "ev26-stay-furano-tbd",
+   "title": "🛏️ Stay: Furano/Biei — NOT BOOKED yet (2 nights)",
+   "date": "2026-07-18",
+   "endDate": "2026-07-20",
+   "category": "personal",
+   "area": "Furano / Biei",
+   "confidence": "low",
+   "sources": [],
+   "bookingNotes": "Gap in the itinerary — lavender PEAK weekend, Furano beds sell out. Book ASAP or plan to base in Asahikawa (JR Furano line).",
+   "bookBy": "2026-07-12"
+  },
+  {
+   "id": "ev26-stay-khouse-asahidake",
+   "title": "🏔️ Stay: K's House Hokkaido — Asahidake Onsen (BOOKED)",
+   "date": "2026-07-20",
+   "endDate": "2026-07-22",
+   "category": "personal",
+   "area": "Asahidake Onsen (Higashikawa)",
+   "confidence": "high",
+   "sources": [
+    "https://kshouse.jp/hokkaido-e/"
+   ],
+   "bookingNotes": "Booked ✓ — hostel with onsen at the ropeway village. Check-in after the Furano → Asahidake leg; two nights, out the morning of the Sapporo return."
+  },
+  {
+   "id": "ev26-stay-sapporo2-tbd",
+   "title": "🛏️ Stay: Sapporo (return leg) — NOT BOOKED yet (2 nights)",
+   "date": "2026-07-22",
+   "endDate": "2026-07-24",
+   "category": "personal",
+   "area": "Sapporo",
+   "confidence": "low",
+   "sources": [],
+   "bookingNotes": "Gap in the itinerary — nights before the Jul 24 10:30 CTS flight. Nariya again is the easy option.",
+   "bookBy": "2026-07-14"
+  },
+  {
+   "id": "ev26-manga-cafe-return",
+   "title": "🛏️ Manga cafe overnight — back-in-Tokyo night",
+   "date": "2026-07-24",
+   "category": "personal",
+   "area": "Tokyo (pick one near the home base / Akihabara)",
+   "confidence": "high",
+   "sources": [],
+   "bookingNotes": "Owner plan: land 13:05ish from Sapporo, crash at a net café (Kaikatsu Club / Manboo — showers, flat seats, no reservation needed). Walk in after 20:00 for night-pack rates (~¥2,000–3,000/8–9h)."
   }
  ],
  "homeNotes": [

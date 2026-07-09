@@ -436,6 +436,16 @@ function jumpToDate(iso) {
   scrollToDay(iso, !prefersReducedMotion());   // endless month: navigate by scrolling, not re-rendering
 }
 
+// month grid: clicking a date number (or "+N more") zooms into that WEEK — the re-render
+// destroys the clicked button, so focus lands on the label (which render() just set to the week)
+export function goWeek(iso) {
+  const t = parseISO(iso); if (!t) return;
+  weekAnchor = iso; viewY = t.getUTCFullYear(); viewM = t.getUTCMonth();
+  mode = 'week';
+  render();
+  requestAnimationFrame(() => { const h = $('#calLabel'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); } });
+}
+
 function render() {
   TODAY = nowISO();   // a tab left open across midnight must not keep highlighting yesterday
   _evCache = null; _taskCache = null;   // invalidate the per-render caches (data may have changed since last render)

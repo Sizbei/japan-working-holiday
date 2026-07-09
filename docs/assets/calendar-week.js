@@ -92,7 +92,7 @@ function gridHTML(days, isDay) {
         + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(b.ev.title)}</span></button>`;
     }).join('');
     const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
-    return `<div class="wk2-col${d === TODAY ? ' today' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
+    return `<div class="wk2-col${d === TODAY ? ' today' : d < TODAY ? ' past' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
   }).join('');
 
   return `<div class="wk2${isDay ? ' is-day' : ''}">
@@ -124,7 +124,8 @@ export function dayHTML() {
 // the DOM keeps the drag/resize column math correct in BOTH modes (and is inherently live).
 const gridDays = () => $$('#calView .wk2-dayhd[data-day]').map(el => el.dataset.day);
 function barHTML(p) {
-  const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '');
+  const e = p.ev, cls = (p.contL ? ' cont-l' : '') + (p.contR ? ' cont-r' : '')
+    + ((e.endDate || e.date).slice(0, 10) < TODAY ? ' wk-past' : '');   // fully-over spans dim; ongoing ones stay bright
   const user = e.source === 'user';   // only your own events resize (baked spans are fixed research)
   const gl = (user && !p.contL) ? '<span class="wk-resize wk-resize-l" aria-hidden="true"></span>' : '';   // grips only on edges visible this week
   const gr = (user && !p.contR) ? '<span class="wk-resize wk-resize-r" aria-hidden="true"></span>' : '';

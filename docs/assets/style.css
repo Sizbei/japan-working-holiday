@@ -661,7 +661,6 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .cal-dow{ text-align:center; font-size:.72rem; font-weight:700; color: var(--ink-soft); padding:.3rem 0; text-transform:uppercase; }
 .cal-cell{ min-height: 92px; background: var(--bg-soft); border:1px solid var(--line); border-radius:10px;
   padding:4px; cursor:pointer; display:flex; flex-direction:column; gap:2px; overflow:hidden; transition: border-color .12s ease; }
-.cal-cell:hover{ border-color: var(--indigo); }
 .cal-cell.empty{ background: transparent; border:none; cursor: default; }
 /* drag-across-days range selection (Notion-style) */
 .cal-cell.cal-selecting{ background: color-mix(in srgb, var(--indigo) 12%, var(--bg-soft)); border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
@@ -2720,7 +2719,8 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   gap: 3px;
   transition: background var(--t-hover);
 }
-.cal-cell:hover{ background: color-mix(in srgb, var(--indigo) 6%, var(--bg-elevated)); }
+/* (cell hover tint removed — owner: hover-silent cells like Notion; the date NUMBER carries
+   the hover affordance instead, since clicking it zooms into the week) */
 .cal-cell.empty{ display: none; }
 .cal-cell.out{ background: color-mix(in srgb, var(--bg-elevated) 55%, var(--bg)); }
 .cal-cell.out .cal-date{ color: var(--ink-faint); }
@@ -2757,7 +2757,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
    relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
    --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
 .cal-chip{
-  background: color-mix(in srgb, var(--chip-cat, var(--line)) 14%, var(--bg-elevated));
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 26%, var(--bg-elevated));   /* was 14% — owner: more contrast (ink on 26% tint still ≥12:1, AA-safe) */
   color: var(--ink);
   border: none;
   border-radius: 4px;
@@ -2766,7 +2766,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   gap: 5px;
   padding: 1px 6px;
   font-size: .64rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.3;
   min-height: 16px;
   width: 100%;
@@ -3431,3 +3431,18 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
   cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; }
 .sp-enp:hover{ color: var(--indigo); }
 @media (hover: none){ .ppl-driftp, .ppl-vcf, .ppl-evopt, .sp-enp{ min-height:44px; } }
+
+/* ===== Date → week zoom · past-event dimming ===== */
+/* the date number is the "zoom to week" trigger — constant padding so the hover pill doesn't shift layout */
+.cal-grid.cal-endless .cal-date{ padding: 1px 5px; border-radius: 6px; }
+.cal-grid.cal-endless .cal-cell:not(.today) .cal-date:hover,
+.cal-grid.cal-endless .cal-cell:not(.today) .cal-date:focus-visible{ background: color-mix(in srgb, var(--ink) 9%, transparent); }
+/* past days: events fade so the upcoming ones carry the eye (today is NOT past) */
+.cal-grid.cal-endless .cal-cell.past :is(.cal-chip, .cal-more, .bk-dot){ opacity: .5; }
+.cal-grid.cal-endless .cal-cell.past .cal-chip:hover,
+.cal-grid.cal-endless .cal-cell.past .cal-chip:focus-visible{ opacity: 1; }
+/* week view: timed blocks in past columns + fully-over spans dim the same way */
+.wk2-col.past .wk2-ev{ opacity: .5; }
+.wk2-col.past .wk2-ev:hover, .wk2-col.past .wk2-ev:focus-visible{ opacity: 1; }
+.wk-bar.wk-past{ opacity: .5; }
+.wk-bar.wk-past:hover, .wk-bar.wk-past:focus-visible{ opacity: 1; }

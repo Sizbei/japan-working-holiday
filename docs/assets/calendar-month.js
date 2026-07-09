@@ -10,63 +10,144 @@ function pad(n) { return String(n).padStart(2, '0'); }
 
 const MONTH_SINGLES = 3;      // chips shown per cell before "+N more"
 
-// Condensed month: a flat 6×7 grid of day cells with chips. A multi-day event renders as ONE chip
-// anchored to the first in-month day it covers (with a "→ end" hint, and a leading "‹" if it
-// started earlier); nothing on the in-between days. Season-long spans (isEvergreen) are pulled into
-// an "Ongoing this season" strip above the grid so ~8 all-summer events don't pile onto day one.
+// ENDLESS month: one continuous week-grid spanning the whole data range (the trip year —
+// ~60 weeks, cheap enough to render whole; no virtual windowing). Month-separator rows sit above
+// the week containing each 1st; the coordinator watches scroll and updates the label / mini-nav /
+// cockpit to the month at the top of the viewport. Multi-day events keep per-month anchoring: one
+// chip at the first covered day of EACH month they span ("‹" when continuing). Evergreen spans stay
+// in the Ongoing strip.
+const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+
+// full range: month before the earliest event → month after the latest (today always included)
+function dataRange() {
+  let lo = TODAY.slice(0, 7), hi = TODAY.slice(0, 7);
+  for (const e of allEvents()) {
+    const s = String(e.date || '').slice(0, 7), en = String(e.endDate || e.date || '').slice(0, 7);
+    if (s && s < lo) lo = s;
+    if (en && en > hi) hi = en;
+  }
+  const step = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
+  return { lo: step(lo, -1), hi: step(hi, 1) };
+}
+
 export function monthHTML() {
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const weeks = monthGrid(viewY, viewM);                    // 6 rows of {iso, day, inMonth}
-  const gridLo = weeks[0][0].iso, gridHi = weeks[5][6].iso; // visible window (incl. spill days)
-  const ongoing = allEvents().filter(e => visible(e) && isEvergreen(e)
-    && e.date.slice(0, 10) <= gridHi && (e.endDate || e.date).slice(0, 10) >= gridLo);
+  const { lo, hi } = dataRange();
+  const rangeStart = (() => { const first = lo + '-01'; const dow = new Date(first + 'T00:00:00Z').getUTCDay(); return addDaysISO(first, -dow); })();
+  const lastDay = (() => { const d = new Date(Date.UTC(+hi.slice(0, 4), +hi.slice(5, 7), 0)); return d.toISOString().slice(0, 10); })();
+  const rangeEnd = (() => { const dow = new Date(lastDay + 'T00:00:00Z').getUTCDay(); return addDaysISO(lastDay, 6 - dow); })();
+
+  const evs = allEvents().filter(visible);
+  const ongoing = evs.filter(isEvergreen);
   const strip = ongoing.length ? `<div class="cal-ongoing"><div class="cal-ong-lab">☀ Ongoing this season <span>— open all month, tap for details</span></div><div class="cal-ong-pills">`
     + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
     + `</div></div>` : '';
 
-  // multi-day (non-evergreen) events → one chip anchored to the first in-month day they cover
-  const monthFirst = `${viewY}-${pad(viewM + 1)}-01`, monthKey = monthFirst.slice(0, 7);
+  // multi-day (non-evergreen): one anchored chip at the first covered day of EACH month spanned
   const anchored = new Map();   // iso → [{ ev, cont, end }]
-  allEvents().filter(e => visible(e) && isMultiDay(e) && !isEvergreen(e)).forEach(e => {
+  const singlesByDay = new Map();
+  for (const e of evs) {
+    if (isEvergreen(e)) continue;
     const s = e.date.slice(0, 10), en = (e.endDate || e.date).slice(0, 10);
-    const anchor = s >= monthFirst ? s : monthFirst;                  // start day, or clamp to the 1st
-    if (anchor > en || anchor.slice(0, 7) !== monthKey) return;       // ended before this month / not this month
-    if (!anchored.has(anchor)) anchored.set(anchor, []);
-    anchored.get(anchor).push({ ev: e, cont: s < monthFirst, end: en });
-  });
+    if (!isMultiDay(e)) {
+      if (!singlesByDay.has(s)) singlesByDay.set(s, []);
+      singlesByDay.get(s).push(e);
+      continue;
+    }
+    let ym = s.slice(0, 7) < lo ? lo : s.slice(0, 7);
+    while (ym <= en.slice(0, 7) && ym <= hi) {
+      const anchor = s > ym + '-01' ? s : ym + '-01';
+      if (anchor <= en) {
+        if (!anchored.has(anchor)) anchored.set(anchor, []);
+        anchored.get(anchor).push({ ev: e, cont: s < anchor, end: en });
+      }
+      const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 1)); ym = d.toISOString().slice(0, 7);
+    }
+  }
+  for (const list of singlesByDay.values()) list.sort((a, b) => (a.time || '~').localeCompare(b.time || '~'));
 
-  const cells = weeks.flat().map((c, i) => {
-    const date = c.iso, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
-    const past = c.inMonth && date < TODAY;
-    // single-day events on this date, timed first (ascending), then all-day
-    const singles = c.inMonth
-      ? allEvents().filter(e => visible(e) && !isMultiDay(e) && e.date.slice(0, 10) === date)
-        .sort((a, b) => (a.time || '~').localeCompare(b.time || '~'))
-      : [];
-    const multis = c.inMonth ? (anchored.get(date) || []) : [];
-    const tks = c.inMonth ? tasksOn(date) : [];
+  let cells = '', day = rangeStart, i = 0;
+  while (day <= rangeEnd) {
+    // a full-width month separator above the week containing each 1st (incl. the very first week)
+    if (i % 7 === 0) {
+      const weekEnd = addDaysISO(day, 6);
+      const firstOfMonth = day.slice(8, 10) === '01' ? day : (weekEnd.slice(8, 10) < day.slice(8, 10) ? weekEnd.slice(0, 8) + '01' : null);
+      const sepYm = i === 0 ? lo : (firstOfMonth ? firstOfMonth.slice(0, 7) : null);   // week-0 pad days belong to lo's PRIOR month — label the range month
+      if (sepYm) cells += `<div class="cal-msep" data-ym="${esc(sepYm)}" role="heading" aria-level="3">${esc(MONTHS_LONG[+sepYm.slice(5, 7) - 1])} ${esc(sepYm.slice(0, 4))}</div>`;
+    }
+    const date = day, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
+    const past = date < TODAY;
+    const singles = singlesByDay.get(date) || [];
+    const multis = anchored.get(date) || [];
+    const tks = tasksOn(date);
     const hasBook = singles.some(e => e.bookBy);
     const items = [...singles.map(e => ({ ev: e })), ...multis, ...tks.map(t => ({ tk: t }))];
     const chips = items.slice(0, MONTH_SINGLES).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
       const e = x.ev;
       const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
-      const t = x.end ? '' : fmt12(e.time);   // single-day timed → lead with the time (Notion-style)
-      const time = t ? `<span class="cc-time">${esc(t)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${t ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+      const tm = x.end ? '' : fmt12(e.time);
+      const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
     const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
     const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
     const nEv = singles.length + multis.length;
     const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
-    const cls = ['cal-cell', isToday && 'today', !c.inMonth && 'out', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
-    return `<div class="${cls}" data-day="${esc(date)}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${c.day}</button>${bk}</span>
+    const dayN = date.slice(8, 10).replace(/^0/, '');
+    const label = date.slice(8, 10) === '01' ? `${esc(MONTHS_LONG[+date.slice(5, 7) - 1].slice(0, 3))} ${dayN}` : dayN;
+    const cls = ['cal-cell', isToday && 'today', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
+    cells += `<div class="${cls}" data-day="${esc(date)}">
+      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${label}</button>${bk}</span>
       ${chips}${more}</div>`;
-  }).join('');
-  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid">${cells}</div>`;
+    day = addDaysISO(day, 1); i++;
+  }
+  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid cal-endless">${cells}</div>`;
 }
+
+// ---- endless-scroll reactions ----
+export function scrollToMonth(ym, smooth) {
+  const sep = $(`#calView .cal-msep[data-ym="${ym}"]`);
+  sep?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+}
+export function scrollToDay(iso, smooth) {
+  const cell = $(`#calView .cal-cell[data-day="${iso}"]`);
+  cell?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
+}
+// watch scrolling; report the month whose separator is closest above the viewport top → the
+// coordinator updates label / mini-nav / cockpit ("the rest of the page reacts").
+export function wireEndless(onMonth) {
+  const grid = $('#calView .cal-grid'); if (!grid) return;
+  let raf = 0, lastYm = '';
+  const topline = () => {
+    const seps = $$('#calView .cal-msep');
+    if (!seps.length) return '';
+    let cur = seps[0].dataset.ym;
+    const th = Math.max(160, window.innerHeight * 0.35);   // proportional: a centered 'today' must attribute to ITS month
+    for (const s of seps) { if (s.getBoundingClientRect().top <= th) cur = s.dataset.ym; else break; }
+    return cur;
+  };
+  const onScroll = () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (grid.offsetParent === null) return;   // hidden (left the route) — every rect is 0 and topline would pick the LAST month, clobbering viewY/viewM
+      const ym = topline();
+      if (ym && ym !== lastYm) { lastYm = ym; onMonth(+ym.slice(0, 4), +ym.slice(5, 7) - 1); }
+    });
+  };
+  grid.addEventListener('scroll', onScroll, { passive: true });          // compact: the grid scrolls internally
+  _endlessOnScroll = onScroll;                                            // persistent listeners delegate to the CURRENT render's handler
+  if (!_endlessWired) {
+    _endlessWired = true;
+    const relay = () => _endlessOnScroll && _endlessOnScroll();
+    window.addEventListener('scroll', relay, { passive: true });          // normal mode: the page scrolls
+    document.getElementById('main')?.addEventListener('scroll', relay, { passive: true });
+  }
+}
+let _endlessWired = false, _endlessOnScroll = null;
 
 // ---- month cockpit: up next · book by · tasks due ----
 function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }

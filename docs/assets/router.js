@@ -71,7 +71,9 @@ function activate(route, { scroll = true } = {}) {
     const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
     // desktop app-shell: MAIN is the scroll container; the window barely scrolls (footer sliver)
     document.getElementById('main')?.scrollTo({ top: 0, behavior });
-    window.scrollTo({ top: 0, behavior });
+    // the calendar's endless month owns the window scroll (positions to today / restores your
+    // month on entry) — a reset here would land it on the top of the data range
+    if (route !== 'calendar') window.scrollTo({ top: 0, behavior });
   }
   current = route;
   document.body.dataset.route = route;   // lets CSS scope per-route (e.g. the calendar opts out of the app-shell internal scroll)

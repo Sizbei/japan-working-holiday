@@ -2,7 +2,7 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v252';
+const CACHE = 'jwh-v253';
 const ASSETS = [
   './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js', 'assets/calendar-agenda.js', 'assets/calendar-week.js', 'assets/calendar-month.js', 'assets/calendar-editor.js',

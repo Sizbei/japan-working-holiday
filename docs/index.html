@@ -117,7 +117,8 @@
       <div class="cal-nav">
         <button id="calSideToggle" class="cal-btn cal-sidetoggle" aria-label="Hide side panels" aria-expanded="true" aria-controls="calSidebar" title="Hide side panels">⊟</button>
         <button id="calPrev" class="cal-btn" aria-label="Previous month">‹</button>
-        <h2 id="calLabel" class="cal-label" aria-live="polite" aria-atomic="true">—</h2>
+        <h2 id="calLabel" class="cal-label">—</h2>
+        <span id="calLive" class="sr-only" aria-live="polite" aria-atomic="true"></span><!-- debounced month announcement — a live #calLabel would announce every month crossed while scrolling the endless grid -->
         <button id="calNext" class="cal-btn" aria-label="Next month">›</button>
         <button id="calToday" class="cal-btn text">Today</button>
       </div>

@@ -176,3 +176,20 @@ export function leavesLabel(leaves, todayIso) {
   else { const mo = Math.round(d / 30); span = `${mo} month${mo === 1 ? '' : 's'}`; }
   return `⏳ leaves ${when} — ${span}`;
 }
+
+// Birthday helpers. `birthday` is user-typed: accepts 'MM-DD' or 'YYYY-MM-DD' (last two segments
+// win). Non-parseable → false. Pure.
+function birthdayMD(birthday) {
+  const parts = String(birthday || '').trim().split('-');
+  if (parts.length < 2) return null;
+  const m = parts[parts.length - 2].padStart(2, '0'), d = parts[parts.length - 1].padStart(2, '0');
+  return /^\d{2}$/.test(m) && /^\d{2}$/.test(d) ? `${m}-${d}` : null;
+}
+export function isBirthday(birthday, todayIso) {
+  const md = birthdayMD(birthday);
+  return !!md && String(todayIso).slice(5, 10) === md;
+}
+export function isBirthdayMonth(birthday, todayIso) {
+  const md = birthdayMD(birthday);
+  return !!md && String(todayIso).slice(5, 7) === md.slice(0, 2);
+}

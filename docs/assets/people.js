@@ -11,7 +11,7 @@ import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { nowISO, fmtShort } from './lib/dates.js';
 import { confirmModal } from './lib/modal.js';
 import { prefersReducedMotion } from './motion.js';
-import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel } from './lib/people.js';
+import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthdayMonth } from './lib/people.js';
 
 const VIEW_KEY = 'jwh-people-view-v1';
 let TODAY = nowISO();
@@ -183,7 +183,7 @@ function cardHTML(p) {
     <button type="button" class="ppl-star ${p.star ? '' : 'off'}" data-star="${esc(p.id)}" aria-pressed="${!!p.star}" aria-label="${p.star ? 'Unstar' : 'Star'} ${esc(p.name)}">${p.star ? '★' : '☆'}</button>
     <div class="ppl-hd">
       <div class="ppl-av" style="background:var(--c-${hueOf(p.id)})" aria-hidden="true">${esc(initialsOf(p.name))}</div>
-      <div class="ppl-id"><div class="ppl-nm"><button type="button" class="ppl-open" aria-label="Open ${esc(p.name)}">${esc(p.name)}${p.reading ? ` <span class="ppl-rd">${esc(p.reading)}</span>` : ''}</button></div>
+      <div class="ppl-id"><div class="ppl-nm"><button type="button" class="ppl-open" aria-label="Open ${esc(p.name)}">${esc(p.name)}${p.reading ? ` <span class="ppl-rd">${esc(p.reading)}</span>` : ''}${isBirthdayMonth(p.birthday, TODAY) ? ' <span title="birthday this month">🎂</span>' : ''}</button></div>
         <div class="ppl-sub">${subline(p)}</div></div>
     </div>
     ${metLine(p) ? `<div class="ppl-met">${metLine(p)}</div>` : ''}

@@ -12,6 +12,8 @@ import { KEYS, get, set } from './lib/store.js';
 import { confirmModal } from './lib/modal.js';
 import { mountAccordion } from './collapse.js';
 import { effectiveLines, sum, summary, fmtYen, fmtCad } from './lib/budget.js';
+import { parseSpend, monthTotal, spendSummary, pruneSpend } from './lib/spend.js';
+import { nowISO, fmtShort } from './lib/dates.js';
 
 // hardcoded fallback if tips.json has no budget block (defensive — UI must still mount)
 const FALLBACK = { currency: 'JPY', oneTime: [], monthly: [] };
@@ -34,6 +36,55 @@ export function mountBudget(data) {
   wireInputs();
   wireReset();
   render();
+  renderSpend();
+}
+
+// ---- spend log (actuals) — jwh-spend-v1; unlike the planner, spend mutations DO dispatch
+// jwh:data-changed: the dashboard teaser derives real burn/runway from them. ----
+let spendYm = nowISO().slice(0, 7);   // month being browsed (quick-add dates independently)
+function loadSpend() { const s = get(KEYS.spend, {}) || {}; return Array.isArray(s.items) ? s.items : []; }
+function saveSpend(items) {
+  set(KEYS.spend, { v: 1, items: pruneSpend(items, nowISO()) });
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  renderSpend(); renderSummary();
+}
+function renderSpend() {
+  const card = $('#spendCard'); if (!card) return;
+  const items = loadSpend();
+  const planned = summary(BAKED, load()).monthlyTotal;
+  const total = monthTotal(items, spendYm);
+  const isNow = spendYm === nowISO().slice(0, 7);
+  const pct = planned > 0 ? Math.min(100, Math.round(total / planned * 100)) : 0;
+  const rows = items.filter(it => String(it.date || '').slice(0, 7) === spendYm)
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(b.id).localeCompare(String(a.id)))
+    .slice(0, 8)
+    .map(it => `<li class="sp-row"><span class="sp-date">${esc(fmtShort(it.date))}</span><span class="sp-note">${esc(it.note || '—')}</span><span class="sp-amt">${fmtYen(it.amount)}</span><button type="button" class="sp-del" data-del="${esc(it.id)}" aria-label="Delete ${fmtYen(it.amount)} ${esc(it.note || '')}">✕</button></li>`).join('');
+  const [yy, mm] = spendYm.split('-');
+  const monthName = new Date(Date.UTC(+yy, +mm - 1, 1)).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  card.innerHTML = `
+    <div class="sp-head"><h3 class="sp-h">Spent ${isNow ? 'this month' : `— ${esc(monthName)} ${esc(yy)}`}</h3>
+      <span class="sp-nav"><button type="button" class="sp-mv" data-mv="-1" aria-label="Previous month">‹</button><button type="button" class="sp-mv" data-mv="1" aria-label="Next month" ${isNow ? 'disabled' : ''}>›</button></span></div>
+    <div class="sp-total"><b>${fmtYen(total)}</b>${planned > 0 ? ` <span class="sp-of">of ${fmtYen(planned)} planned</span>` : ''}</div>
+    ${planned > 0 ? `<div class="sp-bar" role="img" aria-label="${pct}% of planned monthly burn"><i style="width:${pct}%" class="${total > planned ? 'over' : ''}"></i></div>` : ''}
+    ${isNow ? `<form id="spendAdd" class="sp-add" autocomplete="off"><span class="sp-plus" aria-hidden="true">＋</span><input type="text" id="spendInput" placeholder="1200 ramen · ¥3,400 drinks yesterday · 1.2k combini" aria-label="Quick-add a spend — amount then note, optional trailing date word"><span class="sp-hint" id="spendHint" aria-live="polite"></span></form>` : ''}
+    ${rows ? `<ul class="sp-list">${rows}</ul>` : `<p class="sp-empty">${isNow ? 'Nothing logged yet — add your first spend above.' : 'Nothing logged this month.'}</p>`}`;
+  card.querySelectorAll('.sp-mv').forEach(b => b.addEventListener('click', () => {
+    const d = new Date(Date.UTC(+yy, +mm - 1 + (+b.dataset.mv), 1));
+    const next = d.toISOString().slice(0, 7);
+    if (next <= nowISO().slice(0, 7)) { spendYm = next; renderSpend(); }
+  }));
+  card.querySelector('#spendAdd')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = card.querySelector('#spendInput');
+    const parsed = parseSpend(input.value, nowISO());
+    if (!parsed) { const h = card.querySelector('#spendHint'); if (h) h.textContent = 'amount first — e.g. “1200 ramen”'; return; }
+    saveSpend([{ id: 's' + Date.now(), ...parsed }, ...loadSpend()]);
+    const inp = $('#spendInput'); if (inp) { inp.focus(); }   // card re-rendered — re-find + keep the flow going
+  });
+  card.querySelectorAll('.sp-del').forEach(b => b.addEventListener('click', async () => {
+    if (!await confirmModal('Delete this spend entry?', { ok: 'Delete', danger: true })) return;
+    saveSpend(loadSpend().filter(it => it.id !== b.dataset.del));
+  }));
 }
 
 // Savings + Monthly income number inputs — debounced save, then re-render (summary only would

@@ -1009,3 +1009,56 @@ test('isBirthday/isBirthdayMonth: MM-DD and YYYY-MM-DD both work; junk never mat
   assert.equal(isBirthdayMonth('1990-07-20', '2026-07-09'), true);
   assert.equal(isBirthdayMonth('11-12', '2026-10-31'), false);
 });
+
+// ---- lib/spend.js (budget actuals) ----
+import { parseSpend, monthTotal, monthByCat, spendSummary, pruneSpend } from '../docs/assets/lib/spend.js';
+
+test('parseSpend: plain, yen-sign+comma, k-suffix, bare amount', () => {
+  assert.deepEqual(parseSpend('1200 ramen', '2026-07-09'), { amount: 1200, note: 'ramen', date: '2026-07-09' });
+  assert.deepEqual(parseSpend('¥3,400 drinks with friends', '2026-07-09'), { amount: 3400, note: 'drinks with friends', date: '2026-07-09' });
+  assert.deepEqual(parseSpend('1.2k combini', '2026-07-09'), { amount: 1200, note: 'combini', date: '2026-07-09' });
+  assert.deepEqual(parseSpend('980', '2026-07-09'), { amount: 980, note: '', date: '2026-07-09' });
+});
+test('parseSpend: trailing date words — yesterday + PAST weekday (spends are history)', () => {
+  assert.equal(parseSpend('1200 ramen yesterday', '2026-07-09').date, '2026-07-08');
+  // 2026-07-09 is a Thursday → bare "mon" = most recent PAST Monday (Jul 6), never forward
+  assert.equal(parseSpend('500 coffee mon', '2026-07-09').date, '2026-07-06');
+  // bare weekday matching today rolls a full week BACK (a spend "thu" said on Thursday means last week? no — history semantics: not-today)
+  assert.equal(parseSpend('500 coffee thu', '2026-07-09').date, '2026-07-02');
+  assert.equal(parseSpend('500 coffee today', '2026-07-09').date, '2026-07-09');
+});
+test('parseSpend: garbage rejected', () => {
+  assert.equal(parseSpend('ramen 1200', '2026-07-09'), null);   // amount must lead
+  assert.equal(parseSpend('0 freebie', '2026-07-09'), null);
+  assert.equal(parseSpend('', '2026-07-09'), null);
+});
+test('monthTotal/monthByCat: month-scoped sums, cat falls back to note', () => {
+  const items = [
+    { id: 's1', date: '2026-07-01', amount: 1000, cat: 'food' },
+    { id: 's2', date: '2026-07-15', amount: 500, note: 'Coffee' },
+    { id: 's3', date: '2026-06-30', amount: 9999, cat: 'food' },
+  ];
+  assert.equal(monthTotal(items, '2026-07'), 1500);
+  assert.deepEqual(monthByCat(items, '2026-07'), { food: 1000, coffee: 500 });
+});
+test('spendSummary: trailing-30d actuals drive burn + runway; empty → null (plan fallback)', () => {
+  const items = Array.from({ length: 30 }, (_, i) => ({ id: 's' + i, date: `2026-07-${String(i % 9 + 1).padStart(2, '0')}`, amount: 1000 }));
+  const s = spendSummary(items, 190000, 900000, 0, '2026-07-09');
+  assert.equal(s.actualThisMonth, 30000);
+  assert.equal(s.actualMonthlyBurn, 30000);            // 30k over 30d → 1k/day → 30k monthly
+  assert.equal(s.actualRunwayMonths, 30);              // 900k / 30k
+  assert.ok(s.vsPlan < 0);                             // projected 31k < planned 190k
+  assert.equal(spendSummary([], 190000, 900000, 0, '2026-07-09'), null);
+  assert.equal(spendSummary([{ date: '2026-01-01', amount: 500 }], 1, 1, 0, '2026-07-09'), null);  // outside window
+});
+test('pruneSpend: drops entries older than the retention window, keeps the rest, never mutates', () => {
+  const items = [{ id: 'a', date: '2024-01-05', amount: 1 }, { id: 'b', date: '2026-07-01', amount: 2 }];
+  const out = pruneSpend(items, '2026-07-09');
+  assert.deepEqual(out.map(i => i.id), ['b']);
+  assert.equal(items.length, 2);
+});
+test('parseSpend: sub-0.5 decimals cannot mint a ¥0 entry; income>burn → Infinity runway', () => {
+  assert.equal(parseSpend('0.4 x', '2026-07-09'), null);
+  const s = spendSummary([{ date: '2026-07-08', amount: 30000 }], 190000, 900000, 500000, '2026-07-09');
+  assert.equal(s.actualRunwayMonths, Infinity);   // income 500k > burn 30k
+});

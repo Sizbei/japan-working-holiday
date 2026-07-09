@@ -461,6 +461,10 @@ function render() {
   $('#calPrev')?.setAttribute('aria-label', 'Previous ' + unit); $('#calNext')?.setAttribute('aria-label', 'Next ' + unit);
   const view = $('#calView'); if (!view) return;
   const panel = $('#calPanel');
+  // stage 15: switching OUT of month inherits the endless grid's big window scroll, which clamps
+  // against the much shorter week/day/agenda page and buries the chrome (head measured -138px).
+  // Reset only on a real mode CHANGE — data re-renders keep the user's scroll.
+  if (_lastMode !== null && _lastMode !== mode && mode !== 'month') window.scrollTo(0, 0);
   if (mode === 'month') {
     // endless grid: a re-render (data change) must not teleport the user — capture + restore scroll
     const oldGrid = view.querySelector('.cal-grid');

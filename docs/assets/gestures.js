@@ -58,6 +58,10 @@ function wireNavDrawer() {
   nav.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });   // pick a route → close
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) set(false); });
   document.addEventListener('jwh:route', () => { if (nav.classList.contains('open')) set(false); });
+  // Crossing to desktop (rotate / resize / split-view) with the drawer OPEN would strand the body
+  // pin + backdrop once compact's relocateNav teleports the nav into the topbar — force-close on
+  // the transition so all four state bits (class, nav-open, body pin, backdrop) reset together.
+  window.matchMedia('(min-width: 821px)').addEventListener('change', (e) => { if (e.matches && nav.classList.contains('open')) set(false); });
   // trap Tab inside the open drawer — otherwise focus escapes behind the scrim while the
   // page is scroll-locked (no-op on desktop, where .open is never set)
   nav.addEventListener('keydown', (e) => {

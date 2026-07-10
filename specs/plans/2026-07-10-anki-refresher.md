@@ -70,7 +70,13 @@ One giant card, **everything visible at once** — no flip, no friction:
    charset heuristics), chunk math, shaky ops.
 2. **Import flow + stream UI** — drop zone / file picker → preview 3 rows + remap → save; the
    scan card + keyboard/tap/swipe + progress + chunk strip.
-3. **Skim list + shaky pile + polish** — DETAILED (2026-07-10, stage 2 shipped as #113/#117):
+3. **Skim list + shaky pile + polish** — ✅ SHIPPED as #120 (2026-07-10). Matrix green:
+   skim rows aria-pressed + roving ↑↓ (trusted keys), view persists, pile snapshot with
+   stable n/N + non-destructive S, all-clear, chip disabled when empty, shuffle keeps
+   chunk, #ankLive announces first card + flag toggles, tick contrast 4.53:1 light /
+   8.27:1 dark (canvas composite, 700ms theme settle — body's .4s background transition
+   poisons instant probes), 120/120 node tests, 0 exceptions. Detail below as designed
+   (stage 2 shipped as #113/#117):
 
    **3a. View seg + skim list.** A [▶ Stream | ☰ Skim] seg control in the ank header (the
    people-page Cards/List seg pattern; persisted in jwh-anki-v1 as `view`). Skim renders the

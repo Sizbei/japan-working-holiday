@@ -25,9 +25,13 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   After-setup render neutral em-dashes + "set savings below ↓" hint, no tone class; verified
   three states: unset neutral · ¥900k → amber "4 mo" · ¥200k → red "1 mo" (alarm only for real
   numbers). Dashboard teaser untouched (own gate). (PR #101)
-- [ ] **4. Going page layout** — one card in a huge void: grid `auto-fill minmax(300px,1fr)` to use
-  the column; stray ✎ icon dangling under the location line; "Upcoming only" chip is an
-  off-palette green outline → align with site chip language.
+- [x] **4. Going page layout** — grid hypothesis mostly NON-ISSUE (cards flow 2-up inside the
+  site's standard 960px column; the "void" was the 1-card state). Two real fixes: "Upcoming
+  only" active was off-palette pure green rgb(30,142,62) (~3.6:1 with white text, sub-AA) →
+  override removed, inherits the site-wide `.chip.active` indigo (verified pixel-identical to
+  the "All" chip); the ✎ location-edit affordance dangled full-strength after the station text →
+  rests ink-faint, wakes indigo+tint on hover/focus (editor still opens, toggle verified with
+  trusted clicks). (PR #102)
 - [ ] **5. Plan-a-Day date strip** — pills overflow the right edge with a cut-off pill and no
   affordance: horizontal scroll + edge fades (design-principles tabs rule), auto-scroll today
   into view.

@@ -166,8 +166,9 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 .ys-strip .ys-stat b{ font-family: var(--mono); font-size:.9rem; color: var(--ink); }
 
 /* Going: inline location editor (✎) */
-.going-loc{ background:none; border:none; color: var(--indigo-ink); font: inherit; font-size:.74rem; cursor:pointer; padding:0 .15rem; }
-.going-loc:hover{ text-decoration: underline; }
+.going-loc{ background:none; border:none; color: var(--ink-faint); font: inherit; font-size:.74rem; cursor:pointer;
+  padding:0 .3rem; border-radius:6px; transition: color .12s ease, background .12s ease; }
+.going-loc:hover, .going-loc:focus-visible{ color: var(--indigo-ink); background: color-mix(in srgb, var(--indigo) 10%, transparent); }
 .going-loc-in{ font: inherit; font-size:.8rem; padding:.15rem .4rem; border:1px solid var(--indigo); border-radius:6px; background: var(--bg-soft); color: var(--ink); width:min(100%, 280px); }
 
 /* Emergency: live quake list (P2P地震情報) */
@@ -2172,7 +2173,7 @@ html[data-reduce-motion="on"]::view-transition-new(*){ animation: none !importan
   font-size:.78rem; font-weight:700; text-decoration:none; cursor:pointer; transition: all var(--t-hover); }
 .going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
 .going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
-.going-upcoming.active{ background: var(--ok-fill); color: var(--on-accent); border-color: var(--ok-fill); }
+/* (stage 4: green override removed — inherits .chip.active indigo like every other chip) */
 /* category filter pills: a colour dot + readable label on the normal pill — NOT a full cat-* swatch
    (which painted dark --ink-soft text on a saturated background = unreadable) */
 .going-fcat{ text-transform: capitalize; }

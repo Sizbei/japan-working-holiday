@@ -1544,6 +1544,14 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 .jwh-pin-dot.has-emoji::after{ font-family: var(--sans); font-size:14px; inset:-6px; color:transparent; text-shadow:none; }
 /* Map v2 §2a — visited: muted dot + a red hanko "済" stamp overlaid on the marker */
 .jwh-pin.visited .jwh-pin-dot{ filter: grayscale(.55) brightness(.9); opacity:.78; }
+/* stage 23: zoom controls join the site icon family (were plugin-default 30px white in BOTH
+   themes — stark on the dark basemap; theme tokens make dark mode follow automatically) */
+#view-map .map-canvas .leaflet-bar{ border: none; box-shadow: var(--shadow); border-radius: 10px; overflow: hidden; }
+#view-map .map-canvas .leaflet-bar a{ width: 38px; height: 38px; line-height: 38px; background: var(--bg-elevated);
+  color: var(--ink); border-bottom: 1px solid var(--line); font-size: 1.05rem; }
+#view-map .map-canvas .leaflet-bar a:last-child{ border-bottom: none; }
+#view-map .map-canvas .leaflet-bar a:hover{ background: color-mix(in srgb, var(--indigo) 8%, var(--bg-elevated)); color: var(--ink); }
+#view-map .map-canvas .leaflet-bar a.leaflet-disabled{ opacity: .45; }
 /* stage 22: glyph picker collapses behind a summary chip */
 .pin-emowrap{ margin:.3rem 0 0; }
 .pin-emosum{ cursor:pointer; font-size:.72rem; color: var(--ink-soft); padding:.15rem .4rem; border:1px solid var(--line); border-radius:999px; display:inline-block; list-style:none; }

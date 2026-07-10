@@ -126,8 +126,13 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   interactive elements 25→11, strip opens on demand, selection persistence verified (glyph
   saved to jwh-places-v1). Probe lesson banked: closed-<details> children fool offsetParent
   checks in modern Chrome (content-visibility) — screenshot is the witness. (PR #111)
-- [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch
-  targets, geocoding feedback states (loading/empty/error), keyboard reachability of the pin list.
+- [x] **23. (Arc E) Map controls & touch** — zoom controls were plugin-default white 30×30 in
+  BOTH themes (stark on the dark basemap, unthemed in dark mode) → joined the site icon family:
+  38×38, theme tokens (measured light ink/elevated + dark rgb(38,38,49)/light ink), indigo-tint
+  hover, 10px radius; Leaflet's late-loaded .leaflet-touch rules needed a #view-map specificity
+  bump. Zoom verified functional under trusted clicks. Pin rows: 38px buttons/49px rows +
+  keyboard-focusable (verified stage 21). Geocoding feedback states not re-measured (network-
+  dependent; existing announce() path) — logged, not fixed. (PR #114)
 
 - [x] **24. Un-reviewed surfaces** — ALL FOUR VERIFIED CLEAN: emergency (37.4px crimson
   tap-to-dial numbers, card scanability excellent, offline note), deadlines (16.5k chars,

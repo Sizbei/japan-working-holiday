@@ -17,9 +17,10 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   flex:none, padding .68→.46rem, row gap .25rem — measured: wrapped 1→0, navH 77→32px,
   overflow at 1300px 48→6px (both end links fully visible), 1600px 0. 1100px scrolls cleanly
   by design. (PR #93)
-- [ ] **2b. (appended) Nav edge-fade affordance** — below ~1240px the compact nav row scrolls
-  with hidden scrollbar and no visual hint; add scroll-edge fades (needs a JS scrollable-state
-  class — CSS alone can't detect overflow).
+- [x] **2b. Nav edge-fade affordance** — fade-l/fade-r classes wired in guide.js (piggybacks
+  relocateNav — runs on compact toggle + breakpoint cross + scroll/resize) driving CSS mask
+  fades, same pattern as the Plan-a-Day strip. Verified at 1100px: right-only → both → left-only
+  across the scroll; 1600px (fits): no fades. (PR #115)
 - [x] **3. Budget empty-state honesty** — reproduced (untouched page: `Net / mo −¥190,000` in
   alarm tone, savings null). Fixed: unconfigured (no savings AND no monthlyIncome) → Net/Runway/
   After-setup render neutral em-dashes + "set savings below ↓" hint, no tone class; verified

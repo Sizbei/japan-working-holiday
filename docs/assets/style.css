@@ -380,6 +380,12 @@ html[data-compact="on"]{ --header-h: 2.9rem; }
     flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0; border: none; background: none; gap: .25rem; }
   [data-compact="on"] .topbar .route-nav::-webkit-scrollbar{ display: none; }
   [data-compact="on"] .topbar .route-nav a{ white-space: nowrap; flex: none; padding: .28rem .46rem; }   /* stage 2: flex shrink was wrapping "Plan a Day" onto 3 lines; tighter padding fits all 11 links at 1300px (was 48px over) */
+  /* stage 2b: scroll-edge fades where the row actually overflows (classes set by guide.js) */
+  [data-compact="on"] .topbar .route-nav{ --nfL: 0px; --nfR: 0px;
+    mask-image: linear-gradient(90deg, transparent 0, #000 var(--nfL), #000 calc(100% - var(--nfR)), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--nfL), #000 calc(100% - var(--nfR)), transparent 100%); }
+  [data-compact="on"] .topbar .route-nav.fade-l{ --nfL: 32px; }
+  [data-compact="on"] .topbar .route-nav.fade-r{ --nfR: 32px; }
   [data-compact="on"] .topbar .nav-drawer-head, [data-compact="on"] .topbar .nav-drawer-foot{ display: none; }
   [data-compact="on"] .topbar .countdown{ margin-left: var(--s2); }
 }

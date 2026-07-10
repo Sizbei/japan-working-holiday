@@ -1,0 +1,11505 @@
+[
+ {
+  "id": "n4-tara",
+  "pattern": "〜たら",
+  "reading": "たら",
+  "meaning": "if / when (conditional)",
+  "connection": "V-た + ら",
+  "nuance": "たら is the most versatile conditional — the second clause follows once the first is realized; works with a single, one-off event.",
+  "tags": [
+   "conditional"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "に",
+     {
+      "t": "着い",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "arrive (ta-stem)"
+     },
+     {
+      "t": "たら",
+      "f": [
+       [
+        "たら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "電話",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ]
+      ],
+      "g": "phone call"
+     },
+     "します",
+     "。"
+    ],
+    "en": "When I arrive at the station, I'll call you."
+   },
+   {
+    "ja": [
+     {
+      "t": "時間",
+      "f": [
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "time"
+     },
+     "が",
+     {
+      "t": "あっ",
+      "f": [
+       [
+        "あっ",
+        ""
+       ]
+      ],
+      "g": "there is (ta-stem)"
+     },
+     {
+      "t": "たら",
+      "f": [
+       [
+        "たら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "北海道",
+      "f": [
+       [
+        "北",
+        "ほっ"
+       ],
+       [
+        "海",
+        "かい"
+       ],
+       [
+        "道",
+        "どう"
+       ]
+      ],
+      "g": "Hokkaido"
+     },
+     "へ",
+     {
+      "t": "行き",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "go (masu-stem)"
+     },
+     "たいです",
+     "。"
+    ],
+    "en": "If I have time, I want to go to Hokkaido."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": [
+   "n4-ba",
+   "n4-to-conditional"
+  ]
+ },
+ {
+  "id": "n4-ba",
+  "pattern": "〜ば",
+  "reading": "ば",
+  "meaning": "if (hypothetical conditional)",
+  "connection": "V-ば form / adj-ければ",
+  "nuance": "ば states a general or logical if-then; the main clause is often a wish or a natural result.",
+  "tags": [
+   "conditional"
+  ],
+  "related": [
+   "n4-tara",
+   "n4-nara"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "安",
+      "f": [
+       [
+        "安",
+        "やす"
+       ]
+      ],
+      "g": "cheap (ba-stem)"
+     },
+     {
+      "t": "ければ",
+      "f": [
+       [
+        "ければ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "この",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "を",
+     {
+      "t": "借り",
+      "f": [
+       [
+        "借",
+        "か"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "rent (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "If it's cheap, I'll rent this room."
+   },
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "練習",
+      "f": [
+       [
+        "練",
+        "れん"
+       ],
+       [
+        "習",
+        "しゅう"
+       ]
+      ],
+      "g": "practice"
+     },
+     "すれ",
+     {
+      "t": "ば",
+      "f": [
+       [
+        "ば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese (language)"
+     },
+     "が",
+     {
+      "t": "上手",
+      "f": [
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "手",
+        "ず"
+       ]
+      ],
+      "g": "skillful"
+     },
+     "に",
+     "なります",
+     "。"
+    ],
+    "en": "If you practice every day, your Japanese will get better."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-nara",
+  "pattern": "〜なら",
+  "reading": "なら",
+  "meaning": "if (contextual \"if that's the case\")",
+  "connection": "N / plain form + なら",
+  "nuance": "なら picks up something the other person just raised — 'if that's the topic, then...'.",
+  "tags": [
+   "conditional"
+  ],
+  "related": [
+   "n4-tara",
+   "n4-ba",
+   "n4-to-conditional"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "温泉",
+      "f": [
+       [
+        "温",
+        "おん"
+       ],
+       [
+        "泉",
+        "せん"
+       ]
+      ],
+      "g": "hot spring"
+     },
+     {
+      "t": "なら",
+      "f": [
+       [
+        "なら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "箱根",
+      "f": [
+       [
+        "箱",
+        "はこ"
+       ],
+       [
+        "根",
+        "ね"
+       ]
+      ],
+      "g": "Hakone"
+     },
+     "が",
+     {
+      "t": "有名",
+      "f": [
+       [
+        "有",
+        "ゆう"
+       ],
+       [
+        "名",
+        "めい"
+       ]
+      ],
+      "g": "famous"
+     },
+     "です",
+     "。"
+    ],
+    "en": "If it's hot springs (you're after), Hakone is famous."
+   },
+   {
+    "ja": [
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "を",
+     {
+      "t": "探す",
+      "f": [
+       [
+        "探",
+        "さが"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "look for"
+     },
+     {
+      "t": "なら",
+      "f": [
+       [
+        "なら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "シェアハウス",
+     "が",
+     {
+      "t": "いい",
+      "f": [
+       [
+        "いい",
+        ""
+       ]
+      ],
+      "g": "good"
+     },
+     "です",
+     "。"
+    ],
+    "en": "If you're looking for a cheap room, a share house is good."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-to-conditional",
+  "pattern": "〜と",
+  "reading": "と",
+  "meaning": "whenever / natural consequence",
+  "connection": "V-dict + と",
+  "nuance": "と marks an automatic, always-true result — turn this and that happens. No command or request may follow.",
+  "tags": [
+   "conditional"
+  ],
+  "related": [
+   "n4-tara",
+   "n4-nara"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "ボタン",
+      "f": [
+       [
+        "ボタン",
+        ""
+       ]
+      ],
+      "g": "button"
+     },
+     "を",
+     {
+      "t": "押す",
+      "f": [
+       [
+        "押",
+        "お"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "press"
+     },
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "切符",
+      "f": [
+       [
+        "切符",
+        "きっぷ"
+       ]
+      ],
+      "g": "ticket"
+     },
+     "が",
+     {
+      "t": "出ます",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "ます",
+        ""
+       ]
+      ],
+      "g": "come out (polite)"
+     },
+     "。"
+    ],
+    "en": "When you press this button, a ticket comes out."
+   },
+   {
+    "ja": [
+     {
+      "t": "春",
+      "f": [
+       [
+        "春",
+        "はる"
+       ]
+      ],
+      "g": "spring"
+     },
+     "に",
+     "なる",
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "桜",
+      "f": [
+       [
+        "桜",
+        "さくら"
+       ]
+      ],
+      "g": "cherry blossoms"
+     },
+     "が",
+     {
+      "t": "咲きます",
+      "f": [
+       [
+        "咲",
+        "さ"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "bloom (polite)"
+     },
+     "。"
+    ],
+    "en": "When spring comes, the cherry blossoms bloom."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-temo",
+  "pattern": "〜ても",
+  "reading": "ても",
+  "meaning": "even if",
+  "connection": "V-て + も / adj-くても",
+  "tags": [
+   "conditional"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "が",
+     {
+      "t": "降っ",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "fall (te-stem)"
+     },
+     {
+      "t": "ても",
+      "f": [
+       [
+        "ても",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "work"
+     },
+     "に",
+     {
+      "t": "行きます",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "go (polite)"
+     },
+     "。"
+    ],
+    "en": "Even if it rains, I'll go to work."
+   },
+   {
+    "ja": [
+     {
+      "t": "高く",
+      "f": [
+       [
+        "高",
+        "たか"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "expensive (ku-form)"
+     },
+     {
+      "t": "ても",
+      "f": [
+       [
+        "ても",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "この",
+     {
+      "t": "靴",
+      "f": [
+       [
+        "靴",
+        "くつ"
+       ]
+      ],
+      "g": "shoes"
+     },
+     "を",
+     {
+      "t": "買います",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "buy (polite)"
+     },
+     "。"
+    ],
+    "en": "Even if it's expensive, I'll buy these shoes."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": [
+   "n5-temo-ii"
+  ]
+ },
+ {
+  "id": "n4-you-ni-naru",
+  "pattern": "〜ようになる",
+  "reading": "ようになる",
+  "meaning": "come to / reach the point where",
+  "connection": "V-dict or V-ない + ようになる",
+  "nuance": "Marks a gradual change ending in a new ability or habit that wasn't there before.",
+  "tags": [
+   "change"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "の",
+     {
+      "t": "新聞",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "聞",
+        "ぶん"
+       ]
+      ],
+      "g": "newspaper"
+     },
+     "が",
+     {
+      "t": "読める",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "can read"
+     },
+     {
+      "t": "ようになりました",
+      "f": [
+       [
+        "ようになりました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've reached the point where I can read a Japanese newspaper."
+   },
+   {
+    "ja": [
+     {
+      "t": "毎朝",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "朝",
+        "あさ"
+       ]
+      ],
+      "g": "every morning"
+     },
+     {
+      "t": "走る",
+      "f": [
+       [
+        "走",
+        "はし"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "run"
+     },
+     {
+      "t": "ようになりました",
+      "f": [
+       [
+        "ようになりました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've started running every morning (as a habit)."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": []
+ },
+ {
+  "id": "n4-you-ni-suru",
+  "pattern": "〜ようにする",
+  "reading": "ようにする",
+  "meaning": "make an effort to / see to it that",
+  "connection": "V-dict or V-ない + ようにする",
+  "tags": [
+   "change"
+  ],
+  "related": [
+   "n4-you-ni-naru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "野菜",
+      "f": [
+       [
+        "野",
+        "や"
+       ],
+       [
+        "菜",
+        "さい"
+       ]
+      ],
+      "g": "vegetables"
+     },
+     "を",
+     {
+      "t": "食べる",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べる",
+        ""
+       ]
+      ],
+      "g": "eat"
+     },
+     {
+      "t": "ようにしています",
+      "f": [
+       [
+        "ようにしています",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I make an effort to eat vegetables every day."
+   },
+   {
+    "ja": [
+     {
+      "t": "会議",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "議",
+        "ぎ"
+       ]
+      ],
+      "g": "meeting"
+     },
+     "に",
+     {
+      "t": "遅れない",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れない",
+        ""
+       ]
+      ],
+      "g": "not be late"
+     },
+     {
+      "t": "ようにしてください",
+      "f": [
+       [
+        "ようにしてください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please see to it that you're not late for the meeting."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-you-to-omou",
+  "pattern": "〜ようと思う",
+  "reading": "ようとおもう",
+  "meaning": "I think I'll …",
+  "connection": "volitional + と思う",
+  "nuance": "Expresses an intention just decided on; とおもっている describes an ongoing plan.",
+  "tags": [
+   "change"
+  ],
+  "related": [
+   "n4-volitional",
+   "n5-to-omoimasu"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "今週末",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "this weekend"
+     },
+     {
+      "t": "秋葉原",
+      "f": [
+       [
+        "秋",
+        "あき"
+       ],
+       [
+        "葉",
+        "は"
+       ],
+       [
+        "原",
+        "ばら"
+       ]
+      ],
+      "g": "Akihabara"
+     },
+     "へ",
+     {
+      "t": "行こう",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "こう",
+        ""
+       ]
+      ],
+      "g": "go (volitional)"
+     },
+     {
+      "t": "と思います",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I think I'll go to Akihabara this weekend."
+   },
+   {
+    "ja": [
+     {
+      "t": "来年",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "next year"
+     },
+     {
+      "t": "車",
+      "f": [
+       [
+        "車",
+        "くるま"
+       ]
+      ],
+      "g": "car"
+     },
+     "を",
+     {
+      "t": "買おう",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "おう",
+        ""
+       ]
+      ],
+      "g": "buy (volitional)"
+     },
+     {
+      "t": "と思っています",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "っています",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'm thinking of buying a car next year."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-volitional",
+  "pattern": "〜(よ)う",
+  "reading": "よう",
+  "meaning": "plain volitional \"let's / I'll\"",
+  "connection": "V volitional form",
+  "nuance": "The casual counterpart of 〜ましょう — used with friends to suggest doing something.",
+  "tags": [
+   "change"
+  ],
+  "related": [
+   "n4-you-to-omou"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "今晩",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "晩",
+        "ばん"
+       ]
+      ],
+      "g": "tonight"
+     },
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya"
+     },
+     "で",
+     {
+      "t": "飲もう",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "もう",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "drink (volitional)"
+     },
+     "。"
+    ],
+    "en": "Let's drink at the izakaya tonight."
+   },
+   {
+    "ja": [
+     {
+      "t": "疲れた",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "got tired"
+     },
+     "から",
+     "、",
+     "そろそろ",
+     {
+      "t": "帰ろう",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "ろう",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "go home (volitional)"
+     },
+     "。"
+    ],
+    "en": "I'm tired, so let's head home soon."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-yotei",
+  "pattern": "〜予定です",
+  "reading": "よていです",
+  "meaning": "plan to / scheduled to",
+  "connection": "V-dict / N-の + 予定です",
+  "tags": [
+   "change"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "来月",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "next month"
+     },
+     {
+      "t": "引っ越す",
+      "f": [
+       [
+        "引",
+        "ひ"
+       ],
+       [
+        "っ",
+        ""
+       ],
+       [
+        "越",
+        "こ"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "move house"
+     },
+     {
+      "t": "予定です",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "です",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'm planning to move house next month."
+   },
+   {
+    "ja": [
+     {
+      "t": "会議",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "議",
+        "ぎ"
+       ]
+      ],
+      "g": "meeting"
+     },
+     "は",
+     {
+      "t": "三時",
+      "f": [
+       [
+        "三",
+        "さん"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "three o'clock"
+     },
+     "から",
+     "の",
+     {
+      "t": "予定です",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "です",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The meeting is scheduled from three o'clock."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": [
+   "n5-tsumori"
+  ]
+ },
+ {
+  "id": "n4-kamoshiremasen",
+  "pattern": "〜かもしれません",
+  "reading": "かもしれません",
+  "meaning": "might / possibly",
+  "connection": "plain form + かもしれません",
+  "tags": [
+   "change"
+  ],
+  "related": [
+   "n4-hazu"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     {
+      "t": "雪",
+      "f": [
+       [
+        "雪",
+        "ゆき"
+       ]
+      ],
+      "g": "snow"
+     },
+     "が",
+     {
+      "t": "降る",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "fall"
+     },
+     {
+      "t": "かもしれません",
+      "f": [
+       [
+        "かもしれません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It might snow tomorrow."
+   },
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "store manager"
+     },
+     "は",
+     "もう",
+     {
+      "t": "帰った",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "went home"
+     },
+     {
+      "t": "かもしれません",
+      "f": [
+       [
+        "かもしれません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The store manager might have already gone home."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-hazu",
+  "pattern": "〜はずです",
+  "reading": "はずです",
+  "meaning": "should be / expected to",
+  "connection": "plain form + はずです",
+  "nuance": "はず expresses a logical expectation based on evidence — not obligation.",
+  "tags": [
+   "change"
+  ],
+  "related": [
+   "n4-kamoshiremasen",
+   "n4-darou"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     "もう",
+     {
+      "t": "空港",
+      "f": [
+       [
+        "空",
+        "くう"
+       ],
+       [
+        "港",
+        "こう"
+       ]
+      ],
+      "g": "airport"
+     },
+     "に",
+     {
+      "t": "着いた",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "arrived"
+     },
+     {
+      "t": "はずです",
+      "f": [
+       [
+        "はずです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "He should have arrived at the airport by now."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     "に",
+     {
+      "t": "止まる",
+      "f": [
+       [
+        "止",
+        "と"
+       ],
+       [
+        "まる",
+        ""
+       ]
+      ],
+      "g": "stop"
+     },
+     {
+      "t": "はずです",
+      "f": [
+       [
+        "はずです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This train should stop at Shinjuku."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-sou-hearsay",
+  "pattern": "〜そうです（伝聞）",
+  "reading": "そうです",
+  "meaning": "I heard that … (hearsay)",
+  "connection": "plain form + そうです",
+  "nuance": "Reports second-hand information; attaches to the plain form, unlike the look-like そう.",
+  "tags": [
+   "hearsay"
+  ],
+  "related": [
+   "n4-sou-looks",
+   "n4-rashii"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "天気",
+      "f": [
+       [
+        "天",
+        "てん"
+       ],
+       [
+        "気",
+        "き"
+       ]
+      ],
+      "g": "weather"
+     },
+     {
+      "t": "予報",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "報",
+        "ほう"
+       ]
+      ],
+      "g": "forecast"
+     },
+     "に",
+     "よると",
+     "、",
+     "あした",
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "だ",
+     {
+      "t": "そうです",
+      "f": [
+       [
+        "そうです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "According to the forecast, I hear it'll rain tomorrow."
+   },
+   {
+    "ja": [
+     "あの",
+     {
+      "t": "ラーメン",
+      "f": [
+       [
+        "ラーメン",
+        ""
+       ]
+      ],
+      "g": "ramen"
+     },
+     {
+      "t": "屋",
+      "f": [
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "shop"
+     },
+     "は",
+     {
+      "t": "おいしい",
+      "f": [
+       [
+        "おいしい",
+        ""
+       ]
+      ],
+      "g": "delicious"
+     },
+     {
+      "t": "そうです",
+      "f": [
+       [
+        "そうです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I heard that ramen shop is delicious."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-sou-looks",
+  "pattern": "〜そうです（様態）",
+  "reading": "そうです",
+  "meaning": "looks like / about to",
+  "connection": "V-stem / adj-stem + そうです",
+  "nuance": "Describes an impression from what you see; drops the final い of i-adjectives (おいしい→おいしそう).",
+  "tags": [
+   "appearance"
+  ],
+  "related": [
+   "n4-sou-hearsay",
+   "n4-you-desu",
+   "n4-mitai"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "ケーキ",
+      "f": [
+       [
+        "ケーキ",
+        ""
+       ]
+      ],
+      "g": "cake"
+     },
+     "は",
+     {
+      "t": "おいし",
+      "f": [
+       [
+        "おいし",
+        ""
+       ]
+      ],
+      "g": "delicious (stem)"
+     },
+     {
+      "t": "そうです",
+      "f": [
+       [
+        "そうです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This cake looks delicious."
+   },
+   {
+    "ja": [
+     {
+      "t": "今",
+      "f": [
+       [
+        "今",
+        "いま"
+       ]
+      ],
+      "g": "now"
+     },
+     "にも",
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "が",
+     {
+      "t": "降り",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "fall (masu-stem)"
+     },
+     {
+      "t": "そうです",
+      "f": [
+       [
+        "そうです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It looks like it's about to rain any moment."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-you-desu",
+  "pattern": "〜ようです",
+  "reading": "ようです",
+  "meaning": "it seems (inference)",
+  "connection": "plain form + ようです",
+  "nuance": "A reasoned inference from evidence; more formal than みたい.",
+  "tags": [
+   "appearance"
+  ],
+  "related": [
+   "n4-mitai",
+   "n4-rashii",
+   "n4-sou-looks"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "road"
+     },
+     "が",
+     {
+      "t": "濡れて",
+      "f": [
+       [
+        "濡",
+        "ぬ"
+       ],
+       [
+        "れて",
+        ""
+       ]
+      ],
+      "g": "be wet (te-form)"
+     },
+     "います",
+     "。",
+     {
+      "t": "夜中",
+      "f": [
+       [
+        "夜",
+        "よ"
+       ],
+       [
+        "中",
+        "なか"
+       ]
+      ],
+      "g": "middle of the night"
+     },
+     "に",
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "が",
+     {
+      "t": "降った",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "fell"
+     },
+     {
+      "t": "ようです",
+      "f": [
+       [
+        "ようです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The road is wet. It seems it rained during the night."
+   },
+   {
+    "ja": [
+     {
+      "t": "隣",
+      "f": [
+       [
+        "隣",
+        "となり"
+       ]
+      ],
+      "g": "next door"
+     },
+     "の",
+     {
+      "t": "人",
+      "f": [
+       [
+        "人",
+        "ひと"
+       ]
+      ],
+      "g": "person"
+     },
+     "は",
+     {
+      "t": "留守",
+      "f": [
+       [
+        "留",
+        "る"
+       ],
+       [
+        "守",
+        "す"
+       ]
+      ],
+      "g": "not home"
+     },
+     "の",
+     {
+      "t": "ようです",
+      "f": [
+       [
+        "ようです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It seems the person next door isn't home."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-mitai",
+  "pattern": "〜みたい",
+  "reading": "みたい",
+  "meaning": "seems like / like (casual)",
+  "connection": "N / plain form + みたい",
+  "nuance": "The casual spoken equivalent of ようだ; also expresses resemblance ('like a…').",
+  "tags": [
+   "appearance"
+  ],
+  "related": [
+   "n4-you-desu",
+   "n4-rashii"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     {
+      "t": "風邪",
+      "f": [
+       [
+        "風",
+        "か"
+       ],
+       [
+        "邪",
+        "ぜ"
+       ]
+      ],
+      "g": "cold (illness)"
+     },
+     "を",
+     {
+      "t": "引いた",
+      "f": [
+       [
+        "引",
+        "ひ"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "caught"
+     },
+     {
+      "t": "みたい",
+      "f": [
+       [
+        "みたい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "It seems like he caught a cold."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "冷蔵庫",
+      "f": [
+       [
+        "冷",
+        "れい"
+       ],
+       [
+        "蔵",
+        "ぞう"
+       ],
+       [
+        "庫",
+        "こ"
+       ]
+      ],
+      "g": "refrigerator"
+     },
+     {
+      "t": "みたい",
+      "f": [
+       [
+        "みたい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "に",
+     {
+      "t": "寒い",
+      "f": [
+       [
+        "寒",
+        "さむ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cold"
+     },
+     "。"
+    ],
+    "en": "This room is cold like a fridge."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-rashii",
+  "pattern": "〜らしい",
+  "reading": "らしい",
+  "meaning": "apparently / typical of",
+  "connection": "N / plain form + らしい",
+  "nuance": "Reports hearsay you judge reliable; after a noun it means 'befitting / typical of'.",
+  "tags": [
+   "hearsay",
+   "appearance"
+  ],
+  "related": [
+   "n4-sou-hearsay",
+   "n4-you-desu",
+   "n4-mitai"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "駅前",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "in front of the station"
+     },
+     "に",
+     {
+      "t": "新しい",
+      "f": [
+       [
+        "新",
+        "あたら"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "new"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "が",
+     {
+      "t": "できた",
+      "f": [
+       [
+        "できた",
+        ""
+       ]
+      ],
+      "g": "opened"
+     },
+     {
+      "t": "らしい",
+      "f": [
+       [
+        "らしい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "Apparently a new shop has opened in front of the station."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "春",
+      "f": [
+       [
+        "春",
+        "はる"
+       ]
+      ],
+      "g": "spring"
+     },
+     {
+      "t": "らしい",
+      "f": [
+       [
+        "らしい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "暖かい",
+      "f": [
+       [
+        "暖",
+        "あたた"
+       ],
+       [
+        "かい",
+        ""
+       ]
+      ],
+      "g": "warm"
+     },
+     {
+      "t": "日",
+      "f": [
+       [
+        "日",
+        "ひ"
+       ]
+      ],
+      "g": "day"
+     },
+     "です",
+     "。"
+    ],
+    "en": "Today is a warm, spring-like day."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-passive",
+  "pattern": "〜られる（受け身）",
+  "reading": "られる",
+  "meaning": "passive voice",
+  "connection": "V-passive form",
+  "nuance": "The 'suffering passive' often implies the action was unwelcome to the subject.",
+  "tags": [
+   "voice"
+  ],
+  "related": [
+   "n4-potential",
+   "n4-causative"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "で",
+     {
+      "t": "足",
+      "f": [
+       [
+        "足",
+        "あし"
+       ]
+      ],
+      "g": "foot"
+     },
+     "を",
+     {
+      "t": "踏まれ",
+      "f": [
+       [
+        "踏",
+        "ふ"
+       ],
+       [
+        "まれ",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "be stepped on (passive)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I got my foot stepped on on the train."
+   },
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "store manager"
+     },
+     "に",
+     {
+      "t": "名前",
+      "f": [
+       [
+        "名",
+        "な"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "name"
+     },
+     "を",
+     {
+      "t": "聞かれ",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "かれ",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "be asked (passive)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I was asked my name by the store manager."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-potential",
+  "pattern": "〜られる（可能）",
+  "reading": "られる",
+  "meaning": "can / potential form",
+  "connection": "V-potential form",
+  "nuance": "Ru-verbs take 〜られる; casually the ら drops (食べれる). The object usually takes が.",
+  "tags": [
+   "ability"
+  ],
+  "related": [
+   "n4-passive"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     "は",
+     {
+      "t": "刺身",
+      "f": [
+       [
+        "刺",
+        "さし"
+       ],
+       [
+        "身",
+        "み"
+       ]
+      ],
+      "g": "sashimi"
+     },
+     "が",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (potential-stem)"
+     },
+     {
+      "t": "られます",
+      "f": [
+       [
+        "られます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I can eat sashimi."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "アプリ",
+      "f": [
+       [
+        "アプリ",
+        ""
+       ]
+      ],
+      "g": "app"
+     },
+     "で",
+     {
+      "t": "切符",
+      "f": [
+       [
+        "切符",
+        "きっぷ"
+       ]
+      ],
+      "g": "ticket"
+     },
+     "が",
+     {
+      "t": "買え",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "え",
+        ""
+       ]
+      ],
+      "g": "can buy (potential-stem)"
+     },
+     {
+      "t": "ます",
+      "f": [
+       [
+        "ます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "With this app you can buy tickets."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-causative",
+  "pattern": "〜させる",
+  "reading": "させる",
+  "meaning": "make / let someone do",
+  "connection": "V-causative form",
+  "nuance": "Means both 'make (force)' and 'let (allow)' — context and particles (に/を) disambiguate.",
+  "tags": [
+   "voice"
+  ],
+  "related": [
+   "n4-causative-passive",
+   "n4-passive"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "store manager"
+     },
+     "は",
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "me"
+     },
+     "に",
+     {
+      "t": "残業",
+      "f": [
+       [
+        "残",
+        "ざん"
+       ],
+       [
+        "業",
+        "ぎょう"
+       ]
+      ],
+      "g": "overtime"
+     },
+     "を",
+     {
+      "t": "させました",
+      "f": [
+       [
+        "させました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The manager made me work overtime."
+   },
+   {
+    "ja": [
+     {
+      "t": "子供",
+      "f": [
+       [
+        "子",
+        "こ"
+       ],
+       [
+        "供",
+        "ども"
+       ]
+      ],
+      "g": "child"
+     },
+     "を",
+     {
+      "t": "公園",
+      "f": [
+       [
+        "公",
+        "こう"
+       ],
+       [
+        "園",
+        "えん"
+       ]
+      ],
+      "g": "park"
+     },
+     "で",
+     {
+      "t": "遊ば",
+      "f": [
+       [
+        "遊",
+        "あそ"
+       ],
+       [
+        "ば",
+        ""
+       ]
+      ],
+      "g": "play (causative-stem)"
+     },
+     {
+      "t": "せました",
+      "f": [
+       [
+        "せました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I let the child play in the park."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-causative-passive",
+  "pattern": "〜させられる",
+  "reading": "させられる",
+  "meaning": "be made to do",
+  "connection": "V-causative-passive",
+  "nuance": "Combines causative + passive: someone forced you, and you found it unpleasant.",
+  "tags": [
+   "voice"
+  ],
+  "related": [
+   "n4-causative",
+   "n4-passive"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "部長",
+      "f": [
+       [
+        "部",
+        "ぶ"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "department head"
+     },
+     "に",
+     {
+      "t": "二時間",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "two hours"
+     },
+     {
+      "t": "待た",
+      "f": [
+       [
+        "待",
+        "ま"
+       ],
+       [
+        "た",
+        ""
+       ]
+      ],
+      "g": "wait (causative-passive stem)"
+     },
+     {
+      "t": "されました",
+      "f": [
+       [
+        "されました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I was made to wait two hours by the department head."
+   },
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "宿題",
+      "f": [
+       [
+        "宿",
+        "しゅく"
+       ],
+       [
+        "題",
+        "だい"
+       ]
+      ],
+      "g": "homework"
+     },
+     "を",
+     {
+      "t": "やら",
+      "f": [
+       [
+        "やら",
+        ""
+       ]
+      ],
+      "g": "do (causative-passive stem)"
+     },
+     {
+      "t": "されました",
+      "f": [
+       [
+        "されました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I was forced to do homework every day."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-nasai",
+  "pattern": "〜なさい",
+  "reading": "なさい",
+  "meaning": "do … (soft command)",
+  "connection": "V-stem + なさい",
+  "nuance": "A gentle command from a superior to an inferior — parent to child, teacher to student.",
+  "tags": [
+   "command"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "もう",
+     {
+      "t": "寝",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ]
+      ],
+      "g": "sleep (masu-stem)"
+     },
+     {
+      "t": "なさい",
+      "f": [
+       [
+        "なさい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Go to sleep now."
+   },
+   {
+    "ja": [
+     {
+      "t": "野菜",
+      "f": [
+       [
+        "野",
+        "や"
+       ],
+       [
+        "菜",
+        "さい"
+       ]
+      ],
+      "g": "vegetables"
+     },
+     "も",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (masu-stem)"
+     },
+     {
+      "t": "なさい",
+      "f": [
+       [
+        "なさい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Eat your vegetables too."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": [
+   "n4-na-prohibition"
+  ]
+ },
+ {
+  "id": "n4-na-prohibition",
+  "pattern": "〜な（禁止）",
+  "reading": "な",
+  "meaning": "don't (blunt prohibition)",
+  "connection": "V-dict + な",
+  "nuance": "A rough, forceful 'don't' — mostly male speech, warnings, or signs.",
+  "tags": [
+   "command"
+  ],
+  "related": [
+   "n4-nasai"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "ここ",
+     "で",
+     {
+      "t": "写真",
+      "f": [
+       [
+        "写",
+        "しゃ"
+       ],
+       [
+        "真",
+        "しん"
+       ]
+      ],
+      "g": "photo"
+     },
+     "を",
+     {
+      "t": "撮る",
+      "f": [
+       [
+        "撮",
+        "と"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "take"
+     },
+     {
+      "t": "な",
+      "f": [
+       [
+        "な",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Don't take photos here."
+   },
+   {
+    "ja": [
+     {
+      "t": "危ない",
+      "f": [
+       [
+        "危",
+        "あぶ"
+       ],
+       [
+        "ない",
+        ""
+       ]
+      ],
+      "g": "dangerous"
+     },
+     "から",
+     "、",
+     "ホーム",
+     "で",
+     {
+      "t": "走る",
+      "f": [
+       [
+        "走",
+        "はし"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "run"
+     },
+     {
+      "t": "な",
+      "f": [
+       [
+        "な",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's dangerous, so don't run on the platform."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-shimau",
+  "pattern": "〜てしまう",
+  "reading": "てしまう",
+  "meaning": "completely / regrettably do",
+  "connection": "V-て + しまう",
+  "nuance": "Marks completion or, very often, regret over something that happened. Casual: 〜ちゃう.",
+  "tags": [
+   "aspect"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "財布",
+      "f": [
+       [
+        "財",
+        "さい"
+       ],
+       [
+        "布",
+        "ふ"
+       ]
+      ],
+      "g": "wallet"
+     },
+     "を",
+     {
+      "t": "なくし",
+      "f": [
+       [
+        "なくし",
+        ""
+       ]
+      ],
+      "g": "lose (te-stem)"
+     },
+     {
+      "t": "てしまいました",
+      "f": [
+       [
+        "てしまいました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I went and lost my wallet."
+   },
+   {
+    "ja": [
+     "ケーキ",
+     "を",
+     {
+      "t": "全部",
+      "f": [
+       [
+        "全",
+        "ぜん"
+       ],
+       [
+        "部",
+        "ぶ"
+       ]
+      ],
+      "g": "all"
+     },
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (te-stem)"
+     },
+     {
+      "t": "てしまいました",
+      "f": [
+       [
+        "てしまいました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I ended up eating the whole cake."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high",
+  "related": []
+ },
+ {
+  "id": "n4-te-oku",
+  "pattern": "〜ておく",
+  "reading": "ておく",
+  "meaning": "do in advance / leave as is",
+  "connection": "V-て + おく",
+  "nuance": "Do something ahead of time in preparation. Casual contraction: 〜とく.",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-te-shimau"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "旅行",
+      "f": [
+       [
+        "旅",
+        "りょ"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "trip"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "に",
+     {
+      "t": "ホテル",
+      "f": [
+       [
+        "ホテル",
+        ""
+       ]
+      ],
+      "g": "hotel"
+     },
+     "を",
+     {
+      "t": "予約し",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "reserve (te-stem)"
+     },
+     {
+      "t": "ておきます",
+      "f": [
+       [
+        "ておきます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll book the hotel in advance before the trip."
+   },
+   {
+    "ja": [
+     {
+      "t": "窓",
+      "f": [
+       [
+        "窓",
+        "まど"
+       ]
+      ],
+      "g": "window"
+     },
+     "を",
+     {
+      "t": "開け",
+      "f": [
+       [
+        "開",
+        "あ"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "g": "open (te-stem)"
+     },
+     {
+      "t": "ておいて",
+      "f": [
+       [
+        "ておいて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "ください",
+     "。"
+    ],
+    "en": "Please leave the window open."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-miru",
+  "pattern": "〜てみる",
+  "reading": "てみる",
+  "meaning": "try doing",
+  "connection": "V-て + みる",
+  "nuance": "Do something to see how it goes — a trial, not necessarily a struggle.",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-te-oku"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "の",
+     {
+      "t": "ラーメン",
+      "f": [
+       [
+        "ラーメン",
+        ""
+       ]
+      ],
+      "g": "ramen"
+     },
+     "を",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (te-stem)"
+     },
+     {
+      "t": "てみます",
+      "f": [
+       [
+        "てみます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll try eating this shop's ramen."
+   },
+   {
+    "ja": [
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "に",
+     {
+      "t": "電話し",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "phone (te-stem)"
+     },
+     {
+      "t": "てみました",
+      "f": [
+       [
+        "てみました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I tried calling the ward office."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-ageru",
+  "pattern": "〜てあげる",
+  "reading": "てあげる",
+  "meaning": "do (a favor) for someone",
+  "connection": "V-て + あげる",
+  "nuance": "You do something for someone else's benefit; can sound condescending, so use with care.",
+  "tags": [
+   "benefactive"
+  ],
+  "related": [
+   "n4-te-kureru",
+   "n4-te-morau"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "に",
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "the way"
+     },
+     "を",
+     {
+      "t": "教え",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "え",
+        ""
+       ]
+      ],
+      "g": "teach (te-stem)"
+     },
+     {
+      "t": "てあげました",
+      "f": [
+       [
+        "てあげました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I showed my friend the way."
+   },
+   {
+    "ja": [
+     {
+      "t": "彼女",
+      "f": [
+       [
+        "彼",
+        "かの"
+       ],
+       [
+        "女",
+        "じょ"
+       ]
+      ],
+      "g": "her"
+     },
+     "に",
+     {
+      "t": "荷物",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "luggage"
+     },
+     "を",
+     {
+      "t": "持っ",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "carry (te-stem)"
+     },
+     {
+      "t": "てあげました",
+      "f": [
+       [
+        "てあげました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I carried her luggage for her."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-kureru",
+  "pattern": "〜てくれる",
+  "reading": "てくれる",
+  "meaning": "someone does (a favor) for me",
+  "connection": "V-て + くれる",
+  "nuance": "Someone does something for me or my in-group; carries a sense of gratitude.",
+  "tags": [
+   "benefactive"
+  ],
+  "related": [
+   "n4-te-ageru",
+   "n4-te-morau"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "店員",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "shop staff"
+     },
+     "が",
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "the way"
+     },
+     "を",
+     {
+      "t": "教え",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "え",
+        ""
+       ]
+      ],
+      "g": "teach (te-stem)"
+     },
+     {
+      "t": "てくれました",
+      "f": [
+       [
+        "てくれました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The shop clerk showed me the way."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "が",
+     {
+      "t": "空港",
+      "f": [
+       [
+        "空",
+        "くう"
+       ],
+       [
+        "港",
+        "こう"
+       ]
+      ],
+      "g": "airport"
+     },
+     "まで",
+     {
+      "t": "来",
+      "f": [
+       [
+        "来",
+        "き"
+       ]
+      ],
+      "g": "come (te-stem)"
+     },
+     {
+      "t": "てくれました",
+      "f": [
+       [
+        "てくれました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My friend came all the way to the airport for me."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-morau",
+  "pattern": "〜てもらう",
+  "reading": "てもらう",
+  "meaning": "have someone do / receive the favor",
+  "connection": "V-て + もらう",
+  "nuance": "I receive the favor of an action; the doer is marked with に.",
+  "tags": [
+   "benefactive"
+  ],
+  "related": [
+   "n4-te-ageru",
+   "n4-te-kureru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "に",
+     {
+      "t": "引っ越し",
+      "f": [
+       [
+        "引",
+        "ひ"
+       ],
+       [
+        "っ",
+        ""
+       ],
+       [
+        "越",
+        "こ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "moving house"
+     },
+     "を",
+     {
+      "t": "手伝っ",
+      "f": [
+       [
+        "手",
+        "て"
+       ],
+       [
+        "伝",
+        "つだ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "help (te-stem)"
+     },
+     {
+      "t": "てもらいました",
+      "f": [
+       [
+        "てもらいました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I had my friend help me move."
+   },
+   {
+    "ja": [
+     {
+      "t": "先生",
+      "f": [
+       [
+        "先",
+        "せん"
+       ],
+       [
+        "生",
+        "せい"
+       ]
+      ],
+      "g": "teacher"
+     },
+     "に",
+     {
+      "t": "作文",
+      "f": [
+       [
+        "作",
+        "さく"
+       ],
+       [
+        "文",
+        "ぶん"
+       ]
+      ],
+      "g": "essay"
+     },
+     "を",
+     {
+      "t": "直し",
+      "f": [
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "correct (te-stem)"
+     },
+     {
+      "t": "てもらいました",
+      "f": [
+       [
+        "てもらいました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I had my teacher correct my essay."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-iku",
+  "pattern": "〜ていく",
+  "reading": "ていく",
+  "meaning": "go on doing / change away from now",
+  "connection": "V-て + いく",
+  "nuance": "A change moving away from the present into the future, or an action done then leaving.",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-te-kuru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "これから",
+      "f": [
+       [
+        "これから",
+        ""
+       ]
+      ],
+      "g": "from now on"
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "勉強し",
+      "f": [
+       [
+        "勉",
+        "べん"
+       ],
+       [
+        "強",
+        "きょう"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "study (te-stem)"
+     },
+     {
+      "t": "ていきます",
+      "f": [
+       [
+        "ていきます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll keep studying Japanese from now on."
+   },
+   {
+    "ja": [
+     {
+      "t": "朝",
+      "f": [
+       [
+        "朝",
+        "あさ"
+       ]
+      ],
+      "g": "morning"
+     },
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     "で",
+     {
+      "t": "お茶",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "茶",
+        "ちゃ"
+       ]
+      ],
+      "g": "tea"
+     },
+     "を",
+     {
+      "t": "買っ",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "buy (te-stem)"
+     },
+     {
+      "t": "ていきます",
+      "f": [
+       [
+        "ていきます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "In the morning I'll buy tea at the konbini and head off."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-kuru",
+  "pattern": "〜てくる",
+  "reading": "てくる",
+  "meaning": "come to / change up to now",
+  "connection": "V-て + くる",
+  "nuance": "A change that has developed up to the present, or going to do something and coming back.",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-te-iku"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "だんだん",
+      "f": [
+       [
+        "だんだん",
+        ""
+       ]
+      ],
+      "g": "gradually"
+     },
+     {
+      "t": "寒く",
+      "f": [
+       [
+        "寒",
+        "さむ"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "cold (ku-form)"
+     },
+     "なっ",
+     {
+      "t": "てきました",
+      "f": [
+       [
+        "てきました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It has gradually gotten cold."
+   },
+   {
+    "ja": [
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     "で",
+     {
+      "t": "弁当",
+      "f": [
+       [
+        "弁",
+        "べん"
+       ],
+       [
+        "当",
+        "とう"
+       ]
+      ],
+      "g": "bento"
+     },
+     "を",
+     {
+      "t": "買っ",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "buy (te-stem)"
+     },
+     {
+      "t": "てきます",
+      "f": [
+       [
+        "てきます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll go buy a bento at the konbini (and come back)."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-te-aru",
+  "pattern": "〜てある",
+  "reading": "てある",
+  "meaning": "has been done (resultant state)",
+  "connection": "V-て + ある",
+  "nuance": "A transitive verb's result left in place on purpose; the object usually takes が.",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-te-oku"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "壁",
+      "f": [
+       [
+        "壁",
+        "かべ"
+       ]
+      ],
+      "g": "wall"
+     },
+     "に",
+     {
+      "t": "地図",
+      "f": [
+       [
+        "地",
+        "ち"
+       ],
+       [
+        "図",
+        "ず"
+       ]
+      ],
+      "g": "map"
+     },
+     "が",
+     {
+      "t": "貼っ",
+      "f": [
+       [
+        "貼",
+        "は"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "post/stick (te-stem)"
+     },
+     {
+      "t": "てあります",
+      "f": [
+       [
+        "てあります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "A map has been put up on the wall."
+   },
+   {
+    "ja": [
+     {
+      "t": "冷蔵庫",
+      "f": [
+       [
+        "冷",
+        "れい"
+       ],
+       [
+        "蔵",
+        "ぞう"
+       ],
+       [
+        "庫",
+        "こ"
+       ]
+      ],
+      "g": "refrigerator"
+     },
+     "に",
+     {
+      "t": "ビール",
+      "f": [
+       [
+        "ビール",
+        ""
+       ]
+      ],
+      "g": "beer"
+     },
+     "が",
+     {
+      "t": "冷やし",
+      "f": [
+       [
+        "冷",
+        "ひ"
+       ],
+       [
+        "やし",
+        ""
+       ]
+      ],
+      "g": "chill (te-stem)"
+     },
+     {
+      "t": "てあります",
+      "f": [
+       [
+        "てあります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Beer has been chilled in the fridge."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-hajimeru",
+  "pattern": "〜始める",
+  "reading": "はじめる",
+  "meaning": "start doing",
+  "connection": "V-stem + 始める",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-owaru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "先月",
+      "f": [
+       [
+        "先",
+        "せん"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "last month"
+     },
+     "から",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "習い",
+      "f": [
+       [
+        "習",
+        "なら"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "learn (masu-stem)"
+     },
+     {
+      "t": "始めました",
+      "f": [
+       [
+        "始",
+        "はじ"
+       ],
+       [
+        "めました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I started learning Japanese last month."
+   },
+   {
+    "ja": [
+     {
+      "t": "桜",
+      "f": [
+       [
+        "桜",
+        "さくら"
+       ]
+      ],
+      "g": "cherry blossoms"
+     },
+     "が",
+     {
+      "t": "咲き",
+      "f": [
+       [
+        "咲",
+        "さ"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "bloom (masu-stem)"
+     },
+     {
+      "t": "始めました",
+      "f": [
+       [
+        "始",
+        "はじ"
+       ],
+       [
+        "めました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The cherry blossoms have started to bloom."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-owaru",
+  "pattern": "〜終わる",
+  "reading": "おわる",
+  "meaning": "finish doing",
+  "connection": "V-stem + 終わる",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-hajimeru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "本",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "book"
+     },
+     "を",
+     {
+      "t": "読み",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "read (masu-stem)"
+     },
+     {
+      "t": "終わりました",
+      "f": [
+       [
+        "終",
+        "お"
+       ],
+       [
+        "わりました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I finished reading the book."
+   },
+   {
+    "ja": [
+     {
+      "t": "宿題",
+      "f": [
+       [
+        "宿",
+        "しゅく"
+       ],
+       [
+        "題",
+        "だい"
+       ]
+      ],
+      "g": "homework"
+     },
+     "を",
+     {
+      "t": "やり",
+      "f": [
+       [
+        "やり",
+        ""
+       ]
+      ],
+      "g": "do (masu-stem)"
+     },
+     {
+      "t": "終わったら",
+      "f": [
+       [
+        "終",
+        "お"
+       ],
+       [
+        "わったら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "寝ます",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "ます",
+        ""
+       ]
+      ],
+      "g": "sleep (polite)"
+     },
+     "。"
+    ],
+    "en": "Once I finish the homework, I'll sleep."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-yasui",
+  "pattern": "〜やすい",
+  "reading": "やすい",
+  "meaning": "easy to",
+  "connection": "V-stem + やすい",
+  "nuance": "Conjugates like an i-adjective (〜やすかった). The full kanji 易い is rarely written.",
+  "tags": [
+   "appearance"
+  ],
+  "related": [
+   "n4-nikui"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "ペン",
+      "f": [
+       [
+        "ペン",
+        ""
+       ]
+      ],
+      "g": "pen"
+     },
+     "は",
+     {
+      "t": "書き",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "write (masu-stem)"
+     },
+     {
+      "t": "やすい",
+      "f": [
+       [
+        "やすい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "This pen is easy to write with."
+   },
+   {
+    "ja": [
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     "の",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "は",
+     {
+      "t": "迷い",
+      "f": [
+       [
+        "迷",
+        "まよ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "get lost (masu-stem)"
+     },
+     {
+      "t": "やすい",
+      "f": [
+       [
+        "やすい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "Shinjuku station is easy to get lost in."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-nikui",
+  "pattern": "〜にくい",
+  "reading": "にくい",
+  "meaning": "hard to",
+  "connection": "V-stem + にくい",
+  "nuance": "The opposite of 〜やすい; conjugates like an i-adjective.",
+  "tags": [
+   "appearance"
+  ],
+  "related": [
+   "n4-yasui"
+  ],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "は",
+     {
+      "t": "読み",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "read (masu-stem)"
+     },
+     {
+      "t": "にくい",
+      "f": [
+       [
+        "にくい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "This kanji is hard to read."
+   },
+   {
+    "ja": [
+     {
+      "t": "駅前",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "in front of the station"
+     },
+     "は",
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "road"
+     },
+     "が",
+     {
+      "t": "分かり",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かり",
+        ""
+       ]
+      ],
+      "g": "understand (masu-stem)"
+     },
+     {
+      "t": "にくい",
+      "f": [
+       [
+        "にくい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "The streets in front of the station are hard to figure out."
+   }
+  ],
+  "level": "N4",
+  "confidence": "high"
+ },
+ {
+  "id": "n4-koto-ga-aru",
+  "level": "N4",
+  "pattern": "〜ことがある",
+  "reading": "ことがある",
+  "meaning": "sometimes happens / there are times when",
+  "connection": "V-dict + ことがある",
+  "nuance": "With a dictionary verb it means an occasional occurrence; do not confuse it with V-た + ことがある (past experience).",
+  "confidence": "high",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n5-ta-koto-ga-arimasu"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "を",
+     {
+      "t": "逃す",
+      "f": [
+       [
+        "逃",
+        "のが"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "miss (a train)"
+     },
+     {
+      "t": "ことがある",
+      "f": [
+       [
+        "ことがある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "There are times when I miss the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "残業",
+      "f": [
+       [
+        "残",
+        "ざん"
+       ],
+       [
+        "業",
+        "ぎょう"
+       ]
+      ],
+      "g": "overtime"
+     },
+     "で",
+     {
+      "t": "夜",
+      "f": [
+       [
+        "夜",
+        "よる"
+       ]
+      ],
+      "g": "night"
+     },
+     {
+      "t": "遅く",
+      "f": [
+       [
+        "遅",
+        "おそ"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "late"
+     },
+     {
+      "t": "なる",
+      "f": [
+       [
+        "なる",
+        ""
+       ]
+      ],
+      "g": "become"
+     },
+     {
+      "t": "ことがある",
+      "f": [
+       [
+        "ことがある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Because of overtime, it sometimes gets late at night."
+   }
+  ]
+ },
+ {
+  "id": "n4-koto-ni-suru",
+  "level": "N4",
+  "pattern": "〜ことにする",
+  "reading": "ことにする",
+  "meaning": "decide to",
+  "connection": "V-dict / V-ない + ことにする",
+  "nuance": "The speaker's own decision. Contrast with ことになる, where the decision comes from outside.",
+  "confidence": "high",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-koto-ni-naru",
+   "n5-ni-shimasu"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "毎朝",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "朝",
+        "あさ"
+       ]
+      ],
+      "g": "every morning"
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese (language)"
+     },
+     "を",
+     {
+      "t": "勉強",
+      "f": [
+       [
+        "勉",
+        "べん"
+       ],
+       [
+        "強",
+        "きょう"
+       ]
+      ],
+      "g": "study"
+     },
+     "する",
+     {
+      "t": "ことにする",
+      "f": [
+       [
+        "ことにする",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've decided to study Japanese every morning."
+   },
+   {
+    "ja": [
+     {
+      "t": "今月",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "this month"
+     },
+     "は",
+     {
+      "t": "外食",
+      "f": [
+       [
+        "外",
+        "がい"
+       ],
+       [
+        "食",
+        "しょく"
+       ]
+      ],
+      "g": "eating out"
+     },
+     "を",
+     {
+      "t": "しない",
+      "f": [
+       [
+        "しない",
+        ""
+       ]
+      ],
+      "g": "not do"
+     },
+     {
+      "t": "ことにする",
+      "f": [
+       [
+        "ことにする",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've decided not to eat out this month."
+   }
+  ]
+ },
+ {
+  "id": "n4-koto-ni-naru",
+  "level": "N4",
+  "pattern": "〜ことになる",
+  "reading": "ことになる",
+  "meaning": "it's been decided that",
+  "connection": "V-dict + ことになる",
+  "nuance": "The outcome is decided by circumstances or others, not the speaker's own choice.",
+  "confidence": "high",
+  "tags": [
+   "aspect"
+  ],
+  "related": [
+   "n4-koto-ni-suru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "来月",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "next month"
+     },
+     "から",
+     {
+      "t": "北海道",
+      "f": [
+       [
+        "北",
+        "ほっ"
+       ],
+       [
+        "海",
+        "かい"
+       ],
+       [
+        "道",
+        "どう"
+       ]
+      ],
+      "g": "Hokkaido"
+     },
+     "で",
+     {
+      "t": "働く",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "work"
+     },
+     {
+      "t": "ことになる",
+      "f": [
+       [
+        "ことになる",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's been decided that I'll work in Hokkaido from next month."
+   },
+   {
+    "ja": [
+     {
+      "t": "会議",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "議",
+        "ぎ"
+       ]
+      ],
+      "g": "meeting"
+     },
+     "は",
+     {
+      "t": "来週",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "週",
+        "しゅう"
+       ]
+      ],
+      "g": "next week"
+     },
+     "に",
+     {
+      "t": "する",
+      "f": [
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "do / make it"
+     },
+     {
+      "t": "ことになった",
+      "f": [
+       [
+        "ことになった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's been decided that the meeting will be next week."
+   }
+  ]
+ },
+ {
+  "id": "n4-to-iu",
+  "level": "N4",
+  "pattern": "〜という",
+  "reading": "という",
+  "meaning": "called / named",
+  "connection": "N + という + N",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "「一蘭」",
+      "f": [
+       [
+        "「一蘭」",
+        ""
+       ]
+      ],
+      "g": "\"Ichiran\" (a name)"
+     },
+     {
+      "t": "という",
+      "f": [
+       [
+        "という",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "ラーメン屋",
+      "f": [
+       [
+        "ラーメン",
+        ""
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "ramen shop"
+     },
+     "に",
+     {
+      "t": "行きたい",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きたい",
+        ""
+       ]
+      ],
+      "g": "want to go"
+     },
+     "。"
+    ],
+    "en": "I want to go to a ramen shop called \"Ichiran.\""
+   },
+   {
+    "ja": [
+     {
+      "t": "「シェアハウス」",
+      "f": [
+       [
+        "「シェアハウス」",
+        ""
+       ]
+      ],
+      "g": "\"share house\""
+     },
+     {
+      "t": "という",
+      "f": [
+       [
+        "という",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "言葉",
+      "f": [
+       [
+        "言",
+        "こと"
+       ],
+       [
+        "葉",
+        "ば"
+       ]
+      ],
+      "g": "word"
+     },
+     "を",
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "g": "for the first time"
+     },
+     {
+      "t": "聞いた",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "heard"
+     },
+     "。"
+    ],
+    "en": "I heard the word \"share house\" for the first time."
+   }
+  ]
+ },
+ {
+  "id": "n4-toka",
+  "level": "N4",
+  "pattern": "〜とか",
+  "reading": "とか",
+  "meaning": "things like (vague list)",
+  "connection": "N/V + とか",
+  "nuance": "Lists a couple of representative examples casually, implying there are others.",
+  "confidence": "high",
+  "tags": [
+   "listing"
+  ],
+  "related": [
+   "n4-nado"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     "で",
+     {
+      "t": "おにぎり",
+      "f": [
+       [
+        "おにぎり",
+        ""
+       ]
+      ],
+      "g": "rice ball"
+     },
+     {
+      "t": "とか",
+      "f": [
+       [
+        "とか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "お茶",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "茶",
+        "ちゃ"
+       ]
+      ],
+      "g": "tea"
+     },
+     {
+      "t": "とか",
+      "f": [
+       [
+        "とか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "を",
+     {
+      "t": "買う",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "う",
+        ""
+       ]
+      ],
+      "g": "buy"
+     },
+     "。"
+    ],
+    "en": "At the convenience store I buy things like rice balls and tea."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     "は",
+     {
+      "t": "散歩",
+      "f": [
+       [
+        "散",
+        "さん"
+       ],
+       [
+        "歩",
+        "ぽ"
+       ]
+      ],
+      "g": "a walk"
+     },
+     "する",
+     {
+      "t": "とか",
+      "f": [
+       [
+        "とか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "して",
+      "f": [
+       [
+        "して",
+        ""
+       ]
+      ],
+      "g": "do (te-form)"
+     },
+     {
+      "t": "過ごす",
+      "f": [
+       [
+        "過",
+        "す"
+       ],
+       [
+        "ごす",
+        ""
+       ]
+      ],
+      "g": "spend (time)"
+     },
+     "。"
+    ],
+    "en": "On weekends I spend the time doing things like taking a walk."
+   }
+  ]
+ },
+ {
+  "id": "n4-nado",
+  "level": "N4",
+  "pattern": "〜など",
+  "reading": "など",
+  "meaning": "and so on / etc.",
+  "connection": "N + など",
+  "confidence": "high",
+  "tags": [
+   "listing"
+  ],
+  "related": [
+   "n4-toka"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "浅草",
+      "f": [
+       [
+        "浅",
+        "あさ"
+       ],
+       [
+        "草",
+        "くさ"
+       ]
+      ],
+      "g": "Asakusa"
+     },
+     "や",
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     {
+      "t": "など",
+      "f": [
+       [
+        "など",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "を",
+     {
+      "t": "案内した",
+      "f": [
+       [
+        "案",
+        "あん"
+       ],
+       [
+        "内",
+        "ない"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "showed around"
+     },
+     "。"
+    ],
+    "en": "I showed them around Asakusa, Shibuya, and so on."
+   },
+   {
+    "ja": [
+     {
+      "t": "机",
+      "f": [
+       [
+        "机",
+        "つくえ"
+       ]
+      ],
+      "g": "desk"
+     },
+     "の",
+     {
+      "t": "上",
+      "f": [
+       [
+        "上",
+        "うえ"
+       ]
+      ],
+      "g": "top / on"
+     },
+     "に",
+     {
+      "t": "本",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "book"
+     },
+     {
+      "t": "など",
+      "f": [
+       [
+        "など",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "が",
+     {
+      "t": "ある",
+      "f": [
+       [
+        "ある",
+        ""
+       ]
+      ],
+      "g": "there is"
+     },
+     "。"
+    ],
+    "en": "There are things like books on the desk."
+   }
+  ]
+ },
+ {
+  "id": "n4-shi",
+  "level": "N4",
+  "pattern": "〜し",
+  "reading": "し",
+  "meaning": "and what's more (listing reasons)",
+  "connection": "plain form + し",
+  "nuance": "Lists reasons or qualities, often implying \"and on top of that.\"",
+  "confidence": "high",
+  "tags": [
+   "listing",
+   "reason"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     "この",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     {
+      "t": "し",
+      "f": [
+       [
+        "し",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "に",
+     {
+      "t": "近い",
+      "f": [
+       [
+        "近",
+        "ちか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "close"
+     },
+     "。"
+    ],
+    "en": "This room is cheap, and what's more it's close to the station."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "だ",
+     {
+      "t": "し",
+      "f": [
+       [
+        "し",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "家",
+      "f": [
+       [
+        "家",
+        "いえ"
+       ]
+      ],
+      "g": "home"
+     },
+     "に",
+     {
+      "t": "いる",
+      "f": [
+       [
+        "いる",
+        ""
+       ]
+      ],
+      "g": "stay / be"
+     },
+     "。"
+    ],
+    "en": "It's raining today, so (and what's more) I'll stay home."
+   }
+  ]
+ },
+ {
+  "id": "n4-noni",
+  "level": "N4",
+  "pattern": "〜のに",
+  "reading": "のに",
+  "meaning": "even though / despite",
+  "connection": "plain form + のに",
+  "nuance": "Carries a sense of surprise, dissatisfaction, or unexpected contrast.",
+  "confidence": "high",
+  "tags": [
+   "contrast"
+  ],
+  "related": [
+   "n4-keredomo"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "予約",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "reservation"
+     },
+     "した",
+     {
+      "t": "のに",
+      "f": [
+       [
+        "のに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop / restaurant"
+     },
+     "が",
+     {
+      "t": "閉まっていた",
+      "f": [
+       [
+        "閉",
+        "し"
+       ],
+       [
+        "まっていた",
+        ""
+       ]
+      ],
+      "g": "was closed"
+     },
+     "。"
+    ],
+    "en": "Even though I made a reservation, the restaurant was closed."
+   },
+   {
+    "ja": [
+     {
+      "t": "日曜日",
+      "f": [
+       [
+        "日",
+        "にち"
+       ],
+       [
+        "曜",
+        "よう"
+       ],
+       [
+        "日",
+        "び"
+       ]
+      ],
+      "g": "Sunday"
+     },
+     "な",
+     {
+      "t": "のに",
+      "f": [
+       [
+        "のに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "混んでいる",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "んでいる",
+        ""
+       ]
+      ],
+      "g": "is crowded"
+     },
+     "。"
+    ],
+    "en": "Even though it's Sunday, the train is crowded."
+   }
+  ]
+ },
+ {
+  "id": "n4-node",
+  "level": "N4",
+  "pattern": "〜ので",
+  "reading": "ので",
+  "meaning": "because (softer than から)",
+  "connection": "plain form + ので",
+  "nuance": "Presents the reason as objective fact; softer and more polite than から.",
+  "confidence": "high",
+  "tags": [
+   "reason"
+  ],
+  "related": [
+   "n5-kara"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "頭",
+      "f": [
+       [
+        "頭",
+        "あたま"
+       ]
+      ],
+      "g": "head"
+     },
+     "が",
+     {
+      "t": "痛い",
+      "f": [
+       [
+        "痛",
+        "いた"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "hurts"
+     },
+     {
+      "t": "ので",
+      "f": [
+       [
+        "ので",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "早く",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "帰ります",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "ります",
+        ""
+       ]
+      ],
+      "g": "go home (polite)"
+     },
+     "。"
+    ],
+    "en": "Because my head hurts, I'll go home early."
+   },
+   {
+    "ja": [
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "g": "first time"
+     },
+     "な",
+     {
+      "t": "ので",
+      "f": [
+       [
+        "ので",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "の",
+     {
+      "t": "場所",
+      "f": [
+       [
+        "場",
+        "ば"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "location"
+     },
+     "が",
+     {
+      "t": "分からない",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "からない",
+        ""
+       ]
+      ],
+      "g": "don't know"
+     },
+     "。"
+    ],
+    "en": "Because it's my first time, I don't know where the ward office is."
+   }
+  ]
+ },
+ {
+  "id": "n4-keredomo",
+  "level": "N4",
+  "pattern": "〜けれども",
+  "reading": "けれども",
+  "meaning": "however / although (polite)",
+  "connection": "clause + けれども",
+  "nuance": "A more formal, softer version of けど; connects two clauses with contrast.",
+  "confidence": "high",
+  "tags": [
+   "contrast"
+  ],
+  "related": [
+   "n4-noni",
+   "n5-kedo"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "は",
+     {
+      "t": "難しい",
+      "f": [
+       [
+        "難",
+        "むずか"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "difficult"
+     },
+     {
+      "t": "けれども",
+      "f": [
+       [
+        "けれども",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "面白い",
+      "f": [
+       [
+        "面",
+        "おも"
+       ],
+       [
+        "白",
+        "しろ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "interesting"
+     },
+     "。"
+    ],
+    "en": "Japanese is difficult, however it's interesting."
+   },
+   {
+    "ja": [
+     {
+      "t": "駅前",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "in front of the station"
+     },
+     "の",
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya"
+     },
+     "に",
+     {
+      "t": "行った",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "went"
+     },
+     {
+      "t": "けれども",
+      "f": [
+       [
+        "けれども",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "満席",
+      "f": [
+       [
+        "満",
+        "まん"
+       ],
+       [
+        "席",
+        "せき"
+       ]
+      ],
+      "g": "fully booked"
+     },
+     "だった",
+     "。"
+    ],
+    "en": "I went to the izakaya in front of the station, but it was full."
+   }
+  ]
+ },
+ {
+  "id": "n4-ga-suru",
+  "level": "N4",
+  "pattern": "〜がする",
+  "reading": "がする",
+  "meaning": "there is a (smell / sound / taste / feeling)",
+  "connection": "sense N + がする",
+  "nuance": "Used with perception nouns like におい, 音, 味, 気; describes something sensed, not deliberately done.",
+  "confidence": "high",
+  "tags": [
+   "aspect"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "台所",
+      "f": [
+       [
+        "台",
+        "だい"
+       ],
+       [
+        "所",
+        "どころ"
+       ]
+      ],
+      "g": "kitchen"
+     },
+     "から",
+     {
+      "t": "いい",
+      "f": [
+       [
+        "いい",
+        ""
+       ]
+      ],
+      "g": "good / nice"
+     },
+     {
+      "t": "匂い",
+      "f": [
+       [
+        "匂",
+        "にお"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "smell"
+     },
+     {
+      "t": "がする",
+      "f": [
+       [
+        "がする",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "There's a nice smell coming from the kitchen."
+   },
+   {
+    "ja": [
+     {
+      "t": "隣",
+      "f": [
+       [
+        "隣",
+        "となり"
+       ]
+      ],
+      "g": "next door"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "から",
+     {
+      "t": "変な",
+      "f": [
+       [
+        "変",
+        "へん"
+       ],
+       [
+        "な",
+        ""
+       ]
+      ],
+      "g": "strange"
+     },
+     {
+      "t": "音",
+      "f": [
+       [
+        "音",
+        "おと"
+       ]
+      ],
+      "g": "sound"
+     },
+     {
+      "t": "がする",
+      "f": [
+       [
+        "がする",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "There's a strange sound coming from the room next door."
+   }
+  ]
+ },
+ {
+  "id": "n4-aida-ni",
+  "level": "N4",
+  "pattern": "〜間に",
+  "reading": "あいだに",
+  "meaning": "while / during (something happened)",
+  "connection": "V-ている / N-の + 間に",
+  "nuance": "間に marks a point within a span when something happens; 間 alone marks the whole duration.",
+  "confidence": "high",
+  "tags": [
+   "time"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "寝ている",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "ている",
+        ""
+       ]
+      ],
+      "g": "sleeping"
+     },
+     {
+      "t": "間に",
+      "f": [
+       [
+        "間",
+        "あいだ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "地震",
+      "f": [
+       [
+        "地",
+        "じ"
+       ],
+       [
+        "震",
+        "しん"
+       ]
+      ],
+      "g": "earthquake"
+     },
+     "が",
+     {
+      "t": "あった",
+      "f": [
+       [
+        "あった",
+        ""
+       ]
+      ],
+      "g": "there was"
+     },
+     "。"
+    ],
+    "en": "While I was sleeping, there was an earthquake."
+   },
+   {
+    "ja": [
+     {
+      "t": "夏休み",
+      "f": [
+       [
+        "夏",
+        "なつ"
+       ],
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "summer break"
+     },
+     "の",
+     {
+      "t": "間に",
+      "f": [
+       [
+        "間",
+        "あいだ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "北海道",
+      "f": [
+       [
+        "北",
+        "ほっ"
+       ],
+       [
+        "海",
+        "かい"
+       ],
+       [
+        "道",
+        "どう"
+       ]
+      ],
+      "g": "Hokkaido"
+     },
+     "に",
+     {
+      "t": "行った",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "went"
+     },
+     "。"
+    ],
+    "en": "During the summer break, I went to Hokkaido."
+   }
+  ]
+ },
+ {
+  "id": "n4-made",
+  "level": "N4",
+  "pattern": "〜まで",
+  "reading": "まで",
+  "meaning": "until",
+  "connection": "time/place N + まで",
+  "nuance": "Marks a continuous action up to an end point. Contrast with までに (a deadline).",
+  "confidence": "high",
+  "tags": [
+   "time"
+  ],
+  "related": [
+   "n4-made-ni"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "夜",
+      "f": [
+       [
+        "夜",
+        "よる"
+       ]
+      ],
+      "g": "night"
+     },
+     {
+      "t": "十時",
+      "f": [
+       [
+        "十",
+        "じゅう"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "ten o'clock"
+     },
+     {
+      "t": "まで",
+      "f": [
+       [
+        "まで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "を",
+     {
+      "t": "する",
+      "f": [
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "do"
+     },
+     "。"
+    ],
+    "en": "I work my part-time job until ten at night."
+   },
+   {
+    "ja": [
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     {
+      "t": "まで",
+      "f": [
+       [
+        "まで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "で",
+     {
+      "t": "行く",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "go"
+     },
+     "。"
+    ],
+    "en": "I'll go to Shinjuku by train."
+   }
+  ]
+ },
+ {
+  "id": "n4-made-ni",
+  "level": "N4",
+  "pattern": "〜までに",
+  "reading": "までに",
+  "meaning": "by (deadline)",
+  "connection": "time N + までに",
+  "nuance": "A deadline by which an action must be completed. Contrast with まで (continuous up to a point).",
+  "confidence": "high",
+  "tags": [
+   "deadline",
+   "time"
+  ],
+  "related": [
+   "n4-made"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "金曜日",
+      "f": [
+       [
+        "金",
+        "きん"
+       ],
+       [
+        "曜",
+        "よう"
+       ],
+       [
+        "日",
+        "び"
+       ]
+      ],
+      "g": "Friday"
+     },
+     {
+      "t": "までに",
+      "f": [
+       [
+        "までに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "documents"
+     },
+     "を",
+     {
+      "t": "出す",
+      "f": [
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "submit"
+     },
+     "。"
+    ],
+    "en": "I'll submit the documents by Friday."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     {
+      "t": "までに",
+      "f": [
+       [
+        "までに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "に",
+     {
+      "t": "着きたい",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "きたい",
+        ""
+       ]
+      ],
+      "g": "want to arrive"
+     },
+     "。"
+    ],
+    "en": "I want to get to the station by the last train."
+   }
+  ]
+ },
+ {
+  "id": "n4-bakari",
+  "level": "N4",
+  "pattern": "〜ばかり",
+  "reading": "ばかり",
+  "meaning": "nothing but / only",
+  "connection": "N + ばかり / V-て + ばかり",
+  "nuance": "Emphasizes that it's always the same thing, often with a critical tone.",
+  "confidence": "high",
+  "tags": [
+   "quantity"
+  ],
+  "related": [
+   "n4-ta-bakari"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "ラーメン",
+      "f": [
+       [
+        "ラーメン",
+        ""
+       ]
+      ],
+      "g": "ramen"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "食べている",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べている",
+        ""
+       ]
+      ],
+      "g": "am eating"
+     },
+     "。"
+    ],
+    "en": "Every day I eat nothing but ramen."
+   },
+   {
+    "ja": [
+     {
+      "t": "弟",
+      "f": [
+       [
+        "弟",
+        "おとうと"
+       ]
+      ],
+      "g": "younger brother"
+     },
+     "は",
+     {
+      "t": "ゲーム",
+      "f": [
+       [
+        "ゲーム",
+        ""
+       ]
+      ],
+      "g": "games"
+     },
+     "を",
+     {
+      "t": "して",
+      "f": [
+       [
+        "して",
+        ""
+       ]
+      ],
+      "g": "doing"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "いる",
+     "。"
+    ],
+    "en": "My little brother does nothing but play games."
+   }
+  ]
+ },
+ {
+  "id": "n4-ta-bakari",
+  "level": "N4",
+  "pattern": "〜たばかり",
+  "reading": "たばかり",
+  "meaning": "just did (only just now)",
+  "connection": "V-た + ばかり",
+  "nuance": "Only a short time has passed since the action, in the speaker's feeling. Contrast with たところ (objective timing).",
+  "confidence": "high",
+  "tags": [
+   "aspect",
+   "time"
+  ],
+  "related": [
+   "n4-tokoro",
+   "n4-bakari"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "日本",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "Japan"
+     },
+     "に",
+     {
+      "t": "来た",
+      "f": [
+       [
+        "来",
+        "き"
+       ],
+       [
+        "た",
+        ""
+       ]
+      ],
+      "g": "came"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "で",
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friends"
+     },
+     "が",
+     {
+      "t": "いない",
+      "f": [
+       [
+        "いない",
+        ""
+       ]
+      ],
+      "g": "don't have"
+     },
+     "。"
+    ],
+    "en": "I just came to Japan, so I don't have any friends yet."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "スマホ",
+      "f": [
+       [
+        "スマホ",
+        ""
+       ]
+      ],
+      "g": "smartphone"
+     },
+     "は",
+     {
+      "t": "買った",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "bought"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "だ",
+     "。"
+    ],
+    "en": "I just bought this smartphone."
+   }
+  ]
+ },
+ {
+  "id": "n4-tokoro",
+  "level": "N4",
+  "pattern": "〜ところ",
+  "reading": "ところ",
+  "meaning": "about to / in the middle of / just did",
+  "connection": "V-dict / V-ている / V-た + ところ",
+  "nuance": "The verb form sets the timing: dict = about to, ている = in the middle of, た = just finished.",
+  "confidence": "high",
+  "tags": [
+   "aspect",
+   "time"
+  ],
+  "related": [
+   "n4-ta-bakari"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "今",
+      "f": [
+       [
+        "今",
+        "いま"
+       ]
+      ],
+      "g": "now"
+     },
+     {
+      "t": "家",
+      "f": [
+       [
+        "家",
+        "いえ"
+       ]
+      ],
+      "g": "home"
+     },
+     "を",
+     {
+      "t": "出る",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "leave"
+     },
+     {
+      "t": "ところ",
+      "f": [
+       [
+        "ところ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "だ",
+     "。"
+    ],
+    "en": "I'm just about to leave the house now."
+   },
+   {
+    "ja": [
+     {
+      "t": "ちょうど",
+      "f": [
+       [
+        "ちょうど",
+        ""
+       ]
+      ],
+      "g": "just now"
+     },
+     {
+      "t": "昼ご飯",
+      "f": [
+       [
+        "昼",
+        "ひる"
+       ],
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "lunch"
+     },
+     "を",
+     {
+      "t": "食べた",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べた",
+        ""
+       ]
+      ],
+      "g": "ate"
+     },
+     {
+      "t": "ところ",
+      "f": [
+       [
+        "ところ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "だ",
+     "。"
+    ],
+    "en": "I've just finished eating lunch."
+   }
+  ]
+ },
+ {
+  "id": "n4-ta-mama",
+  "level": "N4",
+  "pattern": "〜たまま",
+  "reading": "たまま",
+  "meaning": "leave as is / while still",
+  "connection": "V-た + まま",
+  "nuance": "A state remains unchanged while another action happens, often unintentionally.",
+  "confidence": "high",
+  "tags": [
+   "aspect"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "電気",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "気",
+        "き"
+       ]
+      ],
+      "g": "the lights"
+     },
+     "を",
+     {
+      "t": "つけた",
+      "f": [
+       [
+        "つけた",
+        ""
+       ]
+      ],
+      "g": "turned on"
+     },
+     {
+      "t": "まま",
+      "f": [
+       [
+        "まま",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "寝てしまった",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "てしまった",
+        ""
+       ]
+      ],
+      "g": "fell asleep"
+     },
+     "。"
+    ],
+    "en": "I fell asleep with the lights left on."
+   },
+   {
+    "ja": [
+     {
+      "t": "窓",
+      "f": [
+       [
+        "窓",
+        "まど"
+       ]
+      ],
+      "g": "window"
+     },
+     "を",
+     {
+      "t": "開けた",
+      "f": [
+       [
+        "開",
+        "あ"
+       ],
+       [
+        "けた",
+        ""
+       ]
+      ],
+      "g": "opened"
+     },
+     {
+      "t": "まま",
+      "f": [
+       [
+        "まま",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "出かけた",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "かけた",
+        ""
+       ]
+      ],
+      "g": "went out"
+     },
+     "。"
+    ],
+    "en": "I went out leaving the window open."
+   }
+  ]
+ },
+ {
+  "id": "n4-nakute",
+  "level": "N4",
+  "pattern": "〜なくて",
+  "reading": "なくて",
+  "meaning": "not … and so (negative cause)",
+  "connection": "V-ない stem + なくて",
+  "nuance": "The te-form of the negative; expresses a negative reason or cause for what follows.",
+  "confidence": "high",
+  "tags": [
+   "reason",
+   "negation"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "が",
+     {
+      "t": "読めなくて",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "めなくて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "困った",
+      "f": [
+       [
+        "困",
+        "こま"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "was troubled"
+     },
+     "。"
+    ],
+    "en": "I couldn't read the kanji and so I was in trouble."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "来なくて",
+      "f": [
+       [
+        "来",
+        "こ"
+       ],
+       [
+        "なくて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "遅刻した",
+      "f": [
+       [
+        "遅",
+        "ち"
+       ],
+       [
+        "刻",
+        "こく"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "was late"
+     },
+     "。"
+    ],
+    "en": "The train didn't come and so I was late."
+   }
+  ]
+ },
+ {
+  "id": "n4-ka-dou-ka",
+  "level": "N4",
+  "pattern": "〜かどうか",
+  "reading": "かどうか",
+  "meaning": "whether or not",
+  "connection": "plain form + かどうか",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [
+   "n4-embedded-q"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "に",
+     {
+      "t": "受かった",
+      "f": [
+       [
+        "受",
+        "う"
+       ],
+       [
+        "かった",
+        ""
+       ]
+      ],
+      "g": "passed"
+     },
+     {
+      "t": "かどうか",
+      "f": [
+       [
+        "かどうか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "分からない",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "からない",
+        ""
+       ]
+      ],
+      "g": "don't know"
+     },
+     "。"
+    ],
+    "en": "I don't know whether or not I passed the interview."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "が",
+     {
+      "t": "開いている",
+      "f": [
+       [
+        "開",
+        "あ"
+       ],
+       [
+        "いている",
+        ""
+       ]
+      ],
+      "g": "is open"
+     },
+     {
+      "t": "かどうか",
+      "f": [
+       [
+        "かどうか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "調べる",
+      "f": [
+       [
+        "調",
+        "しら"
+       ],
+       [
+        "べる",
+        ""
+       ]
+      ],
+      "g": "check"
+     },
+     "。"
+    ],
+    "en": "I'll check whether or not this shop is open."
+   }
+  ]
+ },
+ {
+  "id": "n4-embedded-q",
+  "level": "N4",
+  "pattern": "疑問詞〜か",
+  "reading": "か",
+  "meaning": "embedded question (I don't know where…)",
+  "connection": "question word + plain form + か",
+  "nuance": "A question word plus か embeds a whole question inside a larger sentence.",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [
+   "n4-ka-dou-ka"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "が",
+     {
+      "t": "どこ",
+      "f": [
+       [
+        "どこ",
+        ""
+       ]
+      ],
+      "g": "where"
+     },
+     {
+      "t": "か",
+      "f": [
+       [
+        "か",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "教えて",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えて",
+        ""
+       ]
+      ],
+      "g": "tell / teach"
+     },
+     {
+      "t": "ください",
+      "f": [
+       [
+        "ください",
+        ""
+       ]
+      ],
+      "g": "please"
+     },
+     "。"
+    ],
+    "en": "Please tell me where the station is."
+   },
+   {
+    "ja": [
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "が",
+     {
+      "t": "いくら",
+      "f": [
+       [
+        "いくら",
+        ""
+       ]
+      ],
+      "g": "how much"
+     },
+     {
+      "t": "か",
+      "f": [
+       [
+        "か",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "聞いた",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "asked"
+     },
+     "。"
+    ],
+    "en": "I asked how much the rent is."
+   }
+  ]
+ },
+ {
+  "id": "n4-to-itte-imashita",
+  "level": "N4",
+  "pattern": "〜と言っていました",
+  "reading": "といっていました",
+  "meaning": "(someone) said that …",
+  "connection": "plain form + と言っていました",
+  "nuance": "Reports what someone else said. と言っていました reports ongoing/general speech; と言いました a single utterance.",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "store manager"
+     },
+     "は",
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     {
+      "t": "休み",
+      "f": [
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "day off"
+     },
+     "だ",
+     {
+      "t": "と言っていました",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "言",
+        "い"
+       ],
+       [
+        "っていました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The store manager said that tomorrow is a day off."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "が",
+     {
+      "t": "北海道",
+      "f": [
+       [
+        "北",
+        "ほっ"
+       ],
+       [
+        "海",
+        "かい"
+       ],
+       [
+        "道",
+        "どう"
+       ]
+      ],
+      "g": "Hokkaido"
+     },
+     "は",
+     {
+      "t": "寒い",
+      "f": [
+       [
+        "寒",
+        "さむ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cold"
+     },
+     {
+      "t": "と言っていました",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "言",
+        "い"
+       ],
+       [
+        "っていました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My friend said that Hokkaido is cold."
+   }
+  ]
+ },
+ {
+  "id": "n4-tame-ni",
+  "level": "N4",
+  "pattern": "〜ために",
+  "reading": "ために",
+  "meaning": "in order to / for",
+  "connection": "V-dict / N-の + ために",
+  "nuance": "Expresses purpose with a volitional verb; with a noun it means \"for the sake of.\"",
+  "confidence": "high",
+  "tags": [
+   "purpose"
+  ],
+  "related": [
+   "n4-you-ni-purpose"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "旅行",
+      "f": [
+       [
+        "旅",
+        "りょ"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "travel"
+     },
+     "の",
+     {
+      "t": "ために",
+      "f": [
+       [
+        "ために",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "お金",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "金",
+        "かね"
+       ]
+      ],
+      "g": "money"
+     },
+     "を",
+     {
+      "t": "貯める",
+      "f": [
+       [
+        "貯",
+        "た"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "save"
+     },
+     "。"
+    ],
+    "en": "I save money for a trip."
+   },
+   {
+    "ja": [
+     {
+      "t": "ビザ",
+      "f": [
+       [
+        "ビザ",
+        ""
+       ]
+      ],
+      "g": "visa"
+     },
+     "を",
+     {
+      "t": "取る",
+      "f": [
+       [
+        "取",
+        "と"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "get / obtain"
+     },
+     {
+      "t": "ために",
+      "f": [
+       [
+        "ために",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "documents"
+     },
+     "を",
+     {
+      "t": "集める",
+      "f": [
+       [
+        "集",
+        "あつ"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "gather"
+     },
+     "。"
+    ],
+    "en": "In order to get a visa, I gather the documents."
+   }
+  ]
+ },
+ {
+  "id": "n4-you-ni-purpose",
+  "level": "N4",
+  "pattern": "〜ように",
+  "reading": "ように",
+  "meaning": "so that (purpose with potential/negative)",
+  "connection": "V-potential / V-ない + ように",
+  "nuance": "Purpose with a non-volitional verb (potential or negative); contrast with ために, used with volitional verbs.",
+  "confidence": "high",
+  "tags": [
+   "purpose"
+  ],
+  "related": [
+   "n4-tame-ni"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "が",
+     {
+      "t": "読める",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "can read"
+     },
+     {
+      "t": "ように",
+      "f": [
+       [
+        "ように",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "練習する",
+      "f": [
+       [
+        "練",
+        "れん"
+       ],
+       [
+        "習",
+        "しゅう"
+       ],
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "practice"
+     },
+     "。"
+    ],
+    "en": "I practice every day so that I can read kanji."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "を",
+     {
+      "t": "逃さない",
+      "f": [
+       [
+        "逃",
+        "のが"
+       ],
+       [
+        "さない",
+        ""
+       ]
+      ],
+      "g": "not miss"
+     },
+     {
+      "t": "ように",
+      "f": [
+       [
+        "ように",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "早めに",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "めに",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "出る",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "leave"
+     },
+     "。"
+    ],
+    "en": "I leave early so that I don't miss the last train."
+   }
+  ]
+ },
+ {
+  "id": "n4-ba-yokatta",
+  "level": "N4",
+  "pattern": "〜ばよかった",
+  "reading": "ばよかった",
+  "meaning": "I wish I had / should have",
+  "connection": "V-ば + よかった",
+  "nuance": "Expresses regret over something not done. Add なければ for regret over something that was done.",
+  "confidence": "high",
+  "tags": [
+   "regret"
+  ],
+  "related": [
+   "n4-tara-dou"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     "を",
+     {
+      "t": "持って来れば",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "って",
+        ""
+       ],
+       [
+        "来",
+        "く"
+       ],
+       [
+        "れば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "よかった",
+      "f": [
+       [
+        "よかった",
+        ""
+       ]
+      ],
+      "g": "would have been good"
+     },
+     "。"
+    ],
+    "en": "I wish I had brought an umbrella."
+   },
+   {
+    "ja": [
+     {
+      "t": "もっと",
+      "f": [
+       [
+        "もっと",
+        ""
+       ]
+      ],
+      "g": "more"
+     },
+     {
+      "t": "早く",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "early / sooner"
+     },
+     {
+      "t": "予約すれば",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ],
+       [
+        "すれば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "よかった",
+      "f": [
+       [
+        "よかった",
+        ""
+       ]
+      ],
+      "g": "would have been good"
+     },
+     "。"
+    ],
+    "en": "I should have made a reservation sooner."
+   }
+  ]
+ },
+ {
+  "id": "n4-tara-dou",
+  "level": "N4",
+  "pattern": "〜たらどうですか",
+  "reading": "たらどうですか",
+  "meaning": "how about doing …?",
+  "connection": "V-たら + どうですか",
+  "nuance": "A soft suggestion or advice. Can sound pushy if overused with someone of higher status.",
+  "confidence": "high",
+  "tags": [
+   "suggestion"
+  ],
+  "related": [
+   "n4-ba-yokatta"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "疲れた",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "tired"
+     },
+     "なら",
+     {
+      "t": "少し",
+      "f": [
+       [
+        "少",
+        "すこ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "a little"
+     },
+     {
+      "t": "休んだら",
+      "f": [
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "んだら",
+        ""
+       ]
+      ],
+      "g": "if you rest"
+     },
+     {
+      "t": "どうですか",
+      "f": [
+       [
+        "どうですか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "If you're tired, how about resting a little?"
+   },
+   {
+    "ja": [
+     {
+      "t": "駅員",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "station staff"
+     },
+     "に",
+     {
+      "t": "聞いてみたら",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いてみたら",
+        ""
+       ]
+      ],
+      "g": "if you try asking"
+     },
+     {
+      "t": "どうですか",
+      "f": [
+       [
+        "どうですか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "How about trying to ask the station staff?"
+   }
+  ]
+ },
+ {
+  "id": "n4-sonna-ni",
+  "level": "N4",
+  "pattern": "そんなに〜ない",
+  "reading": "そんなに〜ない",
+  "meaning": "not that much",
+  "connection": "そんなに + negative",
+  "nuance": "A non-contiguous pattern: そんなに sets up the degree, and the negative verb/adjective completes it.",
+  "confidence": "high",
+  "tags": [
+   "quantity",
+   "negation"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "そんなに",
+      "f": [
+       [
+        "そんなに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "寒くない",
+      "f": [
+       [
+        "寒",
+        "さむ"
+       ],
+       [
+        "くない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's not that cold today."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya"
+     },
+     "は",
+     {
+      "t": "そんなに",
+      "f": [
+       [
+        "そんなに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "高くない",
+      "f": [
+       [
+        "高",
+        "たか"
+       ],
+       [
+        "くない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This izakaya isn't that expensive."
+   }
+  ]
+ },
+ {
+  "id": "n4-kana",
+  "level": "N4",
+  "pattern": "〜かな",
+  "reading": "かな",
+  "meaning": "I wonder (casual)",
+  "connection": "plain form + かな",
+  "nuance": "A casual self-directed wondering, often spoken to oneself.",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "晴れる",
+      "f": [
+       [
+        "晴",
+        "は"
+       ],
+       [
+        "れる",
+        ""
+       ]
+      ],
+      "g": "be sunny"
+     },
+     {
+      "t": "かな",
+      "f": [
+       [
+        "かな",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I wonder if it'll be sunny tomorrow."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "で",
+     {
+      "t": "合ってる",
+      "f": [
+       [
+        "合",
+        "あ"
+       ],
+       [
+        "ってる",
+        ""
+       ]
+      ],
+      "g": "is right / correct"
+     },
+     {
+      "t": "かな",
+      "f": [
+       [
+        "かな",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I wonder if this is the right train."
+   }
+  ]
+ },
+ {
+  "id": "n4-darou",
+  "level": "N4",
+  "pattern": "〜だろう",
+  "reading": "だろう",
+  "meaning": "probably (plain でしょう)",
+  "connection": "plain form + だろう",
+  "nuance": "The plain-form conjecture; でしょう is its polite equivalent.",
+  "confidence": "high",
+  "tags": [
+   "question"
+  ],
+  "related": [
+   "n4-hazu"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     "は",
+     {
+      "t": "混む",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "be crowded"
+     },
+     {
+      "t": "だろう",
+      "f": [
+       [
+        "だろう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It'll probably be crowded on the weekend."
+   },
+   {
+    "ja": [
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     "もう",
+     {
+      "t": "帰った",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "went home"
+     },
+     {
+      "t": "だろう",
+      "f": [
+       [
+        "だろう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "He's probably already gone home."
+   }
+  ]
+ },
+ {
+  "id": "n4-zutsu",
+  "level": "N4",
+  "pattern": "〜ずつ",
+  "reading": "ずつ",
+  "meaning": "each / at a time",
+  "connection": "quantity + ずつ",
+  "nuance": "Attaches to a quantity to mean \"in equal portions\" or \"a certain amount at a time.\"",
+  "confidence": "high",
+  "tags": [
+   "quantity"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     {
+      "t": "少し",
+      "f": [
+       [
+        "少",
+        "すこ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "a little"
+     },
+     {
+      "t": "ずつ",
+      "f": [
+       [
+        "ずつ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "を",
+     {
+      "t": "覚える",
+      "f": [
+       [
+        "覚",
+        "おぼ"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "g": "memorize"
+     },
+     "。"
+    ],
+    "en": "I memorize a little kanji at a time every day."
+   },
+   {
+    "ja": [
+     {
+      "t": "一人",
+      "f": [
+       [
+        "一",
+        "ひと"
+       ],
+       [
+        "人",
+        "り"
+       ]
+      ],
+      "g": "one person"
+     },
+     {
+      "t": "二つ",
+      "f": [
+       [
+        "二",
+        "ふた"
+       ],
+       [
+        "つ",
+        ""
+       ]
+      ],
+      "g": "two (things)"
+     },
+     {
+      "t": "ずつ",
+      "f": [
+       [
+        "ずつ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "おにぎり",
+      "f": [
+       [
+        "おにぎり",
+        ""
+       ]
+      ],
+      "g": "rice ball"
+     },
+     "を",
+     {
+      "t": "もらった",
+      "f": [
+       [
+        "もらった",
+        ""
+       ]
+      ],
+      "g": "received"
+     },
+     "。"
+    ],
+    "en": "Each person got two rice balls each."
+   }
+  ]
+ },
+ {
+  "id": "n4-o-ni-naru",
+  "level": "N4",
+  "pattern": "お〜になる",
+  "reading": "お〜になる",
+  "meaning": "honorific \"to do\" (respectful)",
+  "connection": "お + V-stem + になる",
+  "nuance": "Regular sonkeigo: raises the subject (a customer, a boss). The verb stem sits between お and になる — e.g. お読みになる (reads).",
+  "confidence": "high",
+  "tags": [
+   "keigo"
+  ],
+  "related": [
+   "n4-o-suru",
+   "n4-sonkeigo-verbs"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "store manager"
+     },
+     "は",
+     {
+      "t": "もう",
+      "f": [
+       [
+        "もう",
+        ""
+       ]
+      ],
+      "g": "already"
+     },
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "帰り",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "going home (stem)"
+     },
+     {
+      "t": "になりました",
+      "f": [
+       [
+        "になりました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The store manager has already gone home."
+   },
+   {
+    "ja": [
+     {
+      "t": "社長",
+      "f": [
+       [
+        "社",
+        "しゃ"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "company president"
+     },
+     "は",
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "本",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "book"
+     },
+     "を",
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "読み",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "reading (stem)"
+     },
+     {
+      "t": "になりますか",
+      "f": [
+       [
+        "になりますか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Will the president read this book?"
+   }
+  ]
+ },
+ {
+  "id": "n4-o-suru",
+  "level": "N4",
+  "pattern": "お〜する",
+  "reading": "お〜する",
+  "meaning": "humble \"to do\"",
+  "connection": "お + V-stem + する",
+  "nuance": "Regular kenjougo: lowers your own action toward someone you respect. お待ちする (I wait), お持ちする (I carry it for you).",
+  "confidence": "high",
+  "tags": [
+   "keigo"
+  ],
+  "related": [
+   "n4-o-ni-naru",
+   "n4-kenjougo-verbs"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "荷物",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "luggage"
+     },
+     "を",
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "持ち",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "ち",
+        ""
+       ]
+      ],
+      "g": "carrying (stem)"
+     },
+     {
+      "t": "します",
+      "f": [
+       [
+        "します",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll carry your luggage (for you)."
+   },
+   {
+    "ja": [
+     {
+      "t": "ロビー",
+      "f": [
+       [
+        "ロビー",
+        ""
+       ]
+      ],
+      "g": "lobby"
+     },
+     "で",
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "待ち",
+      "f": [
+       [
+        "待",
+        "ま"
+       ],
+       [
+        "ち",
+        ""
+       ]
+      ],
+      "g": "waiting (stem)"
+     },
+     {
+      "t": "します",
+      "f": [
+       [
+        "します",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll wait for you in the lobby."
+   }
+  ]
+ },
+ {
+  "id": "n4-sonkeigo-verbs",
+  "level": "N4",
+  "pattern": "特別な尊敬語",
+  "reading": "とくべつなそんけいご",
+  "meaning": "special honorific verbs (いらっしゃる, 召し上がる…)",
+  "connection": "irregular respectful verbs",
+  "nuance": "Irregular sonkeigo replaces whole verbs: いる/行く/来る→いらっしゃる, 食べる/飲む→召し上がる, 言う→おっしゃる, する→なさる, 見る→ご覧になる.",
+  "confidence": "high",
+  "tags": [
+   "keigo"
+  ],
+  "related": [
+   "n4-o-ni-naru",
+   "n4-kenjougo-verbs"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "お客様",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "客",
+        "きゃく"
+       ],
+       [
+        "様",
+        "さま"
+       ]
+      ],
+      "g": "customer (honored)"
+     },
+     "は",
+     {
+      "t": "何",
+      "f": [
+       [
+        "何",
+        "なに"
+       ]
+      ],
+      "g": "what"
+     },
+     "を",
+     {
+      "t": "召し上がりますか",
+      "f": [
+       [
+        "召",
+        "め"
+       ],
+       [
+        "し",
+        ""
+       ],
+       [
+        "上",
+        "あ"
+       ],
+       [
+        "がりますか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "What would you like to eat, sir/madam?"
+   },
+   {
+    "ja": [
+     {
+      "t": "先生",
+      "f": [
+       [
+        "先",
+        "せん"
+       ],
+       [
+        "生",
+        "せい"
+       ]
+      ],
+      "g": "teacher"
+     },
+     "は",
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     {
+      "t": "こちら",
+      "f": [
+       [
+        "こちら",
+        ""
+       ]
+      ],
+      "g": "here"
+     },
+     "に",
+     {
+      "t": "いらっしゃいます",
+      "f": [
+       [
+        "いらっしゃいます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The teacher will come here tomorrow."
+   }
+  ]
+ },
+ {
+  "id": "n4-kenjougo-verbs",
+  "level": "N4",
+  "pattern": "特別な謙譲語",
+  "reading": "とくべつなけんじょうご",
+  "meaning": "special humble verbs (参る, いただく, 申す…)",
+  "connection": "irregular humble verbs",
+  "nuance": "Irregular kenjougo lowers your own action: 行く/来る→参る, 食べる/飲む/もらう→いただく, 言う→申す, する→いたす, 見る→拝見する.",
+  "confidence": "high",
+  "tags": [
+   "keigo"
+  ],
+  "related": [
+   "n4-o-suru",
+   "n4-sonkeigo-verbs"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "田中",
+      "f": [
+       [
+        "田",
+        "た"
+       ],
+       [
+        "中",
+        "なか"
+       ]
+      ],
+      "g": "Tanaka (surname)"
+     },
+     "と",
+     {
+      "t": "申します",
+      "f": [
+       [
+        "申",
+        "もう"
+       ],
+       [
+        "します",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My name is Tanaka."
+   },
+   {
+    "ja": [
+     {
+      "t": "十時",
+      "f": [
+       [
+        "十",
+        "じゅう"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "ten o'clock"
+     },
+     "に",
+     {
+      "t": "会社",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "company / office"
+     },
+     "へ",
+     {
+      "t": "参ります",
+      "f": [
+       [
+        "参",
+        "まい"
+       ],
+       [
+        "ります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I will come to the office at ten o'clock."
+   }
+  ]
+ },
+ {
+  "id": "n4-o-kudasai",
+  "level": "N4",
+  "pattern": "お〜ください",
+  "reading": "お〜ください",
+  "meaning": "please do (respectful request)",
+  "connection": "お + V-stem + ください",
+  "nuance": "Polite request built on the sonkeigo frame — softer and more respectful than the plain 〜てください. お待ちください = please wait.",
+  "confidence": "high",
+  "tags": [
+   "keigo",
+   "polite"
+  ],
+  "related": [
+   "n4-o-ni-naru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "少々",
+      "f": [
+       [
+        "少",
+        "しょう"
+       ],
+       [
+        "々",
+        "しょう"
+       ]
+      ],
+      "g": "a little (formal)"
+     },
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "待ち",
+      "f": [
+       [
+        "待",
+        "ま"
+       ],
+       [
+        "ち",
+        ""
+       ]
+      ],
+      "g": "waiting (stem)"
+     },
+     {
+      "t": "ください",
+      "f": [
+       [
+        "ください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please wait a moment."
+   },
+   {
+    "ja": [
+     {
+      "t": "こちら",
+      "f": [
+       [
+        "こちら",
+        ""
+       ]
+      ],
+      "g": "this way"
+     },
+     "に",
+     {
+      "t": "お",
+      "f": [
+       [
+        "お",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "掛け",
+      "f": [
+       [
+        "掛",
+        "か"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "g": "sitting (stem)"
+     },
+     {
+      "t": "ください",
+      "f": [
+       [
+        "ください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please have a seat here."
+   }
+  ]
+ },
+ {
+  "id": "n4-de-gozaimasu",
+  "level": "N4",
+  "pattern": "〜でございます",
+  "reading": "でございます",
+  "meaning": "is (super-polite です)",
+  "connection": "N + でございます",
+  "nuance": "The most polite copula — shop and hotel staff use it. でございます replaces です; ございます alone can replace あります.",
+  "confidence": "high",
+  "tags": [
+   "keigo",
+   "polite"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "こちら",
+      "f": [
+       [
+        "こちら",
+        ""
+       ]
+      ],
+      "g": "this / here"
+     },
+     "が",
+     {
+      "t": "新商品",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "商",
+        "しょう"
+       ],
+       [
+        "品",
+        "ひん"
+       ]
+      ],
+      "g": "new product"
+     },
+     {
+      "t": "でございます",
+      "f": [
+       [
+        "でございます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This is the new product."
+   },
+   {
+    "ja": [
+     {
+      "t": "受付",
+      "f": [
+       [
+        "受",
+        "うけ"
+       ],
+       [
+        "付",
+        "つけ"
+       ]
+      ],
+      "g": "reception"
+     },
+     "は",
+     {
+      "t": "二階",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "階",
+        "かい"
+       ]
+      ],
+      "g": "second floor"
+     },
+     {
+      "t": "でございます",
+      "f": [
+       [
+        "でございます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Reception is on the second floor."
+   }
+  ]
+ },
+ {
+  "id": "n4-to-onaji",
+  "level": "N4",
+  "pattern": "〜と同じ",
+  "reading": "とおなじ",
+  "meaning": "the same as",
+  "connection": "N + と同じ",
+  "confidence": "high",
+  "tags": [
+   "degree"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     "は",
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I / me"
+     },
+     "の",
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "同じ",
+      "f": [
+       [
+        "同",
+        "おな"
+       ],
+       [
+        "じ",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "same"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     "。"
+    ],
+    "en": "This umbrella is the same as mine."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I / me"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "him / he"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "同じ",
+      "f": [
+       [
+        "同",
+        "おな"
+       ],
+       [
+        "じ",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "same"
+     },
+     {
+      "t": "広さ",
+      "f": [
+       [
+        "広",
+        "ひろ"
+       ],
+       [
+        "さ",
+        ""
+       ]
+      ],
+      "g": "size / area"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     "。"
+    ],
+    "en": "My room is the same size as his."
+   }
+  ]
+ },
+ {
+  "id": "n4-garu",
+  "level": "N4",
+  "pattern": "〜がる",
+  "reading": "がる",
+  "meaning": "shows signs of (third-person feelings)",
+  "connection": "adj-stem + がる",
+  "nuance": "You can't state another person's inner feelings directly; がる reports the outward signs — 寒がる = looks/acts cold. Drops the final い/な of the adjective.",
+  "confidence": "high",
+  "tags": [
+   "desire"
+  ],
+  "related": [
+   "n4-tagaru"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "ルームメイト",
+      "f": [
+       [
+        "ルームメイト",
+        ""
+       ]
+      ],
+      "g": "roommate"
+     },
+     "は",
+     {
+      "t": "いつも",
+      "f": [
+       [
+        "いつも",
+        ""
+       ]
+      ],
+      "g": "always"
+     },
+     {
+      "t": "寒がって",
+      "f": [
+       [
+        "寒",
+        "さむ"
+       ],
+       [
+        "がって",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "acting cold (te-form)"
+     },
+     {
+      "t": "います",
+      "f": [
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "is (progressive)"
+     },
+     "。"
+    ],
+    "en": "My roommate always seems to feel cold."
+   },
+   {
+    "ja": [
+     {
+      "t": "子供",
+      "f": [
+       [
+        "子",
+        "こ"
+       ],
+       [
+        "供",
+        "ども"
+       ]
+      ],
+      "g": "child"
+     },
+     "が",
+     {
+      "t": "犬",
+      "f": [
+       [
+        "犬",
+        "いぬ"
+       ]
+      ],
+      "g": "dog"
+     },
+     "を",
+     {
+      "t": "怖がって",
+      "f": [
+       [
+        "怖",
+        "こわ"
+       ],
+       [
+        "がって",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "being afraid (te-form)"
+     },
+     {
+      "t": "います",
+      "f": [
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "is (progressive)"
+     },
+     "。"
+    ],
+    "en": "The child is afraid of the dog."
+   }
+  ]
+ },
+ {
+  "id": "n4-tagaru",
+  "level": "N4",
+  "pattern": "〜たがる",
+  "reading": "たがる",
+  "meaning": "(someone else) wants to",
+  "connection": "V-stem + たがる",
+  "nuance": "The がる of feelings applied to 〜たい: reports that a third person shows they want to do something. You use 〜たい for yourself, 〜たがる for others.",
+  "confidence": "high",
+  "tags": [
+   "desire"
+  ],
+  "related": [
+   "n4-garu",
+   "n5-tai"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "弟",
+      "f": [
+       [
+        "弟",
+        "おとうと"
+       ]
+      ],
+      "g": "younger brother"
+     },
+     "は",
+     {
+      "t": "秋葉原",
+      "f": [
+       [
+        "秋",
+        "あき"
+       ],
+       [
+        "葉",
+        "は"
+       ],
+       [
+        "原",
+        "ばら"
+       ]
+      ],
+      "g": "Akihabara"
+     },
+     "に",
+     {
+      "t": "行きたがって",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きたがって",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "wanting to go (te-form)"
+     },
+     {
+      "t": "います",
+      "f": [
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "is (progressive)"
+     },
+     "。"
+    ],
+    "en": "My little brother wants to go to Akihabara."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "が",
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya (pub)"
+     },
+     "の",
+     {
+      "t": "写真",
+      "f": [
+       [
+        "写",
+        "しゃ"
+       ],
+       [
+        "真",
+        "しん"
+       ]
+      ],
+      "g": "photo"
+     },
+     "を",
+     {
+      "t": "見たがりました",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "たがりました",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "wanted to see (past)"
+     },
+     "。"
+    ],
+    "en": "My friend wanted to see the photos of the izakaya."
+   }
+  ]
+ },
+ {
+  "id": "n4-te-sumimasen",
+  "level": "N4",
+  "pattern": "〜てすみません",
+  "reading": "てすみません",
+  "meaning": "sorry for doing",
+  "connection": "V-て + すみません",
+  "confidence": "high",
+  "tags": [
+   "polite"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "遅れて",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れて",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "being late (te-form)"
+     },
+     {
+      "t": "すみません",
+      "f": [
+       [
+        "すみません",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "sorry / excuse me"
+     },
+     "。"
+    ],
+    "en": "Sorry for being late."
+   },
+   {
+    "ja": [
+     {
+      "t": "何度も",
+      "f": [
+       [
+        "何",
+        "なん"
+       ],
+       [
+        "度",
+        "ど"
+       ],
+       [
+        "も",
+        ""
+       ]
+      ],
+      "g": "many times"
+     },
+     {
+      "t": "電話して",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "phoning (te-form)"
+     },
+     {
+      "t": "すみません",
+      "f": [
+       [
+        "すみません",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "sorry / excuse me"
+     },
+     "。"
+    ],
+    "en": "I'm sorry for calling so many times."
+   }
+  ]
+ },
+ {
+  "id": "n4-te-yokatta",
+  "level": "N4",
+  "pattern": "〜てよかった",
+  "reading": "てよかった",
+  "meaning": "glad that I did",
+  "connection": "V-て + よかった",
+  "nuance": "よかった is the past of いい — expresses relief/gladness that something happened. The negative 〜なくてよかった = glad I didn't.",
+  "confidence": "high",
+  "tags": [
+   "polite"
+  ],
+  "related": [
+   "n4-te-sumimasen"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     "を",
+     {
+      "t": "持って来て",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "って",
+        ""
+       ],
+       [
+        "来",
+        "き"
+       ],
+       [
+        "て",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "bringing (te-form)"
+     },
+     {
+      "t": "よかった",
+      "f": [
+       [
+        "よかった",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "was good / glad"
+     },
+     "。"
+    ],
+    "en": "I'm glad I brought an umbrella."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "シェアハウス",
+      "f": [
+       [
+        "シェアハウス",
+        ""
+       ]
+      ],
+      "g": "share house"
+     },
+     "に",
+     {
+      "t": "住んで",
+      "f": [
+       [
+        "住",
+        "す"
+       ],
+       [
+        "んで",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "living (te-form)"
+     },
+     {
+      "t": "よかった",
+      "f": [
+       [
+        "よかった",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "was good / glad"
+     },
+     "です",
+     "。"
+    ],
+    "en": "I'm glad I moved into this share house."
+   }
+  ]
+ },
+ {
+  "id": "n4-te-hoshii",
+  "level": "N4",
+  "pattern": "〜てほしい",
+  "reading": "てほしい",
+  "meaning": "want (someone) to do",
+  "connection": "V-て + ほしい",
+  "nuance": "You want someone ELSE to do the action (marked with に). Contrast 〜たい (you want to do it yourself).",
+  "confidence": "high",
+  "tags": [
+   "desire"
+  ],
+  "related": [
+   "n4-tagaru",
+   "n5-ga-hoshii"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "店員",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "shop staff"
+     },
+     "さん",
+     "に",
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "way / road"
+     },
+     "を",
+     {
+      "t": "教えて",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えて",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "teaching (te-form)"
+     },
+     {
+      "t": "ほしい",
+      "f": [
+       [
+        "ほしい",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "want (someone to)"
+     },
+     "です",
+     "。"
+    ],
+    "en": "I want the shop clerk to tell me the way."
+   },
+   {
+    "ja": [
+     {
+      "t": "大家",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "家",
+        "や"
+       ]
+      ],
+      "g": "landlord"
+     },
+     "さん",
+     "に",
+     {
+      "t": "エアコン",
+      "f": [
+       [
+        "エアコン",
+        ""
+       ]
+      ],
+      "g": "air conditioner"
+     },
+     "を",
+     {
+      "t": "直して",
+      "f": [
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "fixing (te-form)"
+     },
+     {
+      "t": "ほしい",
+      "f": [
+       [
+        "ほしい",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "want (someone to)"
+     },
+     "。"
+    ],
+    "en": "I want the landlord to fix the air conditioner."
+   }
+  ]
+ },
+ {
+  "id": "n4-hitsuyou-ga-aru",
+  "level": "N4",
+  "pattern": "〜必要がある",
+  "reading": "ひつようがある",
+  "meaning": "it is necessary to",
+  "connection": "V-dict + 必要がある",
+  "nuance": "必要 is a na-adjective/noun meaning \"necessity\". With a dictionary verb it states that doing X is required; the negative 必要はない = don't need to.",
+  "confidence": "high",
+  "tags": [
+   "obligation"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "で",
+     {
+      "t": "住所",
+      "f": [
+       [
+        "住",
+        "じゅう"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "address"
+     },
+     "を",
+     {
+      "t": "登録する",
+      "f": [
+       [
+        "登",
+        "とう"
+       ],
+       [
+        "録",
+        "ろく"
+       ],
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "to register"
+     },
+     {
+      "t": "必要がある",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ],
+       [
+        "がある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You need to register your address at the ward office."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "job interview"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "に",
+     {
+      "t": "履歴書",
+      "f": [
+       [
+        "履",
+        "り"
+       ],
+       [
+        "歴",
+        "れき"
+       ],
+       [
+        "書",
+        "しょ"
+       ]
+      ],
+      "g": "résumé"
+     },
+     "を",
+     {
+      "t": "書く",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "to write"
+     },
+     {
+      "t": "必要があります",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ],
+       [
+        "があります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You need to write a résumé before the interview."
+   }
+  ]
+ },
+ {
+  "id": "n4-mieru-kikoeru",
+  "level": "N4",
+  "pattern": "見える・聞こえる",
+  "reading": "みえる・きこえる",
+  "meaning": "can (naturally) see / hear",
+  "connection": "spontaneous potential verbs",
+  "nuance": "Different from 見られる/聞ける (ability): 見える/聞こえる mean something comes into view or reaches the ear on its own, without effort.",
+  "confidence": "high",
+  "tags": [
+   "degree"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "の",
+     {
+      "t": "窓",
+      "f": [
+       [
+        "窓",
+        "まど"
+       ]
+      ],
+      "g": "window"
+     },
+     "から",
+     {
+      "t": "東京タワー",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ],
+       [
+        "タワー",
+        ""
+       ]
+      ],
+      "g": "Tokyo Tower"
+     },
+     "が",
+     {
+      "t": "見えます",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "えます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You can see Tokyo Tower from the room's window."
+   },
+   {
+    "ja": [
+     {
+      "t": "隣",
+      "f": [
+       [
+        "隣",
+        "となり"
+       ]
+      ],
+      "g": "next door"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "から",
+     {
+      "t": "音楽",
+      "f": [
+       [
+        "音",
+        "おん"
+       ],
+       [
+        "楽",
+        "がく"
+       ]
+      ],
+      "g": "music"
+     },
+     "が",
+     {
+      "t": "聞こえます",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "こえます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I can hear music from the room next door."
+   }
+  ]
+ },
+ {
+  "id": "n4-ndesu-ga",
+  "level": "N4",
+  "pattern": "〜んですが、",
+  "reading": "んですが",
+  "meaning": "lead-in softener \"the thing is…\"",
+  "connection": "plain form + んですが、",
+  "nuance": "Sets up a request or problem gently, then trails off — the listener infers the ask. Common when approaching staff: \"道に迷ったんですが…\" (I'm lost, and so…).",
+  "confidence": "high",
+  "tags": [
+   "polite"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "way / road"
+     },
+     "に",
+     {
+      "t": "迷った",
+      "f": [
+       [
+        "迷",
+        "まよ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "got lost (past)"
+     },
+     {
+      "t": "んですが",
+      "f": [
+       [
+        "んですが",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "は",
+     {
+      "t": "どちら",
+      "f": [
+       [
+        "どちら",
+        ""
+       ]
+      ],
+      "g": "which way"
+     },
+     "ですか",
+     "。"
+    ],
+    "en": "I've gotten lost — which way is the station?"
+   },
+   {
+    "ja": [
+     {
+      "t": "予約",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "reservation"
+     },
+     "を",
+     {
+      "t": "したい",
+      "f": [
+       [
+        "したい",
+        ""
+       ]
+      ],
+      "g": "want to do"
+     },
+     {
+      "t": "んですが",
+      "f": [
+       [
+        "んですが",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "今夜",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "夜",
+        "や"
+       ]
+      ],
+      "g": "tonight"
+     },
+     "は",
+     {
+      "t": "空いて",
+      "f": [
+       [
+        "空",
+        "あ"
+       ],
+       [
+        "いて",
+        ""
+       ]
+      ],
+      "g": "open / vacant (te-form)"
+     },
+     {
+      "t": "いますか",
+      "f": [
+       [
+        "いますか",
+        ""
+       ]
+      ],
+      "g": "is there?"
+     },
+     "。"
+    ],
+    "en": "I'd like to make a reservation — are you open tonight?"
+   }
+  ]
+ },
+ {
+  "id": "n4-mo-emphasis",
+  "level": "N4",
+  "pattern": "〜も（強調）",
+  "reading": "も",
+  "meaning": "as many/much as (emphasis)",
+  "connection": "quantity + も",
+  "nuance": "Placed after a number/amount, も stresses that it is surprisingly large. Contrast with しか…ない (only, surprisingly little).",
+  "confidence": "high",
+  "tags": [
+   "emphasis"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "job interview"
+     },
+     "を",
+     {
+      "t": "五回",
+      "f": [
+       [
+        "五",
+        "ご"
+       ],
+       [
+        "回",
+        "かい"
+       ]
+      ],
+      "g": "five times"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "受けました",
+      "f": [
+       [
+        "受",
+        "う"
+       ],
+       [
+        "けました",
+        ""
+       ]
+      ],
+      "g": "took / received (past)"
+     },
+     "。"
+    ],
+    "en": "I went to as many as five interviews."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "コート",
+      "f": [
+       [
+        "コート",
+        ""
+       ]
+      ],
+      "g": "coat"
+     },
+     "は",
+     {
+      "t": "三万円",
+      "f": [
+       [
+        "三",
+        "さん"
+       ],
+       [
+        "万",
+        "まん"
+       ],
+       [
+        "円",
+        "えん"
+       ]
+      ],
+      "g": "30,000 yen"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "しました",
+      "f": [
+       [
+        "しました",
+        ""
+       ]
+      ],
+      "g": "cost (past)"
+     },
+     "。"
+    ],
+    "en": "This coat cost a whole 30,000 yen."
+   }
+  ]
+ },
+ {
+  "id": "n4-nakute-wa-ikemasen",
+  "level": "N4",
+  "pattern": "〜なくてはいけません",
+  "reading": "なくてはいけません",
+  "meaning": "must (variant of なければ)",
+  "connection": "V-ない stem + なくてはいけません",
+  "nuance": "Drop the ない, add なくてはいけません. Same \"must\" as なければならない; more conversational. The casual contraction is なくちゃ.",
+  "confidence": "high",
+  "tags": [
+   "obligation"
+  ],
+  "related": [
+   "n4-nakya",
+   "n5-nakereba-narimasen"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "早く",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "起きなくてはいけません",
+      "f": [
+       [
+        "起",
+        "お"
+       ],
+       [
+        "きなくてはいけません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I have to get up early tomorrow."
+   },
+   {
+    "ja": [
+     {
+      "t": "ゴミ",
+      "f": [
+       [
+        "ゴミ",
+        ""
+       ]
+      ],
+      "g": "trash"
+     },
+     "を",
+     {
+      "t": "分けなくてはいけません",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "けなくてはいけません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You have to separate the trash."
+   }
+  ]
+ },
+ {
+  "id": "n4-nakya",
+  "level": "N4",
+  "pattern": "〜なきゃ・なくちゃ",
+  "reading": "なきゃ・なくちゃ",
+  "meaning": "gotta (casual must)",
+  "connection": "casual contractions of なければ/なくては",
+  "nuance": "なきゃ ← なければ, なくちゃ ← なくては. The trailing verb (いけない/ならない) is usually dropped: \"もう行かなきゃ\" = gotta go now.",
+  "confidence": "high",
+  "tags": [
+   "obligation"
+  ],
+  "related": [
+   "n4-nakute-wa-ikemasen",
+   "n5-nakereba-narimasen"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "もう",
+      "f": [
+       [
+        "もう",
+        ""
+       ]
+      ],
+      "g": "already / now"
+     },
+     {
+      "t": "帰らなきゃ",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "らなきゃ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I gotta head home now."
+   },
+   {
+    "ja": [
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "を",
+     {
+      "t": "払わなくちゃ",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "わなくちゃ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've gotta pay the rent."
+   }
+  ]
+ },
+ {
+  "id": "n4-baai",
+  "level": "N4",
+  "pattern": "〜場合は",
+  "reading": "ばあいは",
+  "meaning": "in the case of / if",
+  "connection": "V/N-の + 場合は",
+  "nuance": "場合 = \"situation/case\"; presents a hypothetical or contingency, often on signs and instructions. 地震の場合は = in the event of an earthquake.",
+  "confidence": "high",
+  "tags": [
+   "condition"
+  ],
+  "related": [],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "地震",
+      "f": [
+       [
+        "地",
+        "じ"
+       ],
+       [
+        "震",
+        "しん"
+       ]
+      ],
+      "g": "earthquake"
+     },
+     "の",
+     {
+      "t": "場合",
+      "f": [
+       [
+        "場",
+        "ば"
+       ],
+       [
+        "合",
+        "あい"
+       ]
+      ],
+      "p": 1,
+      "g": "case / situation"
+     },
+     "は",
+     {
+      "t": "エレベーター",
+      "f": [
+       [
+        "エレベーター",
+        ""
+       ]
+      ],
+      "g": "elevator"
+     },
+     "を",
+     {
+      "t": "使わないで",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "わないで",
+        ""
+       ]
+      ],
+      "g": "don't use (request)"
+     },
+     {
+      "t": "ください",
+      "f": [
+       [
+        "ください",
+        ""
+       ]
+      ],
+      "g": "please"
+     },
+     "。"
+    ],
+    "en": "In the case of an earthquake, please don't use the elevator."
+   },
+   {
+    "ja": [
+     {
+      "t": "遅れる",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れる",
+        ""
+       ]
+      ],
+      "g": "to be late"
+     },
+     {
+      "t": "場合",
+      "f": [
+       [
+        "場",
+        "ば"
+       ],
+       [
+        "合",
+        "あい"
+       ]
+      ],
+      "p": 1,
+      "g": "case / situation"
+     },
+     "は",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop / store"
+     },
+     "に",
+     {
+      "t": "電話して",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "g": "call (te-form)"
+     },
+     {
+      "t": "ください",
+      "f": [
+       [
+        "ください",
+        ""
+       ]
+      ],
+      "g": "please"
+     },
+     "。"
+    ],
+    "en": "If you're going to be late, please call the shop."
+   }
+  ]
+ },
+ {
+  "id": "n4-hodo",
+  "level": "N4",
+  "pattern": "〜ほど",
+  "reading": "ほど",
+  "meaning": "to the extent of / about",
+  "connection": "N/V + ほど",
+  "nuance": "Marks a degree or rough amount — \"to the extent that\" after a verb, or \"about/approximately\" after a quantity. Level is disputed between N4 and N3 lists, so filed at the lower boundary.",
+  "confidence": "low",
+  "tags": [
+   "degree"
+  ],
+  "related": [
+   "n5-yori-hou-ga"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "まで",
+     {
+      "t": "十分",
+      "f": [
+       [
+        "十",
+        "じゅっ"
+       ],
+       [
+        "分",
+        "ぷん"
+       ]
+      ],
+      "g": "ten minutes"
+     },
+     {
+      "t": "ほど",
+      "f": [
+       [
+        "ほど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "かかります",
+      "f": [
+       [
+        "かかります",
+        ""
+       ]
+      ],
+      "g": "takes (time)"
+     },
+     "。"
+    ],
+    "en": "It takes about ten minutes to the station."
+   },
+   {
+    "ja": [
+     {
+      "t": "立てない",
+      "f": [
+       [
+        "立",
+        "た"
+       ],
+       [
+        "てない",
+        ""
+       ]
+      ],
+      "g": "can't stand"
+     },
+     {
+      "t": "ほど",
+      "f": [
+       [
+        "ほど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "足",
+      "f": [
+       [
+        "足",
+        "あし"
+       ]
+      ],
+      "g": "leg / foot"
+     },
+     "が",
+     {
+      "t": "疲れました",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れました",
+        ""
+       ]
+      ],
+      "g": "got tired (past)"
+     },
+     "。"
+    ],
+    "en": "My legs were so tired I could hardly stand."
+   }
+  ]
+ }
+]

@@ -14,7 +14,7 @@ const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const CONFIDENCE = ['high', 'medium', 'low'];
 const ID_RE = /^n[1-5]-[a-z0-9]+(-[a-z0-9]+)*$/;
 const KANA_SEG = /^[ぁ-ゖァ-ヺーー]*$/;        // token furigana readings
-const READING_RE = /^[ぁ-ゖーー〜]+$/;                  // point reading: hiragana + 〜
+const READING_RE = /^[ぁ-ゖーー〜・]+$/;                  // point reading: hiragana + 〜 + ・ (dual-form patterns)
 const KANJI = /[一-鿿々]/;
 
 // Pure: validate an array of points for one level file. `allIds` (a Set) enables

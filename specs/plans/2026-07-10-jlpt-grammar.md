@@ -180,7 +180,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
    wrong-but-well-formed readings).
 6. ✅ #125 (2026-07-10) **✓/◆ tracking** — both toggles (✓ studied, ◆ shaky) + press pop, per-level progress bar,
    ◆ filter chip + count, KEYS.grammar registration, backup ride-along test.
-7. **N4 bake (~130).**
+7. ✅ #127 (2026-07-10) **N4 bake — 86 points** (curated union; critic 0 findings; + cross-level jump & append-not-rebuild fixes)
 8. **N3 bake (~200, 2 batches).**
 9. **N2 bake (~200, 2 batches).**
 10. **N1 bake (~250, 2–3 batches; split to 10a/10b if fatigue says so) + full regression** —

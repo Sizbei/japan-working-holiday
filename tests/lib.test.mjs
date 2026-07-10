@@ -1138,3 +1138,46 @@ test('newPerson carries metEventId (event link) and defaults it empty', () => {
   assert.equal(newPerson({ name: 'Aiko', metEventId: ' ev-x ' }, '2026-07-09').metEventId, 'ev-x');
   assert.equal(newPerson({ name: 'Aiko' }, '2026-07-09').metEventId, '');
 });
+
+// ---- Anki Core-2000 refresher: whole-deck export parsing ----
+import { parseAnkiExport, cleanField, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled } from '../docs/assets/lib/anki.js';
+
+const CORE_SAMPLE = `#separator:tab
+#html:true
+食べ物\tたべもの\tfood\tこの食べ物はおいしいです。\tThis food is delicious.[sound:c1.mp3]
+学校\tがっこう\tschool\t学校へ行きます。\tI go to school.
+<b>水</b>\tみず\twater\t水を飲みます。[sound:c3.mp3]\tI drink water.`;
+
+test('parseAnkiExport: header skip, tab sniff, column auto-detect, cleaning', () => {
+  const { cards, cols, delim } = parseAnkiExport(CORE_SAMPLE);
+  assert.equal(delim, '\t');
+  assert.equal(cards.length, 3);
+  assert.deepEqual({ w: cards[0].w, r: cards[0].r, m: cards[0].m }, { w: '食べ物', r: 'たべもの', m: 'food' });
+  assert.equal(cards[0].s, 'この食べ物はおいしいです。');
+  assert.equal(cards[0].sm, 'This food is delicious.');      // [sound:] stripped
+  assert.equal(cards[2].w, '水');                              // <b> stripped
+  assert.ok(cols.expression >= 0 && cols.reading >= 0 && cols.meaning >= 0);
+});
+test('parseAnkiExport: semicolon fallback + mapping override + furigana brackets', () => {
+  const { cards } = parseAnkiExport('犬[いぬ];dog\n猫[ねこ];cat', { expression: 0, meaning: 1, reading: -1, sentence: -1, sentenceMeaning: -1 });
+  assert.equal(cards[0].w, '犬');                              // furigana bracket removed
+  assert.equal(cards[1].m, 'cat');
+  assert.throws(() => parseAnkiExport('#separator:tab\n\n'), /no data rows/);
+  assert.throws(() => parseAnkiExport('???\t???'), /could not detect|no usable/);
+});
+test('cleanField: entities, tags, sound, whitespace', () => {
+  assert.equal(cleanField(' <i>a&amp;b</i> [sound:x.mp3]  c '), 'a&b c');
+});
+test('anki chunks + shaky + deterministic shuffle', () => {
+  assert.equal(chunkCount(2000), 20);
+  assert.equal(chunkCount(0), 1);
+  assert.equal(chunkLabel(3, 2000), '301–400');
+  assert.equal(chunkLabel(19, 1950), '1901–1950');
+  const cards = Array.from({ length: 250 }, (_, i) => ({ id: 'a' + i }));
+  assert.equal(chunkSlice(cards, 2).length, 50);
+  let sh = toggleShaky([], 'a5'); sh = toggleShaky(sh, 'a9'); sh = toggleShaky(sh, 'a5');
+  assert.deepEqual(sh, ['a9']);
+  const s1 = shuffled(cards, 42).map(c => c.id), s2 = shuffled(cards, 42).map(c => c.id);
+  assert.deepEqual(s1, s2);                                    // same seed → same order
+  assert.notDeepEqual(s1, cards.map(c => c.id));               // actually shuffles
+});

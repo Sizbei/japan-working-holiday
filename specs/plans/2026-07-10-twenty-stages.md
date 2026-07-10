@@ -32,11 +32,14 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   the "All" chip); the ✎ location-edit affordance dangled full-strength after the station text →
   rests ink-faint, wakes indigo+tint on hover/focus (editor still opens, toggle verified with
   trusted clicks). (PR #102)
-- [ ] **5. Plan-a-Day date strip** — pills overflow the right edge with a cut-off pill and no
-  affordance: horizontal scroll + edge fades (design-principles tabs rule), auto-scroll today
-  into view.
-- [ ] **6. Plan-a-Day stop cards** — ▲▼/✕ control cluster misaligned two-row; long transit notes
-  clip at the card edge (`overflow` → wrap); tighten the dead right rail.
+- [x] **5. Plan-a-Day date strip** — reproduced hard: 45 pills, 2041px hidden overflow, 28 pills
+  clipped, no affordance. Fixed: scroll-edge mask fades (left/right classes toggled from real
+  scroll state — verified right-only → both → left-only across the strip) + the active chip
+  re-centers on every #/plan entry (verified after picking a far-August day, leaving, returning).
+- [x] **6. Plan-a-Day stop cards** — ▲/✕ shared a ragged first row with ▼ orphaned below → one
+  `.stop-rail` column (measured: all three centered at the same x). Long notes hard-clipped
+  mid-word in the input → text-overflow ellipsis + full text in the title tooltip (inputs can't
+  wrap; textarea conversion deferred). (both PR #103)
 - [ ] **7. Map tiles vs theme** — map renders near-black in LIGHT theme (dark tile filter leaking,
   or slow tiles): verify + scope any tile filter to `[data-theme="dark"]`.
 - [ ] **8. Rooms badge overload** — listing cards drown in colored mono badges; keep 2–3 primary

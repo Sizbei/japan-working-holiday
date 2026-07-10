@@ -116,10 +116,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
 - [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch
   targets, geocoding feedback states (loading/empty/error), keyboard reachability of the pin list.
 
-- [ ] **24. Un-reviewed surfaces: emergency + deadlines + packing + phrases** — emergency is a
-  FULL nav route (crisis usability — worst page to skip); the other three are deep-linked from
-  the dashboard (bell → deadlines, teaser → packing). Review each shot, write measured findings
-  here, fix the top issues per page or tick "verified clean".
+- [x] **24. Un-reviewed surfaces** — ALL FOUR VERIFIED CLEAN: emergency (37.4px crimson
+  tap-to-dial numbers, card scanability excellent, offline note), deadlines (16.5k chars,
+  0 clipped), packing (7.2k chars, 0 clipped), phrases (32k chars after lazy-load, 0 clipped);
+  0 console errors on every route; views all activate. The coverage hole is closed with
+  evidence, no fixes needed. (no PR)
 
 ## Mid-loop critic (Arc C gate, 2026-07-10)
 Opus critic over #93/#94/#96/#99: **#93, #94, #96 SIGN-OFF** (compact-nav scoping verified no

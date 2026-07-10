@@ -1236,7 +1236,8 @@ test('byLevel filters', () => {
 
 test('grammar-n5.json seed passes the validator (shape gate for every data PR)', () => {
   const points = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
-  const errs = validatePoints(points, 'N5', new Set(points.map(p => p.id)));
+  const n4ids = JSON.parse(readFileSync(new URL('../docs/data/grammar-n4.json', import.meta.url), 'utf8')).map(p => p.id);
+  const errs = validatePoints(points, 'N5', new Set([...points.map(p => p.id), ...n4ids]));   // related[] may cross levels
   assert.deepEqual(errs, []);
   assert.equal(points.length, 82);   // P5: full N5 bake
   // acid tests the plan demands of the seed: a non-contiguous pattern + a glossed p anchor
@@ -1256,4 +1257,13 @@ test('validator rejects malformed tokens', () => {
   assert.ok(errs.some(e => e.includes('≠ t')));            // segment concat mismatch
   assert.ok(errs.some(e => e.includes('no p (pattern)'))); // missing p token
   assert.ok(errs.some(e => e.includes('unknown id')));     // dangling related ref
+});
+
+test('grammar-n4.json passes the validator (cross-level related refs resolve)', () => {
+  const n5 = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
+  const n4 = JSON.parse(readFileSync(new URL('../docs/data/grammar-n4.json', import.meta.url), 'utf8'));
+  const allIds = new Set([...n5, ...n4].map(p => p.id));
+  assert.deepEqual(validatePoints(n4, 'N4', allIds), []);
+  assert.equal(n4.length, 86);
+  assert.deepEqual(validatePoints(n5, 'N5', allIds), []);   // N5 gained cross-level links — must still pass
 });

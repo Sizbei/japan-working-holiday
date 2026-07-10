@@ -13,7 +13,7 @@ import { lookupWord } from './lang.js';          // shared Jotoba lookup (export
 import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
-const FILES = { N5: 'data/grammar-n5.json' };   // grows as levels bake (P7–P10)
+const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json' };   // grows as levels bake (P8–P10: N3, N2, N1)
 const CHUNK = 60;                                // cards appended per IntersectionObserver step
 
 const cache = {};                                // level → points, module-cached after first fetch
@@ -58,10 +58,7 @@ export function mountGrammar() {
   moveTabInd();
   document.fonts?.ready?.then(moveTabInd);   // web fonts reflow tab widths
   io = new IntersectionObserver((es) => {
-    if (es.some(x => x.isIntersecting) && state.shown < currentPoints().length) {
-      state.shown += CHUNK;
-      renderList();
-    }
+    if (es.some(x => x.isIntersecting) && state.shown < currentPoints().length) appendChunk();
   });
   io.observe($('#gSentinel'));
   load(state.level);
@@ -153,10 +150,19 @@ function wireBar(root) {
   wireInspect();
 }
 
-function jumpTo(id) {
-  const pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
-  if (!pt) return;
-  state.level = pt.level; state.q = ''; $('#gSearch').value = ''; state.shown = CHUNK;
+async function jumpTo(id) {
+  let pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
+  if (!pt) {                                        // cross-level link into a level not fetched yet
+    const m = /^n([1-5])-/.exec(id);
+    const lvl = m ? 'N' + m[1] : null;
+    if (!lvl || !FILES[lvl]) return;
+    await load(lvl, { render: false });
+    pt = (cache[lvl] || []).find(p => p.id === id);
+    if (!pt) return;
+  }
+  const idx = (cache[pt.level] || []).findIndex(p => p.id === id);
+  state.level = pt.level; state.q = ''; $('#gSearch').value = '';
+  state.shown = Math.max(CHUNK, idx + 1);           // the target may sit beyond the first chunk
   staggerNext = false;   // no stagger — don't delay the flash/scroll target
   document.querySelectorAll('.g-tab').forEach(t => t.setAttribute('aria-pressed', String(t.dataset.level === pt.level)));
   moveTabInd();
@@ -219,6 +225,16 @@ function renderList() {
   const slice = pts.slice(0, state.shown);
   list.innerHTML = slice.map((p, i) => cardHTML(p, st ? Math.min(i, 8) * 20 : -1)).join('');
   announce(state.q ? `${pts.length} matches` : `${state.level}: ${pts.length} grammar points`);
+  updateProgressUI();
+}
+
+// APPEND, never rebuild — a rebuild collapses whatever card the reader has open
+function appendChunk() {
+  const list = $('#gList'); if (!list) return;
+  const pts = currentPoints();
+  const from = state.shown;
+  state.shown += CHUNK;
+  list.insertAdjacentHTML('beforeend', pts.slice(from, state.shown).map(p => cardHTML(p, -1)).join(''));
   updateProgressUI();
 }
 

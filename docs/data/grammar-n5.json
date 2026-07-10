@@ -3754,7 +3754,9 @@
    "obligation"
   ],
   "related": [
-   "n5-nakute-mo-ii"
+   "n5-nakute-mo-ii",
+   "n4-nakute-wa-ikemasen",
+   "n4-nakya"
   ],
   "examples": [
    {
@@ -4485,7 +4487,8 @@
    "desire"
   ],
   "related": [
-   "n5-tai"
+   "n5-tai",
+   "n4-te-hoshii"
   ],
   "examples": [
    {
@@ -4864,7 +4867,8 @@
    "opinion"
   ],
   "related": [
-   "n5-deshou"
+   "n5-deshou",
+   "n4-you-to-omou"
   ],
   "examples": [
    {
@@ -5887,7 +5891,8 @@
    "comparison"
   ],
   "related": [
-   "n5-de-ichiban"
+   "n5-de-ichiban",
+   "n4-hodo"
   ],
   "examples": [
    {
@@ -7873,7 +7878,8 @@
    "preference"
   ],
   "related": [
-   "n5-ni-narimasu"
+   "n5-ni-narimasu",
+   "n4-koto-ni-suru"
   ],
   "examples": [
    {
@@ -8254,7 +8260,8 @@
    "connective"
   ],
   "related": [
-   "n5-ga-but"
+   "n5-ga-but",
+   "n4-keredomo"
   ],
   "examples": [
    {
@@ -10156,7 +10163,8 @@
   ],
   "related": [
    "n5-tsumori",
-   "n5-ga-hoshii"
+   "n5-ga-hoshii",
+   "n4-tagaru"
   ],
   "examples": [
    {
@@ -10423,7 +10431,8 @@
   ],
   "related": [
    "n5-te-wa-ikemasen",
-   "n5-nakute-mo-ii"
+   "n5-nakute-mo-ii",
+   "n4-temo"
   ],
   "examples": [
    {
@@ -10872,7 +10881,9 @@
   "tags": [
    "experience"
   ],
-  "related": [],
+  "related": [
+   "n4-koto-ga-aru"
+  ],
   "examples": [
    {
     "ja": [
@@ -11134,7 +11145,8 @@
   ],
   "related": [
    "n5-te-kara",
-   "n5-dakara"
+   "n5-dakara",
+   "n4-node"
   ],
   "examples": [
    {
@@ -11283,7 +11295,8 @@
    "intention"
   ],
   "related": [
-   "n5-tai"
+   "n5-tai",
+   "n4-yotei"
   ],
   "examples": [
    {

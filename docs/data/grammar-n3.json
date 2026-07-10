@@ -510,7 +510,11 @@
   ],
   "level": "N3",
   "confidence": "high",
-  "related": []
+  "related": [
+   "n2-to-douji-ni",
+   "n2-ka-to-omottara",
+   "n2-shidai"
+  ]
  },
  {
   "id": "n3-saichuu",
@@ -1376,7 +1380,8 @@
   "level": "N3",
   "confidence": "high",
   "related": [
-   "n4-tara"
+   "n4-tara",
+   "n2-mono-nara"
   ]
  },
  {
@@ -1561,7 +1566,8 @@
   "level": "N3",
   "confidence": "high",
   "related": [
-   "n4-temo"
+   "n4-temo",
+   "n2-to-shite-mo"
   ]
  },
  {
@@ -1726,7 +1732,8 @@
   "confidence": "high",
   "related": [
    "n3-sae-ba",
-   "n3-datte"
+   "n3-datte",
+   "n2-sura"
   ]
  },
  {
@@ -2046,7 +2053,9 @@
   ],
   "level": "N3",
   "confidence": "high",
-  "related": []
+  "related": [
+   "n2-ippou-da"
+  ]
  },
  {
   "id": "n3-ba-hodo",
@@ -2761,7 +2770,8 @@
   "confidence": "high",
   "related": [
    "n5-dake",
-   "n3-wa-mochiron"
+   "n3-wa-mochiron",
+   "n2-bakari-ka"
   ]
  },
  {
@@ -2918,7 +2928,9 @@
   ],
   "level": "N3",
   "confidence": "high",
-  "related": []
+  "related": [
+   "n2-kara-ni-wa"
+  ]
  },
  {
   "id": "n3-kuse-ni",
@@ -3054,7 +3066,8 @@
   "confidence": "high",
   "related": [
    "n3-wari-ni",
-   "n4-noni"
+   "n4-noni",
+   "n2-monono"
   ]
  },
  {
@@ -3213,7 +3226,8 @@
   "confidence": "high",
   "related": [
    "n3-kuse-ni",
-   "n3-ni-kurabete"
+   "n3-ni-kurabete",
+   "n2-ni-shite-wa"
   ]
  },
  {
@@ -3503,7 +3517,8 @@
   "level": "N3",
   "confidence": "high",
   "related": [
-   "n3-okage-de"
+   "n3-okage-de",
+   "n2-bakari-ni"
   ]
  },
  {
@@ -4397,7 +4412,10 @@
   "confidence": "high",
   "related": [
    "n3-wake-da",
-   "n3-wake-ni-wa-ikanai"
+   "n3-wake-ni-wa-ikanai",
+   "n2-ni-suginai",
+   "n2-to-wa-kagiranai",
+   "n2-nai-koto-wa-nai"
   ]
  },
  {
@@ -4537,7 +4555,8 @@
   "confidence": "high",
   "related": [
    "n3-wake-da",
-   "n3-wake-de-wa-nai"
+   "n3-wake-de-wa-nai",
+   "n2-shika-nai"
   ]
  },
  {
@@ -4667,7 +4686,8 @@
   "related": [
    "n3-ni-chigainai",
    "n3-hazu-datta",
-   "n4-hazu"
+   "n4-hazu",
+   "n2-wake-ga-nai"
   ]
  },
  {
@@ -4837,7 +4857,8 @@
   "level": "N3",
   "confidence": "high",
   "related": [
-   "n3-hazu-ga-nai"
+   "n3-hazu-ga-nai",
+   "n2-ni-kimatte-iru"
   ]
  },
  {
@@ -5385,7 +5406,8 @@
   ],
   "confidence": "high",
   "related": [
-   "n3-gimi"
+   "n3-gimi",
+   "n2-darake"
   ],
   "examples": [
    {
@@ -6946,7 +6968,8 @@
   ],
   "confidence": "high",
   "related": [
-   "n5-naide"
+   "n5-naide",
+   "n2-zu-ni-wa-irarenai"
   ],
   "examples": [
    {
@@ -7963,7 +7986,8 @@
   ],
   "related": [
    "n3-ni-taishite",
-   "n3-ni-totte"
+   "n3-ni-totte",
+   "n2-ni-kanshite"
   ],
   "examples": [
    {
@@ -8104,7 +8128,8 @@
   ],
   "related": [
    "n3-ni-tsuite",
-   "n3-ni-totte"
+   "n3-ni-totte",
+   "n2-ni-hanshite"
   ],
   "examples": [
    {
@@ -8434,7 +8459,9 @@
   ],
   "related": [
    "n3-ni-yoru-to",
-   "n3-to-shite"
+   "n3-to-shite",
+   "n2-shidai-de",
+   "n2-wo-tsuujite"
   ],
   "examples": [
    {
@@ -10787,7 +10814,9 @@
   "related": [
    "n3-hazu-datta",
    "n3-teki",
-   "n5-ta-hou-ga-ii"
+   "n5-ta-hou-ga-ii",
+   "n2-mono-da",
+   "n2-koto-da"
   ],
   "examples": [
    {

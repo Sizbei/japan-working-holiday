@@ -2,9 +2,9 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v288';
+const CACHE = 'jwh-v289';
 const ASSETS = [
-  './', 'index.html', 'data/tips.json', 'data/grammar-n5.json', 'data/grammar-n4.json', 'data/grammar-n3.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
+  './', 'index.html', 'data/tips.json', 'data/grammar-n5.json', 'data/grammar-n4.json', 'data/grammar-n3.json', 'data/grammar-n2.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js', 'assets/calendar-agenda.js', 'assets/calendar-week.js', 'assets/calendar-month.js', 'assets/calendar-editor.js',
   'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/anim.js', 'assets/countup.js', 'assets/speak.js', 'assets/pointtosay.js', 'assets/vocab.js', 'assets/kana.js', 'assets/numbers.js', 'assets/signs.js', 'assets/phraseday.js', 'assets/quiz.js', 'assets/pronunciation.js', 'assets/particles.js', 'assets/verbs.js', 'assets/adjectives.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/expweek.js', 'assets/phrasesboot.js', 'assets/phrases-anki.js', 'assets/grammar.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/going-page.js', 'assets/people.js', 'assets/palette.js', 'assets/emergency.js', 'assets/print.js', 'assets/cardtranslate.js', 'assets/datepicker.js', 'assets/google-sync.js',
   'assets/lib/dom.js', 'assets/lib/furigana.js', 'assets/lib/jpdate.js', 'assets/lib/store.js', 'assets/lib/usage.js', 'assets/lib/people.js', 'assets/lib/rooms.js', 'assets/lib/dates.js', 'assets/lib/homelayout.js', 'assets/lib/packing.js', 'assets/lib/budget.js', 'assets/lib/spend.js',

@@ -160,6 +160,7 @@ function showPreview(res) {
     saveDeck({ cards: res.cards, pos: {}, shaky: [], shuffle: false, seed: 1 });
     DATA = null;
     render();
+    $('#ankCard')?.focus({ preventScroll: true });   // hand focus to the card so Space/→/S work immediately (keys are section-scoped by design)
   });
   $('#ankCancel')?.addEventListener('click', () => { DATA = null; renderImport(); });
   box.querySelectorAll('select[data-field]').forEach(sel => sel.addEventListener('change', () => {

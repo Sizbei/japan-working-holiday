@@ -1562,6 +1562,7 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 .pin-emowrap{ margin:.3rem 0 0; }
 .pin-emosum{ cursor:pointer; font-size:.72rem; color: var(--ink-soft); padding:.15rem .4rem; border:1px solid var(--line); border-radius:999px; display:inline-block; list-style:none; }
 .pin-emosum::-webkit-details-marker{ display:none; }
+@media (hover: none){ .pin-emosum{ min-height: 24px; display: inline-flex; align-items: center; } }   /* stage-20 critic: was ~20px on touch */
 .pin-emosum:hover{ border-color: var(--indigo); color: var(--ink); }
 .pin-emowrap[open] .pin-emosum{ margin-bottom:.25rem; }
 .jwh-pin-hanko{ position:absolute; bottom:-8px; right:-8px; width:15px; height:15px; display:grid; place-items:center;
@@ -3579,7 +3580,7 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
   box-shadow: var(--shadow); user-select:none; }
 .ank-card:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .ank-card.is-shaky{ border-color: var(--gold); }
-.ank-flag{ position:absolute; top:.6rem; right:.7rem; font-family: var(--mono); font-size:.62rem; font-weight:700; color: var(--gold); }
+.ank-flag{ position:absolute; top:.6rem; right:.7rem; font-family: var(--mono); font-size:.62rem; font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }   /* stage-20 critic: was 2.96:1 in light */
 .ank-word{ font-size:2.6rem; font-weight:800; line-height:1.1; color: var(--ink); }
 .ank-read{ font-size:1rem; color: var(--ink-soft); }
 .ank-mean{ font-size:1.2rem; color: var(--ink); }

@@ -113,11 +113,22 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   behaviors verified with trusted input. The agent's "ungated People drawer" finding was FALSE
   (gated via a `reduce` variable indirection it missed) — rejected with evidence. Logged, not
   fixed: ckFlash animates background (paint) — rare 1.4s one-shot, RM-killed. (PR #116)
-- [ ] **20. Final sweep (explicitly 2–3 ticks; cannot ship a subset — the deliverable is the
-  verdict)** — behavioral regression over ALL 14 surfaces (11 ROUTES + deadlines/packing/phrases;
-  see harness doc) × light/dark × normal/compact + 600px; a11y pass (contrast/focus/aria);
-  Opus critic panel over the loop's accumulated diff; written verdict here — unfixed findings
-  logged, not buried.
+- [x] **20. Final sweep — VERDICT: SIGNED OFF (after one fix).**
+  Part 1 (regression, agent): ALL GREEN — 14/14 surfaces (0 exceptions, 0 real clipping, all
+  views activate) + 5/5 spot checks (calendar dark/compact/600px-mobile, seeded people, budget
+  unset). Part 2 (two-Opus critic panel over PRs #102–#117):
+  · Lens 1 correctness/security: SIGN-OFF — the untrusted Anki import verified safe by
+    execution (cleanField entity-decode + esc() re-escape at every sink, hostile payloads
+    inert); parser linear (no ReDoS); toast/fade/details wiring leak-free.
+  · Lens 2 a11y/design: one MAJOR, fixed same tick — the toast swipe transform replaced the
+    −50% centering (measured 48px jump on grab) → calc(-50% + dx), re-measured 1px drift,
+    dismiss re-verified twice with realistic gestures. Two minors fixed: .ank-flag light ink
+    2.96→8.05:1; .pin-emosum 24px touch floor. Anki keyboard/contrast/frequency-gate all PASS
+    measured.
+  LOGGED, NOT FIXED (post-loop backlog): anki SR announce gap (card innerHTML swap under a
+  focused container isn't re-announced — only the progress live region speaks); anki shuffle
+  toggle snaps to chunk 0; mountAnki's dead data param; ckFlash animates background (rare
+  1.4s one-shot, RM-killed). (PR #118)
 
 - [x] **21. (Arc E) Map layout & sidebar** — one real fix: `.map-srow` pin rows had ZERO
   hover/focus rules → shared interactive-row affordance added (7% indigo bg tint; rows are

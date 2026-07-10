@@ -177,7 +177,8 @@
   "confidence": "high",
   "related": [
    "n3-kuse-ni",
-   "n2-nagara-mo"
+   "n2-nagara-mo",
+   "n1-to-wa-ie"
   ]
  },
  {
@@ -997,7 +998,8 @@
   "confidence": "high",
   "related": [
    "n2-to-shite-mo",
-   "n2-ni-shite-wa"
+   "n2-ni-shite-wa",
+   "n1-de-are"
   ]
  },
  {
@@ -1721,7 +1723,8 @@
   "related": [
    "n2-nomi-narazu",
    "n3-dake-de-naku",
-   "n2-ue-ni"
+   "n2-ue-ni",
+   "n1-dokoroka"
   ]
  },
  {
@@ -1916,7 +1919,8 @@
   "level": "N2",
   "confidence": "high",
   "related": [
-   "n2-bakari-ka"
+   "n2-bakari-ka",
+   "n1-wa-motoyori"
   ]
  },
  {
@@ -3137,7 +3141,8 @@
   "level": "N2",
   "confidence": "high",
   "related": [
-   "n3-totan"
+   "n3-totan",
+   "n1-nari"
   ]
  },
  {
@@ -3475,7 +3480,8 @@
   "confidence": "high",
   "related": [
    "n2-shidai",
-   "n3-ni-yotte"
+   "n3-ni-yotte",
+   "n1-ikan"
   ]
  },
  {
@@ -4219,7 +4225,8 @@
   "level": "N2",
   "confidence": "high",
   "related": [
-   "n2-nai-kagiri"
+   "n2-nai-kagiri",
+   "n1-kagiri-da"
   ]
  },
  {
@@ -4368,7 +4375,8 @@
   "level": "N2",
   "confidence": "high",
   "related": [
-   "n2-dake-ni"
+   "n2-dake-ni",
+   "n1-naradewa"
   ]
  },
  {
@@ -4534,7 +4542,8 @@
   "level": "N2",
   "confidence": "high",
   "related": [
-   "n2-dake-atte"
+   "n2-dake-atte",
+   "n1-to-atte"
   ]
  },
  {
@@ -5321,7 +5330,9 @@
   "tags": [
    "span"
   ],
-  "related": [],
+  "related": [
+   "n1-wo-kawakiri-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -5882,7 +5893,8 @@
    "formal"
   ],
   "related": [
-   "n3-ni-taishite"
+   "n3-ni-taishite",
+   "n1-wo-yoso-ni"
   ],
   "examples": [
    {
@@ -6062,7 +6074,8 @@
    "formal"
   ],
   "related": [
-   "n2-ni-sotte"
+   "n2-ni-sotte",
+   "n1-wo-fumaete"
   ],
   "examples": [
    {
@@ -6424,7 +6437,8 @@
    "basis"
   ],
   "related": [
-   "n2-ni-motozuite"
+   "n2-ni-motozuite",
+   "n1-ni-sokushite"
   ],
   "examples": [
    {
@@ -6599,7 +6613,8 @@
    "formal"
   ],
   "related": [
-   "n2-ni-okeru"
+   "n2-ni-okeru",
+   "n1-wo-motte"
   ],
   "examples": [
    {
@@ -7283,7 +7298,8 @@
    "state"
   ],
   "related": [
-   "n3-gachi"
+   "n3-gachi",
+   "n1-mamire"
   ],
   "examples": [
    {
@@ -8244,7 +8260,8 @@
    "modality"
   ],
   "related": [
-   "n3-wake-de-wa-nai"
+   "n3-wake-de-wa-nai",
+   "n1-ni-hokanaranai"
   ],
   "examples": [
    {
@@ -8393,7 +8410,8 @@
    "denial"
   ],
   "related": [
-   "n3-wake-de-wa-nai"
+   "n3-wake-de-wa-nai",
+   "n1-ni-kakawarazu"
   ],
   "examples": [
    {
@@ -8901,7 +8919,8 @@
   ],
   "related": [
    "n2-mono-ka",
-   "n3-hazu-ga-nai"
+   "n3-hazu-ga-nai",
+   "n1-kkonai"
   ],
   "examples": [
    {
@@ -9380,7 +9399,9 @@
    "obligation"
   ],
   "related": [
-   "n2-shika-nai"
+   "n2-shika-nai",
+   "n1-naide-wa-sumanai",
+   "n1-wo-yoginaku-sareru"
   ],
   "examples": [
    {
@@ -9720,7 +9741,8 @@
    "emotion"
   ],
   "related": [
-   "n2-te-tamaranai"
+   "n2-te-tamaranai",
+   "n1-te-yamanai"
   ],
   "examples": [
    {

@@ -42,8 +42,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   wrap; textarea conversion deferred). (both PR #103)
 - [ ] **7. Map tiles vs theme** — map renders near-black in LIGHT theme (dark tile filter leaking,
   or slow tiles): verify + scope any tile filter to `[data-theme="dark"]`.
-- [ ] **8. Rooms badge overload** — listing cards drown in colored mono badges; keep 2–3 primary
-  + "+N more" disclosure.
+- [x] **8. Rooms badge overload** — VERIFIED NO-CHANGE: measured 3–5 `.room-flag` per card
+  (hard max 6 by construction), ONE uniform color family (ok-green tint), 175 across 43 cards.
+  Every flag is load-bearing rental-decision info (NO KEY MONEY / NO GUARANTOR / BOOK FROM
+  ABROAD…) — hiding them behind "+N more" on a comparison page would be a worse UI. The sweep's
+  "overload" was the downscaled screenshot compressing 43 cards. (no PR)
 - [x] **9. Topbar icon row** — the "stuck glow" hypothesis was a NON-ISSUE (it's the yellow moon
   emoji reading as a halo at small scale, not a stuck state). Real measured inconsistencies fixed:
   sizes {34,38}→{38×38} (lang-toggle was small), radii {r-sm,10px}→{10px}, rest shadows 1→0

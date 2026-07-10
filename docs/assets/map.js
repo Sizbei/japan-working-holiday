@@ -620,10 +620,15 @@ function cataloguePopup(pt) {
 function emojiChips(p) {
   const chips = EMOJI_CHIPS.map(g =>
     `<button type="button" class="pin-emoji${p.emoji === g ? ' on' : ''}" data-uact="emoji" data-g="${esc(g)}" aria-pressed="${p.emoji === g ? 'true' : 'false'}" aria-label="Use ${esc(g)} as the pin glyph">${esc(g)}</button>`).join('');
-  return `<div class="pin-emojis" role="group" aria-label="Pin glyph">
+  // stage 22 (design loop): the 15-glyph strip rendered unconditionally in EVERY popup — an
+  // edit-once affordance permanently occupying the card (25 interactive els measured vs the
+  // site-card ~6). Native <details> collapses it; the delegated .pin-emojis listener still works.
+  return `<details class="pin-emowrap">
+    <summary class="pin-emosum">${esc(p.emoji || '📍')} change glyph</summary>
+    <div class="pin-emojis" role="group" aria-label="Pin glyph">
     ${chips}
     <button type="button" class="pin-emoji pin-emoji-reset${p.emoji ? '' : ' on'}" data-uact="emoji" data-g="" aria-pressed="${p.emoji ? 'false' : 'true'}" aria-label="Reset to the category default glyph" title="Category default">↺</button>
-  </div>`;
+  </div></details>`;
 }
 function userPopup(p) {
   const safeLink = (p.link && /^https:\/\//i.test(p.link)) ? p.link : '';

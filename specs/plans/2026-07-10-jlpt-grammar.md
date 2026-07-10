@@ -183,9 +183,18 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
 7. ✅ #127 (2026-07-10) **N4 bake — 86 points** (curated union; critic 0 findings; + cross-level jump & append-not-rebuild fixes)
 8. ✅ #128 (2026-07-10) **N3 bake — 72 points** (3 batches; critic caught 2 MAJOR jukujikun splits — the gate works)
 9. ✅ #129 (2026-07-10) **N2 bake — 65 points** (critic caught a real conjugation error + another jukujikun split)
-10. **N1 bake (~250, 2–3 batches; split to 10a/10b if fatigue says so) + full regression** —
-    14-surface sweep, contrast both themes, a11y pass (cursor announcements, disclosure
-    aria-expanded, SR on filter changes), offline check, retro + memory update.
+10. ✅ #130 (2026-07-10) **N1 bake — 47 points + full regression. PROJECT COMPLETE:
+    352 points live** (N5 82 · N4 86 · N3 72 · N2 65 · N1 47) — every level authored by
+    parallel validator-gated agents, merged with curated cross-links, audited by a fresh
+    reading-accuracy critic. The jukujikun-split error class was caught at N3, N2, and N1
+    (plus one real conjugation fix, せざるを得ない) — the critic gate is load-bearing.
+    Regression: 15-surface sweep 0 exceptions, all tabs+counts, cross-level search,
+    contrast both themes ≥7.8:1 on pattern underlines, offline error path (verified
+    P1/P5). Counts vs estimates: the ~880 figure counted every list variant; the curated
+    ≥2-list union is 352 core points — breadth traded for per-point quality (segmented
+    furigana + 2 original examples each), deliberately. Parked: にもかかわらず belongs in
+    N2 per the level-dispute rule — future data PR; 10a/10b splits unused (parallel
+    authoring made them moot).
 
 ## Risks
 

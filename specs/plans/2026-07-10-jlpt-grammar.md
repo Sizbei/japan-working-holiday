@@ -158,7 +158,7 @@ Phasing principle: the headline feature ships against seed data BEFORE any bulk 
 segmented schema is proven by phases 2–4 on ~12 points, so 2,000 sentences are never authored
 against an unproven consumer. The count is a map, not a straitjacket: N1 may split → 10a/10b.
 
-1. **Foundation** — schema + validator + lib/grammar.js (readingOf, transliterator, filter/
+1. ✅ #121 (2026-07-10) **Foundation** — schema + validator + lib/grammar.js (readingOf, transliterator, filter/
    search — node-tested) + route shell (HIDDEN, TITLES, view container, phrases cross-link,
    guide `<li>`) + lazy fetch lifecycle + SW (generalized SWR predicate + `caches.match(e.request)`
    fallback + precache + bump). Seed: **grammar-n5.json, ~12 exemplar points incl. ≥1

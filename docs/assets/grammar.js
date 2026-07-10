@@ -13,7 +13,7 @@ import { lookupWord } from './lang.js';          // shared Jotoba lookup (export
 import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
-const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json' };   // N1 lands in P10
+const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
 const CHUNK = 60;                                // cards appended per IntersectionObserver step
 
 const cache = {};                                // level → points, module-cached after first fetch

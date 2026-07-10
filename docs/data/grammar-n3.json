@@ -5715,7 +5715,8 @@
   ],
   "confidence": "high",
   "related": [
-   "n3-gimi"
+   "n3-gimi",
+   "n1-meku"
   ],
   "examples": [
    {
@@ -10816,7 +10817,8 @@
    "n3-teki",
    "n5-ta-hou-ga-ii",
    "n2-mono-da",
-   "n2-koto-da"
+   "n2-koto-da",
+   "n1-bekarazu"
   ],
   "examples": [
    {

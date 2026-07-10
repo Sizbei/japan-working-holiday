@@ -65,10 +65,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   color-mix values): HIGH 3.86 / MEDIUM 3.93 light and LOW 4.38 dark all sub-AA → inks mixed
   toward `--ink`; post-fix all six theme×badge ratios 5.31–8.69 (allAA:true). (c) source-link
   row produced no measurable delta → dropped per the vibes rule. (PR #105)
-- [ ] **13. Checklist visual pass** — FIRST review its (never-reviewed) sweep shot and write
-  measured findings here; fix against the page's OWN spacing scale (not the calendar's — the
-  own-scale gate governs); verify locked-item affordance still reads. Clean page → tick
-  "verified no-change".
+- [x] **13. Checklist visual pass** — VERIFIED NO-CHANGE: row padding uniform 8.5/12.75px across
+  all 20 sampled rows (heights vary with content only); phase headers uniform 17px disclosure
+  rows; locked items read clearly (opacity .55 + 🔒 + .locked class); the shared interactive-row
+  hover exists. One logged non-fix: locked rows keep cursor:grab (drag-reorder stays allowed by
+  design). 0 console errors. (no PR)
 - [ ] **14. People page review** — page is freshly designed (#68/#71/#82): review its
   never-reviewed shot first, write measured findings, fix only measured inconsistencies against
   its OWN scale. Expect small or no changes; "verified no-change" is a valid outcome.

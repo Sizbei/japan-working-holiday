@@ -70,9 +70,10 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   rows; locked items read clearly (opacity .55 + 🔒 + .locked class); the shared interactive-row
   hover exists. One logged non-fix: locked rows keep cursor:grab (drag-reorder stays allowed by
   design). 0 console errors. (no PR)
-- [ ] **14. People page review** — page is freshly designed (#68/#71/#82): review its
-  never-reviewed shot first, write measured findings, fix only measured inconsistencies against
-  its OWN scale. Expect small or no changes; "verified no-change" is a valid outcome.
+- [x] **14. People page review** — VERIFIED NO-CHANGE (as expected for a freshly-designed page):
+  card padding uniform 22.1/22.1/17px across all cards, grid gap consistent 18.7px, drift strip
+  renders at its own 13.6px scale, 0 console errors with seeded data. Zero deltas → no fix.
+  (no PR)
 - [x] **15. Week view chrome parity** — diffed vs #83/#85: past-column dimming ✓ (5 cols + 1 bar
   measured), gutter alignment ✓ (delta 0px), now-line ✓, today column ✓, toolbar sticky ✓. ONE
   residual: switching month→week inherited the endless grid's ~2200px window scroll, which

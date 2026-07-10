@@ -4,6 +4,7 @@
 // import on the first entry to #/phrases. Order preserved exactly from main.js.
 
 import { mountPhrases } from './phrases.js';
+import { mountAnki } from './phrases-anki.js';
 import { mountPointToSay } from './pointtosay.js';
 import { mountVocab } from './vocab.js';
 import { mountKana } from './kana.js';
@@ -21,6 +22,7 @@ import { get, set, KEYS } from './lib/store.js';
 export function mountPhrasesBundle(data) {
   const safe = (fn) => { try { fn(); } catch (err) { console.error('[phrases]', err); } };
   safe(() => mountPhrases(data));
+  safe(() => mountAnki(data));
   safe(() => mountPointToSay(data));
   safe(() => mountVocab(data));
   safe(() => mountKana());

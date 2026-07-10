@@ -1191,3 +1191,69 @@ test('pileOrder: deck order preserved, ids deduped by Set, empty/missing safe', 
   assert.deepEqual(pileOrder([], ['a1']), []);
   assert.deepEqual(pileOrder(cards, undefined), []);
 });
+
+// ---- lib/grammar.js (JLPT grammar reference, P1) ----
+import { readingOf, tokenReading, kanaToRomaji, searchPoints, byLevel } from '../docs/assets/lib/grammar.js';
+import { validatePoints } from '../scripts/validate-grammar.mjs';
+
+test('readingOf: per-segment furigana derives the kana reading', () => {
+  assert.equal(readingOf([['食', 'た'], ['べて', '']]), 'たべて');
+  assert.equal(readingOf([['明日', 'あした']]), 'あした');
+  assert.equal(readingOf([]), '');
+  assert.equal(readingOf(undefined), '');
+  assert.equal(tokenReading('、'), '、');
+  assert.equal(tokenReading({ t: '前に', f: [['前', 'まえ'], ['に', '']] }), 'まえに');
+});
+
+test('kanaToRomaji: wapuro romaji incl. digraphs, gemination, chōon, katakana', () => {
+  assert.equal(kanaToRomaji('たべて'), 'tabete');
+  assert.equal(kanaToRomaji('きょう'), 'kyou');
+  assert.equal(kanaToRomaji('がっこう'), 'gakkou');
+  assert.equal(kanaToRomaji('しゃしん'), 'shashin');
+  assert.equal(kanaToRomaji('ラーメン'), 'raamen');
+  assert.equal(kanaToRomaji('まえに'), 'maeni');
+  assert.equal(kanaToRomaji('も〜も'), 'momo');     // 〜 skipped, not an error
+  assert.equal(kanaToRomaji(''), '');
+});
+
+test('searchPoints: pattern kanji, kana, romaji (spaces ignored), EN meaning', () => {
+  const pts = [
+    { id: 'n5-mae-ni', pattern: '〜前に', reading: 'まえに', meaning: 'before doing X' },
+    { id: 'n5-te-kara', pattern: '〜てから', reading: 'てから', meaning: 'after doing X, Y' },
+  ];
+  assert.deepEqual(searchPoints(pts, '前').map(p => p.id), ['n5-mae-ni']);       // kanji the card shows
+  assert.deepEqual(searchPoints(pts, 'まえに').map(p => p.id), ['n5-mae-ni']);   // kana
+  assert.deepEqual(searchPoints(pts, 'mae ni').map(p => p.id), ['n5-mae-ni']);   // romaji, space ignored
+  assert.deepEqual(searchPoints(pts, 'AFTER').map(p => p.id), ['n5-te-kara']);   // EN, case-insensitive
+  assert.equal(searchPoints(pts, '').length, 2);                                  // empty query = all
+  assert.equal(searchPoints(pts, 'zzz').length, 0);
+});
+
+test('byLevel filters', () => {
+  const pts = [{ id: 'a', level: 'N5' }, { id: 'b', level: 'N4' }];
+  assert.deepEqual(byLevel(pts, 'N5').map(p => p.id), ['a']);
+});
+
+test('grammar-n5.json seed passes the validator (shape gate for every data PR)', () => {
+  const points = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
+  const errs = validatePoints(points, 'N5', new Set(points.map(p => p.id)));
+  assert.deepEqual(errs, []);
+  assert.equal(points.length, 12);
+  // acid tests the plan demands of the seed: a non-contiguous pattern + a glossed p anchor
+  const momo = points.find(p => p.id === 'n5-mo-mo');
+  assert.equal(momo.examples[0].ja.filter(t => t.p).length, 2);                  // disjoint p anchors
+  const maeni = points.find(p => p.id === 'n5-mae-ni');
+  assert.ok(maeni.examples[0].ja.find(t => t.p && t.g));                          // p token carrying its own g
+});
+
+test('validator rejects malformed tokens', () => {
+  const bad = [{
+    id: 'n5-bad', level: 'N5', pattern: '〜てから', reading: 'てから', meaning: 'x', connection: 'x',
+    confidence: 'high', tags: [], related: ['n5-nope'],
+    examples: [{ en: 'x', ja: [{ t: '食べて', f: [['食', 'た'], ['べ', '']], g: 'eat' }] }],   // f ≠ t, no p token
+  }];
+  const errs = validatePoints(bad, 'N5', new Set(['n5-bad']));
+  assert.ok(errs.some(e => e.includes('≠ t')));            // segment concat mismatch
+  assert.ok(errs.some(e => e.includes('no p (pattern)'))); // missing p token
+  assert.ok(errs.some(e => e.includes('unknown id')));     // dangling related ref
+});

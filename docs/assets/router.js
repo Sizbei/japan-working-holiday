@@ -11,7 +11,7 @@ export const ROUTES = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'going
 
 // retired from the nav but still deep-linkable — dashboard teasers/notifications link here
 // (#/deadlines, #/packing) and the views stay mounted; they're just not in the swipe/nav order.
-const HIDDEN = ['deadlines', 'packing', 'phrases'];
+const HIDDEN = ['deadlines', 'packing', 'phrases', 'grammar'];
 
 // legacy section id → route (for intercepting old in-app anchor links)
 const LEGACY = {
@@ -39,7 +39,7 @@ let current = null;
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', going: 'Going To', people: 'People', checklist: 'Checklist',
   budget: 'Budget', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
-  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases',
+  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar',
 };
 const SITE = 'My Year in Japan';
 

@@ -3621,3 +3621,13 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .ank-clear{ text-align:center; padding:2.5rem 1rem; }
 .ank-clear-art{ font-size:2rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); margin-bottom:.5rem; }
 @media (hover: none){ .ank-row{ min-height:44px; } .ank-seg .ank-mini{ min-height:44px; } }
+
+/* ===== JLPT grammar (#/grammar) — P1 route shell ===== */
+.g-xlink a{ font-weight:600; text-decoration:none; border-bottom:1px dotted currentColor; }
+.g-seed-note{ color: var(--ink-soft); font-size:.9rem; }
+.g-seed-list{ list-style:none; padding:0; margin:.6rem 0 0; }
+.g-seed-list li{ display:flex; gap:1rem; align-items:baseline; padding:.45rem .5rem; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.g-seed-pattern{ font-weight:700; font-size:1.05rem; min-width:11ch; }
+.g-seed-meaning{ color: var(--ink-soft); font-size:.9rem; }
+.g-error{ text-align:center; padding:2rem 1rem; }
+.g-retry{ font:inherit; padding:.4rem 1rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }

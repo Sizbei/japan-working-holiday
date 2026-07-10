@@ -128,7 +128,7 @@ function openGuide() {
     <section class="guide-sec">
       <h3 class="guide-h">How to use this</h3>
       <ul class="guide-list">
-        <li><b>The pages</b> — Dashboard (your at-a-glance), Calendar (researched + your events), Deadlines (act-by dates), Checklist (the yearlong plan), Explore (places &amp; tips), Rooms (share-houses), Map (everything pinned), Plan a Day (build an itinerary).</li>
+        <li><b>The pages</b> — Dashboard (your at-a-glance), Calendar (researched + your events), Deadlines (act-by dates), Checklist (the yearlong plan), Explore (places &amp; tips), Rooms (share-houses), Map (everything pinned), Plan a Day (build an itinerary) — plus a JLPT grammar reference linked from Survival Japanese.</li>
         <li><b>Get around</b> — tap the nav, <b>swipe</b> left/right between pages on a phone, or press <b>1–8</b> and <b>[ ]</b> on a keyboard (<b>?</b> shows every shortcut).</li>
         <li><b>Quick actions</b> — <b>long-press</b> a calendar day, an Explore card, or a checklist item for a pop-up menu. Tap <b>★</b> on a restaurant to add it to your map (Tabetai).</li>
         <li><b>Rearrange</b> — drag the ⠿ handle to reorder lists; drag an event chip to another day to reschedule.</li>

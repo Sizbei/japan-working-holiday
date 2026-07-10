@@ -100,6 +100,7 @@ export const GLOSSARY = {
   '持ち物リスト': { r: 'もちものリスト · mochimono risuto', m: 'belongings / packing list' },
   '予算': { r: 'よさん · yosan', m: 'budget' },
   '言葉': { r: 'ことば · kotoba', m: 'words / language / phrases' },
+  '文法': { r: 'ぶんぽう · bunpō', m: 'grammar' },
   'サバイバル日本語': { r: 'サバイバルにほんご · sabaibaru nihongo', m: 'survival Japanese' },
   '予算プランナー': { r: 'よさんプランナー · yosan purannā', m: 'budget planner' },
   '締め切り': { r: 'しめきり · shimekiri', m: 'deadline' },

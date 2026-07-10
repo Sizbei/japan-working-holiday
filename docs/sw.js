@@ -2,13 +2,13 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v280';
+const CACHE = 'jwh-v281';
 const ASSETS = [
-  './', 'index.html', 'data/tips.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
+  './', 'index.html', 'data/tips.json', 'data/grammar-n5.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js', 'assets/calendar-agenda.js', 'assets/calendar-week.js', 'assets/calendar-month.js', 'assets/calendar-editor.js',
-  'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/anim.js', 'assets/countup.js', 'assets/speak.js', 'assets/pointtosay.js', 'assets/vocab.js', 'assets/kana.js', 'assets/numbers.js', 'assets/signs.js', 'assets/phraseday.js', 'assets/quiz.js', 'assets/pronunciation.js', 'assets/particles.js', 'assets/verbs.js', 'assets/adjectives.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/expweek.js', 'assets/phrasesboot.js', 'assets/phrases-anki.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/going-page.js', 'assets/people.js', 'assets/palette.js', 'assets/emergency.js', 'assets/print.js', 'assets/cardtranslate.js', 'assets/datepicker.js', 'assets/google-sync.js',
+  'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/anim.js', 'assets/countup.js', 'assets/speak.js', 'assets/pointtosay.js', 'assets/vocab.js', 'assets/kana.js', 'assets/numbers.js', 'assets/signs.js', 'assets/phraseday.js', 'assets/quiz.js', 'assets/pronunciation.js', 'assets/particles.js', 'assets/verbs.js', 'assets/adjectives.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eventsearch.js', 'assets/expweek.js', 'assets/phrasesboot.js', 'assets/phrases-anki.js', 'assets/grammar.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/going-page.js', 'assets/people.js', 'assets/palette.js', 'assets/emergency.js', 'assets/print.js', 'assets/cardtranslate.js', 'assets/datepicker.js', 'assets/google-sync.js',
   'assets/lib/dom.js', 'assets/lib/furigana.js', 'assets/lib/jpdate.js', 'assets/lib/store.js', 'assets/lib/usage.js', 'assets/lib/people.js', 'assets/lib/rooms.js', 'assets/lib/dates.js', 'assets/lib/homelayout.js', 'assets/lib/packing.js', 'assets/lib/budget.js', 'assets/lib/spend.js',
-  'assets/lib/notify.js', 'assets/lib/ics.js', 'assets/lib/places.js', 'assets/lib/geo.js', 'assets/lib/transit.js', 'assets/lib/dayplan.js', 'assets/lib/modal.js', 'assets/lib/going.js', 'assets/lib/directions.js', 'assets/lib/audio.js', 'assets/lib/placestats.js', 'assets/lib/menu.js', 'assets/lib/calevents.js', 'assets/lib/placesearch.js', 'assets/lib/palette.js', 'assets/lib/checklist.js', 'assets/lib/listctl.js', 'assets/lib/readiness.js', 'assets/lib/anki.js', 'assets/lib/ankiconnect.js', 'assets/lib/translate.js', 'assets/lib/userphrases.js', 'assets/lib/translatecache.js', 'assets/lib/priority.js', 'assets/lib/nlevent.js', 'assets/lib/smartviews.js', 'assets/lib/weekgrid.js', 'assets/lib/minical.js', 'assets/lib/tags.js', 'assets/lib/gcal.js', 'assets/lib/nominatim.js', 'assets/lib/weather.js', 'assets/lib/quakes.js', 'assets/lib/rates.js', 'assets/lib/wiki.js',
+  'assets/lib/notify.js', 'assets/lib/ics.js', 'assets/lib/places.js', 'assets/lib/geo.js', 'assets/lib/transit.js', 'assets/lib/dayplan.js', 'assets/lib/modal.js', 'assets/lib/going.js', 'assets/lib/directions.js', 'assets/lib/audio.js', 'assets/lib/placestats.js', 'assets/lib/menu.js', 'assets/lib/calevents.js', 'assets/lib/placesearch.js', 'assets/lib/palette.js', 'assets/lib/checklist.js', 'assets/lib/listctl.js', 'assets/lib/readiness.js', 'assets/lib/anki.js', 'assets/lib/grammar.js', 'assets/lib/ankiconnect.js', 'assets/lib/translate.js', 'assets/lib/userphrases.js', 'assets/lib/translatecache.js', 'assets/lib/priority.js', 'assets/lib/nlevent.js', 'assets/lib/smartviews.js', 'assets/lib/weekgrid.js', 'assets/lib/minical.js', 'assets/lib/tags.js', 'assets/lib/gcal.js', 'assets/lib/nominatim.js', 'assets/lib/weather.js', 'assets/lib/quakes.js', 'assets/lib/rates.js', 'assets/lib/wiki.js',
 ];
 
 self.addEventListener('install', (e) => {
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (e) => {
   // SW-cached copy instantly, refresh the cache in the background. Trade-off (deliberate,
   // owner-approved in the efficiency plan): a data deploy shows on the NEXT load, not the
   // current one. Code/asset updates keep the network-first guarantee below.
-  if (url.pathname.endsWith('/data/tips.json')) {
+  if (/\/data\/(tips|grammar-n[1-5])\.json$/.test(url.pathname)) {   // grammar-*.json shares the SWR path — same big-JSON pathology
     e.respondWith(caches.match(e.request).then(cached => {
       const net = fetch(e.request, { cache: 'reload' }).then(resp => {
         if (resp && resp.ok && resp.status === 200 && resp.type !== 'opaque') {
@@ -41,7 +41,7 @@ self.addEventListener('fetch', (e) => {
         return resp;
       });
       if (cached) { e.waitUntil(net.catch(() => {})); return cached; }   // instant paint; refresh lands for next visit
-      return net.catch(() => caches.match('data/tips.json'));            // first load / cold cache: network (or precache)
+      return net.catch(() => caches.match(e.request));                   // first load / cold cache: network (or precache, keyed off THIS request)
     }));
     return;
   }

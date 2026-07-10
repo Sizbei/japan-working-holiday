@@ -169,7 +169,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
    and the P3 cursor share one DOM — no P2→P3 re-emit), ふり toggle (KEYS.furi reuse), live
    search (pattern/kana/romaji/EN, global scope w/ background fetch), counts, empty/error
    states, the lede contract line, static live region sibling.
-3. **Token inspect layer** — desktop tooltip + touch gloss strip + keyboard token cursor
+3. ✅ #123 (2026-07-10) **Token inspect layer** — desktop tooltip + touch gloss strip + keyboard token cursor
    (object-token stops, SR announcements through the live region) + NO_SWIPE entry +
    `jwh:popover-open` w/ owner field (lang.js dispatch + listener) + lookupWord/GLOSSARY
    fallback.

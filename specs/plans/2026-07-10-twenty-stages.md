@@ -105,8 +105,14 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   deliberate compromise — a 44px date would eat half the cell, and the huge cell-body popover
   target is the primary touch surface). Desktop verified byte-identical behavior. One tick of
   two budgeted. (PR #99)
-- [ ] **19. Motion pass 2** — dashboard widget entrance stagger (50ms/item), toast timing/position
-  vs design principles, checklist celebration timing; gate everything on reduce-motion.
+- [x] **19. Motion pass 2** — full WAAPI+keyframes inventory (Opus evidence agent): ZERO
+  frequency-gate violations (palette/route-keys/m-w-d-a all clean; the dashboard entrance
+  stagger ALREADY exists via dashRise + anim.js first-visit cascade — adding another would
+  double-animate, rejected). One conformance fix shipped: dndToast gains pause-on-hover,
+  resume-on-leave (1.2s), and swipe/flick dismiss (90px or 0.11px/ms velocity) — all four
+  behaviors verified with trusted input. The agent's "ungated People drawer" finding was FALSE
+  (gated via a `reduce` variable indirection it missed) — rejected with evidence. Logged, not
+  fixed: ckFlash animates background (paint) — rare 1.4s one-shot, RM-killed. (PR #116)
 - [ ] **20. Final sweep (explicitly 2–3 ticks; cannot ship a subset — the deliverable is the
   verdict)** — behavioral regression over ALL 14 surfaces (11 ROUTES + deadlines/packing/phrases;
   see harness doc) × light/dark × normal/compact + 600px; a11y pass (contrast/focus/aria);

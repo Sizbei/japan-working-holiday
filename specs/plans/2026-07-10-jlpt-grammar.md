@@ -175,7 +175,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
    fallback.
 4. ✅ #124 (2026-07-10) **Grammar inspect layer + motion** — `p`-token solid underlines + grammar flavor popover +
    the full positive motion set + reduce-motion verify.
-5. **N5 bake (~100 points)** — against the proven consumer. ≤50-point commits, a dedicated
+5. ✅ #126 (2026-07-10) **N5 bake — 82 points** (curated ≥2-list union; ~100 was the estimate) — against the proven consumer. ≤50-point commits, a dedicated
    reading-accuracy pass per batch (rendaku, on/kun — the validator can't catch
    wrong-but-well-formed readings).
 6. ✅ #125 (2026-07-10) **✓/◆ tracking** — both toggles (✓ studied, ◆ shaky) + press pop, per-level progress bar,

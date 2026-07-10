@@ -1502,7 +1502,8 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 #mapSaved{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); }
 .map-empty{ font-size:.78rem; color: var(--ink-soft); margin:0; }
 .map-slist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
-.map-srow{ display:flex; align-items:center; gap:.4rem; padding:.28rem 0; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.map-srow{ display:flex; align-items:center; gap:.4rem; padding:.28rem .3rem; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); border-radius:6px; transition: background .12s ease; }
+.map-srow:hover, .map-srow:focus-within{ background: color-mix(in srgb, var(--indigo) 7%, transparent); }   /* stage 21: rows had ZERO hover rules — the shared interactive-row affordance (bg tint; rows are borderless) */
 .map-srow.is-fav .map-sicon{ filter: drop-shadow(0 0 2px var(--gold, #d8a200)); }
 .map-sgo{ flex:1; display:flex; align-items:center; gap:.45rem; min-width:0; background:none; border:none; cursor:pointer; color: var(--ink); text-align:left; padding:.15rem .2rem; border-radius: var(--r-sm); }
 .map-sgo:hover{ background: var(--bg-sunk); }

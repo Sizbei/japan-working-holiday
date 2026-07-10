@@ -112,9 +112,12 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   Opus critic panel over the loop's accumulated diff; written verdict here — unfixed findings
   logged, not buried.
 
-- [ ] **21. (Arc E) Map layout & sidebar** — "Your pins" list rhythm (row density, icons,
-  hover/focus states), filter chip rows (two stacked rows read noisy), search box + "＋ drop a
-  pin" affordances; sidebar↔map proportions at 1300px.
+- [x] **21. (Arc E) Map layout & sidebar** — one real fix: `.map-srow` pin rows had ZERO
+  hover/focus rules → shared interactive-row affordance added (7% indigo bg tint; rows are
+  borderless so the bg variant applies), verified 1 rule in cascade + rows render. Measured
+  non-issues: sidebar↔map 433/734px (37/63 split, fine); row heights 37/49 content-driven;
+  rows already keyboard-focusable. "Two chip rows noisy" didn't convert to a delta → dropped.
+  (PR #110)
 - [ ] **22. (Arc E) Pins, clusters & popup cards** — marker/cluster styling on-palette, popup
   card typography/actions parity with the calendar side-panel language; selected-pin state.
 - [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch

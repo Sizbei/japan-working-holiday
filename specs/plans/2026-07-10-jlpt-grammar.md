@@ -178,7 +178,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
 5. **N5 bake (~100 points)** — against the proven consumer. ≤50-point commits, a dedicated
    reading-accuracy pass per batch (rendaku, on/kun — the validator can't catch
    wrong-but-well-formed readings).
-6. **✓/◆ tracking** — both toggles (✓ studied, ◆ shaky) + press pop, per-level progress bar,
+6. ✅ #125 (2026-07-10) **✓/◆ tracking** — both toggles (✓ studied, ◆ shaky) + press pop, per-level progress bar,
    ◆ filter chip + count, KEYS.grammar registration, backup ride-along test.
 7. **N4 bake (~130).**
 8. **N3 bake (~200, 2 batches).**

@@ -86,6 +86,19 @@ function boot() {
       };
       document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'phrases') loadPhrases(); });
       if (/^#\/?phrases$/.test(location.hash)) loadPhrases();   // direct load / reload on the page (exact match)
+      // JLPT grammar reference (#/grammar) rides the same lazy pattern — module + its
+      // per-level data fetch load on first entry (specs/plans/2026-07-10-jlpt-grammar.md P1)
+      let grammarLoaded = false;
+      const loadGrammar = () => {
+        if (grammarLoaded) return;
+        grammarLoaded = true;
+        const view = document.getElementById('view-grammar');
+        view?.setAttribute('aria-busy', 'true');
+        import('./grammar.js').then(m => { m.mountGrammar(); view?.removeAttribute('aria-busy'); })
+          .catch(err => { grammarLoaded = false; view?.removeAttribute('aria-busy'); console.error('[boot] grammar', err); });
+      };
+      document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'grammar') loadGrammar(); });
+      if (/^#\/?grammar$/.test(location.hash)) loadGrammar();
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
       safe(() => mountRooms(data));        // share-room finder (#/rooms)
       safe(() => mountMap(data));          // map page (#/map)

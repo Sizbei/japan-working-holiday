@@ -142,6 +142,11 @@ function renderSummary() {
 
   const netSign = s.monthlyNet > 0 ? '+' : (s.monthlyNet < 0 ? '−' : '±');
   const netAbs = fmtYen(Math.abs(s.monthlyNet));
+  // stage 3 (design loop): an untouched page screamed "−¥190,000 / 0 mo" in alarm red before the
+  // user ever typed a number. Unconfigured (no savings AND no income) → neutral em-dashes + a
+  // hint; the alarm tones only ever color REAL numbers.
+  const st = load();
+  const configured = (+st.savings || 0) > 0 || (+st.monthlyIncome || 0) > 0;
 
   // optional CAD twin under each yen figure — only when a positive rate is set (fmtCad → '' otherwise).
   const rate = clampRate(load().cadRate);
@@ -159,19 +164,20 @@ function renderSummary() {
       <span class="bdg-stat-num">${esc(fmtYen(s.monthlyTotal))}</span>
       ${cad(s.monthlyTotal)}
     </div>
-    <div class="bdg-stat bdg-${esc(tone)}">
+    <div class="bdg-stat ${configured ? `bdg-${esc(tone)}` : ''}">
       <span class="bdg-stat-label">Net / mo</span>
-      <span class="bdg-stat-num">${esc(netSign + netAbs)}</span>
-      ${netCad}
+      <span class="bdg-stat-num">${configured ? esc(netSign + netAbs) : '—'}</span>
+      ${configured ? netCad : ''}
     </div>
-    <div class="bdg-stat bdg-${esc(tone)}">
+    <div class="bdg-stat ${configured ? `bdg-${esc(tone)}` : ''}">
       <span class="bdg-stat-label">Runway</span>
-      <span class="bdg-stat-num">${esc(runwayText)}</span>
+      <span class="bdg-stat-num">${configured ? esc(runwayText) : '—'}</span>
+      ${configured ? '' : '<span class="bdg-cad">set savings below ↓</span>'}
     </div>
     <div class="bdg-stat bdg-after">
       <span class="bdg-stat-label">After setup</span>
-      <span class="bdg-stat-num">${esc(fmtYen(s.afterLanding))}</span>
-      ${cad(s.afterLanding)}
+      <span class="bdg-stat-num">${configured ? esc(fmtYen(s.afterLanding)) : '—'}</span>
+      ${configured ? cad(s.afterLanding) : ''}
     </div>`;
 }
 

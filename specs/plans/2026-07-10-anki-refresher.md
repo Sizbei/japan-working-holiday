@@ -84,27 +84,46 @@ One giant card, **everything visible at once** — no flip, no friction:
    (immutable toggleShaky, saved on each toggle). No mode arming — the whole skim view IS the
    flagging surface (that's its job per the owner's option-3 pick).
 
-   **3c. Shaky pile runner.** A "◆ Shaky (N)" chip pinned at the END of the chunk strip, both
-   views. DECIDED DEFAULTS (owner may veto):
-   - Pile is GLOBAL across the whole deck, not per-chunk (you skim chunk-by-chunk but re-run
-     hesitations in one pass).
-   - Streaming the pile: S UN-flags and drops the card from the run at the next advance — the
-     pile shrinks as recognition returns; progress reads "n / N shaky". Empty pile → small
-     "all clear ✓" state with a button back to chunk 1.
-   - "Clear all flags" lives behind the Replace-deck disclosure (destructive-ish, keep it out
-     of the fast path).
+   **3c. Shaky pile runner — REVISED after two-critic review (non-destructive).**
+   - Pile = the flagged cards in DECK ORDER (frequency pedagogy preserved), SNAPSHOTTED when the
+     run starts (pure `pileOrder(cards, shaky)` in lib/anki.js, tested). Membership does NOT
+     mutate mid-run: **S is the same non-destructive toggle everywhere** — it un-flags/re-flags
+     the current card (◆ updates, announce fires) but the card stays in this run. Progress is a
+     stable "n / N shaky" over the snapshot. This kills the destructive-no-undo mis-key risk,
+     the ambiguous shrinking count, and all drop-index edge math the critics flagged.
+   - `stream.mode: 'chunk' | 'pile'` (NOT a fake chunk index): branches in orderFor/paintCard
+     (pile progress label) / persistPos (pile does NOT persist position) / switchChunk.
+   - "◆ Shaky (N)" chip at the strip end, N live from shaky[]; empty pile at entry → all-clear
+     state + back-to-chunks button. "Clear all flags" stays behind the Replace disclosure.
+   - Pile overview for free: the skim view in pile mode lists ALL flagged cards (tap to unflag
+     in bulk) — the orthogonal view×source design gives the 300-flag overview the review demanded.
 
-   **3d. Folded-in fixes from the stage-20 log:** shuffle toggle keeps the current chunk
-   (today it snaps to 0); drop mountAnki's dead `data` param; SR announce — a visually-hidden
-   debounced (≈400ms, the #calLive pattern) live region that speaks "word, reading, meaning"
-   after advancing settles, so rapid-fire doesn't queue 2000 announcements.
+   **3d. Mechanics the review pinned (all folded in):**
+   - Static `<span id="ankLive" class="sr-only" aria-live="polite">` in index.html as a SIBLING
+     of #ankiDeck (a live region inside the innerHTML-rebuilt root can never announce). Trailing
+     ~200ms coalesce on every paint (first card speaks too — it's paint-triggered, not
+     advance-triggered); skim flag toggles announce "word — flagged/unflagged". (#calLive is
+     600ms, corrected from the earlier 400ms drift.)
+   - `view` threaded through BOTH loadDeck (type-guarded) and saveDeck (they allow-list keys —
+     it would be silently dropped otherwise).
+   - Section keydown early-returns on BUTTON targets (else S/Space on a focused skim row
+     double-fires the row handler AND the stream handler).
+   - Skim rows: real buttons with **aria-pressed** + ROVING TABINDEX (one tab stop; ↑↓ move,
+     Enter/Space/S toggle) — 50 sequential tab stops was a keyboard-cost major.
+   - Extract stripHTML()/progress into shared helpers (both views render them; today they're
+     inlined in renderStream). Skim taps imperatively repaint: row state + chip count + save.
+   - Shuffle fix mechanism: capture stream.chunk BEFORE the stream=null re-derive.
+   - Drop mountAnki's dead `data` param (verified orphaned).
 
-   **3e. Verify (harness):** seg toggle persists · skim rows flag/unflag (trusted taps) + gold
-   tick renders · shaky chip count live-updates from BOTH views · pile run streams only flags,
-   S drops a card, count decrements, empty state renders · shuffle keeps chunk · SR region
-   announces once per settle (probe the debounce) · 44px rows under hover:none (cascade check)
-   · pos/resume still green from stage 2 · 0 exceptions · tests green (new pure helpers, if
-   any, land in lib/anki.js with tests). PR + squash.
+   **3e. Verify — relabeled honestly:**
+   - node tests (real harness): pileOrder (order/dedupe/empty), view round-trip through
+     load/saveDeck guards, coalescer if extracted pure.
+   - CDP rig (manual-serve automation): seg persists across reload · skim rows toggle with
+     aria-pressed + roving ↑↓ (trusted keys) · shaky chip count live-updates from both views ·
+     pile streams the snapshot with stable n/N, S toggles non-destructively, re-entering pile
+     re-derives · all-clear state · shuffle keeps chunk · #ankLive text updates once per settle
+     INCLUDING the first card · gold tick/◆ contrast MEASURED both themes (canvas composite) ·
+     44px rows under hover:none · 0 exceptions.
 
    **v1.1 candidates (parked, not stage 3):** classic flip mode · auto-advance timer (2s/card)
    · hover-dictionary tie-in on the stream word · export the shaky pile back to Anki as TSV

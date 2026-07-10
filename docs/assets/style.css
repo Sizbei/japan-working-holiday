@@ -3506,3 +3506,93 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .cal-chip{ transition: background .12s cubic-bezier(0.23, 1, 0.32, 1), opacity .12s ease; }
 @keyframes cal-pop-in{ from{ opacity: 0; transform: translateY(4px) scale(.97); } to{ opacity: 1; transform: none; } }
 .cal-pop{ animation: cal-pop-in .2s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: top left; }   /* origin-aware: it opens below its day cell */
+
+/* ===== Anki refresher ===== */
+/* Core-2000 rapid refresher on #/phrases. Tokens only (both themes). 4px-grid spacing.
+   NO per-card animation on the stream card — it's a 100+×/session surface (frequency gate). */
+.ank-wrap{ margin: var(--s6) 0; padding: var(--s5); background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.ank-head{ margin-bottom: var(--s4); }
+.ank-h{ margin:0; font-size:1rem; font-weight:800; color: var(--ink); }
+.ank-h-sm{ font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); }
+.ank-sub{ margin:.35rem 0 0; font-size:.86rem; color: var(--ink-soft); max-width: 60ch; }
+
+/* --- import / empty state --- */
+.ank-drop{ display:flex; flex-direction:column; align-items:center; gap:var(--s2); text-align:center;
+  padding: var(--s8) var(--s4); border:2px dashed var(--line); border-radius: var(--r-md);
+  background: var(--bg); color: var(--ink-soft); cursor:pointer; transition: border-color var(--t-hover), background var(--t-hover); }
+.ank-drop:hover, .ank-drop:focus-visible, .ank-drop.is-over{ border-color: var(--indigo); background: color-mix(in srgb, var(--indigo) 6%, var(--bg)); outline:none; }
+.ank-drop-ic{ font-size:1.4rem; line-height:1; }
+.ank-drop-t{ font-size:.9rem; color: var(--ink); }
+.ank-drop-or{ font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; opacity:.6; }
+.ank-btn{ font-family: var(--sans); font-size:.84rem; font-weight:700; border:1px solid var(--line);
+  background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.5rem .9rem; cursor:pointer;
+  transition: border-color var(--t-hover), background var(--t-hover), transform var(--t-hover); }
+.ank-btn:hover{ border-color: var(--indigo); }
+.ank-btn:active{ transform: translateY(1px); }
+.ank-btn-primary{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+.ank-btn-ghost{ background:none; color: var(--ink-soft); }
+.ank-err{ margin-top: var(--s3); padding:.6rem .8rem; font-size:.85rem; border-radius: var(--r-sm);
+  color: var(--bad-ink, #a3341f); background: color-mix(in srgb, var(--bad-ink, #a3341f) 10%, var(--bg-soft)); border:1px solid color-mix(in srgb, var(--bad-ink, #a3341f) 25%, transparent); }
+
+/* --- 3-row preview + remap --- */
+.ank-preview{ margin-top: var(--s4); }
+.ank-prev-h{ font-size:.82rem; color: var(--ink-soft); margin:0 0 var(--s2); }
+.ank-prev-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--line); border-radius: var(--r-sm); }
+.ank-prev-tbl{ border-collapse: collapse; width:100%; font-size:.86rem; }
+.ank-prev-tbl th{ text-align:left; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color: var(--ink-soft); padding:.4rem .6rem; border-bottom:1px solid var(--line); white-space:nowrap; }
+.ank-prev-tbl td{ padding:.5rem .6rem; border-bottom:1px solid var(--line); vertical-align:top; }
+.ank-prev-tbl tr:last-child td{ border-bottom:none; }
+.ank-pc-w{ font-weight:700; color: var(--ink); white-space:nowrap; }
+.ank-pc-r{ color: var(--ink-soft); }
+.ank-pc-s{ color: var(--ink-soft); font-size:.8rem; max-width:22ch; }
+.ank-remap{ margin-top: var(--s3); font-size:.84rem; }
+.ank-remap > summary{ cursor:pointer; color: var(--ink-soft); padding:.3rem 0; }
+.ank-remap-grid{ display:flex; flex-wrap:wrap; gap: var(--s3); margin-top: var(--s2); }
+.ank-remap-f{ display:flex; flex-direction:column; gap:.15rem; font-size:.72rem; color: var(--ink-soft); }
+.ank-remap-f select{ font:inherit; font-size:.8rem; padding:.3rem .4rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); }
+.ank-prev-acts{ display:flex; gap: var(--s3); margin-top: var(--s4); flex-wrap:wrap; }
+
+/* --- chunk strip (reuses the plan-chip rail idea) --- */
+.ank-bar{ display:flex; align-items:center; justify-content:space-between; gap: var(--s3); margin-bottom: var(--s3); }
+.ank-bar-acts{ display:flex; gap: var(--s2); }
+.ank-mini{ font-family: var(--mono); font-size:.7rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink-soft); border-radius: var(--r-sm); padding:.35rem .6rem; cursor:pointer; transition: border-color var(--t-hover), color var(--t-hover); }
+.ank-mini:hover{ border-color: var(--indigo); color: var(--ink); }
+.ank-mini.is-on{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+.ank-back{ margin-bottom: var(--s3); }
+.ank-strip{ display:flex; gap:.4rem; overflow-x:auto; padding:.2rem .1rem .5rem; margin-bottom: var(--s3); scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+  mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%); }
+.ank-chip{ flex:0 0 auto; scroll-snap-align:center; font-family: var(--mono); font-size:.7rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-md); padding:.4rem .6rem; cursor:pointer; white-space:nowrap; transition: border-color var(--t-hover), background var(--t-hover); }
+.ank-chip:hover{ border-color: var(--indigo); }
+.ank-chip.active{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+
+/* --- the stream card: everything visible, no flip, no animation --- */
+.ank-card{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:.4rem;
+  position:relative; padding: var(--s8) var(--s5); min-height: 220px;
+  background: var(--bg); border:1px solid var(--line); border-radius: var(--r-lg); cursor:pointer;
+  box-shadow: var(--shadow); user-select:none; }
+.ank-card:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
+.ank-card.is-shaky{ border-color: var(--gold); }
+.ank-flag{ position:absolute; top:.6rem; right:.7rem; font-family: var(--mono); font-size:.62rem; font-weight:700; color: var(--gold); }
+.ank-word{ font-size:2.6rem; font-weight:800; line-height:1.1; color: var(--ink); }
+.ank-read{ font-size:1rem; color: var(--ink-soft); }
+.ank-mean{ font-size:1.2rem; color: var(--ink); }
+.ank-hair{ width:60px; height:1px; background: var(--line); margin:.5rem 0 .1rem; }
+.ank-sent{ font-size:.95rem; color: var(--ink); max-width:44ch; }
+.ank-sentm{ font-size:.82rem; color: var(--ink-soft); max-width:44ch; }
+
+/* --- progress line --- */
+.ank-prog{ display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-top: var(--s3); font-family: var(--mono); font-size:.74rem; color: var(--ink-soft); }
+.ank-prog-n{ font-weight:700; color: var(--ink); }
+.ank-prog-dot{ opacity:.5; }
+.ank-prog-mini{ opacity:.7; }
+.ank-prog-bar{ flex:1 1 120px; height:5px; min-width:100px; background: var(--line); border-radius: var(--r-pill); overflow:hidden; }
+.ank-prog-bar > i{ display:block; height:100%; background: var(--indigo); border-radius: var(--r-pill); transition: width var(--t-hover); }
+.ank-hint{ margin:.5rem 0 0; font-size:.76rem; color: var(--ink-soft); }
+.ank-hint b{ font-family: var(--mono); }
+
+/* touch: 44px targets, no reliance on hover */
+@media (hover: none){
+  .ank-chip, .ank-mini, .ank-btn, .ank-remap-f select, .ank-drop, .ank-remap > summary{ min-height:44px; }
+  .ank-chip, .ank-mini, .ank-btn{ display:inline-flex; align-items:center; }
+}

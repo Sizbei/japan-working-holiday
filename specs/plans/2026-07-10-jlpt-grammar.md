@@ -164,7 +164,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
    fallback + precache + bump). Seed: **grammar-n5.json, ~12 exemplar points incl. ≥1
    non-contiguous pattern (も〜ば〜も) and ≥1 contentful-kanji `p` anchor (場合)** as schema
    acid tests.
-2. **Browse UI + furigana** — level tabs, cards (header-button disclosure, chunked append,
+2. ✅ #122 (2026-07-10) **Browse UI + furigana** — level tabs, cards (header-button disclosure, chunked append,
    content-visibility), **final `.gtok` token DOM emitted HERE** (round-2: the ruby render
    and the P3 cursor share one DOM — no P2→P3 re-emit), ふり toggle (KEYS.furi reuse), live
    search (pattern/kana/romaji/EN, global scope w/ background fetch), counts, empty/error

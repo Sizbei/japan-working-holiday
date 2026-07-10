@@ -7,7 +7,7 @@
 // Plan: specs/plans/2026-07-10-jlpt-grammar.md.
 import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
-import { getRaw, setRaw, KEYS } from './lib/store.js';
+import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { searchPoints, readingOf } from './lib/grammar.js';
 import { lookupWord } from './lang.js';          // shared Jotoba lookup (exported); GLOSSARY is NOT re-exported —
 import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
@@ -22,6 +22,16 @@ let fetchedAll = false;                          // search is global — remaini
 let io = null;
 let staggerNext = true;                          // card stagger fires on tab switches/boot, NEVER per search keystroke (frequency gate)
 
+// ✓/◆ tracking (owner decision C, reconfirmed): ✓ studied feeds the per-level progress bar,
+// ◆ shaky feeds the filter chip (and the v1.1 Anki-TSV export). Registered in store.js KEYS;
+// written via set() (JSON) so the backup jwh- walk carries it.
+let prog = null;
+function loadProg() {
+  const d = get(KEYS.grammar, { v: 1, done: [], shaky: [] });
+  prog = { v: 1, done: Array.isArray(d.done) ? d.done : [], shaky: Array.isArray(d.shaky) ? d.shaky : [] };
+}
+function saveProg() { set(KEYS.grammar, prog); }
+
 export function mountGrammar() {
   const root = $('#grammarRoot');
   if (!root || root.dataset.wired) return;
@@ -33,10 +43,16 @@ export function mountGrammar() {
         ${LEVELS.map(l => `<button type="button" class="g-tab" data-level="${l}" aria-pressed="${l === state.level}">${l}<span class="g-count" data-count="${l}"></span></button>`).join('')}
       </div>
       <button type="button" class="g-furi" id="gFuri"></button>
+      <button type="button" class="g-shaky-f" id="gShakyF" aria-pressed="false" title="Show only ◆ shaky points">◆ <span id="gShakyN">0</span></button>
       <input type="search" class="g-search" id="gSearch" placeholder="Search 〜てから / maeni / before…" aria-label="Search grammar points (Japanese, romaji or English)">
+    </div>
+    <div class="g-prog" id="gProg" hidden>
+      <span class="g-prog-t" id="gProgT"></span>
+      <span class="g-prog-bar" aria-hidden="true"><span class="g-prog-fill" id="gProgFill"></span></span>
     </div>
     <div id="gList"></div>
     <div id="gSentinel" aria-hidden="true"></div>`;
+  loadProg();
   wireBar(root);
   applyFuri();
   moveTabInd();
@@ -83,9 +99,11 @@ function fetchAllLevels() {          // global search needs the whole corpus (pl
 function currentPoints() {
   if (state.q) {
     const all = LEVELS.flatMap(l => cache[l] || []);
-    return searchPoints(all, state.q);
+    const hits = searchPoints(all, state.q);
+    return state.shakyOnly ? hits.filter(p => prog.shaky.includes(p.id)) : hits;
   }
-  return cache[state.level] || [];
+  const pts = cache[state.level] || [];
+  return state.shakyOnly ? pts.filter(p => prog.shaky.includes(p.id)) : pts;
 }
 
 // ---- wiring (delegated once; #gList innerHTML rebuilds freely) ----
@@ -110,7 +128,15 @@ function wireBar(root) {
     clearTimeout(deb);
     deb = setTimeout(() => { state.q = e.target.value.trim(); state.shown = CHUNK; renderList(); }, 150);
   });
+  $('#gShakyF').addEventListener('click', () => {
+    state.shakyOnly = !state.shakyOnly;
+    $('#gShakyF').setAttribute('aria-pressed', String(state.shakyOnly));
+    state.shown = CHUNK;
+    renderList();
+  });
   $('#gList').addEventListener('click', (e) => {
+    const mk = e.target.closest('.g-mark');
+    if (mk) { toggleMark(mk); return; }
     const h = e.target.closest('.g-card-h');
     if (h) {
       const body = document.getElementById(h.getAttribute('aria-controls'));
@@ -186,12 +212,14 @@ function renderList() {
         ? `<p class="g-empty">Nothing here yet.</p>`
         : `<p class="g-empty">${esc(state.level)} isn't baked yet — N5 is live; the other levels land phase by phase.</p>`);
     announce(state.q ? `No matches for ${state.q}` : `${state.level}: no data yet`);
+    updateProgressUI();
     return;
   }
   const st = staggerNext; staggerNext = false;
   const slice = pts.slice(0, state.shown);
   list.innerHTML = slice.map((p, i) => cardHTML(p, st ? Math.min(i, 8) * 20 : -1)).join('');
   announce(state.q ? `${pts.length} matches` : `${state.level}: ${pts.length} grammar points`);
+  updateProgressUI();
 }
 
 function cardHTML(p, delay = -1) {
@@ -201,6 +229,7 @@ function cardHTML(p, delay = -1) {
     <button type="button" class="g-card-h" aria-expanded="false" aria-controls="${bid}">
       <span class="g-pat" lang="ja">${esc(p.pattern)}</span>
       <span class="g-mean">${esc(p.meaning)}</span>
+      <span class="g-hd-marks" aria-hidden="true">${prog.done.includes(p.id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(p.id) ? '<span class="g-hd-shaky">◆</span>' : ''}</span>
       ${state.q ? `<span class="g-lvl">${esc(p.level)}</span>` : ''}
       <span class="g-chev" aria-hidden="true">▾</span>
     </button>
@@ -209,7 +238,11 @@ function cardHTML(p, delay = -1) {
       ${p.nuance ? `<p class="g-nuance">${esc(p.nuance)}</p>` : ''}
       ${(p.examples || []).map(exampleHTML).join('')}
       ${(p.related || []).length ? `<p class="g-rel">See also ${p.related.map(relChip).join(' ')}</p>` : ''}
-      <span class="badge ${esc(p.confidence)}">${esc(p.confidence)}</span>
+      <div class="g-foot">
+        <button type="button" class="g-mark g-mark-done" data-mark="done" aria-pressed="${prog.done.includes(p.id)}">✓ Studied</button>
+        <button type="button" class="g-mark g-mark-shaky" data-mark="shaky" aria-pressed="${prog.shaky.includes(p.id)}">◆ Shaky</button>
+        <span class="badge ${esc(p.confidence)}">${esc(p.confidence)}</span>
+      </div>
     </div>
   </article>`;
 }
@@ -383,4 +416,34 @@ function wireInspect() {
   document.addEventListener('jwh:popover-open', (e) => {
     if (e.detail?.owner && e.detail.owner !== 'grammar') { hideTip(); hideStrip(); }
   });
+}
+
+// ==== P6: ✓/◆ tracking ===========================================================
+function toggleMark(btn) {
+  const card = btn.closest('.g-card'); if (!card) return;
+  const id = card.dataset.id;
+  const kind = btn.dataset.mark;                       // 'done' | 'shaky'
+  const on = !prog[kind].includes(id);
+  prog = { ...prog, [kind]: on ? [...prog[kind], id] : prog[kind].filter(x => x !== id) };
+  saveProg();
+  btn.setAttribute('aria-pressed', String(on));
+  btn.classList.remove('g-pop'); void btn.offsetWidth; btn.classList.add('g-pop');   // press pop (reduce-motion kill covers it)
+  const marks = card.querySelector('.g-hd-marks');
+  if (marks) marks.innerHTML = `${prog.done.includes(id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(id) ? '<span class="g-hd-shaky">◆</span>' : ''}`;
+  const pt = findPoint(id);
+  announce(`${pt ? pt.pattern : id} — ${on ? 'marked' : 'unmarked'} ${kind === 'done' ? 'studied' : 'shaky'}`);
+  updateProgressUI();
+  if (state.shakyOnly && kind === 'shaky' && !on) renderList();   // card no longer qualifies for the ◆ filter
+}
+
+function updateProgressUI() {
+  const pts = cache[state.level] || [];
+  const nShaky = pts.filter(p => prog.shaky.includes(p.id)).length;
+  const nEl = $('#gShakyN'); if (nEl) nEl.textContent = String(nShaky);
+  const wrap = $('#gProg'); if (!wrap) return;
+  if (!pts.length || state.q) { wrap.hidden = true; return; }
+  const nDone = pts.filter(p => prog.done.includes(p.id)).length;
+  wrap.hidden = false;
+  const t = $('#gProgT'); if (t) t.textContent = `${nDone}/${pts.length} studied`;
+  const f = $('#gProgFill'); if (f) f.style.width = pts.length ? `${Math.round(nDone / pts.length * 100)}%` : '0%';
 }

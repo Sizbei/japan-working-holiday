@@ -59,8 +59,12 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   198/198/198 (grid-stretch equal within rows), padding uniform 12.75px, title font uniform
   15.3px; teasers all 99px with identical 9.35/13.6px padding; left edges aligned (hero offset =
   its scroll-rail). Zero measured deltas → no fix. (no PR)
-- [ ] **12. Explore finding cards** — hover/focus affordance (cards read static), tighten
-  source-link row, audit HIGH/MEDIUM/LOW badge colors for contrast.
+- [x] **12. Explore finding cards** — two real fixes, one drop: (a) cards had ZERO hover/focus
+  rules → `.finding:hover/:focus-within` indigo border (the shared interactive-row pattern);
+  (b) confidence badges measured (canvas alpha-composite — computed-style regex lies for
+  color-mix values): HIGH 3.86 / MEDIUM 3.93 light and LOW 4.38 dark all sub-AA → inks mixed
+  toward `--ink`; post-fix all six theme×badge ratios 5.31–8.69 (allAA:true). (c) source-link
+  row produced no measurable delta → dropped per the vibes rule. (PR #105)
 - [ ] **13. Checklist visual pass** — FIRST review its (never-reviewed) sweep shot and write
   measured findings here; fix against the page's OWN spacing scale (not the calendar's — the
   own-scale gate governs); verify locked-item affordance still reads. Clean page → tick

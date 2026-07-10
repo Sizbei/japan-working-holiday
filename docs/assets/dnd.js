@@ -36,7 +36,22 @@ function toast(msg, undoFn) {
   if (undoFn) { const b = document.createElement('button'); b.textContent = 'Undo'; b.onclick = () => { undoFn(); t.remove(); }; t.appendChild(b); }
   document.body.appendChild(t);
   liveToast = t;
-  setTimeout(() => { if (t.isConnected) { t.classList.add('out'); setTimeout(() => t.remove(), 220); } }, 4200);
+  // stage 19 (design loop): toasts must be dismissible — pause on hover, resume on leave,
+  // swipe/flick to dismiss (velocity OR distance; instant under reduce-motion)
+  const dismiss = () => { if (t.isConnected) { t.classList.add('out'); setTimeout(() => t.remove(), 220); } };
+  let hideTimer = setTimeout(dismiss, 4200);
+  t.addEventListener('pointerenter', () => clearTimeout(hideTimer));
+  t.addEventListener('pointerleave', () => { hideTimer = setTimeout(dismiss, 1200); });
+  let sx = null, dx = 0, st = 0;
+  t.addEventListener('pointerdown', (e) => { if (e.target.tagName === 'BUTTON') return; sx = e.clientX; st = performance.now(); t.setPointerCapture?.(e.pointerId); });
+  t.addEventListener('pointermove', (e) => { if (sx === null) return; dx = e.clientX - sx; t.style.transform = `translateX(${dx}px)`; t.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 220)); });
+  t.addEventListener('pointerup', () => {
+    if (sx === null) return;
+    const v = Math.abs(dx) / Math.max(1, performance.now() - st);   // px/ms — flick beats distance
+    if (Math.abs(dx) > 90 || v > 0.11) { clearTimeout(hideTimer); t.remove(); }
+    else { t.style.transform = ''; t.style.opacity = ''; }
+    sx = null; dx = 0;
+  });
 }
 
 // Sortable list. opts: { itemSelector, handleSelector, idOf(el)->id, onReorder(ids), label }

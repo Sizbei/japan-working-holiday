@@ -20,9 +20,11 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
 - [ ] **2b. (appended) Nav edge-fade affordance** — below ~1240px the compact nav row scrolls
   with hidden scrollbar and no visual hint; add scroll-edge fades (needs a JS scrollable-state
   class — CSS alone can't detect overflow).
-- [ ] **3. Budget empty-state honesty** — with savings/income unset the header screams
-  `NET −¥190,000` / `RUNWAY 0 mo` in crimson. Unset → em-dash + "set your savings below" hint;
-  alarm colors only when real numbers produce them.
+- [x] **3. Budget empty-state honesty** — reproduced (untouched page: `Net / mo −¥190,000` in
+  alarm tone, savings null). Fixed: unconfigured (no savings AND no monthlyIncome) → Net/Runway/
+  After-setup render neutral em-dashes + "set savings below ↓" hint, no tone class; verified
+  three states: unset neutral · ¥900k → amber "4 mo" · ¥200k → red "1 mo" (alarm only for real
+  numbers). Dashboard teaser untouched (own gate). (PR #101)
 - [ ] **4. Going page layout** — one card in a huge void: grid `auto-fill minmax(300px,1fr)` to use
   the column; stray ✎ icon dangling under the location line; "Upcoming only" chip is an
   off-palette green outline → align with site chip language.

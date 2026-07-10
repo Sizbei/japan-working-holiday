@@ -1544,6 +1544,12 @@ button.mrd-stop:hover .mrd-go{ opacity:1; }
 .jwh-pin-dot.has-emoji::after{ font-family: var(--sans); font-size:14px; inset:-6px; color:transparent; text-shadow:none; }
 /* Map v2 §2a — visited: muted dot + a red hanko "済" stamp overlaid on the marker */
 .jwh-pin.visited .jwh-pin-dot{ filter: grayscale(.55) brightness(.9); opacity:.78; }
+/* stage 22: glyph picker collapses behind a summary chip */
+.pin-emowrap{ margin:.3rem 0 0; }
+.pin-emosum{ cursor:pointer; font-size:.72rem; color: var(--ink-soft); padding:.15rem .4rem; border:1px solid var(--line); border-radius:999px; display:inline-block; list-style:none; }
+.pin-emosum::-webkit-details-marker{ display:none; }
+.pin-emosum:hover{ border-color: var(--indigo); color: var(--ink); }
+.pin-emowrap[open] .pin-emosum{ margin-bottom:.25rem; }
 .jwh-pin-hanko{ position:absolute; bottom:-8px; right:-8px; width:15px; height:15px; display:grid; place-items:center;
   font-size:8px; font-weight:700; line-height:1; color: var(--red); background: #fff;
   border:1.5px solid var(--red); border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.4); transform: rotate(-12deg); }

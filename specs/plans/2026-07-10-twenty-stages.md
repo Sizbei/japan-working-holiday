@@ -118,8 +118,14 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   non-issues: sidebar↔map 433/734px (37/63 split, fine); row heights 37/49 content-driven;
   rows already keyboard-focusable. "Two chip rows noisy" didn't convert to a delta → dropped.
   (PR #110)
-- [ ] **22. (Arc E) Pins, clusters & popup cards** — marker/cluster styling on-palette, popup
-  card typography/actions parity with the calendar side-panel language; selected-pin state.
+- [x] **22. (Arc E) Pins, clusters & popups** — cluster/pin palette VERIFIED DELIBERATE
+  (--flighty-blue token, "tuned to theme" comment — the map's own Flighty language, pairs with
+  the stage-7 basemap). ONE real fix: the 15-glyph emoji picker rendered unconditionally in
+  every user-pin popup — measured 25 interactive elements in a 258px card vs the site-card ~6.
+  Collapsed behind a native <details> summary chip ("📍 change glyph"): always-visible
+  interactive elements 25→11, strip opens on demand, selection persistence verified (glyph
+  saved to jwh-places-v1). Probe lesson banked: closed-<details> children fool offsetParent
+  checks in modern Chrome (content-visibility) — screenshot is the witness. (PR #111)
 - [ ] **23. (Arc E) Map controls & touch** — zoom/locate control styling per theme, 44px touch
   targets, geocoding feedback states (loading/empty/error), keyboard reachability of the pin list.
 

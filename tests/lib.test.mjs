@@ -1238,7 +1238,7 @@ test('grammar-n5.json seed passes the validator (shape gate for every data PR)',
   const points = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
   const errs = validatePoints(points, 'N5', new Set(points.map(p => p.id)));
   assert.deepEqual(errs, []);
-  assert.equal(points.length, 12);
+  assert.equal(points.length, 82);   // P5: full N5 bake
   // acid tests the plan demands of the seed: a non-contiguous pattern + a glossed p anchor
   const momo = points.find(p => p.id === 'n5-mo-mo');
   assert.equal(momo.examples[0].ja.filter(t => t.p).length, 2);                  // disjoint p anchors

@@ -12,7 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import {
-  parseAnkiExport, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled,
+  parseAnkiExport, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
 
 const CHUNK = 100;
@@ -32,11 +32,12 @@ function loadDeck() {
     shaky: Array.isArray(d.shaky) ? d.shaky : [],
     shuffle: !!d.shuffle,
     seed: Number.isFinite(d.seed) ? d.seed : 1,
+    view: d.view === 'skim' ? 'skim' : 'stream',   // stage 3: threaded through BOTH fns (they allow-list keys)
   };
 }
-function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed }); }
+function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream' }); }
 
-export function mountAnki(data) {
+export function mountAnki() {
   DATA = null;
   root = $('#ankiDeck');
   if (!root) return;
@@ -46,7 +47,7 @@ export function mountAnki(data) {
 function render() {
   if (!root) return;
   const deck = loadDeck();
-  if (deck) renderStream(deck);
+  if (deck) (deck.view === 'skim' ? renderSkim(deck) : renderStream(deck));
   else renderImport();
 }
 
@@ -179,46 +180,152 @@ function maxCols(raw, delim) {
   return n;
 }
 
-// ───────────────────────────── stream mode ─────────────────────────────
+// ───────────────────────────── stream / skim (stage 3) ─────────────────────────────
 
-let stream = null;   // { deck, chunk, idx, order } — the live view state
+let stream = null;   // { deck, mode: 'chunk'|'pile', chunk, idx, order } — order is a SNAPSHOT (pile never mutates mid-run)
 
-function orderFor(deck, chunk) {
+// SR announce: #ankLive is a STATIC sibling of #ankiDeck in index.html — a live region inside
+// this innerHTML-rebuilt root could never announce. Trailing 200ms coalesce; paint-triggered,
+// so the FIRST card speaks too.
+let _liveT = 0;
+function announce(text) {
+  clearTimeout(_liveT);
+  _liveT = setTimeout(() => { const n = document.getElementById('ankLive'); if (n) n.textContent = text; }, 200);
+}
+
+function orderFor(deck, chunk, mode) {
+  if (mode === 'pile') return pileOrder(deck.cards, deck.shaky);          // deck order, snapshot at entry
   const slice = chunkSlice(deck.cards, chunk, CHUNK);
   return deck.shuffle ? shuffled(slice, deck.seed + chunk) : slice;
 }
 
-function renderStream(deck) {
+// strip + view seg shared by both views (extracted — they were inlined in renderStream)
+function stripHTML(deck, chunk, mode) {
   const nChunks = chunkCount(deck.cards.length, CHUNK);
-  // resume: keep the current chunk if we already have one, else chunk 0
-  const chunk = stream && stream.deck === deck && stream.chunk < nChunks ? stream.chunk : 0;
-  const order = orderFor(deck, chunk);
-  const pos = Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
-  stream = { deck, chunk, idx: pos, order };
-
-  const strip = Array.from({ length: nChunks }, (_, i) => `
-    <button type="button" class="ank-chip${i === chunk ? ' active' : ''}" data-chunk="${i}" aria-pressed="${i === chunk ? 'true' : 'false'}">
+  const chips = Array.from({ length: nChunks }, (_, i) => `
+    <button type="button" class="ank-chip${mode === 'chunk' && i === chunk ? ' active' : ''}" data-chunk="${i}" aria-pressed="${mode === 'chunk' && i === chunk ? 'true' : 'false'}">
       ${esc(chunkLabel(i, deck.cards.length, CHUNK))}</button>`).join('');
-
-  root.innerHTML = `
+  const n = deck.shaky.length;
+  return `${chips}
+    <button type="button" class="ank-chip ank-chip-pile${mode === 'pile' ? ' active' : ''}" data-pile="1" aria-pressed="${mode === 'pile' ? 'true' : 'false'}" ${n ? '' : 'disabled'}>◆ Shaky (<span id="ankPileN">${esc(String(n))}</span>)</button>`;
+}
+function barHTML(deck) {
+  return `
     <div class="ank-bar">
       <h3 class="ank-h ank-h-sm">Core deck</h3>
       <div class="ank-bar-acts">
+        <span class="ank-seg" role="group" aria-label="View">
+          <button type="button" class="ank-mini${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}">▶ Stream</button>
+          <button type="button" class="ank-mini${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}">☰ Skim</button>
+        </span>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini" id="ankReplace">Replace deck</button>
       </div>
-    </div>
-    <div class="ank-strip" id="ankStrip">${strip}</div>
+    </div>`;
+}
+function refreshPileChip() {
+  const { deck } = stream;
+  const el = document.getElementById('ankPileN');
+  if (el) el.textContent = String(deck.shaky.length);
+  const chip = root.querySelector('.ank-chip-pile');
+  if (chip && deck.shaky.length) chip.removeAttribute('disabled');
+}
+
+function renderStream(deck) {
+  const nChunks = chunkCount(deck.cards.length, CHUNK);
+  const mode = stream && stream.deck === deck ? stream.mode : 'chunk';
+  const chunk = stream && stream.deck === deck && stream.chunk < nChunks ? stream.chunk : 0;
+  const order = orderFor(deck, chunk, mode);
+  if (mode === 'pile' && !order.length) { renderAllClear(deck); return; }
+  const pos = mode === 'pile' ? 0 : Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
+  stream = { deck, mode, chunk, idx: Math.min(pos, Math.max(0, order.length - 1)), order };
+
+  root.innerHTML = `${barHTML(deck)}
+    <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
     <div class="ank-card" id="ankCard" tabindex="0" role="group" aria-label="Card — tap or press space for next"></div>
-    <div class="ank-prog" id="ankProg" aria-live="polite"></div>
+    <div class="ank-prog" id="ankProg"></div>
     <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · tap the card = next</p>`;
 
   paintCard();
+  wireCommon();
   wireStream();
 }
 
+// pile empty at entry — nothing shaky left
+function renderAllClear(deck) {
+  stream = { deck, mode: 'chunk', chunk: 0, idx: 0, order: [] };
+  root.innerHTML = `${barHTML(deck)}
+    <div class="ank-clear">
+      <div class="ank-clear-art" aria-hidden="true">◆ ✓</div>
+      <h4>All clear — nothing flagged.</h4>
+      <p>Blast through a chunk and press <b>S</b> on anything that makes you hesitate.</p>
+      <button type="button" class="ank-btn ank-btn-primary" id="ankClearBack">Back to chunk 1</button>
+    </div>`;
+  wireCommon();
+  $('#ankClearBack')?.addEventListener('click', () => { stream = null; renderStream(deck); });
+  announce('Shaky pile is empty — all clear.');
+}
+
+// ───────────────────────────── skim (stage 3) ─────────────────────────────
+
+function renderSkim(deck) {
+  const nChunks = chunkCount(deck.cards.length, CHUNK);
+  const mode = stream && stream.deck === deck ? stream.mode : 'chunk';
+  const chunk = stream && stream.deck === deck && stream.chunk < nChunks ? stream.chunk : 0;
+  const order = orderFor(deck, chunk, mode);
+  stream = { deck, mode, chunk, idx: 0, order };
+  if (mode === 'pile' && !order.length) { renderAllClear(deck); return; }
+
+  const rows = order.map((c, i) => {
+    const on = deck.shaky.includes(c.id);
+    return `<button type="button" class="ank-row${on ? ' is-shaky' : ''}" data-id="${esc(c.id)}" tabindex="${i === 0 ? '0' : '-1'}" aria-pressed="${on}" aria-label="${esc(c.w)}${c.r ? ', ' + esc(c.r) : ''}${c.m ? ', ' + esc(c.m) : ''} — press to flag shaky">
+      <span class="ank-row-w" lang="ja">${esc(c.w)}</span>
+      <span class="ank-row-r" lang="ja">${esc(c.r)}</span>
+      <span class="ank-row-m">${esc(c.m)}</span>
+    </button>`;
+  }).join('');
+
+  root.innerHTML = `${barHTML(deck)}
+    <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
+    <div class="ank-skim" id="ankSkim" role="group" aria-label="Skim — tap any row to flag it shaky">${rows}</div>
+    <p class="ank-hint">tap / Enter / <b>S</b> flags a row · ↑↓ move · switch to Stream to study</p>`;
+
+  wireCommon();
+  wireSkim();
+}
+
+function wireSkim() {
+  const host = $('#ankSkim');
+  if (!host) return;
+  const rows = [...host.querySelectorAll('.ank-row')];
+  const toggleRow = (btn) => {
+    const { deck } = stream;
+    deck.shaky = toggleShaky(deck.shaky, btn.dataset.id);
+    saveDeck(deck);
+    const on = deck.shaky.includes(btn.dataset.id);
+    btn.classList.toggle('is-shaky', on);
+    btn.setAttribute('aria-pressed', String(on));
+    refreshPileChip();
+    const w = btn.querySelector('.ank-row-w')?.textContent || '';
+    announce(`${w} — ${on ? 'flagged' : 'unflagged'}`);
+  };
+  rows.forEach(btn => btn.addEventListener('click', () => toggleRow(btn)));
+  // roving tabindex: ONE tab stop; ↑↓ move focus, Enter/Space (native click) or S toggles
+  host.addEventListener('keydown', (e) => {
+    const cur = e.target.closest?.('.ank-row');
+    if (!cur) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const i = rows.indexOf(cur), next = rows[i + (e.key === 'ArrowDown' ? 1 : -1)];
+      if (next) { cur.tabIndex = -1; next.tabIndex = 0; next.focus(); next.scrollIntoView({ block: 'nearest' }); }
+    } else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleRow(cur); }
+  });
+}
+
+// ───────────────────────────── shared wiring ─────────────────────────────
+
 function paintCard() {
-  const { deck, order, idx, chunk } = stream;
+  const { deck, order, idx, chunk, mode } = stream;
   const card = order[idx];
   const el = $('#ankCard');
   if (!el || !card) return;
@@ -235,21 +342,24 @@ function paintCard() {
     ${hair}${sent}${sentM}`;
 
   const total = deck.cards.length;
-  const globalN = chunk * CHUNK + idx + 1;
   const prog = $('#ankProg');
   if (prog) {
     const pct = Math.round((idx + 1) / order.length * 100);
-    prog.innerHTML = `
-      <span class="ank-prog-n">${esc(String(globalN))} / ${esc(String(total))}</span>
-      <span class="ank-prog-dot" aria-hidden="true">·</span>
-      <span class="ank-prog-lbl">chunk ${esc(chunkLabel(chunk, total, CHUNK))}</span>
-      <span class="ank-prog-mini">${esc(String(idx + 1))}/${esc(String(order.length))}</span>
-      <span class="ank-prog-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`;
+    prog.innerHTML = mode === 'pile'
+      ? `<span class="ank-prog-n">${esc(String(idx + 1))} / ${esc(String(order.length))} shaky</span>
+         <span class="ank-prog-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`
+      : `<span class="ank-prog-n">${esc(String(chunk * CHUNK + idx + 1))} / ${esc(String(total))}</span>
+         <span class="ank-prog-dot" aria-hidden="true">·</span>
+         <span class="ank-prog-lbl">chunk ${esc(chunkLabel(chunk, total, CHUNK))}</span>
+         <span class="ank-prog-mini">${esc(String(idx + 1))}/${esc(String(order.length))}</span>
+         <span class="ank-prog-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`;
   }
+  announce(`${card.w}${card.r ? ', ' + card.r : ''}${card.m ? ', ' + card.m : ''}${isShaky ? ', flagged shaky' : ''}`);
 }
 
 function persistPos() {
-  const { deck, chunk, idx } = stream;
+  const { deck, chunk, idx, mode } = stream;
+  if (mode === 'pile') return;   // the pile is a snapshot run — it does not own a resume slot
   deck.pos[chunk] = idx;
   saveDeck(deck);
 }
@@ -257,7 +367,7 @@ function persistPos() {
 function advance(delta) {
   const { order, idx } = stream;
   const next = idx + delta;
-  if (next < 0 || next >= order.length) return;   // clamp at chunk edges (chunk switch is via the strip)
+  if (next < 0 || next >= order.length) return;
   stream.idx = next;
   paintCard();
   persistPos();
@@ -267,52 +377,71 @@ function toggleShakyCurrent() {
   const { deck, order, idx } = stream;
   const card = order[idx];
   if (!card) return;
+  // NON-destructive everywhere (stage-3 review): in a pile run the card stays in THIS run's
+  // snapshot; the flag + chip count update, and the next pile entry re-derives membership.
   deck.shaky = toggleShaky(deck.shaky, card.id);
   saveDeck(deck);
+  refreshPileChip();
   paintCard();
 }
 
 function switchChunk(chunk) {
   const { deck } = stream;
-  const order = orderFor(deck, chunk);
+  const order = orderFor(deck, chunk, 'chunk');
   const pos = Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
-  stream = { deck, chunk, idx: pos, order };
+  stream = { deck, mode: 'chunk', chunk, idx: pos, order };
+  deck.view === 'skim' ? renderSkim(deck) : rePaintAfterSwitch();
+}
+function enterPile() {
+  const { deck } = stream;
+  stream = { deck, mode: 'pile', chunk: stream.chunk, idx: 0, order: [] };
+  deck.view === 'skim' ? renderSkim(deck) : renderStream(deck);
+}
+function rePaintAfterSwitch() {
+  const { deck, chunk, mode } = stream;
   root.querySelectorAll('.ank-chip').forEach(b => {
-    const on = parseInt(b.dataset.chunk, 10) === chunk;
+    const on = b.dataset.pile ? mode === 'pile' : (mode === 'chunk' && parseInt(b.dataset.chunk, 10) === chunk);
     b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
-  const active = root.querySelector('.ank-chip.active');
-  active?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  root.querySelector('.ank-chip.active')?.scrollIntoView({ inline: 'center', block: 'nearest' });
   paintCard();
+}
+
+function wireCommon() {
+  $('#ankStrip')?.querySelectorAll('.ank-chip[data-chunk]').forEach(b => b.addEventListener('click', () => switchChunk(parseInt(b.dataset.chunk, 10))));
+  root.querySelector('.ank-chip-pile')?.addEventListener('click', enterPile);
+  $('#ankViewStream')?.addEventListener('click', () => { const d = stream.deck; if (d.view !== 'stream') { d.view = 'stream'; saveDeck(d); renderStream(d); } });
+  $('#ankViewSkim')?.addEventListener('click', () => { const d = stream.deck; if (d.view !== 'skim') { d.view = 'skim'; saveDeck(d); renderSkim(d); } });
+  $('#ankShuffle')?.addEventListener('click', () => {
+    const deck = stream.deck;
+    const keep = stream.chunk;                     // stage-3 fix: the re-derive was snapping to chunk 0
+    deck.shuffle = !deck.shuffle;
+    saveDeck(deck);
+    stream = { deck, mode: stream.mode, chunk: keep, idx: 0, order: [] };
+    deck.view === 'skim' ? renderSkim(deck) : renderStream(deck);
+  });
+  $('#ankReplace')?.addEventListener('click', () => {
+    DATA = null; stream = null;
+    renderImport();
+    root.insertAdjacentHTML('afterbegin', `<button type="button" class="ank-mini ank-back" id="ankBack">← Back to deck</button>
+      <button type="button" class="ank-mini ank-back" id="ankClearFlags">Clear all flags</button>`);
+    $('#ankBack')?.addEventListener('click', () => { render(); });
+    $('#ankClearFlags')?.addEventListener('click', () => { const d = loadDeck(); if (d) { d.shaky = []; saveDeck(d); } render(); });
+  });
 }
 
 function wireStream() {
   const card = $('#ankCard');
   card?.addEventListener('click', () => advance(1));
-  $('#ankStrip')?.querySelectorAll('.ank-chip').forEach(b => b.addEventListener('click', () => switchChunk(parseInt(b.dataset.chunk, 10))));
-
-  $('#ankShuffle')?.addEventListener('click', () => {
-    const deck = stream.deck;
-    deck.shuffle = !deck.shuffle;
-    saveDeck(deck);
-    stream = null;   // force a full re-derive of order
-    renderStream(deck);
-  });
-  $('#ankReplace')?.addEventListener('click', () => {
-    // does NOT clear the saved deck — only re-opens the importer; a new file must parse OK to replace.
-    DATA = null; stream = null;
-    renderImport();
-    root.insertAdjacentHTML('afterbegin', `<button type="button" class="ank-mini ank-back" id="ankBack">← Back to deck</button>`);
-    $('#ankBack')?.addEventListener('click', () => { render(); });
-  });
-
-  // keyboard: only when the Core-deck card/section holds focus (don't hijack the whole page)
   if (!root.dataset.kbd) {
     root.dataset.kbd = '1';
     root.addEventListener('keydown', (e) => {
       if (!stream) return;
       const t = e.target;
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+      // BUTTON early-return (stage-3 review): S/Space on a focused skim row or strip chip must
+      // not ALSO drive the stream (double-fire); buttons own their keys.
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
+      if (stream.deck.view === 'skim') return;
       if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
       else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }

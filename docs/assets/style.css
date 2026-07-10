@@ -3603,3 +3603,21 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
   .ank-chip, .ank-mini, .ank-btn, .ank-remap-f select, .ank-drop, .ank-remap > summary{ min-height:44px; }
   .ank-chip, .ank-mini, .ank-btn{ display:inline-flex; align-items:center; }
 }
+
+/* ===== Anki refresher — stage 3 (skim + pile) ===== */
+.ank-seg{ display:inline-flex; gap:2px; margin-right:.4rem; }
+.ank-chip-pile{ font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }
+.ank-chip-pile[disabled]{ opacity:.45; cursor:default; }
+.ank-skim{ display:flex; flex-direction:column; gap:2px; margin-top:.5rem; }
+.ank-row{ display:grid; grid-template-columns: minmax(90px,auto) minmax(90px,auto) 1fr; gap:.8rem; align-items:baseline;
+  text-align:left; background:none; border:none; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  border-left:3px solid transparent; padding:.35rem .5rem; font:inherit; color:var(--ink); cursor:pointer; border-radius:6px; }
+.ank-row:hover, .ank-row:focus-visible{ background: color-mix(in srgb, var(--indigo) 7%, transparent); }
+.ank-row:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; }
+.ank-row.is-shaky{ border-left-color: var(--gold-ink, #8a6508); background: color-mix(in srgb, var(--gold, #c9a227) 7%, transparent); }   /* gold-ink: plain --gold is 2.77:1 on the light row bg */
+.ank-row-w{ font-weight:700; font-size:1rem; }
+.ank-row-r{ color: var(--ink-soft); font-size:.85rem; }
+.ank-row-m{ color: var(--ink-soft); font-size:.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ank-clear{ text-align:center; padding:2.5rem 1rem; }
+.ank-clear-art{ font-size:2rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); margin-bottom:.5rem; }
+@media (hover: none){ .ank-row{ min-height:44px; } .ank-seg .ank-mini{ min-height:44px; } }

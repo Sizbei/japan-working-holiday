@@ -70,9 +70,45 @@ One giant card, **everything visible at once** — no flip, no friction:
    charset heuristics), chunk math, shaky ops.
 2. **Import flow + stream UI** — drop zone / file picker → preview 3 rows + remap → save; the
    scan card + keyboard/tap/swipe + progress + chunk strip.
-3. **Skim list + shaky pile + polish** — the skim toggle (dense list, tap-to-flag), stream-the-
-   flags mode, shuffle, resume; mobile pass (44px targets); 0-console-errors + trusted-input
-   verification; PR.
+3. **Skim list + shaky pile + polish** — DETAILED (2026-07-10, stage 2 shipped as #113/#117):
 
-Estimated: 2–3 loop-tick-sized chunks. The design loop's remaining stages (23, 19, 20, 2b)
-continue independently.
+   **3a. View seg + skim list.** A [▶ Stream | ☰ Skim] seg control in the ank header (the
+   people-page Cards/List seg pattern; persisted in jwh-anki-v1 as `view`). Skim renders the
+   CURRENT CHUNK as a dense list: one row = `word · reading · meaning` (NO sentence column —
+   density is the point; the sentence lives in stream). Rows are real <button>s (keyboard
+   focusable, Enter/S toggles). ~50 rows/screen at .9rem; row hover = the shared
+   interactive-row affordance; 44px min-height under (hover:none). Flagged rows show ◆ + gold
+   left tick. Chunk strip + progress shared with stream (same state).
+
+   **3b. Tap-to-flag.** Tapping/Enter on a skim row toggles that card in shaky[] immediately
+   (immutable toggleShaky, saved on each toggle). No mode arming — the whole skim view IS the
+   flagging surface (that's its job per the owner's option-3 pick).
+
+   **3c. Shaky pile runner.** A "◆ Shaky (N)" chip pinned at the END of the chunk strip, both
+   views. DECIDED DEFAULTS (owner may veto):
+   - Pile is GLOBAL across the whole deck, not per-chunk (you skim chunk-by-chunk but re-run
+     hesitations in one pass).
+   - Streaming the pile: S UN-flags and drops the card from the run at the next advance — the
+     pile shrinks as recognition returns; progress reads "n / N shaky". Empty pile → small
+     "all clear ✓" state with a button back to chunk 1.
+   - "Clear all flags" lives behind the Replace-deck disclosure (destructive-ish, keep it out
+     of the fast path).
+
+   **3d. Folded-in fixes from the stage-20 log:** shuffle toggle keeps the current chunk
+   (today it snaps to 0); drop mountAnki's dead `data` param; SR announce — a visually-hidden
+   debounced (≈400ms, the #calLive pattern) live region that speaks "word, reading, meaning"
+   after advancing settles, so rapid-fire doesn't queue 2000 announcements.
+
+   **3e. Verify (harness):** seg toggle persists · skim rows flag/unflag (trusted taps) + gold
+   tick renders · shaky chip count live-updates from BOTH views · pile run streams only flags,
+   S drops a card, count decrements, empty state renders · shuffle keeps chunk · SR region
+   announces once per settle (probe the debounce) · 44px rows under hover:none (cascade check)
+   · pos/resume still green from stage 2 · 0 exceptions · tests green (new pure helpers, if
+   any, land in lib/anki.js with tests). PR + squash.
+
+   **v1.1 candidates (parked, not stage 3):** classic flip mode · auto-advance timer (2s/card)
+   · hover-dictionary tie-in on the stream word · export the shaky pile back to Anki as TSV
+   (the June lib's toAnkiTSV is sitting right there) · per-chunk "last visited" heat strip.
+
+Estimated: one focused build session. The design loop completed 2026-07-10 (see
+2026-07-10-twenty-stages.md verdicts).

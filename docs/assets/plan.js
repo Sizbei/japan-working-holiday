@@ -44,7 +44,11 @@ export function mountPlan(data) {
     if (document.getElementById('view-plan')?.classList.contains('is-active')) { renderRail(); render(); }
     else planDirty = true;
   });
-  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'plan' && planDirty) { planDirty = false; renderRail(); render(); } });
+  document.addEventListener('jwh:route', (e) => {
+    if (e.detail?.route !== 'plan') return;
+    if (planDirty) { planDirty = false; renderRail(); render(); }
+    requestAnimationFrame(scrollActiveIntoView);   // stage 5: entering mid-trip, the active chip can be deep in the 2000px strip
+  });
   document.addEventListener('jwh:plan-goto', (e) => { const d = e.detail?.date; if (d) { activeDate = d; planDirty = false; renderRail(); render(); scrollActiveIntoView(); } });   // fresh render — clear dirty so the route listener doesn't repeat it (review)   // long-press a calendar day → plan it
   // the route line is drawn on demand (Show route on map); clear it only when leaving BOTH
   // plan and map (never auto-load Leaflet on #/plan).
@@ -77,6 +81,15 @@ function renderRail() {
     </button>`;
   }).join('') + `<label class="plan-pick">+ date<input type="date" id="planPick" aria-label="Jump to any date"></label>`;
   rail.querySelectorAll('.plan-chip').forEach(b => b.addEventListener('click', () => { activeDate = b.dataset.date; renderRail(); render(); scrollActiveIntoView(); }));
+  // stage 5: scroll-edge fades — only where content actually overflows (45 pills ≈ 2000px hidden)
+  if (!rail.dataset.fadeWired) {
+    rail.dataset.fadeWired = '1';
+    const fades = () => { rail.classList.toggle('fade-l', rail.scrollLeft > 4); rail.classList.toggle('fade-r', rail.scrollLeft + rail.clientWidth < rail.scrollWidth - 4); };
+    rail.addEventListener('scroll', fades, { passive: true });
+    window.addEventListener('resize', fades);
+    rail._fades = fades;
+  }
+  rail._fades?.();
   $('#planPick')?.addEventListener('change', (e) => { if (e.target.value) { activeDate = e.target.value; renderRail(); render(); } });
   if (railHadFocus) $('#planDays .plan-chip.active')?.focus();   // keep keyboard focus on the selected day across the rebuild
 }
@@ -198,13 +211,15 @@ function stopRow(s, i, stops) {
           </span>
           ${end ? `<span class="stop-end">→ ${esc(end)}</span>` : ''}
         </div>
-        <input type="text" class="stop-note" value="${esc(s.note || '')}" data-edit="note" data-id="${esc(s.id)}" placeholder="note…" aria-label="Note for ${esc(s.name)}">
+        <input type="text" class="stop-note" value="${esc(s.note || '')}" title="${esc(s.note || '')}" data-edit="note" data-id="${esc(s.id)}" placeholder="note…" aria-label="Note for ${esc(s.name)}">
       </div>
-      <span class="stop-move">
-        <button type="button" class="mv" data-edit="up" data-id="${esc(s.id)}" aria-label="Move ${esc(s.name)} earlier"${i === 0 ? ' disabled' : ''}>▲</button>
-        <button type="button" class="mv" data-edit="down" data-id="${esc(s.id)}" aria-label="Move ${esc(s.name)} later"${i === stops.length - 1 ? ' disabled' : ''}>▼</button>
+      <span class="stop-rail">
+        <span class="stop-move">
+          <button type="button" class="mv" data-edit="up" data-id="${esc(s.id)}" aria-label="Move ${esc(s.name)} earlier"${i === 0 ? ' disabled' : ''}>▲</button>
+          <button type="button" class="mv" data-edit="down" data-id="${esc(s.id)}" aria-label="Move ${esc(s.name)} later"${i === stops.length - 1 ? ' disabled' : ''}>▼</button>
+        </span>
+        <button type="button" class="stop-del" data-edit="del" data-id="${esc(s.id)}" aria-label="Remove ${esc(s.name)}">✕</button>
       </span>
-      <button type="button" class="stop-del" data-edit="del" data-id="${esc(s.id)}" aria-label="Remove ${esc(s.name)}">✕</button>
     </li>`;
 }
 function endTime(start, dur) {

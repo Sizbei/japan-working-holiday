@@ -44,7 +44,8 @@ function toast(msg, undoFn) {
   t.addEventListener('pointerleave', () => { hideTimer = setTimeout(dismiss, 1200); });
   let sx = null, dx = 0, st = 0;
   t.addEventListener('pointerdown', (e) => { if (e.target.tagName === 'BUTTON') return; sx = e.clientX; st = performance.now(); t.setPointerCapture?.(e.pointerId); });
-  t.addEventListener('pointermove', (e) => { if (sx === null) return; dx = e.clientX - sx; t.style.transform = `translateX(${dx}px)`; t.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 220)); });
+  // calc(-50% + dx): the toast is centered via translateX(-50%) — replacing it jumped ½-width on grab (stage-20 critic, measured 48px)
+  t.addEventListener('pointermove', (e) => { if (sx === null) return; dx = e.clientX - sx; t.style.transform = `translateX(calc(-50% + ${dx}px))`; t.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 220)); });
   t.addEventListener('pointerup', () => {
     if (sx === null) return;
     const v = Math.abs(dx) / Math.max(1, performance.now() - st);   // px/ms — flick beats distance

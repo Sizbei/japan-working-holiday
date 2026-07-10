@@ -7162,7 +7162,9 @@
   "tags": [
    "aspect"
   ],
-  "related": [],
+  "related": [
+   "n2-ppanashi"
+  ],
   "examples": [
    {
     "ja": [
@@ -8610,7 +8612,8 @@
    "question"
   ],
   "related": [
-   "n4-hazu"
+   "n4-hazu",
+   "n2-mai"
   ],
   "examples": [
    {

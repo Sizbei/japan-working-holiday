@@ -1235,7 +1235,7 @@ test('byLevel filters', () => {
 });
 
 test('all grammar-*.json files pass the validator (the data gate for every bake PR)', () => {
-  const COUNTS = { n5: 82, n4: 86, n3: 72 };            // update per bake phase
+  const COUNTS = { n5: 82, n4: 86, n3: 72, n2: 65 };            // update per bake phase
   const files = Object.keys(COUNTS).map(l => [l.toUpperCase(),
     JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8'))]);
   const allIds = new Set(files.flatMap(([, pts]) => pts.map(p => p.id)));   // related[] crosses levels

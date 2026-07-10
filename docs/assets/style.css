@@ -3659,3 +3659,27 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .g-error{ text-align:center; padding:2rem 1rem; }
 .g-retry{ font:inherit; padding:.4rem 1rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
 @media (hover: none){ .g-card-h, .g-tab, .g-furi{ min-height:44px; } }
+
+/* ===== JLPT grammar — P3 token inspect (tooltip / strip / cursor) ===== */
+.gtok{ cursor:pointer; }
+.gtok:hover{ background: color-mix(in srgb, var(--indigo) 10%, transparent); border-radius:3px; }
+.gtok-cur{ outline:2px solid var(--indigo); outline-offset:1px; border-radius:3px; }
+.g-ja:focus-visible{ outline:2px solid var(--indigo); outline-offset:3px; border-radius:4px; }
+.g-tip{ position:fixed; z-index:95; max-width:300px; padding:.5rem .7rem; background:var(--bg-elevated);
+  border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); font-size:.85rem; }
+.g-tip[hidden]{ display:none; }
+.g-tip-w{ font-weight:700; margin-right:.4rem; }
+.g-tip-r{ color:var(--ink-soft); font-size:.8rem; margin-right:.4rem; }
+.g-tip-g{ display:block; margin-top:.15rem; }
+.g-tip-jisho{ display:inline-block; margin-top:.25rem; font-size:.78rem; }
+.g-tip-pat{ font-weight:700; }
+.g-tip-conn{ display:block; margin-top:.25rem; font-size:.82rem; }
+.g-tip-conn b{ font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-right:.3rem; }
+.g-tip-nuance{ display:block; margin-top:.2rem; color:var(--ink-soft); font-size:.78rem; }
+.g-strip{ position:relative; margin:.2rem 0 .55rem; padding:.5rem 2rem .5rem .7rem; font-size:.88rem;
+  border:1px solid var(--line); border-left:3px solid var(--indigo); border-radius:8px;
+  background: color-mix(in srgb, var(--indigo) 6%, var(--bg-soft)); }
+.g-strip-x{ position:absolute; top:.25rem; right:.3rem; background:none; border:none; cursor:pointer;
+  color:var(--ink-soft); font:inherit; padding:.25rem .45rem; border-radius:6px; }
+.g-strip-x:hover, .g-strip-x:focus-visible{ color:var(--ink); background: color-mix(in srgb, var(--ink) 8%, transparent); }
+@media (hover: none){ .g-strip-x{ min-height:44px; min-width:44px; } }

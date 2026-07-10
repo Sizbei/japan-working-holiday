@@ -154,3 +154,9 @@ export function shuffled(cards, seed = 1) {
   for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
   return out;
 }
+
+// pile = flagged cards in DECK ORDER (stage 3; snapshot at run start — never mutated mid-run)
+export function pileOrder(cards, shaky) {
+  const set = new Set(shaky || []);
+  return (cards || []).filter(c => c && set.has(c.id));
+}

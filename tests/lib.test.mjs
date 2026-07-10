@@ -1181,3 +1181,13 @@ test('anki chunks + shaky + deterministic shuffle', () => {
   assert.deepEqual(s1, s2);                                    // same seed → same order
   assert.notDeepEqual(s1, cards.map(c => c.id));               // actually shuffles
 });
+
+// ---- Anki stage 3: pile snapshot ----
+import { pileOrder } from '../docs/assets/lib/anki.js';
+test('pileOrder: deck order preserved, ids deduped by Set, empty/missing safe', () => {
+  const cards = [{id:'a0'},{id:'a1'},{id:'a2'},{id:'a3'}];
+  assert.deepEqual(pileOrder(cards, ['a3','a1','a1']).map(c=>c.id), ['a1','a3']);  // deck order, not flag order
+  assert.deepEqual(pileOrder(cards, []), []);
+  assert.deepEqual(pileOrder([], ['a1']), []);
+  assert.deepEqual(pileOrder(cards, undefined), []);
+});

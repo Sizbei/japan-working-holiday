@@ -148,7 +148,8 @@
   "confidence": "high",
   "related": [
    "n4-ba",
-   "n4-to-conditional"
+   "n4-to-conditional",
+   "n3-to-shitara"
   ]
  },
  {
@@ -746,7 +747,8 @@
   "level": "N4",
   "confidence": "high",
   "related": [
-   "n5-temo-ii"
+   "n5-temo-ii",
+   "n3-tatoe-temo"
   ]
  },
  {
@@ -1006,7 +1008,8 @@
   ],
   "related": [
    "n4-volitional",
-   "n5-to-omoimasu"
+   "n5-to-omoimasu",
+   "n3-you-to-suru"
   ],
   "examples": [
    {
@@ -1519,7 +1522,9 @@
   ],
   "related": [
    "n4-kamoshiremasen",
-   "n4-darou"
+   "n4-darou",
+   "n3-hazu-ga-nai",
+   "n3-hazu-datta"
   ],
   "examples": [
    {
@@ -1656,7 +1661,8 @@
   ],
   "related": [
    "n4-sou-looks",
-   "n4-rashii"
+   "n4-rashii",
+   "n3-ni-yoru-to"
   ],
   "examples": [
    {
@@ -3686,7 +3692,8 @@
   ],
   "related": [
    "n4-te-ageru",
-   "n4-te-kureru"
+   "n4-te-kureru",
+   "n3-te-itadakemasen-ka"
   ],
   "examples": [
    {
@@ -4231,7 +4238,9 @@
    "aspect"
   ],
   "related": [
-   "n4-owaru"
+   "n4-owaru",
+   "n3-dasu",
+   "n3-tsuzukeru"
   ],
   "examples": [
    {
@@ -4361,7 +4370,8 @@
    "aspect"
   ],
   "related": [
-   "n4-hajimeru"
+   "n4-hajimeru",
+   "n3-tsuzukeru"
   ],
   "examples": [
    {
@@ -5129,7 +5139,10 @@
   "tags": [
    "question"
   ],
-  "related": [],
+  "related": [
+   "n3-to-iu-no-wa",
+   "n3-tte"
+  ],
   "examples": [
    {
     "ja": [
@@ -5433,7 +5446,8 @@
    "listing"
   ],
   "related": [
-   "n4-toka"
+   "n4-toka",
+   "n3-nanka"
   ],
   "examples": [
    {
@@ -5721,7 +5735,8 @@
    "contrast"
   ],
   "related": [
-   "n4-keredomo"
+   "n4-keredomo",
+   "n3-kuse-ni"
   ],
   "examples": [
    {
@@ -6326,7 +6341,9 @@
   "tags": [
    "time"
   ],
-  "related": [],
+  "related": [
+   "n3-uchi-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -6749,7 +6766,8 @@
    "quantity"
   ],
   "related": [
-   "n4-ta-bakari"
+   "n4-ta-bakari",
+   "n3-te-bakari-iru"
   ],
   "examples": [
    {
@@ -7014,7 +7032,8 @@
    "time"
   ],
   "related": [
-   "n4-ta-bakari"
+   "n4-ta-bakari",
+   "n3-tokoro-datta"
   ],
   "examples": [
    {
@@ -7964,7 +7983,8 @@
    "purpose"
   ],
   "related": [
-   "n4-tame-ni"
+   "n4-tame-ni",
+   "n3-you-ni-iu"
   ],
   "examples": [
    {
@@ -9010,7 +9030,8 @@
   ],
   "related": [
    "n4-o-ni-naru",
-   "n4-kenjougo-verbs"
+   "n4-kenjougo-verbs",
+   "n3-sasete-itadaku"
   ],
   "examples": [
    {
@@ -9135,7 +9156,8 @@
   ],
   "related": [
    "n4-o-ni-naru",
-   "n4-kenjougo-verbs"
+   "n4-kenjougo-verbs",
+   "n3-rareru-keigo"
   ],
   "examples": [
    {
@@ -9596,7 +9618,9 @@
   "tags": [
    "degree"
   ],
-  "related": [],
+  "related": [
+   "n3-toori-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -10430,7 +10454,9 @@
   "tags": [
    "obligation"
   ],
-  "related": [],
+  "related": [
+   "n3-koto-wa-nai"
+  ],
   "examples": [
    {
     "ja": [
@@ -11391,7 +11417,9 @@
    "degree"
   ],
   "related": [
-   "n5-yori-hou-ga"
+   "n5-yori-hou-ga",
+   "n3-ba-hodo",
+   "n3-hodo-nai"
   ],
   "examples": [
    {

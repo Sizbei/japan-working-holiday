@@ -34,6 +34,23 @@ function relocateNav() {
   const inBar = nav.parentElement === topbar;
   if (wantInBar && !inBar) topbar.insertBefore(nav, topbar.querySelector('.countdown'));
   else if (!wantInBar && inBar) topbar.parentNode.insertBefore(nav, topbar.nextSibling);
+  wireNavFades(nav);
+}
+// stage 2b (design loop): below ~1240px the compact in-topbar nav scrolls with a hidden
+// scrollbar and no hint — fade-l/fade-r classes (same pattern as the Plan-a-Day strip) drive
+// CSS mask fades only where content actually overflows.
+function wireNavFades(nav) {
+  const fades = () => {
+    const inBar = nav.parentElement?.classList?.contains('topbar');
+    nav.classList.toggle('fade-l', inBar && nav.scrollLeft > 4);
+    nav.classList.toggle('fade-r', inBar && nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 4);
+  };
+  if (!nav.dataset.fadeWired) {
+    nav.dataset.fadeWired = '1';
+    nav.addEventListener('scroll', fades, { passive: true });
+    window.addEventListener('resize', fades);
+  }
+  requestAnimationFrame(fades);
 }
 DESKTOP.addEventListener('change', relocateNav);   // crossing 820px must restore the drawer / re-merge
 

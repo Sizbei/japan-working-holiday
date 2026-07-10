@@ -3625,10 +3625,11 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 /* ===== JLPT grammar (#/grammar) — P2 browse UI ===== */
 .g-xlink a{ font-weight:600; text-decoration:none; border-bottom:1px dotted currentColor; }
 .g-bar{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:.4rem 0 .9rem; }
-.g-tabs{ display:inline-flex; gap:2px; }
-.g-tab{ font:inherit; font-size:.85rem; font-weight:600; padding:.3rem .7rem; border:1px solid var(--line); background:var(--bg-soft); color:var(--ink); cursor:pointer; }
-.g-tab:first-child{ border-radius:8px 0 0 8px; } .g-tab:last-child{ border-radius:0 8px 8px 0; }
-.g-tab[aria-pressed="true"]{ background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.g-tabs{ position:relative; display:inline-flex; gap:2px; border:1px solid var(--line); border-radius:9px; background:var(--bg-soft); padding:2px; }
+.g-tab{ position:relative; z-index:1; font:inherit; font-size:.85rem; font-weight:600; padding:.28rem .68rem; border:none; border-radius:7px; background:transparent; color:var(--ink); cursor:pointer; }
+.g-tab[aria-pressed="true"]{ color: var(--bg); }
+.g-tab-ind{ position:absolute; top:2px; left:0; z-index:0; background:var(--ink); border-radius:7px; will-change:transform; }
+.g-tab-ind.is-ready{ transition: transform .28s cubic-bezier(.34,1.45,.64,1), width .28s cubic-bezier(.34,1.45,.64,1); }
 .g-count{ font-weight:400; font-size:.75rem; opacity:.75; }
 .g-furi{ font:inherit; font-size:.85rem; padding:.3rem .7rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
 .g-furi[aria-pressed="true"]{ border-color: var(--indigo); }
@@ -3683,3 +3684,11 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
   color:var(--ink-soft); font:inherit; padding:.25rem .45rem; border-radius:6px; }
 .g-strip-x:hover, .g-strip-x:focus-visible{ color:var(--ink); background: color-mix(in srgb, var(--ink) 8%, transparent); }
 @media (hover: none){ .g-strip-x{ min-height:44px; min-width:44px; } }
+
+/* ===== JLPT grammar — P4 motion (all covered by the reduce-motion TOTAL-kill) ===== */
+@keyframes gCardIn{ from{ opacity:0; transform:translateY(4px); } }
+.g-card.g-in{ animation: gCardIn .18s ease-out both; animation-delay: var(--gd, 0ms); }   /* tab switches only — never per search keystroke */
+@keyframes gStripIn{ from{ opacity:0; transform:scale(.97) translateY(-2px); } }
+.g-strip{ animation: gStripIn .12s ease-out; transform-origin: top left; }                /* tap/keyboard-summoned = deliberate; hover tooltip stays INSTANT */
+#grammar ruby rt{ transition: opacity .16s ease; }
+#grammar.furi-off ruby rt{ visibility:visible; opacity:0; }   /* keep the global .furi-off space behavior, let the fade show inside grammar */

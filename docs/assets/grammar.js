@@ -20,6 +20,7 @@ const cache = {};                                // level → points, module-cac
 const state = { level: 'N5', q: '', shown: CHUNK };
 let fetchedAll = false;                          // search is global — remaining levels fetch on first search focus
 let io = null;
+let staggerNext = true;                          // card stagger fires on tab switches/boot, NEVER per search keystroke (frequency gate)
 
 export function mountGrammar() {
   const root = $('#grammarRoot');
@@ -28,6 +29,7 @@ export function mountGrammar() {
   root.innerHTML = `
     <div class="g-bar">
       <div class="g-tabs" role="group" aria-label="JLPT level">
+        <span class="g-tab-ind" id="gTabInd" aria-hidden="true"></span>
         ${LEVELS.map(l => `<button type="button" class="g-tab" data-level="${l}" aria-pressed="${l === state.level}">${l}<span class="g-count" data-count="${l}"></span></button>`).join('')}
       </div>
       <button type="button" class="g-furi" id="gFuri"></button>
@@ -37,6 +39,8 @@ export function mountGrammar() {
     <div id="gSentinel" aria-hidden="true"></div>`;
   wireBar(root);
   applyFuri();
+  moveTabInd();
+  document.fonts?.ready?.then(moveTabInd);   // web fonts reflow tab widths
   io = new IntersectionObserver((es) => {
     if (es.some(x => x.isIntersecting) && state.shown < currentPoints().length) {
       state.shown += CHUNK;
@@ -91,7 +95,9 @@ function wireBar(root) {
     state.level = b.dataset.level;
     state.q = ''; $('#gSearch').value = '';
     state.shown = CHUNK;
+    staggerNext = true;
     root.querySelectorAll('.g-tab').forEach(t => t.setAttribute('aria-pressed', String(t === b)));
+    moveTabInd();
     load(state.level);
   });
   $('#gFuri').addEventListener('click', () => {
@@ -125,7 +131,9 @@ function jumpTo(id) {
   const pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
   if (!pt) return;
   state.level = pt.level; state.q = ''; $('#gSearch').value = ''; state.shown = CHUNK;
+  staggerNext = false;   // no stagger — don't delay the flash/scroll target
   document.querySelectorAll('.g-tab').forEach(t => t.setAttribute('aria-pressed', String(t.dataset.level === pt.level)));
+  moveTabInd();
   renderList();
   const card = document.querySelector(`.g-card[data-id="${CSS.escape(id)}"]`);
   if (!card) return;
@@ -153,6 +161,19 @@ function updateCounts() {
     const el = document.querySelector(`.g-count[data-count="${l}"]`);
     if (el) el.textContent = cache[l] ? ` ${cache[l].length}` : '';
   });
+  moveTabInd();   // count chips change tab widths
+}
+
+// sliding pressed-pill behind the level tabs (spring; reduce-motion global kill covers it).
+// First position is set BEFORE .is-ready arms the transition — no fly-in from 0 on boot.
+function moveTabInd() {
+  const ind = $('#gTabInd');
+  const act = document.querySelector('.g-tab[aria-pressed="true"]');
+  if (!ind || !act) return;
+  ind.style.width = act.offsetWidth + 'px';
+  ind.style.height = act.offsetHeight + 'px';
+  ind.style.transform = `translateX(${act.offsetLeft}px)`;
+  if (!ind.classList.contains('is-ready')) requestAnimationFrame(() => ind.classList.add('is-ready'));
 }
 
 function renderList() {
@@ -167,15 +188,16 @@ function renderList() {
     announce(state.q ? `No matches for ${state.q}` : `${state.level}: no data yet`);
     return;
   }
+  const st = staggerNext; staggerNext = false;
   const slice = pts.slice(0, state.shown);
-  list.innerHTML = slice.map(cardHTML).join('');
+  list.innerHTML = slice.map((p, i) => cardHTML(p, st ? Math.min(i, 8) * 20 : -1)).join('');
   announce(state.q ? `${pts.length} matches` : `${state.level}: ${pts.length} grammar points`);
 }
 
-function cardHTML(p) {
+function cardHTML(p, delay = -1) {
   const bid = `gc-${esc(p.id)}`;
   return `
-  <article class="g-card" data-id="${esc(p.id)}">
+  <article class="g-card${delay >= 0 ? ' g-in' : ''}" data-id="${esc(p.id)}"${delay >= 0 ? ` style="--gd:${delay}ms"` : ''}>
     <button type="button" class="g-card-h" aria-expanded="false" aria-controls="${bid}">
       <span class="g-pat" lang="ja">${esc(p.pattern)}</span>
       <span class="g-mean">${esc(p.meaning)}</span>

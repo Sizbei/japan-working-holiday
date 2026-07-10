@@ -1234,17 +1234,21 @@ test('byLevel filters', () => {
   assert.deepEqual(byLevel(pts, 'N5').map(p => p.id), ['a']);
 });
 
-test('grammar-n5.json seed passes the validator (shape gate for every data PR)', () => {
-  const points = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
-  const n4ids = JSON.parse(readFileSync(new URL('../docs/data/grammar-n4.json', import.meta.url), 'utf8')).map(p => p.id);
-  const errs = validatePoints(points, 'N5', new Set([...points.map(p => p.id), ...n4ids]));   // related[] may cross levels
-  assert.deepEqual(errs, []);
-  assert.equal(points.length, 82);   // P5: full N5 bake
-  // acid tests the plan demands of the seed: a non-contiguous pattern + a glossed p anchor
-  const momo = points.find(p => p.id === 'n5-mo-mo');
-  assert.equal(momo.examples[0].ja.filter(t => t.p).length, 2);                  // disjoint p anchors
-  const maeni = points.find(p => p.id === 'n5-mae-ni');
-  assert.ok(maeni.examples[0].ja.find(t => t.p && t.g));                          // p token carrying its own g
+test('all grammar-*.json files pass the validator (the data gate for every bake PR)', () => {
+  const COUNTS = { n5: 82, n4: 86, n3: 72 };            // update per bake phase
+  const files = Object.keys(COUNTS).map(l => [l.toUpperCase(),
+    JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8'))]);
+  const allIds = new Set(files.flatMap(([, pts]) => pts.map(p => p.id)));   // related[] crosses levels
+  for (const [level, pts] of files) {
+    assert.deepEqual(validatePoints(pts, level, allIds), [], level);
+    assert.equal(pts.length, COUNTS[level.toLowerCase()], level);
+  }
+  // plan acid tests: a non-contiguous pattern + a glossed p anchor survive every merge
+  const n5 = files[0][1];
+  const momo = n5.find(p => p.id === 'n5-mo-mo');
+  assert.equal(momo.examples[0].ja.filter(tk => tk.p).length, 2);
+  const maeni = n5.find(p => p.id === 'n5-mae-ni');
+  assert.ok(maeni.examples[0].ja.find(tk => tk.p && tk.g));
 });
 
 test('validator rejects malformed tokens', () => {
@@ -1259,11 +1263,3 @@ test('validator rejects malformed tokens', () => {
   assert.ok(errs.some(e => e.includes('unknown id')));     // dangling related ref
 });
 
-test('grammar-n4.json passes the validator (cross-level related refs resolve)', () => {
-  const n5 = JSON.parse(readFileSync(new URL('../docs/data/grammar-n5.json', import.meta.url), 'utf8'));
-  const n4 = JSON.parse(readFileSync(new URL('../docs/data/grammar-n4.json', import.meta.url), 'utf8'));
-  const allIds = new Set([...n5, ...n4].map(p => p.id));
-  assert.deepEqual(validatePoints(n4, 'N4', allIds), []);
-  assert.equal(n4.length, 86);
-  assert.deepEqual(validatePoints(n5, 'N5', allIds), []);   // N5 gained cross-level links — must still pass
-});

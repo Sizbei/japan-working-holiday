@@ -5381,7 +5381,9 @@
    "quantity",
    "degree"
   ],
-  "related": [],
+  "related": [
+   "n3-kurai"
+  ],
   "examples": [
    {
     "ja": [
@@ -5659,7 +5661,8 @@
    "quantity"
   ],
   "related": [
-   "n5-shika-nai"
+   "n5-shika-nai",
+   "n3-dake-de-naku"
   ],
   "examples": [
    {
@@ -5892,7 +5895,8 @@
   ],
   "related": [
    "n5-de-ichiban",
-   "n4-hodo"
+   "n4-hodo",
+   "n3-ni-kurabete"
   ],
   "examples": [
    {
@@ -6873,7 +6877,9 @@
    "negation"
   ],
   "related": [
-   "n5-zenzen-nai"
+   "n5-zenzen-nai",
+   "n3-betsu-ni-nai",
+   "n3-nakanaka-nai"
   ],
   "examples": [
    {
@@ -8114,7 +8120,9 @@
    "negation",
    "connective"
   ],
-  "related": [],
+  "related": [
+   "n3-zu-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -11008,7 +11016,9 @@
   "tags": [
    "advice"
   ],
-  "related": [],
+  "related": [
+   "n3-beki"
+  ],
   "examples": [
    {
     "ja": [

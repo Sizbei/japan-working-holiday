@@ -3622,12 +3622,40 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .ank-clear-art{ font-size:2rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); margin-bottom:.5rem; }
 @media (hover: none){ .ank-row{ min-height:44px; } .ank-seg .ank-mini{ min-height:44px; } }
 
-/* ===== JLPT grammar (#/grammar) — P1 route shell ===== */
+/* ===== JLPT grammar (#/grammar) — P2 browse UI ===== */
 .g-xlink a{ font-weight:600; text-decoration:none; border-bottom:1px dotted currentColor; }
-.g-seed-note{ color: var(--ink-soft); font-size:.9rem; }
-.g-seed-list{ list-style:none; padding:0; margin:.6rem 0 0; }
-.g-seed-list li{ display:flex; gap:1rem; align-items:baseline; padding:.45rem .5rem; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); }
-.g-seed-pattern{ font-weight:700; font-size:1.05rem; min-width:11ch; }
-.g-seed-meaning{ color: var(--ink-soft); font-size:.9rem; }
+.g-bar{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:.4rem 0 .9rem; }
+.g-tabs{ display:inline-flex; gap:2px; }
+.g-tab{ font:inherit; font-size:.85rem; font-weight:600; padding:.3rem .7rem; border:1px solid var(--line); background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.g-tab:first-child{ border-radius:8px 0 0 8px; } .g-tab:last-child{ border-radius:0 8px 8px 0; }
+.g-tab[aria-pressed="true"]{ background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.g-count{ font-weight:400; font-size:.75rem; opacity:.75; }
+.g-furi{ font:inherit; font-size:.85rem; padding:.3rem .7rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.g-furi[aria-pressed="true"]{ border-color: var(--indigo); }
+.g-search{ font:inherit; font-size:.9rem; padding:.35rem .6rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); flex:1; min-width:14rem; }
+.g-card{ border:1px solid color-mix(in srgb, var(--line) 70%, transparent); border-radius:10px; margin-bottom:.5rem; background:var(--bg-soft); content-visibility:auto; contain-intrinsic-size:auto 58px; }
+.g-card-h{ display:grid; grid-template-columns:minmax(9ch,auto) 1fr auto auto; gap:.9rem; align-items:baseline; width:100%; text-align:left;
+  font:inherit; color:var(--ink); background:none; border:none; padding:.6rem .8rem; cursor:pointer; border-radius:10px; }
+.g-card-h:hover, .g-card-h:focus-visible{ background: color-mix(in srgb, var(--indigo) 7%, transparent); }
+.g-card-h:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; }
+.g-pat{ font-weight:700; font-size:1.1rem; }
+.g-mean{ color:var(--ink-soft); font-size:.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.g-lvl{ font-size:.72rem; font-weight:700; color:var(--indigo-ink); border:1px solid var(--indigo); border-radius:6px; padding:.05rem .35rem; }
+.g-chev{ color:var(--ink-soft); transition:transform .15s ease; }
+.g-card-h[aria-expanded="true"] .g-chev{ transform:rotate(180deg); }
+.g-card-b{ padding:.2rem .9rem .8rem; }
+.g-conn{ font-size:.9rem; margin:.2rem 0 .5rem; } .g-conn b{ font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-right:.4rem; }
+.g-nuance{ font-size:.85rem; color:var(--ink-soft); border-left:3px solid var(--line); padding-left:.6rem; margin:.4rem 0; }
+.g-ex{ margin:.55rem 0; }
+.g-ja{ font-size:1.08rem; line-height:2.4; margin:0; }   /* generous line-height: room for ruby + honest touch targets */
+.g-en{ color:var(--ink-soft); font-size:.85rem; margin:.1rem 0 0; }
+.gtok{ border-bottom:1px dotted color-mix(in srgb, var(--ink) 45%, transparent); }        /* the phrases-page "hoverable JP" affordance */
+.gtok-p{ border-bottom:2px solid var(--indigo-ink); }                                     /* the pattern itself — the lede names this contract */
+.g-rel{ font-size:.85rem; color:var(--ink-soft); margin:.5rem 0 .3rem; }
+.g-rel-chip{ font:inherit; font-size:.85rem; padding:.1rem .5rem; border:1px solid var(--line); border-radius:100px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.g-rel-chip:hover{ border-color: var(--indigo); }
+.g-flash{ outline:2px solid var(--indigo); outline-offset:2px; }
+.g-empty{ color:var(--ink-soft); text-align:center; padding:2rem 1rem; }
 .g-error{ text-align:center; padding:2rem 1rem; }
 .g-retry{ font:inherit; padding:.4rem 1rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+@media (hover: none){ .g-card-h, .g-tab, .g-furi{ min-height:44px; } }

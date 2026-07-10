@@ -8,7 +8,9 @@
 import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { getRaw, setRaw, KEYS } from './lib/store.js';
-import { searchPoints } from './lib/grammar.js';
+import { searchPoints, readingOf } from './lib/grammar.js';
+import { lookupWord } from './lang.js';          // shared Jotoba lookup (exported); GLOSSARY is NOT re-exported —
+import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json' };   // grows as levels bake (P7–P10)
@@ -112,8 +114,11 @@ function wireBar(root) {
       return;
     }
     const rel = e.target.closest('.g-rel-chip');
-    if (rel) jumpTo(rel.dataset.target);
+    if (rel) { jumpTo(rel.dataset.target); return; }
+    const tok = e.target.closest('.gtok');
+    if (tok) showStrip(tok);
   });
+  wireInspect();
 }
 
 function jumpTo(id) {
@@ -188,12 +193,13 @@ function cardHTML(p) {
 }
 
 function exampleHTML(ex) {
-  // FINAL token DOM (plan P2): P3 wires tooltip/strip/cursor onto these exact spans.
+  // FINAL token DOM: P3's tooltip/strip/cursor read the data attrs. data-t is required —
+  // textContent of a <ruby> includes the <rt> readings, so it's never a clean word.
   // data-no-swipe: a horizontal drag on a long sentence must scroll, not route-navigate.
   const ja = (ex.ja || []).map(tok => typeof tok === 'string'
     ? esc(tok)
-    : `<span class="gtok${tok.p ? ' gtok-p' : ''}" lang="ja">${rubyHTML(tok.f, tok.t)}</span>`).join('');
-  return `<div class="g-ex"><p class="g-ja" lang="ja" data-no-swipe>${ja}</p><p class="g-en">${esc(ex.en || '')}</p></div>`;
+    : `<span class="gtok${tok.p ? ' gtok-p' : ''}" lang="ja" data-t="${esc(tok.t)}" data-r="${esc(readingOf(tok.f))}" data-g="${esc(tok.g || '')}">${rubyHTML(tok.f, tok.t)}</span>`).join('');
+  return `<div class="g-ex"><p class="g-ja" lang="ja" data-no-swipe tabindex="0">${ja}</p><p class="g-en">${esc(ex.en || '')}</p></div>`;
 }
 
 function relChip(id) {
@@ -216,4 +222,143 @@ let liveTimer = 0;
 function announce(msg) {
   clearTimeout(liveTimer);
   liveTimer = setTimeout(() => { const el = document.getElementById('gLive'); if (el) el.textContent = msg; }, 200);
+}
+
+// ==== P3: token inspect layer ====================================================
+// Desktop hover = TOOLTIP (instant — no enter animation: it fires constantly while
+// reading, the frequency gate applies; role=tooltip + aria-describedby, the lang.js
+// model). Tap / keyboard = GLOSS STRIP pinned below the sentence (toggletip: announced
+// via #gLive, focus never moves, NO aria-expanded — per the ARIA pattern). Grammar
+// tokens (.gtok-p) get the grammar flavor. One popover across the whole page:
+// jwh:popover-open {owner} cross-dismisses with lang.js (self-ignore mandatory).
+
+let tip = null, tipFor = null;
+
+function findPoint(id) { return LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id); }
+
+function tokInfo(el) {
+  return { t: el.dataset.t || '', r: el.dataset.r || '', g: el.dataset.g || '', p: el.classList.contains('gtok-p') };
+}
+
+function dictHTML(d) {
+  return `<span class="g-tip-w" lang="ja">${esc(d.t)}</span>
+    <span class="g-tip-r" lang="ja">${esc(d.r)}</span>
+    <span class="g-tip-g">${d.g ? esc(d.g) : '—'}</span>
+    <a class="g-tip-jisho" href="https://jisho.org/search/${encodeURIComponent(d.t)}" target="_blank" rel="noopener noreferrer">Jisho ↗</a>`;
+}
+
+function grammarHTML(point, d) {
+  if (!point) return dictHTML(d);
+  return `<span class="g-tip-pat" lang="ja">${esc(point.pattern)}</span> <span class="g-lvl">${esc(point.level)}</span>
+    ${d.g ? `<span class="g-tip-g">${esc(d.r ? d.r + ' — ' : '')}${esc(d.g)}</span>` : ''}
+    <span class="g-tip-conn"><b>Connection</b> <span lang="ja">${esc(point.connection)}</span></span>
+    ${point.nuance ? `<span class="g-tip-nuance">${esc(point.nuance)}</span>` : ''}`;
+}
+
+// unbaked-gloss fallback: bundled GLOSSARY first (instant, offline), then the shared
+// Jotoba lookup (cached, time-boxed inside lang.js) — fails safe to the em dash
+async function fillGloss(word, box) {
+  const slot = box.querySelector('.g-tip-g');
+  if (!slot || !word) return;
+  const g = GLOSSARY[word];
+  if (g) { slot.textContent = g.m; return; }
+  try {
+    const r = await lookupWord(word);
+    if (r && r.gloss && box.isConnected) slot.textContent = r.gloss;
+  } catch { /* offline — leave the em dash */ }
+}
+
+function popoverOpened() {
+  document.dispatchEvent(new CustomEvent('jwh:popover-open', { detail: { owner: 'grammar' } }));
+}
+
+// ---- desktop tooltip ----
+function ensureTip() {
+  if (tip) return tip;
+  tip = document.createElement('div');
+  tip.className = 'g-tip'; tip.id = 'gTip';
+  tip.setAttribute('role', 'tooltip');
+  tip.hidden = true;
+  document.body.appendChild(tip);
+  return tip;
+}
+
+function showTip(el) {
+  const d = tokInfo(el);
+  const t = ensureTip();
+  t.innerHTML = d.p ? grammarHTML(findPoint(el.closest('.g-card')?.dataset.id), d) : dictHTML(d);
+  t.hidden = false;
+  const r = el.getBoundingClientRect();
+  t.style.left = Math.max(8, Math.min(r.left, window.innerWidth - t.offsetWidth - 8)) + 'px';
+  const top = r.top - t.offsetHeight - 8;
+  t.style.top = (top < 8 ? r.bottom + 8 : top) + 'px';
+  if (tipFor && tipFor !== el) tipFor.removeAttribute('aria-describedby');
+  tipFor = el; el.setAttribute('aria-describedby', 'gTip');
+  popoverOpened();
+  if (!d.g && !d.p) fillGloss(d.t, t);
+}
+
+function hideTip() {
+  if (tip) tip.hidden = true;
+  if (tipFor) { tipFor.removeAttribute('aria-describedby'); tipFor = null; }
+}
+
+// ---- tap/keyboard gloss strip ----
+function showStrip(tok) {
+  const sent = tok.closest('.g-ja'); if (!sent) return;
+  hideTip();
+  document.querySelectorAll('.g-strip').forEach(x => { if (x.previousElementSibling !== sent) x.remove(); });
+  let s = sent.nextElementSibling;
+  if (!s || !s.classList.contains('g-strip')) {
+    s = document.createElement('div');
+    s.className = 'g-strip';
+    sent.after(s);
+  }
+  const d = tokInfo(tok);
+  const point = findPoint(tok.closest('.g-card')?.dataset.id);
+  s.innerHTML = (d.p ? grammarHTML(point, d) : dictHTML(d))
+    + `<button type="button" class="g-strip-x" aria-label="Close">✕</button>`;
+  sent.querySelectorAll('.gtok-cur').forEach(x => x.classList.remove('gtok-cur'));
+  tok.classList.add('gtok-cur');
+  popoverOpened();
+  const toks = [...sent.querySelectorAll('.gtok')];
+  const pos = `(${toks.indexOf(tok) + 1} of ${toks.length})`;
+  announce(d.p && point ? `${point.pattern} — grammar pattern ${pos}` : `${d.r}${d.g ? ' — ' + d.g : ''} ${pos}`);
+  if (!d.g && !d.p) fillGloss(d.t, s);
+}
+
+function hideStrip() {
+  document.querySelectorAll('.g-strip').forEach(x => x.remove());
+  document.querySelectorAll('.gtok-cur').forEach(x => x.classList.remove('gtok-cur'));
+}
+
+// ---- wiring ----
+function wireInspect() {
+  const list = $('#gList');
+  // tooltip is hover-summoned only — on touch the tap path owns the interaction
+  if (window.matchMedia('(hover: hover)').matches) {
+    list.addEventListener('mouseover', (e) => { const t = e.target.closest('.gtok'); if (t && t !== tipFor) showTip(t); });
+    list.addEventListener('mouseout', (e) => { if (e.target.closest('.gtok')) hideTip(); });
+  }
+  // keyboard token cursor: the sentence is ONE tab stop; ←/→ rove over object tokens,
+  // the strip follows, #gLive announces "reading — gloss (n of N)" on every move
+  list.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { hideStrip(); hideTip(); return; }   // section-scoped; idempotent beside the global Escape listeners
+    const sent = e.target.closest && e.target.closest('.g-ja');
+    if (!sent || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+    const toks = [...sent.querySelectorAll('.gtok')];
+    if (!toks.length) return;
+    e.preventDefault();
+    const i = toks.indexOf(sent.querySelector('.gtok-cur'));
+    const next = e.key === 'ArrowRight' ? Math.min(i + 1, toks.length - 1) : Math.max(i - 1, 0);
+    showStrip(toks[next]);
+  });
+  // strip close: ✕, click-away, or another popover system opening
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.g-strip-x')) { hideStrip(); return; }
+    if (document.querySelector('.g-strip') && !e.target.closest('.g-strip, .gtok')) hideStrip();
+  });
+  document.addEventListener('jwh:popover-open', (e) => {
+    if (e.detail?.owner && e.detail.owner !== 'grammar') { hideTip(); hideStrip(); }
+  });
 }

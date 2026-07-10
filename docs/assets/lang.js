@@ -63,6 +63,9 @@ function wireDictionary() {
   document.addEventListener('focusin', (e) => { const t = e.target.closest('.jp, [data-jp]'); if (t) showFor(t); });
   document.addEventListener('focusout', (e) => { if (e.target.closest('.jp, [data-jp]')) scheduleHide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideNow(); });
+  // cross-dismiss: another popover system (grammar) opened — hide ours. MUST self-ignore:
+  // showFor re-fires on every mouseover, so acting on our own events would self-dismiss.
+  document.addEventListener('jwh:popover-open', (e) => { if (e.detail?.owner && e.detail.owner !== 'lang') hideNow(); });
   // Touch: hover/focus-on-tap is unreliable for span[tabindex] on mobile, so wire an explicit
   // tap. Only the .jp accents (inert role=button spans) — NOT [data-jp] nav links, whose tap
   // must navigate. Tapping outside (anywhere but the popover) dismisses.
@@ -108,6 +111,8 @@ function showFor(el) {
   p.innerHTML = render(word, g ? g.r : '', g ? g.m : (g === undefined ? '…' : ''), !g);
   position(p, el);
   p.classList.add('show');
+  // one popover across the whole page: grammar (#/grammar tokens) listens and hides its own
+  document.dispatchEvent(new CustomEvent('jwh:popover-open', { detail: { owner: 'lang' } }));
   if (curEl && curEl !== el) curEl.removeAttribute('aria-describedby');
   curEl = el; el.setAttribute('aria-describedby', 'jpDictPop');      // link the tooltip to its trigger while shown
   if (!g) lookup(word, p, el);                                       // enrich unknown words via the API

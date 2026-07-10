@@ -40,8 +40,12 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   `.stop-rail` column (measured: all three centered at the same x). Long notes hard-clipped
   mid-word in the input → text-overflow ellipsis + full text in the title tooltip (inputs can't
   wrap; textarea conversion deferred). (both PR #103)
-- [ ] **7. Map tiles vs theme** — map renders near-black in LIGHT theme (dark tile filter leaking,
-  or slow tiles): verify + scope any tile filter to `[data-theme="dark"]`.
+- [x] **7. Map tiles vs theme** — VERIFIED NON-ISSUE: 12 tiles loaded, zero CSS filters anywhere
+  (tile pane + container both `filter: none`); the darkness is the tile PROVIDER — map.js:315
+  deliberately uses CARTO dark_matter in all themes ("Flighty-style dark basemap", in-code
+  comment). A deliberate documented aesthetic, not a leak. Option logged, not taken: theme-aware
+  swap (light_all ↔ dark_all) is a one-line change if the owner ever wants the map to follow the
+  theme. (no PR)
 - [x] **8. Rooms badge overload** — VERIFIED NO-CHANGE: measured 3–5 `.room-flag` per card
   (hard max 6 by construction), ONE uniform color family (ok-green tint), 175 across 43 cards.
   Every flag is load-bearing rental-decision info (NO KEY MONEY / NO GUARANTOR / BOOK FROM

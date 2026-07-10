@@ -173,7 +173,7 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
    (object-token stops, SR announcements through the live region) + NO_SWIPE entry +
    `jwh:popover-open` w/ owner field (lang.js dispatch + listener) + lookupWord/GLOSSARY
    fallback.
-4. **Grammar inspect layer + motion** — `p`-token solid underlines + grammar flavor popover +
+4. ✅ #124 (2026-07-10) **Grammar inspect layer + motion** — `p`-token solid underlines + grammar flavor popover +
    the full positive motion set + reduce-motion verify.
 5. **N5 bake (~100 points)** — against the proven consumer. ≤50-point commits, a dedicated
    reading-accuracy pass per batch (rendaku, on/kun — the validator can't catch

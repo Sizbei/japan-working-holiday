@@ -84,3 +84,17 @@ export function searchPoints(points, query) {
 export function byLevel(points, level) {
   return (points || []).filter(p => p && p.level === level);
 }
+
+// ---- ◆ → Anki export (the shaky flag's consumer) ----------------------------
+// Rows for lib/anki.js toAnkiTSV: front = the pattern, back = meaning + connection,
+// tags = deck marker + level. Level order N5→N1, deck order within a level.
+export function shakyRows(pointsByLevel, shakyIds) {
+  const want = new Set(shakyIds || []);
+  const out = [];
+  for (const level of ['N5', 'N4', 'N3', 'N2', 'N1']) {
+    for (const p of pointsByLevel[level] || []) {
+      if (p && want.has(p.id)) out.push({ front: p.pattern, back: `${p.meaning} — ${p.connection}`, tags: ['jwh-grammar', p.level] });
+    }
+  }
+  return out;
+}

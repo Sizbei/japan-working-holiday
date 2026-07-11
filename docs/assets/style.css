@@ -3712,3 +3712,8 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .g-pop{ animation: gPop .2s ease-out; }
 .g-foot .badge{ margin-left:auto; }
 @media (hover: none){ .g-mark, .g-shaky-f{ min-height:44px; } }
+
+/* ◆ → Anki export (grammar toolbar) */
+.g-export{ font:inherit; font-size:.85rem; padding:.3rem .6rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.g-export[disabled]{ opacity:.45; cursor:default; }
+@media (hover: none){ .g-export{ min-height:44px; } }

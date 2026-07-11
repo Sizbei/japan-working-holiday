@@ -1183,7 +1183,7 @@ test('anki chunks + shaky + deterministic shuffle', () => {
 });
 
 // ---- Anki stage 3: pile snapshot ----
-import { pileOrder } from '../docs/assets/lib/anki.js';
+import { pileOrder, toAnkiTSV } from '../docs/assets/lib/anki.js';
 test('pileOrder: deck order preserved, ids deduped by Set, empty/missing safe', () => {
   const cards = [{id:'a0'},{id:'a1'},{id:'a2'},{id:'a3'}];
   assert.deepEqual(pileOrder(cards, ['a3','a1','a1']).map(c=>c.id), ['a1','a3']);  // deck order, not flag order
@@ -1263,3 +1263,18 @@ test('validator rejects malformed tokens', () => {
   assert.ok(errs.some(e => e.includes('unknown id')));     // dangling related ref
 });
 
+
+import { shakyRows } from '../docs/assets/lib/grammar.js';
+test('shakyRows: level order N5→N1, deck order within, tags + TSV round-trip', () => {
+  const byLevel = {
+    N5: [{ id: 'n5-a', level: 'N5', pattern: '〜てから', meaning: 'after', connection: 'V-て + から' },
+         { id: 'n5-b', level: 'N5', pattern: '〜たい', meaning: 'want', connection: 'stem + たい' }],
+    N1: [{ id: 'n1-a', level: 'N1', pattern: '〜べく', meaning: 'in order to', connection: 'V-dict + べく' }],
+  };
+  const rows = shakyRows(byLevel, ['n1-a', 'n5-b']);
+  assert.deepEqual(rows.map(r => r.front), ['〜たい', '〜べく']);   // N5 before N1, deck order kept
+  assert.deepEqual(rows[0].tags, ['jwh-grammar', 'N5']);
+  assert.equal(rows[0].back, 'want — stem + たい');
+  assert.equal(toAnkiTSV(rows).split('\n').length, 2);
+  assert.deepEqual(shakyRows(byLevel, []), []);
+});

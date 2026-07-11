@@ -32,3 +32,13 @@ before/after metrics, extensive review (critics on anything non-trivial).
       `ensureRoute('people')` before dispatching, or the listener isn't attached yet. `lib/people.js`
       stays eager (dashboard `isBirthday`); `lib/rooms.js` defers with rooms. Deferred: map+plan bundle
       (EF6 — Leaflet cold-start + `placesModel` DATA coupling need their own isolated verification).
+- [x] **EF6 — Lazy map + plan bundle.** *(boot eager assets/*.js 83→76; map.js 64K + plan.js 24K + their now-unreachable libs off the boot path — the biggest single stage. CDP-verified: 0 exceptions; Leaflet cold-start renders 12 tiles on first lazy #/map visit; plan rail+body paint on first #/plan visit; plan-goto listener responds (empty-date clears, back-to-Jul-4 restores); BOTH orders correct — plan-first keeps Leaflet unloaded until #/map is shown. SW v307→v308.)* map.js 64K + plan.js 24K
+      parsed+mounted at boot for two pages the user may never open. They share ONE lazy bundle because
+      `plan.js` imports `placesModel/drawRoute/clearRoute` from `map.js` and `placesModel()` reads map's
+      module-level `DATA` set ONLY by `mountMap` — so the loader always mounts BOTH (map first). Extra
+      gotcha beyond EF5: Leaflet cold-start — map's route-entry body (`ensureLeaflet` + `onMapShown` +
+      route redraw) was inline in the `jwh:route` handler, which never fires for the entry that
+      triggered the lazy load; extracted to `enterMap()` and called hash-gated at mount end. The
+      `ensureLeaflet→loadScript→initMap` chain self-completes via the script-load callback (sets
+      `leafletReady`, calls `onMapShown`), independent of `jwh:route` — unchanged by EF6. `jwh:plan-goto`
+      (gestures long-press) now navigates first, then `await ensureRoute('plan')` before dispatching.

@@ -9,6 +9,7 @@ import { prefersReducedMotion } from './motion.js';
 import { openMenu } from './lib/menu.js';
 import { getEventMenu, undoLastDelete } from './calendar.js';
 import { openPalette } from './palette.js';
+import { ensureRoute } from './lazyroutes.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', going: 'Going To', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -258,7 +259,9 @@ function resolveTarget(node) {
     const date = cell.dataset.day;
     return { items: [
       { label: '➕ Add event', run: () => document.dispatchEvent(new CustomEvent('jwh:cal-quickadd', { detail: { date } })) },
-      { label: '🗺 Plan this day', run: () => { document.dispatchEvent(new CustomEvent('jwh:plan-goto', { detail: { date } })); location.hash = '#/plan'; } },
+      // EF6: #/plan is lazy — navigate first, then await its mount before dispatching, or plan's
+      // jwh:plan-goto listener isn't attached yet (and the old order dispatched BEFORE the hash change).
+      { label: '🗺 Plan this day', run: () => { location.hash = '#/plan'; ensureRoute('plan').then(() => document.dispatchEvent(new CustomEvent('jwh:plan-goto', { detail: { date } }))); } },
     ] };
   }
   const star = node.closest?.('#restaurantsGrid .card2, .card2:has(.tabetai-star)');

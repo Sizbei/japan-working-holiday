@@ -10,8 +10,6 @@ import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
-import { mountMap } from './map.js';
-import { mountPlan } from './plan.js';
 import { mountEmergency } from './emergency.js';
 import { mountPrint } from './print.js';
 import { mountEventSearch } from './eventsearch.js';
@@ -100,9 +98,13 @@ function boot() {
       safe(() => registerLazyRoute(['people'], () => import('./people.js').then(m => m.mountPeople(data))));
       safe(() => registerLazyRoute(['rooms'],  () => import('./rooms.js').then(m => m.mountRooms(data))));
       safe(() => registerLazyRoute(['going'],  () => import('./going-page.js').then(m => m.mountGoingPage())));
+      // EF6: map + plan share ONE lazy bundle. plan.js imports placesModel/drawRoute/clearRoute from
+      // map.js, and placesModel() reads map's module-level DATA set ONLY by mountMap — so the bundle
+      // always mounts BOTH (map first, to set DATA), on first #/map OR #/plan entry. Leaflet still
+      // lazy-loads on top of that, only when #/map is actually shown (map.js enterMap).
+      safe(() => registerLazyRoute(['map', 'plan'], () =>
+        Promise.all([import('./map.js'), import('./plan.js')]).then(([m, p]) => { m.mountMap(data); p.mountPlan(data); })));
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
-      safe(() => mountMap(data));          // map page (#/map)
-      safe(() => mountPlan(data));         // day itinerary planner (#/plan)
       safe(() => mountEmergency(data));    // emergency quick-reference (#/emergency) — read-only, offline
       safe(() => mountPrint(data, today)); // 🖨 one-page printable trip summary (footer button)
       safe(() => mountEventSearch(data));  // search all events on the calendar page

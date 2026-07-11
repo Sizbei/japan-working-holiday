@@ -53,6 +53,10 @@ export function mountRooms(data) {
     if (document.getElementById('view-rooms')?.classList.contains('is-active')) render();
     else roomsDirty = true;   // consumed by ensureRendered() on the next entry (review: a second route listener double-rendered)
   });
+  // EF5: when lazy-loaded on entry, the jwh:route('rooms') that triggered this mount has already
+  // fired — so kick the first render here. Hash-gated (not .is-active: the view-transition toggle
+  // runs a microtask later, so is-active is still false during mount).
+  if (/^#\/?rooms$/.test(location.hash)) ensureRendered();
 }
 
 function ensureRendered() {

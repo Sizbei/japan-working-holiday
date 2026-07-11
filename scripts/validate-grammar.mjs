@@ -35,6 +35,10 @@ export function validatePoints(points, level, allIds) {
     if (p.reading && !READING_RE.test(p.reading)) bad(id, `reading not kana: ${p.reading}`);
     if (!p.meaning) bad(id, 'missing meaning');
     if (!p.connection) bad(id, 'missing connection');
+    // depth fields (owner 2026-07-11: every lesson expands to textbook depth, uniformly)
+    if (!p.nuance || typeof p.nuance !== 'string') bad(id, 'missing nuance');
+    if (!p.register || !/^[a-z][a-z /-]*$/.test(p.register)) bad(id, 'missing/bad register (lowercase, e.g. "neutral", "casual", "formal/written")');
+    if (!p.caution || typeof p.caution !== 'string') bad(id, 'missing caution');
     if (!CONFIDENCE.includes(p.confidence)) bad(id, 'bad confidence');
     if (!Array.isArray(p.tags)) bad(id, 'tags must be an array');
     if (!Array.isArray(p.related)) bad(id, 'related must be an array');

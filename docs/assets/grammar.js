@@ -256,10 +256,12 @@ function cardHTML(p, delay = -1) {
       <p class="g-conn"><b>Connection</b> <span lang="ja">${esc(p.connection)}</span></p>
       ${p.nuance ? `<p class="g-nuance">${esc(p.nuance)}</p>` : ''}
       ${(p.examples || []).map(exampleHTML).join('')}
+      ${p.caution ? `<p class="g-caution">⚠ ${esc(p.caution)}</p>` : ''}
       ${(p.related || []).length ? `<p class="g-rel">See also ${p.related.map(relChip).join(' ')}</p>` : ''}
       <div class="g-foot">
         <button type="button" class="g-mark g-mark-done" data-mark="done" aria-pressed="${prog.done.includes(p.id)}">✓ Studied</button>
         <button type="button" class="g-mark g-mark-shaky" data-mark="shaky" aria-pressed="${prog.shaky.includes(p.id)}">◆ Shaky</button>
+        ${p.register ? `<span class="g-reg">${esc(p.register)}</span>` : ''}
         <span class="badge ${esc(p.confidence)}">${esc(p.confidence)}</span>
       </div>
     </div>

@@ -3778,3 +3778,7 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 @media (hover: none){ .sp-rename{ min-width: 44px; min-height: 44px; color: var(--ink-soft); } }   /* visible + honest target on touch */
 /* src-many: right-edge fade signals there's more to scroll (the scrollbar is hidden) */
 .sp-body .modal-src.src-many{ -webkit-mask-image: linear-gradient(to right, #000 88%, transparent); mask-image: linear-gradient(to right, #000 88%, transparent); }
+
+/* grammar depth (owner 2026-07-11): caution block + register chip in the expanded card */
+.g-caution{ font-size:.85rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 70%, var(--ink)); border-left:3px solid var(--gold-ink, #8a6508); padding-left:.6rem; margin:.5rem 0; }
+.g-reg{ font-size:.72rem; font-family: var(--mono); color: var(--ink-soft); border:1px solid var(--line); border-radius:6px; padding:.05rem .4rem; }

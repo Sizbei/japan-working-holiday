@@ -187,7 +187,9 @@
     ],
     "en": "The contract was extended; nevertheless, my visa's expiry date doesn't change."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Don't confuse it with とはいうものの (same meaning, more spoken): とはいえ can also open a sentence as a connector, whereas ものの cannot stand alone."
  },
  {
   "id": "n1-to-iedomo",
@@ -369,7 +371,9 @@
     ],
     "en": "Even a single person is not permitted to disturb the harmony of the workplace."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "It's archaic — reserve it for formal writing and proverbs; using it in everyday conversation sounds stiff and theatrical where とはいえ or ても would be natural."
  },
  {
   "id": "n1-dokoroka",
@@ -521,7 +525,9 @@
     ],
     "en": "Let alone a break — I didn't even have time to eat lunch."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The second clause must be stronger or opposite to the first — pairing どころか with a merely similar or weaker statement is wrong; that's what makes it 'far from', not plain 'and also'."
  },
  {
   "id": "n1-dokoro-de-wa-nai",
@@ -665,7 +671,9 @@
     ],
     "en": "I had a fever, so it was no time for going to see the cherry blossoms."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Don't mix it up with どころか: どころではない says circumstances rule the action out ('no time for it'), while どころか corrects a factual expectation ('far from')."
  },
  {
   "id": "n1-ga-hayai-ka",
@@ -915,7 +923,9 @@
     ],
     "en": "The instant my boss sat down, he started replying to emails."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "The main clause must be past tense and describe an actual observed event — you can't use が早いか for a command, intention, or future/habitual statement."
  },
  {
   "id": "n1-ya-ina-ya",
@@ -1112,7 +1122,9 @@
     ],
     "en": "No sooner had I sent the email than a reply came back."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "Like が早いか, the second clause states something that actually happened (past tense) — や否や can't take a volitional, request, or negative main clause."
  },
  {
   "id": "n1-nari",
@@ -1312,7 +1324,9 @@
     ],
     "en": "The child saw the souvenir and instantly let out a cheer."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "Unlike が早いか and や否や, なり requires the SAME subject for both actions and a past-tense main clause; using it with two different subjects is the classic error."
  },
  {
   "id": "n1-katawara",
@@ -1523,7 +1537,9 @@
     ],
     "en": "On top of her office job, she teaches pottery on weekends."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It's for a sustained long-term second pursuit alongside a main one — don't use かたわら for a one-off dual-purpose errand; that's がてら's job."
  },
  {
   "id": "n1-gatera",
@@ -1700,7 +1716,9 @@
     ],
     "en": "While out shopping, I dropped off some paperwork at the ward office too."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "がてら is a single occasion combining two purposes on the same outing — don't stretch it to a long-running side occupation (use かたわら), and it attaches to motion-related nouns/stems."
  },
  {
   "id": "n1-ni-shiro-ni-seyo",
@@ -1886,7 +1904,9 @@
     ],
     "en": "Whether full-time or part-time work, you pay taxes either way."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "The paired items should be genuine alternatives (often opposites); don't attach な before a noun — it's N + にしろ directly, e.g. 学生にしろ, not 学生なにしろ."
  },
  {
   "id": "n1-de-are",
@@ -2066,7 +2086,9 @@
     ],
     "en": "Be it any foreigner, you must always carry your residence card."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Attach であれ directly to a noun (誰であれ), not to a な-adjective's な form — and remember it needs a following clause that holds unconditionally, not a simple 'even if' aside."
  },
  {
   "id": "n1-to-ii-to-ii",
@@ -2268,7 +2290,9 @@
     ],
     "en": "What with the autumn leaves and with the air, Kyoto in fall is exceptional."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Both slots take plain nouns (N といい N といい) and lead to an overall evaluation — don't use it for a neutral list; if you're not passing judgment, use も…も instead."
  },
  {
   "id": "n1-to-iwazu",
@@ -2450,7 +2474,9 @@
     ],
     "en": "Weekday or weekend, no exceptions — Shibuya is always packed."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "The two nouns are just examples standing for the whole ('all over'), so don't read といわず as literal negation ('not saying') — and it takes nouns, not verbs."
  },
  {
   "id": "n1-wa-motoyori",
@@ -2619,7 +2645,9 @@
     ],
     "en": "Tokyo goes without saying — I'd also like to tour the festivals out in the regions."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It only adds a further item ('not to mention'); don't use はもとより to mean 'from the start / originally' — that sense is the separate adverb もともと."
  },
  {
   "id": "n1-naradewa",
@@ -2772,7 +2800,9 @@
     ],
     "en": "The snowy scenery you can only get in winter Hokkaido is unforgettable."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "When a noun follows, you must insert の — ならではの + noun (下町ならではの人情); dropping the の (下町ならでは人情) is the classic mistake, and it stays positive."
  },
  {
   "id": "n1-wo-yoso-ni",
@@ -2952,7 +2982,9 @@
     ],
     "en": "Indifferent to my family's worry, I stayed abroad on my own."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "Unlike neutral にもかかわらず, をよそに carries a critical nuance of willfully disregarding someone's concern or a warning — don't use it for a neutral 'despite'."
  },
  {
   "id": "n1-wo-motte",
@@ -3129,7 +3161,9 @@
   "confidence": "high",
   "related": [
    "n2-ni-oite"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "The 'as of (a date/time)' boundary sense and the 'by means of' instrument sense are different — for a concrete physical tool prefer で; をもって is for ceremonial dates or abstract means."
  },
  {
   "id": "n1-ni-itatte",
@@ -3361,7 +3395,9 @@
   "confidence": "high",
   "related": [
    "n1-ni-itaru-made"
-  ]
+  ],
+  "register": "written",
+  "caution": "Don't confuse に至って (finally reaching an extreme stage before acting) with に至るまで (spanning a range down to even the smallest item) — they are different patterns."
  },
  {
   "id": "n1-ni-itaru-made",
@@ -3605,7 +3641,9 @@
   "confidence": "high",
   "related": [
    "n1-ni-itatte"
-  ]
+  ],
+  "register": "written",
+  "caution": "It marks the extreme endpoint of an exhaustive range ('down to even'), not a time deadline — for 'up until (a time)' use plain まで, not に至るまで."
  },
  {
   "id": "n1-wo-kawakiri-ni",
@@ -3829,7 +3867,9 @@
   "confidence": "high",
   "related": [
    "n2-wo-hajime"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "The starting event must launch an expanding, ongoing series (a tour, a chain of openings) — don't use を皮切りに for a one-off first step that leads nowhere further."
  },
  {
   "id": "n1-ni-saishite",
@@ -4028,7 +4068,9 @@
   "confidence": "high",
   "related": [
    "n1-ni-atatte"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "に際して is for a specific one-time occasion or event, not an ongoing condition — and it's more solemn than plain とき; don't use it for everyday situations."
  },
  {
   "id": "n1-ni-atatte",
@@ -4223,7 +4265,9 @@
   "related": [
    "n1-ni-saishite",
    "n1-ni-sakidatte"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Reserve にあたって for a positive, significant undertaking one is about to begin — using it for a trivial or negative event sounds off; and it points forward, not backward."
  },
  {
   "id": "n1-ni-sakidatte",
@@ -4397,7 +4441,9 @@
   "confidence": "high",
   "related": [
    "n1-ni-atatte"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "に先立って means preparation done in advance of a big event, so the two clauses share a topic — don't use it for two unrelated sequential actions where 前に would do."
  },
  {
   "id": "n1-wo-fumaete",
@@ -4581,7 +4627,9 @@
   "confidence": "high",
   "related": [
    "n2-ni-motozuite"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "を踏まえて takes established facts/results as a basis for what follows — don't confuse it with を込めて ('putting feeling into'); the noun before it must be information, not emotion."
  },
  {
   "id": "n1-ni-sokushite",
@@ -4772,7 +4820,9 @@
   "confidence": "high",
   "related": [
    "n2-ni-sotte"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "に即して conforms to concrete facts, rules, or reality — don't swap it for に沿って, which follows an abstract line/policy/wish; 即して needs a factual, rule-like standard."
  },
  {
   "id": "n1-no-moto-de",
@@ -4950,7 +5000,9 @@
   ],
   "level": "N1",
   "confidence": "high",
-  "related": []
+  "related": [],
+  "register": "formal/written",
+  "caution": "のもとで marks the conditions/supervision under which something happens; don't confuse it with のもとに, which more often frames a premise or principle ('on the basis of')."
  },
  {
   "id": "n1-wo-towazu",
@@ -5130,7 +5182,9 @@
   "confidence": "high",
   "related": [
    "n1-ni-kakawarazu"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It pairs with a noun naming a category of variation (年齢を問わず, 経験を問わず) — don't attach を問わず to a full yes/no clause; for that use かどうかにかかわらず."
  },
  {
   "id": "n1-ni-kakawarazu",
@@ -5316,7 +5370,9 @@
    "n1-wo-towazu",
    "n2-to-wa-kagiranai",
    "n2-nimo-kakawarazu"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Don't confuse にかかわらず ('regardless of') with にもかかわらず ('despite the fact that') — the も version concedes a surprising contrast, the plain version dismisses a variable."
  },
  {
   "id": "n1-ikan",
@@ -5458,7 +5514,9 @@
   "confidence": "high",
   "related": [
    "n2-shidai-de"
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "いかんによっては/いかんで means 'depending on X', but いかんによらず/いかんにかかわらず flips to 'regardless of X' — mixing the two up reverses the meaning entirely."
  },
  {
   "id": "n1-mamire",
@@ -5610,7 +5668,9 @@
   "related": [
    "n2-darake",
    "n1-zukume"
-  ]
+  ],
+  "register": "neutral",
+  "caution": "まみれ only attaches to a clinging physical substance (泥, 汗, 血, 借金) — don't use it for abstract states or a mere abundance of good things; that's ずくめ or だらけ territory."
  },
  {
   "id": "n1-zukume",
@@ -5764,7 +5824,9 @@
   "confidence": "high",
   "related": [
    "n1-mamire"
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ずくめ is 'entirely composed of' one thing (often positive: いいことずくめ), while だらけ is 'full of' scattered unwanted things (間違いだらけ) — don't treat them as synonyms."
  },
  {
   "id": "n1-meku",
@@ -5913,7 +5975,9 @@
   "confidence": "high",
   "related": [
    "n3-ppoi"
-  ]
+  ],
+  "register": "written",
+  "caution": "めく is a verb suffix, so conjugate it (春めく→春めいた, 謎めいている) — treating it as a noun or na-adjective is wrong; and it means 'take on the air of', not literal becoming."
  },
  {
   "id": "n1-te-yamanai",
@@ -6067,7 +6131,9 @@
     ],
     "en": "I pray with all my heart for the success of my new life here."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "It only attaches to a small set of emotion verbs of hope/love/respect (願う, 愛する, 尊敬する) — don't use てやまない with ordinary action verbs."
  },
  {
   "id": "n1-ni-taenai",
@@ -6216,7 +6282,9 @@
     ],
     "en": "I am overwhelmed with gratitude for everyone's support."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Keep the two senses apart: with a perception verb it's 'cannot bear to' (見るに堪えない), but with an emotion noun it's 'overflowing with' (感謝に堪えない) — the noun/verb choice flips the meaning."
  },
  {
   "id": "n1-kagiri-da",
@@ -6374,7 +6442,9 @@
     ],
     "en": "My visa came through without a hitch — I couldn't be happier."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "限りだ only follows an emotion adjective describing the speaker's own feeling (嬉しい限りだ, 心細い限りだ) — don't use it with a plain noun or for a third party's emotion."
  },
  {
   "id": "n1-shimatsu-da",
@@ -6577,7 +6647,9 @@
     ],
     "en": "I got lost, and in the end I had no choice but to cancel the reservation."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "始末だ always caps a deteriorating process with a deplorable outcome — don't use it for a neutral or good result; the whole build-up must be negative."
  },
  {
   "id": "n1-made-da",
@@ -6737,7 +6809,9 @@
     ],
     "en": "I merely told you how I honestly feel — nothing more."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "Watch the tense: V-dict + までだ is resolve ('I'll just do X if it comes to it'), but V-た + までだ is 'I merely did X (no more was meant)' — the plain/past form changes the meaning."
  },
  {
   "id": "n1-made-mo-nai",
@@ -6901,7 +6975,9 @@
     ],
     "en": "It goes without saying, but always carry your residence card on you."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It attaches to the dictionary form of a verb (言うまでもない), not the ます-stem or a noun — and it means 'no need to bother', not 'not allowed to'."
  },
  {
   "id": "n1-bekarazu",
@@ -7025,7 +7101,9 @@
     ],
     "en": "No entry without permission. (sign)"
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "べからず is signs-and-notices only (立入るべからず) and blunt/impersonal — never use it as a spoken prohibition to a person; and する becomes すべからず (or classical せ), not するべからず in set phrases."
  },
  {
   "id": "n1-beku",
@@ -7203,7 +7281,9 @@
     ],
     "en": "In order to prepare for the typhoon, I stocked up on food supplies."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "べく cannot be followed by ください or any request/command — it's a literary 'in order to' that leads into a statement; and する contracts to すべく."
  },
  {
   "id": "n1-kkonai",
@@ -7372,7 +7452,9 @@
     ],
     "en": "Even if we leave now, there's no way we'll make the last train."
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "っこない attaches to the ます-stem (できっこない, 分かりっこない), never the dictionary form — and it's strictly casual, so avoid it in formal or written contexts."
  },
  {
   "id": "n1-naide-wa-sumanai",
@@ -7553,7 +7635,9 @@
     ],
     "en": "On the noise issue, I won't get away without apologizing to the neighbor."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It means social/situational pressure makes X unavoidable ('won't be let off without'), not personal inability — don't confuse it with なければならない, a plain obligation."
  },
  {
   "id": "n1-wo-yoginaku-sareru",
@@ -7727,7 +7811,9 @@
     ],
     "en": "Some people are forced to return home over visa problems."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "The passive を余儀なくされる has the subject forced by circumstances into X; don't mix it with the active を余儀なくさせる, where circumstances force it upon someone else."
  },
  {
   "id": "n1-ni-hokanaranai",
@@ -7916,7 +8002,9 @@
     ],
     "en": "The daily overtime is nothing other than the fault of the staff shortage."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "It asserts 'is precisely X and nothing else', so the X should be the true cause/essence — don't weaken it to a mere 'is X'; the emphatic identity is the whole point."
  },
  {
   "id": "n1-to-atte",
@@ -8108,7 +8196,9 @@
     ],
     "en": "Given that it's my first time living abroad, I'm a little nervous."
    }
-  ]
+  ],
+  "register": "written",
+  "caution": "Don't confuse とあって with だけあって: とあって is reportorial ('given this special situation, naturally...'), used for out-of-the-ordinary circumstances, while だけあって praises a result as fitting a cause."
  },
  {
   "id": "n1-tomo-naru-to",
@@ -8277,7 +8367,9 @@
     ],
     "en": "When it comes to rent in the city center, it's not something you can pay easily."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "ともなると needs the noun to mark a genuinely high level or stage (プロともなると) — don't use it for an ordinary, low-threshold situation where になると alone suffices."
  },
  {
   "id": "n1-hame-ni-naru",
@@ -8464,6 +8556,8 @@
     ],
     "en": "My documents were incomplete, so I ended up having to go to the ward office twice."
    }
-  ]
+  ],
+  "register": "casual",
+  "caution": "はめになる always ends in an unwelcome, sorry outcome you got stuck with — don't use it for a good or neutral result, or as a plain 'became' (ことになる)."
  }
 ]

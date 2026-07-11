@@ -6,6 +6,8 @@
   "meaning": "while (before the situation changes)",
   "connection": "V-dict/V-ている/adj + うちに",
   "nuance": "Do the action within a window before it ends — while it's still light, still warm, still available.",
+  "register": "neutral",
+  "caution": "うちに vs 間に: うちに wants a change-implying state (明るいうちに, before it stops being true), while 間に just marks a span; also, negative-verb うちに (忘れないうちに) means 'before it becomes X', not 'while not X'.",
   "tags": [
    "time"
   ],
@@ -155,6 +157,8 @@
   "meaning": "every time",
   "connection": "V-dict / N-の + たびに",
   "nuance": "Each time X happens, Y follows — a recurring pairing.",
+  "register": "neutral",
+  "caution": "たびに always pairs each occurrence with a result, so it can't take a fixed frequency word like 毎日 (毎日たびに is wrong) — use it with an event verb, not a schedule.",
   "tags": [
    "time"
   ],
@@ -342,6 +346,8 @@
   "meaning": "the moment (something happened)",
   "connection": "V-た + とたん",
   "nuance": "The instant the first action finished, the second happened — often unexpected.",
+  "register": "neutral",
+  "caution": "たとたん needs the second clause to be a sudden, UNCONTROLLED result you notice — so it can't take a command, intention, or request (×開いたとたん、乗ろう); use それから/たら for planned follow-ups.",
   "tags": [
    "time"
   ],
@@ -523,6 +529,8 @@
   "meaning": "right in the middle of",
   "connection": "V-ている / N-の + 最中に",
   "nuance": "Interrupted right at the peak of doing something.",
+  "register": "neutral",
+  "caution": "最中に needs an ongoing action at its peak, so it takes 〜ている or a noun (食事の最中に), never a plain V-dict; and the interruption should be a sudden intrusion, not a scheduled next step.",
   "tags": [
    "time"
   ],
@@ -706,6 +714,8 @@
   "meaning": "haven't … since",
   "connection": "V-た + きり",
   "nuance": "After the last action, the expected follow-up never came.",
+  "register": "neutral",
+  "caution": "たきり must attach to the past (V-た) and the expected continuation never comes — don't confuse it with たきり meaning 'only' after a number; here the point is 'did X and then nothing since'.",
   "tags": [
    "time"
   ],
@@ -877,6 +887,8 @@
   "meaning": "for the first time in (a period)",
   "connection": "period N + ぶりに",
   "nuance": "After a long gap, doing the thing again — emphasises how much time passed.",
+  "register": "neutral",
+  "caution": "ぶり attaches to a length of time (三年ぶり), not to a verb, and it's about resuming after a gap — don't use it for a plain 'ago' (that's 前); '3年ぶりに会った' = met again after 3 years, not '3 years ago'.",
   "tags": [
    "time"
   ],
@@ -1034,6 +1046,8 @@
   "meaning": "while at it / taking the opportunity",
   "connection": "V-dict/V-た / N-の + ついでに",
   "nuance": "Do a secondary thing while already out doing the main one.",
+  "register": "neutral",
+  "caution": "ついでに means the second act is a bonus done while already doing the main one, so the main action must genuinely be happening — it's not a plain 'and also', and the two acts share one trip/occasion.",
   "tags": [
    "time"
   ],
@@ -1214,6 +1228,8 @@
   "meaning": "supposing / if we assume",
   "connection": "plain form + としたら",
   "nuance": "Sets up a hypothesis to reason from: assuming that were true, then...",
+  "register": "neutral",
+  "caution": "としたら sets up a hypothesis to reason from ('supposing X'), so pair it with a judgment/consequence — don't use it for a real, decided plan (use なら/たら for that).",
   "tags": [
    "condition"
   ],
@@ -1391,6 +1407,8 @@
   "meaning": "even if (hypothetical)",
   "connection": "たとえ + V-ても",
   "nuance": "たとえ signals the coming ても — 'even supposing X, still Y'.",
+  "register": "neutral",
+  "caution": "The たとえ must be answered by 〜ても/〜でも later in the sentence; dropping the ても (leaving bare たとえ…) is the classic error — たとえ only sets up the concessive, it can't stand alone.",
   "tags": [
    "condition"
   ],
@@ -1577,6 +1595,8 @@
   "meaning": "even",
   "connection": "N + さえ",
   "nuance": "Highlights an extreme or minimal example — 'even this much'.",
+  "register": "neutral",
+  "caution": "さえ (extreme example 'even') is different from さえ…ば (sole condition 'as long as'); also さえ replaces を/が but stacks after other particles (name さえ書けない), so don't leave を in (×名前をさえ).",
   "tags": [
    "degree"
   ],
@@ -1743,6 +1763,8 @@
   "meaning": "if only / as long as",
   "connection": "N + さえ + V-ば",
   "nuance": "Just this one condition is enough for the result.",
+  "register": "neutral",
+  "caution": "さえ…ば says just this one condition suffices — the verb must be in ば/なら form, and with nouns it's typically N さえ あれば, not N さえ です; don't confuse this 'if only' with plain 'even' さえ.",
   "tags": [
    "condition"
   ],
@@ -1899,6 +1921,8 @@
   "meaning": "as … progresses",
   "connection": "V-dict / N + につれて",
   "nuance": "Two things change together, gradually and in step.",
+  "register": "formal",
+  "caution": "につれて needs a gradual, linked change on BOTH sides (as one rises, the other rises) — it can't take a one-off event or a deliberate action, and unlike と/たら it doesn't express a simple condition.",
   "tags": [
    "time"
   ],
@@ -2064,6 +2088,8 @@
   "meaning": "the more … the more",
   "connection": "V-ば + same V + ほど",
   "nuance": "Increasing the first proportionally increases the second.",
+  "register": "neutral",
+  "caution": "The verb must repeat in ば…ほど form (考えれば考えるほど); な-adjectives take なら…なほど and い-adjectives ければ…いほど — a common slip is writing the verb only once or mismatching the two halves.",
   "tags": [
    "degree"
   ],
@@ -2209,6 +2235,8 @@
   "meaning": "nothing as … as",
   "connection": "N + ほど + negative",
   "nuance": "Nothing else reaches that degree — the ultimate example.",
+  "register": "neutral",
+  "caution": "ほど…はない is a superlative ('nothing is as … as X'), so X is the top of the scale — don't confuse it with ほど meaning 'about/to the extent'; the はない negative is essential and can't be dropped.",
   "tags": [
    "degree"
   ],
@@ -2357,6 +2385,8 @@
   "meaning": "to the extent that / so … that",
   "connection": "V/adj + くらい",
   "nuance": "Gives a vivid measure of how extreme something is.",
+  "register": "casual/spoken",
+  "caution": "This 'to the extent that' くらい (degree) is a different sense from くらい 'approximately' — here it illustrates how extreme something is via a vivid comparison, so it attaches to a clause, not just a quantity.",
   "tags": [
    "degree"
   ],
@@ -2476,6 +2506,8 @@
   "meaning": "not particularly",
   "connection": "別に + negative",
   "nuance": "Downplays: nothing in particular, no strong feeling either way.",
+  "register": "casual/spoken",
+  "caution": "別に requires a following negative — 別に used with a positive (×別に行きたい) is wrong; and a curt '別に。' alone reads as sulky/dismissive, so mind the tone.",
   "tags": [
    "degree"
   ],
@@ -2606,6 +2638,8 @@
   "meaning": "not only … but also",
   "connection": "N/V + だけでなく",
   "nuance": "Adds a second, often bigger, item beyond the first.",
+  "register": "neutral",
+  "caution": "だけでなく usually pairs with も on the second, bigger item (A だけでなく B も) — forgetting that も, or treating B as smaller than A, is the classic slip; often reinforced as だけでなく…も.",
   "tags": [
    "listing"
   ],
@@ -2781,6 +2815,8 @@
   "meaning": "now that / since (commitment)",
   "connection": "V-dict/V-た + 以上",
   "nuance": "Since the situation is fixed, a natural obligation follows — 'now that X, of course Y'.",
+  "register": "formal/written",
+  "caution": "This 以上 ('now that X, of course Y') attaches to a verb/clause and demands a fitting obligation, resolve, or expectation in the second half — don't confuse it with 以上 'more than' (quantity) or the letter-closing 以上.",
   "tags": [
    "logic"
   ],
@@ -2939,6 +2975,8 @@
   "meaning": "even though (critical/disdainful)",
   "connection": "plain form / N-の + くせに",
   "nuance": "Like のに but scornful — implies the subject should know or do better.",
+  "register": "casual/spoken",
+  "caution": "くせに is openly scornful, so it's rude aimed at superiors and can't describe yourself (×私は…くせに); the subject of both clauses must be the same person, unlike neutral のに.",
   "tags": [
    "contrast"
   ],
@@ -3077,6 +3115,8 @@
   "meaning": "considering / for …",
   "connection": "plain form / N-の + わりに",
   "nuance": "The result is unexpected given the standard you'd assume.",
+  "register": "neutral",
+  "caution": "わりに means 'unexpectedly, given the standard you'd assume from X' — it's not plain contrast のに; the two clauses must share a scale (small room → yet high rent), and it lacks the scorn of くせに.",
   "tags": [
    "contrast"
   ],
@@ -3237,6 +3277,8 @@
   "meaning": "thanks to (positive cause)",
   "connection": "plain form / N-の + おかげで",
   "nuance": "Credits a good outcome to a cause — grateful tone.",
+  "register": "neutral",
+  "caution": "おかげで credits a GOOD result, so swapping it with せいで (which blames a bad result) is the classic mix-up — sarcastic 'おかげで' for a bad outcome exists but is deliberately ironic, not the default.",
   "tags": [
    "cause"
   ],
@@ -3382,6 +3424,8 @@
   "meaning": "because of (blame)",
   "connection": "plain form / N-の + せいで",
   "nuance": "Blames a bad outcome on a cause — the opposite of おかげで.",
+  "register": "neutral",
+  "caution": "せいで blames a BAD result on a cause, the mirror of おかげで (positive) — using せいで for something good, or おかげで for something bad, is the stock error; せい also nominalizes as せいだ/せいか.",
   "tags": [
    "cause"
   ],
@@ -3528,6 +3572,8 @@
   "meaning": "just because … doesn't mean",
   "connection": "plain form + からといって",
   "nuance": "Rejects a too-easy conclusion: X being true doesn't automatically give Y.",
+  "register": "neutral",
+  "caution": "からといって rejects a hasty inference, so the sentence normally ends in a negative like わけではない/とは限らない — leaving it with a plain affirmative loses the 'doesn't necessarily mean' force.",
   "tags": [
    "logic"
   ],
@@ -3686,6 +3732,8 @@
   "meaning": "… means / the thing called",
   "connection": "N + というのは",
   "nuance": "Introduces a term to define or explain it.",
+  "register": "neutral",
+  "caution": "というのは introduces a term to define OR gives a reason ('the reason is…'); don't confuse the defining use with plain topic は — というのは signals an explanation is coming, so it needs a following account.",
   "tags": [
    "logic"
   ],
@@ -3857,6 +3905,8 @@
   "meaning": "the fact that (nominalizer)",
   "connection": "plain form + ということ",
   "nuance": "Wraps a whole clause into a noun — the fact/idea that ...",
+  "register": "neutral",
+  "caution": "ということ nominalizes a whole clause (the fact/that…), distinct from こと alone or という 'called'; watch ということだ, which at sentence end can mean hearsay 'I hear that…', not just 'it means that…'.",
   "tags": [
    "logic"
   ],
@@ -3993,6 +4043,8 @@
   "meaning": "no need to",
   "connection": "V-dict + ことはない",
   "nuance": "Reassures: there's no need to do that; don't bother.",
+  "register": "neutral",
+  "caution": "ことはない here means 'no need to' (reassurance), attaching to V-dict — don't confuse it with past 〜たことがない 'have never'; the point is 'you don't have to', not 'has never happened'.",
   "tags": [
    "logic"
   ],
@@ -4121,6 +4173,8 @@
   "meaning": "that's why / no wonder",
   "connection": "plain form + わけだ",
   "nuance": "Draws a natural conclusion from a fact — 'so that's the reason'.",
+  "register": "neutral",
+  "caution": "わけだ draws a logical 'so that's why/no wonder' conclusion from given facts — it's not わけではない (partial denial) nor わけにはいかない (social can't); using わけだ where you mean 'I decided to' (that's ことにする) is a stock error.",
   "tags": [
    "logic"
   ],
@@ -4302,6 +4356,8 @@
   "meaning": "it doesn't mean that",
   "connection": "plain form + わけではない",
   "nuance": "Partial denial: it's not the case that ... entirely.",
+  "register": "neutral",
+  "caution": "わけではない is a PARTIAL denial ('it's not that…entirely'), not a flat negation — don't read it as 'definitely not'; contrast it with わけがない ('there's no way', strong denial) and plain わけだ (conclusion).",
   "tags": [
    "logic"
   ],
@@ -4425,6 +4481,8 @@
   "meaning": "can't very well (socially/morally)",
   "connection": "V-dict + わけにはいかない",
   "nuance": "Can't do it for social or moral reasons, even if physically possible.",
+  "register": "neutral",
+  "caution": "わけにはいかない means can't for social/moral reasons though physically possible — don't confuse it with わけだ or わけではない; its negative-verb form (〜ないわけにはいかない) flips to 'have no choice but to do'.",
   "tags": [
    "logic"
   ],
@@ -4566,6 +4624,8 @@
   "meaning": "can't possibly be",
   "connection": "plain form + はずがない",
   "nuance": "Confident logical denial — there's no way that's true.",
+  "register": "neutral",
+  "caution": "はずがない is a confident logical 'can't possibly be', based on reasoning — don't confuse it with はずだ 'should be (expected)' or わけがない (near-synonym but blunter); it denies likelihood, not permission.",
   "tags": [
    "logic"
   ],
@@ -4697,6 +4757,8 @@
   "meaning": "must be / no doubt",
   "connection": "plain form / N + に違いない",
   "nuance": "Strong conviction based on evidence — surely that's it.",
+  "register": "neutral",
+  "caution": "に違いない is the speaker's strong personal conviction from evidence ('surely'), not objective certainty — for reported/hearsay use そうだ/らしい instead; it attaches directly to nouns without な/だ (×学生だに違いない).",
   "tags": [
    "logic"
   ],
@@ -4868,6 +4930,8 @@
   "meaning": "just as / according to",
   "connection": "V-dict/V-た / N-の + 通り(に)",
   "nuance": "Exactly as specified — following the model, plan, or instruction.",
+  "register": "neutral",
+  "caution": "通りに means 'exactly as (specified/shown)'; after a verb it reads とおり (言ったとおりに), after a noun it's の通り/どおり with rendaku (予定どおり) — mixing up the とおり/どおり reading is the usual slip.",
   "tags": [
    "logic"
   ],
@@ -5034,6 +5098,8 @@
   "meaning": "try to / be about to",
   "connection": "volitional + とする",
   "nuance": "The volitional + とする marks an attempt or the moment right before an action begins — often a try that fails or a state on the verge of happening.",
+  "register": "neutral",
+  "caution": "ようとする marks an attempt or the verge of acting, so it takes the volitional stem (食べようとする), not V-dict + とする; and ようとしない ('refuses to') is a fixed nuance, not just 'doesn't try'.",
   "tags": [
    "aspect"
   ],
@@ -5223,6 +5289,8 @@
   "meaning": "half-done / unfinished",
   "connection": "V-stem + かけ(の/だ)",
   "nuance": "V-stem + かけ describes something started but left partway through — a half-drunk coffee, an unfinished sentence.",
+  "register": "neutral",
+  "caution": "かけ/かける means an action left half-done (読みかけの本); don't confuse it with 〜かける 'begin to' onset — context decides, and '死にかける' means 'nearly die', a special sense, not 'half-die'.",
   "tags": [
    "aspect"
   ],
@@ -5401,6 +5469,8 @@
   "meaning": "tend to (undesirable)",
   "connection": "V-stem / N + がち",
   "nuance": "がち marks an unwanted tendency — something that happens all too often, usually with a negative flavor.",
+  "register": "neutral",
+  "caution": "がち marks an unwanted, frequent TENDENCY and is usually negative (病気がち, 遅れがち) — don't use it for good habits, and don't confuse it with ぎみ 'a slight touch of', which is milder and more momentary.",
   "tags": [
    "tendency"
   ],
@@ -5550,6 +5620,8 @@
   "meaning": "a touch of / slightly",
   "connection": "V-stem / N + 気味",
   "nuance": "気味 (rendaku ぎ) adds 'a slight sense of' — a mild, noticeable tendency toward the noun or state.",
+  "register": "neutral",
+  "caution": "ぎみ (気味) means 'a slight touch of' a state (風邪ぎみ, 疲れぎみ) and is milder/more temporary than がち — reserve it for a light onset you feel, not a repeated habitual tendency.",
   "tags": [
    "degree"
   ],
@@ -5710,6 +5782,8 @@
   "meaning": "-ish / apt to",
   "connection": "V-stem / N + っぽい",
   "nuance": "っぽい means '-like' or 'has a strong quality of' — childish, forgetful, reddish. Often carries a mildly critical tone.",
+  "register": "casual/spoken",
+  "caution": "っぽい means '-ish/has a strong quality of' and is colloquial and often mildly critical (子供っぽい, 忘れっぽい) — don't confuse it with らしい 'typical/befitting' (男らしい = manly-good vs 男っぽい = mannish).",
   "tags": [
    "tendency"
   ],
@@ -5870,6 +5944,8 @@
   "meaning": "keep doing",
   "connection": "V-stem + 続ける",
   "nuance": "続ける attaches to a verb stem to mean 'continue doing' — the action goes on without stopping.",
+  "register": "neutral",
+  "caution": "続ける attaches to the masu-stem (降り続ける) and means the actor keeps doing it — for a state that merely stays ongoing use 続く (intransitive); mixing 続ける (do continuously) with 続く (continue on its own) is the classic error.",
   "tags": [
    "aspect"
   ],
@@ -6034,6 +6110,8 @@
   "meaning": "suddenly start",
   "connection": "V-stem + 出す",
   "nuance": "出す on a verb stem marks a sudden, often unexpected onset of an action — 'burst out ...ing'.",
+  "register": "neutral",
+  "caution": "出す on a stem marks a SUDDEN onset ('burst out …ing', 泣き出す) with no control implied — it can't take a volitional/intended start; for a deliberate or gradual beginning use 始める instead.",
   "tags": [
    "aspect"
   ],
@@ -6198,6 +6276,8 @@
   "meaning": "do completely / to the end",
   "connection": "V-stem + 切る",
   "nuance": "切る on a verb stem means carrying an action fully through to completion — finish off, use up entirely.",
+  "register": "neutral",
+  "caution": "切る on a stem means fully completing/exhausting an action (使い切る, 食べ切る) — don't take it literally as 'cut'; the negative 切れない often means 'can't finish/too many to', not 'can't cut'.",
   "tags": [
    "aspect"
   ],
@@ -6370,6 +6450,8 @@
   "meaning": "do together / mutually",
   "connection": "V-stem + 合う",
   "nuance": "合う on a verb stem expresses a reciprocal or mutual action — doing something to or with each other.",
+  "register": "neutral",
+  "caution": "合う on a stem means a MUTUAL/reciprocal action done to each other (助け合う, 話し合う) — it needs a plural or 'with each other' sense; don't confuse it with 合う 'to match/fit' as an independent verb.",
   "tags": [
    "manner"
   ],
@@ -6526,6 +6608,8 @@
   "meaning": "redo / do over",
   "connection": "V-stem + 直す",
   "nuance": "直す on a verb stem means doing the action again, usually to correct or improve it — 'redo', 'do over'.",
+  "register": "neutral",
+  "caution": "直す on a stem means redo to correct/improve (書き直す) — don't confuse it with the auxiliary meaning of just 'again'; and 直す as its own verb 'to fix/cure' is separate, so context tells 'redo' from 'repair'.",
   "tags": [
    "aspect"
   ],
@@ -6702,6 +6786,8 @@
   "meaning": "(humbly) be allowed to do",
   "connection": "V-causative-て + いただく",
   "nuance": "The humblest way to say 'I will do' — literally 'receive the favor of being allowed to do', common in service and workplace keigo.",
+  "register": "formal",
+  "caution": "させていただく is humble and presumes the listener grants permission, so it's odd for things needing no permission (over-used, it sounds obsequious); build it from the causative せる/させる — 休ませていただく, not ×休みさせていただく.",
   "tags": [
    "keigo"
   ],
@@ -6845,6 +6931,8 @@
   "meaning": "honorific passive-form respect",
   "connection": "V-passive form as honorific",
   "nuance": "The passive れる・られる form doubles as a light honorific — a softer way to elevate someone's action than お〜になる.",
+  "register": "polite",
+  "caution": "The honorific れる/られる is identical in form to the passive and the potential, so context must disambiguate (社長が来られた = 'came' honorific, not 'was come'); it's lighter respect than お〜になる and never used about yourself.",
   "tags": [
    "keigo"
   ],
@@ -6964,6 +7052,8 @@
   "meaning": "without doing",
   "connection": "V-ない stem + ずに (する→せずに)",
   "nuance": "A more formal, written equivalent of 〜ないで meaning 'without doing'. Note the irregular する → せずに.",
+  "register": "formal/written",
+  "caution": "ずに = ないで 'without doing' but more written; the irregular is する → せずに (never ×しずに), and 来る → 来 (こ)ずに — using しずに for する is the stock mistake.",
   "tags": [
    "manner"
   ],
@@ -7126,6 +7216,8 @@
   "meaning": "not easily / takes forever",
   "connection": "なかなか + negative",
   "nuance": "A non-contiguous pattern: なかなか paired with a negative predicate means something just won't happen despite effort or expectation.",
+  "register": "neutral",
+  "caution": "In this pattern なかなか REQUIRES a negative predicate and means 'won't … easily / not for a while' (なかなか来ない); with a positive verb なかなか instead means 'quite/considerably', so the polarity flips the meaning.",
   "tags": [
    "degree"
   ],
@@ -7245,6 +7337,8 @@
   "meaning": "almost (nearly happened)",
   "connection": "V-dict + ところだった",
   "nuance": "Dictionary form + ところだった describes something that nearly happened but was avoided — 'I almost ...'.",
+  "register": "neutral",
+  "caution": "V-dict + ところだった means something ALMOST happened but didn't (危うく…ところだった) — don't confuse it with V-た ところだ 'just finished' or V-ている ところ 'in the middle of'; the tense of the verb before ところ changes everything.",
   "tags": [
    "aspect"
   ],
@@ -7397,6 +7491,8 @@
   "meaning": "do nothing but",
   "connection": "V-て + ばかりいる",
   "nuance": "て-form + ばかりいる criticizes someone for doing only one thing all the time and nothing else.",
+  "register": "neutral",
+  "caution": "てばかりいる criticizes doing only one thing to the exclusion of all else (遊んでばかりいる) — it attaches to the て-form, unlike ばかり after a noun ('only N'); the tone is reproachful, so avoid it about yourself neutrally.",
   "tags": [
    "tendency"
   ],
@@ -7546,6 +7642,8 @@
   "meaning": "only after doing … (did I realize)",
   "connection": "V-て + はじめて",
   "nuance": "て-form + はじめて marks the point where something first became true or understood — 'only after ... did I ...'.",
+  "register": "neutral",
+  "caution": "てはじめて marks the moment something first became true/understood ('only after …'), and the main clause is usually a realization (気づいた/分かった) — don't read はじめて here as the plain adverb 'for the first time' detached from the て-clause.",
   "tags": [
    "aspect"
   ],
@@ -7719,6 +7817,8 @@
   "meaning": "tell (someone) to do",
   "connection": "V-dict/V-ない + ように言う",
   "nuance": "ように言う reports an indirect request or instruction — 'tell someone to (not) do something'.",
+  "register": "neutral",
+  "caution": "ように言う reports an indirect request/instruction; the embedded verb is plain (行くように言う = tell to go), and a negative request uses ないように言う (tell NOT to do) — dropping ように and just quoting is the usual slip.",
   "tags": [
    "request"
   ],
@@ -7860,6 +7960,8 @@
   "meaning": "could you kindly …?",
   "connection": "V-て + いただけませんか",
   "nuance": "A very polite request: て-form + いただけませんか literally asks 'could I not receive the favor of you doing ...?' — the softest 'could you please'.",
+  "register": "polite",
+  "caution": "ていただけませんか is a very polite request built on the humble いただく — keep it in the negative-question form (…ませんか); saying ×ていただきませんか or mixing in もらえる (which is casual) breaks the register.",
   "tags": [
    "request",
    "keigo"
@@ -7982,6 +8084,8 @@
   "meaning": "about / concerning",
   "connection": "N + について",
   "nuance": "について marks the topic a statement, question, or research is *about* — neutral and common in reports and study.",
+  "register": "neutral",
+  "caution": "について marks the TOPIC something is about (研究する対象) — don't confuse it with に対して 'toward/against a target'; について is the subject-matter, not the direction of an attitude or action.",
   "tags": [
    "topic"
   ],
@@ -8123,6 +8227,8 @@
   "meaning": "toward / in contrast to",
   "connection": "N + に対して",
   "nuance": "に対して directs an attitude or action *toward* a target, or sets one thing *in contrast* against another.",
+  "register": "formal",
+  "caution": "に対して directs an action/attitude TOWARD a target or sets up a contrast — don't swap it with について (mere topic): 'Xについて怒る' is wrong for 'angry at X'; anger is directed, so it needs に対して.",
   "tags": [
    "topic",
    "standpoint"
@@ -8309,6 +8415,8 @@
   "meaning": "for / from the standpoint of",
   "connection": "N + にとって",
   "nuance": "にとって frames a judgment from a person or group’s standpoint — \"for X, this is …\".",
+  "register": "neutral",
+  "caution": "にとって frames a value judgment from someone's STANDPOINT ('for X, this is important') — don't confuse it with に 'to' (recipient) or として 'as a role'; it needs an evaluative predicate (大切/necessary), not a plain action.",
   "tags": [
    "standpoint"
   ],
@@ -8455,6 +8563,8 @@
   "meaning": "by / depending on / due to",
   "connection": "N + によって",
   "nuance": "によって covers three jobs: the agent in a passive (\"done by\"), variation (\"depending on\"), and cause (\"due to\").",
+  "register": "formal/written",
+  "caution": "によって juggles three senses — agent-in-passive ('done by'), 'depending on', and 'due to' — so read the clause to pick the right one; for a pure passive agent, low-animacy causes prefer によって over に.",
   "tags": [
    "means"
   ],
@@ -8592,6 +8702,8 @@
   "meaning": "according to",
   "connection": "source N + によると",
   "nuance": "によると cites a source of information; the sentence usually ends in a hearsay そうだ / らしい.",
+  "register": "neutral",
+  "caution": "によると cites an information source, so the sentence should END in hearsay (そうだ/らしい/ということだ) — pairing によると with a flat assertion, or confusing it with によって 'by means of', is the classic error.",
   "tags": [
    "standpoint"
   ],
@@ -8744,6 +8856,8 @@
   "meaning": "as / in the capacity of",
   "connection": "N + として",
   "nuance": "として states the role, capacity, or category in which someone or something acts.",
+  "register": "neutral",
+  "caution": "として states the ROLE/capacity in which someone acts ('as a student') — don't confuse it with にとって 'from the standpoint of': 'as a teacher I decide' is 教師として, while 'for a teacher this is hard' is 教師にとって.",
   "tags": [
    "standpoint"
   ],
@@ -8882,6 +8996,8 @@
   "meaning": "instead of / in exchange for",
   "connection": "N-の + 代わりに",
   "nuance": "代わりに swaps one thing for another, or offsets one act with a return act (\"in exchange\").",
+  "register": "neutral",
+  "caution": "代わりに has two senses — substitution ('instead of') and compensation ('in exchange') — so context decides; after a noun it's Nの代わりに, after a verb V-dict + 代わりに, and forgetting the の with nouns is a common slip.",
   "tags": [
    "means"
   ],
@@ -9073,6 +9189,8 @@
   "meaning": "not to mention / let alone",
   "connection": "N + はもちろん",
   "nuance": "はもちろん takes one obvious item for granted, then adds a second — \"A of course, and even B\".",
+  "register": "neutral",
+  "caution": "はもちろん takes the first item as OBVIOUS and adds a second, usually with も (Aはもちろん B も) — the second item should be the more surprising one; dropping the も or reversing which item is 'obvious' weakens it.",
   "tags": [
    "emphasis"
   ],
@@ -9233,6 +9351,8 @@
   "meaning": "things like (casual, often dismissive)",
   "connection": "N + なんか",
   "nuance": "なんか cites an example casually, often with a dismissive or self-deprecating tone (\"stuff like…\", \"someone like me\").",
+  "register": "casual/spoken",
+  "caution": "なんか is casual and often dismissive/self-deprecating (私なんか…), so it's inappropriate in formal speech — its polite/written counterpart is など; using なんか up the hierarchy can sound rude or falsely modest.",
   "tags": [
    "emphasis"
   ],
@@ -9367,6 +9487,8 @@
   "meaning": "precisely / the very …",
   "connection": "N + こそ",
   "nuance": "こそ singles out its word for emphasis — \"this one, precisely\" — often to correct or to reciprocate (\"こちらこそ\").",
+  "register": "neutral",
+  "caution": "こそ emphasizes 'this one precisely' and replaces は/が (今度こそ, こちらこそ) — don't stack it with those particles (×はこそ); it stresses the preceding word, so put it right after the item you're singling out.",
   "tags": [
    "emphasis"
   ],
@@ -9468,6 +9590,8 @@
   "meaning": "even / too (casual)",
   "connection": "N + だって",
   "nuance": "だって is a casual even/too — \"even N\" or \"N too\". Lists split it between N3 and N2, so treat the level as unsettled.",
+  "register": "casual/spoken",
+  "caution": "だって is casual for 'even/too' (でも/も) and also a colloquial 'because…' at sentence head — don't use it in formal writing; and sentence-initial だって (excuse-making 'but…') is a different, whiny nuance.",
   "tags": [
    "emphasis"
   ],
@@ -9610,6 +9734,8 @@
   "meaning": "casual quotative / topic \"you said / speaking of\"",
   "connection": "plain form / N + って",
   "nuance": "って is casual と/という — it quotes (\"X said …\"), names (\"a thing called X\"), or raises a topic (\"speaking of X\").",
+  "register": "casual/spoken",
+  "caution": "って is casual と/という — quotative, naming, or topic-marker — strictly spoken; it's not for formal writing, and topic って ('speaking of X') shouldn't be confused with the quotative って ('X said').",
   "tags": [
    "topic"
   ],
@@ -9744,6 +9870,8 @@
   "meaning": "intended for / aimed at",
   "connection": "N + 向け",
   "nuance": "向け marks the intended audience a thing was *made for* (\"designed for beginners\"), unlike 向き which is mere suitability.",
+  "register": "neutral",
+  "caution": "向け marks the intended TARGET audience a thing was deliberately made for (子供向け = made for kids), unlike 向き which is mere suitability (子供向き = suits kids) — swapping 向け and 向き is the classic N3 trap.",
   "tags": [
    "standpoint",
    "suffix"
@@ -9910,6 +10038,8 @@
   "meaning": "suited for",
   "connection": "N + 向き",
   "nuance": "向き describes natural suitability (\"suited for beginners\", \"facing south\") — a fit, not a deliberate target like 向け.",
+  "register": "neutral",
+  "caution": "向き describes natural SUITABILITY or orientation (初心者向き, 南向き), not deliberate design — for 'made intentionally for' use 向け; also 向き can mean 'facing (a direction)', a sense 向け never has.",
   "tags": [
    "standpoint",
    "suffix"
@@ -10045,6 +10175,8 @@
   "meaning": "-ic / -al (adjectivizing suffix)",
   "connection": "N + 的(な/に)",
   "nuance": "的 turns a noun into a な-adjective (\"economic\", \"personal\") — な before nouns, に as an adverb.",
+  "register": "neutral",
+  "caution": "的 makes a な-adjective, so it's 〜的な before a noun and 〜的に as an adverb (経済的な問題 / 経済的に) — attaching 的 to native-Japanese or already-adjectival words, or dropping the な/に, is the usual error.",
   "tags": [
    "suffix"
   ],
@@ -10194,6 +10326,8 @@
   "meaning": "-ness (nominalized い-adjective)",
   "connection": "い-adj stem + さ",
   "nuance": "さ turns an adjective into a noun measuring its degree — 高い → 高さ (height), 便利 → 便利さ (convenience).",
+  "register": "neutral",
+  "caution": "さ nominalizes to measure DEGREE objectively (高さ = height); use さ on the adjective stem (高い→高さ, 便利→便利さ) — don't confuse it with み, which gives a subjective/experiential noun (暖かみ vs 暖かさ).",
   "tags": [
    "suffix"
   ],
@@ -10342,6 +10476,8 @@
   "meaning": "throughout / all over",
   "connection": "N + 中 (家中, 一日中)",
   "nuance": "中 read じゅう means \"all through\" a whole span or space (一日中 = all day, 家中 = the whole house) — distinct from ちゅう \"in the middle of\".",
+  "register": "neutral",
+  "caution": "中 read じゅう means 'throughout' a whole span/space (一日中, 世界中), while ちゅう means 'in the middle of / during' (授業中) — picking the wrong reading flips 'all day' into 'while it's daytime'.",
   "tags": [
    "suffix",
    "frequency"
@@ -10480,6 +10616,8 @@
   "meaning": "every / each",
   "connection": "N / V-dict + ごとに",
   "nuance": "ごとに means \"at each interval\" — 一駅ごとに (every station), 会うごとに (each time we meet).",
+  "register": "neutral",
+  "caution": "ごとに means 'at each interval' and can take a number (三日ごとに = every 3 days), unlike たびに which needs an event — also 一つおきに 'every OTHER' is different from ごとに 'every', a frequent mix-up.",
   "tags": [
    "frequency"
   ],
@@ -10643,6 +10781,8 @@
   "meaning": "was supposed to (but didn’t)",
   "connection": "V-dict + はずだった",
   "nuance": "はずだった states an expectation that failed to happen — \"it was supposed to …, but …\".",
+  "register": "neutral",
+  "caution": "はずだった states an expectation that FAILED ('was supposed to, but…'), so a contrary result should follow — don't confuse it with はずだ 'should be' (still expected) or はずがない 'can't possibly be'.",
   "tags": [
    "obligation"
   ],
@@ -10809,6 +10949,8 @@
   "meaning": "should / ought to",
   "connection": "V-dict + べき(だ) (する→すべき)",
   "nuance": "べき states a strong should/ought — a duty or the right thing to do. With する it becomes すべき (or するべき).",
+  "register": "formal",
+  "caution": "べき is a strong 'should/ought' (moral duty), not mere advice (that's ほうがいい); with する it's すべき (or するべき, never ×すべく here), and べきだった means 'should have (but didn't)' — a past regret, so don't use plain べき for past obligations.",
   "tags": [
    "obligation"
   ],
@@ -10972,6 +11114,8 @@
   "meaning": "compared to",
   "connection": "N + に比べて",
   "nuance": "に比べて sets a baseline for comparison — \"compared to X, Y is …\".",
+  "register": "neutral",
+  "caution": "に比べて sets X as the BASELINE you compare against ('compared to X, Y is…') — don't confuse it with より (simple 'than' in comparisons); 比べて needs an explicit reference point, and the judgment goes on Y, not X.",
   "tags": [
    "comparison"
   ],

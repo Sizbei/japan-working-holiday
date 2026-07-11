@@ -3782,3 +3782,7 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 /* grammar depth (owner 2026-07-11): caution block + register chip in the expanded card */
 .g-caution{ font-size:.85rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 70%, var(--ink)); border-left:3px solid var(--gold-ink, #8a6508); padding-left:.6rem; margin:.5rem 0; }
 .g-reg{ font-size:.72rem; font-family: var(--mono); color: var(--ink-soft); border:1px solid var(--line); border-radius:6px; padding:.05rem .4rem; }
+
+/* Guide: "Pages in the nav" group heading */
+.set-group{ font-family: var(--mono); font-weight:700; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin:1rem 0 .2rem; display:flex; flex-direction:column; gap:2px; }
+.set-group .set-sub{ font-family: var(--sans, inherit); font-weight:400; text-transform:none; letter-spacing:0; font-size:.75rem; }

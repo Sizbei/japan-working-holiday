@@ -15,6 +15,7 @@ import { checklistItems } from './checklist-page.js';
 import { isBirthday } from './lib/people.js';
 import { spendSummary } from './lib/spend.js';
 import { allEvents } from './calendar.js';
+import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
 import { loadPlans } from './lib/dayplan.js';
 import { isGoing } from './lib/going.js';
 import { summary, fmtYen } from './lib/budget.js';
@@ -320,6 +321,24 @@ function renderWidgets(alerts) {
   renderTeasers(alerts);
 }
 
+
+// Trip-mode band — leads the Today widget while a stay-event chain covers today
+// (lib/trip.js). Links to #/emergency: the SW-cached page where the stay card lives
+// (deliberate offline-page compromise). No animation — glanced daily.
+function tripBandHTML() {
+  const evs = allEvents();
+  const w = tripWindow(evs, TODAY);
+  if (!w) return '';
+  const stay = stayForNight(evs, TODAY);
+  if (!stay) return `<a class="w-tripband" href="#/emergency">✈️ Trip day ${w.day}/${w.total} — checkout day</a>`;
+  if (!stayBooked(stay)) {
+    const by = stay.bookBy ? ` — book by ${esc(fmtShort(stay.bookBy))}` : '';
+    return `<a class="w-tripband w-tripband-warn" href="#/emergency">⚠ Trip day ${w.day}/${w.total} · tonight: NOT BOOKED${by}</a>`;
+  }
+  const name = String(stay.title).split(/stay:\s*/i).pop().replace(/\s*\(BOOKED\)\s*/i, '');
+  return `<a class="w-tripband" href="#/emergency">✈️ Trip day ${w.day}/${w.total} · tonight: ${esc(clip(name, 44))}</a>`;
+}
+
 // "Today" — the post-arrival lead widget: today's day plan, today's events, tasks due today.
 function renderToday() {
   const el = $('#wToday');
@@ -342,7 +361,7 @@ function renderToday() {
   (get(KEYS.people, []) || []).filter(p => isBirthday(p.birthday, TODAY)).slice(0, 2)
     .forEach(p => bits.push(`<li><a href="#/people"><span class="w-when">🎂</span> ${esc(clip(String(p.name || ''), 40))}’s birthday</a></li>`));
   const body = el.querySelector('.widget-body'); if (!body) return;
-  body.innerHTML = `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
+  body.innerHTML = tripBandHTML() + `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
     ? `<ul>${bits.join('')}</ul>`
     : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`);
   renderWxStrip();   // fill from cache synchronously; refreshWeather() re-fills when a fetch lands

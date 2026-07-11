@@ -1278,3 +1278,38 @@ test('shakyRows: level order N5→N1, deck order within, tags + TSV round-trip',
   assert.equal(toAnkiTSV(rows).split('\n').length, 2);
   assert.deepEqual(shakyRows(byLevel, []), []);
 });
+
+// ---- lib/trip.js (trip-mode derivations, pre-trip plan PR A) ----
+import { isStay, stayBooked, stayForNight, tripWindow } from '../docs/assets/lib/trip.js';
+test('trip.js: real Hokkaido fixture — chain, boundaries, day counts', () => {
+  const cal = JSON.parse(readFileSync(new URL('../docs/data/tips.json', import.meta.url), 'utf8')).calendar;
+  const w = tripWindow(cal, '2026-07-17');
+  assert.ok(w); assert.equal(w.start, '2026-07-15'); assert.equal(w.end, '2026-07-24');
+  assert.equal(w.day, 3); assert.equal(w.total, 10); assert.equal(w.stays.length, 4);
+  // Jul 18 boundary: Sapporo [15,18) is over — the night belongs to Furano [18,20)
+  assert.match(stayForNight(cal, '2026-07-18').title, /Furano/);
+  assert.equal(stayBooked(stayForNight(cal, '2026-07-18')), false);   // the unbooked one
+  assert.match(stayForNight(cal, '2026-07-20').title, /K's House/);
+  // last day: window active (day 10/10) but NO stay that night (checkout morning)
+  assert.equal(tripWindow(cal, '2026-07-24').day, 10);
+  assert.equal(stayForNight(cal, '2026-07-24'), null);
+  // outside the window
+  assert.equal(tripWindow(cal, '2026-07-10'), null);
+  assert.equal(tripWindow(cal, '2026-07-25'), null);
+  // the colon-less Tokyo "initial stay" event must NOT be a stay
+  assert.equal(cal.filter(isStay).length, 4);
+});
+
+test('trip.js: synthetic gap splits the chain; overlaps extend via max endDate', () => {
+  const mk = (d, e, t = 'Stay: x') => ({ title: t, date: d, endDate: e });
+  const gap = [mk('2026-08-01', '2026-08-03'), mk('2026-08-05', '2026-08-07')];   // Aug 4 = gap night
+  assert.equal(tripWindow(gap, '2026-08-04'), null);
+  assert.equal(tripWindow(gap, '2026-08-02').end, '2026-08-03');
+  assert.equal(tripWindow(gap, '2026-08-06').start, '2026-08-05');
+  const overlap = [mk('2026-08-01', '2026-08-10'), mk('2026-08-03', '2026-08-05'), mk('2026-08-10', '2026-08-12')];
+  const w = tripWindow(overlap, '2026-08-11');   // chained through the LONG stay's endDate
+  assert.ok(w); assert.equal(w.start, '2026-08-01'); assert.equal(w.end, '2026-08-12');
+  // tie on a night covered by two stays: prefer the booked one
+  const tie = [mk('2026-08-01', '2026-08-05', 'Stay: A — NOT BOOKED yet'), mk('2026-08-02', '2026-08-04', 'Stay: B (BOOKED)')];
+  assert.match(stayForNight(tie, '2026-08-03').title, /B/);
+});

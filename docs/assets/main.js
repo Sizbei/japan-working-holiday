@@ -3,8 +3,6 @@
 
 import { mountGate } from './gate.js';
 import { renderContent } from './content.js';
-import { mountPacking } from './packing.js';
-import { mountBudget } from './budget.js';
 import { mountPhraseDay } from './phraseday.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
@@ -64,8 +62,12 @@ function boot() {
       safe(() => mountGoogleSync(() => allEvents()));
       safe(() => mountTracker(data));
       safe(() => renderContent(data, today));
-      safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist
-      safe(() => mountBudget(data));       // budget planner (#/budget) — one-time + monthly cost estimate
+      // EF7: budget + packing are leaf route pages (imported only here, no inbound cross-module
+      // events, both render at mount) — lazy-load on first #/budget|#/packing entry. The dashboard
+      // budget/packing teasers + readiness widget read from lib/*.js + store, NOT these page modules,
+      // so they stay accurate without the pages mounted.
+      safe(() => registerLazyRoute(['budget'],  () => import('./budget.js').then(m => m.mountBudget(data))));
+      safe(() => registerLazyRoute(['packing'], () => import('./packing.js').then(m => m.mountPacking(data))));
       safe(() => mountPhraseDay(data));    // "phrase of the day" dashboard widget (deterministic by date) — stays eager
       // EF1: the 12 phrases-page modules (~76KB) lazy-load on first #/phrases entry —
       // they were parse+mount cost on EVERY boot for the least-visited route.

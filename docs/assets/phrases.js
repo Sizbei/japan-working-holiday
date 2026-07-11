@@ -293,12 +293,15 @@ function rowHTML(p, favs) {
 function render() {
   const wrap = $('#phraseList');
   if (!wrap) return;
-  const all = [...bakedPhrases(), ...loadUser()];
+  // Owner (2026-07-11): the baked survival phrases are beneath their level now — the page
+  // list is USER phrases only (Translate-save + Anki import). Baked phrases stay in tips.json
+  // for the dashboard phrase-of-the-day widget and the emergency page.
+  const all = loadUser();
   const favs = loadFavs();
   const filtered = favOnly() ? all.filter(p => favs[p.id]) : all;
 
   if (!filtered.length) {
-    wrap.innerHTML = `<div class="empty">${favOnly() ? 'No favorites yet — tap ☆ on a phrase to pin it.' : 'No phrases yet.'}</div>`;
+    wrap.innerHTML = `<div class="empty">${favOnly() ? 'No favorites yet — tap ☆ on a phrase to pin it.' : 'No saved phrases yet — save one from あ→A Translate, or ⬆ import your Anki deck.'}</div>`;
     return;
   }
 
@@ -337,4 +340,61 @@ function wireRows() {
     saveUser(removeUserPhrase(loadUser(), b.dataset.del)); render();
   }));
   $$('#phraseList .phrase-spk').forEach(b => b.addEventListener('click', () => speak(b.dataset.jp, b)));
+}
+
+// ==== #/survival — "Useful phrases" on its own page (owner 2026-07-11) ====
+// The baked survival categories moved here from #/phrases (which is now the study studio).
+// Shares the favorites store and the site-wide furigana sentinel; ☆-filter is page-local.
+let svFav = false;
+export function mountSurvival(data) {
+  if (data) DATA = data;
+  if (!$('#svList')) return;
+  applySvFuri();
+  $('#svFuri')?.addEventListener('click', () => { setRaw(KEYS.furi, furiOff() ? '' : 'off'); applySvFuri(); applyFuri(); });
+  $('#svFavOnly')?.addEventListener('click', () => {
+    svFav = !svFav;
+    $('#svFavOnly')?.setAttribute('aria-pressed', String(svFav));
+    renderSurvival();
+  });
+  renderSurvival();
+}
+function applySvFuri() {
+  const off = furiOff();
+  $('#survival')?.classList.toggle('furi-off', off);
+  const btn = $('#svFuri');
+  if (btn) { btn.setAttribute('aria-pressed', off ? 'false' : 'true'); btn.textContent = off ? 'あ Furigana off' : 'あ Furigana'; }
+}
+function renderSurvival() {
+  const wrap = $('#svList'); if (!wrap) return;
+  const favs = loadFavs();
+  const filtered = svFav ? bakedPhrases().filter(p => favs[p.id]) : bakedPhrases();
+  if (!filtered.length) {
+    wrap.innerHTML = `<div class="empty">${svFav ? 'No favorites yet — tap ☆ on a phrase to pin it.' : 'No phrases in the dataset.'}</div>`;
+    return;
+  }
+  const groups = groupByCategory(filtered, CATEGORY_ORDER);
+  wrap.innerHTML = groups.map(g => {
+    const accId = `sv-cat-${slug(g.cat)}`;
+    const rows = g.items.map(p => rowHTML(p, favs)).join('');
+    return `<section class="acc phrase-cat" data-acc="${esc(accId)}">
+      <button type="button" class="acc-head" aria-expanded="true" aria-controls="acc-panel-${esc(accId)}" aria-label="${esc(g.cat)}">
+        <span class="acc-chevron" aria-hidden="true">›</span>
+        <span class="acc-title">${esc(g.cat)}</span>
+        <span class="acc-count">${esc(String(g.items.length))}</span>
+      </button>
+      <div class="acc-panel" id="acc-panel-${esc(accId)}" role="region" aria-label="${esc(g.cat)}">
+        <div class="acc-inner"><ul class="phrase-list">${rows}</ul></div>
+      </div>
+    </section>`;
+  }).join('');
+  $$('#svList .phrase-fav').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.fav;
+    const m = { ...loadFavs() };
+    if (m[id]) delete m[id]; else m[id] = true;
+    saveFavs(m);
+    renderSurvival();
+  }));
+  $$('#svList .phrase-spk').forEach(b => b.addEventListener('click', () => speak(b.dataset.jp, b)));
+  wireJpAccents(wrap);
+  mountAccordion(wrap, { allToggle: $('#svCollapseAll') });
 }

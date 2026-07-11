@@ -3786,3 +3786,14 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 /* Guide: "Pages in the nav" group heading */
 .set-group{ font-family: var(--mono); font-weight:700; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin:1rem 0 .2rem; display:flex; flex-direction:column; gap:2px; }
 .set-group .set-sub{ font-family: var(--sans, inherit); font-weight:400; text-transform:none; letter-spacing:0; font-size:.75rem; }
+
+/* ===== phrases declutter (owner 2026-07-11) ===== */
+.ph-h{ font-family: var(--mono); font-weight:700; font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin:1.2rem 0 .4rem; }
+.beginner-drawer{ margin-top:1.6rem; border:1px solid var(--line); border-radius:10px; background:var(--bg-soft); }
+.beginner-drawer > summary{ cursor:pointer; padding:.7rem .9rem; font-weight:600; font-size:.88rem; color:var(--ink-soft); list-style:none; }
+.beginner-drawer > summary::before{ content:'▸ '; color:var(--indigo); }
+.beginner-drawer[open] > summary::before{ content:'▾ '; }
+.beginner-drawer > summary::-webkit-details-marker{ display:none; }
+.beginner-drawer[open]{ padding-bottom:.8rem; }
+.beginner-drawer > *:not(summary){ margin-left:.9rem; margin-right:.9rem; }
+@media (hover: none){ .beginner-drawer > summary{ min-height:44px; display:flex; align-items:center; } }

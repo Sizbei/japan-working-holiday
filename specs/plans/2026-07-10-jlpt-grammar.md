@@ -208,7 +208,8 @@ against an unproven consumer. The count is a map, not a straitjacket: N1 may spl
 
 ## Parked (not v1)
 
-Export ◆ → Anki TSV · conjugation drills · sentence audio · JLPT mock-question mode ·
+~~Export ◆ → Anki TSV~~ ✅ shipped #132 · ~~にもかかわらず N2 addendum~~ ✅ shipped #131
+(353 points total) · conjugation drills · sentence audio · JLPT mock-question mode ·
 per-kanji decomposition popover.
 
 ## Review log

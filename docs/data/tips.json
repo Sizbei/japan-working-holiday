@@ -2857,15 +2857,17 @@
   },
   {
    "id": "ev26-stay-furano-tbd",
-   "title": "🛏️ Stay: Furano/Biei — NOT BOOKED yet (2 nights)",
-   "date": "2026-07-18",
-   "endDate": "2026-07-20",
+   "title": "🛏️ Stay: Minshuku Mutsukari — Furano (BOOKED)",
+   "date": "2026-07-19",
+   "endDate": "2026-07-21",
    "category": "personal",
    "area": "Furano / Biei",
-   "confidence": "low",
+   "confidence": "high",
    "sources": [],
-   "bookingNotes": "Gap in the itinerary — lavender PEAK weekend, Furano beds sell out. Book ASAP or plan to base in Asahikawa (JR Furano line).",
-   "bookBy": "2026-07-12"
+   "bookingNotes": "Confirmed — 2 nights (Jul 19–21). Furano base for the lavender leg; JR Furano line into town.",
+   "stayAddress": "Midorimachi 8-13, Furano, Hokkaido, Japan",
+   "stayAddressJa": "北海道富良野市緑町8-13",
+   "stayContact": "Booked via Booking.com (民宿 minshuku — no phone desk). Check-in 16:00–22:00, out by 10:00. Keep your Booking.com confirmation for the host contact."
   },
   {
    "id": "ev26-stay-khouse-asahidake",

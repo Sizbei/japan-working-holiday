@@ -1281,23 +1281,40 @@ test('shakyRows: level order N5→N1, deck order within, tags + TSV round-trip',
 
 // ---- lib/trip.js (trip-mode derivations, pre-trip plan PR A) ----
 import { isStay, stayBooked, stayForNight, tripWindow } from '../docs/assets/lib/trip.js';
-test('trip.js: real Hokkaido fixture — chain, boundaries, day counts', () => {
-  const cal = JSON.parse(readFileSync(new URL('../docs/data/tips.json', import.meta.url), 'utf8')).calendar;
+test('trip.js: contiguous 4-stay chain — boundaries, day counts (synthetic; NOT live bookings)', () => {
+  // A fixed synthetic itinerary so the test never breaks when the owner rebooks a real
+  // stay (it did — the Furano booking created a legit gap night, splitting the live chain).
+  const cal = [
+    { title: '🏠 Stay: A', date: '2026-07-15', endDate: '2026-07-18' },
+    { title: '🛏️ Stay: Furano — NOT BOOKED yet', date: '2026-07-18', endDate: '2026-07-20' },
+    { title: "🏔️ Stay: K's House (BOOKED)", date: '2026-07-20', endDate: '2026-07-22' },
+    { title: '🛏️ Stay: D', date: '2026-07-22', endDate: '2026-07-24' },
+    { title: 'Makoto Guesthouse — initial stay', date: '2026-06-30', endDate: '2026-07-10' },   // colon-less → NOT a stay
+  ];
   const w = tripWindow(cal, '2026-07-17');
   assert.ok(w); assert.equal(w.start, '2026-07-15'); assert.equal(w.end, '2026-07-24');
   assert.equal(w.day, 3); assert.equal(w.total, 10); assert.equal(w.stays.length, 4);
-  // Jul 18 boundary: Sapporo [15,18) is over — the night belongs to Furano [18,20)
-  assert.match(stayForNight(cal, '2026-07-18').title, /Furano/);
-  assert.equal(stayBooked(stayForNight(cal, '2026-07-18')), false);   // the unbooked one
+  assert.match(stayForNight(cal, '2026-07-18').title, /Furano/);           // half-open: night 18 → Furano [18,20)
+  assert.equal(stayBooked(stayForNight(cal, '2026-07-18')), false);
   assert.match(stayForNight(cal, '2026-07-20').title, /K's House/);
-  // last day: window active (day 10/10) but NO stay that night (checkout morning)
-  assert.equal(tripWindow(cal, '2026-07-24').day, 10);
+  assert.equal(tripWindow(cal, '2026-07-24').day, 10);                     // last day active, no stay that night
   assert.equal(stayForNight(cal, '2026-07-24'), null);
-  // outside the window
   assert.equal(tripWindow(cal, '2026-07-10'), null);
   assert.equal(tripWindow(cal, '2026-07-25'), null);
-  // the colon-less Tokyo "initial stay" event must NOT be a stay
-  assert.equal(cal.filter(isStay).length, 4);
+  assert.equal(cal.filter(isStay).length, 4);                             // the colon-less "initial stay" is excluded
+});
+
+test('trip.js: a mid-trip gap night splits the chain (the real Furano-booking case)', () => {
+  // Live shape after the owner booked Mutsukari Jul 19–21: Jul 18 is an uncovered gap,
+  // so Jul 17 sees only the first window (ends Jul 18), not the whole trip.
+  const cal = [
+    { title: 'Stay: A', date: '2026-07-15', endDate: '2026-07-18' },
+    { title: 'Stay: Mutsukari (BOOKED)', date: '2026-07-19', endDate: '2026-07-21' },
+  ];
+  assert.equal(tripWindow(cal, '2026-07-17').end, '2026-07-18');   // window 1 (Jul 15–18)
+  assert.equal(tripWindow(cal, '2026-07-18').end, '2026-07-18');   // Jul 18 = window-1 checkout day (day 4/4), band still shows
+  assert.equal(stayForNight(cal, '2026-07-18'), null);             // …but no bed that night — the real gap
+  assert.equal(tripWindow(cal, '2026-07-20').start, '2026-07-19'); // window 2 (Jul 19–21)
 });
 
 test('trip.js: synthetic gap splits the chain; overlaps extend via max endDate', () => {

@@ -23,6 +23,7 @@ export const KEYS = {
   weather: 'jwh-wx-v1',              // { at: epoch-ms, data: parseWeather() } — dashboard strip cache
   fx: 'jwh-fx-v1',                   // { at: epoch-ms, usd: USD-per-JPY } — budget teaser cache
   evArea: 'jwh-evarea-v1',           // event id → user-edited location/area (Going page ✎)
+  evTitle: 'jwh-evtitle-v1',         // event id → user-renamed title (side-panel dblclick; baked events — user events edit their own store)
   evHidden: 'jwh-evhidden-v1',       // baked event ids the user deleted (researched data stays in tips.json)
   widgetOrder: 'jwh-widgetorder-v1',
   arcade: 'jwh-arcade-v1',

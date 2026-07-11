@@ -104,7 +104,10 @@
     ],
     "en": "This ramen is famous."
    }
-  ]
+  ],
+  "nuance": "The polite copula that ends most textbook sentences; its plain-form equivalent is だ, which you drop entirely in casual speech (学生だ, or often just 学生). Unlike English \"is\", です carries politeness, not extra meaning.",
+  "register": "polite",
+  "caution": "です does not conjugate the na-adjective before it — write 静かです, never 静かいです; the \"い-adjective + です\" pattern (高いです) is politeness only, so never say 高いだ."
  },
  {
   "id": "n5-ja-arimasen",
@@ -113,7 +116,7 @@
   "reading": "じゃありません",
   "meaning": "polite negative \"is not\"",
   "connection": "N / na-adj + じゃありません",
-  "nuance": "じゃありません is the casual-polite form; ではありません is the more formal equivalent.",
+  "nuance": "じゃありません is the more colloquial polite form; ではありません is the stiffer, more formal polite form.",
   "confidence": "high",
   "tags": [
    "polite",
@@ -201,7 +204,9 @@
     ],
     "en": "I'm not free today."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "Don't attach it to い-adjectives — 高いじゃありません is wrong; the negative of an い-adjective is 高くないです / 高くありません instead."
  },
  {
   "id": "n5-wa",
@@ -339,7 +344,9 @@
     ],
     "en": "I take the train every morning."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "は marks the topic, not the subject — in 象は鼻が長い the は-phrase is what the sentence is *about*, while が marks the real subject; beginners wrongly treat は as an all-purpose subject marker."
  },
  {
   "id": "n5-ga-subject",
@@ -489,7 +496,9 @@
     ],
     "en": "Which train is faster?"
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Question words as subjects take が, not は — ask 誰が来ますか, never 誰は来ますか; and answers to \"who/what did it\" also stay with が."
  },
  {
   "id": "n5-wo",
@@ -632,7 +641,9 @@
     ],
     "en": "I study Japanese every night."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Motion verbs use を for the path passed through, not an object — 公園を歩く means \"walk through the park\", so を here is not the thing being acted on."
  },
  {
   "id": "n5-ni-time",
@@ -774,7 +785,9 @@
     ],
     "en": "On Sunday I go to the sento."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Only absolute time words take に (3時に, 月曜日に); relative words like 今日・明日・毎日 take NO に — 明日に行きます is wrong."
  },
  {
   "id": "n5-de-place",
@@ -914,7 +927,9 @@
     ],
     "en": "I went to the ward office by bus."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "で is where an action happens; に is where something exists or a destination — 図書館で勉強する (study *at*) vs 図書館にいる (be *at*). Swapping them is the classic beginner slip."
  },
  {
   "id": "n5-e",
@@ -1052,7 +1067,9 @@
     ],
     "en": "Next week I'll climb Mt. Fuji."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "へ only marks direction toward a place; it cannot mark a point in time or an existence location, so use に (not へ) for arrival-at and for に-time expressions."
  },
  {
   "id": "n5-to-and",
@@ -1185,7 +1202,9 @@
     ],
     "en": "I drank at an izakaya with a friend."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "と only joins nouns (\"A and B\"); it never joins two sentences or clauses — for \"and then\" between actions use て-form or それから, not と."
  },
  {
   "id": "n5-ya",
@@ -1352,7 +1371,9 @@
     ],
     "en": "In Akihabara I looked at manga, games and the like."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "や joins nouns only and implies an incomplete list, so it clashes with 全部 or \"exactly these\"; when you mean a closed, exhaustive list use と instead."
  },
  {
   "id": "n5-no",
@@ -1491,7 +1512,10 @@
     ],
     "en": "I bought a Japanese book."
    }
-  ]
+  ],
+  "nuance": "Links two nouns as possessor-to-possessed or modifier-to-head (私の本, 日本語の本); the order is opposite to English — the modifier comes first, so 日本語の本 is \"a book *of* Japanese\", i.e. a Japanese book.",
+  "register": "neutral",
+  "caution": "Don't insert の between a na-adjective and its noun — it's 静かな部屋 with な, not 静かの部屋; の links nouns, な links na-adjectives."
  },
  {
   "id": "n5-mo",
@@ -1624,7 +1648,9 @@
     ],
     "en": "Tomorrow is an early shift too."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "も replaces は/が/を outright — say 私も行きます, never 私はも or 私もは; but with に/で/へ it stacks on (東京にも)."
  },
  {
   "id": "n5-ka",
@@ -1758,7 +1784,9 @@
     ],
     "en": "Does this train go to Shinjuku?"
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "In plain/casual speech か is usually dropped and replaced by rising intonation (行く？); tacking か onto plain form (行くか？) sounds blunt or challenging, not neutral."
  },
  {
   "id": "n5-ne",
@@ -1884,7 +1912,9 @@
     ],
     "en": "This ramen is delicious, isn't it?"
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "ね assumes the listener shares or will agree with your view; use it to state something the other person can't know (like new info about yourself), and it sounds like you're fishing for agreement you have no right to expect."
  },
  {
   "id": "n5-yo",
@@ -2027,7 +2057,9 @@
     ],
     "en": "That izakaya over there is cheap, you know."
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "よ asserts information you assume the listener lacks; using it on something obvious to them can sound pushy or condescending, so don't reflexively end every statement with よ."
  },
  {
   "id": "n5-masu",
@@ -2155,7 +2187,10 @@
     ],
     "en": "I'll meet a friend tomorrow."
    }
-  ]
+  ],
+  "nuance": "The polite present/future form — it covers both habitual actions and future plans (毎日飲みます = \"I drink daily\" and 明日行きます = \"I'll go tomorrow\"); Japanese has no separate future tense. Its plain equivalent is the dictionary form.",
+  "register": "polite",
+  "caution": "ます attaches to the ます-stem (i-row), not the dictionary form — it's 飲みます from 飲む, never 飲むます; irregulars are します and 来ます (きます)."
  },
  {
   "id": "n5-masen",
@@ -2274,7 +2309,10 @@
     ],
     "en": "I don't eat natto."
    }
-  ]
+  ],
+  "nuance": "The polite negative of ます, covering \"don't / won't\" (今日は飲みません). It shares the same ます-stem as the affirmative — you just swap ます for ません; the plain-form counterpart is 〜ない.",
+  "register": "polite",
+  "caution": "ません is the negative of ます (present/future); its past is ませんでした, so \"didn't eat\" is 食べませんでした, never 食べませんかった."
  },
  {
   "id": "n5-mashita",
@@ -2415,7 +2453,10 @@
     ],
     "en": "I climbed Mt. Fuji last week."
    }
-  ]
+  ],
+  "nuance": "The polite past of ます — one form covers both English \"did\" and \"have done\" (食べました = \"ate\" / \"have eaten\"). Context, not the verb, tells them apart. The plain equivalent is the た-form.",
+  "register": "polite",
+  "caution": "Its negative is not ましたじゃない — the polite past negative is a separate form, ませんでした (行きませんでした = \"didn't go\")."
  },
  {
   "id": "n5-masen-deshita",
@@ -2543,7 +2584,10 @@
     ],
     "en": "I didn't make the last train."
    }
-  ]
+  ],
+  "nuance": "The polite past negative (\"didn't / hasn't\") — built by adding でした after the negative ません, literally \"was not (doing)\". Its plain-form counterpart is 〜なかった.",
+  "register": "polite",
+  "caution": "It only negates verbs; for a noun/na-adjective in the polite past negative you need じゃありませんでした (学生じゃありませんでした), not ませんでした."
  },
  {
   "id": "n5-nai",
@@ -2666,7 +2710,9 @@
     ],
     "en": "I don't eat anything in the morning."
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "Only する→しない and 来る→こない are irregular; for regular u-verbs the final -u becomes -a-nai (飲む→飲まない), and verbs ending in う go to わ (買う→買わない, never 買あない)."
  },
  {
   "id": "n5-nakatta",
@@ -2777,7 +2823,10 @@
     ],
     "en": "I didn't take an umbrella with me."
    }
-  ]
+  ],
+  "nuance": "The plain past negative — take the 〜ない form and, because ない conjugates like an い-adjective, change ない→なかった (行かない→行かなかった). It's the casual equivalent of ませんでした.",
+  "register": "casual/spoken",
+  "caution": "Because ない acts like an い-adjective, the past is なかった (行かなかった), never 行かないでした; ない never takes でした."
  },
  {
   "id": "n5-te-iru",
@@ -2923,7 +2972,9 @@
     ],
     "en": "I'm studying Japanese every night."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "With change-of-state verbs (行く, 結婚する, 死ぬ) ている marks the resulting *state*, not an action in progress — 行っている means \"has gone / is there now\", not \"is going\"."
  },
  {
   "id": "n5-te-kudasai",
@@ -3029,7 +3080,10 @@
     ],
     "en": "Please say it one more time."
    }
-  ]
+  ],
+  "nuance": "A polite request or instruction (\"please do…\"), built on the て-form. It's firm and direct — fine for teachers, staff, or signs — but toward superiors soften it with 〜ていただけますか. Its negative is ないでください.",
+  "register": "polite",
+  "caution": "It attaches to the て-form, so get the te-form right — 待ってください (待つ), not 待ちてください; irregular te-forms (して, 来て/きて) carry over."
  },
  {
   "id": "n5-naide-kudasai",
@@ -3170,7 +3224,10 @@
     ],
     "en": "Please don't make phone calls on the train."
    }
-  ]
+  ],
+  "nuance": "The negative request — \"please don't do…\" — formed from the plain negative stem plus でください. It's the direct counterpart of てください for prohibitions you're asking of someone.",
+  "register": "polite",
+  "caution": "Use the ない-stem + でください (撮らないでください), not the て-form; and don't confuse it with なくてもいい (\"you don't have to\"), which permits rather than forbids."
  },
  {
   "id": "n5-mashou",
@@ -3287,7 +3344,10 @@
     ],
     "en": "Let's head home now."
    }
-  ]
+  ],
+  "nuance": "A polite \"let's…\" that proposes a shared action the speaker assumes both parties want (一緒に行きましょう). Because it presumes agreement, ませんか is the gentler way to *invite* someone who hasn't agreed yet.",
+  "register": "polite",
+  "caution": "ましょう assumes the other person is already on board; to actually invite (and let them decline) use ませんか — leading with ましょう on an unshared plan can sound presumptuous."
  },
  {
   "id": "n5-mashou-ka",
@@ -3388,7 +3448,10 @@
     ],
     "en": "Where shall we meet?"
    }
-  ]
+  ],
+  "nuance": "Adds か to ましょう to *offer* (\"shall I…?\") or *check* a shared plan (\"shall we…?\"). 窓を開けましょうか offers help; どこで会いましょうか asks the group to decide. The subject (I vs we) comes from context.",
+  "register": "polite",
+  "caution": "ましょうか offers to do something / checks a joint plan; it is not a yes-no invitation — to invite someone to join *you*, use ませんか instead."
  },
  {
   "id": "n5-masen-ka",
@@ -3530,7 +3593,9 @@
     ],
     "en": "Would you like to go to a sento this weekend?"
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "This is an invitation, not a real negative question — 行きませんか means \"won't you go? (let's)\", so answering はい means \"yes, let's\", not \"yes, I won't\"."
  },
  {
   "id": "n5-tari-tari",
@@ -3739,7 +3804,9 @@
     ],
     "en": "On weekends I do things like watch anime and read manga."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Don't forget the final する — it's 〜たり〜たりする, and the tense/politeness lives on that する (…したりしました), not on the たり verbs themselves."
  },
  {
   "id": "n5-nakereba-narimasen",
@@ -3877,7 +3944,9 @@
     ],
     "en": "I have to submit documents at the ward office."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "It literally means \"if you don't, it won't do\", so the two negatives cancel to a positive obligation (\"must do\") — don't read the ない as making it negative."
  },
  {
   "id": "n5-nakute-mo-ii",
@@ -4013,7 +4082,9 @@
     ],
     "en": "You don't have to take off your shoes."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "This is \"don't have to\", the opposite of \"must not\" — contrast it with てはいけません (forbidden); 食べなくてもいい means eating is optional, not banned."
  },
  {
   "id": "n5-koto-ga-dekimasu",
@@ -4145,7 +4216,10 @@
     ],
     "en": "You can withdraw money at the konbini."
    }
-  ]
+  ],
+  "nuance": "Expresses ability or permission by nominalizing a dictionary-form verb with こと (\"the thing of doing X is possible\"). It's the analytic alternative to the potential form (泳げます) and is often felt as slightly more formal or explicit.",
+  "register": "polite",
+  "caution": "It attaches to the dictionary form, not the ます-stem — 泳ぐことができます, never 泳ぎことができます or 泳げることができます."
  },
  {
   "id": "n5-no-ga-suki",
@@ -4302,7 +4376,9 @@
     ],
     "en": "I like reading books on the train."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "What you like is marked by が, not を — it's 読むのが好き, never 読むのを好き, because 好き is an adjective describing that the reading \"is likeable\"."
  },
  {
   "id": "n5-no-ga-jouzu",
@@ -4474,7 +4550,9 @@
     ],
     "en": "My roommate is good at speaking Japanese."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Avoid saying 私は〜のが上手です about yourself — claiming 上手 sounds boastful; describe your own skill with できます or 得意 (still cautiously), and reserve 上手 for praising others."
  },
  {
   "id": "n5-ga-hoshii",
@@ -4630,7 +4708,9 @@
     ],
     "en": "In winter I want a warm coat."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "欲しい describes the speaker's own desire — don't use it flatly for a third person (\"he wants…\"); for others you need 欲しがっている."
  },
  {
   "id": "n5-sugimasu",
@@ -4752,7 +4832,9 @@
     ],
     "en": "I drank too much at the izakaya yesterday."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "すぎる is always negative/excessive (\"too much\", a problem) — it is not an intensifier like とても; 高すぎる means \"too expensive (bad)\", not just \"very expensive\"."
  },
  {
   "id": "n5-n-desu",
@@ -4854,7 +4936,9 @@
     ],
     "en": "The thing is, I missed the last train."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "Nouns and na-adjectives need な before んです (学生なんです, 静かなんです), not だ — 学生だんです is wrong; only verbs and い-adjectives attach んです directly."
  },
  {
   "id": "n5-to-omoimasu",
@@ -4983,7 +5067,9 @@
     ],
     "en": "I think this shop is cheap."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "The と-clause stays in plain form even in polite speech — 行くと思います, never 行きますと思います; and と思います states the speaker's own opinion, not a general fact."
  },
  {
   "id": "n5-deshou",
@@ -5087,7 +5173,9 @@
     ],
     "en": "Hokkaido is probably cold."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "Don't stack it on です — it's 高いでしょう / 学生でしょう, never 高いですでしょう; でしょう already carries the polite copula."
  },
  {
   "id": "n5-mada",
@@ -5221,7 +5309,9 @@
     ],
     "en": "I haven't gotten my residence card yet."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "まだ (\"not yet\") takes ていません, not the plain past negative — まだ食べていません, not まだ食べませんでした; the latter wrongly says \"still didn't eat\"."
  },
  {
   "id": "n5-mou",
@@ -5369,7 +5459,9 @@
     ],
     "en": "I've already opened a bank account."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "This もう means \"already\" with an affirmative past (もう食べました); a different もう + negative means \"no longer\" (もう食べません), so watch the polarity."
  },
  {
   "id": "n5-gurai",
@@ -5510,7 +5602,10 @@
     ],
     "en": "I save about 30,000 yen every month."
    }
-  ]
+  ],
+  "nuance": "Marks an approximate quantity, duration, or degree (\"about\", 三十分ぐらい, 千円ぐらい). Interchangeable with ごろ only in feel, not use: ぐらい is for amounts/spans, ごろ for a single clock point. ぐらい and くらい are the same word.",
+  "register": "neutral",
+  "caution": "Use ぐらい for amounts and durations (10分ぐらい); for an approximate *point* in time use ごろ — 3時ぐらい is loose, 3時ごろ is the natural choice."
  },
  {
   "id": "n5-goro",
@@ -5649,7 +5744,9 @@
     ],
     "en": "The train comes around eight thirty."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ごろ attaches only to a point in time, so don't say 10分ごろ for a duration — a length of time takes ぐらい (10分ぐらい)."
  },
  {
   "id": "n5-dake",
@@ -5758,7 +5855,10 @@
     ],
     "en": "I can only read hiragana."
    }
-  ]
+  ],
+  "nuance": "Limits to \"only / just\" and, unlike しか, pairs with an affirmative verb (一人だけ来た). It carries a neutral or even positive \"that's enough\" feel, whereas しか〜ない stresses the shortfall (\"only, and that's too few\").",
+  "register": "neutral",
+  "caution": "だけ takes a positive verb (一人だけ来た); if you switch to the しか construction you must make the verb negative — the two are not interchangeable word-for-word."
  },
  {
   "id": "n5-shika-nai",
@@ -5882,7 +5982,9 @@
     ],
     "en": "I can only take Sundays off."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "しか obligatorily requires a negative verb even though the meaning is \"only\" — 千円しかない = \"have only 1000 yen\"; 千円しかある is ungrammatical."
  },
  {
   "id": "n5-yori-hou-ga",
@@ -6053,7 +6155,10 @@
     ],
     "en": "I like winter more than summer."
    }
-  ]
+  ],
+  "nuance": "The standard comparison frame: より marks the losing/standard item and (の)ほうが marks the one that wins on the quality (電車より車のほうが速い). Word order is flexible, but ほうが always sits with the item that \"has more\" of the trait.",
+  "register": "neutral",
+  "caution": "より marks the thing being surpassed (the standard), so AよりBのほうが means B > A — beginners often flip it and mark the winner with より by mistake."
  },
  {
   "id": "n5-de-ichiban",
@@ -6255,7 +6360,10 @@
     ],
     "en": "At this restaurant, the ramen is the cheapest."
    }
-  ]
+  ],
+  "nuance": "The superlative: 〜の中で names the group, がいちばん marks the top member (クラスの中で田中さんがいちばん背が高い). いちばん is just the adverb \"most/number one\" placed before the adjective — no -est ending exists.",
+  "register": "neutral",
+  "caution": "Use の中で (not で alone) to frame the group, and remember いちばん is an adverb before the adjective — 高いちばん is wrong, it's いちばん高い."
  },
  {
   "id": "n5-toki",
@@ -6407,7 +6515,10 @@
     ],
     "en": "When I came to Japan, I went to the ward office."
    }
-  ]
+  ],
+  "nuance": "Marks \"when / at the time of\" and the tense of the verb before とき matters: 行くとき (dict) = \"when about to/on the way to go\", 行ったとき (past) = \"when I had gone/arrived\". Nouns link with の (子供のとき).",
+  "register": "neutral",
+  "caution": "The tense on the verb before とき is relative to the main clause, not the sentence — 行くとき写真を撮った means \"took a photo *on the way* there\", while 行ったとき means \"*after* arriving\"."
  },
  {
   "id": "n5-ta-ato-de",
@@ -6576,7 +6687,9 @@
     ],
     "en": "After eating, I wash the dishes."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "あとで pins strict sequence and takes the past た-form regardless of sentence tense; don't confuse it with てから, which more strongly stresses that X finishes before Y begins."
  },
  {
   "id": "n5-kata",
@@ -6717,7 +6830,10 @@
     ],
     "en": "The way to write kanji is difficult."
    }
-  ]
+  ],
+  "nuance": "Attaches to the ます-stem to mean \"the way of / how to do\" (作り方 = \"how to make\"), turning the verb into a noun. The following object often switches its を to の: 漢字の書き方 (\"the way of writing kanji\").",
+  "register": "neutral",
+  "caution": "Attach 方 to the ます-stem, not the dictionary form — 使い方 (from 使います), never 使う方; and the object particle typically becomes の (この漢字の書き方)."
  },
  {
   "id": "n5-ni-ikimasu",
@@ -6864,7 +6980,10 @@
     ],
     "en": "I'm going to Hokkaido to ski."
    }
-  ]
+  ],
+  "nuance": "Expresses purpose of movement: ます-stem + に + a motion verb (映画を見に行きます = \"go to see a movie\"). The に here means \"in order to\", and only motion verbs (行く/来る/帰る) complete it.",
+  "register": "polite",
+  "caution": "Use the ます-stem before に, not the dictionary form — 買いに行く, never 買うに行く; with a する-noun, the noun alone precedes に (勉強しに → 勉強に行く)."
  },
  {
   "id": "n5-amari-nai",
@@ -6982,7 +7101,10 @@
     ],
     "en": "I don't eat natto very much."
    }
-  ]
+  ],
+  "nuance": "あまり pairs with a negative to mean \"not very / not much\" (あまり高くない). Without the negative, あまり(に) instead means \"excessively\", so the negative verb is what fixes the \"not very\" reading.",
+  "register": "neutral",
+  "caution": "あまり demands a negative predicate for the \"not much\" sense — あまり高い alone doesn't mean \"not very expensive\"; you must say あまり高くない."
  },
  {
   "id": "n5-zenzen-nai",
@@ -7099,7 +7221,10 @@
     ],
     "en": "I couldn't sleep at all last night."
    }
-  ]
+  ],
+  "nuance": "ぜんぜん emphasizes a total negative — \"not at all\" (ぜんぜん分からない). In casual modern speech it also appears with positives to mean \"totally fine\" (ぜんぜん大丈夫), but for N5 keep it strictly with negatives.",
+  "register": "neutral",
+  "caution": "In careful/standard usage ぜんぜん needs a negative — ぜんぜん + affirmative (ぜんぜんいい) is colloquial and best avoided in polite writing or on tests."
  },
  {
   "id": "n5-wa-dou-desu-ka",
@@ -7186,7 +7311,10 @@
     ],
     "en": "How about a coffee?"
    }
-  ]
+  ],
+  "nuance": "Asks for an opinion or offers a suggestion (\"How about…? / What do you think of…?\"), e.g. コーヒーはどうですか offers coffee. いかがですか is the more polite version used with customers or superiors.",
+  "register": "polite",
+  "caution": "This asks \"how about it / your opinion\", not \"how (by what means)\" — for method use どうやって; and don't swap in どうですか to ask literal \"how are you doing X\"."
  },
  {
   "id": "n5-wo-kudasai",
@@ -7281,7 +7409,10 @@
     ],
     "en": "Two draft beers, please."
    }
-  ]
+  ],
+  "nuance": "Requests a thing/object (\"please give me…\", これをください). It asks for a noun; to request an *action*, you need the てください form instead (待ってください).",
+  "register": "polite",
+  "caution": "をください requests a *thing*; to request an *action* use the verb's て-form + ください — 待ってください, not 待つをください."
  },
  {
   "id": "n5-ku-narimasu",
@@ -7406,7 +7537,10 @@
     ],
     "en": "Japanese has gradually become fun."
    }
-  ]
+  ],
+  "nuance": "Expresses \"become\" for い-adjectives: drop い and add くなります (寒い→寒くなります). It describes a natural change of state; for a deliberate change *you* cause, use くします instead.",
+  "register": "polite",
+  "caution": "Use the く form, not に — it's 大きくなる for い-adjectives; only nouns and na-adjectives take になる (mixing them up, e.g. 寒いになる, is the classic error)."
  },
  {
   "id": "n5-ni-narimasu",
@@ -7543,7 +7677,10 @@
     ],
     "en": "I practiced every day and got good at it."
    }
-  ]
+  ],
+  "nuance": "The \"become\" pattern for nouns and na-adjectives, which link with に (医者になる, 静かになる). Parallel to くなります for い-adjectives; the choice of に vs く depends purely on the word class.",
+  "register": "polite",
+  "caution": "Nouns and na-adjectives take に (元気になる); don't apply this to an い-adjective — 高いになる is wrong, it must be 高くなる."
  },
  {
   "id": "n5-no-nominalizer",
@@ -7719,7 +7856,9 @@
     ],
     "en": "Getting up early in the morning is tough."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "This の makes a verb into a noun; don't confuse it with こと — の is preferred for concrete, perceived acts (泳ぐのを見る), while abstract facts often take こと."
  },
  {
   "id": "n5-kute",
@@ -7872,7 +8011,10 @@
     ],
     "en": "The share house is spacious and bright."
    }
-  ]
+  ],
+  "nuance": "Links an い-adjective to what follows by changing い→くて (高くて広い = \"expensive and spacious\"). It joins clauses and often implies a cause/reason (\"being X, so…\"); the tense is carried by the final predicate only.",
+  "register": "neutral",
+  "caution": "Only い-adjectives use くて; nouns and na-adjectives link with で (静かで, 学生で), not くて — and いい becomes よくて, never いくて."
  },
  {
   "id": "n5-ni-shimasu",
@@ -7984,7 +8126,10 @@
     ],
     "en": "For a drink, I'll have tea."
    }
-  ]
+  ],
+  "nuance": "States a decision or choice, most often an order — コーヒーにします = \"I'll have the coffee\". The に marks the option settled on; contrast にする (you decide) with になる (it becomes so on its own).",
+  "register": "polite",
+  "caution": "にします is \"I decide on / I'll choose\" (volitional); don't confuse it with になります (\"becomes\", a natural change) — one is a choice, the other happens by itself."
  },
  {
   "id": "n5-deshou-ka",
@@ -8107,7 +8252,10 @@
     ],
     "en": "I wonder if this train stops at Shibuya."
    }
-  ]
+  ],
+  "nuance": "A softened, polite question expressing wondering or a tentative guess (\"I wonder if…\", 雨でしょうか). It hedges more than plain ですか, so it sounds gentler and less demanding when asking or confirming.",
+  "register": "polite",
+  "caution": "でしょうか softens a question; it isn't a plain yes/no ですか — using it doesn't make the sentence more certain, it makes it more tentative and polite."
  },
  {
   "id": "n5-naide",
@@ -8255,7 +8403,9 @@
     ],
     "en": "I went out without taking an umbrella."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ないで means \"without doing\" as an accompanying manner; for \"because not / instead of\" contrast, and for linking negative reasons, なくて is used — 食べないで出た (\"left without eating\") vs 食べなくて… (reason)."
  },
  {
   "id": "n5-kedo",
@@ -8396,7 +8546,9 @@
     ],
     "en": "I want to go, but I don't have time."
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "けど is casual — in polite/written contexts use が or けれども; also けど often just softens a lead-in (\"um, about that…\"), not always a real \"but\"."
  },
  {
   "id": "n5-ga-but",
@@ -8554,7 +8706,9 @@
     ],
     "en": "Excuse me, but where is the station?"
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "This conjunctive が means \"but\" and comes mid-sentence after a full clause — don't confuse it with the subject-marker が, and don't start a new sentence with it the way English does with \"But\"."
  },
  {
   "id": "n5-demo",
@@ -8666,7 +8820,10 @@
     ],
     "en": "But it's raining, so I won't go."
    }
-  ]
+  ],
+  "nuance": "A sentence-initial \"but / however\" that pushes back on what was just said (雨だ。でも行く). It's softer and more conversational than しかし; note the same でも after a noun instead means \"even\" (子供でも).",
+  "register": "neutral",
+  "caution": "Sentence-starting でも (\"but\") is different from the particle でも meaning \"even / or something\" (コーヒーでも) — same shape, opposite job; judge by position."
  },
  {
   "id": "n5-soshite",
@@ -8837,7 +8994,10 @@
     ],
     "en": "I cleaned. And then I did laundry too."
    }
-  ]
+  ],
+  "nuance": "Joins two sentences as \"and (then)\", adding a further point or the next event (ご飯を食べた。そして寝た). It links *sentences*; to link nouns within one sentence you still need と or や, not そして.",
+  "register": "neutral",
+  "caution": "そして connects whole sentences, not nouns — for \"A and B\" between two nouns use と/や; そして本 is wrong."
  },
  {
   "id": "n5-sorekara",
@@ -9003,7 +9163,10 @@
     ],
     "en": "I bought bread. And also I bought eggs."
    }
-  ]
+  ],
+  "nuance": "Sequences events as \"after that / and then\" and can also add another item (\"and also\"). Compared with そして, それから more clearly stresses temporal order — one thing, then the next.",
+  "register": "neutral",
+  "caution": "それから emphasizes sequence (\"and after that\"); それで, which looks similar, means \"and so / therefore\" (a result) — don't swap them."
  },
  {
   "id": "n5-dakara",
@@ -9195,7 +9358,10 @@
     ],
     "en": "It's cold outside. So I'll wear a coat."
    }
-  ]
+  ],
+  "nuance": "A sentence-initial \"so / that's why\" that draws a consequence from the previous statement (雨だ。だから行かない). It's the standalone cousin of clause-final から; ですから is its polite form.",
+  "register": "casual/spoken",
+  "caution": "だから is casual/assertive and can sound blunt or accusatory toward superiors; in polite speech soften to ですから or それで."
  },
  {
   "id": "n5-to-issho-ni",
@@ -9348,7 +9514,10 @@
     ],
     "en": "I'll climb Mt. Fuji together with my roommate."
    }
-  ]
+  ],
+  "nuance": "Means \"together with (a person)\", where と marks the companion and 一緒に adds \"together\" (友達と一緒に行く). The と alone already implies togetherness, so 一緒に just makes it explicit and warmer.",
+  "register": "neutral",
+  "caution": "The companion is marked by と, not は — it's 友達と一緒に, never 友達は一緒に; 一緒に by itself just means \"together\" without naming who."
  },
  {
   "id": "n5-te-linking",
@@ -9481,7 +9650,10 @@
     ],
     "en": "In the morning I get up and wash my face."
    }
-  ]
+  ],
+  "nuance": "The て-form chains actions or clauses (\"do X and (then) Y\", 起きて、顔を洗って…). Only the FINAL verb shows tense and politeness; the て-verbs stay neutral, and sequence/means/cause is read from context.",
+  "register": "neutral",
+  "caution": "Tense sits only on the last verb — 起きて食べました makes the whole chain past; don't try to mark tense on each て-form (起きましたて… is wrong)."
  },
  {
   "id": "n5-donna",
@@ -9616,7 +9788,10 @@
     ],
     "en": "What kind of room are you looking for?"
    }
-  ]
+  ],
+  "nuance": "Asks \"what kind of…?\" and always attaches directly to a noun (どんな音楽 = \"what kind of music\"). Contrast どの (\"which of a set\") and どう (\"how\"); どんな probes the type or character of a thing.",
+  "register": "neutral",
+  "caution": "どんな must be followed by a noun (どんな人?), and it asks about *kind/type* — not \"which one\" (that's どの) and not \"how\" (that's どう)."
  },
  {
   "id": "n5-te-kara",
@@ -9811,7 +9986,10 @@
     ],
     "en": "After arriving in Japan, I went to the ward office first."
    }
-  ]
+  ],
+  "nuance": "Sequences two actions as \"after doing X, (then) Y\", built on the て-form + から. Compared with たあとで, てから stresses that X must be finished first before Y — the completion is the point, not just the order.",
+  "register": "neutral",
+  "caution": "Don't confuse this with the reason から — てから attaches to the て-form and orders events (\"after doing X, then Y\"), it does not mean \"because\"."
  },
  {
   "id": "n5-mae-ni",
@@ -9983,7 +10161,9 @@
     ],
     "en": "Before going to bed, I check tomorrow's weather."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The verb before 前に is ALWAYS dictionary form even for past events (食べる前に, never 食べた前に); with a noun you need の (食事の前に)."
  },
  {
   "id": "n5-mo-mo",
@@ -10157,7 +10337,9 @@
     ],
     "en": "I study both kanji and katakana every day."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Both も slots replace は/が/を, and with a negative verb the whole thing flips to \"neither…nor\" (肉も魚も食べない = \"eat neither meat nor fish\") — watch the verb's polarity."
  },
  {
   "id": "n5-tai",
@@ -10317,7 +10499,9 @@
     ],
     "en": "I want to get good at Japanese."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "たい states the speaker's own desire; don't use it to report a third person's wish — for \"he wants to…\" use たがっている instead of 〜たい."
  },
  {
   "id": "n5-ga-arimasu",
@@ -10426,7 +10610,9 @@
     ],
     "en": "There is a cat in the share house."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "Choose the verb by animacy, not politeness — living things (people, animals) take います, inanimate things take あります; 犬があります is the classic error."
  },
  {
   "id": "n5-temo-ii",
@@ -10562,7 +10748,10 @@
     ],
     "en": "Is it OK to use the kitchen?"
    }
-  ]
+  ],
+  "nuance": "Grants permission — \"you may / it's OK to…\" (帰ってもいいです). Built on the て-form; its negative-permission partner is なくてもいい (\"don't have to\"), and its prohibition opposite is てはいけません.",
+  "register": "neutral",
+  "caution": "This grants permission (\"may\"), so don't confuse it with its opposite てはいけません (\"must not\"); also its negative form なくてもいい means \"don't have to\", not \"may not\"."
  },
  {
   "id": "n5-te-wa-ikemasen",
@@ -10706,7 +10895,10 @@
     ],
     "en": "You must not park bicycles here."
    }
-  ]
+  ],
+  "nuance": "A firm prohibition — \"must not / may not\" (ここでタバコを吸ってはいけません). Built on the て-form + は; in casual speech ては often contracts to ちゃ (吸っちゃだめ). It bans, whereas なければなりません compels.",
+  "register": "polite",
+  "caution": "This forbids an action (\"must not\"); it is not the opposite of \"must\" — the opposite of なければなりません (\"must do\") is なくてもいい (\"don't have to\"), not this."
  },
  {
   "id": "n5-nagara",
@@ -10881,7 +11073,9 @@
     ],
     "en": "I study Japanese while watching anime."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Both actions must have the SAME subject and run at once — you can't use ながら when two different people act, and it attaches to the ます-stem (見ながら, not 見るながら)."
  },
  {
   "id": "n5-ta-koto-ga-arimasu",
@@ -11007,7 +11201,10 @@
     ],
     "en": "I have been in the hot springs at Asahidake."
    }
-  ]
+  ],
+  "nuance": "States life experience — \"have (ever) done X before\" (日本に行ったことがあります). It needs the past た-form and implies a notable, countable past occasion, so it fits unusual experiences, not everyday routine.",
+  "register": "polite",
+  "caution": "Reserve it for genuine past experience, not recent/normal actions — 昨日食べたことがあります is odd; and it takes the た-form (食べたことがある), never the dictionary form."
  },
  {
   "id": "n5-ta-hou-ga-ii",
@@ -11144,7 +11341,9 @@
     ],
     "en": "You'd better go to bed early."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Affirmative advice uses the PAST た-form (寝たほうがいい), which feels counter-intuitive; negative advice uses ない (寝ないほうがいい) — using 寝るほうがいい for advice is the classic slip."
  },
  {
   "id": "n5-kara",
@@ -11296,7 +11495,9 @@
     ],
     "en": "Tomorrow is an early start, so I'm going to bed now."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "This から means \"because\" and attaches to a full clause; don't confuse it with てから (\"after doing\") or the から that marks \"from\" a starting point/place."
  },
  {
   "id": "n5-tsumori",
@@ -11469,6 +11670,9 @@
     ],
     "en": "I intend to still be in Japan next year."
    }
-  ]
+  ],
+  "nuance": "States a firm intention or plan the speaker has already settled on (来年帰るつもりです). It attaches to the dictionary form; the negative 〜ないつもり means \"intend not to\", distinct from 〜つもりはない (\"have no intention\").",
+  "register": "polite",
+  "caution": "Use the dictionary form (行くつもり), not the ます-stem or past; and つもり expresses the speaker's own resolve — it's awkward for stating a third person's plans as fact."
  }
 ]

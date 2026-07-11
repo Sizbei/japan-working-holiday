@@ -150,7 +150,9 @@
    "n4-ba",
    "n4-to-conditional",
    "n3-to-shitara"
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The main clause can't be a stative fact tied to the general present; use と or ば for \"whenever X, Y always happens,\" and keep た-form (着いたら, not 着くたら)."
  },
  {
   "id": "n4-ba",
@@ -308,7 +310,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Avoid ば when the main clause is a command, request, or invitation (×勉強すれば、遊びに行きましょう) — use たら there instead."
  },
  {
   "id": "n4-nara",
@@ -462,7 +466,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "なら attaches to the plain form WITHOUT past た for a present topic (日本へ行くなら), so don't confuse it with the identical-looking だ→なら of the copula."
  },
  {
   "id": "n4-to-conditional",
@@ -603,7 +609,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "と cannot be followed by a request, command, permission, or volition in the result clause (×このボタンを押すと、待ってください) — that's the single most common と mistake."
  },
  {
   "id": "n4-temo",
@@ -749,7 +757,10 @@
   "related": [
    "n5-temo-ii",
    "n3-tatoe-temo"
-  ]
+  ],
+  "nuance": "Concedes a condition that fails to change the outcome — \"X, yet Y anyway.\" With a question word (誰でも, いくら…ても) it becomes \"no matter who/how much.\"",
+  "register": "neutral",
+  "caution": "Don't swap it for the permission 〜てもいい (\"may I…\"): ても alone means \"even if,\" and needs a following clause, not いい."
  },
  {
   "id": "n4-you-ni-naru",
@@ -873,7 +884,9 @@
   ],
   "level": "N4",
   "confidence": "high",
-  "related": []
+  "related": [],
+  "register": "neutral",
+  "caution": "Built on the potential/plain verb, not the ます-stem (読めるようになる, ×読みようになる); with a negative use 〜なくなる rather than ×ないようになる in speech."
  },
  {
   "id": "n4-you-ni-suru",
@@ -994,7 +1007,10 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "nuance": "A deliberate effort or policy to bring about a state — you steer your own behaviour. Contrast ようになる, where the change happens to you on its own.",
+  "register": "neutral",
+  "caution": "Don't confuse it with ようになる: ようにする is a conscious effort you make, ようになる is a change that simply comes about."
  },
  {
   "id": "n4-you-to-omou",
@@ -1152,7 +1168,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "It must attach to the volitional form (行こうと思う), not the dictionary form (×行くと思う, which just means \"I think he goes\")."
  },
  {
   "id": "n4-volitional",
@@ -1262,7 +1280,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "casual",
+  "caution": "Plain 〜(よ)う is informal \"let's/I'll\" — use ましょう with strangers or superiors; don't attach と思う unless expressing your own intention."
  },
  {
   "id": "n4-yotei",
@@ -1394,7 +1414,10 @@
   "confidence": "high",
   "related": [
    "n5-tsumori"
-  ]
+  ],
+  "nuance": "States a fixed, already-arranged schedule — a plan on the calendar, not just a personal wish. Firmer and more objective than つもり.",
+  "register": "neutral",
+  "caution": "Nouns take の before 予定 (会議の予定), not だ (×会議だ予定); use it for arranged schedules, not spur-of-the-moment intentions (that's つもり/volitional)."
  },
  {
   "id": "n4-kamoshiremasen",
@@ -1508,7 +1531,10 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "nuance": "Raises a real possibility the speaker isn't sure of — weaker and less evidence-based than はず or でしょう. Casual form: 〜かも.",
+  "register": "polite",
+  "caution": "Attach it to the plain form; a na-adjective/noun drops だ (静かかもしれない, 雨かもしれない — ×雨だかもしれない)."
  },
  {
   "id": "n4-hazu",
@@ -1647,7 +1673,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "はず is your logical expectation, NOT obligation — don't use it for \"should\" as advice/duty (that's 〜べき or 〜たほうがいい)."
  },
  {
   "id": "n4-sou-hearsay",
@@ -1774,7 +1802,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Hearsay そう attaches to the full plain form (雨が降るそうだ, おいしいそうだ) — if you drop the い/る you switch to the \"looks like\" appearance そう and change the meaning."
  },
  {
   "id": "n4-sou-looks",
@@ -1884,7 +1914,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Appearance そう attaches to the stem (おいしそう, 降りそう); いい and ない become よさそう and なさそう, and it sounds odd describing things you plainly see are true (×髪が長そう for someone visibly long-haired)."
  },
  {
   "id": "n4-you-desu",
@@ -2040,7 +2072,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "formal",
+  "caution": "Nouns connect with の (病気のようだ), and na-adjectives with な (元気なようだ) — a bare だ (×病気だようだ) is wrong."
  },
  {
   "id": "n4-mitai",
@@ -2181,7 +2215,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "casual/spoken",
+  "caution": "Nouns and na-adjectives attach directly with NO な/の (子供みたい, 元気みたい — ×子供なみたい); it's casual, so use ようです in polite or written contexts."
  },
  {
   "id": "n4-rashii",
@@ -2332,7 +2368,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Don't confuse the two らしい: after a plain sentence it's hearsay (\"apparently\"), but 男らしい / 学生らしい means \"befitting a typical man/student\" — very different meanings."
  },
  {
   "id": "n4-passive",
@@ -2451,7 +2489,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "For godan verbs the passive (書かれる) and potential (書ける) differ, but for ichidan verbs they're identical (食べられる = both \"is eaten\" and \"can eat\") — rely on context and particles (に vs が) to tell them apart."
  },
  {
   "id": "n4-potential",
@@ -2578,7 +2618,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "The potential object takes が, not を (刺身が食べられる); ら-drop (食べれる, 見れる) is common in speech but marked wrong in formal writing."
  },
  {
   "id": "n4-causative",
@@ -2714,7 +2756,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "For \"let/make,\" an intransitive verb marks the person with を (子供を遊ばせる), but with an を-taking transitive verb the person switches to に (子供に野菜を食べさせる) — mixing them up is the classic error."
  },
  {
   "id": "n4-causative-passive",
@@ -2851,7 +2895,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Godan verbs contract 〜させられる→〜される (待たせられる→待たされる), but ichidan and する verbs never contract (食べさせられる, ×食べされる)."
  },
  {
   "id": "n4-nasai",
@@ -2941,7 +2987,9 @@
   "confidence": "high",
   "related": [
    "n4-na-prohibition"
-  ]
+  ],
+  "register": "polite",
+  "caution": "It sounds down-talking, so use it only from a superior to a subordinate (parent→child, teacher→student); never say なさい to a boss, customer, or peer."
  },
  {
   "id": "n4-na-prohibition",
@@ -3054,7 +3102,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "casual",
+  "caution": "Prohibition な attaches to the DICTIONARY form (見るな = don't look); the ます-stem + な (見な) is the opposite — a clipped, friendly command to DO it."
  },
  {
   "id": "n4-te-shimau",
@@ -3157,7 +3207,9 @@
   ],
   "level": "N4",
   "confidence": "high",
-  "related": []
+  "related": [],
+  "register": "neutral",
+  "caution": "The casual contraction depends on the te-form: 〜てしまう→〜ちゃう but 〜でしまう→〜じゃう (読んでしまう→読んじゃう, not ×読んちゃう)."
  },
  {
   "id": "n4-te-oku",
@@ -3288,7 +3340,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Don't confuse it with 〜てある: ておく is doing something in advance on purpose, てある describes the resulting state that's been left in place."
  },
  {
   "id": "n4-te-miru",
@@ -3412,7 +3466,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "The みる here is auxiliary and written in kana (食べてみる), never in kanji (×食べて見る, which would mean \"eat and look\")."
  },
  {
   "id": "n4-te-ageru",
@@ -3547,7 +3603,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Never use てあげる about doing a favour for the listener (×荷物を持ってあげます to a boss) — it sounds patronising; use お〜しましょうか or humble 〜させていただく instead."
  },
  {
   "id": "n4-te-kureru",
@@ -3678,7 +3736,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Direction is fixed: くれる is a favour coming TO you/your in-group, so the giver is the subject (友達が手伝ってくれた) — reversing it with あげる/もらう is the classic direction error."
  },
  {
   "id": "n4-te-morau",
@@ -3830,7 +3890,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "With てもらう the receiver is the subject and the doer takes に (友達に手伝ってもらった); confusing that に with the が of てくれる is the usual slip."
  },
  {
   "id": "n4-te-iku",
@@ -3977,7 +4039,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "For directional/aspectual meaning keep いく in kana (増えていく); pair it with 〜てくる by axis — くる = up to now, いく = from now on."
  },
  {
   "id": "n4-te-kuru",
@@ -4092,7 +4156,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Direction of change matters: 〜てくる develops up to now, 〜ていく from now on — 増えてきた (has increased) vs 増えていく (will keep increasing)."
  },
  {
   "id": "n4-te-aru",
@@ -4226,7 +4292,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "てある uses a TRANSITIVE verb with が for a deliberately-left result (窓が開けてある); don't confuse it with ている on an intransitive verb (窓が開いている), which is just a natural state."
  },
  {
   "id": "n4-hajimeru",
@@ -4358,7 +4426,10 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "nuance": "Marks the onset of an action — you begin the verb itself. 始める is transitive/deliberate; the intransitive 始まる is for events that start on their own (映画が始まる).",
+  "register": "neutral",
+  "caution": "Attach to the ます-stem (降り始める, ×降る始める); use 〜始める (you start an action), not 始まる, which is for things that begin by themselves."
  },
  {
   "id": "n4-owaru",
@@ -4481,7 +4552,10 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "nuance": "Marks finishing an action through to its end — \"finish doing.\" Pairs naturally with 〜始める as the bookend of an activity.",
+  "register": "neutral",
+  "caution": "Attach to the ます-stem (食べ終わる, ×食べる終わる); it means you finish AN ACTION, so it doesn't fit sudden-end events the way 終わる-as-main-verb does."
  },
  {
   "id": "n4-yasui",
@@ -4599,7 +4673,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Attach to the ます-stem (使いやすい, ×使るやすい); it describes an inherent easiness, not \"I am able to\" — that's the potential form."
  },
  {
   "id": "n4-nikui",
@@ -4721,7 +4797,9 @@
    }
   ],
   "level": "N4",
-  "confidence": "high"
+  "confidence": "high",
+  "register": "neutral",
+  "caution": "Attach to the ます-stem (読みにくい); for physical/inherent difficulty use にくい, but for difficulty from external circumstances Japanese often prefers 〜づらい or 〜がたい."
  },
  {
   "id": "n4-koto-ga-aru",
@@ -4849,7 +4927,9 @@
     ],
     "en": "Because of overtime, it sometimes gets late at night."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Tense on the verb changes the meaning: dictionary form + ことがある = \"sometimes happens,\" but past た + ことがある = \"have done before (experience)\" — don't mix them."
  },
  {
   "id": "n4-koto-ni-suru",
@@ -4988,7 +5068,9 @@
     ],
     "en": "I've decided not to eat out this month."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ことにする is YOUR own decision; ことになる is a decision made by circumstances/others — swapping them reverses who chose."
  },
  {
   "id": "n4-koto-ni-naru",
@@ -5126,7 +5208,9 @@
     ],
     "en": "It's been decided that the meeting will be next week."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ことになる signals the decision came from outside you, so don't use it for your own free choice (that's ことにする), even when you're the one affected."
  },
  {
   "id": "n4-to-iu",
@@ -5268,7 +5352,10 @@
     ],
     "en": "I heard the word \"share house\" for the first time."
    }
-  ]
+  ],
+  "nuance": "Introduces a name or label, quoting what something is called (田中という人 = a person called Tanaka). Also bundles a preceding clause into a noun-like idea.",
+  "register": "neutral",
+  "caution": "The naming という takes a plain quote before it (「みどり」という店); don't drop the と (×みどりいう) and don't confuse it with こと (the nominaliser)."
  },
  {
   "id": "n4-toka",
@@ -5432,7 +5519,9 @@
     ],
     "en": "On weekends I spend the time doing things like taking a walk."
    }
-  ]
+  ],
+  "register": "casual",
+  "caution": "とか is casual and implies an unfinished list (\"things like…\"), so don't use it in formal writing (use など) and don't treat it as an exact enumeration."
  },
  {
   "id": "n4-nado",
@@ -5573,7 +5662,10 @@
     ],
     "en": "There are things like books on the desk."
    }
-  ]
+  ],
+  "nuance": "Signals a non-exhaustive list — \"…and the like.\" The more formal, written counterpart of casual とか.",
+  "register": "neutral",
+  "caution": "など follows the noun it lists (本や雑誌など), and reads なんか in casual speech — don't mistake it for the standalone 何 (なに)."
  },
  {
   "id": "n4-shi",
@@ -5720,7 +5812,9 @@
     ],
     "en": "It's raining today, so (and what's more) I'll stay home."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "し attaches to the plain form (安いし、近いし) and implies \"and, among other reasons,\" so listing just one し-clause still hints there are more."
  },
  {
   "id": "n4-noni",
@@ -5860,7 +5954,9 @@
     ],
     "en": "Even though it's Sunday, the train is crowded."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "のに carries reproach or surprise, so don't use it for a neutral contrast (that's が/けど); after a noun/na-adjective it needs な (元気なのに, ×元気のに)."
  },
  {
   "id": "n4-node",
@@ -6026,7 +6122,9 @@
     ],
     "en": "Because it's my first time, I don't know where the ward office is."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "After a noun/na-adjective ので needs な (病気なので, ×病気だので); it presents the reason as objective fact, so it's odd before a direct command or invitation."
  },
  {
   "id": "n4-keredomo",
@@ -6191,7 +6289,9 @@
     ],
     "en": "I went to the izakaya in front of the station, but it was full."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "けれども/けれど/けど form a politeness scale (formal→casual), so match the register — plain けど sounds too casual in a business email."
  },
  {
   "id": "n4-ga-suru",
@@ -6328,7 +6428,9 @@
     ],
     "en": "There's a strange sound coming from the room next door."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "It's built with が, not を (においがする, ×においをする), and only works with perception nouns (音・味・におい・気・感じ), not general nouns."
  },
  {
   "id": "n4-aida-ni",
@@ -6477,7 +6579,9 @@
     ],
     "en": "During the summer break, I went to Hokkaido."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "間に marks a moment inside the span when a one-time event happens (留守の間に電話が来た); plain 間 marks an action lasting the WHOLE span — dropping the に changes the meaning."
  },
  {
   "id": "n4-made",
@@ -6615,7 +6719,9 @@
     ],
     "en": "I'll go to Shinjuku by train."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "まで is continuous action up TO an endpoint (5時まで働く); it needs a durative verb, unlike までに, which pairs with a one-time completion."
  },
  {
   "id": "n4-made-ni",
@@ -6752,7 +6858,9 @@
     ],
     "en": "I want to get to the station by the last train."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "までに is a deadline for a one-time action (5時までに終わる), while まで is continuous action up to that time — using まで for a deadline (×5時まで終わる) is the classic error."
  },
  {
   "id": "n4-bakari",
@@ -6874,7 +6982,9 @@
     ],
     "en": "My little brother does nothing but play games."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Don't confuse noun+ばかり (\"nothing but,\" often critical) with past た+ばかり (\"just did\") — same word, different structure and meaning."
  },
  {
   "id": "n4-ta-bakari",
@@ -7017,7 +7127,9 @@
     ],
     "en": "I just bought this smartphone."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "たばかり is subjective (\"it feels like it just happened,\" even hours ago), whereas たところ is objective (\"literally just now\") — don't treat them as identical."
  },
  {
   "id": "n4-tokoro",
@@ -7149,7 +7261,9 @@
     ],
     "en": "I've just finished eating lunch."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The verb form sets the timing: 食べるところ (about to), 食べているところ (in the middle of), 食べたところ (just finished) — using the wrong tense shifts the whole meaning."
  },
  {
   "id": "n4-ta-mama",
@@ -7277,7 +7391,9 @@
     ],
     "en": "I went out leaving the window open."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "まま needs past た for a verb (つけたまま, ×つけるまま); it means a state was left unchanged, so it doesn't fit an ongoing action (that's ながら)."
  },
  {
   "id": "n4-nakute",
@@ -7396,7 +7512,9 @@
     ],
     "en": "The train didn't come and so I was late."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "なくて links a negative cause/state (お金がなくて困った), but you can't make a negative REQUEST with it — \"please don't…\" needs 〜ないでください, not ×〜なくてください."
  },
  {
   "id": "n4-ka-dou-ka",
@@ -7537,7 +7655,10 @@
     ],
     "en": "I'll check whether or not this shop is open."
    }
-  ]
+  ],
+  "nuance": "Embeds a yes/no question (\"whether or not…\") inside a larger sentence. Use it when the buried question has no question word; use 疑問詞+か when it does.",
+  "register": "neutral",
+  "caution": "Use かどうか only for yes/no questions; when the embedded question already has a question word (どこ, 誰…), use just か, not ×どこかどうか."
  },
  {
   "id": "n4-embedded-q",
@@ -7671,7 +7792,9 @@
     ],
     "en": "I asked how much the rent is."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The embedded question keeps plain form and ends in か before the main verb (どこに行くか分からない); don't add です inside it (×どこに行きますか分からない)."
  },
  {
   "id": "n4-to-itte-imashita",
@@ -7823,7 +7946,9 @@
     ],
     "en": "My friend said that Hokkaido is cold."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "と言っていました reports someone's ongoing/general remark; と言いました reports a single past utterance — and the quote before と stays in plain form."
  },
  {
   "id": "n4-tame-ni",
@@ -7972,7 +8097,9 @@
     ],
     "en": "In order to get a visa, I gather the documents."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ために takes a VOLITIONAL, same-subject verb for purpose (合格するために勉強する); for a potential/negative or different-subject goal use ように instead."
  },
  {
   "id": "n4-you-ni-purpose",
@@ -8141,7 +8268,9 @@
     ],
     "en": "I leave early so that I don't miss the last train."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Purpose ように pairs with a non-volitional verb — potential or negative (見えるように, 忘れないように); swapping it with ために (volitional) is the classic ように-vs-ために mistake."
  },
  {
   "id": "n4-ba-yokatta",
@@ -8266,7 +8395,9 @@
     ],
     "en": "I should have made a reservation sooner."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "It expresses regret about the PAST, so keep よかった in the past tense (行けばよかった, ×行けばいい, which is present advice \"you should go\")."
  },
  {
   "id": "n4-tara-dou",
@@ -8388,7 +8519,9 @@
     ],
     "en": "How about trying to ask the station staff?"
    }
-  ]
+  ],
+  "register": "casual",
+  "caution": "It's advice aimed at the listener, so it can sound bossy toward a superior; the たら here is fixed and can't be replaced by ば/と in this suggestion frame."
  },
  {
   "id": "n4-sonna-ni",
@@ -8496,7 +8629,9 @@
     ],
     "en": "This izakaya isn't that expensive."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "そんなに must pair with a NEGATIVE (そんなに高くない = \"not that expensive\"); with an affirmative it flips to \"that much / so very,\" a different meaning."
  },
  {
   "id": "n4-kana",
@@ -8599,7 +8734,9 @@
     ],
     "en": "I wonder if this is the right train."
    }
-  ]
+  ],
+  "register": "casual",
+  "caution": "かな is casual self-talk, not a polite question to someone else; the male-leaning かなあ/かね differ in tone, and it takes plain form (行くかな, ×行きますかな)."
  },
  {
   "id": "n4-darou",
@@ -8705,7 +8842,9 @@
     ],
     "en": "He's probably already gone home."
    }
-  ]
+  ],
+  "register": "casual",
+  "caution": "Plain だろう is informal (でしょう is its polite form); a na-adjective/noun drops だ (静かだろう, 雨だろう — ×雨だだろう). Rising-intonation だろう？ seeks agreement."
  },
  {
   "id": "n4-zutsu",
@@ -8859,7 +8998,9 @@
     ],
     "en": "Each person got two rice balls each."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "ずつ attaches to a quantity, not a bare noun (一つずつ, 少しずつ — ×りんごずつ), and means equal portions, so don't use it for a simple total."
  },
  {
   "id": "n4-o-ni-naru",
@@ -9019,7 +9160,9 @@
     ],
     "en": "Will the president read this book?"
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "お〜になる RAISES someone else's action (respect); never apply it to yourself — for your own action use the humble お〜する. Swapping the two is the classic keigo error."
  },
  {
   "id": "n4-o-suru",
@@ -9145,7 +9288,9 @@
     ],
     "en": "I'll wait for you in the lobby."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "お〜する LOWERS your own action toward someone you respect; never use it for the other person's action (that's お〜になる) — reversing them is the classic keigo mistake."
  },
  {
   "id": "n4-sonkeigo-verbs",
@@ -9275,7 +9420,9 @@
     ],
     "en": "The teacher will come here tomorrow."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "These special honorifics are for OTHERS' actions only; pairing them with yourself, or double-marking (×お召し上がりになる done wrong), is the usual trap. Their humble counterparts (参る, いただく) are separate words."
  },
  {
   "id": "n4-kenjougo-verbs",
@@ -9379,7 +9526,9 @@
     ],
     "en": "I will come to the office at ten o'clock."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "These humble verbs lower YOUR OWN action, so never use them for the listener (×先生が申しました); use the honorific set (おっしゃる, いらっしゃる) for others."
  },
  {
   "id": "n4-o-kudasai",
@@ -9503,7 +9652,9 @@
     ],
     "en": "Please have a seat here."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "お〜ください uses the ます-stem (お待ちください, ×お待ってください) and is respectful; for irregular honorific verbs some use ご (ご覧ください), and する-verbs take ご (ご注意ください)."
  },
  {
   "id": "n4-de-gozaimasu",
@@ -9610,7 +9761,9 @@
     ],
     "en": "Reception is on the second floor."
    }
-  ]
+  ],
+  "register": "formal",
+  "caution": "でございます is a polite copula (\"is\") replacing です; don't confuse it with plain ございます (replacing あります, \"there is\") — they're not interchangeable."
  },
  {
   "id": "n4-to-onaji",
@@ -9806,7 +9959,10 @@
     ],
     "en": "My room is the same size as his."
    }
-  ]
+  ],
+  "nuance": "States that two things are the same, marking the compared item with と (A と同じ). Follow it with a noun using 同じ〜 (同じ色) — no な.",
+  "register": "neutral",
+  "caution": "Compare with と, not に (私のと同じ, ×私のに同じ); 同じ modifies a noun directly with NO な (同じ本, ×同じな本)."
  },
  {
   "id": "n4-garu",
@@ -9933,7 +10089,9 @@
     ],
     "en": "The child is afraid of the dog."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Use がる for a THIRD person's outward feelings (弟は寒がる), not your own (say 寒い for yourself); it drops the final い/な (寂しい→寂しがる) and makes the feeling into a verb."
  },
  {
   "id": "n4-tagaru",
@@ -10083,7 +10241,9 @@
     ],
     "en": "My friend wanted to see the photos of the izakaya."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "たがる is for other people's desires (子供が行きたがる); use たい for yourself, and note the object often takes を where たい allows が (水を飲みたがる)."
  },
  {
   "id": "n4-te-sumimasen",
@@ -10184,7 +10344,10 @@
     ],
     "en": "I'm sorry for calling so many times."
    }
-  ]
+  ],
+  "nuance": "Apologises for the action just named — \"sorry for (doing) X.\" The heavier 〜て申し訳ありません is its polite/formal upgrade.",
+  "register": "polite",
+  "caution": "For apologising in advance about a request, use 〜てすみませんが or 恐れ入りますが; don't swap in 〜てありがとう, which thanks rather than apologises."
  },
  {
   "id": "n4-te-yokatta",
@@ -10307,7 +10470,9 @@
     ],
     "en": "I'm glad I moved into this share house."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "It expresses relief about something that DID happen, so keep よかった past; the negative is 〜なくてよかった (\"glad I didn't\"), not ×〜ないでよかった as a rule."
  },
  {
   "id": "n4-te-hoshii",
@@ -10445,7 +10610,9 @@
     ],
     "en": "I want the landlord to fix the air conditioner."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "The person you want to act takes に (君に来てほしい); don't confuse it with 〜たい (you want to do it yourself) — subject and marking differ."
  },
  {
   "id": "n4-hitsuyou-ga-aru",
@@ -10622,7 +10789,9 @@
     ],
     "en": "You need to write a résumé before the interview."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Necessity 必要がある takes a dictionary verb (行く必要がある); the negative is 必要はない (\"don't need to\"), and 必要 is a noun, so a verb links directly, not with こと."
  },
  {
   "id": "n4-mieru-kikoeru",
@@ -10764,7 +10933,9 @@
     ],
     "en": "I can hear music from the room next door."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "見える/聞こえる = something naturally enters your sight/hearing; 見られる/聞ける = you have the ability/opportunity —富士山が見える (visible) vs 映画が見られる (able to watch) are not interchangeable."
  },
  {
   "id": "n4-ndesu-ga",
@@ -10925,7 +11096,9 @@
     ],
     "en": "I'd like to make a reservation — are you open tonight?"
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "The trailing が softens and invites help; don't read it as the contrastive \"but,\" and use のですが in polite/formal speech rather than the casual んだけど."
  },
  {
   "id": "n4-mo-emphasis",
@@ -11065,7 +11238,9 @@
     ],
     "en": "This coat cost a whole 30,000 yen."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Emphatic も follows a number to stress \"as much as\" (三時間も待った); its opposite is しか…ない (\"only\"), so don't mix the two when stressing amount."
  },
  {
   "id": "n4-nakute-wa-ikemasen",
@@ -11160,7 +11335,9 @@
     ],
     "en": "You have to separate the trash."
    }
-  ]
+  ],
+  "register": "polite",
+  "caution": "It's a double negative meaning \"must,\" so don't read the ない as literal negation; keep the base verb's ない-stem (行かなくては…, ×行くなくては…)."
  },
  {
   "id": "n4-nakya",
@@ -11244,7 +11421,9 @@
     ],
     "en": "I've gotta pay the rent."
    }
-  ]
+  ],
+  "register": "casual/spoken",
+  "caution": "These are spoken contractions of なければ/なくては with the いけない/ならない dropped — fine in casual talk, but write out the full form in formal or written Japanese."
  },
  {
   "id": "n4-baai",
@@ -11407,7 +11586,9 @@
     ],
     "en": "If you're going to be late, please call the shop."
    }
-  ]
+  ],
+  "register": "formal/written",
+  "caution": "Nouns take の before 場合 (地震の場合), na-adjectives take な, and plain verbs attach directly (遅れる場合は); a bare だ (×地震だ場合) is wrong."
  },
  {
   "id": "n4-hodo",
@@ -11533,6 +11714,8 @@
     ],
     "en": "My legs were so tired I could hardly stand."
    }
-  ]
+  ],
+  "register": "neutral",
+  "caution": "Don't confuse ほど's two jobs: after a quantity it's \"about\" (三日ほど), but in ば〜ほど or 〜ほど…ない it marks degree/comparison, not approximation."
  }
 ]

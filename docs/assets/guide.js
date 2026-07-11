@@ -61,6 +61,7 @@ export function applyHomeLayout() {
 export function mountGuide() {
   // apply persisted reduce-motion + home layout on boot (theme + arcade are restored by their own modules)
   if (getRaw(KEYS.reduceMotion, '') === 'on') document.documentElement.dataset.reduceMotion = 'on';
+  if (getRaw(KEYS.mapDark, '') === 'on') document.documentElement.dataset.mapDark = 'on';
   applyHomeLayout();
   $('#guideBtn')?.addEventListener('click', () => openGuide());
 }
@@ -114,6 +115,7 @@ function openGuide() {
   const arcade = document.documentElement.dataset.arcade === 'on';
   const reduce = document.documentElement.dataset.reduceMotion === 'on';
   const compact = document.documentElement.dataset.compact === 'on';
+  const mapDark = document.documentElement.dataset.mapDark === 'on';
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
   const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
@@ -156,6 +158,7 @@ function openGuide() {
       ${row('setArcade', 'Arcade mode', 'Extra retro CRT glow &amp; pixel flair', arcade)}
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
       ${row('setCompact', 'Compact pages', 'Small titles, more content — the calendar fits one screen', compact)}
+      ${row('setMapDark', 'Dark map tiles', 'Night-mode map when dark theme is on (opt-in)', mapDark)}
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
     </section>
@@ -188,6 +191,12 @@ function openGuide() {
     applyCompact();
     setSwitch('setCompact', !on);
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // active views re-render so compact-aware bits (month chip cap) flip instantly
+  });
+  $('#setMapDark', ov)?.addEventListener('click', () => {
+    const on = document.documentElement.dataset.mapDark === 'on';
+    document.documentElement.dataset.mapDark = on ? '' : 'on';
+    setRaw(KEYS.mapDark, on ? '' : 'on');
+    setSwitch('setMapDark', !on);
   });
   $('#setCelebrate', ov)?.addEventListener('click', () => {
     const on = getRaw(KEYS.celebrations, '') !== 'off';        // currently on?

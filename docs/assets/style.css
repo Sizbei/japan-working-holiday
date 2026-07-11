@@ -2871,8 +2871,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .cat-task { background: var(--indigo); }                         /* agenda-date pill + popover swatch */
 .agenda-row.agenda-task .agenda-title { color: var(--indigo-ink); }
 /* brief highlight when jumping to a checklist item from a calendar task chip */
-.check-item.flash { animation: ckFlash 1.4s var(--ease-out); }
-@keyframes ckFlash { 0%, 100% { background: transparent; } 15%, 55% { background: color-mix(in srgb, var(--indigo) 16%, transparent); } }
+.check-item.flash { position: relative; }   /* the flash tint lives on a pseudo-element animating OPACITY (composited), not background (paint) */
+.check-item.flash::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: color-mix(in srgb, var(--indigo) 16%, transparent); opacity: 0; animation: ckFlash 1.4s var(--ease-out); }
+@keyframes ckFlash { 0%, 100% { opacity: 0; } 15%, 55% { opacity: 1; } }
 
 
 /* ============================================================
@@ -3738,3 +3740,7 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .w-spend-tot{ font-size:.8rem; color:var(--ink-soft); margin:.45rem 0 0; }
 .w-spend-hint{ font-size:.78rem; color: var(--bad-ink, #b3261e); margin:.2rem 0 0; min-height:1em; }
 @media (hover: none){ .w-spend-in, .w-spend-add{ min-height:44px; } }
+
+/* Dark map tiles — OPT-IN (Guide setting), dark theme only. The standard OSM invert trick:
+   tiles only; markers, popups and controls stay untouched. */
+html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue-rotate(180deg) brightness(.88) contrast(.92) saturate(.65); }

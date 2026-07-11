@@ -111,9 +111,12 @@ function colIdx(createSql, name) {
   if (!inner) return -1;
   return inner[1].split(',').map(s => s.trim().split(/\s+/)[0].replace(/["'\u0060\[\]]/g, '')).indexOf(name);
 }
+const MAX_APKG = 300 * 1024 * 1024;   // 300MB — a Core-2000-with-audio apkg is ~50MB; guards f.arrayBuffer() OOM on a hostile huge file
+const MEDIA_CAP = 250 * 1024 * 1024;  // stop writing media to IndexedDB past this (quota guard)
 async function importApkg(f) {
   try {
     showErr('');
+    if (f.size > MAX_APKG) throw new Error('file too large (' + Math.round(f.size / 1048576) + 'MB) — is this really an Anki export?');
     const u8 = new Uint8Array(await f.arrayBuffer());
     const byName = new Map(listZip(u8).map(e => [e.name, e]));
     const colEntry = byName.get('collection.anki21') || byName.get('collection.anki2');
@@ -152,12 +155,15 @@ async function attachMedia(cards, apkg, onProgress) {
   });
   const refs = [...new Set(out.flatMap(c => [c.a, c.img].filter(Boolean)))];
   await mediaClear();
+  let total = 0;
   const MIME = { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', m4a: 'audio/mp4', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml' };
   for (let i = 0; i < refs.length; i++) {
     const name = refs[i];
     const entry = byName.get(manifest.get(name));
     if (!entry) continue;
     const bytes = await readZipEntry(u8, entry);
+    total += bytes.length;
+    if (total > MEDIA_CAP) { if (onProgress) onProgress(refs.length, refs.length); break; }   // quota guard — deck still saves with the media loaded so far
     const ext = (name.split('.').pop() || '').toLowerCase();
     await mediaPut(name, new Blob([bytes], { type: MIME[ext] || 'application/octet-stream' }));
     if (onProgress && i % 20 === 0) onProgress(i + 1, refs.length);

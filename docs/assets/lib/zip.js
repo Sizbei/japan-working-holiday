@@ -7,6 +7,7 @@
 const SIG_EOCD = 0x06054b50;   // PK\x05\x06 end of central directory
 const SIG_CD   = 0x02014b50;   // PK\x01\x02 central-directory file header
 const SIG_LOCAL = 0x04034b50;  // PK\x03\x04 local file header
+const ENTRY_CAP = 512 * 1024 * 1024;   // 512MB single-entry inflate cap (zip-bomb guard); a real Anki collection.anki2 is well under this
 
 const utf8 = new TextDecoder('utf-8');
 
@@ -22,16 +23,21 @@ const u32 = (u8, p) => (u8[p] | (u8[p + 1] << 8) | (u8[p + 2] << 16) | (u8[p + 3
 export function listZip(u8) {
   if (!(u8 instanceof Uint8Array) || u8.length < 22) throw new Error('not a zip (too small)');
 
-  // EOCD: scan backwards from the end for the signature. Comment ≤ 65535, so bound the scan.
+  // EOCD: scan backwards for the signature. Comment ≤ 65535, so bound the scan. A valid ZIP
+  // comment (or trailing junk) can itself CONTAIN the EOCD bytes — so don't trust the first
+  // hit: require the record's own invariants (comment length reaches EOF, CD offset+size land
+  // exactly here). Keep scanning past a false positive.
   const min = Math.max(0, u8.length - 22 - 0xffff);
-  let eocd = -1;
+  let eocd = -1, count = 0, cdOff = 0;
   for (let p = u8.length - 22; p >= min; p--) {
-    if (u32(u8, p) === SIG_EOCD) { eocd = p; break; }
+    if (u32(u8, p) !== SIG_EOCD) continue;
+    const commentLen = u16(u8, p + 20);
+    if (p + 22 + commentLen !== u8.length) continue;   // comment must run exactly to EOF
+    const c = u16(u8, p + 10), off = u32(u8, p + 16), size = u32(u8, p + 12);
+    if (off !== 0xffffffff && size !== 0xffffffff && off + size <= p) { eocd = p; count = c; cdOff = off; break; }
+    if (c === 0xffff || off === 0xffffffff) { eocd = p; count = c; cdOff = off; break; }   // zip64 sentinel — let the check below throw
   }
   if (eocd < 0) throw new Error('not a zip (no EOCD)');
-
-  const count = u16(u8, eocd + 10);   // total entries this disk
-  const cdOff = u32(u8, eocd + 16);   // offset of central directory
   if (count === 0xffff || cdOff === 0xffffffff) throw new Error('zip64 unsupported');
 
   const entries = [];
@@ -81,9 +87,21 @@ export async function readZipEntry(u8, entry) {
 
   // deflate: inflate raw. Empty payloads have no deflate stream — short-circuit.
   if (entry.size === 0) return new Uint8Array(0);
-  const ds = new DecompressionStream('deflate-raw');
-  const stream = new Blob([comp]).stream().pipeThrough(ds);
-  const out = new Uint8Array(await new Response(stream).arrayBuffer());
-  if (out.length !== entry.size) throw new Error('size mismatch for ' + entry.name);
+  // zip-bomb guard: reject an entry claiming an absurd inflated size BEFORE decompressing,
+  // and cap what we read as it streams (a lying CD size + a real bomb both die here, not in OOM).
+  if (entry.size > ENTRY_CAP) throw new Error('entry too large: ' + entry.name);
+  const out = new Uint8Array(entry.size);
+  let n = 0;
+  try {
+    const ds = new DecompressionStream('deflate-raw');
+    const reader = new Blob([comp]).stream().pipeThrough(ds).getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (n + value.length > entry.size) { await reader.cancel(); throw new Error('inflate overran'); }
+      out.set(value, n); n += value.length;
+    }
+  } catch (e) { throw new Error('inflate failed for ' + entry.name + (e && e.message ? ': ' + e.message : '')); }   // platform DecompressionStream throws a blank-message TypeError on truncated data
+  if (n !== entry.size) throw new Error('size mismatch for ' + entry.name);
   return out;
 }

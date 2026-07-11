@@ -1575,3 +1575,50 @@ test('sqlite: col table reads (single row)', () => {
   assert.equal(rows[0][0], 1);   // rowid alias
   assert.equal(rows[0][4], 11);  // ver
 });
+
+// ---- .apkg hostile-input hardening (review round: 2 blockers + majors) ----
+test('zip: false EOCD signature inside a comment does not empty the archive', () => {
+  // build a minimal 1-entry stored zip, then append a comment CONTAINING PK\x05\x06
+  const name = 'x', data = new Uint8Array([65, 66, 67]);
+  const le16 = n => [n & 255, (n >> 8) & 255];
+  const le32 = n => [n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >> 24) & 255];
+  const local = [0x50,0x4b,0x03,0x04, ...le16(20),...le16(0),...le16(0),...le16(0),...le16(0), ...le32(0),...le32(data.length),...le32(data.length), ...le16(name.length),...le16(0), ...[...name].map(c=>c.charCodeAt(0)), ...data];
+  const cdOff = local.length;
+  const cd = [0x50,0x4b,0x01,0x02, ...le16(20),...le16(20),...le16(0),...le16(0),...le16(0),...le16(0), ...le32(0),...le32(data.length),...le32(data.length), ...le16(name.length),...le16(0),...le16(0),...le16(0),...le16(0), ...le32(0),...le32(0), ...[...name].map(c=>c.charCodeAt(0))];
+  const comment = [0x50,0x4b,0x05,0x06, 1,2,3,4];   // the fake-EOCD bytes live in the comment
+  const eocd = [0x50,0x4b,0x05,0x06, ...le16(0),...le16(0),...le16(1),...le16(1), ...le32(cd.length),...le32(cdOff), ...le16(comment.length)];
+  const buf = new Uint8Array([...local, ...cd, ...eocd, ...comment]);
+  const entries = listZip(buf);
+  assert.equal(entries.length, 1);            // the real EOCD wins; the comment's fake one is skipped
+  assert.equal(entries[0].name, 'x');
+});
+
+import { readFileSync as _rf } from 'node:fs';
+test('sqlite: 8-byte negative integer decodes correctly (not 0)', async () => {
+  // craft a 1-row table with a type-6 (8-byte) value of -1 via the CLI, read it back
+  const { execSync } = await import('node:child_process');
+  const os = await import('node:os'); const path = await import('node:path');
+  const f = path.join(os.tmpdir(), 'jwh-neg-' + Date.now() + '.db');
+  try {
+    execSync(`sqlite3 "${f}" "CREATE TABLE t(id INTEGER PRIMARY KEY, n INTEGER); INSERT INTO t VALUES(1, -1); INSERT INTO t VALUES(2, -9223372036854775808);"`);
+    const db = openSqlite(new Uint8Array(_rf(f)));
+    const rows = sqliteRows(db, 't');
+    assert.equal(rows.find(r => r[0] === 1)[1], -1);   // was decoding to 0 before the BigInt fix
+  } finally { try { (await import('node:fs')).unlinkSync(f); } catch {} }
+});
+
+test('sqlite: corrupt payload length is rejected, not OOM-allocated', () => {
+  // a buffer with valid header but a leaf cell claiming a giant payload → throw, not hang/OOM
+  const buf = new Uint8Array(4096);
+  const magic = 'SQLite format 3\0';
+  for (let i = 0; i < magic.length; i++) buf[i] = magic.charCodeAt(i);
+  buf[16] = 0x10; buf[17] = 0x00;    // page size 4096
+  buf[56] = 0; buf[57] = 0; buf[58] = 0; buf[59] = 1;   // UTF-8
+  buf[18] = 1; buf[19] = 1;          // legacy format
+  buf[100] = 0x0d; buf[103] = 0; buf[104] = 1;          // leaf table, 1 cell
+  buf[108] = 0x0f; buf[109] = 0xf0;  // cell pointer → 0x0ff0
+  // at 0x0ff0: a 9-byte varint payload length of ~2^56, then rowid
+  let o = 0x0ff0; for (let i = 0; i < 8; i++) buf[o++] = 0xff; buf[o++] = 0x7f; buf[o++] = 0x01;
+  const db = openSqlite(buf);
+  assert.throws(() => sqliteRows(db, 't'), /payload|range|corrupt/i);   // must throw, must not allocate 2^56 bytes
+});

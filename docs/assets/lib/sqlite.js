@@ -33,13 +33,20 @@ function u8ToString(u8) {
   return new TextDecoder('utf-8').decode(u8);
 }
 
-// signed big-endian integer from `n` bytes
+// signed big-endian integer from `n` bytes. For n===8, float64 accumulation loses the low
+// bits (2^64-1 rounds to 2^64, so -1 would decode to 0) — use BigInt for the 8-byte case and
+// return a Number when it fits ±2^53 (all Anki columns do), else the BigInt.
 function readSignedBE(buf, off, n) {
+  if (n === 8) {
+    let b = 0n;
+    for (let i = 0; i < 8; i++) b = (b << 8n) | BigInt(buf[off + i]);
+    if (b & 0x8000000000000000n) b -= 1n << 64n;   // two's-complement sign
+    return (b >= -9007199254740991n && b <= 9007199254740991n) ? Number(b) : b;
+  }
   let v = 0;
   for (let i = 0; i < n; i++) v = v * 256 + buf[off + i];
-  // sign-extend: if top bit set, subtract 2^(8n)
   const top = buf[off];
-  if (top & 0x80) v -= Math.pow(2, 8 * n);
+  if (top & 0x80) v -= Math.pow(2, 8 * n);   // sign-extend
   return v;
 }
 
@@ -55,6 +62,7 @@ export function openSqlite(u8) {
   if (pageSize === 1) pageSize = 65536;
   const reserved = u8[20];
   const usable = pageSize - reserved;
+  if (usable <= 35) throw new Error('bad page geometry');   // guards take<=0 overflow-loop hang (hostile reserved byte)
   const encoding = view.getUint32(56);
   if (encoding !== 1) throw new Error('unsupported text encoding (only UTF-8)');
   // bytes 18/19: file-format read/write version. 1 = legacy (rollback journal),
@@ -79,6 +87,9 @@ function headerOffset(db, pageNumber) {
 function readPayload(db, payloadLen, localStart) {
   const { u8, usable } = db;
   const U = usable;
+  // hostile-input guard: a payload longer than the whole file is corrupt — reject BEFORE
+  // allocating (a crafted varint could ask for gigabytes and OOM the tab).
+  if (!(payloadLen >= 0) || payloadLen > u8.length) throw new Error('corrupt payload length');
   const X = U - 35; // table-leaf local-payload threshold
   if (payloadLen <= X) {
     return u8.subarray(localStart, localStart + payloadLen);
@@ -94,12 +105,16 @@ function readPayload(db, payloadLen, localStart) {
   let nextPage = (u8[localStart + local] << 24) | (u8[localStart + local + 1] << 16) |
                  (u8[localStart + local + 2] << 8) | u8[localStart + local + 3];
   nextPage = nextPage >>> 0;
+  const seen = new Set();   // hostile-input guard: an overflow chain that cycles (A→B→A) would hang forever
   while (nextPage !== 0 && filled < payloadLen) {
+    if (seen.has(nextPage)) throw new Error('overflow chain cycle');
+    seen.add(nextPage);
     const base = pageOffset(db, nextPage);
+    if (base < 0 || base + 4 > u8.length) throw new Error('overflow page out of range');
     // first 4 bytes of an overflow page = next page pointer; then U-4 content bytes.
     const next = (u8[base] << 24) | (u8[base + 1] << 16) | (u8[base + 2] << 8) | u8[base + 3];
-    const avail = U - 4;
-    const take = Math.min(avail, payloadLen - filled);
+    const take = Math.min(U - 4, payloadLen - filled);
+    if (take <= 0) throw new Error('overflow makes no progress');   // U>35 is enforced in openSqlite, but belt-and-braces
     out.set(u8.subarray(base + 4, base + 4 + take), filled);
     filled += take;
     nextPage = next >>> 0;
@@ -153,10 +168,12 @@ function decodeRecord(payload) {
 // ---- walk a table b-tree rooted at `rootpage`, emitting [rowid, values] ----
 function walkTable(db, rootpage, emit, seen) {
   seen = seen || new Set();
-  if (seen.has(rootpage)) return; // cycle guard
+  if (seen.has(rootpage)) return; // cycle guard (also bounds interior-tree recursion depth to the page count)
   seen.add(rootpage);
-  const { u8 } = db;
+  const { u8, pageSize } = db;
   const base = pageOffset(db, rootpage);
+  if (rootpage < 1 || base + pageSize > u8.length + pageSize) { /* last page may be short */ }
+  if (base < 0 || base >= u8.length) throw new Error('page out of range');   // hostile child/rootpage pointer
   const hOff = base + headerOffset(db, rootpage);
   const type = u8[hOff];
   const view = new DataView(u8.buffer, u8.byteOffset);
@@ -164,12 +181,18 @@ function walkTable(db, rootpage, emit, seen) {
   // cell content pointer array starts after the header (8 bytes leaf, 12 bytes interior).
   const headerSize = type === 0x05 ? 12 : 8;
   const ptrArray = hOff + headerSize;
+  const pageEnd = base + pageSize;
+  const cellOff = (i) => {   // validated cell offset — a hostile cellPtr/cellCount can't read OOB
+    if (ptrArray + i * 2 + 2 > u8.length) throw new Error('cell pointer out of range');
+    const off = base + view.getUint16(ptrArray + i * 2);
+    if (off < hOff || off >= pageEnd) throw new Error('cell offset out of range');
+    return off;
+  };
 
   if (type === 0x0d) {
     // leaf table page
     for (let i = 0; i < cellCount; i++) {
-      const cellPtr = view.getUint16(ptrArray + i * 2);
-      let off = base + cellPtr;
+      let off = cellOff(i);
       const [payloadLen, n1] = readVarint(u8, off); off += n1;
       const [rowid, n2] = readVarint(u8, off); off += n2;
       const payload = readPayload(db, payloadLen, off);
@@ -180,8 +203,7 @@ function walkTable(db, rootpage, emit, seen) {
   if (type === 0x05) {
     // interior table page: each cell = 4-byte left child page + rowid varint.
     for (let i = 0; i < cellCount; i++) {
-      const cellPtr = view.getUint16(ptrArray + i * 2);
-      const off = base + cellPtr;
+      const off = cellOff(i);
       const child = view.getUint32(off); // 4-byte BE left-child page number
       walkTable(db, child, emit, seen);
     }

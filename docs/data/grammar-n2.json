@@ -178,7 +178,8 @@
   "related": [
    "n3-kuse-ni",
    "n2-nagara-mo",
-   "n1-to-wa-ie"
+   "n1-to-wa-ie",
+   "n2-nimo-kakawarazu"
   ]
  },
  {
@@ -11210,6 +11211,194 @@
      "。"
     ],
     "en": "There is a risk the renewal will be delayed due to a flaw in the documents."
+   }
+  ]
+ },
+ {
+  "id": "n2-nimo-kakawarazu",
+  "level": "N2",
+  "pattern": "〜にもかかわらず",
+  "reading": "にもかかわらず",
+  "meaning": "despite / in spite of",
+  "connection": "plain form / N + にもかかわらず",
+  "nuance": "Don't confuse with にかかわらず (regardless of, N1) — にもかかわらず marks that the outcome DEFIED the circumstance.",
+  "confidence": "high",
+  "tags": [
+   "concession",
+   "formal"
+  ],
+  "related": [
+   "n1-ni-kakawarazu",
+   "n4-noni",
+   "n2-monono"
+  ],
+  "examples": [
+   {
+    "ja": [
+     {
+      "t": "台風",
+      "f": [
+       [
+        "台",
+        "たい"
+       ],
+       [
+        "風",
+        "ふう"
+       ]
+      ],
+      "g": "typhoon"
+     },
+     {
+      "t": "にもかかわらず",
+      "f": [
+       [
+        "にもかかわらず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "山手線",
+      "f": [
+       [
+        "山手",
+        "やまのて"
+       ],
+       [
+        "線",
+        "せん"
+       ]
+      ],
+      "g": "Yamanote line"
+     },
+     "は",
+     {
+      "t": "動いて",
+      "f": [
+       [
+        "動",
+        "うご"
+       ],
+       [
+        "いて",
+        ""
+       ]
+      ],
+      "g": "running (te-form)"
+     },
+     {
+      "t": "いました",
+      "f": [
+       [
+        "いました",
+        ""
+       ]
+      ],
+      "g": "was (polite)"
+     },
+     "。"
+    ],
+    "en": "Despite the typhoon, the Yamanote line was running."
+   },
+   {
+    "ja": [
+     {
+      "t": "忙しい",
+      "f": [
+       [
+        "忙",
+        "いそが"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "busy"
+     },
+     {
+      "t": "にもかかわらず",
+      "f": [
+       [
+        "にもかかわらず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "同僚",
+      "f": [
+       [
+        "同",
+        "どう"
+       ],
+       [
+        "僚",
+        "りょう"
+       ]
+      ],
+      "g": "colleague"
+     },
+     "は",
+     {
+      "t": "引っ越し",
+      "f": [
+       [
+        "引",
+        "ひ"
+       ],
+       [
+        "っ",
+        ""
+       ],
+       [
+        "越",
+        "こ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "moving house"
+     },
+     "を",
+     {
+      "t": "手伝って",
+      "f": [
+       [
+        "手",
+        "て"
+       ],
+       [
+        "伝",
+        "つだ"
+       ],
+       [
+        "って",
+        ""
+       ]
+      ],
+      "g": "help (te-form)"
+     },
+     {
+      "t": "くれました",
+      "f": [
+       [
+        "くれました",
+        ""
+       ]
+      ],
+      "g": "did (for me, polite)"
+     },
+     "。"
+    ],
+    "en": "Despite being busy, my colleague helped me move."
    }
   ]
  }

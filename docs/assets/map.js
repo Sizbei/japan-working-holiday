@@ -125,16 +125,7 @@ export function mountMap(data) {
   });
   document.addEventListener('jwh:route', (e) => {
     mapActive = e.detail?.route === 'map';
-    if (!mapActive) return;
-    ensureLeaflet();
-    renderSaved();
-    populateDaySelect();              // refresh the day-plan list (plans may have changed since last visit)
-    // "Today's route": default the picker to today's plan on open (keeps a prior manual pick), and
-    // (re)draw the selected day — the route is cleared when leaving the map, so redraw on return.
-    const sel = $('#mapDay'), today = nowISO();
-    if (sel && !sel.value && hasPlan(today)) sel.value = today;
-    if (sel && sel.value) { const p = getPlan(sel.value); if (p) drawRoute(p.stops, { title: p.title, date: sel.value }); }
-    if (leafletReady) onMapShown();   // re-measure + catch up once the SPA actually reveals the container
+    if (mapActive) enterMap();
   });
   // off the map route, just mark pins dirty — defer the expensive 200+-marker rebuild until the map is next shown
   document.addEventListener('jwh:data-changed', () => {
@@ -142,6 +133,23 @@ export function mountMap(data) {
     if (mapActive) { renderSaved(); if (leafletReady) renderPins(); }
     else { pinsDirty = true; }
   });
+  // EF6: lazy-mounted on entry — the jwh:route('map') that triggered this mount already fired, so
+  // run the entry body here too (Leaflet cold-start). Hash-gated, not .is-active (the view-transition
+  // toggle in motion.js runs a microtask later, so is-active is still false during mount).
+  if (/^#\/?map$/.test(location.hash)) { mapActive = true; enterMap(); }
+}
+
+// the map-route entry body: init Leaflet (lazy), refresh pins + the day picker, redraw today's route.
+function enterMap() {
+  ensureLeaflet();
+  renderSaved();
+  populateDaySelect();                // refresh the day-plan list (plans may have changed since last visit)
+  // "Today's route": default the picker to today's plan on open (keeps a prior manual pick), and
+  // (re)draw the selected day — the route is cleared when leaving the map, so redraw on return.
+  const sel = $('#mapDay'), today = nowISO();
+  if (sel && !sel.value && hasPlan(today)) sel.value = today;
+  if (sel && sel.value) { const p = getPlan(sel.value); if (p) drawRoute(p.stops, { title: p.title, date: sel.value }); }
+  if (leafletReady) onMapShown();     // re-measure + catch up once the SPA actually reveals the container
 }
 
 // header stats line + visited milestones (Map v2 §2d). Injected into #mapTools (the markup

@@ -1,6 +1,6 @@
 'use strict';
 import { $, $$, esc } from './lib/dom.js';
-import { daysBetween, fmtShort } from './lib/dates.js';
+import { daysBetween, fmtShort, parseISO } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
@@ -49,7 +49,9 @@ export function monthHTML() {
   const singlesByDay = new Map();
   for (const e of evs) {
     if (isEvergreen(e)) continue;
-    const s = e.date.slice(0, 10), en = (e.endDate || e.date).slice(0, 10);
+    // parseISO-guard the end like eventsOn does — a corrupted endDate ('2026-13-05') would otherwise
+    // pass the lexical comparisons and flood a chip onto every day through the end of the range
+    const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
     if (!isMultiDay(e)) {
       if (!singlesByDay.has(s)) singlesByDay.set(s, []);
       singlesByDay.get(s).push(e);
@@ -88,7 +90,7 @@ export function monthHTML() {
       const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
       const tm = x.end ? '' : fmt12(e.time);
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${x.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
     const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
@@ -302,7 +304,9 @@ export function wireReschedule() {
   const view = $('#calView');
   if (!view) return;
   makeMovable(view, {
-    itemSelector: '.cal-chip[data-ev]', label: 'event',
+    // .cont excluded: rescheduleEvent snaps the START to the drop day, so a continuation chip as a
+    // drag handle would teleport the whole span (and a >6px wobble released on its own day shifts it)
+    itemSelector: '.cal-chip[data-ev]:not(.cont)', label: 'event',
     canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,

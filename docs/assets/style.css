@@ -872,9 +872,12 @@ html.gated{ overflow: hidden; }
   .cal-grid{ grid-auto-rows: minmax(66px, 1fr); }   /* grid governs row height now */
   .cal-cell{ gap: 1px; }
   /* show one legible chip + a "+N" count, not illegible bars; the density meter
-     and ticket glyph carry the rest, and tapping the day opens the full list */
+     and ticket glyph carry the rest, and tapping the day opens the full list.
+     Continuation (.cont) span chips yield the slot — spans sort first, so an 8-day stay
+     would otherwise be the ONLY visible chip on all 8 days, hiding every daily event */
   .cal-chip{ font-size: var(--fs-2xs); padding: 1px 4px; height: auto; border-radius: 4px; }
-  .cal-cell .cal-chip:nth-of-type(n+2){ display:none; }
+  .cal-cell .cal-chip.cont{ display:none; }
+  .cal-cell .cal-chip:not(.cont) ~ .cal-chip:not(.cont){ display:none; }
   .cal-date{ font-size:.74rem; }
 }
 

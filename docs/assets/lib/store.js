@@ -61,6 +61,7 @@ export const KEYS = {
   ankiDeck: 'jwh-anki-deck-v1',
   anki: 'jwh-anki-v1',               // Core-2000 rapid refresher: { v, cards, pos, shaky, shuffle, seed }
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)
+  mapDark: 'jwh-mapdark-v1',         // dark map tiles opt-in ('on'/'') — CSS filter, dark theme only
   translateCache: 'jwh-translate-cache-v1',
   tags: 'jwh-tags-v1',
   seed: 'jwh-seed-v1',

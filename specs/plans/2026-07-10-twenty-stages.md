@@ -112,7 +112,7 @@ reproduce gets ticked "verified non-issue" with evidence. Parity reference (dura
   resume-on-leave (1.2s), and swipe/flick dismiss (90px or 0.11px/ms velocity) — all four
   behaviors verified with trusted input. The agent's "ungated People drawer" finding was FALSE
   (gated via a `reduce` variable indirection it missed) — rejected with evidence. Logged, not
-  fixed: ckFlash animates background (paint) — rare 1.4s one-shot, RM-killed. (PR #116)
+  fixed: ckFlash animates background (paint) — rare 1.4s one-shot, RM-killed. (PR #116) → CLOSED #135: tint moved to a ::after animating opacity (composited)
 - [x] **20. Final sweep — VERDICT: SIGNED OFF (after one fix).**
   Part 1 (regression, agent): ALL GREEN — 14/14 surfaces (0 exceptions, 0 real clipping, all
   views activate) + 5/5 spot checks (calendar dark/compact/600px-mobile, seeded people, budget

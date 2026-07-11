@@ -9,7 +9,7 @@ const htmlKeys = [...html.matchAll(/\sdata-i18n="([^"]+)"/g)].map(m => m[1]);
 
 // keys rendered by JS (not present as static data-i18n in index.html)
 const JS_KEYS = ['head.tracker.fixed', 'head.tracker.dated', 'head.readiness.arrived',
-  'nav.phrases', 'nav.grammar', 'nav.packing', 'nav.deadlines'];   // optional nav pages — links are JS-injected (guide.js applyNavShow)   // set from dashboard.js post-arrival heading swap
+  'nav.phrases', 'nav.grammar', 'nav.packing', 'nav.deadlines', 'nav.survival'];   // optional nav pages — links are JS-injected (guide.js applyNavShow)   // set from dashboard.js post-arrival heading swap
 
 test('every data-i18n key in index.html has a Japanese string', () => {
   for (const k of htmlKeys) {

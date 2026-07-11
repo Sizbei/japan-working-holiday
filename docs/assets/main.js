@@ -84,8 +84,8 @@ function boot() {
         import('./phrasesboot.js').then(m => { m.mountPhrasesBundle(data); view?.removeAttribute('aria-busy'); })
           .catch(err => { phrasesLoaded = false; view?.removeAttribute('aria-busy'); console.error('[boot] phrases bundle', err); });
       };
-      document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'phrases') loadPhrases(); });
-      if (/^#\/?phrases$/.test(location.hash)) loadPhrases();   // direct load / reload on the page (exact match)
+      document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'phrases' || e.detail?.route === 'survival') loadPhrases(); });
+      if (/^#\/?(phrases|survival)$/.test(location.hash)) loadPhrases();   // direct load / reload on either page (exact match)
       // JLPT grammar reference (#/grammar) rides the same lazy pattern — module + its
       // per-level data fetch load on first entry (specs/plans/2026-07-10-jlpt-grammar.md P1)
       let grammarLoaded = false;

@@ -3,9 +3,9 @@
 // collapse seed) used to run in the main boot for every visit to any page; now they dynamic-
 // import on the first entry to #/phrases. Order preserved exactly from main.js.
 
-import { mountPhrases } from './phrases.js';
+import { mountPhrases, mountSurvival } from './phrases.js';
 import { mountAnki } from './phrases-anki.js';
-import { mountPointToSay } from './pointtosay.js';
+// pointtosay retired from the page (2026-07-11 declutter) — module kept for possible emergency-page reuse
 import { mountVocab } from './vocab.js';
 import { mountKana } from './kana.js';
 import { mountNumbers } from './numbers.js';
@@ -22,8 +22,8 @@ import { get, set, KEYS } from './lib/store.js';
 export function mountPhrasesBundle(data) {
   const safe = (fn) => { try { fn(); } catch (err) { console.error('[phrases]', err); } };
   safe(() => mountPhrases(data));
+  safe(() => mountSurvival(data));
   safe(() => mountAnki(data));
-  safe(() => mountPointToSay(data));
   safe(() => mountVocab(data));
   safe(() => mountKana());
   safe(() => mountNumbers());

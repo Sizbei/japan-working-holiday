@@ -62,6 +62,7 @@ export function applyHomeLayout() {
 // Hidden deep-linked routes the owner can surface in the nav. Order = insertion order.
 const NAV_OPT = [
   { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },
+  { r: 'survival', label: 'Useful phrases', i18n: 'nav.survival' },
   { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
   { r: 'packing', label: 'Packing', i18n: 'nav.packing' },
   { r: 'deadlines', label: 'Deadlines', i18n: 'nav.deadlines' },

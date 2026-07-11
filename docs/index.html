@@ -285,9 +285,8 @@
   <!-- ============ PHRASEBOOK ============ -->
   <section id="phrases">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">言葉</span><h2 data-i18n="head.phrases">Survival Japanese</h2></div>
-    <p class="lede" data-i18n="lede.phrases">Survival-Japanese phrases for the working-holiday year — konbini, ward-office paperwork, apartment hunting, restaurants, transit, emergencies and daily life, each with the Japanese, a reading, and the English meaning. Hover any Japanese to see its reading; ★ the ones you're learning. Favorites save on this device.</p>
-    <p class="g-xlink"><a href="#/grammar">📖 JLPT grammar reference (N5–N1) →</a></p>
-    <div id="pointToSay" class="point-to-say"></div>
+    <p class="lede" data-i18n="lede.phrases">Your Japanese studio — look words up, translate and save your own phrases, blast through the Core-2000 refresher, and drill JLPT grammar. Beginner references (kana, numbers, N5 vocab, signs…) live folded at the bottom.</p>
+    <p class="g-xlink"><a href="#/grammar">📖 JLPT grammar reference (N5–N1) →</a> · <a href="#/survival">🗣 Useful survival phrases →</a></p>
     <div class="jtools" role="group" aria-label="Japanese tools">
       <button type="button" class="jt-btn" id="jtLookupBtn" aria-expanded="false" aria-controls="jtLookupPanel">🔍 Look up</button>
       <button type="button" class="jt-btn" id="jtTranslateBtn" aria-expanded="false" aria-controls="jtTranslatePanel">あ→A Translate</button>
@@ -305,22 +304,26 @@
       <button type="button" id="phraseFavOnly" class="ct-toggle" aria-pressed="false">☆ Favorites only</button>
       <button type="button" id="phraseFuri" class="ct-toggle" aria-pressed="true">あ Furigana</button>
     </div>
+    <h3 class="ph-h">My phrases</h3>
     <div id="phraseList"></div>
     <section id="ankiDeck" class="ank-wrap" aria-label="Core deck rapid refresher"></section>
     <span id="ankLive" class="sr-only" aria-live="polite" aria-atomic="true"></span><!-- SIBLING of #ankiDeck: a live region inside the innerHTML-rebuilt root could never announce -->
-    <div class="vocab-wrap">
-      <h3 class="vocab-h" data-i18n="head.vocab">Starter words · JLPT N5</h3>
-      <p class="vocab-sub">Tap a theme to study — 🔊 to hear each word; the ふりがな toggle above hides readings.</p>
-      <div id="vocabList"></div>
-    </div>
-    <div id="kanaChart" class="kana-wrap"></div>
-    <div id="numbersRef" class="num-wrap"></div>
-    <div id="signsRef" class="signs-wrap"></div>
-    <div id="quizMode" class="quiz-wrap"></div>
-    <div id="particlesRef" class="part-wrap"></div>
-    <div id="verbsRef" class="verb-wrap"></div>
-    <div id="adjRef" class="verb-wrap"></div>
-    <div id="pronTips" class="pron-wrap"></div>
+    <details class="beginner-drawer" id="beginnerDrawer">
+      <summary>Beginner reference — kana · numbers · N5 vocab · signs · quiz · particles · verbs · adjectives · pronunciation</summary>
+      <div class="vocab-wrap">
+        <h3 class="vocab-h" data-i18n="head.vocab">Starter words · JLPT N5</h3>
+        <p class="vocab-sub">Tap a theme to study — 🔊 to hear each word; the ふりがな toggle above hides readings.</p>
+        <div id="vocabList"></div>
+      </div>
+      <div id="kanaChart" class="kana-wrap"></div>
+      <div id="numbersRef" class="num-wrap"></div>
+      <div id="signsRef" class="signs-wrap"></div>
+      <div id="quizMode" class="quiz-wrap"></div>
+      <div id="particlesRef" class="part-wrap"></div>
+      <div id="verbsRef" class="verb-wrap"></div>
+      <div id="adjRef" class="verb-wrap"></div>
+      <div id="pronTips" class="pron-wrap"></div>
+    </details>
   </section>
   </div><!-- /view-phrases -->
 
@@ -332,6 +335,19 @@
     <span id="gLive" class="sr-only" aria-live="polite" aria-atomic="true"></span><!-- SIBLING of #grammarRoot: a live region inside the innerHTML-rebuilt root could never announce -->
   </section>
   </div><!-- /view-grammar -->
+
+  <div class="view" id="view-survival" data-route="survival">
+  <section id="survival">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">便利</span><h2>Useful phrases</h2></div>
+    <p class="lede">Survival-Japanese phrases — konbini, ward-office paperwork, apartment hunting, restaurants, transit, emergencies and daily life, each with the Japanese, a reading, and the English meaning. Hover any Japanese for its reading; ★ favorites are shared with the studio page and save on this device.</p>
+    <div class="pack-tools">
+      <button type="button" id="svCollapseAll" class="ct-toggle">Collapse / expand all</button>
+      <button type="button" id="svFavOnly" class="ct-toggle" aria-pressed="false">☆ Favorites only</button>
+      <button type="button" id="svFuri" class="ct-toggle" aria-pressed="true">あ Furigana</button>
+    </div>
+    <div id="svList"></div>
+  </section>
+  </div><!-- /view-survival -->
 
   <div class="view" id="view-explore" data-route="explore">
   <div id="exploreWeek" class="exp-week" hidden role="region" aria-label="Events this week"></div>

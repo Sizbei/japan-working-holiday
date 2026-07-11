@@ -13,9 +13,8 @@ const MONTH_SINGLES = 4;      // chips shown per cell before "+N more" (owner: 4
 // ENDLESS month: one continuous week-grid spanning the whole data range (the trip year —
 // ~60 weeks, cheap enough to render whole; no virtual windowing). Month-separator rows sit above
 // the week containing each 1st; the coordinator watches scroll and updates the label / mini-nav /
-// cockpit to the month at the top of the viewport. Multi-day events keep per-month anchoring: one
-// chip at the first covered day of EACH month they span ("‹" when continuing). Evergreen spans stay
-// in the Ongoing strip.
+// cockpit to the month at the top of the viewport. Multi-day events chip on every covered day,
+// Notion-style ("‹" when continuing from an earlier day). Evergreen spans stay in the Ongoing strip.
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 
@@ -44,8 +43,9 @@ export function monthHTML() {
     + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
     + `</div></div>` : '';
 
-  // multi-day (non-evergreen): one anchored chip at the first covered day of EACH month spanned
-  const anchored = new Map();   // iso → [{ ev, cont, end }]
+  // multi-day (non-evergreen): a chip on EVERY covered day, Notion-style ("‹" = continuing from an
+  // earlier day) — so a mid-stay day counts the span toward the chip cap and "+N more" like Notion's bars
+  const spansByDay = new Map();   // iso → [{ ev, cont, end }]
   const singlesByDay = new Map();
   for (const e of evs) {
     if (isEvergreen(e)) continue;
@@ -55,14 +55,12 @@ export function monthHTML() {
       singlesByDay.get(s).push(e);
       continue;
     }
-    let ym = s.slice(0, 7) < lo ? lo : s.slice(0, 7);
-    while (ym <= en.slice(0, 7) && ym <= hi) {
-      const anchor = s > ym + '-01' ? s : ym + '-01';
-      if (anchor <= en) {
-        if (!anchored.has(anchor)) anchored.set(anchor, []);
-        anchored.get(anchor).push({ ev: e, cont: s < anchor, end: en });
-      }
-      const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 1)); ym = d.toISOString().slice(0, 7);
+    let d = s < rangeStart ? rangeStart : s;
+    const stop = en > rangeEnd ? rangeEnd : en;
+    while (d <= stop) {
+      if (!spansByDay.has(d)) spansByDay.set(d, []);
+      spansByDay.get(d).push({ ev: e, cont: d > s, end: en });
+      d = addDaysISO(d, 1);
     }
   }
   for (const list of singlesByDay.values()) list.sort((a, b) => (a.time || '~').localeCompare(b.time || '~'));
@@ -79,10 +77,11 @@ export function monthHTML() {
     const date = day, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
     const past = date < TODAY;
     const singles = singlesByDay.get(date) || [];
-    const multis = anchored.get(date) || [];
+    const multis = spansByDay.get(date) || [];
     const tks = tasksOn(date);
     const hasBook = singles.some(e => e.bookBy);
-    const items = [...singles.map(e => ({ ev: e })), ...multis, ...tks.map(t => ({ tk: t }))];
+    // spans first (Notion stacks its bars above the day's own events), then timed singles, then tasks
+    const items = [...multis, ...singles.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
     const chips = items.slice(0, MONTH_SINGLES).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
       const e = x.ev;

@@ -3730,3 +3730,11 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .em-stay-warn{ color: color-mix(in srgb, var(--gold-ink, #8a6508) 70%, var(--ink)); }
 .em-stay-addr{ font-size:.85rem; margin:.15rem 0; }
 .em-stay-link{ font-size:.8rem; }
+
+/* 💴 quick-spend widget (pre-trip plan PR B) */
+.w-spend-form{ display:flex; gap:.4rem; }
+.w-spend-in{ flex:1; font:inherit; font-size:.9rem; padding:.4rem .6rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); min-width:0; }
+.w-spend-add{ font:inherit; font-size:1rem; font-weight:700; padding:.3rem .8rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
+.w-spend-tot{ font-size:.8rem; color:var(--ink-soft); margin:.45rem 0 0; }
+.w-spend-hint{ font-size:.78rem; color: var(--bad-ink, #b3261e); margin:.2rem 0 0; min-height:1em; }
+@media (hover: none){ .w-spend-in, .w-spend-add{ min-height:44px; } }

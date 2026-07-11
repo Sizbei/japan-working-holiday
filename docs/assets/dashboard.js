@@ -13,7 +13,7 @@ import { fetchUsdPerJpy } from './lib/rates.js';
 import { loadPlaces } from './lib/places.js';
 import { checklistItems } from './checklist-page.js';
 import { isBirthday } from './lib/people.js';
-import { spendSummary } from './lib/spend.js';
+import { spendSummary, parseSpend, monthTotal, pruneSpend } from './lib/spend.js';
 import { allEvents } from './calendar.js';
 import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
 import { loadPlans } from './lib/dayplan.js';
@@ -315,6 +315,7 @@ function renderPanel(alerts) {
 // ---- home: promoted "needs me" cards + demoted teasers ----
 function renderWidgets(alerts) {
   renderToday();
+  renderSpend();
   fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'), 3);
   renderProgress();
   renderGoingWidget();
@@ -337,6 +338,48 @@ function tripBandHTML() {
   }
   const name = String(stay.title).split(/stay:\s*/i).pop().replace(/\s*\(BOOKED\)\s*/i, '');
   return `<a class="w-tripband" href="#/emergency">✈️ Trip day ${w.day}/${w.total} · tonight: ${esc(clip(name, 44))}</a>`;
+}
+
+
+// 💴 Quick spend — one-line phone-first entry into the SAME jwh-spend-v1 the budget page
+// reads ("1200 ramen" · "3.4k drinks yesterday"). SKIPS its own re-render while focus is
+// inside the widget: an unrelated jwh:data-changed must never wipe a half-typed entry
+// (review finding). Submit re-queries #spendInput AFTER the synchronous refresh — the
+// dispatched event rebuilds the node, so a captured reference would be detached.
+function renderSpend() {
+  const el = $('#wSpend');
+  if (!el) return;
+  if (el.contains(document.activeElement)) return;   // mid-typing — totals catch up next refresh
+  const items = (get(KEYS.spend, {}) || {}).items || [];
+  el.querySelector('.widget-body').innerHTML = `
+    <form id="spendQuick" class="w-spend-form">
+      <input id="spendInput" class="w-spend-in" type="text" inputmode="text" enterkeyhint="done"
+        placeholder="1200 ramen" aria-label="Quick spend — amount then note, e.g. 1200 ramen" autocomplete="off">
+      <button type="submit" class="w-spend-add" aria-label="Add spend">＋</button>
+    </form>
+    <p class="w-spend-tot" id="spendTot">${spendTotalsHTML(items)}</p>
+    <p class="w-spend-hint" id="spendQHint" role="status"></p>`;
+  el.querySelector('#spendQuick').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const parsed = parseSpend(el.querySelector('#spendInput').value, nowISO());
+    if (!parsed) { const h = el.querySelector('#spendQHint'); if (h) h.textContent = 'amount first — e.g. “1200 ramen”'; return; }
+    const cur = (get(KEYS.spend, {}) || {}).items || [];
+    const next = pruneSpend([{ id: 's' + Date.now(), ...parsed }, ...cur], nowISO());
+    set(KEYS.spend, { v: 1, items: next });
+    document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+    // focus never left the input, so the guard above SKIPPED the rebuild — reset explicitly
+    // (same node): clear value + hint, recompute the totals line, keep the flow going.
+    const inp = $('#spendInput');
+    if (inp) { inp.value = ''; inp.focus({ preventScroll: true }); }
+    const h = $('#spendQHint'); if (h) h.textContent = '';
+    const tot = $('#spendTot');
+    if (tot) tot.innerHTML = spendTotalsHTML(next);
+  });
+}
+
+function spendTotalsHTML(items) {
+  const todaySum = items.filter(i => i && i.date === TODAY).reduce((s, i) => s + (i.amount || 0), 0);
+  return `today ¥${todaySum.toLocaleString()} · month ¥${monthTotal(items, TODAY.slice(0, 7)).toLocaleString()} — <a href="#/budget">budget</a>`;
 }
 
 // "Today" — the post-arrival lead widget: today's day plan, today's events, tasks due today.

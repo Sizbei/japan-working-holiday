@@ -7,6 +7,8 @@
 import { $, esc } from './lib/dom.js';
 import { wireJpAccents } from './lang.js';
 import { fetchQuakes } from './lib/quakes.js';
+import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
+import { nowISO, fmtShort } from './lib/dates.js';
 
 export function mountEmergency(data) {
   const host = $('#emergencyContent');
@@ -46,6 +48,11 @@ export function mountEmergency(data) {
       <div class="em-contacts">${rows}</div>
     </section>`);
   }
+
+  // Tonight's stay — trip-mode only, placed AFTER numbers + contacts (110/119 stay on
+  // top: a stay card is never more urgent than an ambulance). Re-rendered on every
+  // #/emergency entry so an open tab never shows yesterday's stay after midnight.
+  sections.push(`<div id="emStay"></div>`);
 
   if (carry.length) {
     const items = carry.map(c => `<li>${esc(c)}</li>`).join('');
@@ -88,11 +95,13 @@ export function mountEmergency(data) {
     </section>`);
 
   host.innerHTML = sections.join('');
+  renderStay(data);
   wireJpAccents($('#view-emergency'));
 
   let quakesAt = 0, quakesBusy = false;
   document.addEventListener('jwh:route', async (e) => {
     if (e.detail?.route !== 'emergency') return;
+    renderStay(data);                                              // cheap; keeps "tonight" true across midnight
     if (quakesBusy || Date.now() - quakesAt < 10 * 60e3) return;   // refresh at most every 10 min
     quakesBusy = true;
     const el = $('#emQuakes');
@@ -111,4 +120,39 @@ export function mountEmergency(data) {
     } catch { if (el) el.innerHTML = '<p class="em-note">Feed unavailable (offline?).</p>'; }
     finally { quakesBusy = false; }
   });
+}
+
+// "Tonight's stay" — offline stay card from baked calendar stays (lib/trip.js). Renders
+// only while a trip window covers today; everything esc()'d; read-only.
+function renderStay(data) {
+  const host = $('#emStay');
+  if (!host) return;
+  const today = nowISO();
+  const cal = (data && data.calendar) || [];
+  const w = tripWindow(cal, today);
+  if (!w) { host.innerHTML = ''; return; }
+  const card = (s, tonight) => {
+    const booked = stayBooked(s);
+    const name = String(s.title).split(/stay:\s*/i).pop().replace(/\s*\(BOOKED\)\s*/i, '');
+    const badge = booked
+      ? '<span class="em-stay-badge">BOOKED ✓</span>'
+      : `<span class="em-stay-badge em-stay-warn">NOT BOOKED${s.bookBy ? ' — book by ' + esc(fmtShort(s.bookBy)) : ''}</span>`;
+    const src = (s.sources || [])[0];
+    return `<div class="em-stay${tonight ? ' em-stay-tonight' : ''}">
+      <p class="em-stay-name">${tonight ? '🛏 Tonight: ' : ''}${esc(name)} ${badge}</p>
+      <p class="em-note">${esc(fmtShort(s.date))} → ${esc(fmtShort(s.endDate))} · ${esc(s.area || '')}</p>
+      ${s.stayAddress ? `<p class="em-stay-addr">${esc(s.stayAddress)}</p>` : ''}
+      ${s.stayAddressJa ? `<p class="em-stay-addr" lang="ja">${esc(s.stayAddressJa)}</p>` : ''}
+      ${s.bookingNotes ? `<p class="em-note">${esc(s.bookingNotes)}</p>` : ''}
+      ${s.stayContact ? `<p class="em-note">${esc(s.stayContact)}</p>` : ''}
+      ${src ? `<a class="em-stay-link" href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(src.replace(/^https?:\/\//, ''))} ↗</a>` : ''}
+    </div>`;
+  };
+  const tonight = stayForNight(cal, today);
+  const rest = w.stays.filter(s => s !== tonight && String(s.endDate) > today);
+  host.innerHTML = `<section class="em-section" aria-labelledby="em-h-stay">
+    <h3 id="em-h-stay" class="em-h">Trip stays · day ${esc(String(w.day))}/${esc(String(w.total))}</h3>
+    ${tonight ? card(tonight, true) : '<p class="em-note">Checkout day — no stay tonight.</p>'}
+    ${rest.map(s => card(s, false)).join('')}
+  </section>`;
 }

@@ -2929,9 +2929,14 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* event image backdrop (baked `image` field — Pokémon days etc.): translucent art behind the
    band text. Low opacity + a bg-soft gradient floor keep the serif title readable over any art;
    offline it simply doesn't paint. */
-.sp-img{ position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .38;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 96%); mask-image: linear-gradient(to bottom, #000, transparent 96%); }
-.sp-band.has-img::after{ content: ''; position: absolute; inset: 0; background: linear-gradient(to right, color-mix(in srgb, var(--bg-soft) 78%, transparent), transparent 70%); }
+.sp-img{ position: absolute; inset: 0; background-size: cover; background-position: center;
+  opacity: 0; transition: opacity .35s ease; }              /* fades in on real load (.is-loaded) — no pop when the network delivers late */
+.sp-img.is-loaded{ opacity: .26; }
+/* FULL-band scrim, theme-robust: bg-soft is dark in dark mode and light in light mode, so the
+   text zone always sits on ≥60% of its own background — worst-case (white art, dark theme)
+   title contrast stays ≥5:1 analytically (review #136: the old right-fade died at 70% width) */
+.sp-band.has-img::after{ content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, var(--bg-soft) 8%, color-mix(in srgb, var(--bg-soft) 60%, transparent) 55%, color-mix(in srgb, var(--bg-soft) 25%, transparent)); }
 .sp-band > *:not(.sp-img){ position: relative; z-index: 1; }   /* the img layer must stay absolute — same-specificity later rule was clobbering it */
 .sp-band.has-img .sp-title{ text-shadow: 0 1px 6px color-mix(in srgb, var(--bg-soft) 85%, transparent); }
 .sp-cattop{ display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: 8px; }
@@ -3763,3 +3768,13 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
   color: var(--ink); background: var(--bg-elevated); border: 1px solid var(--indigo); border-radius: 8px;
   padding: .05em .3em; margin: 0; width: 100%; min-width: 0; }
 .sp-title{ cursor: text; }
+
+/* ===== #136 review fixes ===== */
+.sp-titlerow{ display: flex; align-items: flex-start; gap: 8px; }
+.sp-titlerow .sp-title{ flex: 1; min-width: 0; touch-action: manipulation; }   /* reclaim double-tap from browser zoom */
+.sp-rename{ flex: none; background: none; border: 1px solid transparent; border-radius: 8px; cursor: pointer;
+  color: var(--ink-faint); font-size: .95rem; padding: 4px 7px; margin-top: 2px; touch-action: manipulation; }
+.sp-rename:hover, .sp-rename:focus-visible{ color: var(--ink); border-color: var(--line); }
+@media (hover: none){ .sp-rename{ min-width: 44px; min-height: 44px; color: var(--ink-soft); } }   /* visible + honest target on touch */
+/* src-many: right-edge fade signals there's more to scroll (the scrollbar is hidden) */
+.sp-body .modal-src.src-many{ -webkit-mask-image: linear-gradient(to right, #000 88%, transparent); mask-image: linear-gradient(to right, #000 88%, transparent); }

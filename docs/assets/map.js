@@ -12,6 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw } from './lib/store.js';
 import { areaOf, AREA_ORDER, centroid, jitter } from './lib/geo.js';
+import { allEvents } from './calendar.js';   // override-merged view (renames, area edits, reschedules, hidden) — raw DATA.calendar showed stale titles (review #136)
 import { haversineKm, estimateMinutes, format as fmtMins, legLabel, totalTransit, areaCount } from './lib/transit.js';
 import { directionsUrl } from './lib/directions.js';
 import { placesVisitedStats } from './lib/placestats.js';
@@ -217,7 +218,7 @@ export function placesModel() {
     out.push({ ...p, kind: 'user', cat: p.category || 'personal', group }); seenId.add(p.id);
   });
   // 2) upcoming dated events
-  (DATA.calendar || []).forEach(e => {
+  allEvents().filter(e => e.source === 'baked').forEach(e => {
     if (!e.area || !e.date || e.date < today || e.category === 'holiday') return;
     const nm = (e.title || '').toLowerCase().trim();
     if (seenName.has(nm)) return; seenName.add(nm);
@@ -890,7 +891,7 @@ function renderIndex() {
   const add = (arr, emoji) => (arr || []).forEach(i => { const area = i.area || i.area_or_park || ''; if (i.name) places.push({ name: i.name, area, group: areaOf(area), emoji }); });
   ['music', 'geek', 'building', 'restaurants', 'livemusic', 'activities', 'disney', 'meetups'].forEach(k => add(DATA[k], PILLAR_EMOJI[k] || '📍'));
   (DATA.rooms || []).forEach(r => places.push({ name: r.name, area: r.area, group: areaOf(r.area), emoji: '🏠' }));
-  (DATA.calendar || []).forEach(e => { if (e.area && e.category !== 'holiday') places.push({ name: e.title, area: e.area, group: areaOf(e.area), emoji: eventEmoji(e.category) }); });
+  allEvents().filter(e => e.source === 'baked').forEach(e => { if (e.area && e.category !== 'holiday') places.push({ name: e.title, area: e.area, group: areaOf(e.area), emoji: eventEmoji(e.category) }); });
   const groups = {};
   places.forEach(p => { (groups[p.group] = groups[p.group] || []).push(p); });
   wrap.innerHTML = `<h3 class="map-side-h">All places by area</h3>` + AREA_ORDER.filter(k => groups[k]).map(k => `

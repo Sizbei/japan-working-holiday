@@ -2872,30 +2872,30 @@
   {
    "id": "ev26-stay-khouse-asahidake",
    "title": "🏔️ Stay: K's House Hokkaido — Asahidake Onsen (BOOKED)",
-   "date": "2026-07-20",
-   "endDate": "2026-07-22",
+   "date": "2026-07-21",
+   "endDate": "2026-07-23",
    "category": "personal",
    "area": "Asahidake Onsen (Higashikawa)",
    "confidence": "high",
    "sources": [
     "https://kshouse.jp/hokkaido-e/"
    ],
-   "bookingNotes": "Booked ✓ — hostel with onsen at the ropeway village. Check-in after the Furano → Asahidake leg; two nights, out the morning of the Sapporo return.",
+   "bookingNotes": "Booked ✓ — hostel with onsen at the ropeway village. 2 nights (Jul 21–23). Check in after the Furano → Asahidake leg on the 21st; out the morning of the Sapporo return.",
    "stayAddress": "Yukomanbetsu, Asahidake Onsen, Higashikawa-cho, Kamikawa-gun, Hokkaido 071-1472",
    "stayAddressJa": "〒071-1472 北海道上川郡東川町勇駒別（旭岳温泉）",
    "stayContact": "No phone bookings — contact via kshouse.jp; screenshot your booking email before you go."
   },
   {
    "id": "ev26-stay-sapporo2-tbd",
-   "title": "🛏️ Stay: Sapporo (return leg) — NOT BOOKED yet (2 nights)",
-   "date": "2026-07-22",
+   "title": "🛏️ Stay: Sapporo (return leg) — NOT BOOKED yet (1 night)",
+   "date": "2026-07-23",
    "endDate": "2026-07-24",
    "category": "personal",
    "area": "Sapporo",
    "confidence": "low",
    "sources": [],
-   "bookingNotes": "Gap in the itinerary — nights before the Jul 24 10:30 CTS flight. Nariya again is the easy option.",
-   "bookBy": "2026-07-14"
+   "bookingNotes": "Gap — 1 night before the Jul 24 10:30 CTS flight (Asahidake → Sapporo on the 23rd). Nariya again is the easy option.",
+   "bookBy": "2026-07-16"
   },
   {
    "id": "ev26-manga-cafe-return",

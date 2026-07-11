@@ -9,6 +9,11 @@ animations. 10 phases." REVISED twice under adversarial review (round 1: 3 criti
 > and the eventual Anki-TSV export, v1.1). The review's "✓ has no consumer" point is accepted
 > as a known trade-off — ✓ is bookkeeping the owner wants.
 
+> **DEPTH UPGRADE (owner, 2026-07-11, #138):** decision B's "compact" is superseded — every
+> point now carries validator-REQUIRED nuance + register + ⚠ caution, so the expanded card is
+> textbook depth, uniformly across all five levels (5 diff-checked enrichment agents + an
+> accuracy critic over all 353: 2 MAJOR prose fixes applied).
+
 **Owner expectation, stated plainly:** the reference becomes actually usable at **phase 5**
 (N5 fully baked). Phases 1–4 are engineering against ~12 seed points; phases 6–10 are one
 bookmark feature + four level bakes. It's 4 phases of plumbing, then usable, then a content

@@ -12,8 +12,11 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import {
-  parseAnkiExport, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
+  parseAnkiExport, cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
+import { listZip, readZipEntry } from './lib/zip.js';
+import { openSqlite, sqliteTables, sqliteRows } from './lib/sqlite.js';
+import { parseMediaManifest, soundRef, imgRef, mediaPut, mediaGet, mediaClear } from './lib/ankimedia.js';
 
 const CHUNK = 100;
 const FIELDS = ['expression', 'reading', 'meaning', 'sentence', 'sentenceMeaning'];
@@ -61,10 +64,10 @@ function renderImport(preview) {
     </div>
     <div class="ank-drop" id="ankDrop" tabindex="0" role="button" aria-label="Drop an Anki export file, or choose a file">
       <span class="ank-drop-ic" aria-hidden="true">⬇</span>
-      <span class="ank-drop-t">Export from Anki: <b>Notes in Plain Text (.txt)</b> → drop it here</span>
+      <span class="ank-drop-t">Drop your Anki export — <b>.apkg</b> (full deck, keeps audio/images) or <b>Notes in Plain Text (.txt)</b>. For .apkg, tick <b>“Support older Anki versions”</b> when exporting.</span>
       <span class="ank-drop-or">or</span>
       <button type="button" class="ank-btn" id="ankPick">Choose a file</button>
-      <input type="file" id="ankFile" accept=".txt,.tsv,.csv" hidden>
+      <input type="file" id="ankFile" accept=".txt,.tsv,.csv,.apkg" hidden>
     </div>
     <div class="ank-err" id="ankErr" role="alert" hidden></div>
     <div class="ank-preview" id="ankPreview" hidden></div>`;
@@ -92,10 +95,74 @@ function showErr(msg) {
 
 function readFile(f) {
   showErr('');
+  if (/\.apkg$/i.test(f.name || '')) { importApkg(f); return; }
   const rd = new FileReader();
   rd.onerror = () => showErr('Could not read that file — try exporting again.');
   rd.onload = () => parseText(String(rd.result || ''));
   rd.readAsText(f);
+}
+
+// ---- .apkg import: unzip → minimal sqlite read of notes.flds → the SAME preview/remap
+// flow as the TSV path. Media (audio/images) extracts into IndexedDB at Save time.
+// zstd-only exports (collection.anki21b, Anki 2.1.50+ default) can't be read without a
+// zstd decoder — the error tells the owner to re-export with the legacy checkbox.
+function colIdx(createSql, name) {
+  const inner = /\(([\s\S]*)\)/.exec(createSql || '');
+  if (!inner) return -1;
+  return inner[1].split(',').map(s => s.trim().split(/\s+/)[0].replace(/["'\u0060\[\]]/g, '')).indexOf(name);
+}
+async function importApkg(f) {
+  try {
+    showErr('');
+    const u8 = new Uint8Array(await f.arrayBuffer());
+    const byName = new Map(listZip(u8).map(e => [e.name, e]));
+    const colEntry = byName.get('collection.anki21') || byName.get('collection.anki2');
+    if (!colEntry) {
+      throw new Error(byName.has('collection.anki21b')
+        ? 'new-format apkg — in Anki, export again with “Support older Anki versions” checked'
+        : 'no collection database found in that archive');
+    }
+    const db = openSqlite(await readZipEntry(u8, colEntry));
+    const notesTbl = sqliteTables(db).find(t => t.name === 'notes');
+    if (!notesTbl) throw new Error('no notes table in the deck');
+    const fi = colIdx(notesTbl.sql, 'flds');
+    if (fi < 0) throw new Error('unrecognised notes schema');
+    const rows = sqliteRows(db, 'notes').map(r => String(r[fi] ?? '').split('\x1f'));
+    if (!rows.length) throw new Error('no data rows');
+    let manifest = null;
+    if (byName.has('media')) {
+      try { manifest = parseMediaManifest(await readZipEntry(u8, byName.get('media'))); } catch { manifest = null; }
+    }
+    const res = cardsFromRows(rows);
+    DATA = { ...res, apkg: { u8, byName, manifest, rows }, nCols: Math.max(...rows.slice(0, 50).map(r => r.length)) };
+    renderImport(DATA);
+  } catch (err) { showErr(friendlyErr(err)); }
+}
+
+// extract only the media the kept cards actually reference; attach a/img refs to the cards
+async function attachMedia(cards, apkg, onProgress) {
+  const { u8, byName, manifest, rows } = apkg;
+  if (!manifest) return cards.map(({ srcIdx, ...c }) => c);
+  const out = cards.map(c => {
+    const fields = rows[c.srcIdx] || [];
+    let a = null, img = null;
+    for (const f of fields) { a = a || soundRef(f); img = img || imgRef(f); }
+    const { srcIdx, ...rest } = c;
+    return { ...rest, ...(a && manifest.has(a) ? { a } : {}), ...(img && manifest.has(img) ? { img } : {}) };
+  });
+  const refs = [...new Set(out.flatMap(c => [c.a, c.img].filter(Boolean)))];
+  await mediaClear();
+  const MIME = { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', m4a: 'audio/mp4', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml' };
+  for (let i = 0; i < refs.length; i++) {
+    const name = refs[i];
+    const entry = byName.get(manifest.get(name));
+    if (!entry) continue;
+    const bytes = await readZipEntry(u8, entry);
+    const ext = (name.split('.').pop() || '').toLowerCase();
+    await mediaPut(name, new Blob([bytes], { type: MIME[ext] || 'application/octet-stream' }));
+    if (onProgress && i % 20 === 0) onProgress(i + 1, refs.length);
+  }
+  return out;
 }
 
 // parse (optionally with a manual column override) and show the 3-row preview
@@ -129,7 +196,7 @@ function showPreview(res) {
       <td class="ank-pc-s" lang="ja">${esc(c.s)}</td>
     </tr>`).join('');
   // remap row: one <select> per display field, each listing the raw column indices
-  const nCols = res.delim ? maxCols(res.raw, res.delim) : 0;
+  const nCols = DATA?.apkg ? (DATA.nCols || 0) : (res.delim ? maxCols(res.raw, res.delim) : 0);
   const colOpts = (sel) => {
     let out = `<option value="-1"${sel < 0 ? ' selected' : ''}>— none —</option>`;
     for (let i = 0; i < nCols; i++) out += `<option value="${i}"${sel === i ? ' selected' : ''}>col ${i + 1}</option>`;
@@ -157,8 +224,20 @@ function showPreview(res) {
       <button type="button" class="ank-btn ank-btn-ghost" id="ankCancel">Cancel</button>
     </div>`;
 
-  $('#ankSave')?.addEventListener('click', () => {
-    saveDeck({ cards: res.cards, pos: {}, shaky: [], shuffle: false, seed: 1 });
+  $('#ankSave')?.addEventListener('click', async () => {
+    const btn = $('#ankSave');
+    let cards = res.cards;
+    if (DATA?.apkg) {
+      try {
+        if (btn) { btn.disabled = true; btn.textContent = 'Importing media…'; }
+        cards = await attachMedia(res.cards, DATA.apkg, (n, t) => { if (btn) btn.textContent = `Importing media… ${n}/${t}`; });
+      } catch (err) {
+        console.error('[anki] media import', err);
+        showErr('Media import failed (' + (err?.message || err) + ') — the deck was saved without audio/images.');
+        cards = res.cards.map(({ srcIdx, ...c }) => c);
+      }
+    } else cards = res.cards.map(({ srcIdx, ...c }) => c);   // srcIdx is import plumbing — never persisted
+    saveDeck({ cards, pos: {}, shaky: [], shuffle: false, seed: 1 });
     DATA = null;
     render();
     $('#ankCard')?.focus({ preventScroll: true });   // hand focus to the card so Space/→/S work immediately (keys are section-scoped by design)
@@ -167,7 +246,10 @@ function showPreview(res) {
   box.querySelectorAll('select[data-field]').forEach(sel => sel.addEventListener('change', () => {
     const mapping = {};
     box.querySelectorAll('select[data-field]').forEach(s => { mapping[s.dataset.field] = parseInt(s.value, 10); });
-    parseText(res.raw, mapping);   // re-parse with the override; keeps the details panel open on the next render? no — reset is fine
+    if (DATA?.apkg) {                                  // apkg: rebuild from the sqlite rows (there is no raw text to re-parse)
+      try { const r2 = cardsFromRows(DATA.apkg.rows, mapping); DATA = { ...DATA, ...r2 }; renderImport(DATA); }
+      catch (err) { showErr(friendlyErr(err)); }
+    } else parseText(res.raw, mapping);   // re-parse with the override
   }));
 }
 
@@ -324,6 +406,33 @@ function wireSkim() {
 
 // ───────────────────────────── shared wiring ─────────────────────────────
 
+// media fill — async (IndexedDB), token-guarded against stale paints; one objectURL at
+// a time for the image, audio URLs revoked on 'ended'. Deck audio is deliberate-tap
+// (or P) — never autoplay: the refresher's speed is the point.
+let _mediaTok = 0, _imgUrl = null, _audio = null;
+function fillMedia(card) {
+  const tok = ++_mediaTok;
+  if (_imgUrl) { URL.revokeObjectURL(_imgUrl); _imgUrl = null; }
+  if (_audio) { try { _audio.pause(); } catch { /* already stopped */ } _audio = null; }
+  if (card.img) {
+    mediaGet(card.img).then(b => {
+      if (tok !== _mediaTok || !b) return;
+      const el = $('#ankImg'); if (!el) return;
+      _imgUrl = URL.createObjectURL(b);
+      el.src = _imgUrl; el.hidden = false;
+    }).catch(() => {});
+  }
+  $('#ankAudio')?.addEventListener('click', () => {
+    mediaGet(card.a).then(b => {
+      if (!b) return;
+      const u = URL.createObjectURL(b);
+      _audio = new Audio(u);
+      _audio.addEventListener('ended', () => URL.revokeObjectURL(u), { once: true });
+      _audio.play().catch(() => {});
+    }).catch(() => {});
+  });
+}
+
 function paintCard() {
   const { deck, order, idx, chunk, mode } = stream;
   const card = order[idx];
@@ -339,7 +448,9 @@ function paintCard() {
     <div class="ank-word" lang="ja">${esc(card.w) || '&nbsp;'}</div>
     ${card.r ? `<div class="ank-read" lang="ja">${esc(card.r)}</div>` : ''}
     ${card.m ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
-    ${hair}${sent}${sentM}`;
+    ${hair}${sent}${sentM}
+    ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}`;
+  fillMedia(card);
 
   const total = deck.cards.length;
   const prog = $('#ankProg');
@@ -442,6 +553,7 @@ function wireStream() {
       // not ALSO drive the stream (double-fire); buttons own their keys.
       if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
       if (stream.deck.view === 'skim') return;
+    if (k === 'p') { $('#ankAudio')?.click(); return; }
       if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
       else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }

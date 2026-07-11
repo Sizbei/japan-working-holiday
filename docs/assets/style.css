@@ -3797,3 +3797,10 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 .beginner-drawer[open]{ padding-bottom:.8rem; }
 .beginner-drawer > *:not(summary){ margin-left:.9rem; margin-right:.9rem; }
 @media (hover: none){ .beginner-drawer > summary{ min-height:44px; display:flex; align-items:center; } }
+
+/* anki refresher media (.apkg import) */
+.ank-media{ display:flex; align-items:center; justify-content:center; gap:.7rem; margin-top:.6rem; }
+.ank-img{ max-width:220px; max-height:130px; border-radius:8px; border:1px solid var(--line); }
+.ank-audio{ font:inherit; font-size:1.05rem; background:var(--bg-soft); border:1px solid var(--line); border-radius:100px; padding:.3rem .75rem; cursor:pointer; }
+.ank-audio:hover, .ank-audio:focus-visible{ border-color: var(--indigo); }
+@media (hover: none){ .ank-audio{ min-width:44px; min-height:44px; } }

@@ -1313,3 +1313,265 @@ test('trip.js: synthetic gap splits the chain; overlaps extend via max endDate',
   const tie = [mk('2026-08-01', '2026-08-05', 'Stay: A — NOT BOOKED yet'), mk('2026-08-02', '2026-08-04', 'Stay: B (BOOKED)')];
   assert.match(stayForNight(tie, '2026-08-03').title, /B/);
 });
+
+// ── zip.js: dependency-free ZIP reader ────────────────────────────────────────
+import { deflateRawSync } from 'node:zlib';
+import { listZip, readZipEntry } from '../docs/assets/lib/zip.js';
+
+// Build a ZIP in-memory (local headers + data + central directory + EOCD) to
+// spec-cross-check the reader. crc32 present but not verified by the reader.
+function crc32(buf) {
+  let c = ~0 >>> 0;
+  for (let i = 0; i < buf.length; i++) {
+    c ^= buf[i];
+    for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1));
+  }
+  return (~c) >>> 0;
+}
+function buildZip(files) {
+  const enc = new TextEncoder();
+  const locals = [], centrals = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name);
+    const raw = f.data;
+    const method = f.method;
+    const comp = method === 8 ? deflateRawSync(raw) : raw;
+    const hdr = Buffer.alloc(30);
+    hdr.writeUInt32LE(0x04034b50, 0);
+    hdr.writeUInt16LE(method, 8);
+    hdr.writeUInt32LE(crc32(raw), 14);
+    hdr.writeUInt32LE(comp.length, 18);
+    hdr.writeUInt32LE(raw.length, 22);
+    hdr.writeUInt16LE(name.length, 26);
+    const local = Buffer.concat([hdr, Buffer.from(name), Buffer.from(comp)]);
+    const cd = Buffer.alloc(46);
+    cd.writeUInt32LE(0x02014b50, 0);
+    cd.writeUInt16LE(method, 10);
+    cd.writeUInt32LE(crc32(raw), 16);
+    cd.writeUInt32LE(comp.length, 20);
+    cd.writeUInt32LE(raw.length, 24);
+    cd.writeUInt16LE(name.length, 28);
+    cd.writeUInt32LE(offset, 42);
+    centrals.push(Buffer.concat([cd, Buffer.from(name)]));
+    locals.push(local);
+    offset += local.length;
+  }
+  const cdBuf = Buffer.concat(centrals);
+  const cdStart = offset;
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(files.length, 8);
+  eocd.writeUInt16LE(files.length, 10);
+  eocd.writeUInt32LE(cdBuf.length, 12);
+  eocd.writeUInt32LE(cdStart, 16);
+  return new Uint8Array(Buffer.concat([...locals, cdBuf, eocd]));
+}
+
+const _mediaJson = JSON.stringify({ '0': 'front.png', '1': 'audio.mp3' });
+const _patterned = new Uint8Array(5000).map((_, i) => (i * 37 + 11) & 0xff);
+const _zipFixture = buildZip([
+  { name: 'media', method: 0, data: new TextEncoder().encode(_mediaJson) },
+  { name: 'collection.anki2', method: 8, data: _patterned },
+  { name: 'empty', method: 0, data: new Uint8Array(0) },
+]);
+
+test('zip.js: listZip finds all entries with right sizes/methods', () => {
+  const list = listZip(_zipFixture);
+  assert.equal(list.length, 3);
+  const media = list.find(e => e.name === 'media');
+  const coll = list.find(e => e.name === 'collection.anki2');
+  const empty = list.find(e => e.name === 'empty');
+  assert.equal(media.method, 0);
+  assert.equal(media.size, new TextEncoder().encode(_mediaJson).length);
+  assert.equal(coll.method, 8);
+  assert.equal(coll.size, 5000);
+  assert.ok(coll.csize < 5000);           // deflate actually shrank it
+  assert.equal(empty.size, 0);
+});
+
+test('zip.js: readZipEntry round-trips stored, deflated, and empty entries', async () => {
+  const list = listZip(_zipFixture);
+  const media = await readZipEntry(_zipFixture, list.find(e => e.name === 'media'));
+  assert.equal(new TextDecoder().decode(media), _mediaJson);
+  const coll = await readZipEntry(_zipFixture, list.find(e => e.name === 'collection.anki2'));
+  assert.deepEqual(coll, _patterned);
+  const empty = await readZipEntry(_zipFixture, list.find(e => e.name === 'empty'));
+  assert.equal(empty.length, 0);
+});
+
+test('zip.js: garbage / truncated buffers throw', () => {
+  assert.throws(() => listZip(new Uint8Array(10)), /too small/);
+  assert.throws(() => listZip(new Uint8Array(64)), /no EOCD/);
+  const truncated = _zipFixture.subarray(0, _zipFixture.length - 4);   // chop the EOCD
+  assert.throws(() => listZip(truncated), /no EOCD/);
+});
+
+// ---- lib/ankimedia.js (apkg media manifest + field refs, PURE half) ----
+import { parseMediaManifest, soundRef, imgRef, mediaRefs, notesToRawCards } from '../docs/assets/lib/ankimedia.js';
+test('ankimedia: parseMediaManifest inverts {entry→name} to name→entry, skips weird keys', () => {
+  const json = JSON.stringify({ '0': '食べ物 audio.mp3', '1': 'ねこ.jpg', 'x': 'skip.me', '2': '' });
+  const map = parseMediaManifest(new TextEncoder().encode(json));
+  assert.equal(map.get('食べ物 audio.mp3'), '0');
+  assert.equal(map.get('ねこ.jpg'), '1');
+  assert.equal(map.has('skip.me'), false);   // non-numeric key skipped
+  assert.equal(map.has(''), false);          // empty name skipped
+  assert.equal(map.size, 2);
+  // accepts a plain string too
+  assert.equal(parseMediaManifest('{"5":"a.mp3"}').get('a.mp3'), '5');
+});
+test('ankimedia: parseMediaManifest rejects a non-object / bad JSON', () => {
+  assert.throws(() => parseMediaManifest('[1,2,3]'), /not an object/);
+  assert.throws(() => parseMediaManifest('"just a string"'), /not an object/);
+  assert.throws(() => parseMediaManifest('not json'), /not valid JSON/);
+});
+test('ankimedia: soundRef first [sound:] wins, unicode + spaces preserved raw', () => {
+  assert.equal(soundRef('食べ物です[sound:食べ物 audio.mp3] more'), '食べ物 audio.mp3');
+  assert.equal(soundRef('[sound:a.mp3] mid [sound:b.mp3]'), 'a.mp3');   // first wins
+  assert.equal(soundRef('no audio here'), null);
+  assert.equal(soundRef(null), null);
+});
+test('ankimedia: imgRef handles double/single/unquoted src and <IMG> uppercase', () => {
+  assert.equal(imgRef('<img src="pic one.png">'), 'pic one.png');
+  assert.equal(imgRef("<img alt='x' src='ねこ.jpg' width=20>"), 'ねこ.jpg');
+  assert.equal(imgRef('<img src=bare.gif >'), 'bare.gif');
+  assert.equal(imgRef('<IMG SRC="UP.PNG">'), 'UP.PNG');
+  assert.equal(imgRef('plain text &amp; no img'), null);
+});
+test('ankimedia: notesToRawCards splits on \\x1f, preserves empty trailing fields', () => {
+  assert.deepEqual(notesToRawCards(['a\x1fb\x1f']), [['a', 'b', '']]);
+  assert.deepEqual(notesToRawCards(['x\x1fy\x1fz']), [['x', 'y', 'z']]);
+  assert.deepEqual(notesToRawCards(['solo']), [['solo']]);
+  assert.deepEqual(notesToRawCards([]), []);
+});
+test('ankimedia: mediaRefs dedupes across audio + image', () => {
+  const cards = [
+    { a: '[sound:a.mp3]', img: '<img src="p.png">' },
+    { a: '[sound:a.mp3]', img: '<img src="q.jpg">' },   // dup audio
+    { a: 'no ref', img: 'no img' },
+    null,
+  ];
+  const refs = mediaRefs(cards);
+  assert.deepEqual([...refs].sort(), ['a.mp3', 'p.png', 'q.jpg']);
+});
+
+// ---- lib/sqlite.js (dependency-free read-only SQLite reader for Anki .apkg) ----
+import { openSqlite, sqliteTables, sqliteRows } from '../docs/assets/lib/sqlite.js';
+import { execSync } from 'node:child_process';
+import { writeFileSync, unlinkSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+// Build a fixture .sqlite via the system sqlite3 CLI (fallback: python3 sqlite3 module).
+function buildSqliteFixture() {
+  const big = 'あ'.repeat(8000) + 'X'.repeat(5000);            // >12000 chars → forces overflow chain
+  assert.ok(big.length > 12000);
+  const jp = ['表面日本語', '裏面ドリル'].join('\x1f');          // unicode + \x1f field separator
+  const dbPath = join(tmpdir(), `jwh-sqlite-fixture-${process.pid}.sqlite`);
+  const sqlPath = join(tmpdir(), `jwh-sqlite-fixture-${process.pid}.sql`);
+  // assemble SQL; sqlite3 CLI reads it on stdin
+  const rows = [];
+  for (let i = 1; i <= 60; i++) {
+    let flds, tags = "'tag1 tag2'", sfld = "'sfld" + i + "'";
+    if (i === 1) flds = "'" + big.replace(/'/g, "''") + "'";           // overflow row
+    else if (i === 2) { flds = "'" + jp + "'"; tags = 'NULL'; }        // unicode + NULL tags
+    else if (i === 3) flds = "'neg'";
+    else flds = "'front" + i + "\x1fback" + i + "'";
+    const mid = i === 3 ? -2147483648 : 1000 + i;                       // negative int
+    const csum = i === 4 ? 9007199254740000 : 100 + i;                  // large int
+    rows.push(`INSERT INTO notes VALUES(${i},'guid${i}',${mid},1600000000,0,${tags},${flds},${sfld},${csum},0,'');`);
+  }
+  const sql = [
+    'PRAGMA journal_mode=DELETE;',
+    'CREATE TABLE notes(id INTEGER PRIMARY KEY, guid TEXT, mid INTEGER, mod INTEGER, usn INTEGER, tags TEXT, flds TEXT, sfld TEXT, csum INTEGER, flags INTEGER, data TEXT);',
+    'CREATE TABLE col(id INTEGER PRIMARY KEY, crt INTEGER, mod INTEGER, scm INTEGER, ver INTEGER, dty INTEGER, usn INTEGER, ls INTEGER, conf TEXT, models TEXT, decks TEXT, dconf TEXT, tags TEXT);',
+    "INSERT INTO col VALUES(1,1600000000,1600000000,0,11,0,0,0,'{}','{}','{}','{}','{}');",
+    'CREATE TABLE metrics(id INTEGER PRIMARY KEY, ratio REAL, label TEXT);',
+    "INSERT INTO metrics VALUES(1,3.14159,'pi');",
+    "INSERT INTO metrics VALUES(2,-2.5,'neg');",
+    ...rows,
+  ].join('\n');
+  try {
+    writeFileSync(sqlPath, sql);
+    execSync(`sqlite3 ${JSON.stringify(dbPath)} < ${JSON.stringify(sqlPath)}`, { stdio: ['ignore', 'ignore', 'pipe'] });
+  } catch {
+    // fallback: python3 sqlite3
+    const py = `import sqlite3,sys\ncon=sqlite3.connect(sys.argv[1])\ncon.executescript(open(sys.argv[2]).read())\ncon.commit();con.close()`;
+    execSync(`python3 -c ${JSON.stringify(py)} ${JSON.stringify(dbPath)} ${JSON.stringify(sqlPath)}`);
+  }
+  const bytes = new Uint8Array(readFileSync(dbPath));
+  try { unlinkSync(dbPath); unlinkSync(sqlPath); } catch { /* ignore */ }
+  return { bytes, big, jp };
+}
+
+const _sqliteFx = buildSqliteFixture();
+
+test('sqlite: bad magic throws', () => {
+  assert.throws(() => openSqlite(new Uint8Array(200)), /not a sqlite file/);
+  assert.throws(() => openSqlite(new Uint8Array([1, 2, 3])), /not a sqlite file/);
+});
+
+test('sqlite: sqliteTables finds notes, col, metrics with sql + rootpage', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const tables = sqliteTables(db);
+  const names = tables.map((t) => t.name).sort();
+  assert.deepEqual(names, ['col', 'metrics', 'notes']);
+  const notes = tables.find((t) => t.name === 'notes');
+  assert.ok(notes.rootpage >= 2);
+  assert.match(notes.sql, /INTEGER PRIMARY KEY/);
+});
+
+test('sqlite: sqliteRows returns 60 notes with rowid-alias ids', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'notes');
+  assert.equal(rows.length, 60);
+  // id column (index 0) is INTEGER PRIMARY KEY → stored NULL, comes back via rowid
+  const ids = rows.map((r) => r[0]).sort((a, b) => a - b);
+  assert.deepEqual(ids, Array.from({ length: 60 }, (_, i) => i + 1));
+});
+
+test('sqlite: overflow row round-trips exactly (length + content)', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'notes');
+  const row1 = rows.find((r) => r[0] === 1);
+  const flds = row1[6]; // flds column index
+  assert.equal(flds.length, _sqliteFx.big.length);
+  assert.equal(flds, _sqliteFx.big);
+});
+
+test('sqlite: unicode + \\x1f separators + NULL tags intact', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'notes');
+  const row2 = rows.find((r) => r[0] === 2);
+  assert.equal(row2[6], _sqliteFx.jp);
+  assert.ok(row2[6].includes('\x1f'));
+  assert.equal(row2[5], null); // tags NULL
+  const row4 = rows.find((r) => r[0] === 4);
+  assert.match(row4[6], /front4\x1fback4/);
+});
+
+test('sqlite: negative + large ints', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'notes');
+  const row3 = rows.find((r) => r[0] === 3);
+  assert.equal(row3[2], -2147483648);        // mid negative
+  const row4 = rows.find((r) => r[0] === 4);
+  assert.equal(row4[8], 9007199254740000);   // csum large
+});
+
+test('sqlite: float table (REAL serial type 7)', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'metrics');
+  assert.equal(rows.length, 2);
+  assert.ok(Math.abs(rows[0][1] - 3.14159) < 1e-9);
+  assert.ok(Math.abs(rows[1][1] - -2.5) < 1e-9);
+  assert.equal(rows[0][2], 'pi');
+});
+
+test('sqlite: col table reads (single row)', () => {
+  const db = openSqlite(_sqliteFx.bytes);
+  const rows = sqliteRows(db, 'col');
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0][0], 1);   // rowid alias
+  assert.equal(rows[0][4], 11);  // ver
+});

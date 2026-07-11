@@ -61,3 +61,10 @@ through the same formula is acceptable.)
 `ROUTES` (11): dashboard, calendar, plan, map, explore, going, people, checklist, budget, rooms,
 emergency. `HIDDEN` deep-linked (3): deadlines (notifications bell target), packing (dashboard
 teaser), phrases. Full sweeps iterate all 14.
+- **Touch personas need touch-context checks.** #136 shipped dblclick-rename + title= tooltips +
+  hover hostnames to a phone-primary owner — three failures with ONE root cause (hover-only
+  affordances), invisible to a desktop-mouse CDP pass. When the owner is touch-first, drive the
+  flow with Input.dispatchTouchEvent and ask "how would a finger DISCOVER this?" per affordance.
+- **esc() is an HTML escaper, not a CSS one.** HTML entities decode BEFORE the CSS parser runs —
+  esc()'d values inside style="url('…')" can still escape the url() context. Never string-build
+  URLs into style attributes: validate the charset strictly and assign via the CSSOM.

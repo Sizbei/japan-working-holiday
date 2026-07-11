@@ -687,7 +687,7 @@ function positionSidePanel(panel) {
   if (!card) return;
   if (!window.matchMedia('(min-width: 700px)').matches) { card.style.left = card.style.top = card.style.width = ''; return; }
   const trig = _sidePanelTrigger;
-  const W = 380, gap = 10, m = 8;   // owner: notes were cramped — a little longer
+  const W = window.innerWidth < 900 ? 320 : 380, gap = 10, m = 8;   // owner: notes were cramped — a little longer (380); 700–820px keeps 320 so the card doesn't smother its trigger
   const vw = window.innerWidth, vh = window.innerHeight;
   const sx = window.scrollX, sy = window.scrollY;                    // the card is DOCUMENT-anchored → add scroll so it scrolls WITH the page (owner: "fixed in place", not floating in the viewport)
   card.style.width = W + 'px';
@@ -732,6 +732,11 @@ export function openSidePanel(ev, trigger) {
   if (panel.parentElement !== document.body) document.body.appendChild(panel);
 
   const isBaked = ev.source !== 'user';
+  // event art: BAKED events only, and a strict URL charset — no quotes/parens/spaces means the
+  // value can never escape a CSS url() context. It is assigned via the CSSOM after render (not
+  // string-built into a style attribute): esc() is an HTML escaper, and HTML entities DECODE
+  // BEFORE the CSS parser runs — the wrong tool for this context (review #136).
+  const imgOk = isBaked && /^https:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&*+,;=%-]+$/.test(ev.image || '') && !/['"()\s<>]/.test(ev.image);
   const going = isGoing(ev.id);
   const dateRange = esc(fmtDate(ev.date)) + (ev.endDate ? ' – ' + esc(fmtDate(ev.endDate)) : '');
   // friendly countdown chip: "in N days" / today / tomorrow / on now / past, + "· N-day" duration
@@ -744,19 +749,22 @@ export function openSidePanel(ev, trigger) {
   const goBtn = `<button class="btn sp-going${going ? ' is-going' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>`;
   const gcal = `<a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">Google Cal</a>`;
   const actions = isBaked
-    ? `${goBtn}<div class="sp-sec">${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}<button class="btn" id="spPlan">＋ Day plan</button>${gcal}<button class="btn" id="spCopy">Copy</button></div>`
+    ? `${goBtn}<div class="sp-sec">${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}${ev.renamed ? '<button class="btn" id="spResetName">↩ Reset name</button>' : ''}<button class="btn" id="spPlan">＋ Day plan</button>${gcal}<button class="btn" id="spCopy">Copy</button></div>`
     : `${goBtn}<div class="sp-sec"><button class="btn" id="spEdit">Edit</button>${gcal}<button class="btn danger" id="spDel">Delete</button></div>`;
 
   panel.innerHTML = `
     <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
     <div class="sp-inner" role="dialog" aria-label="${esc(ev.title)}" style="--cat:var(--c-${safeCat(ev)}-ink)">
-      <div class="sp-band${(/^https:\/\//.test(ev.image || '')) ? ' has-img' : ''}">
-        ${(/^https:\/\//.test(ev.image || '')) ? `<div class="sp-img" aria-hidden="true" style="background-image:url('${esc(ev.image)}')"></div>` : ''}
+      <div class="sp-band${imgOk ? ' has-img' : ''}">
+        ${imgOk ? `<div class="sp-img" aria-hidden="true"></div>` : ''}
         <div class="sp-cattop">
           <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(ev.category || 'event')}</span>
           <button class="sp-close" id="spClose" aria-label="Close">✕</button>
         </div>
-        <h2 class="sp-title" title="Double-click to rename">${esc(ev.title)}</h2>
+        <div class="sp-titlerow">
+          <h2 class="sp-title" title="Double-click to rename">${esc(ev.title)}</h2>
+          <button type="button" class="sp-rename" id="spRename" aria-label="Rename event">✎</button>
+        </div>
         ${cdFull ? `<span class="sp-cd">${esc(cdFull)}</span>` : ''}
       </div>
       <div class="sp-body" tabindex="0">
@@ -768,6 +776,7 @@ export function openSidePanel(ev, trigger) {
         </div>
         ${(ev.note || ev.bookingNotes || ev.why) ? `<p class="sp-note">${esc(ev.note || ev.bookingNotes || ev.why || '')}</p>` : ''}
         ${ev.moved ? '<p class="sp-moved">↩ You rescheduled this from its researched date.</p>' : ''}
+        ${ev.renamed ? '<p class="sp-moved">✏ You renamed this event.</p>' : ''}
         ${metHereLine(ev.id)}
         ${srcline(ev.sources)}
       </div>
@@ -781,11 +790,18 @@ export function openSidePanel(ev, trigger) {
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
-  // dblclick the title → inline rename. User events patch their own store; baked events go
-  // through the evTitle override map (the evArea pattern) so tips.json stays immutable.
-  panel.querySelector('.sp-title')?.addEventListener('dblclick', () => {
+  if (imgOk) {                                              // art loads via CSSOM, fades in on real load (no pop; reduce-motion kill covers the transition)
+    const imgEl = panel.querySelector('.sp-img');
+    const im = new Image();
+    im.onload = () => { if (imgEl.isConnected) { imgEl.style.backgroundImage = `url("${ev.image}")`; imgEl.classList.add('is-loaded'); } };
+    im.src = ev.image;
+  }
+  // Rename: the visible ✎ button is the touch/keyboard path (dblclick stays as the desktop
+  // power path — hover-only affordances don't exist on a phone, review #136). User events
+  // patch their own store; baked events use the evTitle override map (the evArea pattern).
+  const startRename = () => {
     const titleEl = panel.querySelector('.sp-title');
-    if (!titleEl) return;
+    if (!titleEl || panel.querySelector('.sp-title-in')) return;
     const inp = document.createElement('input');
     inp.className = 'sp-title-in'; inp.value = ev.title; inp.maxLength = 120;
     inp.setAttribute('aria-label', 'Event name');
@@ -813,6 +829,15 @@ export function openSidePanel(ev, trigger) {
       if (e.key === 'Escape') commit(false);
     });
     inp.addEventListener('blur', () => commit(true));
+  };
+  panel.querySelector('#spRename')?.addEventListener('click', startRename);
+  panel.querySelector('.sp-title')?.addEventListener('dblclick', startRename);
+  panel.querySelector('#spResetName')?.addEventListener('click', () => {
+    const m2 = { ...(get(KEYS.evTitle, {}) || {}) };
+    delete m2[ev.id];
+    set(KEYS.evTitle, m2); changed();
+    const fresh = allEvents().find(x => x.id === ev.id);
+    if (fresh) openSidePanel(fresh, _sidePanelTrigger);
   });
   panel.querySelectorAll('.sp-enp').forEach(b => b.addEventListener('click', () => {   // 縁: name → open that person's drawer on #/people
     closeSidePanel();
@@ -960,7 +985,9 @@ function srcline(s) {
   if (!arr.length) return '';
   const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
   if (arr.length <= 3) return `<p class="modal-src">${arr.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(host(u))}">source ${i + 1} ↗</a>`).join('')}</p>`;
-  // 4+ sources: compact numbered chips on ONE line (they used to be silently capped at 3)
-  return `<p class="modal-src src-many">${arr.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(host(u))}" aria-label="source ${i + 1} — ${esc(host(u))}">${i + 1}↗</a>`).join('')}</p>`;
+  // 4+ sources: compact HOST-labelled chips on ONE line (blind numbers made touch users tap
+  // blind — review #136; hostnames were the whole point of exposing more sources)
+  const short = (u) => { const h = host(u); const l = h.split('.')[0] || h; return l.length > 14 ? l.slice(0, 13) + '…' : l; };
+  return `<p class="modal-src src-many">${arr.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(host(u))}" aria-label="source ${i + 1} — ${esc(host(u))}">${esc(short(u))}↗</a>`).join('')}</p>`;
 }
 

@@ -22,3 +22,13 @@ before/after metrics, extensive review (critics on anything non-trivial).
       render-on-entry, preserving the single-path data flow.
 - [x] **EF4 — boot double-work audit.** *(audit found only the documented-intentional dashboard teaser dual-trigger, sub-ms — closed with no action)* mount + first jwh:route both trigger refresh paths
       (dashboard refresh ran twice pre-weather-dedup; sweep for remaining doubles).
+- [x] **EF5 — Lazy route-only pages (people / rooms / going).** *(boot eager assets/*.js 86→83; ~74KB JS moved off the boot path — people.js 36K + rooms.js 20K + lib/rooms.js 12K + going-page.js 8K, minus the ~2K helper. CDP-verified: 0 exceptions, all three paint on first visit (direct-load AND hash-change), the people-open race is proven (unfixed dispatch misses the listener; the shipped await-path opens the drawer). SW v306→v307.)* Three route-only pages
+      parse+mount at boot for pages the user may never open. New `lazyroutes.js` (`registerLazyRoute` +
+      `ensureRoute`) dynamic-imports each on first `#/people|#/rooms|#/going` entry, mirroring EF1.
+      Two gotchas handled: (a) first-paint — the module's own `jwh:route` "render on entry" listener
+      attaches AFTER the triggering event fired, and the `.is-active` toggle runs in a View-Transition
+      microtask, so first paint is keyed on `location.hash` (rooms) / an unconditional mount render
+      (people, going); (b) the calendar "縁 met here" jump (`jwh:people-open`) now `await`s
+      `ensureRoute('people')` before dispatching, or the listener isn't attached yet. `lib/people.js`
+      stays eager (dashboard `isBirthday`); `lib/rooms.js` defers with rooms. Deferred: map+plan bundle
+      (EF6 — Leaflet cold-start + `placesModel` DATA coupling need their own isolated verification).

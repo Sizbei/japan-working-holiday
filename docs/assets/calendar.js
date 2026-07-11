@@ -26,6 +26,7 @@ import { agendaHTML, wireAgenda } from './calendar-agenda.js';
 import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
 import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
+import { ensureRoute } from './lazyroutes.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
 
 let DATA = null;
@@ -842,7 +843,9 @@ export function openSidePanel(ev, trigger) {
   panel.querySelectorAll('.sp-enp').forEach(b => b.addEventListener('click', () => {   // 縁: name → open that person's drawer on #/people
     closeSidePanel();
     if (location.hash !== '#/people') location.hash = '#/people';
-    requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:people-open', { detail: { id: b.dataset.pid } })));
+    // EF5: #/people is lazy — await its mount before firing, or the listener isn't attached yet.
+    const pid = b.dataset.pid;
+    ensureRoute('people').then(() => requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:people-open', { detail: { id: pid } }))));
   }));
   // click-away + reposition-on-resize, bound ONCE at the document/window level. Desktop: the container
   // is pointer-events:none so a real click lands on an event (→ switch) or empty space (→ close);

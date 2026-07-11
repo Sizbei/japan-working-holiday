@@ -8,11 +8,8 @@ import { mountBudget } from './budget.js';
 import { mountPhraseDay } from './phraseday.js';
 import { mountCalendar, allEvents } from './calendar.js';
 import { mountGoogleSync } from './google-sync.js';
-import { mountGoingPage } from './going-page.js';
-import { mountPeople } from './people.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
-import { mountRooms } from './rooms.js';
 import { mountMap } from './map.js';
 import { mountPlan } from './plan.js';
 import { mountEmergency } from './emergency.js';
@@ -22,6 +19,7 @@ import { mountExpWeek } from './expweek.js';
 import { mountLang } from './lang.js';
 import { mountBackup } from './backup.js';
 import { initRouter } from './router.js';
+import { registerLazyRoute } from './lazyroutes.js';
 import { mountGestures } from './gestures.js';
 import { mountPalette } from './palette.js';
 import { mountGuide, applyHomeLayout, applyCompact } from './guide.js';
@@ -66,8 +64,6 @@ function boot() {
       safe(seedDayPlanJul4);               // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
       safe(() => mountCalendar(data, today));
       safe(() => mountGoogleSync(() => allEvents()));
-      safe(() => mountGoingPage());        // dedicated "Going To" page (#/going) — events marked ✓ Going
-      safe(() => mountPeople(data));       // 縁 People (#/people) — device-local trip PRM (data feeds the "met at…" event picker)
       safe(() => mountTracker(data));
       safe(() => renderContent(data, today));
       safe(() => mountPacking(data));      // packing page (#/packing) — categorized super-checklist
@@ -99,8 +95,12 @@ function boot() {
       };
       document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'grammar') loadGrammar(); });
       if (/^#\/?grammar$/.test(location.hash)) loadGrammar();
+      // EF5: route-only pages lazy-load on first entry (~76KB off the boot path). people feeds the
+      // calendar "縁 met here" jump (jwh:people-open) which awaits ensureRoute('people') in calendar.js.
+      safe(() => registerLazyRoute(['people'], () => import('./people.js').then(m => m.mountPeople(data))));
+      safe(() => registerLazyRoute(['rooms'],  () => import('./rooms.js').then(m => m.mountRooms(data))));
+      safe(() => registerLazyRoute(['going'],  () => import('./going-page.js').then(m => m.mountGoingPage())));
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
-      safe(() => mountRooms(data));        // share-room finder (#/rooms)
       safe(() => mountMap(data));          // map page (#/map)
       safe(() => mountPlan(data));         // day itinerary planner (#/plan)
       safe(() => mountEmergency(data));    // emergency quick-reference (#/emergency) — read-only, offline

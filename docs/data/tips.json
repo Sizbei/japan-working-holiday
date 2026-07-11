@@ -33,21 +33,18 @@
    "item": "File Moving-In Notification (転入届) + register address at ward office",
    "timing": "Within 14 days of settling in — HARD legal deadline",
    "action": "Bring passport + Residence Card. They print your address on the card's back and create your juminhyo. Request 2-3 juminhyo copies (~¥300 each) for the bank. Missing the window risks a fine up to ¥200,000 under the Immigration Control Act (and up to ¥50,000 under the Basic Resident Registration Act), and in serious cases revocation of your status of residence after 90 days. This unlocks pension, NHI, My Number, banking.",
-   "dueBy": "2026-07-14",
    "confidence": "high"
   },
   {
    "item": "Enroll in National Pension (国民年金, Category-1) + apply for exemption (免除)",
    "timing": "Same ward visit as address registration",
    "action": "Legally mandatory for 20-59 residents regardless of visa. Do NOT assume the Canada-Japan totalization treaty exempts you — that only covers employer-detached workers. With zero prior-year Japan income you almost certainly qualify for full/partial exemption; enroll AND file menjo in one motion to pause the ~¥17k/month bill while staying compliant.",
-   "dueBy": "2026-07-14",
    "confidence": "high"
   },
   {
    "item": "Enroll in National Health Insurance (国民健康保険 / NHI)",
    "timing": "Same ward visit (within 14 days of eligibility)",
    "action": "Mandatory for any 3+ month visa holder. Bring Residence Card + passport. Coverage backdates to your move-in date, so prompt enrollment avoids a retroactive lump bill.",
-   "dueBy": "2026-07-14",
    "confidence": "high"
   },
   {
@@ -424,7 +421,6 @@
    "category": "seasonal",
    "area": "Your local ward office, Tokyo",
    "cost": "NHI ~JPY 1,500–3,000/mo first year; National Pension ~JPY 17,000/mo (low-income exemption or post-departure lump-sum refund possible — keep receipts).",
-   "bookBy": "2026-07-14",
    "bookingNotes": "Bring passport + residence card + proof of address. Ask the ward office about pension EXEMPTION while on WHV (low income) and the lump-sum withdrawal for when you leave. File dattai ichijikin within 2 years of leaving Japan. 14-day rule and enrollment are fixed law; confirm pension lump-sum specifics at your ward office / JPS.",
    "why": "Not autumn itself, but a Canadian-WHV gotcha that frees up your autumn: register your address at the ward office within 14 days of arrival (residence card issued at NRT on entry). Same office: enroll in National Health Insurance (~JPY 1,500–3,000/mo year 1) and National Pension (mandatory for residents 20–59 staying 3+ months). Settle this in summer so autumn is free. As a Canadian leaving within ~12 months, plan a Pension Lump-sum Withdrawal (dattai ichijikin) after departure and keep tax/proof-of-funds records.",
    "sources": [
@@ -3458,7 +3454,6 @@
      "id": "chk-addr-reg",
      "task": "Talk to your ward office — register your address (転入届)",
      "window": "within 14 days of settling into your address",
-     "dueBy": "2026-07-14",
      "kind": "legal",
      "note": "File your moving-in notification (転入届 / 住民登録) at your Tokyo ward or city office once you have a fixed address. Bring passport + Residence Card; they print your address on the back of the card on the spot and create your resident record (juminhyo). While there, grab a few Jūminhyō copies (~¥300 each) — the bank will want one; missing the 14-day window risks a fine up to ¥50,000. This is the legal gateway that unlocks pension, health insurance, My Number, and banking — do it first. Hard 14-day legal deadline under the Resident Registration Act; late filing can trigger penalties. The clock runs from when you move into your address, not from landing — but with a 6/30 arrival, plan for the 7/14 outer limit. Bring your lease/address details. Do pension + NHI + My-Number registration in the SAME visit. While you're there, knock out pension + health insurance + the exemption in the same visit — they unlock in the 'Needs Residence' section below.",
      "sources": [

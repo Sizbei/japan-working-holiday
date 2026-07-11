@@ -10,6 +10,10 @@ export const STRINGS = {
   brand: '日本での一年',
 
   'nav.dashboard': 'ダッシュボード',
+  'nav.phrases': '言葉',
+  'nav.grammar': '文法',
+  'nav.packing': '荷造り',
+  'nav.deadlines': '締め切り',
   'nav.calendar': 'カレンダー',
   'nav.going': '参加予定',
   'nav.checklist': 'チェックリスト',

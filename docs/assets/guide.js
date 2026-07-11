@@ -4,7 +4,7 @@
 // settings persist to localStorage and apply via data-attributes on <html>.
 
 import { $, $$, esc } from './lib/dom.js';
-import { KEYS, get, getRaw, setRaw } from './lib/store.js';
+import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/homelayout.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { usageSummary } from './lib/usage.js';
@@ -58,7 +58,36 @@ export function applyHomeLayout() {
   document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
 }
 
+// ---- optional nav pages (owner 2026-07-11: "can't see the phrases page — easy toggle") ----
+// Hidden deep-linked routes the owner can surface in the nav. Order = insertion order.
+const NAV_OPT = [
+  { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },
+  { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
+  { r: 'packing', label: 'Packing', i18n: 'nav.packing' },
+  { r: 'deadlines', label: 'Deadlines', i18n: 'nav.deadlines' },
+];
+function navShown() {
+  const v = get(KEYS.navShow, null);
+  return Array.isArray(v) ? v.filter(r => NAV_OPT.some(o => o.r === r)) : ['phrases'];   // default restores Phrases
+}
+export function applyNavShow() {
+  const nav = document.getElementById('routeNav');
+  if (!nav) return;
+  const shown = navShown();
+  NAV_OPT.forEach(o => {
+    let a = nav.querySelector(`a[data-route="${o.r}"]`);
+    if (shown.includes(o.r) && !a) {
+      a = document.createElement('a');
+      a.href = '#/' + o.r; a.dataset.route = o.r; a.dataset.i18n = o.i18n; a.textContent = o.label;
+      const before = nav.querySelector('.nav-drawer-foot');
+      nav.insertBefore(a, before || null);
+      if (location.hash.replace(/^#\//, '') === o.r) a.setAttribute('aria-current', 'page');   // router convention (it re-runs per navigation)
+    } else if (!shown.includes(o.r) && a) a.remove();
+  });
+}
+
 export function mountGuide() {
+  applyNavShow();
   // apply persisted reduce-motion + home layout on boot (theme + arcade are restored by their own modules)
   if (getRaw(KEYS.reduceMotion, '') === 'on') document.documentElement.dataset.reduceMotion = 'on';
   if (getRaw(KEYS.mapDark, '') === 'on') document.documentElement.dataset.mapDark = 'on';
@@ -159,6 +188,8 @@ function openGuide() {
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
       ${row('setCompact', 'Compact pages', 'Small titles, more content — the calendar fits one screen', compact)}
       ${row('setMapDark', 'Dark map tiles', 'Night-mode map when dark theme is on (opt-in)', mapDark)}
+      <p class="set-group">Pages in the nav <span class="set-sub">deep links keep working either way; swipe order is unchanged</span></p>
+      ${NAV_OPT.map(o => row('setNav-' + o.r, o.label, 'Show ' + o.label + ' in the top navigation', navShown().includes(o.r))).join('')}
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
     </section>
@@ -191,6 +222,15 @@ function openGuide() {
     applyCompact();
     setSwitch('setCompact', !on);
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // active views re-render so compact-aware bits (month chip cap) flip instantly
+  });
+  NAV_OPT.forEach(o => {
+    $('#setNav-' + o.r, ov)?.addEventListener('click', () => {
+      const cur = navShown();
+      const on = cur.includes(o.r);
+      set(KEYS.navShow, on ? cur.filter(x => x !== o.r) : [...cur, o.r]);
+      applyNavShow();
+      setSwitch('setNav-' + o.r, !on);
+    });
   });
   $('#setMapDark', ov)?.addEventListener('click', () => {
     const on = document.documentElement.dataset.mapDark === 'on';

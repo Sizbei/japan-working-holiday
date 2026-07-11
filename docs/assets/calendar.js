@@ -864,7 +864,11 @@ export function openSidePanel(ev, trigger) {
   panel.querySelector('#spGoing')?.addEventListener('click', () => {
     const id = ev.id;
     toggleGoingEv(ev);                                                            // synchronous jwh:data-changed → the calendar re-renders → the trigger node is replaced
-    const fresh = document.querySelector(`#calView [data-ev="${id}"], #calView [data-id="${id}"]`) || _sidePanelTrigger;   // re-anchor to the NEW element (else the popover jumped to the corner)
+    // re-anchor to the NEW element (else the popover jumped to the corner) — prefer the SAME day's
+    // chip: spans now chip every covered day, so first-match would teleport the card to the span start
+    const day = _sidePanelTrigger?.closest?.('[data-day]')?.dataset.day;
+    const fresh = (day && document.querySelector(`#calView [data-day="${day}"] [data-ev="${id}"]`))
+      || document.querySelector(`#calView [data-ev="${id}"], #calView [data-id="${id}"]`) || _sidePanelTrigger;
     openSidePanel(ev, fresh);
   });
   if (isBaked) {

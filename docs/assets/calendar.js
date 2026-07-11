@@ -78,9 +78,11 @@ export function allEvents() {
   const copied = new Set(user.map(e => e.copyOf).filter(Boolean));   // "Copy to my events" takes over the baked original — hide it to avoid a duplicate chip
   const areaOv = get(KEYS.evArea, {}) || {};   // user-edited locations (Going page ✎) — works for baked AND user events
   const hidden = new Set(get(KEYS.evHidden, []) || []);   // baked events the user deleted (tips.json itself is immutable)
+  const titleOv = get(KEYS.evTitle, {}) || {};   // dblclick renames (side panel) — baked events only; user events edit their own store
   _evCache = [...bakedEvents().filter(e => !copied.has(e.id) && !hidden.has(e.id)), ...user]
     .filter(e => parseISO(e.date))
-    .map(e => (typeof areaOv[e.id] === 'string' && areaOv[e.id]) ? { ...e, area: areaOv[e.id] } : e);
+    .map(e => (typeof areaOv[e.id] === 'string' && areaOv[e.id]) ? { ...e, area: areaOv[e.id] } : e)
+    .map(e => (e.source === 'baked' && typeof titleOv[e.id] === 'string' && titleOv[e.id]) ? { ...e, title: titleOv[e.id], renamed: true } : e);
   return _evCache;
 }
 // Invalidate the memo on ANY mutation, order-independently: this listener is registered at
@@ -685,7 +687,7 @@ function positionSidePanel(panel) {
   if (!card) return;
   if (!window.matchMedia('(min-width: 700px)').matches) { card.style.left = card.style.top = card.style.width = ''; return; }
   const trig = _sidePanelTrigger;
-  const W = 320, gap = 10, m = 8;
+  const W = 380, gap = 10, m = 8;   // owner: notes were cramped — a little longer
   const vw = window.innerWidth, vh = window.innerHeight;
   const sx = window.scrollX, sy = window.scrollY;                    // the card is DOCUMENT-anchored → add scroll so it scrolls WITH the page (owner: "fixed in place", not floating in the viewport)
   card.style.width = W + 'px';
@@ -748,12 +750,13 @@ export function openSidePanel(ev, trigger) {
   panel.innerHTML = `
     <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
     <div class="sp-inner" role="dialog" aria-label="${esc(ev.title)}" style="--cat:var(--c-${safeCat(ev)}-ink)">
-      <div class="sp-band">
+      <div class="sp-band${(/^https:\/\//.test(ev.image || '')) ? ' has-img' : ''}">
+        ${(/^https:\/\//.test(ev.image || '')) ? `<div class="sp-img" aria-hidden="true" style="background-image:url('${esc(ev.image)}')"></div>` : ''}
         <div class="sp-cattop">
           <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(ev.category || 'event')}</span>
           <button class="sp-close" id="spClose" aria-label="Close">✕</button>
         </div>
-        <h2 class="sp-title">${esc(ev.title)}</h2>
+        <h2 class="sp-title" title="Double-click to rename">${esc(ev.title)}</h2>
         ${cdFull ? `<span class="sp-cd">${esc(cdFull)}</span>` : ''}
       </div>
       <div class="sp-body" tabindex="0">
@@ -778,6 +781,39 @@ export function openSidePanel(ev, trigger) {
 
   // wire actions
   panel.querySelector('#spClose')?.addEventListener('click', closeSidePanel);
+  // dblclick the title → inline rename. User events patch their own store; baked events go
+  // through the evTitle override map (the evArea pattern) so tips.json stays immutable.
+  panel.querySelector('.sp-title')?.addEventListener('dblclick', () => {
+    const titleEl = panel.querySelector('.sp-title');
+    if (!titleEl) return;
+    const inp = document.createElement('input');
+    inp.className = 'sp-title-in'; inp.value = ev.title; inp.maxLength = 120;
+    inp.setAttribute('aria-label', 'Event name');
+    titleEl.replaceWith(inp); inp.focus(); inp.select();
+    let done = false;
+    const commit = (save) => {
+      if (done) return; done = true;
+      const v = inp.value.trim();
+      if (save && v && v !== ev.title) {
+        if (ev.source === 'user') saveUser(loadUser().map(x => x.id === ev.id ? { ...x, title: v } : x));
+        else {
+          const m = { ...(get(KEYS.evTitle, {}) || {}) };
+          const orig = (DATA.calendar || []).find(x => x.id === ev.id);
+          if (orig && orig.title === v) delete m[ev.id]; else m[ev.id] = v;   // typing the researched name back clears the override
+          set(KEYS.evTitle, m); changed();
+        }
+        const fresh = allEvents().find(x => x.id === ev.id);
+        if (fresh) { openSidePanel(fresh, _sidePanelTrigger); return; }
+      }
+      inp.replaceWith(titleEl);
+    };
+    inp.addEventListener('keydown', (e) => {
+      e.stopPropagation();                                   // the panel's Tab trap + Esc-close listen in capture
+      if (e.key === 'Enter') commit(true);
+      if (e.key === 'Escape') commit(false);
+    });
+    inp.addEventListener('blur', () => commit(true));
+  });
   panel.querySelectorAll('.sp-enp').forEach(b => b.addEventListener('click', () => {   // 縁: name → open that person's drawer on #/people
     closeSidePanel();
     if (location.hash !== '#/people') location.hash = '#/people';
@@ -825,7 +861,10 @@ export function openSidePanel(ev, trigger) {
   // role=dialog but NOT aria-modal — the background stays live (click another event to switch), so we
   // don't claim modality to AT; we just keep Tab from wandering behind an open popover.
   const onKey = (e) => {
-    if (e.key === 'Escape') { e.stopPropagation(); closeSidePanel(); return; }
+    if (e.key === 'Escape') {
+      if (e.target?.classList?.contains('sp-title-in')) return;   // a rename is active — its own handler cancels; don't close the panel over it
+      e.stopPropagation(); closeSidePanel(); return;
+    }
     if (e.key !== 'Tab') return;
     const f = [...panel.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el => !el.disabled && el.offsetParent !== null);
     if (!f.length) return;
@@ -918,6 +957,10 @@ export function getEventMenu(node) {
 }
 function srcline(s) {
   const arr = (s || []).filter(u => /^https?:\/\//i.test(u));   // only real web URLs into href (no javascript:)
-  return arr.length ? `<p class="modal-src">${arr.slice(0, 3).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">source ${i + 1} ↗</a>`).join('')}</p>` : '';
+  if (!arr.length) return '';
+  const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+  if (arr.length <= 3) return `<p class="modal-src">${arr.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(host(u))}">source ${i + 1} ↗</a>`).join('')}</p>`;
+  // 4+ sources: compact numbered chips on ONE line (they used to be silently capped at 3)
+  return `<p class="modal-src src-many">${arr.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(host(u))}" aria-label="source ${i + 1} — ${esc(host(u))}">${i + 1}↗</a>`).join('')}</p>`;
 }
 

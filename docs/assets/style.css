@@ -2925,7 +2925,15 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .cal-sidepanel.is-open .sp-inner{ opacity: 1; transform: none; }
 
 /* header band — category-tinted (--cat is set inline per event on .sp-inner) */
-.sp-band{ padding: var(--s4) var(--s4) var(--s3); background: color-mix(in srgb, var(--cat) 8%, var(--bg-soft)); border-bottom: 1px solid var(--line); }
+.sp-band{ position: relative; overflow: hidden; padding: var(--s4) var(--s4) var(--s3); background: color-mix(in srgb, var(--cat) 8%, var(--bg-soft)); border-bottom: 1px solid var(--line); }
+/* event image backdrop (baked `image` field — Pokémon days etc.): translucent art behind the
+   band text. Low opacity + a bg-soft gradient floor keep the serif title readable over any art;
+   offline it simply doesn't paint. */
+.sp-img{ position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .38;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 96%); mask-image: linear-gradient(to bottom, #000, transparent 96%); }
+.sp-band.has-img::after{ content: ''; position: absolute; inset: 0; background: linear-gradient(to right, color-mix(in srgb, var(--bg-soft) 78%, transparent), transparent 70%); }
+.sp-band > *:not(.sp-img){ position: relative; z-index: 1; }   /* the img layer must stay absolute — same-specificity later rule was clobbering it */
+.sp-band.has-img .sp-title{ text-shadow: 0 1px 6px color-mix(in srgb, var(--bg-soft) 85%, transparent); }
 .sp-cattop{ display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: 8px; }
 .sp-cat{ display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-weight: 700; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--cat); }
 .sp-dot{ width: 8px; height: 8px; border-radius: 50%; background: var(--cat); flex: none; }
@@ -3395,7 +3403,7 @@ ruby > rt {
 .sp-row{ display:flex; align-items:center; gap:.6rem; padding:.3rem 0; border-bottom:1px dashed var(--line); font-size:.85rem; }
 .sp-row:last-child{ border-bottom:none; }
 .sp-date{ font-family: var(--mono); font-size:.7rem; color: var(--ink-faint); flex:none; width:3.4rem; }
-.sp-note{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sp-row .sp-note{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }   /* scoped: bare .sp-note clobbered the calendar side panel's note into one ellipsized line */
 .sp-amt{ font-family: var(--mono); font-weight:700; }
 .sp-del{ border:none; background:none; color: var(--ink-faint); cursor:pointer; font-size:.7rem; padding:2px 6px; border-radius:6px; }
 .sp-del:hover{ color: var(--crimson, #bc002d); }
@@ -3744,3 +3752,14 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 /* Dark map tiles — OPT-IN (Guide setting), dark theme only. The standard OSM invert trick:
    tiles only; markers, popups and controls stay untouched. */
 html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue-rotate(180deg) brightness(.88) contrast(.92) saturate(.65); }
+
+/* ===== event panel polish (owner asks, 2026-07-10) ===== */
+/* 4+ sources: compact numbered chips, ONE line (they were silently capped at 3 before) */
+.sp-body .modal-src.src-many{ flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.sp-body .modal-src.src-many::-webkit-scrollbar{ display: none; }
+.sp-body .modal-src.src-many a{ flex: none; padding: 3px 8px; }
+/* dblclick rename input — swaps in for .sp-title, same type scale */
+.sp-title-in{ font-family: var(--serif); font-weight: 600; font-size: 1.4rem; line-height: 1.16; letter-spacing: -.01em;
+  color: var(--ink); background: var(--bg-elevated); border: 1px solid var(--indigo); border-radius: 8px;
+  padding: .05em .3em; margin: 0; width: 100%; min-width: 0; }
+.sp-title{ cursor: text; }

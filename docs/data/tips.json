@@ -622,7 +622,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "medium"
+   "confidence": "medium",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-pokemon-go-10th-anniversary",
@@ -635,7 +636,8 @@
    "sources": [
     "https://pokemongo.com/news/10th-anniversary-party"
    ],
-   "confidence": "high"
+   "confidence": "high",
+   "image": "https://lh3.googleusercontent.com/dX_Wg6XO3f7fSTWMorQrEa367IKhPrDo0FFTO7VD3dEbw0JJlt4qfIPMMpSli5ndDBtpBDX69udZvVaH_dCgqAX4jG7YqMiuXeJjei7Dyr6N"
   },
   {
    "id": "ev-plan-recover",
@@ -701,7 +703,8 @@
    "sources": [
     "https://www.pokemoncenter-online.com/cafe/"
    ],
-   "confidence": "medium"
+   "confidence": "medium",
+   "image": "https://www.pokemoncenter-online.com/on/demandware.static/-/Sites-POL-Library/default/dw2264f023/images/og_img/OGP_banner_B.jpg"
   },
   {
    "id": "ev-forestlimit-hatagaya-experimental-nights",
@@ -774,7 +777,8 @@
    "sources": [
     "https://leekduck.com/events/pokemon-go-fest-2026-global/"
    ],
-   "confidence": "high"
+   "confidence": "high",
+   "image": "https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-07-11-pokemon-go-fest-2026-global/pokemon-go-fest-2026-global.jpg?v2"
   },
   {
    "id": "ev-tomioka-hachimangu-antique-market-monzen-nakacho",
@@ -1216,7 +1220,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "medium"
+   "confidence": "medium",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-tokyo-koenji-awa-odori-67th",
@@ -1338,7 +1343,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "mus-ffkt-2026-formerly-taicoclub",
@@ -1448,7 +1454,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-yomiuriland-jewellumination-winter-illuminati",
@@ -1857,7 +1864,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev26-meiji-jingu-gaien-ginkgo-festival-avenue",
@@ -2002,7 +2010,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-comiket-c109-winter-comic-market-special-3-da",
@@ -2217,7 +2226,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-onsen-day-trip-option-hakone-kusatsu-nikko-sn",
@@ -2362,7 +2372,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-pokemon-go-tour-2027",
@@ -2375,7 +2386,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-pokemon-day-2027",
@@ -2443,7 +2455,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-tokyo-first-bloom-kaika-sakura-season-opens",
@@ -2622,7 +2635,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-golden-week-2027-peak-domestic-travel-price-c",
@@ -2715,7 +2729,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev-sanja-matsuri-asakusa-s-wild-three-day-mikosh",
@@ -2811,7 +2826,8 @@
    "sources": [
     "https://pokemongo.com/events"
    ],
-   "confidence": "low"
+   "confidence": "low",
+   "image": "https://lh3.googleusercontent.com/IPj1UZVD_Pu1txMymYI-u8ZIrHhwcZ4jrP6tR0Z7_skB67a4bYd6JtF7aMorC_D0cxUQjPmH2bMD698we75qYRdyMJuC5Gls=s0"
   },
   {
    "id": "ev26-shumi-no-bungu-matsuri",

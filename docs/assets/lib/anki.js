@@ -108,6 +108,25 @@ export function detectColumns(rows) {
  * Parse a whole-deck export → { cards, cols, delim }. `mapping` overrides detected indices.
  * Card: { id, w, r, m, s, sm }. Throws on unusable input (caller shows the message).
  */
+// rows-of-fields → cleaned cards. Shared by the TSV path (parseAnkiExport) and the .apkg
+// path (sqlite notes.flds split on \x1f). srcIdx points back at the ORIGINAL row so the
+// apkg importer can look up [sound:]/[img] refs in the raw fields after column cleaning.
+export function cardsFromRows(rows, mapping) {
+  const cols = { ...detectColumns(rows.slice(0, 50)), ...(mapping || {}) };
+  if (cols.expression < 0 && cols.meaning < 0) throw new Error('could not detect columns');
+  const cards = rows.map((r, i) => ({
+    id: 'a' + i,
+    srcIdx: i,
+    w: cleanField(r[cols.expression] ?? ''),
+    r: cols.reading >= 0 ? cleanField(r[cols.reading] ?? '') : '',
+    m: cols.meaning >= 0 ? cleanField(r[cols.meaning] ?? '') : '',
+    s: cols.sentence >= 0 ? cleanField(r[cols.sentence] ?? '') : '',
+    sm: cols.sentenceMeaning >= 0 ? cleanField(r[cols.sentenceMeaning] ?? '') : '',
+  })).filter(c => c.w || c.m);
+  if (!cards.length) throw new Error('no usable cards');
+  return { cards, cols };
+}
+
 export function parseAnkiExport(text, mapping) {
   const raw = String(text ?? '').replace(/\r\n?/g, '\n').split('\n');
   const header = {};
@@ -119,17 +138,7 @@ export function parseAnkiExport(text, mapping) {
   if (!lines.length) throw new Error('no data rows');
   const delim = sniffDelim(lines, header);
   const rows = lines.map(l => l.split(delim));
-  const cols = { ...detectColumns(rows.slice(0, 50)), ...(mapping || {}) };
-  if (cols.expression < 0 && cols.meaning < 0) throw new Error('could not detect columns');
-  const cards = rows.map((r, i) => ({
-    id: 'a' + i,
-    w: cleanField(r[cols.expression] ?? ''),
-    r: cols.reading >= 0 ? cleanField(r[cols.reading] ?? '') : '',
-    m: cols.meaning >= 0 ? cleanField(r[cols.meaning] ?? '') : '',
-    s: cols.sentence >= 0 ? cleanField(r[cols.sentence] ?? '') : '',
-    sm: cols.sentenceMeaning >= 0 ? cleanField(r[cols.sentenceMeaning] ?? '') : '',
-  })).filter(c => c.w || c.m);
-  if (!cards.length) throw new Error('no usable cards');
+  const { cards, cols } = cardsFromRows(rows, mapping);
   return { cards, cols, delim };
 }
 

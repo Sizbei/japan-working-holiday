@@ -8,7 +8,8 @@
 import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
-import { searchPoints, readingOf } from './lib/grammar.js';
+import { searchPoints, readingOf, shakyRows } from './lib/grammar.js';
+import { toAnkiTSV } from './lib/anki.js';
 import { lookupWord } from './lang.js';          // shared Jotoba lookup (exported); GLOSSARY is NOT re-exported —
 import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
 
@@ -44,6 +45,7 @@ export function mountGrammar() {
       </div>
       <button type="button" class="g-furi" id="gFuri"></button>
       <button type="button" class="g-shaky-f" id="gShakyF" aria-pressed="false" title="Show only ◆ shaky points">◆ <span id="gShakyN">0</span></button>
+      <button type="button" class="g-export" id="gExport" disabled title="Export every ◆ point as an Anki TSV file">⬇ ◆→Anki</button>
       <input type="search" class="g-search" id="gSearch" placeholder="Search 〜てから / maeni / before…" aria-label="Search grammar points (Japanese, romaji or English)">
     </div>
     <div class="g-prog" id="gProg" hidden>
@@ -125,6 +127,7 @@ function wireBar(root) {
     clearTimeout(deb);
     deb = setTimeout(() => { state.q = e.target.value.trim(); state.shown = CHUNK; renderList(); }, 150);
   });
+  $('#gExport').addEventListener('click', exportShaky);
   $('#gShakyF').addEventListener('click', () => {
     state.shakyOnly = !state.shakyOnly;
     $('#gShakyF').setAttribute('aria-pressed', String(state.shakyOnly));
@@ -456,10 +459,26 @@ function updateProgressUI() {
   const pts = cache[state.level] || [];
   const nShaky = pts.filter(p => prog.shaky.includes(p.id)).length;
   const nEl = $('#gShakyN'); if (nEl) nEl.textContent = String(nShaky);
+  const exp = $('#gExport'); if (exp) exp.disabled = !prog.shaky.length;   // ANY level's flags enable it
   const wrap = $('#gProg'); if (!wrap) return;
   if (!pts.length || state.q) { wrap.hidden = true; return; }
   const nDone = pts.filter(p => prog.done.includes(p.id)).length;
   wrap.hidden = false;
   const t = $('#gProgT'); if (t) t.textContent = `${nDone}/${pts.length} studied`;
   const f = $('#gProgFill'); if (f) f.style.width = pts.length ? `${Math.round(nDone / pts.length * 100)}%` : '0%';
+}
+
+// ◆ → Anki: fetch every level (flags may point at levels not browsed yet), build the
+// TSV via the shared lib/anki.js format, download. Same flow as the phrases export.
+async function exportShaky() {
+  if (!prog.shaky.length) return;
+  await Promise.all(LEVELS.filter(l => FILES[l] && !cache[l]).map(l => load(l, { render: false })));
+  const rows = shakyRows(cache, prog.shaky);
+  if (!rows.length) return;
+  const blob = new Blob([toAnkiTSV(rows)], { type: 'text/tab-separated-values' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'jlpt-grammar-shaky.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  announce(`${rows.length} shaky grammar points exported for Anki`);
 }

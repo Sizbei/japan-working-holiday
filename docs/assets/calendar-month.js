@@ -14,7 +14,8 @@ const MONTH_SINGLES = 4;      // rows per cell — all chips, or 3 chips + "+N m
 // ~60 weeks, cheap enough to render whole; no virtual windowing). Month-separator rows sit above
 // the week containing each 1st; the coordinator watches scroll and updates the label / mini-nav /
 // cockpit to the month at the top of the viewport. Multi-day events chip on every covered day,
-// Notion-style ("‹" when continuing from an earlier day). Evergreen spans stay in the Ongoing strip.
+// Notion-style ("‹" when continuing from an earlier day). Evergreen spans are dropped from the grid
+// (see the filter below) and reachable via the Find/add search popover + agenda, not a strip.
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 
@@ -38,10 +39,9 @@ export function monthHTML() {
   const rangeEnd = (() => { const dow = new Date(lastDay + 'T00:00:00Z').getUTCDay(); return addDaysISO(lastDay, 6 - dow); })();
 
   const evs = allEvents().filter(visible);
-  const ongoing = evs.filter(isEvergreen);
-  const strip = ongoing.length ? `<div class="cal-ongoing"><div class="cal-ong-lab">☀ Ongoing this season <span>— open all month, tap for details</span></div><div class="cal-ong-pills">`
-    + ongoing.map(e => `<button class="cal-opill cat-${esc(catOf(e))}" data-ev="${esc(e.id)}" title="${esc(e.title)}"><span class="cal-ong-dot" aria-hidden="true"></span>${esc(e.title)}</button>`).join('')
-    + `</div></div>` : '';
+  // evergreen (season-long / 'seasonal') events stay OUT of the day grid (they'd flood every cell).
+  // The "Ongoing this season" strip that used to surface them was removed for vertical space
+  // (owner) — they remain reachable via the Find/add search popover and the agenda view.
 
   // multi-day (non-evergreen): a chip on EVERY covered day, Notion-style ("‹" = continuing from an
   // earlier day) — so a mid-stay day counts the span toward the chip cap and "+N more" like Notion's bars
@@ -111,7 +111,7 @@ export function monthHTML() {
       ${chips}${more}</div>`;
     day = addDaysISO(day, 1); i++;
   }
-  return `${strip}<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid cal-endless">${cells}</div>`;
+  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid cal-endless">${cells}</div>`;
 }
 
 // ---- endless-scroll reactions ----
@@ -249,10 +249,6 @@ export function wireCells() {
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
-  // "Ongoing this season" strip pills → popover
-  $$('#calView .cal-opill[data-ev]').forEach(b => b.addEventListener('click', () => {
-    const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
-  }));
 }
 // Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
 // that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.

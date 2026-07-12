@@ -13,7 +13,9 @@
 // (#/main …) hashes fall back to the dashboard, and boot's full parseRoute corrects them.
 (function () {
   document.documentElement.classList.add('js-router');
-  var h = (location.hash || '').replace(/^#\/?/, '').replace(/[?&].*$/, '');
+  // Match router.js parseRoute exactly (it does NOT strip a query): only an exact `#/<route>`
+  // whose view exists activates; anything else falls back to dashboard, same as parseRoute.
+  var h = (location.hash || '').replace(/^#\/?/, '');
   var view = h && document.getElementById('view-' + h);
   if (!view) { h = 'dashboard'; view = document.getElementById('view-dashboard'); }
   if (!view) return;   // views not parsed yet (head run) — js-router is still applied above

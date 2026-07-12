@@ -314,6 +314,20 @@
  ],
  "calendar": [
   {
+   "id": "ev26-dinner-motenashi-kuroki",
+   "title": "🍜 Dinner: Motenashi Kuroki (饗 くろ㐂) — post-Kamakura",
+   "date": "2026-07-13",
+   "time": "18:30",
+   "category": "food",
+   "area": "Asakusabashi (ROJI Asakusabashi 1F, 1-min from the hostel)",
+   "bookingNotes": "Top-100 shio/shoyu ramen, Tabelog 3.91, ~¥1,100–1,500, ticket machine, no reservations. Dinner slot 18:00–20:30 weekdays but hours shift — check their X/SNS before queueing. Backup: Kikanbo (Kanda, karashibi spice-miso, ~¥1,200, 2 stops).",
+   "confidence": "high",
+   "sources": [
+    "https://tabelog.com/en/tokyo/A1311/A131103/13290780/",
+    "https://motenashi-kuroki.com/company.html"
+   ]
+  },
+  {
    "id": "ev-forest-beer-garden-mori-no-beer-garden-meiji-",
    "title": "Forest Beer Garden (Mori no Beer Garden), Meiji Jingu Gaien",
    "date": "2026-04-22",

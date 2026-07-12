@@ -275,8 +275,8 @@ function wireCmdPop() {
   if (!btn || !pop || btn.dataset.wired) return;
   btn.dataset.wired = '1';
   const place = () => {
-    const r = btn.getBoundingClientRect(), w = pop.offsetWidth || 340;
-    pop.style.top = (r.bottom + 6) + 'px';
+    const r = btn.getBoundingClientRect(), w = pop.offsetWidth || 340, h = pop.offsetHeight || 0;
+    pop.style.top = Math.max(8, Math.min(r.bottom + 6, window.innerHeight - h - 8)) + 'px';   // below the button, but never past the viewport bottom (short screens)
     pop.style.left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8)) + 'px';   // right-align to the button, clamp to the viewport
   };
   const open = () => { pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); place(); $('#calQuickInput')?.focus({ preventScroll: true }); };

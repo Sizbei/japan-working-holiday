@@ -62,12 +62,12 @@ function renderImport(preview) {
       <h3 class="ank-h">Core deck — rapid refresher</h3>
       <p class="ank-sub">Blast through your Anki cards with the answer already showing — a fast refresher, not a review session. Your export stays on this device.</p>
     </div>
-    <div class="ank-drop" id="ankDrop" tabindex="0" role="button" aria-label="Drop an Anki export file, or choose a file">
+    <div class="ank-drop" id="ankDrop" tabindex="0" role="button" aria-label="Drop an Anki .apkg export file, or choose a file">
       <span class="ank-drop-ic" aria-hidden="true">⬇</span>
-      <span class="ank-drop-t">Drop your Anki export — <b>.apkg</b> (full deck, keeps audio/images) or <b>Notes in Plain Text (.txt)</b>. For .apkg, tick <b>“Support older Anki versions”</b> when exporting.</span>
+      <span class="ank-drop-t">Drop your Anki <b>.apkg</b> export (full deck — keeps audio/images). When exporting, tick <b>“Support older Anki versions”</b>.</span>
       <span class="ank-drop-or">or</span>
       <button type="button" class="ank-btn" id="ankPick">Choose a file</button>
-      <input type="file" id="ankFile" accept=".txt,.tsv,.csv,.apkg" hidden>
+      <input type="file" id="ankFile" accept=".apkg" hidden>
     </div>
     <div class="ank-err" id="ankErr" role="alert" hidden></div>
     <div class="ank-preview" id="ankPreview" hidden></div>`;
@@ -96,10 +96,7 @@ function showErr(msg) {
 function readFile(f) {
   showErr('');
   if (/\.apkg$/i.test(f.name || '')) { importApkg(f); return; }
-  const rd = new FileReader();
-  rd.onerror = () => showErr('Could not read that file — try exporting again.');
-  rd.onload = () => parseText(String(rd.result || ''));
-  rd.readAsText(f);
+  showErr('Please choose an Anki .apkg export — in Anki: File → Export → Anki Deck Package, and tick “Support older Anki versions”.');
 }
 
 // ---- .apkg import: unzip → minimal sqlite read of notes.flds → the SAME preview/remap
@@ -107,7 +104,12 @@ function readFile(f) {
 // zstd-only exports (collection.anki21b, Anki 2.1.50+ default) can't be read without a
 // zstd decoder — the error tells the owner to re-export with the legacy checkbox.
 function colIdx(createSql, name) {
-  const inner = /\(([\s\S]*)\)/.exec(createSql || '');
+  // Strip SQL comments FIRST. Anki's real `notes` schema annotates every column with a `/* N */`
+  // index comment; because that comment sits AFTER the column's comma, a naive comma-split glues
+  // it onto the NEXT column's name (`flds` parses as `/*`), so the field is never found → an empty
+  // import that silently fails. Drop /* … */ and -- … comments before splitting.
+  const sql = String(createSql || '').replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ');
+  const inner = /\(([\s\S]*)\)/.exec(sql);
   if (!inner) return -1;
   return inner[1].split(',').map(s => s.trim().split(/\s+/)[0].replace(/["'\u0060\[\]]/g, '')).indexOf(name);
 }

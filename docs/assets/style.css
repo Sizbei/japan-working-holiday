@@ -2816,7 +2816,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* continuation chips (mid-span days): quieter fill so daily one-offs pop — the span already
    announced itself (title + "→ end") on its start day */
 .cal-chip.cont{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 16%, var(--bg-elevated)); }
-/* per-category: set --chip-cat so border-left + dot both pick up the colour */
+/* per-category: set --chip-cat so the chip fill, legend swatch and ongoing pills pick up the colour */
 :is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
 :is(.cal-chip,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }
 :is(.cal-chip,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination); }

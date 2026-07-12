@@ -18,6 +18,7 @@
   // in the after-body run — seat the nav inside the topbar the way relocateNav will.
   // applyCompact() at boot re-applies the SAME state idempotently (and owns resize/fade wiring).
   var compact = '';
+  // key literal duplicated on purpose (classic script, can't import) — keep in sync with KEYS.compact in lib/store.js
   try { compact = localStorage.getItem('jwh-compact-v1') === 'on' ? 'on' : ''; } catch (e) { /* storage blocked — boot's applyCompact settles it */ }
   document.documentElement.dataset.compact = compact;
   if (compact && document.body && window.matchMedia('(min-width: 821px)').matches) {

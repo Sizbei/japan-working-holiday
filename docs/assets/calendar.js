@@ -155,6 +155,7 @@ export function mountCalendar(data, today) {
   weekAnchor = TODAY;
   wireToolbar();
   wireQuickAdd();
+  wireCmdPop();
   buildCalendars();
   applySidebar();   // apply the persisted collapsed/expanded state to the layout + toggle button
   render();
@@ -264,6 +265,29 @@ function wireQuickAdd() {
     input.focus({ preventScroll: true });                                       // a bare focus() yanked the endless grid back to the top
     requestAnimationFrame(() => scrollToDay(p.date, !prefersReducedMotion()));  // land on the new event
   });
+}
+// Quick-add + search live in a popover (owner: keep the toolbar row clear for calendar space).
+// The inputs keep their IDs, so wireQuickAdd()/mountEventSearch() are untouched — this only owns
+// open/close/placement. Opened by the 🔍 toolbar button or the `f` key (‘/’ is the global palette).
+let _openCmdPop = null;
+function wireCmdPop() {
+  const btn = $('#calCmd'), pop = $('#calCmdPop');
+  if (!btn || !pop || btn.dataset.wired) return;
+  btn.dataset.wired = '1';
+  const place = () => {
+    const r = btn.getBoundingClientRect(), w = pop.offsetWidth || 340, h = pop.offsetHeight || 0;
+    pop.style.top = Math.max(8, Math.min(r.bottom + 6, window.innerHeight - h - 8)) + 'px';   // below the button, but never past the viewport bottom (short screens)
+    pop.style.left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8)) + 'px';   // right-align to the button, clamp to the viewport
+  };
+  const open = () => { pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); place(); $('#calQuickInput')?.focus({ preventScroll: true }); };
+  const close = (refocus) => { if (pop.hidden) return; pop.hidden = true; btn.setAttribute('aria-expanded', 'false'); if (refocus) btn.focus({ preventScroll: true }); };
+  btn.addEventListener('click', () => pop.hidden ? open() : close(true));
+  pop.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(true); } });   // stopPropagation: don't also trip the global ? / palette Esc handlers
+  document.addEventListener('pointerdown', (e) => { if (!pop.hidden && !e.target.closest('#calCmdPop, #calCmd')) close(false); });
+  pop.addEventListener('click', (e) => { if (e.target.closest('[data-go], [data-plan]')) close(false); });   // picking a search result navigates — get out of the way
+  window.addEventListener('resize', () => { if (!pop.hidden) place(); });
+  document.addEventListener('jwh:route', () => close(false));   // never persist an open popover across a route change
+  _openCmdPop = open;
 }
 function shift(d) {
   if (mode === 'week') { weekAnchor = addDaysISO(weekAnchor, 7 * d); render(); return; }   // week mode steps by a week
@@ -390,6 +414,7 @@ function onCalKeydown(e) {
     // drops focus to <body> so there's no focused cell to read.
     e.preventDefault(); const day = e.target.closest?.('.cal-cell[data-day], .wk2-dayhd[data-day], .wk2-add[data-day]')?.dataset.day || ((mode === 'day' || mode === 'week') ? weekAnchor : TODAY); openModal(null, day); return;
   }
+  if (e.key === 'f' || e.key === 'F') { e.preventDefault(); _openCmdPop?.(); return; }   // Find/add popover (‘/’ is taken by the global command palette)
   // view switch (m/w/a) — Google-Calendar-style
   if (e.key === 'm' || e.key === 'M') { e.preventDefault(); if (mode !== 'month') { mode = 'month'; _kbSwitch = true; render(); } return; }
   if (e.key === 'w' || e.key === 'W') { e.preventDefault(); if (mode !== 'week') { mode = 'week'; _kbSwitch = true; render(); } return; }
@@ -661,8 +686,9 @@ export function dayPopover(date, anchor) {
   const onScroll = () => dismissPopover();
   const thisPop = popEl;   // guard: if the popover was dismissed before this task ran, don't attach unremovable listeners
   const mainEl = document.getElementById('main');   // app-shell: content scrolls INSIDE main, not the window
-  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); mainEl?.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus({ preventScroll: true }); }, 0);   // preventScroll: a bare focus() + html scroll-behavior:smooth started a window scroll whose FIRST tick hit onScroll and dismissed the popover it was focusing
-  popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); mainEl?.removeEventListener('scroll', onScroll); };
+  const gridEl = document.querySelector('#calView .cal-grid');   // …and the endless month grid scrolls internally (both compact + normal now)
+  setTimeout(() => { if (popEl !== thisPop) return; document.addEventListener('click', onDoc); document.addEventListener('keydown', onKey); window.addEventListener('scroll', onScroll, { passive: true }); mainEl?.addEventListener('scroll', onScroll, { passive: true }); gridEl?.addEventListener('scroll', onScroll, { passive: true }); popEl.querySelector('.pop-open, .pop-add')?.focus({ preventScroll: true }); }, 0);   // preventScroll: a bare focus() + html scroll-behavior:smooth started a window scroll whose FIRST tick hit onScroll and dismissed the popover it was focusing
+  popCleanup = () => { document.removeEventListener('click', onDoc); document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); mainEl?.removeEventListener('scroll', onScroll); gridEl?.removeEventListener('scroll', onScroll); };
 }
 
 // ---- slide-in side panel (replaces openDetail as the event-detail surface) ----
@@ -858,11 +884,11 @@ export function openSidePanel(ev, trigger) {
       closeSidePanel();
     });
     window.addEventListener('resize', () => { const p = $('#calSidePanel'); if (p && !p.hidden && p.classList.contains('is-open')) positionSidePanel(p); });   // re-anchor / reset inline coords across the desktop↔mobile breakpoint
-    // compact viewport-fit: the grid scrolls INSIDE main (window.scrollY stays 0), so the
+    // viewport-fit (both modes now): the grid scrolls INSIDE main (window.scrollY stays 0), so the
     // document-anchored panel would visibly detach from its chip — dismiss on internal scroll,
-    // mirroring the day-popover (which already listens on #main).
-    document.getElementById('main')?.addEventListener('scroll', () => { if (document.documentElement.dataset.compact === 'on' && _sidePanelEv) closeSidePanel(); }, { passive: true });
-    document.addEventListener('scroll', (e) => { if (document.documentElement.dataset.compact === 'on' && _sidePanelEv && e.target?.classList?.contains('cal-grid')) closeSidePanel(); }, { capture: true, passive: true });
+    // mirroring the day-popover (which already listens on #main + the grid).
+    document.getElementById('main')?.addEventListener('scroll', () => { if (_sidePanelEv) closeSidePanel(); }, { passive: true });
+    document.addEventListener('scroll', (e) => { if (_sidePanelEv && e.target?.classList?.contains('cal-grid')) closeSidePanel(); }, { capture: true, passive: true });
   }
   panel.querySelector('#spGoing')?.addEventListener('click', () => {
     const id = ev.id;

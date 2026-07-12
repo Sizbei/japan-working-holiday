@@ -134,6 +134,7 @@
           <button id="calModeDay" class="cal-btn text">Day</button>
           <button id="calModeAgenda" class="cal-btn text">Agenda</button>
         </div>
+        <button id="calCmd" class="cal-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="calCmdPop" title="Find or add an event (press f)" aria-label="Find or add an event">🔍</button>
         <button id="calAdd" class="cal-btn primary">+ Add</button>
         <button id="calImportBtn" class="cal-btn text">Import</button>
         <button id="calExport" class="cal-btn text">Export</button>
@@ -142,7 +143,9 @@
         <input type="file" id="calImport" accept=".ics,text/calendar" hidden>
       </div>
     </div>
-    <div class="cal-inputrow">
+    <!-- Quick-add + search moved off the always-visible row into a popover (owner: more calendar
+         space). Same element IDs, so wireQuickAdd()/mountEventSearch() bind unchanged. -->
+    <div class="cal-cmdpop" id="calCmdPop" role="dialog" aria-label="Find or add an event" hidden>
       <form class="cal-quickadd" id="calQuickAdd" autocomplete="off">
         <span class="cqa-plus" aria-hidden="true">＋</span>
         <input type="text" id="calQuickInput" placeholder="Quick add — try: Ramen with Kenji Fri 7pm" aria-label="Quick-add an event in plain language (title, date and time) — added as ✓ Going">

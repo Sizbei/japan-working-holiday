@@ -913,7 +913,8 @@ html.gated{ overflow: hidden; }
 .calrow{ display:flex; align-items:center; gap:.5rem; width:100%; padding:.28rem .35rem; margin:1px 0; border:none; background:none; border-radius:7px; cursor:pointer; text-align:left; font: inherit; font-size:.82rem; color: var(--ink); }
 .calrow:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
 .calrow.off{ opacity:.42; }
-.cal-sw{ width:12px; height:12px; border-radius:3px; background: var(--chip-cat, var(--line)); flex:none; }
+/* swatch matches the CHIP rendering (32% tinted fill + a colour ring) so legend ↔ grid map 1:1 */
+.cal-sw{ width:12px; height:12px; border-radius:3px; background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chip-cat, var(--line)) 70%, transparent); flex:none; }
 .calrow.off .cal-sw{ background: transparent; box-shadow: inset 0 0 0 2px var(--chip-cat, var(--line-strong)); }
 .cal-nm{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform: capitalize; }
 .calrow[data-cat] .cal-nm{ text-transform: capitalize; }
@@ -2733,8 +2734,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .cal-opill:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
 .cal-ong-dot{ width:7px; height:7px; border-radius:50%; background:var(--chip-cat, var(--line)); flex:none; }
 
-/* multi-day chip range hint ("→ Jul 15", "‹ → …" when it continued from before) */
-.cc-range{ font-family: var(--mono); font-size:.9em; color: var(--ink-faint); margin-left:.25rem; white-space:nowrap; }
+/* multi-day chip range hint — "→ Jul 15" on the span's START chip only, right-aligned so the
+   title always wins the width fight; continuation days show a bare faint "‹" instead */
+.cc-range{ font-family: var(--mono); font-size:.9em; color: var(--ink-soft); margin-left:auto; padding-left:.25rem; white-space:nowrap; flex:none; }
+.cc-cont{ font-family: var(--mono); font-size:.9em; color: var(--ink-soft); flex:none; }
 /* dim in-month days that have already passed (out-of-month .out styling wins where they overlap) */
 /* owner: all day cells the SAME color (no past/weekend background tints — Notion-uniform);
    past days keep only the faint date number */
@@ -2754,7 +2757,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   border-radius: 0;
   min-height: 0;
   padding: 9px 9px 8px;   /* owner: more breath again (5/5/4 → 7/7/6 → 9/9/8) — chips felt flush to the cell borders */
-  gap: 4px;
+  gap: 5px;               /* owner: chips felt congested at 4px */
   transition: background var(--t-hover);
 }
 /* (cell hover tint removed — owner: hover-silent cells like Notion; the date NUMBER carries
@@ -2791,8 +2794,8 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* ---- Event chips — contrast-critical override ----
    These rules MUST appear AFTER the .cat-<cat> fills (lines 641-646)
    and after .cal-chip's base rule (line 637).
-   Using the "chip category dot" pattern for colour identity without
-   relying on chip background colour (WCAG 1.4.1 + deuteranopia safe).
+   Category identity is carried by the tinted 32% fill (owner: the vertical
+   tick bar was removed — it read as clutter at chip size).
    --ink on --bg-soft: light ~16:1, dark ~13:1 — both pass WCAG AA.     */
 .cal-chip{
   background: color-mix(in srgb, var(--chip-cat, var(--line)) 32%, var(--bg-elevated));   /* was 14%, then 26% — owner keeps asking for more contrast (measured worst-category: 9.2:1 light / 6.2:1 dark — AA-safe) */
@@ -2802,7 +2805,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 2px 7px;
+  padding: 3px 7px;   /* owner: chips felt congested (was 2px) */
   font-size: .64rem;
   font-weight: 600;
   line-height: 1.3;
@@ -2810,18 +2813,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   width: 100%;
   text-align: left;
 }
-/* category LINE inside the chip (Notion-style vertical tick — was a 5px dot) */
-.cal-chip::before{
-  content: '';
-  display: block;
-  width: 3px;
-  height: 10px;
-  align-self: center;   /* fixed + centered — stretch/margin rounding sat the bar a pixel off */
-  border-radius: 2px;
-  background: var(--chip-cat, var(--line));
-  flex: 0 0 auto;
-}
-/* per-category: set --chip-cat so border-left + dot both pick up the colour */
+/* continuation chips (mid-span days): quieter fill so daily one-offs pop — the span already
+   announced itself (title + "→ end") on its start day */
+.cal-chip.cont{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 16%, var(--bg-elevated)); }
+/* per-category: set --chip-cat so the chip fill, legend swatch and ongoing pills pick up the colour */
 :is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
 :is(.cal-chip,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }
 :is(.cal-chip,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination); }
@@ -2861,7 +2856,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .cal-more:hover{ color: var(--ink); }
 .cal-more:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 1px; border-radius: var(--r-xs); }
 /* a quiet dot after the date number marks a day that holds a booking deadline */
-.bk-dot{ width: 4px; height: 4px; border-radius: 50%; background: var(--red); display: inline-block; margin-left: 4px; vertical-align: middle; flex: 0 0 auto; }
+.bk-dot{ width: 5px; height: 5px; border-radius: 50%; background: var(--red); display: inline-block; margin-left: 4px; vertical-align: middle; flex: 0 0 auto; }
 
 /* mobile: keep single chip visible, compact */
 @media (max-width: 560px){
@@ -3217,8 +3212,9 @@ ruby > rt {
   html[data-compact="on"] body[data-route="calendar"] .cal-layout > *{ min-height: 0; max-height: 100%; }
   html[data-compact="on"] body[data-route="calendar"] #calView{ display: flex; flex-direction: column; min-height: 0; }
   html[data-compact="on"] body[data-route="calendar"] .cal-grid{ flex: 1; min-height: 0; overflow-y: auto; grid-auto-rows: minmax(88px, 1fr); }   /* normal-size cells: grow to fill tall screens, scroll internally on short ones — never shrink content */
-  /* the Ongoing strip collapses to ONE horizontally-scrollable pill row (it was ~5 rows tall) */
-  html[data-compact="on"] body[data-route="calendar"] .cal-ong-pills{ flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+  /* the Ongoing strip collapses to ONE horizontally-scrollable pill row (it was ~5 rows tall);
+     thin scrollbar = the only hint that clipped pills continue to the right */
+  html[data-compact="on"] body[data-route="calendar"] .cal-ong-pills{ flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
   html[data-compact="on"] body[data-route="calendar"] .cal-opill{ flex: none; font-size: .7rem; padding: .16rem .5rem; }
   html[data-compact="on"] body[data-route="calendar"] .cal-ongoing{ padding: .35rem .55rem; margin-bottom: .45rem; }
   html[data-compact="on"] body[data-route="calendar"] .cal-ong-lab{ margin-bottom: .25rem; }
@@ -3425,7 +3421,7 @@ ruby > rt {
 /* compact re-asserts minmax(88px,1fr) with higher specificity — a zero-height sentinel row would
    stretch into an empty 88px band at every month boundary */
 html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; }
-.cal-grid.cal-endless .cal-cell{ min-height: 96px; }   /* owner: more breath (was 88px) */
+.cal-grid.cal-endless .cal-cell{ min-height: 134px; }   /* rows resolve to this floor, content never grows them — 96px clipped the 4th row (owner: 4 rows per cell, the 4th is "+N more"); 134 = date row + 4 chip rows + gaps + padding */
 /* separators are invisible SENTINELS (owner: Notion-style, no banner row): the sticky label +
    the inline "July 1" day label carry the month; the elements remain in the DOM because the
    topline detector and the ‹ › scroll targets are keyed off .cal-msep[data-ym] */

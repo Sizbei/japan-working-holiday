@@ -289,7 +289,7 @@ function buildCalendars() {
   const row = (attrs, btnCls, swCls, name, on) =>
     `<button class="calrow${btnCls ? ' ' + btnCls : ''}${on ? '' : ' off'}" role="switch" aria-checked="${on}" type="button" ${attrs}><span class="cal-sw${swCls ? ' ' + swCls : ''}"></span><span class="cal-nm">${name}</span></button>`;
   el.innerHTML =
-    `<div class="cal-cals-head"><span>Calendars</span><button class="cal-cals-all" id="calAll" type="button">${hiddenCats.size ? 'All' : 'None'}</button></div>`
+    `<div class="cal-cals-head"><span>Calendars</span><button class="cal-cals-all" id="calAll" type="button">${hiddenCats.size ? 'Show all' : 'Hide all'}</button></div>`
     + row('id="calSrcUser"', '', 'sw-user', 'My events', showUser)
     + row('id="calSrcBaked"', '', 'sw-baked', 'Researched', showBaked)
     + `<div class="cal-cals-div" role="separator"></div>`

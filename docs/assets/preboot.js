@@ -13,6 +13,18 @@
 // (#/main …) hashes fall back to the dashboard, and boot's full parseRoute corrects them.
 (function () {
   document.documentElement.classList.add('js-router');
+  // Compact pages must not flash in either (owner report: full-size titles/nav paint for a
+  // beat before boot's applyCompact runs): set <html data-compact> before first paint, and —
+  // in the after-body run — seat the nav inside the topbar the way relocateNav will.
+  // applyCompact() at boot re-applies the SAME state idempotently (and owns resize/fade wiring).
+  var compact = '';
+  // key literal duplicated on purpose (classic script, can't import) — keep in sync with KEYS.compact in lib/store.js
+  try { compact = localStorage.getItem('jwh-compact-v1') === 'on' ? 'on' : ''; } catch (e) { /* storage blocked — boot's applyCompact settles it */ }
+  document.documentElement.dataset.compact = compact;
+  if (compact && document.body && window.matchMedia('(min-width: 821px)').matches) {
+    var nav = document.getElementById('routeNav'), topbar = document.querySelector('.topbar');
+    if (nav && topbar && nav.parentElement !== topbar) topbar.insertBefore(nav, topbar.querySelector('.countdown'));
+  }
   // Match router.js parseRoute exactly (it does NOT strip a query): only an exact `#/<route>`
   // whose view exists activates; anything else falls back to dashboard, same as parseRoute.
   var h = (location.hash || '').replace(/^#\/?/, '');

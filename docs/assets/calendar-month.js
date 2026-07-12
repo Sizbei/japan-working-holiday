@@ -8,7 +8,7 @@ import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskC
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-const MONTH_SINGLES = 4;      // chips shown per cell before "+N more" (owner: 4, not 3)
+const MONTH_SINGLES = 4;      // rows per cell — all chips, or 3 chips + "+N more" as the 4th row
 
 // ENDLESS month: one continuous week-grid spanning the whole data range (the trip year —
 // ~60 weeks, cheap enough to render whole; no virtual windowing). Month-separator rows sit above
@@ -84,17 +84,23 @@ export function monthHTML() {
     const hasBook = singles.some(e => e.bookBy);
     // spans first (Notion stacks its bars above the day's own events), then timed singles, then tasks
     const items = [...multis, ...singles.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
-    const chips = items.slice(0, MONTH_SINGLES).map(x => {
+    // "+N more" REPLACES the last row (owner: 4 rows per cell, the 4th IS the count when a day
+    // overflows) — never a 5th row that compact's fixed row height clips into invisibility
+    const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
+    const chips = items.slice(0, shown).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
       const e = x.ev;
-      const range = x.end ? `<span class="cc-range">${x.cont ? '‹ ' : ''}→ ${esc(fmtShort(x.end))}</span>` : '';
+      // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the
+      // titles; continuation days carry just a faint "‹" (the quieter .cont fill says the rest)
+      const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(fmtShort(x.end))}</span>` : '';
+      const cont = x.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
       const tm = x.end ? '' : fmt12(e.time);
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${x.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${x.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
     }).join('');
-    const moreN = items.length - Math.min(items.length, MONTH_SINGLES);
+    const moreN = items.length - shown;
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
-    const bk = hasBook ? `<span class="bk-dot" title="has a booking deadline"></span>` : '';
+    const bk = hasBook ? `<span class="bk-dot" role="img" aria-label="has a booking deadline" title="has a booking deadline"></span>` : '';
     const nEv = singles.length + multis.length;
     const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
     const dayN = date.slice(8, 10).replace(/^0/, '');

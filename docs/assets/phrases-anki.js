@@ -1,7 +1,7 @@
 'use strict';
 // Core-2000 rapid refresher (#/phrases → "Core deck" section). Import your own Anki
-// "Notes in Plain Text (.txt)" export, parsed client-side into a stream of one-card-at-a-time
-// display cards — everything visible at once, NO per-card animation (a 100+×/session surface;
+// .apkg deck export (unzipped + read client-side — keeps audio/images), shown as a stream of
+// one-card-at-a-time display cards — everything visible at once, NO per-card animation (a 100+×/session surface;
 // the frequency gate says instant). Owner's HYBRID design: stream is the default; the skim
 // list + shaky re-run is STAGE 3 (not built here). All state device-local (jwh-anki-v1),
 // walked automatically by the backup export/import (it iterates jwh-* keys).
@@ -12,7 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set } from './lib/store.js';
 import {
-  parseAnkiExport, cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
+  cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
 import { listZip, readZipEntry } from './lib/zip.js';
 import { openSqlite, sqliteTables, sqliteRows } from './lib/sqlite.js';
@@ -173,23 +173,12 @@ async function attachMedia(cards, apkg, onProgress) {
   return out;
 }
 
-// parse (optionally with a manual column override) and show the 3-row preview
-function parseText(text, mapping) {
-  try {
-    const res = parseAnkiExport(text, mapping);
-    DATA = { ...res, raw: text };
-    renderImport(DATA);
-  } catch (err) {
-    showErr(friendlyErr(err));
-  }
-}
-
 function friendlyErr(err) {
   const m = String((err && err.message) || err || '');
-  if (/no data rows/.test(m)) return 'That file has no rows — is it the "Notes in Plain Text" export?';
-  if (/could not detect columns/.test(m)) return 'Could not tell which columns are the word/meaning — pick them below, or check the file.';
+  if (/no data rows/.test(m)) return 'That deck has no cards — is it a full Anki .apkg export?';
+  if (/could not detect columns/.test(m)) return 'Could not tell which fields are the word/meaning — pick them below, or check the deck.';
   if (/no usable cards/.test(m)) return 'No usable cards found — every row was empty after cleaning.';
-  return 'Could not read that export (' + m + '). In Anki: File → Export → Notes in Plain Text.';
+  return 'Could not read that .apkg (' + m + '). In Anki: File → Export → Anki Deck Package, and tick “Support older Anki versions”.';
 }
 
 function showPreview(res) {
@@ -204,7 +193,7 @@ function showPreview(res) {
       <td class="ank-pc-s" lang="ja">${esc(c.s)}</td>
     </tr>`).join('');
   // remap row: one <select> per display field, each listing the raw column indices
-  const nCols = DATA?.apkg ? (DATA.nCols || 0) : (res.delim ? maxCols(res.raw, res.delim) : 0);
+  const nCols = DATA?.nCols || 0;   // apkg column count (the only import path)
   const colOpts = (sel) => {
     let out = `<option value="-1"${sel < 0 ? ' selected' : ''}>— none —</option>`;
     for (let i = 0; i < nCols; i++) out += `<option value="${i}"${sel === i ? ' selected' : ''}>col ${i + 1}</option>`;
@@ -254,20 +243,10 @@ function showPreview(res) {
   box.querySelectorAll('select[data-field]').forEach(sel => sel.addEventListener('change', () => {
     const mapping = {};
     box.querySelectorAll('select[data-field]').forEach(s => { mapping[s.dataset.field] = parseInt(s.value, 10); });
-    if (DATA?.apkg) {                                  // apkg: rebuild from the sqlite rows (there is no raw text to re-parse)
-      try { const r2 = cardsFromRows(DATA.apkg.rows, mapping); DATA = { ...DATA, ...r2 }; renderImport(DATA); }
-      catch (err) { showErr(friendlyErr(err)); }
-    } else parseText(res.raw, mapping);   // re-parse with the override
+    // apkg: rebuild the cards from the sqlite rows with the manual column override
+    try { const r2 = cardsFromRows(DATA.apkg.rows, mapping); DATA = { ...DATA, ...r2 }; renderImport(DATA); }
+    catch (err) { showErr(friendlyErr(err)); }
   }));
-}
-
-function maxCols(raw, delim) {
-  let n = 0;
-  String(raw).split('\n').slice(0, 60).forEach(l => {
-    if (!l.trim() || /^#\w+:/.test(l)) return;
-    n = Math.max(n, l.split(delim).length);
-  });
-  return n;
 }
 
 // ───────────────────────────── stream / skim (stage 3) ─────────────────────────────
@@ -561,7 +540,7 @@ function wireStream() {
       // not ALSO drive the stream (double-fire); buttons own their keys.
       if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
       if (stream.deck.view === 'skim') return;
-    if (k === 'p') { $('#ankAudio')?.click(); return; }
+      if (e.key === 'p') { $('#ankAudio')?.click(); return; }
       if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
       else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }

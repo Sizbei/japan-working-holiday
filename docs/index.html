@@ -288,8 +288,11 @@
   <!-- ============ PHRASEBOOK ============ -->
   <section id="phrases">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">言葉</span><h2 data-i18n="head.phrases">Survival Japanese</h2></div>
-    <p class="lede" data-i18n="lede.phrases">Your Japanese studio — look words up, translate and save your own phrases, blast through the Core-2000 refresher, and drill JLPT grammar. Beginner references (kana, numbers, N5 vocab, signs…) live folded at the bottom.</p>
+    <p class="lede" data-i18n="lede.phrases">Your Japanese studio — blast through the Core-2000 refresher up top, look words up and save your own phrases, and drill JLPT grammar. Beginner references (kana, numbers, N5 vocab, signs…) live folded at the bottom.</p>
     <p class="g-xlink"><a href="#/grammar">📖 JLPT grammar reference (N5–N1) →</a> · <a href="#/survival">🗣 Useful survival phrases →</a></p>
+    <!-- Core deck — the study hero, first on the page -->
+    <section id="ankiDeck" class="ank-wrap" aria-label="Core deck rapid refresher"></section>
+    <span id="ankLive" class="sr-only" aria-live="polite" aria-atomic="true"></span><!-- SIBLING of #ankiDeck: a live region inside the innerHTML-rebuilt root could never announce -->
     <div class="jtools" role="group" aria-label="Japanese tools">
       <button type="button" class="jt-btn" id="jtLookupBtn" aria-expanded="false" aria-controls="jtLookupPanel">🔍 Look up</button>
       <button type="button" class="jt-btn" id="jtTranslateBtn" aria-expanded="false" aria-controls="jtTranslatePanel">あ→A Translate</button>
@@ -309,8 +312,6 @@
     </div>
     <h3 class="ph-h">My phrases</h3>
     <div id="phraseList"></div>
-    <section id="ankiDeck" class="ank-wrap" aria-label="Core deck rapid refresher"></section>
-    <span id="ankLive" class="sr-only" aria-live="polite" aria-atomic="true"></span><!-- SIBLING of #ankiDeck: a live region inside the innerHTML-rebuilt root could never announce -->
     <details class="beginner-drawer" id="beginnerDrawer">
       <summary>Beginner reference — kana · numbers · N5 vocab · signs · quiz · particles · verbs · adjectives · pronunciation</summary>
       <div class="vocab-wrap">

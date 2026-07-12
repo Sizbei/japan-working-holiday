@@ -33,7 +33,7 @@ export function mountPlan(data) {
   DATA = data;
   const arrival = (data.meta && data.meta.arrival_date) || '2026-06-30';
   const today = nowISO();
-  activeDate = firstPlanned() || (arrival >= today ? arrival : today);
+  activeDate = today >= arrival ? today : arrival;   // default to TODAY once the trip has started (else the arrival day)
   renderRail();
   render();
   $('#planBody')?.addEventListener('click', onBodyClick);
@@ -54,7 +54,6 @@ export function mountPlan(data) {
   // plan and map (never auto-load Leaflet on #/plan).
   document.addEventListener('jwh:route', (e) => { const r = e.detail?.route; if (r !== 'plan' && r !== 'map') clearRoute(); });
 }
-function firstPlanned() { const ks = Object.keys(loadPlans()).filter(k => hasPlan(k)).sort(); return ks[0] || ''; }
 
 // ---- day-chip rail: today→arrival+30, plus any planned dates ----
 function railDates(plans) {

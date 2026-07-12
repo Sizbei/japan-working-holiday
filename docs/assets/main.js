@@ -27,6 +27,7 @@ import { mountCountUp } from './countup.js';
 import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
 import { get, set, KEYS } from './lib/store.js';
+import { TRIP_DAYPLANS } from './lib/tripseed.js';
 import { bumpUsage } from './lib/usage.js';
 
 // Clickjacking defense: a static host can't send X-Frame-Options and frame-ancestors is
@@ -58,6 +59,7 @@ function boot() {
       safe(seedNearby);                    // one-time: drop the near-base neighborhood pins (+ the festival venue)
       safe(fixHousingSeed);                // one-time: un-tick the wrongly-seeded long-term share-house items
       safe(seedDayPlanJul4);               // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
+      safe(seedTripPlans);                 // one-time: bake the full Jul 13–26 itinerary into Plan a Day
       safe(() => mountCalendar(data, today));
       safe(() => mountGoogleSync(() => allEvents()));
       safe(() => mountTracker(data));
@@ -241,6 +243,20 @@ function seedDayPlanJul4() {
     set(KEYS.dayPlans, plans);
   }
   set(KEYS.seedPlan, true);
+}
+
+// One-time seed (jwh-seed-plan-trip-v1): bake the whole Jul 13–26 itinerary into Plan a Day so the
+// timeline is ready without any manual paste. Non-destructive per date — a day the owner already
+// planned is left untouched. Bump the guard key here + KEYS.seedPlanTrip to re-seed a revised trip.
+function seedTripPlans() {
+  if (get(KEYS.seedPlanTrip, false)) return;
+  const plans = get(KEYS.dayPlans, {}) || {};
+  let changed = false;
+  for (const [date, day] of Object.entries(TRIP_DAYPLANS)) {
+    if (!plans[date]) { plans[date] = day; changed = true; }
+  }
+  if (changed) set(KEYS.dayPlans, plans);
+  set(KEYS.seedPlanTrip, true);
 }
 
 function registerSW() {

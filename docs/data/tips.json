@@ -300,12 +300,6 @@
    "confidence": "low"
   },
   {
-   "id": "book-furano-stay",
-   "when": "2026-07-12",
-   "what": "Furano/Biei beds (Jul 18–20) — NOT BOOKED",
-   "action": "Lavender PEAK weekend — Furano sells out. Book 2 nights now (or base in Asahikawa on the JR Furano line)."
-  },
-  {
    "id": "book-sapporo-return-stay",
    "when": "2026-07-14",
    "what": "Sapporo return nights (Jul 22–24) — NOT BOOKED",
@@ -2864,6 +2858,18 @@
    "confidence": "high",
    "sources": [],
    "bookingNotes": "Hokkaido trip base #1 — check in after the NRT→CTS flight lands; out the morning of the Furano leg."
+  },
+  {
+   "id": "ev26-stay-mangacafe-jul18",
+   "title": "🛌 Manga cafe overnight — Kaikatsu Club Susukino",
+   "date": "2026-07-18",
+   "category": "personal",
+   "area": "Susukino, Sapporo",
+   "confidence": "medium",
+   "sources": [
+    "https://www.kaikatsu.jp/shop/detail/20106.html"
+   ],
+   "bookingNotes": "Gap night (Nariya out 18th, Mutsukari in 19th). Walk-in net cafe — night-pack entry 20:00–04:00, ~¥1,800 for an 8h booth (locked room a bit more), showers. 1 min from Susukino Stn exit 5. Backup: DiCE Tanukikoji (24h). Grab bags from the Sapporo Stn coin locker before ~22:00; early Furano/Lavender Express on the 19th."
   },
   {
    "id": "ev26-stay-furano-tbd",

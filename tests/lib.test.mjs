@@ -1639,3 +1639,24 @@ test('sqlite: corrupt payload length is rejected, not OOM-allocated', () => {
   const db = openSqlite(buf);
   assert.throws(() => sqliteRows(db, 't'), /payload|range|corrupt/i);   // must throw, must not allocate 2^56 bytes
 });
+
+import { TRIP_DAYPLANS } from '../docs/assets/lib/tripseed.js';
+import { normalizePlan } from '../docs/assets/lib/dayplan.js';
+test('tripseed: every baked day is a well-formed, normalizer-safe plan with unique stop ids', () => {
+  const dates = Object.keys(TRIP_DAYPLANS);
+  assert.ok(dates.length >= 14, 'expected the full Jul 13–26 arc');
+  const allIds = [];
+  for (const [date, day] of Object.entries(TRIP_DAYPLANS)) {
+    assert.equal(day.date, date, `date key must match day.date for ${date}`);
+    const norm = normalizePlan(date, day);                 // must survive the app's own normalizer
+    assert.equal(norm.stops.length, day.stops.length, `no stops dropped for ${date}`);
+    assert.ok(day.stops.length > 0, `${date} has stops`);
+    for (const s of day.stops) {
+      assert.ok(s.id && s.name, `${date} stop needs id + name`);
+      assert.equal(typeof s.durationMin, 'number', `${date} ${s.id} durationMin is a number`);
+      assert.match(s.startTime, /^([01]\d|2[0-3]):[0-5]\d$/, `${date} ${s.id} startTime is HH:MM`);
+      allIds.push(s.id);
+    }
+  }
+  assert.equal(new Set(allIds).size, allIds.length, 'stop ids are globally unique');
+});

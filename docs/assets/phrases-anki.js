@@ -309,11 +309,24 @@ function renderStream(deck) {
   const pos = mode === 'pile' ? 0 : Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
   stream = { deck, mode, chunk, idx: Math.min(pos, Math.max(0, order.length - 1)), order };
 
+  // The tap zones live in a wrapper as SIBLINGS of #ankCard — paintCard() rewrites #ankCard's
+  // innerHTML each card, so overlays placed inside it would be wiped. The bottom control bar
+  // (touch only, hidden on desktop by CSS) drives the same next/back/shaky/audio actions.
   root.innerHTML = `${barHTML(deck)}
     <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
-    <div class="ank-card" id="ankCard" tabindex="0" role="group" aria-label="Card — tap or press space for next"></div>
+    <div class="ank-cardwrap">
+      <div class="ank-card" id="ankCard" tabindex="0" role="group" aria-label="Card — tap or press space for next"></div>
+      <span class="ank-tap ank-tap-l" id="ankTapPrev" aria-hidden="true"><span class="ank-tap-hint">‹</span></span>
+      <span class="ank-tap ank-tap-r" id="ankTapNext" aria-hidden="true"><span class="ank-tap-hint">›</span></span>
+    </div>
     <div class="ank-prog" id="ankProg"></div>
-    <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · tap the card = next</p>`;
+    <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · tap the card = next</p>
+    <div class="ank-controls" role="group" aria-label="Card controls">
+      <button type="button" class="ank-ctl ank-ctl-prev" id="ankPrevBtn">◀ Back</button>
+      <button type="button" class="ank-ctl ank-ctl-icon" id="ankAudioBtn" aria-label="Play audio">🔊</button>
+      <button type="button" class="ank-ctl ank-ctl-icon" id="ankShakyBtn" aria-label="Flag shaky">⚑</button>
+      <button type="button" class="ank-ctl ank-ctl-next" id="ankNextBtn">Next ▶</button>
+    </div>`;
 
   paintCard();
   wireCommon();
@@ -409,7 +422,8 @@ function fillMedia(card) {
       el.src = _imgUrl; el.hidden = false;
     }).catch(() => {});
   }
-  $('#ankAudio')?.addEventListener('click', () => {
+  $('#ankAudio')?.addEventListener('click', (e) => {
+    e.stopPropagation();   // play audio without also advancing the card (the card click = next)
     mediaGet(card.a).then(b => {
       if (!b) return;
       const u = URL.createObjectURL(b);
@@ -531,6 +545,14 @@ function wireCommon() {
 function wireStream() {
   const card = $('#ankCard');
   card?.addEventListener('click', () => advance(1));
+  // touch controls (rebuilt every renderStream) — wire to the SAME actions as the keys.
+  // Tap zones sit over the card halves; the bottom bar is the accessible equivalent.
+  $('#ankTapPrev')?.addEventListener('click', () => advance(-1));
+  $('#ankTapNext')?.addEventListener('click', () => advance(1));
+  $('#ankPrevBtn')?.addEventListener('click', () => advance(-1));
+  $('#ankNextBtn')?.addEventListener('click', () => advance(1));
+  $('#ankShakyBtn')?.addEventListener('click', () => toggleShakyCurrent());
+  $('#ankAudioBtn')?.addEventListener('click', () => $('#ankAudio')?.click());   // no-op if this card has no audio
   if (!root.dataset.kbd) {
     root.dataset.kbd = '1';
     root.addEventListener('keydown', (e) => {

@@ -3618,6 +3618,33 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
   .ank-chip, .ank-mini, .ank-btn{ display:inline-flex; align-items:center; }
 }
 
+/* --- mobile deck controls: tap zones over the card + a thumb-zone bottom bar (touch/narrow only;
+   desktop keeps the keyboard shortcuts and the whole-card tap). Overlays are siblings of #ankCard
+   inside .ank-cardwrap so paintCard()'s innerHTML rewrite never wipes them. --- */
+.ank-cardwrap{ position: relative; }
+.ank-controls{ display: none; }
+.ank-tap{ display: none; }
+@media (hover: none), (max-width: 560px){
+  .ank-hint{ display: none; }                                   /* keyboard hint is irrelevant on touch */
+  .ank-bar, .ank-bar-acts{ flex-wrap: wrap; }                   /* Stream/Skim/Shuffle/Replace wrap instead of clipping off-screen */
+  .ank-card{ padding: var(--s6) var(--s4); min-height: 200px; }  /* fit a phone */
+  .ank-word{ font-size: 2.1rem; }
+  .ank-tap{ display: block; position: absolute; top: 0; bottom: 0; width: 32%; z-index: 2; cursor: pointer; }
+  .ank-tap-l{ left: 0; } .ank-tap-r{ right: 0; }
+  .ank-tap-hint{ position: absolute; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: var(--ink-soft); opacity: .22; pointer-events: none; }
+  .ank-tap-l .ank-tap-hint{ left: .4rem; } .ank-tap-r .ank-tap-hint{ right: .4rem; }
+  .ank-controls{ display: flex; flex-wrap: wrap; align-items: stretch; gap: .5rem; margin-top: .6rem; }   /* wrap rather than clip on the narrowest phones */
+  .ank-ctl{ min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+    font-family: var(--sans); font-size: .92rem; font-weight: 700; border: 1px solid var(--line);
+    background: var(--bg-soft); color: var(--ink); border-radius: var(--r-md); cursor: pointer;
+    transition: transform .08s ease, border-color var(--t-hover); }
+  .ank-ctl:active{ transform: translateY(1px); }                /* <100ms press feedback */
+  .ank-ctl-icon{ flex: 0 0 48px; min-width: 48px; font-size: 1.1rem; }
+  .ank-ctl-prev{ flex: 1 1 auto; color: var(--ink-soft); }
+  .ank-ctl-next{ flex: 2 1 auto; background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }  /* primary, thumb zone (Fitts) */
+}
+@media (prefers-reduced-motion: reduce){ .ank-ctl{ transition: none; } .ank-ctl:active{ transform: none; } }
+
 /* ===== Anki refresher — stage 3 (skim + pile) ===== */
 .ank-seg{ display:inline-flex; gap:2px; margin-right:.4rem; }
 .ank-chip-pile{ font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }

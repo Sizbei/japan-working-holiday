@@ -25,6 +25,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Shippori+Mincho:wght@500;600&family=Space+Mono:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<!-- add `js-router` before any view parses, so views never paint stacked (no dashboard flash on
+     reload). Runs again after the views (below) to activate the hash's view. See preboot.js. -->
+<script src="assets/preboot.js"></script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -585,6 +588,9 @@
   <p class="disclaimer">Everything you edit is saved only in this browser — back it up before clearing data or switching phones. Visa, tax, pension, Disney and booking systems all change — I verify against official sources before relying on anything here. Confidence flags and “verify closer” notes mark what to re-check. The passphrase is convenience only, not real security.</p>
 </footer>
 
+<!-- first-paint route selector: mark the hash's view active before the deferred module boots,
+     so a refresh lands on the right page (no dashboard flash). Classic, not inline (CSP). -->
+<script src="assets/preboot.js"></script>
 <script type="module" src="assets/main.js"></script>
 </body>
 </html>

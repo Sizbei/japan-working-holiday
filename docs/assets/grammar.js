@@ -18,7 +18,7 @@ const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'dat
 const CHUNK = 60;                                // cards appended per IntersectionObserver step
 
 const cache = {};                                // level → points, module-cached after first fetch
-const state = { level: 'N5', q: '', shown: CHUNK };
+const state = { level: 'N5', q: '', shown: CHUNK, sort: '' };
 let fetchedAll = false;                          // search is global — remaining levels fetch on first search focus
 let io = null;
 let staggerNext = true;                          // card stagger fires on tab switches/boot, NEVER per search keystroke (frequency gate)
@@ -47,6 +47,11 @@ export function mountGrammar() {
       <button type="button" class="g-shaky-f" id="gShakyF" aria-pressed="false" title="Show only ◆ shaky points">◆ <span id="gShakyN">0</span></button>
       <button type="button" class="g-export" id="gExport" disabled title="Export every ◆ point as an Anki TSV file">⬇ ◆→Anki</button>
       <input type="search" class="g-search" id="gSearch" placeholder="Search 〜てから / maeni / before…" aria-label="Search grammar points (Japanese, romaji or English)">
+      <select class="g-sort" id="gSort" aria-label="Sort grammar points">
+        <option value="">Sort: level order</option>
+        <option value="az">Sort: A→Z</option>
+        <option value="unseen">Sort: unseen first</option>
+      </select>
     </div>
     <div class="g-prog" id="gProg" hidden>
       <span class="g-prog-t" id="gProgT"></span>
@@ -96,13 +101,23 @@ function fetchAllLevels() {          // global search needs the whole corpus (pl
 
 // ---- state / derivations ----
 function currentPoints() {
+  let base;
   if (state.q) {
     const all = LEVELS.flatMap(l => cache[l] || []);
     const hits = searchPoints(all, state.q);
-    return state.shakyOnly ? hits.filter(p => prog.shaky.includes(p.id)) : hits;
+    base = state.shakyOnly ? hits.filter(p => prog.shaky.includes(p.id)) : hits;
+  } else {
+    const pts = cache[state.level] || [];
+    base = state.shakyOnly ? pts.filter(p => prog.shaky.includes(p.id)) : pts;
   }
-  const pts = cache[state.level] || [];
-  return state.shakyOnly ? pts.filter(p => prog.shaky.includes(p.id)) : pts;
+  return sortPoints(base);
+}
+
+// stable re-order for the sort control ('' = file order; V8 sort is stable so groups keep order)
+function sortPoints(pts) {
+  if (state.sort === 'az') return [...pts].sort((a, b) => String(a.pattern).localeCompare(String(b.pattern), 'ja'));
+  if (state.sort === 'unseen') return [...pts].sort((a, b) => (prog.done.includes(a.id) ? 1 : 0) - (prog.done.includes(b.id) ? 1 : 0));
+  return pts;
 }
 
 // ---- wiring (delegated once; #gList innerHTML rebuilds freely) ----
@@ -127,6 +142,7 @@ function wireBar(root) {
     clearTimeout(deb);
     deb = setTimeout(() => { state.q = e.target.value.trim(); state.shown = CHUNK; renderList(); }, 150);
   });
+  $('#gSort').addEventListener('change', (e) => { state.sort = e.target.value; state.shown = CHUNK; staggerNext = true; renderList(); });
   $('#gExport').addEventListener('click', exportShaky);
   $('#gShakyF').addEventListener('click', () => {
     state.shakyOnly = !state.shakyOnly;
@@ -244,7 +260,7 @@ function appendChunk() {
 function cardHTML(p, delay = -1) {
   const bid = `gc-${esc(p.id)}`;
   return `
-  <article class="g-card${delay >= 0 ? ' g-in' : ''}" data-id="${esc(p.id)}"${delay >= 0 ? ` style="--gd:${delay}ms"` : ''}>
+  <article class="g-card${delay >= 0 ? ' g-in' : ''}" data-id="${esc(p.id)}" data-lvl="${esc(p.level)}"${delay >= 0 ? ` style="--gd:${delay}ms"` : ''}>
     <button type="button" class="g-card-h" aria-expanded="false" aria-controls="${bid}">
       <span class="g-pat" lang="ja">${esc(p.pattern)}</span>
       <span class="g-mean">${esc(p.meaning)}</span>
@@ -466,6 +482,7 @@ function updateProgressUI() {
   if (!pts.length || state.q) { wrap.hidden = true; return; }
   const nDone = pts.filter(p => prog.done.includes(p.id)).length;
   wrap.hidden = false;
+  wrap.dataset.lvl = state.level;   // colours the fill for the current level
   const t = $('#gProgT'); if (t) t.textContent = `${nDone}/${pts.length} studied`;
   const f = $('#gProgFill'); if (f) f.style.width = pts.length ? `${Math.round(nDone / pts.length * 100)}%` : '0%';
 }

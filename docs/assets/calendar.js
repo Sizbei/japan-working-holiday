@@ -153,6 +153,10 @@ export function mountCalendar(data, today) {
   const t = parseISO(TODAY);
   if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); }
   weekAnchor = TODAY;
+  // the 7-column month grid is cramped on a phone — open in the agenda (list) view on narrow
+  // screens. The ☰ view toggle still switches to month/week; desktop is unchanged. Set once at
+  // mount (like the sidebar-collapsed default above), so an in-session toggle sticks.
+  if (window.matchMedia('(max-width: 700px)').matches) mode = 'agenda';
   wireToolbar();
   wireQuickAdd();
   wireCmdPop();

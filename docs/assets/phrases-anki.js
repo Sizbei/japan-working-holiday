@@ -430,7 +430,7 @@ function fillMedia(card) {
   $('#ankAudio')?.addEventListener('click', (e) => {
     e.stopPropagation();   // play audio without also advancing the card (the card click = next)
     mediaGet(card.a).then(b => {
-      if (!b) return;
+      if (tok !== _mediaTok || !b) return;   // ignore a stale in-flight read when a newer card loaded
       const u = URL.createObjectURL(b);
       _audio = new Audio(u);
       _audio.addEventListener('ended', () => URL.revokeObjectURL(u), { once: true });

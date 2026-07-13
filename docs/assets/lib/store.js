@@ -74,6 +74,7 @@ export const KEYS = {
   fixHousing: 'jwh-fix-housing-v1',
   seedPlan: 'jwh-seed-plan-v1',
   seedPlanTrip: 'jwh-seed-plan-trip-v1',   // one-time: bake the whole Jul 13–26 itinerary into Plan a Day
+  seedTodos: 'jwh-seed-todos-v1',          // one-time: drop live trip action-items into the checklist's "My tasks"
 };
 
 export function get(key, fallback) {

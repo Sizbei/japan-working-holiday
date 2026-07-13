@@ -2263,6 +2263,13 @@ html[data-reduce-motion="on"] #view-dashboard *{ animation: none !important; }
 }
 @media (max-width: 560px){
   #view-dashboard .sun-ink{ width: 220px; height: 220px; right: -50px; }
+  /* command-center home on phones: drop the flavour prose and tighten the hero so the countdown +
+     the "Today" / "Next deadlines" widgets surface without a scroll. (Personality prose stays on
+     tablet/desktop; the identity — kicker + title + countdown — is untouched.) */
+  #view-dashboard .dash-hero{ padding: .75rem .9rem .85rem; }
+  #view-dashboard .dash-sub{ display: none; }
+  #view-dashboard .hero-count{ margin-top: .35rem; }
+  #view-dashboard .needs-me, #view-dashboard .dash-teasers{ margin-top: var(--s3); }
 }
 
 /* ---- light ink consistency pass on shared chrome (all routes) ---- */

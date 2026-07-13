@@ -84,16 +84,17 @@ const NAV_ALL = [
 const NAV_KNOWN = new Set(NAV_ALL.map(o => o.r));
 const NAV_META = (r) => NAV_ALL.find(o => o.r === r);
 
-// migrate the legacy navShow (which optional routes were surfaced) into a hidden set: the 5 optional
-// routes NOT in navShow are hidden; the 11 defaults stay visible. Default (no key) hides all optional
-// except phrases — matching the pre-existing nav exactly.
+// migrate the legacy navShow (which optional routes were surfaced) into a hidden set. Default (no
+// stored navHidden): hide all optional routes except phrases, PLUS the routes the owner doesn't use
+// (emergency/map/explore/going) — all still reachable by deep link and re-enableable in this panel.
+const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore', 'going'];
 function navHiddenSet() {
   const v = get(KEYS.navHidden, null);
   if (Array.isArray(v)) return v.filter(r => NAV_KNOWN.has(r));
   const OPT = ['phrases', 'survival', 'grammar', 'packing', 'deadlines'];
   const shown = get(KEYS.navShow, null);
   const shownArr = Array.isArray(shown) ? shown : ['phrases'];
-  return OPT.filter(r => !shownArr.includes(r));
+  return [...OPT.filter(r => !shownArr.includes(r)), ...NAV_HIDDEN_DEFAULT];
 }
 function navOrder() {
   const v = get(KEYS.navOrder, null);

@@ -28,6 +28,7 @@ import { nowISO } from './lib/dates.js';
 import { $, $$, esc } from './lib/dom.js';
 import { get, set, KEYS } from './lib/store.js';
 import { TRIP_DAYPLANS } from './lib/tripseed.js';
+import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { bumpUsage } from './lib/usage.js';
 
 // Clickjacking defense: a static host can't send X-Frame-Options and frame-ancestors is
@@ -60,6 +61,7 @@ function boot() {
       safe(fixHousingSeed);                // one-time: un-tick the wrongly-seeded long-term share-house items
       safe(seedDayPlanJul4);               // one-time: ready-made Plan-a-Day for the World DJ Festival (Jul 4)
       safe(seedTripPlans);                 // one-time: bake the full Jul 13–26 itinerary into Plan a Day
+      safe(seedTripTodos);                 // one-time: drop live trip action-items into the checklist "My tasks"
       safe(() => mountCalendar(data, today));
       safe(() => mountGoogleSync(() => allEvents()));
       safe(() => mountTracker(data));
@@ -262,6 +264,30 @@ function seedTripPlans() {
   }
   if (changed) set(KEYS.dayPlans, plans);
   set(KEYS.seedPlanTrip, TRIP_SEED_VERSION);
+}
+
+// One-time seed (jwh-seed-todos-v1): drop the live trip action-items into the checklist's "My tasks"
+// group so they live on the site, and their due dates feed the notifications bell. Skips any id the
+// owner already has (never duplicates); items are normal custom tasks they can tick/edit/delete.
+function seedTripTodos() {
+  if (get(KEYS.seedTodos, false)) return;
+  const TODOS = [
+    ['todo-call-eye-clinic', 'Call Shinagawa LASIK to lock today’s eye-clinic slot (0120-412-049)', '2026-07-13'],
+    ['todo-comiket-wristband', 'Buy the Comiket C108 wristband in Akihabara (¥440 afternoon-advance)', '2026-07-14'],
+    ['todo-pack-hokkaido', 'Pack for Hokkaido — rain shell, warm layer, hiking shoes', '2026-07-14'],
+    ['todo-cash-hokkaido', 'Withdraw cash for rural Hokkaido (7-Bank ATM)', '2026-07-14'],
+    ['todo-lavender-express', 'Reserve the Furano/Lavender Express seat (Sapporo→Furano, Jul 19)', '2026-07-15'],
+    ['todo-bed-jul23', 'Book the Jul 23 Sapporo return-night bed', '2026-07-18'],
+    ['todo-beds-jul2426', 'Book Tokyo beds for Jul 24–26 (or a bridge hostel)', '2026-07-22'],
+    ['todo-book-lasik', 'Book LASIK surgery for after Hokkaido (~Jul 27)', '2026-07-24'],
+    ['todo-glasses-lasik', 'Switch to glasses (no soft contacts) from ~Jul 24 for the LASIK exam', '2026-07-24'],
+    ['todo-sharehouse', 'Keep hunting the share house (¥60–80k)', ''],
+  ];
+  const custom = loadChecklistCustom();
+  const have = new Set(custom.map(it => it && it.id));
+  const add = TODOS.filter(([id]) => !have.has(id)).map(([id, task, dueBy]) => customItem(task, 'My tasks', dueBy, id));
+  if (add.length) saveChecklistCustom([...custom, ...add]);
+  set(KEYS.seedTodos, true);
 }
 
 function registerSW() {

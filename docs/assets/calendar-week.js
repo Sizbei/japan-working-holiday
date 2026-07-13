@@ -98,7 +98,7 @@ function gridHTML(days, isDay) {
   return `<div class="wk2${isDay ? ' is-day' : ''}">
     <div class="wk2-head"><div class="wk2-corner"></div>${hd}</div>
     <div class="wk2-band">
-      <div class="wk2-blabel">all-day</div>
+      <div class="wk2-blabel"><span class="sr-only">All-day</span></div>
       <div class="wk2-bcols" id="wkAllday">
         ${lanes || '<div class="wk-lane"></div>'}
         <div class="wk-chips">${chips}</div>

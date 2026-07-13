@@ -21,6 +21,7 @@ const cache = {};                                // level → points, module-cac
 const state = { level: 'N5', q: '', shown: CHUNK, sort: '' };
 let fetchedAll = false;                          // search is global — remaining levels fetch on first search focus
 let io = null;
+let viewList = [];                               // the ordered points snapshotted at each renderList (appendChunk + the IO length-gate read this, not a fresh sort)
 let staggerNext = true;                          // card stagger fires on tab switches/boot, NEVER per search keystroke (frequency gate)
 
 // ✓/◆ tracking (owner decision C, reconfirmed): ✓ studied feeds the per-level progress bar,
@@ -65,7 +66,7 @@ export function mountGrammar() {
   moveTabInd();
   document.fonts?.ready?.then(moveTabInd);   // web fonts reflow tab widths
   io = new IntersectionObserver((es) => {
-    if (es.some(x => x.isIntersecting) && state.shown < currentPoints().length) appendChunk();
+    if (es.some(x => x.isIntersecting) && state.shown < viewList.length) appendChunk();
   });
   io.observe($('#gSentinel'));
   load(state.level);
@@ -229,7 +230,7 @@ function moveTabInd() {
 
 function renderList() {
   const list = $('#gList'); if (!list) return;
-  const pts = currentPoints();
+  const pts = viewList = currentPoints();   // snapshot the ordered list; appendChunk reuses THIS order
   if (!pts.length) {
     list.innerHTML = state.q
       ? `<p class="g-empty">No matches for “${esc(state.q)}” — try the pattern's kana, its romaji (maeni), or an English word.</p>`
@@ -250,7 +251,7 @@ function renderList() {
 // APPEND, never rebuild — a rebuild collapses whatever card the reader has open
 function appendChunk() {
   const list = $('#gList'); if (!list) return;
-  const pts = currentPoints();
+  const pts = viewList;   // reuse the last render's ordered snapshot — immune to a mid-scroll mark/sort shift
   const from = state.shown;
   state.shown += CHUNK;
   list.insertAdjacentHTML('beforeend', pts.slice(from, state.shown).map(p => cardHTML(p, -1)).join(''));

@@ -10,25 +10,23 @@ const stop = (id, name, area, startTime, durationMin, note, lat, lng) => ({
 });
 
 export const TRIP_DAYPLANS = {
-  '2026-07-13': { date: '2026-07-13', title: 'Kamakura full loop → Enoshima sunset', note: 'Leave Asakusabashi ~08:10 (Sobu → Shinagawa → Yokosuka line). Buy the Enoden day pass (Noriorikun ¥800) — you ride it 4×.', stops: [
-    stop('p0713a', 'Kamakura Stn → Enoden → Hase', 'Kamakura', '09:45', 25, 'Day pass at the Enoden window', 35.3125, 139.5470),
-    stop('p0713b', 'Kotoku-in — Great Buddha', 'Hase', '10:15', 75, '¥300; Hase-dera is 5 min away if you\'re ahead', 35.3167, 139.5358),
-    stop('p0713c', 'Komachi-dori — street-food lunch', 'Kamakura', '12:00', 110, 'Eat as you walk: croquettes, dango, shirasu-man; souvenirs', 35.3211, 139.5531),
-    stop('p0713d', 'Tsurugaoka Hachimangu', 'Kamakura', '14:00', 30, 'Straight up from the end of Komachi-dori', 35.3258, 139.5565),
-    stop('p0713e', 'Hokokuji bamboo grove', 'Kamakura (Jomyoji)', '14:35', 60, '⚠ CLOSES 16:00 (last entry 15:30) — bus 23/24/36 ~10 min; matcha in the grove ¥600', 35.3204, 139.5735),
-    stop('p0713f', 'Enoden → Kamakurakōkōmae — Slam Dunk crossing', 'Shonan coast', '17:00', 45, 'The opening-credits railroad crossing; Fuji across the bay on clear days', 35.3066, 139.5008),
-    stop('p0713g', 'Enoden → Enoshima Stn → causeway walk', 'Enoshima', '18:10', 40, '~20 min walk to the island', 35.3040, 139.4800),
-    stop('p0713h', 'Chigogafuchi — SUNSET (~18:55)', 'Enoshima (west cliffs)', '18:50', 50, 'Iwaya Caves close 17:00–18:00, so this is the sunset plaza instead', 35.2972, 139.4757),
-    stop('p0713i', 'Shirasu-don dinner near the island', 'Enoshima', '19:50', 60, 'Raw shirasu if the catch allows; kamaage (steamed) otherwise', 35.3009, 139.4794),
-    stop('p0713j', 'Enoshima Stn → home', 'Enoden / Odakyu / JR', '20:50', 90, 'Odakyu to Shinjuku or JR from Fujisawa; ~1h30 door to door', 35.6987, 139.7855),
+  '2026-07-13': { date: '2026-07-13', title: 'Eye clinic + last Tokyo bits (Kamakura → tomorrow)', note: 'Swapped with the 14th so Kamakura gets a full day tomorrow. Today is built around the eye-clinic exam — call ahead, and keep tonight low-key since the exam dilates your pupils.', stops: [
+    stop('p0713a', '🍜 Lunch: Motenashi Kuroki', 'Asakusabashi', '11:45', 60, 'Lunch run 11:30–14:30 (their dinner run works too if you miss it); ticket machine, ~¥1,100–1,500', 35.6987, 139.7855),
+    stop('p0713b', '👁 Eye clinic — Shinagawa LASIK, Yurakucho', 'Yurakucho (ITOCiA 13F)', '13:30', 210, 'CALL FIRST for a same-day slot: 0120-412-049 (EN 080-8867-4964, open to 20:00). Full exam ~3–4h; a consult is shorter. Soft-contact wearers: today can only be a CONSULT — the measurement exam needs 3 lens-free days. Goal: get cleared so you can book surgery for after Hokkaido (~Jul 27).', 35.6744, 139.7633),
+    stop('p0713c', 'Akihabara — Comiket wristband (if time)', 'Akihabara', '17:30', 90, 'Only if the exam didn\'t run long / your eyes aren\'t dilated. Grab the C108 afternoon-advance wristband at Animate/Melonbooks (¥440)', 35.6984, 139.7731),
+    stop('p0713d', 'Pack for Hokkaido + low-key evening', 'Asakusabashi', '19:30', 120, 'Dilation blurs vision for hours — skip the fancy dinner tonight. Pack: rain shell + warm layer + hiking shoes for Asahidake; withdraw cash', 35.6987, 139.7855),
   ]},
-  '2026-07-14': { date: '2026-07-14', title: 'Last full Tokyo day (before Hokkaido)', note: 'Kuroki as LUNCH (11:30–14:30). Book Nabeno-Ism for dinner — open Tue. Buy the Comiket C108 wristband in Akihabara (¥440 afternoon-advance). Pack for the mountains tonight.', stops: [
-    stop('p0714a', 'Meiji Jingu — forest approach', 'Harajuku', '09:00', 90, 'Coolest hours', 35.6764, 139.6993),
-    stop('p0714b', 'Harajuku / Omotesando wander', 'Harajuku', '10:45', 60, 'Backstreets > Takeshita', 35.6702, 139.7027),
-    stop('p0714c', '🍜 LUNCH: Motenashi Kuroki', 'Asakusabashi', '11:45', 60, 'Arrive by 11:45 to beat the loop; ticket machine, ~¥1,100–1,500', 35.6987, 139.7855),
-    stop('p0714d', 'Akihabara — figures + Comiket wristband', 'Akihabara', '13:30', 150, 'Grab the C108 afternoon-advance wristband at Animate/Melonbooks (¥440)', 35.6984, 139.7731),
-    stop('p0714e', 'Pack for Hokkaido + laundry', 'Asakusabashi', '16:30', 90, 'Rain shell + warm layer + hiking shoes for Asahidake; cash out', 35.6987, 139.7855),
-    stop('p0714f', 'Dinner: Nabeno-Ism (book!) or Tempura Shimomura', 'Kuramae', '19:00', 120, '4.19, open Tue, 10-min walk home', 35.7040, 139.7920),
+  '2026-07-14': { date: '2026-07-14', title: 'Kamakura full loop → Enoshima sunset', note: 'Swapped from the 13th so the eye clinic could take today. Leave Asakusabashi ~08:10 (Sobu → Shinagawa → Yokosuka line). Buy the Enoden day pass (Noriorikun ¥800) — you ride it 4×. NOTE: you fly to Sapporo tomorrow, so pack tonight after you get back (or this morning).', stops: [
+    stop('p0714a', 'Kamakura Stn → Enoden → Hase', 'Kamakura', '09:45', 25, 'Day pass at the Enoden window', 35.3125, 139.5470),
+    stop('p0714b', 'Kotoku-in — Great Buddha', 'Hase', '10:15', 75, '¥300; Hase-dera is 5 min away if you\'re ahead', 35.3167, 139.5358),
+    stop('p0714c', 'Komachi-dori — street-food lunch', 'Kamakura', '12:00', 110, 'Eat as you walk: croquettes, dango, shirasu-man; souvenirs', 35.3211, 139.5531),
+    stop('p0714d', 'Tsurugaoka Hachimangu', 'Kamakura', '14:00', 30, 'Straight up from the end of Komachi-dori', 35.3258, 139.5565),
+    stop('p0714e', 'Hokokuji bamboo grove', 'Kamakura (Jomyoji)', '14:35', 60, '⚠ CLOSES 16:00 (last entry 15:30) — bus 23/24/36 ~10 min; matcha in the grove ¥600', 35.3204, 139.5735),
+    stop('p0714f', 'Enoden → Kamakurakōkōmae — Slam Dunk crossing', 'Shonan coast', '17:00', 45, 'The opening-credits railroad crossing; Fuji across the bay on clear days', 35.3066, 139.5008),
+    stop('p0714g', 'Enoden → Enoshima Stn → causeway walk', 'Enoshima', '18:10', 40, '~20 min walk to the island', 35.3040, 139.4800),
+    stop('p0714h', 'Chigogafuchi — SUNSET (~18:55)', 'Enoshima (west cliffs)', '18:50', 50, 'Iwaya Caves close 17:00–18:00, so this is the sunset plaza instead', 35.2972, 139.4757),
+    stop('p0714i', 'Shirasu-don dinner near the island', 'Enoshima', '19:50', 60, 'Raw shirasu if the catch allows; kamaage (steamed) otherwise', 35.3009, 139.4794),
+    stop('p0714j', 'Enoshima Stn → home', 'Enoden / Odakyu / JR', '20:50', 90, 'Odakyu to Shinjuku or JR from Fujisawa; ~1h30 door to door', 35.6987, 139.7855),
   ]},
   '2026-07-15': { date: '2026-07-15', title: 'Fly to Sapporo (easy morning)', note: 'MM573 (Peach, LCC) NRT 15:10 — bag-drop closes ~50 min prior. Little Japan checkout in the morning.', stops: [
     stop('p0715a', 'Kuramae coffee + last Sumida stroll', 'Kuramae', '09:30', 75, 'Say bye to the neighborhood', 35.7030, 139.7905),

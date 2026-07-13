@@ -3728,6 +3728,32 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .g-foot .badge{ margin-left:auto; }
 @media (hover: none){ .g-mark, .g-shaky-f{ min-height:44px; } }
 
+/* --- JLPT level colour-coding (difficulty gradient N5→N1). Colour lands on DECORATIVE accents
+   only — card left-border, tab dots, the pattern underline, the progress fill — never on text,
+   so amber/red never fail contrast (the level is always labelled in text too). --- */
+:root{ --lvl-n5:#3f9d5a; --lvl-n4:#158f8f; --lvl-n3:#3a5fd0; --lvl-n2:#b8860b; --lvl-n1:#c0392b; }
+html[data-theme="dark"]{ --lvl-n5:#5ec27a; --lvl-n4:#3fbcbc; --lvl-n3:#7f9bff; --lvl-n2:#d9a441; --lvl-n1:#e0685a; }
+.g-tab::before{ content:""; display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:.4rem; vertical-align:middle; background:var(--line-strong, var(--ink)); }
+.g-tab[data-level="N5"]::before{ background:var(--lvl-n5); }
+.g-tab[data-level="N4"]::before{ background:var(--lvl-n4); }
+.g-tab[data-level="N3"]::before{ background:var(--lvl-n3); }
+.g-tab[data-level="N2"]::before{ background:var(--lvl-n2); }
+.g-tab[data-level="N1"]::before{ background:var(--lvl-n1); }
+.g-card[data-lvl="N5"]{ --lvl:var(--lvl-n5); }
+.g-card[data-lvl="N4"]{ --lvl:var(--lvl-n4); }
+.g-card[data-lvl="N3"]{ --lvl:var(--lvl-n3); }
+.g-card[data-lvl="N2"]{ --lvl:var(--lvl-n2); }
+.g-card[data-lvl="N1"]{ --lvl:var(--lvl-n1); }
+.g-card[data-lvl]{ border-left-width:4px; border-left-color: var(--lvl, var(--line)); }
+.g-card[data-lvl] .g-lvl{ border-color: var(--lvl); }                    /* text stays dark; the border carries the colour */
+.g-card[data-lvl] .gtok-p{ border-bottom-color: var(--lvl); background: color-mix(in srgb, var(--lvl) 8%, transparent); }
+.g-prog[data-lvl="N5"] .g-prog-fill{ background:var(--lvl-n5); }
+.g-prog[data-lvl="N4"] .g-prog-fill{ background:var(--lvl-n4); }
+.g-prog[data-lvl="N3"] .g-prog-fill{ background:var(--lvl-n3); }
+.g-prog[data-lvl="N2"] .g-prog-fill{ background:var(--lvl-n2); }
+.g-prog[data-lvl="N1"] .g-prog-fill{ background:var(--lvl-n1); }
+.g-sort{ font:inherit; font-size:.82rem; padding:.32rem .5rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink-soft); cursor:pointer; }
+
 /* ◆ → Anki export (grammar toolbar) */
 .g-export{ font:inherit; font-size:.85rem; padding:.3rem .6rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
 .g-export[disabled]{ opacity:.45; cursor:default; }

@@ -342,7 +342,11 @@ function buildCalendars() {
   const el = $('#calCalendars');
   if (!el) return;
   const resOpen = getRaw(KEYS.calResOpen, '') === 'open';
-  const present = [...new Set(allEvents().map(catOf))].sort().filter(c => c !== 'birthday');   // birthday lives under Your calendars, not Researched
+  // allCats drives the aggregate ops (isolate / Hide all) — always includes 'birthday' (a togglable
+  // calendar even though it's a People-derived layer, not in allEvents()). present is the RENDER list
+  // for the Researched group only (birthday shows under Your calendars, so it's excluded there).
+  const allCats = [...new Set([...allEvents().map(catOf), 'birthday'])].sort();
+  const present = allCats.filter(c => c !== 'birthday');
   // btnCls (e.g. cat-festival) goes on the row so the category :is() rule sets --chip-cat, which the
   // child swatch inherits; swCls (sw-user/sw-baked/sw-task) colours the source/task swatches directly.
   const row = (attrs, btnCls, swCls, name, on) =>
@@ -365,7 +369,7 @@ function buildCalendars() {
   // double-click AND Shift+activation (Shift+click / Shift+Enter, the keyboard path to isolate).
   const isolate = (c) => {
     if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; }
-    const others = present.filter(x => x !== c);
+    const others = allCats.filter(x => x !== c);
     const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
     hiddenCats.clear();
     if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
@@ -394,7 +398,7 @@ function buildCalendars() {
     buildCalendars(); render(); focusRow('#lgTasks');
   });
   $('#calAll')?.addEventListener('click', () => {
-    if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
+    if (hiddenCats.size) hiddenCats.clear(); else allCats.forEach(c => hiddenCats.add(c));   // Hide all covers Birthdays too
     persistFilters(); buildCalendars(); render(); focusRow('#calAll');
   });
 }

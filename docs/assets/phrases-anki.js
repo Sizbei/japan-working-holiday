@@ -50,6 +50,7 @@ export function mountAnki() {
 
 function render() {
   if (!root) return;
+  _lastAutoId = null;   // fresh deck load (mount / Replace) — don't let a repeated card id (a0, a1…) skip autoplay
   const deck = loadDeck();
   if (deck) (deck.view === 'skim' ? renderSkim(deck) : renderStream(deck));
   else renderImport();

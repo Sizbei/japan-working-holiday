@@ -1392,7 +1392,7 @@ details[open] > .map-area::before{ transform: rotate(90deg); }
 .sug-area{ flex:none; font-size:.7rem; color: var(--ink-soft); }
 .sug-prec{ flex:none; font-size:.66rem; font-weight:700; color: var(--ink-soft); opacity:.8; }
 .map-canvas{ width:100%; height: 440px; border:1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow); background: #0b0b0f; }   /* Flighty deep-black — matches the dark basemap while tiles load */
-@media (max-width: 700px){ .map-canvas{ height: 60vh; min-height: 440px; } }   /* the map is the page on a phone — let it fill more of the screen */
+@media (max-width: 700px){ .map-canvas{ height: clamp(440px, 60vh, 560px); } }   /* the map is the page on a phone — fill more of the screen, bounded (min 440 / max 560) */
 .map-canvas.failed::after{ content:'Map offline — use the neighbourhood index below.'; display:grid; place-items:center; height:100%; color: var(--ink-soft); font-size:.85rem; }
 /* loading state — spinner while Leaflet lazy-loads (a blank canvas reads as broken) */
 .map-canvas.loading::after{ content:'Loading map…'; position:absolute; inset:0; display:grid; place-items:end center; padding-bottom:2.4rem; color: var(--ink-soft); font-size:.85rem; }
@@ -3177,9 +3177,13 @@ ruby > rt {
 /* Explore: "This week" band (S3) */
 .exp-week{ margin: 0 0 var(--s4); }
 .expw-h{ font-family: var(--mono); font-weight:700; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin:0 0 .4rem; }
-.expw-row{ display:flex; gap:.45rem; overflow-x:auto; padding-bottom:.25rem; -webkit-overflow-scrolling:touch;
-  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);   /* fade edges so the horizontal scroll is discoverable on a phone */
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%); }
+.expw-row{ display:flex; gap:.45rem; overflow-x:auto; padding-bottom:.25rem; -webkit-overflow-scrolling:touch; }
+/* fade edges so the horizontal scroll is discoverable — TOUCH/narrow only, so a keyboard user's
+   focus ring on an edge chip is never clipped by the mask on desktop (review a11y finding). */
+@media (max-width: 700px){
+  .expw-row{ mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%); }
+}
 .expw-chip{ flex:none; display:inline-flex; align-items:baseline; gap:.4rem; padding:.4rem .75rem; border:1px solid var(--line); border-radius: var(--r-pill); background: var(--bg-soft); color: var(--ink); text-decoration:none; font-size:.8rem; max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .expw-chip:hover{ border-color: var(--indigo); }
 .expw-chip b{ font-family: var(--mono); font-size:.68rem; color: var(--indigo-ink); }

@@ -20,11 +20,20 @@ function currentRoute() {
   const h = String(location.hash || '').replace(/^#\/?/, '');
   return ROUTES.includes(h) ? h : 'dashboard';
 }
+// the VISIBLE nav order (user-customizable via ⚙ Settings) drives swipe + number shortcuts, so they
+// match what's on screen. Falls back to the canonical ROUTES when the nav isn't rendered yet.
+function visibleRoutes() {
+  const nav = document.getElementById('routeNav');
+  const rs = nav ? [...nav.querySelectorAll('a[data-route]')].map(a => a.dataset.route).filter(Boolean) : [];
+  return rs.length ? rs : ROUTES;
+}
 function go(route) { if (route) location.hash = '#/' + route; }
 function neighbour(dir) {
-  const i = ROUTES.indexOf(currentRoute());
+  const vr = visibleRoutes();
+  const i = vr.indexOf(currentRoute());
+  if (i < 0) return null;   // current page is hidden from the nav (deep-linked) — no swipe neighbour
   const j = i + dir;
-  return (j >= 0 && j < ROUTES.length) ? ROUTES[j] : null;
+  return (j >= 0 && j < vr.length) ? vr[j] : null;
 }
 
 export function mountGestures() {
@@ -158,7 +167,7 @@ function wireKeyboard() {
     if (e.key === '?' && (!modal || modal.classList.contains('kbd-help'))) { e.preventDefault(); toggleHelp(); return; }
     if (modal) return;
     if (e.key === '/' && !document.querySelector('.cmdk-overlay')) { e.preventDefault(); openPalette(); return; }
-    if (e.key >= '1' && e.key <= String(Math.min(9, ROUTES.length))) { e.preventDefault(); go(ROUTES[+e.key - 1]); return; }
+    if (e.key >= '1' && e.key <= '9') { const vr = visibleRoutes(); const idx = +e.key - 1; if (idx < vr.length) { e.preventDefault(); go(vr[idx]); } return; }
     if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
     if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
     // common utility shortcuts — keys unused by the calendar (m/w/d/a/n/t) + checklist (j/k/d/p/e) layers

@@ -5,6 +5,7 @@ export const KEYS = {
   auth: 'jwh-auth-v1',
   events: 'jwh-events-v1',
   calFilters: 'jwh-calfilters-v1',
+  calResOpen: 'jwh-cal-resopen-v1',  // Calendars panel: is the collapsible "Researched" group expanded ('open'/'')
   calGoingOnly: 'jwh-cal-goingonly-v1',
   calShowTasks: 'jwh-cal-showtasks-v1',
   calSources: 'jwh-cal-sources-v1',

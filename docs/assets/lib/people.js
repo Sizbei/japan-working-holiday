@@ -260,3 +260,34 @@ export function isBirthdayMonth(birthday, todayIso) {
   const md = birthdayMD(birthday);
   return !!md && String(todayIso).slice(5, 7) === md.slice(0, 2);
 }
+export { birthdayMD };
+
+// The date (MM-DD) a birthday is CELEBRATED in a given year — Feb-29 falls to Feb-28 in non-leap
+// years so it never silently vanishes (mirrors isBirthday). Pure.
+export function birthdayObservedMD(birthday, year) {
+  let md = birthdayMD(birthday);
+  if (!md) return null;
+  if (md === '02-29') {
+    const y = +year;
+    const leap = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+    if (!leap) md = '02-28';
+  }
+  return md;
+}
+// Build a lookup 'YYYY-MM-DD' → [{ id, name }] for every person's birthday across [y0, y1].
+// One entry per person per year in range; shared birthdays list together. Pure.
+export function birthdaysByDate(people, y0, y1) {
+  const map = new Map();
+  for (const p of (Array.isArray(people) ? people : [])) {
+    const name = String(p?.name ?? '').trim();
+    if (!name || !birthdayMD(p?.birthday)) continue;
+    for (let y = y0; y <= y1; y++) {
+      const md = birthdayObservedMD(p.birthday, y);
+      if (!md) continue;
+      const iso = `${y}-${md}`;
+      if (!map.has(iso)) map.set(iso, []);
+      map.get(iso).push({ id: String(p?.id ?? ''), name });
+    }
+  }
+  return map;
+}

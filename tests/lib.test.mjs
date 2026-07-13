@@ -907,7 +907,29 @@ test('usageSummary: ranks routes, totals visits/edits, flags never-used; guards 
 });
 
 // ---- 縁 People (trip PRM) pure lib — invented names only (public repo) ----
-import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthday, isBirthdayMonth } from '../docs/assets/lib/people.js';
+import { newPerson, searchPeople, sortPeople, tagSet, initialsOf, hueOf, flagOf, leavesLabel, isBirthday, isBirthdayMonth, birthdaysByDate } from '../docs/assets/lib/people.js';
+
+test('birthdaysByDate: yearly instances across the range, Feb-29 falls to Feb-28 in non-leap years', () => {
+  const people = [
+    { id: 'a', name: 'Kenji', birthday: '08-14' },
+    { id: 'b', name: 'Aya', birthday: '1990-11-02' },   // year-prefixed → MM-DD wins
+    { id: 'c', name: 'Leap', birthday: '02-29' },
+    { id: 'd', name: 'NoBday', birthday: '' },           // skipped
+    { id: 'e', name: '', birthday: '05-01' },            // no name → skipped
+  ];
+  const map = birthdaysByDate(people, 2026, 2027);
+  assert.deepEqual(map.get('2026-08-14'), [{ id: 'a', name: 'Kenji' }]);
+  assert.deepEqual(map.get('2027-08-14'), [{ id: 'a', name: 'Kenji' }]);
+  assert.deepEqual(map.get('2026-11-02'), [{ id: 'b', name: 'Aya' }]);
+  assert.equal(map.get('2026-02-29'), undefined);        // 2026 is not a leap year
+  assert.deepEqual(map.get('2026-02-28'), [{ id: 'c', name: 'Leap' }]);   // observed on the 28th
+  assert.equal(map.has('2026-05-01'), false);            // nameless skipped
+  assert.equal(map.has('2026-01-01'), false);            // empty birthday skipped
+});
+test('birthdaysByDate: shared birthday lists everyone together', () => {
+  const map = birthdaysByDate([{ id: 'a', name: 'A', birthday: '03-03' }, { id: 'b', name: 'B', birthday: '03-03' }], 2026, 2026);
+  assert.deepEqual(map.get('2026-03-03'), [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }]);
+});
 
 const _people = () => [
   newPerson({ name: 'Aria', tags: ['music', 'Ramen Nerd'], metDate: '2026-07-04', nextPlan: 'Knock Kōenji', lastSeen: '2026-07-06', star: true }, '2026-07-08', 'p1'),

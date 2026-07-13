@@ -4,7 +4,7 @@ import { daysBetween, fmtShort, parseISO } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
-import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, rescheduleEvent, goAgenda, goWeek } from './calendar.js';
+import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, birthdaysOn, birthdayChipHTML, gotoPerson, rescheduleEvent, goAgenda, goWeek } from './calendar.js';
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -81,14 +81,16 @@ export function monthHTML() {
     const singles = singlesByDay.get(date) || [];
     const multis = spansByDay.get(date) || [];
     const tks = tasksOn(date);
+    const bds = birthdaysOn(date);
     const hasBook = singles.some(e => e.bookBy);
-    // spans first (Notion stacks its bars above the day's own events), then timed singles, then tasks
-    const items = [...multis, ...singles.map(e => ({ ev: e })), ...tks.map(t => ({ tk: t }))];
+    // spans first (Notion stacks its bars above the day's own events), then timed singles, birthdays, tasks
+    const items = [...multis, ...singles.map(e => ({ ev: e })), ...bds.map(b => ({ bd: b })), ...tks.map(t => ({ tk: t }))];
     // "+N more" REPLACES the last row (owner: 4 rows per cell, the 4th IS the count when a day
     // overflows) — never a 5th row that compact's fixed row height clips into invisibility
     const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
     const chips = items.slice(0, shown).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
+      if (x.bd) return birthdayChipHTML(x.bd);
       const e = x.ev;
       // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the
       // titles; continuation days carry just a faint "‹" (the quieter .cont fill says the rest)
@@ -243,6 +245,7 @@ export function wireCells() {
       const chip = e.target.closest('.cal-chip');
       if (chip) {
         if (chip.dataset.task) { gotoTask(chip.dataset.task); return; }     // task chip → jump to the checklist item
+        if (chip.dataset.person) { gotoPerson(chip.dataset.person); return; }   // birthday chip → open that person
         const ev = allEvents().find(x => x.id === chip.dataset.ev); if (ev) openSidePanel(ev, chip); return;
       }
       if (c.querySelector('.cal-chip, .cal-more')) dayPopover(c.dataset.day, c);   // day has events/tasks → peek (pointer path; keyboard = Enter on the date → week)

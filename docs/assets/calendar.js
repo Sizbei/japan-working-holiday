@@ -26,6 +26,7 @@ import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
 import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
+import { birthdaysByDate } from './lib/people.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
 
 let DATA = null;
@@ -44,7 +45,7 @@ let _sidePanelTrigger = null;     // element that opened the panel (focus restor
 let _sidePanelCleanup = null;     // remove side-panel document listeners
 let _legendTimer = null;          // discriminate legend single-click (toggle) from double-click (isolate)
 
-export const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'imported'];
+export const CATS = ['festival', 'fireworks', 'illumination', 'convention', 'seasonal', 'nature', 'holiday', 'food', 'disney', 'music', 'personal', 'birthday', 'imported'];
 export const SPAN_CAP = 10;
 // an "evergreen" event is a season-long span (start→end beyond SPAN_CAP): the ongoing/permanent
 // layer (teamLab, club residencies, beer gardens). These belong in the month view's "Ongoing this
@@ -117,6 +118,35 @@ export function gotoTask(taskId) {
   if (location.hash !== '#/checklist') location.hash = '#/checklist';
   // let the route transition swap views before scrolling/focusing the target row
   setTimeout(() => revealChecklistItem(taskId), 60);
+}
+
+// ---- Birthdays as a display-only calendar layer (auto from the People page) ----
+// Like tasks: not real events (no data-ev, so drag/reschedule/export ignore them). Toggled by the
+// 'birthday' category in the Calendars panel; memoized per render, invalidated on jwh:data-changed.
+let _bdayCache = null;
+document.addEventListener('jwh:data-changed', () => { _bdayCache = null; });
+function bdayMap() {
+  if (_bdayCache) return _bdayCache;
+  // span the whole endless range (a couple of years) so every year's birthday shows
+  const years = [...new Set(allEvents().map(e => +String(e.date).slice(0, 4)).filter(Boolean))];
+  const nowY = +nowISO().slice(0, 4);
+  const y0 = Math.min(nowY, ...years), y1 = Math.max(nowY, ...years);
+  return (_bdayCache = birthdaysByDate(get(KEYS.people, []) || [], y0, y1));
+}
+export function birthdaysOn(iso) {
+  if (hiddenCats.has('birthday')) return [];
+  return bdayMap().get(String(iso).slice(0, 10)) || [];
+}
+export function hasBirthdays() { return bdayMap().size > 0; }
+export function birthdayChipHTML(b) {
+  return `<button type="button" class="cal-chip cat-birthday bday" data-person="${esc(b.id)}" title="${esc(b.name)}’s birthday"><span class="cc-t">🎂 ${esc(b.name)}</span></button>`;
+}
+// jump from a birthday chip to that person on the People page (mirrors gotoTask)
+export function gotoPerson(id) {
+  dismissPopover();
+  if (location.hash !== '#/people') location.hash = '#/people';
+  if (!id) return;
+  ensureRoute('people').then(() => requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:people-open', { detail: { id } }))));
 }
 
 export function catOf(e) { return e.category || 'personal'; }
@@ -305,23 +335,33 @@ export function goToDate(iso) {
   viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; render();
 }
 
-// ---- the "Calendars" sidebar list: source (My events / Researched) + per-category filters ----
+// ---- the "Calendars" sidebar list: YOUR calendars (My events · 🎂 Birthdays · Tasks) up top, the
+// researched category filters tucked into a collapsible "Researched" group below (owner hardly uses
+// them). Category toggles still drive hiddenCats; Birthdays is the 'birthday' category. ----
 function buildCalendars() {
   const el = $('#calCalendars');
   if (!el) return;
-  const present = [...new Set(allEvents().map(catOf))].sort();
+  const resOpen = getRaw(KEYS.calResOpen, '') === 'open';
+  // allCats drives the aggregate ops (isolate / Hide all) — always includes 'birthday' (a togglable
+  // calendar even though it's a People-derived layer, not in allEvents()). present is the RENDER list
+  // for the Researched group only (birthday shows under Your calendars, so it's excluded there).
+  const allCats = [...new Set([...allEvents().map(catOf), 'birthday'])].sort();
+  const present = allCats.filter(c => c !== 'birthday');
   // btnCls (e.g. cat-festival) goes on the row so the category :is() rule sets --chip-cat, which the
   // child swatch inherits; swCls (sw-user/sw-baked/sw-task) colours the source/task swatches directly.
   const row = (attrs, btnCls, swCls, name, on) =>
     `<button class="calrow${btnCls ? ' ' + btnCls : ''}${on ? '' : ' off'}" role="switch" aria-checked="${on}" type="button" ${attrs}><span class="cal-sw${swCls ? ' ' + swCls : ''}"></span><span class="cal-nm">${name}</span></button>`;
   el.innerHTML =
     `<div class="cal-cals-head"><span>Calendars</span><button class="cal-cals-all" id="calAll" type="button">${hiddenCats.size ? 'Show all' : 'Hide all'}</button></div>`
+    + `<div class="cal-grp-lab">Your calendars</div>`
     + row('id="calSrcUser"', '', 'sw-user', 'My events', showUser)
-    + row('id="calSrcBaked"', '', 'sw-baked', 'Researched', showBaked)
-    + `<div class="cal-cals-div" role="separator"></div>`
+    + row(`data-cat="birthday" title="Birthdays from your People page · click to toggle"`, 'cat-birthday', '', '🎂 Birthdays', !hiddenCats.has('birthday'))
+    + row('id="lgTasks"', '', 'sw-task', '☑ Tasks', showTasks)
+    + `<button class="cal-grp-head" id="calResHead" type="button" aria-expanded="${resOpen}" aria-controls="calResBody"><span class="cal-grp-chev" aria-hidden="true">${resOpen ? '▾' : '▸'}</span>Researched</button>`
+    + `<div class="cal-grp-body" id="calResBody"${resOpen ? '' : ' hidden'}>`
+    + row('id="calSrcBaked"', '', 'sw-baked', 'All researched', showBaked)
     + present.map(c => row(`data-cat="${esc(c)}" title="Click to toggle · double-click or Shift+Enter to show only ${esc(c)}"`, `cat-${esc(c)}`, '', esc(c), !hiddenCats.has(c))).join('')
-    + `<div class="cal-cals-div" role="separator"></div>`
-    + row('id="lgTasks"', '', 'sw-task', '☑ Tasks', showTasks);
+    + `</div>`;
 
   const focusRow = (sel) => $(sel)?.focus({ preventScroll: true });   // restore keyboard focus across the rebuild
   const catSel = (c) => `#calCalendars .calrow[data-cat="${window.CSS ? CSS.escape(c) : c}"]`;
@@ -329,7 +369,7 @@ function buildCalendars() {
   // double-click AND Shift+activation (Shift+click / Shift+Enter, the keyboard path to isolate).
   const isolate = (c) => {
     if (_legendTimer) { clearTimeout(_legendTimer); _legendTimer = null; }
-    const others = present.filter(x => x !== c);
+    const others = allCats.filter(x => x !== c);
     const isolated = !hiddenCats.has(c) && others.every(x => hiddenCats.has(x));
     hiddenCats.clear();
     if (!isolated) others.forEach(x => hiddenCats.add(x));   // isolate to c; if already isolated, un-isolate (show all)
@@ -350,6 +390,7 @@ function buildCalendars() {
     });
     b.addEventListener('dblclick', () => isolate(b.dataset.cat));
   });
+  $('#calResHead')?.addEventListener('click', () => { setRaw(KEYS.calResOpen, resOpen ? '' : 'open'); buildCalendars(); focusRow('#calResHead'); });   // collapse/expand the Researched group (no re-render — visibility unchanged)
   $('#calSrcUser')?.addEventListener('click', () => { showUser = !showUser; persistSources(); buildCalendars(); render(); focusRow('#calSrcUser'); });
   $('#calSrcBaked')?.addEventListener('click', () => { showBaked = !showBaked; persistSources(); buildCalendars(); render(); focusRow('#calSrcBaked'); });
   $('#lgTasks')?.addEventListener('click', () => {
@@ -357,7 +398,7 @@ function buildCalendars() {
     buildCalendars(); render(); focusRow('#lgTasks');
   });
   $('#calAll')?.addEventListener('click', () => {
-    if (hiddenCats.size) hiddenCats.clear(); else present.forEach(c => hiddenCats.add(c));
+    if (hiddenCats.size) hiddenCats.clear(); else allCats.forEach(c => hiddenCats.add(c));   // Hide all covers Birthdays too
     persistFilters(); buildCalendars(); render(); focusRow('#calAll');
   });
 }

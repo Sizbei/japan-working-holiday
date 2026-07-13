@@ -46,6 +46,7 @@
   --c-music:#5a3fb5;        --c-music-ink:#5a3fb5;
   --c-personal:#3a5ba0;     --c-personal-ink:#3a5ba0;
   --c-imported:#6b6b6b;     --c-imported-ink:#6b6b6b;
+  --c-birthday:#c02a6e;     --c-birthday-ink:#c02a6e;
   /* ============ TYPE ============ */
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --serif-jp: 'Shippori Mincho', 'Newsreader', serif;   /* editorial Japanese serif for the masthead kickers */
@@ -126,6 +127,7 @@
   --c-convention-ink:#5cc678; --c-seasonal-ink:#e0b34a; --c-nature-ink:#74c267;
   --c-holiday-ink:#ff6b81; --c-food-ink:#e09a55; --c-disney-ink:#e985cf;
   --c-music-ink:#b3a0f0; --c-personal-ink:#8fb0ff; --c-imported-ink:#a5a5a5;
+  --c-birthday-ink:#ff8fbf;
   --shadow-xs:0 1px 2px rgba(0,0,0,.3);
   --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.35);
   --shadow-md:0 1px 2px rgba(0,0,0,.3), 0 8px 30px rgba(0,0,0,.45);
@@ -904,6 +906,14 @@ html.gated{ overflow: hidden; }
 .cal-cals-all{ font-size:.62rem; font-weight:700; color: var(--ink-soft); background:none; border:1px solid var(--line); border-radius:999px; padding:1px 8px; cursor:pointer; }
 .cal-cals-all:hover{ border-color: var(--line-strong); color: var(--ink); }
 .cal-cals-div{ height:1px; background: var(--line); margin:.35rem .1rem; }
+/* Calendars panel groups: "Your calendars" label + collapsible "Researched" header */
+.cal-grp-lab{ font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); font-weight:700; margin:.15rem .35rem .2rem; }
+.cal-grp-head{ display:flex; align-items:center; gap:.3rem; width:100%; margin-top:.4rem; padding:.3rem .35rem; border:none; background:none; cursor:pointer;
+  font: inherit; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); font-weight:700; border-top:1px solid var(--line); border-radius:0; }
+.cal-grp-head:hover{ color: var(--ink-soft); }
+.cal-grp-head:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; border-radius: var(--r-xs); }
+.cal-grp-chev{ font-size:.7rem; width:.8em; display:inline-block; }
+.cal-grp-body[hidden]{ display:none; }
 .calrow{ display:flex; align-items:center; gap:.5rem; width:100%; padding:.28rem .35rem; margin:1px 0; border:none; background:none; border-radius:7px; cursor:pointer; text-align:left; font: inherit; font-size:.82rem; color: var(--ink); }
 .calrow:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
 .calrow.off{ opacity:.42; }
@@ -2799,6 +2809,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 :is(.cal-chip,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music); }
 :is(.cal-chip,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal); }
 :is(.cal-chip,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported); }
+:is(.cal-chip,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday); }
 
 /* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
 [data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival-ink); }
@@ -2813,6 +2824,7 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 [data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music-ink); }
 [data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal-ink); }
 [data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday-ink); }
 
 /* chip title truncates with an ellipsis (flex child needs min-width:0) */
 .cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

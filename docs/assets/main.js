@@ -245,18 +245,23 @@ function seedDayPlanJul4() {
   set(KEYS.seedPlan, true);
 }
 
-// One-time seed (jwh-seed-plan-trip-v1): bake the whole Jul 13–26 itinerary into Plan a Day so the
-// timeline is ready without any manual paste. Non-destructive per date — a day the owner already
-// planned is left untouched. Bump the guard key here + KEYS.seedPlanTrip to re-seed a revised trip.
+// Versioned seed (jwh-seed-plan-trip-v1 stores the applied TRIP_SEED_VERSION): bake the whole
+// Jul 13–26 itinerary into Plan a Day so the timeline is ready without any manual paste. A day is
+// (re)applied only if it's ABSENT or still a PRISTINE prior seed (every stop id matches the seed
+// pattern) — so hand-edited/authored days are always preserved. Bump TRIP_SEED_VERSION to push a
+// revised itinerary (e.g. a day swap) to everyone who hasn't customised those days.
+const TRIP_SEED_VERSION = 2;
+const isPristineSeedDay = (p) => p && Array.isArray(p.stops) && p.stops.length > 0
+  && p.stops.every(s => /^p\d{4}[a-z]$/.test(String(s && s.id)));
 function seedTripPlans() {
-  if (get(KEYS.seedPlanTrip, false)) return;
+  if ((get(KEYS.seedPlanTrip, 0) || 0) >= TRIP_SEED_VERSION) return;   // old boolean `true` → 1 → still < 2, so it re-seeds once
   const plans = get(KEYS.dayPlans, {}) || {};
   let changed = false;
   for (const [date, day] of Object.entries(TRIP_DAYPLANS)) {
-    if (!plans[date]) { plans[date] = day; changed = true; }
+    if (!plans[date] || isPristineSeedDay(plans[date])) { plans[date] = day; changed = true; }
   }
   if (changed) set(KEYS.dayPlans, plans);
-  set(KEYS.seedPlanTrip, true);
+  set(KEYS.seedPlanTrip, TRIP_SEED_VERSION);
 }
 
 function registerSW() {

@@ -743,8 +743,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .wkl-cont{ margin-inline-start:auto; font-size:.66rem; color:var(--ink-soft); flex:0 0 auto; padding-inline-start:6px; }
 .wkl-empty{ color:var(--ink-soft); font-size:.78rem; font-style:italic; margin:2px 0; }
 .wkl-ev:focus-visible, .wkl-add:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
-.wk-chip{ height:22px; display:flex; align-items:center; gap:6px; padding:0 7px; border-radius:6px; font-size:.74rem; font-weight:600; white-space:nowrap; overflow:hidden; cursor:pointer;
-  background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: color-mix(in srgb, var(--cat), #000 20%); }
+.wk-chip{ height:24px; display:flex; align-items:center; gap:6px; padding:0 8px; border-radius:7px; font-size:.76rem; font-weight:500; white-space:nowrap; overflow:hidden; cursor:pointer;
+  background: color-mix(in srgb, var(--cat) 13%, var(--bg-soft)); color: color-mix(in srgb, var(--cat), #000 20%); }   /* match .wk-bar so single-day all-day events read as bars, not boxier chips */
 .cal-chip{ display:block; width:100%; text-align:left; border:none; cursor:pointer; color:#fff;
   font-size:.66rem; font-weight:600; line-height:1.25; padding:1px 5px; border-radius:5px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background: var(--c-personal); }
@@ -3262,7 +3262,7 @@ ruby > rt {
 .wk2-dd{ font-family: var(--serif); font-size:1.1rem; font-weight:600; color: var(--ink); line-height:1; }
 .wk2-dayhd.today .wk2-dd{ color: var(--red); }
 /* all-day band */
-.wk2-band{ display:grid; grid-template-columns: var(--wk-gutter) 1fr; border-bottom:1px solid var(--line-strong); max-height:132px; overflow-y:auto; }
+.wk2-band{ display:grid; grid-template-columns: var(--wk-gutter) 1fr; border-bottom:1px solid var(--line); max-height:132px; overflow-y:auto; }   /* Notion-style: all-day bars flow under the day headers, not a boxed-off labelled lane */
 .wk2-blabel{ font-family: var(--mono); font-size:.56rem; letter-spacing:.05em; text-transform:uppercase; color: var(--ink-faint); padding:.4rem .3rem; border-right:1px solid var(--line); display:flex; align-items:flex-start; justify-content:flex-end; }
 .wk2-bcols{ padding:.25rem .1rem; display:flex; flex-direction:column; gap:2px; min-width:0; }
 /* scrollable hour grid */

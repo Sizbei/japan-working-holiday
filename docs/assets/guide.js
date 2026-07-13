@@ -10,6 +10,7 @@ import { listCtl, LISTCTL } from './lib/listctl.js';
 import { usageSummary } from './lib/usage.js';
 import { ROUTES, routeLabel } from './router.js';
 import { makeSortable } from './dnd.js';
+import { STRINGS } from './i18n.js';
 
 const LISTCTL_OPTS = [
   { v: LISTCTL.QUICKLINE, label: 'Quick-line' },
@@ -98,7 +99,7 @@ function navOrder() {
   const v = get(KEYS.navOrder, null);
   let order = Array.isArray(v) ? v.filter(r => NAV_KNOWN.has(r)) : NAV_ALL.map(o => o.r);
   for (const o of NAV_ALL) if (!order.includes(o.r)) order.push(o.r);   // append any route missing from a stored order (forward-compat)
-  return order;
+  return [...new Set(order)];   // dedupe defensively (a hand-edited / bad-restore storage value could repeat an id)
 }
 
 // Reconcile the live #routeNav <a> list with the stored order + hidden set: create/remove/reorder.
@@ -114,7 +115,9 @@ export function applyNav() {
     if (hidden.has(r)) { if (a) a.remove(); continue; }
     if (!a) {
       a = document.createElement('a');
-      a.href = '#/' + r; a.dataset.route = r; if (meta.i18n) a.dataset.i18n = meta.i18n; a.textContent = meta.label;
+      a.href = '#/' + r; a.dataset.route = r; if (meta.i18n) a.dataset.i18n = meta.i18n;
+      const ja = getRaw(KEYS.lang, 'en') === 'ja';   // keep a re-shown link in the active language (lang.js only re-scans on toggle)
+      a.textContent = (ja && meta.i18n && STRINGS[meta.i18n]) ? STRINGS[meta.i18n] : meta.label;
     }
     if (curHash === r) a.setAttribute('aria-current', 'page');
     nav.insertBefore(a, foot || null);   // insertBefore re-positions an existing node / appends a new one, in order, ahead of the drawer foot

@@ -184,7 +184,7 @@ function openHelp() {
   helpEl = document.createElement('div');
   helpEl.className = 'kbd-help';
   helpEl.setAttribute('role', 'dialog'); helpEl.setAttribute('aria-modal', 'true'); helpEl.setAttribute('aria-label', 'Keyboard shortcuts');
-  const rows = ROUTES.slice(0, Math.min(9, ROUTES.length)).map((r, i) => `<div class="kh-row"><kbd>${i + 1}</kbd><span>${PAGE_LABEL[r] || r}</span></div>`).join('');   // only 1–9 have a number shortcut; the rest are reachable via ⌘K (below)
+  const rows = visibleRoutes().slice(0, 9).map((r, i) => `<div class="kh-row"><kbd>${i + 1}</kbd><span>${PAGE_LABEL[r] || r}</span></div>`).join('');   // 1–9 follow the VISIBLE nav order (same as the shortcut); the rest are reachable via ⌘K (below)
   helpEl.innerHTML = `<div class="kh-panel">
     <h2 class="kh-title">Keyboard shortcuts</h2>
     <div class="kh-grid">${rows}</div>

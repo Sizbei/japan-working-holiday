@@ -4,7 +4,6 @@
 export const KEYS = {
   auth: 'jwh-auth-v1',
   events: 'jwh-events-v1',
-  going: 'jwh-going-v1',
   calFilters: 'jwh-calfilters-v1',
   calGoingOnly: 'jwh-cal-goingonly-v1',
   calShowTasks: 'jwh-cal-showtasks-v1',

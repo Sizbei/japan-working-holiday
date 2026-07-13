@@ -69,7 +69,7 @@
        --maxw       WIDE  : card-grid / multi-column tool pages
                             (dashboard, calendar, explore, rooms, plan).
        --maxw-read  READ  : single-column reading / list pages
-                            (going, deadlines, checklist, packing, budget,
+                            (deadlines, checklist, packing, budget,
                              phrases, emergency). Same width on every one so
                             pages don't appear randomly different.
      EXCEPTION: #view-map stays full --maxw (wide) — user-excepted.
@@ -164,12 +164,6 @@ html { scroll-behavior: smooth; font-size: 106.25%; }
 /* Settling-in: "year so far" stat strip (S7) */
 .ys-strip{ display:flex; gap:.5rem; align-items:baseline; flex-wrap:wrap; margin-top:.55rem; padding-top:.5rem; border-top:1px dashed var(--line); font-size:.74rem; color: var(--ink-faint); }
 .ys-strip .ys-stat b{ font-family: var(--mono); font-size:.9rem; color: var(--ink); }
-
-/* Going: inline location editor (✎) */
-.going-loc{ background:none; border:none; color: var(--ink-faint); font: inherit; font-size:.74rem; cursor:pointer;
-  padding:0 .3rem; border-radius:6px; transition: color .12s ease, background .12s ease; }
-.going-loc:hover, .going-loc:focus-visible{ color: var(--indigo-ink); background: color-mix(in srgb, var(--indigo) 10%, transparent); }
-.going-loc-in{ font: inherit; font-size:.8rem; padding:.15rem .4rem; border:1px solid var(--indigo); border-radius:6px; background: var(--bg-soft); color: var(--ink); width:min(100%, 280px); }
 
 /* Emergency: live quake list (P2P地震情報) */
 .em-qlist{ list-style:none; margin:0; padding:0; }
@@ -1839,7 +1833,6 @@ body { line-height: 1.7; }
    routes narrow that to the READ tier (--maxw-read); they all get the SAME
    width so pages don't jump around. Grid/tool routes keep the WIDE tier and
    need no rule here. #view-map is explicitly excepted and stays WIDE. */
-html.js-router #view-going,
 html.js-router #view-deadlines,
 html.js-router #view-checklist,
 html.js-router #view-packing,
@@ -2190,45 +2183,6 @@ html[data-reduce-motion="on"]::view-transition-new(*){ animation: none !importan
 /* Due-soon flat view: show each item's phase as a small label */
 .ci-phase{ font-family:var(--mono); font-size:.6rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); border:1px solid var(--line); border-radius:var(--r-pill); padding:.05rem .45rem; margin-left:.4rem; vertical-align:middle; white-space:nowrap; }
 .check-soon .check-item{ border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); border-radius:0; }
-
-/* "Going To" page (#/going) — a row list of events the user marked ✓ Going */
-/* "Sync itinerary from calendar" — bulk-marks the trip's personal-category events ✓ Going */
-.going-toolbar{ display:flex; align-items:center; flex-wrap:wrap; gap:.5rem .75rem; margin: var(--s3) 0 var(--s2); }
-.going-sync{ display:inline-flex; align-items:center; gap:.4rem; font:inherit; font-size:.82rem; font-weight:600;
-  padding:.4rem .8rem; border:1px solid var(--indigo); border-radius: var(--r-pill); cursor:pointer;
-  background: color-mix(in srgb, var(--indigo) 8%, var(--bg-soft)); color: var(--indigo-ink); transition: background var(--t-hover), border-color var(--t-hover); }
-.going-sync:hover{ background: color-mix(in srgb, var(--indigo) 16%, var(--bg-soft)); }
-.going-sync:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
-.going-sync:active{ transform: scale(var(--press-scale, .97)); }
-.going-sync-note{ font-size:.78rem; color: var(--ink-soft); }
-
-.going-list{ display:flex; flex-direction:column; gap:.6rem; margin-top: var(--s4); }
-/* P6: going rows 2-up at wide viewports — the narrow column left the page mostly empty */
-@media (min-width: 1100px){ #goingList{ display:grid; grid-template-columns: repeat(2, 1fr); gap: var(--s3); align-items: stretch; } #goingList .empty{ grid-column: 1 / -1; } }
-.going-row{ display:flex; align-items:stretch; gap:.85rem; padding:.7rem .8rem; border:1px solid var(--line);
-  border-radius:var(--r-md); background: var(--bg-elevated); transition: border-color var(--t-hover), transform var(--t-hover); }
-.going-row:hover{ border-color: color-mix(in srgb, var(--indigo) 40%, var(--line)); }
-.going-date{ flex:0 0 auto; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
-  min-width:6.5rem; padding:.35rem .6rem; border-radius:var(--r-sm); color:#fff; line-height:1.2; }
-.going-date b{ font-family:var(--mono); font-size:.82rem; font-weight:700; }
-.going-when{ font-size:.66rem; opacity:.9; margin-top:.1rem; }
-.going-main{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:.2rem; justify-content:center; }
-.going-title{ font-weight:700; color: var(--ink); }
-.going-area{ font-size:.82rem; color: var(--ink-soft); }
-.going-cat{ align-self:flex-start; margin-top:.15rem; font-size:.62rem; font-weight:700; text-transform:uppercase;
-  letter-spacing:.04em; color:#fff; padding:.08rem .5rem; border-radius:var(--r-pill); }
-.going-acts{ flex:0 0 auto; display:flex; flex-direction:column; gap:.35rem; align-items:center; justify-content:center; }
-.going-ic{ display:inline-flex; align-items:center; justify-content:center; min-width:32px; min-height:32px;
-  border:1px solid var(--line); border-radius:var(--r-sm); background: var(--bg-soft); color: var(--ink-soft);
-  font-size:.78rem; font-weight:700; text-decoration:none; cursor:pointer; transition: all var(--t-hover); }
-.going-ic:hover{ color: var(--ink); border-color: var(--ink-soft); transform: translateY(-1px); }
-.going-ic:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
-/* (stage 4: green override removed — inherits .chip.active indigo like every other chip) */
-/* category filter pills: a colour dot + readable label on the normal pill — NOT a full cat-* swatch
-   (which painted dark --ink-soft text on a saturated background = unreadable) */
-.going-fcat{ text-transform: capitalize; }
-.going-fdot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-inline-end:.4rem; vertical-align:baseline; }
-.going-fcat.active .going-fdot{ box-shadow: 0 0 0 1.5px var(--on-accent); }   /* keep the dot legible on the active indigo pill */
 
 /* ============================================================
    FRONT PAGE — Sumi-e ink, scoped to #view-dashboard only.
@@ -2969,16 +2923,10 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .sp-body .modal-src a{ font-family: var(--mono); font-size: .7rem; font-weight: 700; color: var(--indigo); text-decoration: none; border: 1px solid color-mix(in srgb, var(--indigo) 30%, transparent); background: color-mix(in srgb, var(--indigo) 6%, transparent); border-radius: var(--r-pill); padding: 3px 10px; }
 .sp-body .modal-src a:hover{ background: color-mix(in srgb, var(--indigo) 12%, transparent); }
 
-/* actions — hero Going (category-filled) + a secondary row */
+/* actions — a secondary row of buttons */
 .sp-actions{ display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line); background: var(--bg-soft); }
 .sp-sec{ display: flex; gap: var(--s2); }
 .sp-sec .btn{ flex: 1; font-size: .76rem; padding: .5rem .4rem; text-align: center; }
-.sp-going{ width: 100%; text-align: center; background: var(--cat); color: var(--on-accent); border-color: var(--cat); font-weight: 700; }
-.sp-going:hover{ border-color: var(--cat); }
-/* "✓ Going" active state: darken the label in LIGHT theme so it clears AA 4.5:1 on the tint for every
-   category (food/imported/seasonal -ink dipped to ~4.4); dark-theme -ink already passes, keep it. */
-.sp-going.is-going{ background: color-mix(in srgb, var(--cat) 14%, transparent); color: color-mix(in srgb, var(--cat), #000 22%); border-color: color-mix(in srgb, var(--cat) 40%, transparent); }
-[data-theme="dark"] .sp-going.is-going{ color: var(--cat); }
 
 /* reduce-motion: no entrance transition */
 @media (prefers-reduced-motion: reduce){ .sp-inner{ transition: none; } }

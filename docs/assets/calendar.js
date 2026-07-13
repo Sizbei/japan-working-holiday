@@ -10,9 +10,8 @@ import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { gcalUrl } from './lib/ics.js';
 import { alertModal } from './lib/modal.js';
-import { upsertStop, newStop } from './lib/dayplan.js';
+import { upsertStop, newStop, getPlan } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
-import { isGoing, toggleGoing, setGoing } from './lib/going.js';
 import { approxCoord } from './lib/geo.js';
 import { dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
@@ -77,7 +76,7 @@ export function allEvents() {
   if (_evCache) return _evCache;
   const user = loadUser().map(e => ({ ...e, source: 'user' }));
   const copied = new Set(user.map(e => e.copyOf).filter(Boolean));   // "Copy to my events" takes over the baked original — hide it to avoid a duplicate chip
-  const areaOv = get(KEYS.evArea, {}) || {};   // user-edited locations (Going page ✎) — works for baked AND user events
+  const areaOv = get(KEYS.evArea, {}) || {};   // user-edited locations (✎) — works for baked AND user events
   const hidden = new Set(get(KEYS.evHidden, []) || []);   // baked events the user deleted (tips.json itself is immutable)
   const titleOv = get(KEYS.evTitle, {}) || {};   // dblclick renames (side panel) — baked events only; user events edit their own store
   _evCache = [...bakedEvents().filter(e => !copied.has(e.id) && !hidden.has(e.id)), ...user]
@@ -262,10 +261,9 @@ function wireQuickAdd() {
     const t = parseISO(p.date);
     if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); mode = 'month'; }
     const id = 'u' + Date.now();
-    setGoing(id, true);   // a quick-added event is a plan you're making — mark it ✓ Going up front
     saveUser([...loadUser(), { id, title, date: p.date, endDate: '', time: p.time || '', category: 'personal', note: '' }]);
     input.value = ''; hint.textContent = '';
-    dndToast(`Added ✓ Going: ${title} · ${fmtShort(p.date)}`);
+    dndToast(`Added: ${title} · ${fmtShort(p.date)}`);
     input.focus({ preventScroll: true });                                       // a bare focus() yanked the endless grid back to the top
     requestAnimationFrame(() => scrollToDay(p.date, !prefersReducedMotion()));  // land on the new event
   });
@@ -367,8 +365,8 @@ function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 function persistSources() { set(KEYS.calSources, { showUser, showBaked }); }
 
 // ---- Notion-style keyboard shortcuts (active only on #/calendar) ----
-// remove the focused/open event: user events delete; baked events leave your Going list (researched
-// suggestions can't be deleted, only un-followed).
+// remove the focused/open event: user events delete; baked events hide (researched
+// suggestions can't be deleted, only hidden from the merged stream).
 function removeEventByKey(id) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
@@ -376,11 +374,10 @@ function removeEventByKey(id) {
   else hideBakedEvent(id, ev.title);                        // baked → hide from the merged stream (undoable via the toast)
 }
 // "Delete" for a researched event: tips.json is immutable, so hide its id from allEvents()
-// (calendar, Going, map, dashboard all re-derive). The toast offers Undo.
+// (calendar, map, dashboard all re-derive). The toast offers Undo.
 function hideBakedEvent(id, title) {
   set(KEYS.evHidden, [...new Set([...(get(KEYS.evHidden, []) || []), id])]);
-  if (isGoing(id)) toggleGoing(id);                          // also drop it from Going (toggle dispatches data-changed)
-  else document.dispatchEvent(new CustomEvent('jwh:data-changed'));
+  document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   closeSidePanel();
   dndToast(`Deleted “${title}”`, () => {
     set(KEYS.evHidden, (get(KEYS.evHidden, []) || []).filter(x => x !== id));
@@ -768,7 +765,7 @@ export function openSidePanel(ev, trigger) {
   // string-built into a style attribute): esc() is an HTML escaper, and HTML entities DECODE
   // BEFORE the CSS parser runs — the wrong tool for this context (review #136).
   const imgOk = isBaked && /^https:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&*+,;=%-]+$/.test(ev.image || '') && !/['"()\s<>]/.test(ev.image);
-  const going = isGoing(ev.id);
+  const alreadyPlanned = !!getPlan(ev.date.slice(0, 10))?.stops?.some(s => s.name === ev.title);
   const dateRange = esc(fmtDate(ev.date)) + (ev.endDate ? ' – ' + esc(fmtDate(ev.endDate)) : '');
   // friendly countdown chip: "in N days" / today / tomorrow / on now / past, + "· N-day" duration
   const startISO = ev.date.slice(0, 10), endISO = (ev.endDate || ev.date).slice(0, 10);
@@ -777,11 +774,10 @@ export function openSidePanel(ev, trigger) {
   if (dTo != null) cd = dTo > 1 ? `in ${dTo} days` : dTo === 1 ? 'tomorrow' : dTo === 0 ? 'today' : (endISO >= TODAY ? 'on now' : 'past');
   const span = ev.endDate ? (daysBetween(startISO, endISO) ?? 0) + 1 : 0;
   const cdFull = [cd, span > 1 ? `${span}-day` : ''].filter(Boolean).join(' · ');
-  const goBtn = `<button class="btn sp-going${going ? ' is-going' : ''}" id="spGoing" aria-pressed="${going ? 'true' : 'false'}">${going ? '✓ Going' : '＋ Going'}</button>`;
   const gcal = `<a class="btn ghost" href="${esc(gcalUrl(ev))}" target="_blank" rel="noopener noreferrer">Google Cal</a>`;
   const actions = isBaked
-    ? `${goBtn}<div class="sp-sec">${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}${ev.renamed ? '<button class="btn" id="spResetName">↩ Reset name</button>' : ''}<button class="btn" id="spPlan">＋ Day plan</button>${gcal}<button class="btn" id="spCopy">Copy</button></div>`
-    : `${goBtn}<div class="sp-sec"><button class="btn" id="spEdit">Edit</button>${gcal}<button class="btn danger" id="spDel">Delete</button></div>`;
+    ? `<div class="sp-sec">${ev.moved ? '<button class="btn" id="spReset">↺ Reset date</button>' : ''}${ev.renamed ? '<button class="btn" id="spResetName">↩ Reset name</button>' : ''}${alreadyPlanned ? '' : '<button class="btn" id="spPlan">＋ Day plan</button>'}${gcal}<button class="btn" id="spCopy">Copy</button></div>`
+    : `<div class="sp-sec"><button class="btn" id="spEdit">Edit</button>${gcal}<button class="btn danger" id="spDel">Delete</button></div>`;
 
   panel.innerHTML = `
     <div class="sp-backdrop" id="spBackdrop" aria-hidden="true"></div>
@@ -894,16 +890,6 @@ export function openSidePanel(ev, trigger) {
     document.getElementById('main')?.addEventListener('scroll', () => { if (_sidePanelEv) closeSidePanel(); }, { passive: true });
     document.addEventListener('scroll', (e) => { if (_sidePanelEv && e.target?.classList?.contains('cal-grid')) closeSidePanel(); }, { capture: true, passive: true });
   }
-  panel.querySelector('#spGoing')?.addEventListener('click', () => {
-    const id = ev.id;
-    toggleGoingEv(ev);                                                            // synchronous jwh:data-changed → the calendar re-renders → the trigger node is replaced
-    // re-anchor to the NEW element (else the popover jumped to the corner) — prefer the SAME day's
-    // chip: spans now chip every covered day, so first-match would teleport the card to the span start
-    const day = _sidePanelTrigger?.closest?.('[data-day]')?.dataset.day;
-    const fresh = (day && document.querySelector(`#calView [data-day="${day}"] [data-ev="${id}"]`))
-      || document.querySelector(`#calView [data-ev="${id}"], #calView [data-id="${id}"]`) || _sidePanelTrigger;
-    openSidePanel(ev, fresh);
-  });
   if (isBaked) {
     panel.querySelector('#spReset')?.addEventListener('click', () => { const { [ev.id]: _d, ...o } = loadOverrides(); saveOverrides(o); closeSidePanel(); });
     panel.querySelector('#spPlan')?.addEventListener('click', () => { addEventToPlan(ev); closeSidePanel(); });
@@ -949,7 +935,6 @@ document.addEventListener('jwh:data-changed', () => {
 });
 
 // ---- shared event actions (used by both the modal handlers and the context menu) ----
-export function toggleGoingEv(ev) { toggleGoing(ev.id); }                     // toggleGoing dispatches
 function addEventToPlan(ev) {
   const c = approxCoord(DATA.areaGeo, ev.area || '', ev.title);
   upsertStop(ev.date.slice(0, 10), newStop({ name: ev.title, area: ev.area || '', lat: c.lat, lng: c.lng, coordKind: 'approx', seed: Math.random() }));   // upsertStop → dispatch
@@ -989,7 +974,7 @@ export function undoLastDelete() {
   const { event, place } = pendingUndo;                        // atomic consume: capture, then clear BEFORE mutating
   clearPending();
   if (place) patchPlace(place.id, { eventId: place.eventId, date: place.date, remindDate: place.remindDate });   // re-link first (silent) …
-  saveUser([...loadUser(), event]);                            // … then save: one dispatch renders both. Original id → Going + place links reconnect.
+  saveUser([...loadUser(), event]);                            // … then save: one dispatch renders both. Original id → place links reconnect.
   return true;
 }
 function focusAdd() { $('#calAdd')?.focus(); }                 // after a mutating menu action, render destroys the trigger
@@ -1003,11 +988,10 @@ function eventMenuItems(ev) {
     plan: () => addEventToPlan(ev),
     checklist: () => addEventToChecklist(ev),
     gcal: () => window.open(gcalUrl(ev), '_blank', 'noopener'),
-    going: () => { toggleGoingEv(ev); focusAdd(); },
     copy: () => { copyBakedToUser(ev); focusAdd(); },
     delete: () => { deleteUserEvent(ev.id); focusAdd(); },
   };
-  return eventMenuSpec(ev, { isGoing: isGoing(ev.id) }).map(it => it.sep ? { sep: true } : { label: it.label, danger: it.danger, run: RUN[it.key] });
+  return eventMenuSpec(ev, { alreadyPlanned: !!getPlan(ev.date.slice(0, 10))?.stops?.some(s => s.name === ev.title) }).map(it => it.sep ? { sep: true } : { label: it.label, danger: it.danger, run: RUN[it.key] });
 }
 
 // Resolve a DOM node to event menu items, or null if it's not an event trigger. Exported for gestures.js.

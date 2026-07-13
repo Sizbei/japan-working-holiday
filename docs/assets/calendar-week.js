@@ -164,7 +164,7 @@ export function wireWeek() {
     const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
     scroll.scrollTop = target * WK_HH;
   }
-  // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Going/Reset/Copy; user → edit modal).
+  // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.
   $$('#calView .wk-chip[data-id], #calView .wk-bar[data-id], #calView .wkl-ev[data-id], #calView .wk2-ev[data-id]').forEach(el => el.addEventListener('click', () => {
     if (_wkResizeSuppressClick) return;                       // a resize drag just ended on this bar — don't also open it

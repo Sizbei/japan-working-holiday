@@ -15,17 +15,22 @@ test('duplicateUserEvent: copies fields with new id + copyOf, no input mutation'
   assert.ok(!('copyOf' in ev));
 });
 
-test('eventMenuSpec: user event → edit/duplicate/plan/gcal/going + sep + delete(danger)', () => {
-  const spec = eventMenuSpec({ id: 'u1', source: 'user' }, { isGoing: true });
-  assert.deepEqual(spec.filter(i => i.key).map(i => i.key), ['edit', 'duplicate', 'plan', 'checklist', 'gcal', 'going', 'delete']);
+test('eventMenuSpec: user event → edit/duplicate/plan/checklist/gcal + sep + delete(danger)', () => {
+  const spec = eventMenuSpec({ id: 'u1', source: 'user' });
+  assert.deepEqual(spec.filter(i => i.key).map(i => i.key), ['edit', 'duplicate', 'plan', 'checklist', 'gcal', 'delete']);
   assert.ok(spec.some(i => i.sep));
   assert.equal(spec.find(i => i.key === 'delete').danger, true);
-  assert.equal(spec.find(i => i.key === 'going').label, '✓ Going');
 });
 
-test('eventMenuSpec: baked event → open/plan/gcal/copy/going, no edit/delete/duplicate', () => {
-  const spec = eventMenuSpec({ id: 'b1', source: 'baked' }, { isGoing: false });
+test('eventMenuSpec: baked event → open/plan/checklist/gcal/copy, no edit/delete/duplicate', () => {
+  const spec = eventMenuSpec({ id: 'b1', source: 'baked' });
   const keys = spec.filter(i => i.key).map(i => i.key);
-  assert.deepEqual(keys, ['open', 'plan', 'checklist', 'gcal', 'copy', 'going']);
-  assert.equal(spec.find(i => i.key === 'going').label, '＋ Going');
+  assert.deepEqual(keys, ['open', 'plan', 'checklist', 'gcal', 'copy']);
+});
+
+test('eventMenuSpec: alreadyPlanned omits the ＋ Add to day plan item', () => {
+  const userSpec = eventMenuSpec({ id: 'u1', source: 'user' }, { alreadyPlanned: true });
+  assert.ok(!userSpec.some(i => i.key === 'plan'));
+  const bakedSpec = eventMenuSpec({ id: 'b1', source: 'baked' }, { alreadyPlanned: true });
+  assert.ok(!bakedSpec.some(i => i.key === 'plan'));
 });

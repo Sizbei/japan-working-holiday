@@ -7,14 +7,25 @@ import { $, $$, esc } from './lib/dom.js';
 import { fmtShort, nowISO, daysBetween } from './lib/dates.js';
 import { allEvents } from './calendar.js';
 import { gcalUrl } from './lib/ics.js';
-import { isGoing, toggleGoing } from './lib/going.js';
+import { isGoing, toggleGoing, addGoing } from './lib/going.js';
+import { dndToast } from './dnd.js';
 import { get, set, KEYS } from './lib/store.js';
 
 let TODAY = nowISO();
 let fCat = 'all', fUpcoming = true;   // session filter state
 
+// the trip itinerary on the calendar is the 'personal' category (arrival/day plans, stays, flights,
+// intercity legs) — as opposed to researched suggestions (festivals, conventions…). Sync marks all
+// of them ✓ Going so the list reflects the real trip. Explicit + repeatable (re-run as you add days).
+function syncItinerary() {
+  const ids = allEvents().filter(e => (e.category || 'personal') === 'personal').map(e => e.id);
+  const n = addGoing(ids);   // one write + dispatch → the jwh:data-changed listener re-renders
+  dndToast(n ? `Added ${n} itinerary event${n === 1 ? '' : 's'} to Going` : 'Your itinerary is already all in Going');
+}
+
 export function mountGoingPage() {
   TODAY = nowISO();
+  $('#goingSync')?.addEventListener('click', syncItinerary);
   render();
   // EF3: a ✓ Going toggle anywhere refreshes this list — immediately when visible, else on entry
   let goingDirty = false;

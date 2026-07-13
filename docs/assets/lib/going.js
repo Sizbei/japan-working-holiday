@@ -22,6 +22,15 @@ export function setGoing(id, on = true) {
   document.dispatchEvent(new CustomEvent('jwh:data-changed'));
   return on;
 }
+// bulk-add (sync the itinerary from the calendar): one write + one dispatch for the whole set,
+// and only when something actually changed. Returns how many were newly added.
+export function addGoing(ids) {
+  const g = loadGoing();
+  let added = 0;
+  for (const id of ids) if (id && !g.has(id)) { g.add(id); added++; }
+  if (added) { set(KEYS.going, [...g]); document.dispatchEvent(new CustomEvent('jwh:data-changed')); }
+  return added;
+}
 export function toggleGoing(id) {
   if (!id) return false;
   const g = loadGoing();

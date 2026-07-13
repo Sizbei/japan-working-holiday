@@ -51,7 +51,7 @@ function applyLang(lang) {
       el.removeAttribute('data-jp');
     }
   });
-  // ledes swapped via innerHTML re-create empty #goingCount/#roomCount; nudge their owners to repaint.
+  // ledes swapped via innerHTML re-create empty #roomCount; nudge their owners to repaint.
   // Safe: applyLang is never invoked from a jwh:data-changed handler, so this cannot loop.
   if (swappedHtml) document.dispatchEvent(new CustomEvent('jwh:data-changed'));
 }

@@ -4,10 +4,9 @@
 
 import { $, $$, esc } from './lib/dom.js';
 import { gcalUrl, toICS, parseICS } from './lib/ics.js';
-import { isGoing } from './lib/going.js';
 import { alertModal, confirmModal } from './lib/modal.js';
 import { searchJP } from './lib/nominatim.js';
-import { TODAY, CATS, allEvents, catOf, loadUser, saveUser, toggleGoingEv, syncPlaceDate, deleteUserEvent } from './calendar.js';
+import { TODAY, CATS, allEvents, catOf, loadUser, saveUser, syncPlaceDate, deleteUserEvent } from './calendar.js';
 
 // ---- add/edit modal ----
 export function openModal(ev, presetDate, presetEnd, presetTime) {
@@ -37,7 +36,6 @@ export function openModal(ev, presetDate, presetEnd, presetTime) {
       </label>
       <label>Note<textarea name="note" rows="3">${esc(e.note || '')}</textarea></label>
       <div class="modal-actions">
-        ${ev && ev.id ? `<button type="button" class="btn ${isGoing(ev.id) ? 'primary' : ''}" id="mdGoingU" aria-pressed="${isGoing(ev.id) ? 'true' : 'false'}">${isGoing(ev.id) ? '✓ Going' : '＋ Going'}</button>` : ''}
         ${ev ? '<button type="button" class="btn danger" id="mdDel">Delete</button>' : ''}
         ${gbtn}
         <button type="submit" class="btn primary">${ev ? 'Save' : 'Add'}</button>
@@ -45,7 +43,6 @@ export function openModal(ev, presetDate, presetEnd, presetTime) {
     </form>`;
   const ov = showModal(body);
   wireLocationField(ov);
-  ov.querySelector('#mdGoingU')?.addEventListener('click', () => { toggleGoingEv(ev); closeModal(ov, { rerender: true }); });
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());

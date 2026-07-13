@@ -17,7 +17,6 @@ import { spendSummary, parseSpend, monthTotal, pruneSpend } from './lib/spend.js
 import { allEvents } from './calendar.js';
 import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
 import { loadPlans } from './lib/dayplan.js';
-import { isGoing } from './lib/going.js';
 import { summary, fmtYen } from './lib/budget.js';
 import { progress } from './lib/packing.js';
 import { readiness } from './lib/readiness.js';
@@ -318,7 +317,6 @@ function renderWidgets(alerts) {
   renderSpend();
   fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'), 3);
   renderProgress();
-  renderGoingWidget();
   renderTeasers(alerts);
 }
 
@@ -441,10 +439,9 @@ function renderWxStrip() {
 // fills the Settling-in card's spare space instead of orphaning a 7th grid cell
 function yearStatsHTML() {
   const visited = loadPlaces().filter(p => p.visited).length;
-  const attended = allEvents().filter(e => isGoing(e.id) && (e.endDate || e.date).slice(0, 10) < TODAY).length;
   const tasksDone = Object.keys(get(KEYS.checklist, {}) || {}).length;
   const st = (n, label) => `<span class="ys-stat"><b>${esc(String(n))}</b> ${esc(label)}</span>`;
-  return `<div class="ys-strip">${st(visited, 'places visited')}<span aria-hidden="true">·</span>${st(attended, 'events attended')}<span aria-hidden="true">·</span>${st(tasksDone, 'tasks done')}</div>`;
+  return `<div class="ys-strip">${st(visited, 'places visited')}<span aria-hidden="true">·</span>${st(tasksDone, 'tasks done')}</div>`;
 }
 
 // ¥→USD for the budget teaser (er-api, keyless). 24h TTL — FX day-precision is plenty here.
@@ -492,20 +489,6 @@ function teaser(sel, text, route) {
   if (!el) return;
   const body = el.querySelector('.teaser-body');
   if (body) body.innerHTML = `<a href="${route}">${esc(text)} <span class="teaser-go" aria-hidden="true">→</span></a>`;
-}
-// curated "events I'm going to" — the ones the user has marked ✓ Going (not the auto upcoming stream)
-function renderGoingWidget() {
-  const el = $('#wGoing');
-  if (!el) return;
-  const going = allEvents().filter(e => isGoing(e.id) && (e.endDate || e.date).slice(0, 10) >= TODAY).sort((a, b) => a.date.localeCompare(b.date));
-  const body = going.length
-    ? `<ul>${going.slice(0, 2).map(e => {
-        const c = countdown(e.date.slice(0, 10), TODAY);
-        const when = c.phase === 'arrived' ? esc(fmtShort(e.date)) : `in ${c.days}d`;
-        return `<li><a href="#/calendar"><span class="w-when">${esc(when)}</span> ${esc(clip(e.title, 46))}</a></li>`;
-      }).join('')}</ul>`
-    : `<p class="w-empty">Nothing locked in yet — open an event and tap <b>✓ Going</b>.</p>`;
-  el.querySelector('.widget-body').innerHTML = body;
 }
 function fill(sel, list, max = 5) {
   const el = $(sel);

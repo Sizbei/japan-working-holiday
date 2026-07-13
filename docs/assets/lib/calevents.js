@@ -17,26 +17,24 @@ export function duplicateUserEvent(ev, newId) {
   };
 }
 
-export function eventMenuSpec(ev, { isGoing = false } = {}) {
-  const going = { key: 'going', label: isGoing ? '✓ Going' : '＋ Going' };
+export function eventMenuSpec(ev, { alreadyPlanned = false } = {}) {
+  const plan = alreadyPlanned ? null : { key: 'plan', label: '＋ Add to day plan' };
   if (ev.source === 'user') {
     return [
       { key: 'edit', label: 'Edit' },
       { key: 'duplicate', label: 'Duplicate' },
-      { key: 'plan', label: '＋ Add to day plan' },
+      plan,
       { key: 'checklist', label: '＋ Add to checklist' },
       { key: 'gcal', label: '＋ Google Calendar' },
-      going,
       { sep: true },
       { key: 'delete', label: 'Delete', danger: true },
-    ];
+    ].filter(Boolean);
   }
   return [
     { key: 'open', label: 'Open details' },
-    { key: 'plan', label: '＋ Add to day plan' },
+    plan,
     { key: 'checklist', label: '＋ Add to checklist' },
     { key: 'gcal', label: '＋ Google Calendar' },
     { key: 'copy', label: 'Copy to my events' },
-    going,
-  ];
+  ].filter(Boolean);
 }

@@ -103,7 +103,6 @@ function boot() {
       // calendar "縁 met here" jump (jwh:people-open) which awaits ensureRoute('people') in calendar.js.
       safe(() => registerLazyRoute(['people'], () => import('./people.js').then(m => m.mountPeople(data))));
       safe(() => registerLazyRoute(['rooms'],  () => import('./rooms.js').then(m => m.mountRooms(data))));
-      safe(() => registerLazyRoute(['going'],  () => import('./going-page.js').then(m => m.mountGoingPage())));
       // EF6: map + plan share ONE lazy bundle. plan.js imports placesModel/drawRoute/clearRoute from
       // map.js, and placesModel() reads map's module-level DATA set ONLY by mountMap — so the bundle
       // always mounts BOTH (map first, to set DATA), on first #/map OR #/plan entry. Leaflet still
@@ -252,7 +251,7 @@ function seedDayPlanJul4() {
 // (re)applied only if it's ABSENT or still a PRISTINE prior seed (every stop id matches the seed
 // pattern) — so hand-edited/authored days are always preserved. Bump TRIP_SEED_VERSION to push a
 // revised itinerary (e.g. a day swap) to everyone who hasn't customised those days.
-const TRIP_SEED_VERSION = 3;
+const TRIP_SEED_VERSION = 4;
 const isPristineSeedDay = (p) => p && Array.isArray(p.stops) && p.stops.length > 0
   && p.stops.every(s => /^p\d{4}[a-z]$/.test(String(s && s.id)));
 function seedTripPlans() {

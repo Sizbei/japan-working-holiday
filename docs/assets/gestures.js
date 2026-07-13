@@ -12,7 +12,7 @@ import { openPalette } from './palette.js';
 import { ensureRoute } from './lazyroutes.js';
 
 const PAGE_LABEL = {
-  dashboard: 'Home', calendar: 'Calendar', going: 'Going To', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
+  dashboard: 'Home', calendar: 'Calendar', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
   packing: 'Packing', budget: 'Budget', phrases: 'Phrases', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a day', emergency: 'Emergency',
 };
 

@@ -3570,6 +3570,13 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .ank-card.is-shaky{ border-color: var(--gold); }
 .ank-flag{ position:absolute; top:.6rem; right:.7rem; font-family: var(--mono); font-size:.62rem; font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }   /* stage-20 critic: was 2.96:1 in light */
 .ank-word{ font-size:2.6rem; font-weight:800; line-height:1.1; color: var(--ink); }
+/* reading rides above the word as ruby; SIZE stays on .ank-word so the mobile 2.1rem override still
+   wins. The site's `.furi-off ruby > rt{visibility:hidden}` toggles the reading for free. */
+ruby.ank-word{ ruby-position: over; line-height: 1.9; }
+ruby.ank-word rt{ font-size:.34em; font-weight:500; color: var(--ink-soft); }
+.ank-pos{ font-family: var(--mono); font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+  color: var(--ink-soft); background: var(--bg-soft); border:1px solid var(--line); border-radius:100px; padding:.15rem .6rem; }
+.ank-cloze{ background: color-mix(in srgb, var(--indigo) 16%, transparent); color: var(--ink); border-radius:5px; padding:.02em .28em; font-weight:700; }
 .ank-read{ font-size:1rem; color: var(--ink-soft); }
 .ank-mean{ font-size:1.2rem; color: var(--ink); }
 .ank-hair{ width:60px; height:1px; background: var(--line); margin:.5rem 0 .1rem; }

@@ -36,9 +36,10 @@ function loadDeck() {
     shuffle: !!d.shuffle,
     seed: Number.isFinite(d.seed) ? d.seed : 1,
     view: d.view === 'skim' ? 'skim' : 'stream',   // stage 3: threaded through BOTH fns (they allow-list keys)
+    autoplay: !!d.autoplay,                        // auto-play each card's audio
   };
 }
-function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream' }); }
+function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay }); }
 
 export function mountAnki() {
   DATA = null;
@@ -49,6 +50,7 @@ export function mountAnki() {
 
 function render() {
   if (!root) return;
+  _lastAutoId = null;   // fresh deck load (mount / Replace) — don't let a repeated card id (a0, a1…) skip autoplay
   const deck = loadDeck();
   if (deck) (deck.view === 'skim' ? renderSkim(deck) : renderStream(deck));
   else renderImport();
@@ -288,6 +290,7 @@ function barHTML(deck) {
           <button type="button" class="ank-mini${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}">☰ Skim</button>
         </span>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
+        <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
         <button type="button" class="ank-mini" id="ankReplace">Replace deck</button>
       </div>
     </div>`;
@@ -410,6 +413,8 @@ function wireSkim() {
 // a time for the image, audio URLs revoked on 'ended'. Deck audio is deliberate-tap
 // (or P) — never autoplay: the refresher's speed is the point.
 let _mediaTok = 0, _imgUrl = null, _audio = null;
+let _suppressTap = false;   // a horizontal swipe just advanced — swallow the click it would also fire
+let _lastAutoId = null;     // last card auto-played (so a re-paint of the same card doesn't replay)
 function fillMedia(card) {
   const tok = ++_mediaTok;
   if (_imgUrl) { URL.revokeObjectURL(_imgUrl); _imgUrl = null; }
@@ -486,11 +491,16 @@ function paintCard() {
     ${hair}${sent}${sentM}
     ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}`;
   fillMedia(card);
+  // auto-play audio ONLY when the card actually changed (not on a re-paint from flagging shaky) —
+  // gated on card.id. Browsers block play() until a gesture; advancing IS a gesture, so it works
+  // from the first tap onward (the very first mount paint is silently blocked, which is fine).
+  if (deck.autoplay && card.a && card.id !== _lastAutoId) { _lastAutoId = card.id; $('#ankAudio')?.click(); }
 
   const total = deck.cards.length;
   const prog = $('#ankProg');
   if (prog) {
     const pct = Math.round((idx + 1) / order.length * 100);
+    const jump = `<label class="ank-jump-l">→ <input class="ank-jump" id="ankJump" type="number" inputmode="numeric" min="1" max="${esc(String(total))}" value="${esc(String(chunk * CHUNK + idx + 1))}" aria-label="Jump to card number"></label>`;
     prog.innerHTML = mode === 'pile'
       ? `<span class="ank-prog-n">${esc(String(idx + 1))} / ${esc(String(order.length))} shaky</span>
          <span class="ank-prog-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`
@@ -498,7 +508,8 @@ function paintCard() {
          <span class="ank-prog-dot" aria-hidden="true">·</span>
          <span class="ank-prog-lbl">chunk ${esc(chunkLabel(chunk, total, CHUNK))}</span>
          <span class="ank-prog-mini">${esc(String(idx + 1))}/${esc(String(order.length))}</span>
-         <span class="ank-prog-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`;
+         <span class="ank-prog-bar ank-scrub" aria-hidden="true" title="Tap to jump within this set"><i style="width:${pct}%"></i></span>
+         ${jump}`;
   }
   announce(`${card.w}${card.r ? ', ' + card.r : ''}${card.m ? ', ' + card.m : ''}${isShaky ? ', flagged shaky' : ''}`);
 }
@@ -515,6 +526,27 @@ function advance(delta) {
   const next = idx + delta;
   if (next < 0 || next >= order.length) return;
   stream.idx = next;
+  paintCard();
+  persistPos();
+}
+
+// jump to a GLOBAL card number (1-based across the whole deck) — resolves to its chunk + index.
+function jumpToCard(n) {
+  if (!stream || !Number.isFinite(n)) return;
+  const total = stream.deck.cards.length;
+  n = Math.min(Math.max(1, n | 0), total);
+  const chunk = Math.floor((n - 1) / CHUNK), idx = (n - 1) % CHUNK;
+  stream.deck.pos[chunk] = idx;                                    // switchChunk reads pos → lands on idx
+  if (stream.mode !== 'chunk' || chunk !== stream.chunk) { switchChunk(chunk); }
+  else { stream.idx = Math.min(idx, stream.order.length - 1); paintCard(); persistPos(); }
+}
+
+// scrub within the current set (chunk or pile) from a click x on the progress bar.
+function scrubTo(bar, clientX) {
+  if (!stream) return;
+  const r = bar.getBoundingClientRect();
+  const frac = r.width ? Math.min(1, Math.max(0, (clientX - r.left) / r.width)) : 0;
+  stream.idx = Math.min(Math.max(0, Math.round(frac * (stream.order.length - 1))), stream.order.length - 1);
   paintCard();
   persistPos();
 }
@@ -556,6 +588,11 @@ function rePaintAfterSwitch() {
 function wireCommon() {
   $('#ankStrip')?.querySelectorAll('.ank-chip[data-chunk]').forEach(b => b.addEventListener('click', () => switchChunk(parseInt(b.dataset.chunk, 10))));
   root.querySelector('.ank-chip-pile')?.addEventListener('click', enterPile);
+  $('#ankAuto')?.addEventListener('click', () => {
+    const d = stream.deck; d.autoplay = !d.autoplay; saveDeck(d);
+    const b = $('#ankAuto'); if (b) { b.classList.toggle('is-on', d.autoplay); b.setAttribute('aria-pressed', String(d.autoplay)); }
+    if (d.autoplay) { _lastAutoId = null; $('#ankAudio')?.click(); }   // play the current card now (this click is the gesture)
+  });
   $('#ankViewStream')?.addEventListener('click', () => { const d = stream.deck; if (d.view !== 'stream') { d.view = 'stream'; saveDeck(d); renderStream(d); } });
   $('#ankViewSkim')?.addEventListener('click', () => { const d = stream.deck; if (d.view !== 'skim') { d.view = 'skim'; saveDeck(d); renderSkim(d); } });
   $('#ankShuffle')?.addEventListener('click', () => {
@@ -578,15 +615,46 @@ function wireCommon() {
 
 function wireStream() {
   const card = $('#ankCard');
-  card?.addEventListener('click', () => advance(1));
+  const tap = (fn) => () => { if (_suppressTap) { _suppressTap = false; return; } fn(); };   // swallow the click a swipe also fires
+  card?.addEventListener('click', tap(() => advance(1)));
   // touch controls (rebuilt every renderStream) — wire to the SAME actions as the keys.
   // Tap zones sit over the card halves; the bottom bar is the accessible equivalent.
-  $('#ankTapPrev')?.addEventListener('click', () => advance(-1));
-  $('#ankTapNext')?.addEventListener('click', () => advance(1));
+  $('#ankTapPrev')?.addEventListener('click', tap(() => advance(-1)));
+  $('#ankTapNext')?.addEventListener('click', tap(() => advance(1)));
   $('#ankPrevBtn')?.addEventListener('click', () => advance(-1));
   $('#ankNextBtn')?.addEventListener('click', () => advance(1));
   $('#ankShakyBtn')?.addEventListener('click', () => toggleShakyCurrent());
   $('#ankAudioBtn')?.addEventListener('click', () => $('#ankAudio')?.click());   // no-op if this card has no audio
+
+  // swipe (touch/pen only): swipe left = next, right = back. Requires a mostly-horizontal move past a
+  // distance OR velocity threshold, so a vertical scroll or a tap never triggers it; the ensuing click
+  // is swallowed via _suppressTap (reset on the next pointerdown so it can't get stuck).
+  const wrap = root.querySelector('.ank-cardwrap');
+  if (wrap) {
+    let sx = 0, sy = 0, st = 0, tracking = false;
+    wrap.addEventListener('pointerdown', (e) => {
+      _suppressTap = false;
+      if (e.pointerType === 'mouse') return;
+      sx = e.clientX; sy = e.clientY; st = e.timeStamp; tracking = true;
+    });
+    wrap.addEventListener('pointerup', (e) => {
+      if (!tracking) return; tracking = false;
+      const dx = e.clientX - sx, dy = e.clientY - sy, dt = Math.max(1, e.timeStamp - st);
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3 && (Math.abs(dx) > 70 || Math.abs(dx) / dt > 0.3)) {
+        _suppressTap = true;
+        advance(dx < 0 ? 1 : -1);
+      }
+    });
+  }
+
+  // jump-to-card — the number input jumps to a global card #, the progress bar scrubs within the set.
+  // Delegated on #ankProg (its innerHTML rebuilds every paintCard, but #ankProg itself persists).
+  const prog = $('#ankProg');
+  if (prog) {
+    prog.addEventListener('change', (e) => { if (e.target.id === 'ankJump') jumpToCard(parseInt(e.target.value, 10)); });
+    prog.addEventListener('click', (e) => { const bar = e.target.closest('.ank-scrub'); if (bar) scrubTo(bar, e.clientX); });
+  }
+
   if (!root.dataset.kbd) {
     root.dataset.kbd = '1';
     root.addEventListener('keydown', (e) => {

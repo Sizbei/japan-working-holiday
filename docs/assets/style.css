@@ -3623,7 +3623,11 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 /* --- mobile deck controls: tap zones over the card + a thumb-zone bottom bar (touch/narrow only;
    desktop keeps the keyboard shortcuts and the whole-card tap). Overlays are siblings of #ankCard
    inside .ank-cardwrap so paintCard()'s innerHTML rewrite never wipes them. --- */
-.ank-cardwrap{ position: relative; }
+.ank-cardwrap{ position: relative; touch-action: pan-y; }   /* let vertical scroll through; horizontal drag is our swipe */
+.ank-scrub{ cursor: pointer; }
+.ank-jump-l{ display:inline-flex; align-items:center; gap:.15rem; color: var(--ink-soft); }
+.ank-jump{ width:4.5em; font:inherit; font-family: var(--mono); font-size:.72rem; padding:.1rem .3rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); }
+@media (hover: none){ .ank-scrub{ height:12px; } .ank-jump{ min-height:36px; } }   /* fatter scrub target + tappable input on touch */
 .ank-controls{ display: none; }
 .ank-tap{ display: none; }
 @media (hover: none), (max-width: 560px){

@@ -449,12 +449,17 @@ function isPOS(m) {
 // highlight its first occurrence. esc() is applied to BOTH sentence and word before the <mark> is
 // spliced in, so the only unescaped markup is our own trusted tag.
 function sentenceHTML(s, w) {
-  const html = esc(s);
-  const ew = esc(w || '');
-  const mark = `<mark class="ank-cloze" lang="ja">${ew}</mark>`;
-  if (/（\s*）|\(\s*\)/.test(html)) return html.replace(/（\s*）|\(\s*\)/, mark);
-  if (ew && html.includes(ew)) return html.replace(ew, mark);
-  return html;
+  s = String(s || ''); w = String(w || '');
+  const mark = `<mark class="ank-cloze" lang="ja">${esc(w)}</mark>`;
+  // Split the RAW string and esc() each segment separately, then splice in the (already-esc'd)
+  // mark by concatenation — NOT String.replace. This avoids two hazards with untrusted decks:
+  // `$`/`$&` in the word being read as replacement operators, and matching a word like "amp"
+  // inside an `&amp;` entity produced by escaping first.
+  const cloze = s.match(/（\s*）|\(\s*\)/);              // fill an empty cloze with the word
+  if (cloze) return esc(s.slice(0, cloze.index)) + mark + esc(s.slice(cloze.index + cloze[0].length));
+  const i = w ? s.indexOf(w) : -1;                       // else highlight the word in place
+  if (i >= 0) return esc(s.slice(0, i)) + mark + esc(s.slice(i + w.length));
+  return esc(s);
 }
 
 function paintCard() {

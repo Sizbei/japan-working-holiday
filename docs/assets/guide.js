@@ -9,6 +9,8 @@ import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/hom
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { usageSummary } from './lib/usage.js';
 import { ROUTES, routeLabel } from './router.js';
+import { makeSortable } from './dnd.js';
+import { STRINGS } from './i18n.js';
 
 const LISTCTL_OPTS = [
   { v: LISTCTL.QUICKLINE, label: 'Quick-line' },
@@ -58,37 +60,72 @@ export function applyHomeLayout() {
   document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
 }
 
-// ---- optional nav pages (owner 2026-07-11: "can't see the phrases page — easy toggle") ----
-// Hidden deep-linked routes the owner can surface in the nav. Order = insertion order.
-const NAV_OPT = [
+// ---- Nav customization (owner 2026-07-13: show/hide + reorder ANY page in the top nav; grew out
+// of the earlier "surface the Phrases page" toggle). Deep links keep working for hidden routes —
+// parseRoute validates against router ROUTES + HIDDEN, independent of nav visibility. ----
+const NAV_ALL = [
+  { r: 'dashboard', label: 'Dashboard', i18n: 'nav.dashboard' },
+  { r: 'calendar', label: 'Calendar', i18n: 'nav.calendar' },
+  { r: 'plan', label: 'Plan a Day', i18n: 'nav.plan' },
+  { r: 'map', label: 'Map', i18n: 'nav.map' },
+  { r: 'explore', label: 'Explore', i18n: 'nav.explore' },
+  { r: 'going', label: 'Going', i18n: 'nav.going' },
+  { r: 'people', label: 'People', i18n: null },        // people has no i18n key — stays English (as in index.html)
+  { r: 'checklist', label: 'Checklist', i18n: 'nav.checklist' },
+  { r: 'budget', label: 'Budget', i18n: 'nav.budget' },
+  { r: 'rooms', label: 'Rooms', i18n: 'nav.rooms' },
+  { r: 'emergency', label: 'Emergency', i18n: 'nav.emergency' },
   { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },
   { r: 'survival', label: 'Useful phrases', i18n: 'nav.survival' },
   { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
   { r: 'packing', label: 'Packing', i18n: 'nav.packing' },
   { r: 'deadlines', label: 'Deadlines', i18n: 'nav.deadlines' },
 ];
-function navShown() {
-  const v = get(KEYS.navShow, null);
-  return Array.isArray(v) ? v.filter(r => NAV_OPT.some(o => o.r === r)) : ['phrases'];   // default restores Phrases
+const NAV_KNOWN = new Set(NAV_ALL.map(o => o.r));
+const NAV_META = (r) => NAV_ALL.find(o => o.r === r);
+
+// migrate the legacy navShow (which optional routes were surfaced) into a hidden set: the 5 optional
+// routes NOT in navShow are hidden; the 11 defaults stay visible. Default (no key) hides all optional
+// except phrases — matching the pre-existing nav exactly.
+function navHiddenSet() {
+  const v = get(KEYS.navHidden, null);
+  if (Array.isArray(v)) return v.filter(r => NAV_KNOWN.has(r));
+  const OPT = ['phrases', 'survival', 'grammar', 'packing', 'deadlines'];
+  const shown = get(KEYS.navShow, null);
+  const shownArr = Array.isArray(shown) ? shown : ['phrases'];
+  return OPT.filter(r => !shownArr.includes(r));
 }
-export function applyNavShow() {
+function navOrder() {
+  const v = get(KEYS.navOrder, null);
+  let order = Array.isArray(v) ? v.filter(r => NAV_KNOWN.has(r)) : NAV_ALL.map(o => o.r);
+  for (const o of NAV_ALL) if (!order.includes(o.r)) order.push(o.r);   // append any route missing from a stored order (forward-compat)
+  return [...new Set(order)];   // dedupe defensively (a hand-edited / bad-restore storage value could repeat an id)
+}
+
+// Reconcile the live #routeNav <a> list with the stored order + hidden set: create/remove/reorder.
+export function applyNav() {
   const nav = document.getElementById('routeNav');
   if (!nav) return;
-  const shown = navShown();
-  NAV_OPT.forEach(o => {
-    let a = nav.querySelector(`a[data-route="${o.r}"]`);
-    if (shown.includes(o.r) && !a) {
+  const foot = nav.querySelector('.nav-drawer-foot');
+  const hidden = new Set(navHiddenSet());
+  const curHash = location.hash.replace(/^#\//, '');
+  for (const r of navOrder()) {
+    const meta = NAV_META(r); if (!meta) continue;
+    let a = nav.querySelector(`a[data-route="${r}"]`);
+    if (hidden.has(r)) { if (a) a.remove(); continue; }
+    if (!a) {
       a = document.createElement('a');
-      a.href = '#/' + o.r; a.dataset.route = o.r; a.dataset.i18n = o.i18n; a.textContent = o.label;
-      const before = nav.querySelector('.nav-drawer-foot');
-      nav.insertBefore(a, before || null);
-      if (location.hash.replace(/^#\//, '') === o.r) a.setAttribute('aria-current', 'page');   // router convention (it re-runs per navigation)
-    } else if (!shown.includes(o.r) && a) a.remove();
-  });
+      a.href = '#/' + r; a.dataset.route = r; if (meta.i18n) a.dataset.i18n = meta.i18n;
+      const ja = getRaw(KEYS.lang, 'en') === 'ja';   // keep a re-shown link in the active language (lang.js only re-scans on toggle)
+      a.textContent = (ja && meta.i18n && STRINGS[meta.i18n]) ? STRINGS[meta.i18n] : meta.label;
+    }
+    if (curHash === r) a.setAttribute('aria-current', 'page');
+    nav.insertBefore(a, foot || null);   // insertBefore re-positions an existing node / appends a new one, in order, ahead of the drawer foot
+  }
 }
 
 export function mountGuide() {
-  applyNavShow();
+  applyNav();
   // apply persisted reduce-motion + home layout on boot (theme + arcade are restored by their own modules)
   if (getRaw(KEYS.reduceMotion, '') === 'on') document.documentElement.dataset.reduceMotion = 'on';
   if (getRaw(KEYS.mapDark, '') === 'on') document.documentElement.dataset.mapDark = 'on';
@@ -150,6 +187,7 @@ function openGuide() {
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
   const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
   const listCtlCur = listCtl();
+  const navHidden = new Set(navHiddenSet());
   ov = document.createElement('div');
   ov.className = 'guide-overlay';
   ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'guideTitle');
@@ -189,10 +227,20 @@ function openGuide() {
       ${row('setReduce', 'Reduce motion', 'Minimise animations and transitions', reduce)}
       ${row('setCompact', 'Compact pages', 'Small titles, more content — the calendar fits one screen', compact)}
       ${row('setMapDark', 'Dark map tiles', 'Night-mode map when dark theme is on (opt-in)', mapDark)}
-      <p class="set-group">Pages in the nav <span class="set-sub">deep links keep working either way; swipe order is unchanged</span></p>
-      ${NAV_OPT.map(o => row('setNav-' + o.r, o.label, 'Show ' + o.label + ' in the top navigation', navShown().includes(o.r))).join('')}
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
+    </section>
+
+    <section class="guide-sec">
+      <h3 class="guide-h">Navigation <span class="use-sub">— show, hide &amp; reorder your pages</span></h3>
+      <p class="set-sub nav-cfg-hint">Toggle a page off to hide it from the top nav (deep links still work). Drag the ⠿ handle to reorder — swipe and number shortcuts follow this order.</p>
+      <ul class="nav-cfg" id="navCfg" aria-label="Navigation pages">
+        ${navOrder().map(r => { const o = NAV_META(r); const shown = !navHidden.has(r); return `<li class="nav-cfg-row" data-r="${esc(r)}">
+          <span class="nav-cfg-grip" aria-hidden="true">⠿</span>
+          <span class="nav-cfg-name">${esc(o.label)}</span>
+          <button type="button" class="set-switch" role="switch" aria-checked="${shown ? 'true' : 'false'}" data-navtoggle="${esc(r)}" aria-label="Show ${esc(o.label)} in the navigation"><span class="set-knob" aria-hidden="true"></span></button>
+        </li>`; }).join('')}
+      </ul>
     </section>
     ${usageSectionHTML()}
   </div>`;
@@ -224,14 +272,22 @@ function openGuide() {
     setSwitch('setCompact', !on);
     document.dispatchEvent(new CustomEvent('jwh:data-changed'));   // active views re-render so compact-aware bits (month chip cap) flip instantly
   });
-  NAV_OPT.forEach(o => {
-    $('#setNav-' + o.r, ov)?.addEventListener('click', () => {
-      const cur = navShown();
-      const on = cur.includes(o.r);
-      set(KEYS.navShow, on ? cur.filter(x => x !== o.r) : [...cur, o.r]);
-      applyNavShow();
-      setSwitch('setNav-' + o.r, !on);
+  // Nav customization: per-page show/hide switches + drag-to-reorder (keyboard-accessible via dnd.js)
+  const navCfg = $('#navCfg', ov);
+  navCfg?.querySelectorAll('[data-navtoggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const r = btn.dataset.navtoggle;
+      const hid = new Set(navHiddenSet());
+      if (hid.has(r)) hid.delete(r); else hid.add(r);
+      set(KEYS.navHidden, [...hid]);
+      applyNav();
+      btn.setAttribute('aria-checked', hid.has(r) ? 'false' : 'true');
     });
+  });
+  makeSortable(navCfg, {
+    itemSelector: '.nav-cfg-row', handleSelector: '.nav-cfg-grip', label: 'page',
+    idOf: el => el.dataset.r,
+    onReorder: (ids) => { set(KEYS.navOrder, ids); applyNav(); },
   });
   $('#setMapDark', ov)?.addEventListener('click', () => {
     const on = document.documentElement.dataset.mapDark === 'on';

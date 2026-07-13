@@ -2100,6 +2100,18 @@ html[data-nightowl] .crt::before{ opacity: calc(var(--crt-opacity, .05) + .03); 
 .set-switch[aria-checked="true"] .set-knob{ transform: translateX(20px); }
 .set-switch:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
 
+/* Navigation customizer — one row per page: drag grip + label + show/hide switch */
+.nav-cfg-hint{ margin: 0 0 var(--s2); }
+.nav-cfg{ list-style: none; margin: 0; padding: 0; }
+.nav-cfg-row{ display: flex; align-items: center; gap: var(--s3); padding: .45rem 0; border-top: 1px solid var(--line); }
+.nav-cfg-row:first-child{ border-top: none; }
+.nav-cfg-grip{ flex: none; cursor: grab; color: var(--ink-faint); font-size: 1rem; line-height: 1; padding: .2rem .1rem; touch-action: none; user-select: none; border-radius: var(--r-xs); }
+.nav-cfg-grip:hover{ color: var(--ink-soft); }
+.nav-cfg-grip:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+.nav-cfg-name{ flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-cfg-row.dnd-dragging{ background: var(--bg-elevated); border-radius: var(--r-sm); }
+.nav-cfg-row.dnd-grabbed{ box-shadow: var(--ring); border-radius: var(--r-sm); }
+
 @media (max-width: 560px){ .guide-trigger{ width: 34px; height: 34px; } }
 
 /* user-set "Reduce motion" — an app-level override of every animation/transition */

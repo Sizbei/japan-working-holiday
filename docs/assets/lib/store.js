@@ -63,7 +63,9 @@ export const KEYS = {
   anki: 'jwh-anki-v1',               // Core-2000 rapid refresher: { v, cards, pos, shaky, shuffle, seed }
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)
   mapDark: 'jwh-mapdark-v1',         // dark map tiles opt-in ('on'/'') — CSS filter, dark theme only
-  navShow: 'jwh-navshow-v1',         // hidden routes surfaced in the nav (array of ids; default ['phrases'])
+  navShow: 'jwh-navshow-v1',         // (legacy) optional routes surfaced in the nav — migrated into navHidden on first read
+  navOrder: 'jwh-navorder-v1',       // user's nav page order (array of route ids across ALL candidates)
+  navHidden: 'jwh-navhidden-v1',     // routes hidden from the nav (array of ids; deep links still work)
   translateCache: 'jwh-translate-cache-v1',
   tags: 'jwh-tags-v1',
   seed: 'jwh-seed-v1',

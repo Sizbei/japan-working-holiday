@@ -434,6 +434,34 @@ function fillMedia(card) {
   });
 }
 
+// the meaning field of many decks is a part-of-speech label ("Noun", "Verb"…) rather than a gloss;
+// show those as a tag. Anything else is a real meaning. Kept to whole-string known POS names so a
+// real gloss that merely CONTAINS "verb" isn't mislabelled.
+const POS_SET = new Set(['noun', 'verb', 'adjective', 'i-adjective', 'い-adjective', 'na-adjective', 'な-adjective',
+  'adverb', 'particle', 'expression', 'pronoun', 'conjunction', 'interjection', 'prefix', 'suffix', 'counter',
+  'adnominal', 'numeral', 'auxiliary', 'auxiliary verb', 'copula', 'phrase', 'adjectival noun', 'godan verb', 'ichidan verb']);
+function isPOS(m) {
+  const s = String(m || '').trim().toLowerCase();
+  return s.length <= 24 && POS_SET.has(s);
+}
+
+// show the target word inside the example sentence: fill an empty （）/() cloze with it, else
+// highlight its first occurrence. esc() is applied to BOTH sentence and word before the <mark> is
+// spliced in, so the only unescaped markup is our own trusted tag.
+function sentenceHTML(s, w) {
+  s = String(s || ''); w = String(w || '');
+  const mark = `<mark class="ank-cloze" lang="ja">${esc(w)}</mark>`;
+  // Split the RAW string and esc() each segment separately, then splice in the (already-esc'd)
+  // mark by concatenation — NOT String.replace. This avoids two hazards with untrusted decks:
+  // `$`/`$&` in the word being read as replacement operators, and matching a word like "amp"
+  // inside an `&amp;` entity produced by escaping first.
+  const cloze = s.match(/（\s*）|\(\s*\)/);              // fill an empty cloze with the word
+  if (cloze) return esc(s.slice(0, cloze.index)) + mark + esc(s.slice(cloze.index + cloze[0].length));
+  const i = w ? s.indexOf(w) : -1;                       // else highlight the word in place
+  if (i >= 0) return esc(s.slice(0, i)) + mark + esc(s.slice(i + w.length));
+  return esc(s);
+}
+
 function paintCard() {
   const { deck, order, idx, chunk, mode } = stream;
   const card = order[idx];
@@ -441,14 +469,20 @@ function paintCard() {
   if (!el || !card) return;
   const isShaky = deck.shaky.includes(card.id);
   const hair = (card.s || card.sm) ? `<div class="ank-hair" aria-hidden="true"></div>` : '';
-  const sent = card.s ? `<div class="ank-sent" lang="ja">${esc(card.s)}</div>` : '';
+  const sent = card.s ? `<div class="ank-sent" lang="ja">${sentenceHTML(card.s, card.w)}</div>` : '';
   const sentM = card.sm ? `<div class="ank-sentm">${esc(card.sm)}</div>` : '';
+  // reading now rides ABOVE the word as ruby (toggle-able via the site .furi-off rule); the meaning
+  // field is a POS tag when it names a part of speech, otherwise a meaning line under the word.
+  const wordHTML = card.r
+    ? `<ruby class="ank-word" lang="ja">${esc(card.w) || '&nbsp;'}<rt>${esc(card.r)}</rt></ruby>`
+    : `<div class="ank-word" lang="ja">${esc(card.w) || '&nbsp;'}</div>`;
+  const isPos = card.m && isPOS(card.m);
   el.classList.toggle('is-shaky', isShaky);
   el.innerHTML = `
     ${isShaky ? '<span class="ank-flag" aria-label="flagged shaky" title="flagged shaky">◆ shaky</span>' : ''}
-    <div class="ank-word" lang="ja">${esc(card.w) || '&nbsp;'}</div>
-    ${card.r ? `<div class="ank-read" lang="ja">${esc(card.r)}</div>` : ''}
-    ${card.m ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
+    ${isPos ? `<span class="ank-pos">${esc(card.m)}</span>` : ''}
+    ${wordHTML}
+    ${card.m && !isPos ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
     ${hair}${sent}${sentM}
     ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}`;
   fillMedia(card);

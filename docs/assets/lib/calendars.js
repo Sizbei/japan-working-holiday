@@ -20,7 +20,9 @@ export function normalizeCalendars(v) {
   for (const c of v) {
     if (!c || typeof c !== 'object') continue;
     const id = String(c.id ?? '');
-    if (!id || seen.has(id) || !clampName(c.name)) continue;   // id + name required, unique
+    // id + name required, unique, and a safe slug — the id is interpolated into a CSS selector
+    // (`.cat-<id>{…}`) at runtime, so reject anything but [a-z0-9-] (app ids are 'cal-<base36>').
+    if (!id || seen.has(id) || !/^[a-z0-9-]+$/i.test(id) || !clampName(c.name)) continue;
     seen.add(id);
     out.push({ id, name: clampName(c.name), color: safeColor(c.color) });
   }

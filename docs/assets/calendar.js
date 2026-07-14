@@ -161,8 +161,9 @@ export function catLabel(cat) { return calMeta(cat)?.name || cat; }
 export function applyCalColors() {
   let el = document.getElementById('calCustomColors');
   if (!el) { el = document.createElement('style'); el.id = 'calCustomColors'; document.head.appendChild(el); }
+  const escId = (id) => (window.CSS && CSS.escape) ? CSS.escape(id) : id;   // ids are already slug-validated in normalizeCalendars; escape too as defence-in-depth
   el.textContent = customCals().map(c =>
-    `:is(.cal-chip,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${c.id}{--chip-cat:${c.color};}`).join('');
+    `:is(.cal-chip,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${escId(c.id)}{--chip-cat:${c.color};}`).join('');
 }
 
 export function catOf(e) { return e.category || 'personal'; }
@@ -442,7 +443,9 @@ function buildCalendars() {
     const r = await askCalendar(CAL_PALETTE, cal);
     if (!r) return;
     if (r.remove) {
-      if (!await confirmModal(`Delete “${cal.name}”? Events keep their date but lose this calendar’s colour and label.`, { ok: 'Delete', danger: true })) return;
+      if (!await confirmModal(`Delete “${cal.name}”? Its events move to My events (they keep their date).`, { ok: 'Delete', danger: true })) return;
+      const reassigned = loadUser().map(e => e.category === cal.id ? { ...e, category: 'personal' } : e);
+      saveUser(reassigned);   // no orphaned raw-id categories left behind (dispatches jwh:data-changed)
       persistCals(removeCalendar(customCals(), cal.id));
       dndToast(`Calendar “${cal.name}” deleted`);
       return;

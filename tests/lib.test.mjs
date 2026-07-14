@@ -1705,5 +1705,6 @@ test('calendars: normalize drops malformed + dedupes; nextColor avoids used', ()
   const norm = normalizeCalendars([{ id: 'a', name: 'A', color: CAL_PALETTE[0] }, { id: '', name: 'x' }, { id: 'a', name: 'dup' }, null, { name: 'noid' }]);
   assert.deepEqual(norm.map(c => c.id), ['a']);
   assert.equal(normalizeCalendars('nonsense').length, 0);
+  assert.equal(normalizeCalendars([{ id: 'x{}body', name: 'Evil', color: CAL_PALETTE[0] }]).length, 0);   // unsafe id charset rejected
   assert.equal(nextColor([{ id: 'a', name: 'A', color: CAL_PALETTE[0] }]), CAL_PALETTE[1]);
 });

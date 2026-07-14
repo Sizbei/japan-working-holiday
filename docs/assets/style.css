@@ -959,6 +959,8 @@ html.gated{ overflow: hidden; }
 .calrow-wrap:hover .cal-edit, .cal-edit:focus-visible{ opacity:1; }
 .cal-edit:hover{ background: color-mix(in srgb, var(--ink) 9%, transparent); color:var(--ink); }
 .cal-edit:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
+/* touch: no hover to reveal ✎ — keep it always visible with a bigger tap target (like .wk2-add) */
+@media (hover: none){ .cal-edit{ opacity:1; width:32px; height:32px; } .calrow-wrap .calrow{ padding-right:2rem; } }
 .cal-newcal{ display:flex; align-items:center; gap:.4rem; width:100%; margin:.15rem 0 .1rem; padding:.3rem .35rem; border:none; background:none; border-radius:7px;
   font:inherit; font-size:.78rem; font-weight:600; color:var(--indigo-ink); cursor:pointer; text-align:left; }
 .cal-newcal:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }

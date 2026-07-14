@@ -86,8 +86,8 @@ const NAV_META = (r) => NAV_ALL.find(o => o.r === r);
 
 // migrate the legacy navShow (which optional routes were surfaced) into a hidden set. Default (no
 // stored navHidden): hide all optional routes except phrases, PLUS the routes the owner doesn't use
-// (emergency/map/explore/going) — all still reachable by deep link and re-enableable in this panel.
-const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore', 'going'];
+// (emergency/map/explore) — all still reachable by deep link and re-enableable in this panel.
+const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore'];
 function navHiddenSet() {
   const v = get(KEYS.navHidden, null);
   if (Array.isArray(v)) return v.filter(r => NAV_KNOWN.has(r));

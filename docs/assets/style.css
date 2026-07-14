@@ -3085,6 +3085,9 @@ ruby > rt {
   color: var(--ink-faint); letter-spacing: .02em; line-height: 1;
   user-select: none; text-emphasis: none;
 }
+/* phones: nudge base furigana up (~9px→~10px) so grammar/hover readings stay legible.
+   Scoped to the base rule only — the reviewer's larger ruby.ank-word rt (higher specificity) is unaffected. */
+@media (max-width: 560px){ ruby > rt { font-size: .62em; } }
 /* a toggle on the phrases route hides readings when the learner wants raw kanji */
 .furi-off ruby > rt { visibility: hidden; }
 .furi-off .phrase-read { display: none; }

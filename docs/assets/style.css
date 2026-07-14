@@ -951,6 +951,27 @@ html.gated{ overflow: hidden; }
 .cal-grp-head:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; border-radius: var(--r-xs); }
 .cal-grp-chev{ font-size:.7rem; width:.8em; display:inline-block; }
 .cal-grp-body[hidden]{ display:none; }
+/* custom-calendar row: toggle + a hover ✎ edit button (sibling, since a <button> can't nest one) */
+.calrow-wrap{ position:relative; }
+.calrow-wrap .calrow{ padding-right:1.6rem; }
+.cal-edit{ position:absolute; right:.2rem; top:50%; transform:translateY(-50%); width:22px; height:22px; display:grid; place-items:center;
+  border:none; background:none; border-radius:6px; color:var(--ink-faint); font-size:.8rem; line-height:1; cursor:pointer; opacity:0; transition:opacity .12s, background .12s; }
+.calrow-wrap:hover .cal-edit, .cal-edit:focus-visible{ opacity:1; }
+.cal-edit:hover{ background: color-mix(in srgb, var(--ink) 9%, transparent); color:var(--ink); }
+.cal-edit:focus-visible{ outline:2px solid var(--indigo); outline-offset:1px; }
+/* touch: no hover to reveal ✎ — keep it always visible with a bigger tap target (like .wk2-add) */
+@media (hover: none){ .cal-edit{ opacity:1; width:32px; height:32px; } .calrow-wrap .calrow{ padding-right:2rem; } }
+.cal-newcal{ display:flex; align-items:center; gap:.4rem; width:100%; margin:.15rem 0 .1rem; padding:.3rem .35rem; border:none; background:none; border-radius:7px;
+  font:inherit; font-size:.78rem; font-weight:600; color:var(--indigo-ink); cursor:pointer; text-align:left; }
+.cal-newcal:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
+.cal-newcal:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; border-radius: var(--r-xs); }
+/* new/edit-calendar modal colour picker */
+.cal-swatches{ display:flex; flex-wrap:wrap; gap:.5rem; margin:.2rem 0 .1rem; }
+.cal-swatch{ width:30px; height:30px; border-radius:50%; border:2px solid transparent; cursor:pointer; background: var(--sw);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #000 18%, transparent); transition: transform .1s; }
+.cal-swatch:hover{ transform: scale(1.08); }
+.cal-swatch.sel{ border-color: var(--ink); }
+.cal-swatch:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .calrow{ display:flex; align-items:center; gap:.5rem; width:100%; padding:.28rem .35rem; margin:1px 0; border:none; background:none; border-radius:7px; cursor:pointer; text-align:left; font: inherit; font-size:.82rem; color: var(--ink); }
 .calrow:hover{ background: color-mix(in srgb, var(--indigo) 8%, transparent); }
 .calrow.off{ opacity:.42; }

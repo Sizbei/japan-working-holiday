@@ -1682,3 +1682,29 @@ test('tripseed: every baked day is a well-formed, normalizer-safe plan with uniq
   }
   assert.equal(new Set(allIds).size, allIds.length, 'stop ids are globally unique');
 });
+
+import { CAL_PALETTE, normalizeCalendars, addCalendar, updateCalendar, removeCalendar, nextColor } from '../docs/assets/lib/calendars.js';
+test('calendars: add/update/remove with validation', () => {
+  let list = [];
+  list = addCalendar(list, { name: '  Work  ', color: CAL_PALETTE[1] }, 'cal-1');
+  assert.deepEqual(list, [{ id: 'cal-1', name: 'Work', color: CAL_PALETTE[1] }]);   // trimmed
+  list = addCalendar(list, { name: '', color: CAL_PALETTE[2] }, 'cal-2');            // blank name → no-op
+  assert.equal(list.length, 1);
+  list = addCalendar(list, { name: 'Dup', color: CAL_PALETTE[2] }, 'cal-1');         // dup id → no-op
+  assert.equal(list.length, 1);
+  list = addCalendar(list, { name: 'Anniv', color: 'not-a-color' }, 'cal-3');        // bad color → palette[0]
+  assert.equal(list.find(c => c.id === 'cal-3').color, CAL_PALETTE[0]);
+  list = updateCalendar(list, 'cal-1', { name: 'Job', color: CAL_PALETTE[4] });
+  assert.deepEqual(list.find(c => c.id === 'cal-1'), { id: 'cal-1', name: 'Job', color: CAL_PALETTE[4] });
+  list = updateCalendar(list, 'cal-1', { name: '   ' });                             // blank rename ignored
+  assert.equal(list.find(c => c.id === 'cal-1').name, 'Job');
+  list = removeCalendar(list, 'cal-3');
+  assert.deepEqual(list.map(c => c.id), ['cal-1']);
+});
+test('calendars: normalize drops malformed + dedupes; nextColor avoids used', () => {
+  const norm = normalizeCalendars([{ id: 'a', name: 'A', color: CAL_PALETTE[0] }, { id: '', name: 'x' }, { id: 'a', name: 'dup' }, null, { name: 'noid' }]);
+  assert.deepEqual(norm.map(c => c.id), ['a']);
+  assert.equal(normalizeCalendars('nonsense').length, 0);
+  assert.equal(normalizeCalendars([{ id: 'x{}body', name: 'Evil', color: CAL_PALETTE[0] }]).length, 0);   // unsafe id charset rejected
+  assert.equal(nextColor([{ id: 'a', name: 'A', color: CAL_PALETTE[0] }]), CAL_PALETTE[1]);
+});

@@ -9,6 +9,7 @@ import { mountGoogleSync } from './google-sync.js';
 import { mountTracker } from './tracker.js';
 import { mountDashboard } from './dashboard.js';
 import { mountEmergency } from './emergency.js';
+import { mountPocket } from './pocket.js';
 import { mountPrint } from './print.js';
 import { mountEventSearch } from './eventsearch.js';
 import { mountExpWeek } from './expweek.js';
@@ -111,6 +112,7 @@ function boot() {
         Promise.all([import('./map.js'), import('./plan.js')]).then(([m, p]) => { m.mountMap(data); p.mountPlan(data); })));
       safe(() => mountDashboard(data, today));   // reads calendar + content, so mount last
       safe(() => mountEmergency(data));    // emergency quick-reference (#/emergency) — read-only, offline
+      safe(() => mountPocket(data));       // 🆘 top-bar pocket: dial + tonight's stay + offline, 2 taps away
       safe(() => mountPrint(data, today)); // 🖨 one-page printable trip summary (footer button)
       safe(() => mountEventSearch(data));  // search all events on the calendar page
       safe(() => mountExpWeek());          // "This week" band on #/explore (display-only)

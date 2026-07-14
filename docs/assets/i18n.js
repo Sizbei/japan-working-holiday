@@ -19,6 +19,8 @@ export const STRINGS = {
   'nav.checklist': 'チェックリスト',
   'nav.budget': '予算',
   'nav.explore': 'さがす',
+  'nav.eats': 'グルメ記録',
+  'head.eats': 'グルメ記録',
   'nav.rooms': '部屋',
   'nav.map': '地図',
   'nav.plan': 'プラン',

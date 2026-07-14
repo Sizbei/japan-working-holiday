@@ -104,6 +104,7 @@ function boot() {
       // calendar "縁 met here" jump (jwh:people-open) which awaits ensureRoute('people') in calendar.js.
       safe(() => registerLazyRoute(['people'], () => import('./people.js').then(m => m.mountPeople(data))));
       safe(() => registerLazyRoute(['rooms'],  () => import('./rooms.js').then(m => m.mountRooms(data))));
+      safe(() => registerLazyRoute(['eats'],   () => import('./eats.js').then(m => m.mountEats())));
       // EF6: map + plan share ONE lazy bundle. plan.js imports placesModel/drawRoute/clearRoute from
       // map.js, and placesModel() reads map's module-level DATA set ONLY by mountMap — so the bundle
       // always mounts BOTH (map first, to set DATA), on first #/map OR #/plan entry. Leaflet still

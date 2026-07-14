@@ -19,7 +19,7 @@ import { KEYS, get, set } from './store.js';
 // ---- pure helpers (unit-tested in Node; no localStorage/document) ----
 export function normalize(p) {
   return {
-    source: 'drop', fav: false, locked: false, visited: false, emoji: '', home: false,
+    source: 'drop', fav: false, locked: false, visited: false, emoji: '', home: false, rating: 0,
     coordKind: (typeof p.lat === 'number' && !isNaN(p.lat)) ? 'exact' : 'approx',
     note: '', link: '', date: '', remindDate: '', eventId: '', category: 'personal',
     ...p,

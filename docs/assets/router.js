@@ -7,7 +7,7 @@ import { transitionView, prefersReducedMotion } from './motion.js';
 
 // deadlines/packing/phrases retired from the nav post-arrival (their views + data remain for the
 // dashboard/notifications; re-add here + in index.html to restore).
-export const ROUTES = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'people', 'checklist', 'budget', 'rooms', 'emergency'];
+export const ROUTES = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'eats', 'people', 'checklist', 'budget', 'rooms', 'emergency'];
 
 // retired from the nav but still deep-linkable — dashboard teasers/notifications link here
 // (#/deadlines, #/packing) and the views stay mounted; they're just not in the swipe/nav order.
@@ -38,7 +38,7 @@ let current = null;
 // per-route document title so browser tabs + history entries read like real pages
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', people: 'People', checklist: 'Checklist',
-  budget: 'Budget', explore: 'Explore', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
+  budget: 'Budget', explore: 'Explore', eats: 'Eats', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
   deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar', survival: 'Useful phrases',
 };
 const SITE = 'My Year in Japan';

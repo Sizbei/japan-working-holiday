@@ -135,3 +135,35 @@ export function showModal(titleText, trustedHTML, { closeLabel = 'Close', wide =
     initialFocus: '[data-ok]',
   }).then(() => undefined);
 }
+
+// Create / edit a custom calendar: name input + colour-swatch picker (+ Delete when editing).
+// Resolves { name, color } on save, { remove: true } on delete, or null on cancel. `colors` is a
+// palette of hex strings; `cal` (optional) pre-fills the fields for edit mode.
+export function askCalendar(colors, cal = null) {
+  const editing = !!cal;
+  const cur = (cal && colors.includes(cal.color)) ? cal.color : colors[0];
+  const swatches = colors.map(c => `<button type="button" class="cal-swatch${c === cur ? ' sel' : ''}" role="radio" aria-checked="${c === cur}" data-color="${esc(c)}" style="--sw:${esc(c)}" aria-label="Colour ${esc(c)}"></button>`).join('');
+  return openDialog(`
+    <h2 id="amTitle" class="app-modal-title">${editing ? 'Edit calendar' : 'New calendar'}</h2>
+    <input class="app-modal-input" id="calNameIn" type="text" value="${esc(cal?.name || '')}" placeholder="Calendar name — e.g. Work, Anniversaries" aria-label="Calendar name" maxlength="40" autocomplete="off">
+    <div class="cal-swatches" role="radiogroup" aria-label="Calendar colour">${swatches}</div>
+    <div class="app-modal-acts">
+      ${editing ? '<button type="button" class="am-btn am-danger" data-remove>Delete</button>' : ''}
+      <button type="button" class="am-btn" data-cancel>Cancel</button>
+      <button type="button" class="am-btn am-primary" data-ok>${editing ? 'Save' : 'Create'}</button>
+    </div>`, {
+    onMount: (card, done) => {
+      let color = cur;
+      const nameEl = card.querySelector('#calNameIn');
+      card.querySelectorAll('.cal-swatch').forEach(b => b.addEventListener('click', () => {
+        color = b.dataset.color;
+        card.querySelectorAll('.cal-swatch').forEach(x => { const on = x === b; x.classList.toggle('sel', on); x.setAttribute('aria-checked', String(on)); });
+      }));
+      const save = () => { const n = nameEl.value.trim(); if (!n) { nameEl.focus(); return; } done({ name: n, color }); };
+      card.querySelector('[data-ok]').addEventListener('click', save);
+      card.querySelector('[data-cancel]').addEventListener('click', () => done(null));
+      card.querySelector('[data-remove]')?.addEventListener('click', () => done({ remove: true }));
+      nameEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } });
+    }, initialFocus: '#calNameIn',
+  });
+}

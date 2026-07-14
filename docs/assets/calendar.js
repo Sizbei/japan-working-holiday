@@ -9,7 +9,7 @@ import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import { parseISO, daysBetween, fmtDate, fmtShort, MONTHS, nowISO } from './lib/dates.js';
 import { gcalUrl } from './lib/ics.js';
-import { alertModal } from './lib/modal.js';
+import { alertModal, confirmModal } from './lib/modal.js';
 import { upsertStop, newStop, getPlan } from './lib/dayplan.js';
 import { loadPlaces, patchPlace } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
@@ -27,6 +27,8 @@ import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireResche
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
+import { askCalendar } from './lib/modal.js';
+import { CAL_PALETTE, normalizeCalendars, addCalendar, updateCalendar, removeCalendar, nextColor } from './lib/calendars.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
 
 let DATA = null;
@@ -149,6 +151,20 @@ export function gotoPerson(id) {
   ensureRoute('people').then(() => requestAnimationFrame(() => document.dispatchEvent(new CustomEvent('jwh:people-open', { detail: { id } }))));
 }
 
+// ---- user-created calendars (a calendar id doubles as an event category) ----
+export function customCals() { return normalizeCalendars(get(KEYS.calendars, [])); }
+function calMeta(id) { return customCals().find(c => c.id === id) || null; }
+// display label for any category: a custom calendar's name, else the raw category id
+export function catLabel(cat) { return calMeta(cat)?.name || cat; }
+// Inject per-calendar --chip-cat rules so custom-category chips/swatches pick up their colour through
+// the SAME machinery as the built-in cat-* tokens (CSP allows <style> under style-src 'unsafe-inline').
+export function applyCalColors() {
+  let el = document.getElementById('calCustomColors');
+  if (!el) { el = document.createElement('style'); el.id = 'calCustomColors'; document.head.appendChild(el); }
+  el.textContent = customCals().map(c =>
+    `:is(.cal-chip,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${c.id}{--chip-cat:${c.color};}`).join('');
+}
+
 export function catOf(e) { return e.category || 'personal'; }
 export function visible(e) {
   if (hiddenCats.has(catOf(e))) return false;
@@ -189,6 +205,7 @@ export function mountCalendar(data, today) {
   wireToolbar();
   wireQuickAdd();
   wireCmdPop();
+  applyCalColors();   // inject custom-calendar chip colours before the first render
   buildCalendars();
   applySidebar();   // apply the persisted collapsed/expanded state to the layout + toggle button
   render();
@@ -345,18 +362,27 @@ function buildCalendars() {
   // allCats drives the aggregate ops (isolate / Hide all) — always includes 'birthday' (a togglable
   // calendar even though it's a People-derived layer, not in allEvents()). present is the RENDER list
   // for the Researched group only (birthday shows under Your calendars, so it's excluded there).
-  const allCats = [...new Set([...allEvents().map(catOf), 'birthday'])].sort();
-  const present = allCats.filter(c => c !== 'birthday');
+  const cals = customCals();
+  // allCats drives the aggregate ops: everything toggleable, incl. 'birthday' and every custom
+  // calendar (togglable even with no events yet, so not always in allEvents()).
+  const allCats = [...new Set([...allEvents().map(catOf), 'birthday', ...cals.map(c => c.id)])].sort();
+  const present = allCats.filter(c => c !== 'birthday' && !cals.some(x => x.id === c));   // Researched render list: researched categories only
   // btnCls (e.g. cat-festival) goes on the row so the category :is() rule sets --chip-cat, which the
   // child swatch inherits; swCls (sw-user/sw-baked/sw-task) colours the source/task swatches directly.
   const row = (attrs, btnCls, swCls, name, on) =>
     `<button class="calrow${btnCls ? ' ' + btnCls : ''}${on ? '' : ' off'}" role="switch" aria-checked="${on}" type="button" ${attrs}><span class="cal-sw${swCls ? ' ' + swCls : ''}"></span><span class="cal-nm">${name}</span></button>`;
+  // a custom-calendar row = the toggle row + a hover ✎ edit button (siblings — can't nest a <button>)
+  const calRow = (c) => `<div class="calrow-wrap">`
+    + row(`data-cat="${esc(c.id)}" title="Click to toggle · double-click to show only this"`, `cat-${esc(c.id)}`, '', esc(c.name), !hiddenCats.has(c.id))
+    + `<button type="button" class="cal-edit" data-editcal="${esc(c.id)}" aria-label="Edit ${esc(c.name)}">✎</button></div>`;
   el.innerHTML =
     `<div class="cal-cals-head"><span>Calendars</span><button class="cal-cals-all" id="calAll" type="button">${hiddenCats.size ? 'Show all' : 'Hide all'}</button></div>`
     + `<div class="cal-grp-lab">Your calendars</div>`
     + row('id="calSrcUser"', '', 'sw-user', 'My events', showUser)
     + row(`data-cat="birthday" title="Birthdays from your People page · click to toggle"`, 'cat-birthday', '', '🎂 Birthdays', !hiddenCats.has('birthday'))
     + row('id="lgTasks"', '', 'sw-task', '☑ Tasks', showTasks)
+    + cals.map(calRow).join('')
+    + `<button type="button" class="cal-newcal" id="calNew">＋ New calendar</button>`
     + `<button class="cal-grp-head" id="calResHead" type="button" aria-expanded="${resOpen}" aria-controls="calResBody"><span class="cal-grp-chev" aria-hidden="true">${resOpen ? '▾' : '▸'}</span>Researched</button>`
     + `<div class="cal-grp-body" id="calResBody"${resOpen ? '' : ' hidden'}>`
     + row('id="calSrcBaked"', '', 'sw-baked', 'All researched', showBaked)
@@ -398,9 +424,31 @@ function buildCalendars() {
     buildCalendars(); render(); focusRow('#lgTasks');
   });
   $('#calAll')?.addEventListener('click', () => {
-    if (hiddenCats.size) hiddenCats.clear(); else allCats.forEach(c => hiddenCats.add(c));   // Hide all covers Birthdays too
+    if (hiddenCats.size) hiddenCats.clear(); else allCats.forEach(c => hiddenCats.add(c));   // Hide all covers Birthdays + custom calendars too
     persistFilters(); buildCalendars(); render(); focusRow('#calAll');
   });
+  // create / edit / delete custom calendars (persist → recolour → rebuild panel + grid)
+  const persistCals = (list) => { set(KEYS.calendars, list); applyCalColors(); buildCalendars(); render(); };
+  $('#calNew')?.addEventListener('click', async () => {
+    const r = await askCalendar(CAL_PALETTE, null);
+    if (!r || r.remove || !r.name) return;
+    const id = 'cal-' + Date.now().toString(36);
+    persistCals(addCalendar(customCals(), { name: r.name, color: r.color }, id));
+    dndToast(`Calendar “${r.name}” created — pick it in the event editor`);
+  });
+  $$('#calCalendars .cal-edit').forEach(b => b.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const cal = customCals().find(c => c.id === b.dataset.editcal); if (!cal) return;
+    const r = await askCalendar(CAL_PALETTE, cal);
+    if (!r) return;
+    if (r.remove) {
+      if (!await confirmModal(`Delete “${cal.name}”? Events keep their date but lose this calendar’s colour and label.`, { ok: 'Delete', danger: true })) return;
+      persistCals(removeCalendar(customCals(), cal.id));
+      dndToast(`Calendar “${cal.name}” deleted`);
+      return;
+    }
+    persistCals(updateCalendar(customCals(), cal.id, { name: r.name, color: r.color }));
+  }));
 }
 function persistFilters() { set(KEYS.calFilters, [...hiddenCats]); }
 function persistSources() { set(KEYS.calSources, { showUser, showBaked }); }
@@ -656,7 +704,7 @@ document.addEventListener('jwh:route', (e) => {
 
 // a category guaranteed to have a --c-* token (an imported .ics could carry an arbitrary one →
 // var(--c-<unknown>) would be undefined and the bar would render unstyled/unreadable)
-export function safeCat(e) { const c = catOf(e); return CATS.includes(c) ? c : 'imported'; }
+export function safeCat(e) { const c = catOf(e); return (CATS.includes(c) || calMeta(c)) ? c : 'imported'; }
 // shared reschedule (month grid + week chips): user → edit date (keep span); baked → date override.
 export function rescheduleEvent(id, day) {
   const ev = allEvents().find(x => x.id === id);
@@ -826,7 +874,7 @@ export function openSidePanel(ev, trigger) {
       <div class="sp-band${imgOk ? ' has-img' : ''}">
         ${imgOk ? `<div class="sp-img" aria-hidden="true"></div>` : ''}
         <div class="sp-cattop">
-          <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(ev.category || 'event')}</span>
+          <span class="sp-cat"><span class="sp-dot" aria-hidden="true"></span>${esc(catLabel(ev.category) || 'event')}</span>
           <button class="sp-close" id="spClose" aria-label="Close">✕</button>
         </div>
         <div class="sp-titlerow">

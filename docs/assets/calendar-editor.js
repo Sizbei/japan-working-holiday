@@ -6,14 +6,18 @@ import { $, $$, esc } from './lib/dom.js';
 import { gcalUrl, toICS, parseICS } from './lib/ics.js';
 import { alertModal, confirmModal } from './lib/modal.js';
 import { searchJP } from './lib/nominatim.js';
-import { TODAY, CATS, allEvents, catOf, loadUser, saveUser, syncPlaceDate, deleteUserEvent } from './calendar.js';
+import { TODAY, CATS, allEvents, catOf, loadUser, saveUser, syncPlaceDate, deleteUserEvent, customCals } from './calendar.js';
 
 // ---- add/edit modal ----
 export function openModal(ev, presetDate, presetEnd, presetTime) {
   const e = ev || { id: '', title: '', date: presetDate || TODAY, endDate: presetEnd || '', time: presetTime || '', endTime: '', category: 'personal', note: '' };
-  // preserve a non-standard (e.g. imported .ics) category instead of silently rewriting it to the first option
-  const cats = (e.category && !CATS.includes(e.category)) ? [e.category, ...CATS] : CATS;
-  const opts = cats.map(c => `<option value="${c}" ${c === (e.category || 'personal') ? 'selected' : ''}>${c}</option>`).join('');
+  // Your calendars first (as an optgroup), then the researched categories. Preserve a non-standard
+  // (e.g. imported .ics) category that matches neither, so editing never silently rewrites it.
+  const cals = customCals();
+  const known = new Set([...CATS, ...cals.map(c => c.id)]);
+  const extra = (e.category && !known.has(e.category)) ? [e.category] : [];
+  const optCals = cals.length ? `<optgroup label="Your calendars">${cals.map(c => `<option value="${esc(c.id)}" ${c.id === e.category ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : '';
+  const opts = optCals + [...extra, ...CATS].map(c => `<option value="${esc(c)}" ${c === (e.category || 'personal') ? 'selected' : ''}>${esc(c)}</option>`).join('');
   const gbtn = ev ? `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer">+ Google</a>` : '';
   const body = `
     <h3 class="modal-title">${ev ? 'Edit event' : 'Add event'}</h3>

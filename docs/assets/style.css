@@ -583,7 +583,17 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
   transition: transform .15s ease, border-color .15s ease; }
 .pocket-btn:hover{ transform: translateY(-1px); border-color: var(--red); }
 .pocket-btn:focus-visible{ outline: 2px solid var(--red); outline-offset: 2px; }
-@media (hover: none){ .pocket-btn{ min-width: 44px; min-height: 44px; } }
+/* narrow phones: the new 🆘 makes 4 top-bar icons — shrink the icon family + tighten the section
+   gap + compact the countdown pill so it all fits down to 320px (no top-bar overflow). */
+@media (max-width: 560px){
+  .topbar{ gap: var(--s3); }
+  .pocket-btn, .topbar .theme-toggle, .topbar .bell{ width: 34px; height: 34px; }
+  .topbar-right{ gap: .3rem; }
+  .countdown{ font-size: .72rem; padding: .18rem .5rem; }
+}
+/* tiniest phones (SE-gen1 ~320px): the decorative days-pill won't fit next to 4 icons — hide it
+   (the day count still lives in the dashboard hero). Kept on the common 360px+. */
+@media (max-width: 350px){ .topbar .countdown{ display: none; } }
 .pk-sec{ margin: 0 0 var(--s4); }
 .pk-h{ font-family: var(--mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); margin: 0 0 .5rem; }
 .pk-dials{ display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }

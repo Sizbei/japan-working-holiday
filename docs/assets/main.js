@@ -254,7 +254,7 @@ function seedDayPlanJul4() {
 // (re)applied only if it's ABSENT or still a PRISTINE prior seed (every stop id matches the seed
 // pattern) — so hand-edited/authored days are always preserved. Bump TRIP_SEED_VERSION to push a
 // revised itinerary (e.g. a day swap) to everyone who hasn't customised those days.
-const TRIP_SEED_VERSION = 4;
+const TRIP_SEED_VERSION = 5;
 const isPristineSeedDay = (p) => p && Array.isArray(p.stops) && p.stops.length > 0
   && p.stops.every(s => /^p\d{4}[a-z]$/.test(String(s && s.id)));
 function seedTripPlans() {

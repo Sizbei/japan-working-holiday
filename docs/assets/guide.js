@@ -69,6 +69,7 @@ const NAV_ALL = [
   { r: 'plan', label: 'Plan a Day', i18n: 'nav.plan' },
   { r: 'map', label: 'Map', i18n: 'nav.map' },
   { r: 'explore', label: 'Explore', i18n: 'nav.explore' },
+  { r: 'eats', label: 'Eats', i18n: 'nav.eats' },
   { r: 'people', label: 'People', i18n: null },        // people has no i18n key — stays English (as in index.html)
   { r: 'checklist', label: 'Checklist', i18n: 'nav.checklist' },
   { r: 'budget', label: 'Budget', i18n: 'nav.budget' },

@@ -62,6 +62,7 @@
   <a href="#/plan" data-route="plan" data-i18n="nav.plan">Plan a Day</a>
   <a href="#/map" data-route="map" data-i18n="nav.map">Map</a>
   <a href="#/explore" data-route="explore" data-i18n="nav.explore">Explore</a>
+  <a href="#/eats" data-route="eats" data-i18n="nav.eats">Eats</a>
           <a href="#/people" data-route="people">People</a>
   <a href="#/checklist" data-route="checklist" data-i18n="nav.checklist">Checklist</a>
   <a href="#/budget" data-route="budget" data-i18n="nav.budget">Budget</a>
@@ -475,6 +476,27 @@
     <ul id="sourcesList"></ul>
   </section>
   </div><!-- /view-explore -->
+  <div class="view" id="view-eats" data-route="eats">
+  <section id="eats">
+    <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">食べ歩き</span><h2 data-i18n="head.eats">Eats</h2></div>
+    <p class="lede">Rate the places you eat — a quick star and a one-liner. Paste a Google Maps link (or none — the pin searches the name), and any eat with a location also shows on your <a href="#/map">Map</a>. <span id="eatsCount" class="eat-count" role="status" aria-live="polite"></span></p>
+    <form class="eats-add" id="eatsAdd" autocomplete="off">
+      <input type="text" id="eatName" placeholder="Restaurant / dish" aria-label="Restaurant name" required>
+      <div class="eats-add-stars" id="eatAdd" data-rating="0" role="group" aria-label="Star rating">
+        <button type="button" class="eat-star" data-n="1" aria-label="1 star" aria-pressed="false">☆</button>
+        <button type="button" class="eat-star" data-n="2" aria-label="2 stars" aria-pressed="false">☆</button>
+        <button type="button" class="eat-star" data-n="3" aria-label="3 stars" aria-pressed="false">☆</button>
+        <button type="button" class="eat-star" data-n="4" aria-label="4 stars" aria-pressed="false">☆</button>
+        <button type="button" class="eat-star" data-n="5" aria-label="5 stars" aria-pressed="false">☆</button>
+      </div>
+      <input type="text" id="eatNote" placeholder="One-liner (optional)" aria-label="One-line note">
+      <input type="url" id="eatLink" placeholder="Google Maps link (optional)" aria-label="Google Maps link" inputmode="url">
+      <button type="submit" class="btn primary">Add</button>
+    </form>
+    <div id="eatsList" class="eats-list"></div>
+  </section>
+  </div><!-- /view-eats -->
+
   <div class="view" id="view-rooms" data-route="rooms">
   <section id="rooms">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">部屋探し</span><h2 data-i18n="head.rooms">Find a Room</h2></div>

@@ -107,6 +107,14 @@ test('normalize back-fills new fields, infers coordKind, preserves data', () => 
   assert.equal(normalize({ id: 'x', name: 'NoCoords' }).coordKind, 'approx');
 });
 
+test('normalize: rating defaults to 0 (additive) and preserves a set eat rating', () => {
+  assert.equal(normalize({ id: 'p2', name: 'Legacy' }).rating, 0);         // back-filled on old records
+  const eat = normalize({ id: 'eat1', name: 'Kuroki', source: 'eat', rating: 4, note: 'great shio', visited: true });
+  assert.equal(eat.rating, 4);
+  assert.equal(eat.source, 'eat');
+  assert.equal(eat.visited, true);
+});
+
 test('slug + catId are deterministic and url-safe', () => {
   assert.equal(slug('Big Love Records (Harajuku)!'), 'big-love-records-harajuku');
   assert.equal(catId('restaurants', 'Ichiran'), 'cat:restaurants:ichiran');

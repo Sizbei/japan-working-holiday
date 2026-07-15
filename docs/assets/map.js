@@ -364,7 +364,7 @@ function initMap() {
     let last = 0;
     new ResizeObserver(() => {
       const h = el.offsetHeight;
-      if (h && h !== last) { last = h; map.invalidateSize({ animate: false }); }
+      if (h && h !== last) { last = h; map.invalidateSize({ animate: false }); if (!pinsShown) onMapShown(); }   // backstop: if the poll timed out before the container had size, place pins now
     }).observe(el);
   }
   onMapShown();   // poll for real canvas size, then invalidateSize + place pins (cold-start: scripts finished after the route reveal)

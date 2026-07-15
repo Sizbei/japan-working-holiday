@@ -599,6 +599,11 @@ function render() {
     wireMonthSelect();
     // "the rest of the page reacts": scrolling updates the label, mini-nav and cockpit for the month in view
     wireEndless((y, m) => {
+      // While a re-entry restore is pending, positionEndless owns the month. In window-scroll mode
+      // (viewport <821px) the window sits at the top (earliest month) for a beat on re-entry; without
+      // this guard a transient scroll here would clobber viewY/viewM to that top month, and
+      // positionEndless would then "restore" it — landing on April instead of the month you left.
+      if (_entryPos || _endlessNeedsPos) return;
       viewY = y; viewM = m;
       const lb = $('#calLabel'); if (lb) lb.textContent = `${MONTHS[viewM]} ${viewY}`;
       // announce to screen readers only after scrolling settles — a live #calLabel would queue

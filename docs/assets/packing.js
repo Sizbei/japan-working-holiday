@@ -239,7 +239,7 @@ function itemRowHTML(it, checked, drag) {
   const id = it.id;
   const on = !!checked[id];
   const conf = (it.confidence || '').toLowerCase();
-  const lowBadge = conf === 'low' ? `<span class="badge low">verify</span>` : '';
+  const confBadge = (conf === 'low' || conf === 'medium') ? `<span class="badge ${conf}">verify</span>` : '';
   const note = it.note ? `<span class="pack-note">${esc(it.note)}</span>` : '';
   const remove = it._custom
     ? `<button type="button" class="pack-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.item)}">✎</button>`
@@ -251,7 +251,7 @@ function itemRowHTML(it, checked, drag) {
       <label class="pack-row">
         <input type="checkbox" data-pid="${esc(id)}" ${on ? 'checked' : ''} aria-label="${esc(it.item)}">
         <span class="pack-body">
-          <span class="pack-name">${esc(it.item)} ${lowBadge}</span>
+          <span class="pack-name">${esc(it.item)} ${confBadge}</span>
           ${note}
         </span>
       </label>

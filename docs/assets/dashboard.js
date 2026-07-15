@@ -235,7 +235,7 @@ function wireBell() {
   if (!bell || !panel) return;
   if (bell.dataset.wired) return;   // guard: the two document-level listeners must mount once
   bell.dataset.wired = '1';
-  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('role', 'region');   // a non-modal dropdown, not a modal dialog (dialog would imply a focus trap we don't have)
   panel.setAttribute('aria-label', 'Notifications');
   const close = (restoreFocus) => { panel.hidden = true; bell.setAttribute('aria-expanded', 'false'); if (restoreFocus) bell.focus(); };
   bell.addEventListener('click', (e) => {

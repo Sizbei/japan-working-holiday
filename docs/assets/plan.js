@@ -338,7 +338,7 @@ function openPicker() {
     if (item) { addFromModel(item.dataset.id); close(); }
   });
   ov.querySelector('#pkFilter').addEventListener('input', (e) => { q = e.target.value.trim().toLowerCase(); draw(); });
-  setTimeout(() => ov.querySelector('#pkFilter').focus(), 30);
+  setTimeout(() => ov.querySelector('#pkFilter')?.focus(), 30);
 }
 function addFromModel(id) {
   const pt = placesModel().find(p => p.id === id); if (!pt) return;

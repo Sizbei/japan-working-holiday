@@ -550,6 +550,8 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
   const flagged = lvl > 0;
   const nextLbl = lvl >= 4 ? 'none' : 'P' + (lvl + 1);   // what a press will set (cyclePriority)
   const phaseTag = opts.showPhase && it.phase ? `<span class="ci-phase">${esc(it.phase)}</span>` : '';
+  const conf = (it.confidence || '').toLowerCase();
+  const confBadge = (conf === 'low' || conf === 'medium') ? `<span class="badge ${conf}">verify</span>` : '';   // flag estimates (matches Explore/Budget/Packing)
   const del = it._custom
     ? `<button type="button" class="check-edit" data-edit="${esc(id)}" aria-label="Edit ${esc(it.task)}">✎</button>`
       + `<button type="button" class="check-del" data-del="${esc(id)}" aria-label="Remove ${esc(it.task)}">✕</button>`
@@ -564,7 +566,7 @@ function checkItemHTML(it, state, due, now, knownIds, opts = {}) {
       <input type="checkbox" id="cb-${esc(id)}" data-cid="${esc(id)}" ${checked} ${locked ? 'disabled' : ''}
              aria-label="${esc(it.task)}">
       <label class="ci-body" for="cb-${esc(id)}">
-        <span class="ci-task">${esc(it.task)}<span class="kind-tag kind-${esc(kind)}">${esc(kind)}</span>${phaseTag}${dueTag}${locked ? '<span class="lock">🔒 do prerequisite first</span>' : ''}</span>
+        <span class="ci-task">${esc(it.task)}<span class="kind-tag kind-${esc(kind)}">${esc(kind)}</span>${phaseTag}${dueTag}${confBadge}${locked ? '<span class="lock">🔒 do prerequisite first</span>' : ''}</span>
         ${it.note ? `<span class="ci-note">${esc(it.note)}</span>` : ''}
         ${srcLinks(it.sources, 'ci-src')}
       </label>

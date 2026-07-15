@@ -120,6 +120,7 @@ function wireReset() {
     if (!await confirmModal('Reset budget to the researched defaults? Your edits, custom lines, savings and income will be cleared.', { ok: 'Reset', danger: true })) return;
     save({});
     render();
+    renderSpend();   // reset changes the planned figure the spend card references — refresh it too
   });
 }
 
@@ -184,12 +185,12 @@ function renderSummary() {
 // ---- one line row: label + editable amount + remove × ----
 function lineRowHTML(line) {
   const conf = (line.confidence || '').toLowerCase();
-  const lowBadge = (conf === 'low') ? `<span class="badge low">verify</span>` : '';
+  const confBadge = (conf === 'low' || conf === 'medium') ? `<span class="badge ${conf}">verify</span>` : '';
   const note = line.note ? `<span class="bdg-note">${esc(line.note)}</span>` : '';
   return `
     <li class="bdg-line" data-id="${esc(line.id)}">
       <span class="bdg-line-body">
-        <span class="bdg-line-label">${esc(line.label || '')} ${lowBadge}</span>
+        <span class="bdg-line-label">${esc(line.label || '')} ${confBadge}</span>
         ${note}
       </span>
       <span class="bdg-line-amt">

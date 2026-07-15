@@ -84,7 +84,7 @@ async function load(level, { render = true } = {}) {
     if (!Array.isArray(points)) throw new Error('bad shape');
     cache[level] = points;
     updateCounts();
-    if (render) renderList();
+    if (render && level === state.level) renderList();   // ignore a stale fetch if the user switched levels mid-load
   } catch (err) {
     console.error('[grammar] load', level, err);
     if (render) renderLoadError(level);

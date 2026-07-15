@@ -599,6 +599,11 @@ function render() {
     wireMonthSelect();
     // "the rest of the page reacts": scrolling updates the label, mini-nav and cockpit for the month in view
     wireEndless((y, m) => {
+      // While a re-entry restore is pending, positionEndless owns the month. In window-scroll mode
+      // (viewport <821px) the window sits at the top (earliest month) for a beat on re-entry; without
+      // this guard a transient scroll here would clobber viewY/viewM to that top month, and
+      // positionEndless would then "restore" it — landing on April instead of the month you left.
+      if (_entryPos || _endlessNeedsPos) return;
       viewY = y; viewM = m;
       const lb = $('#calLabel'); if (lb) lb.textContent = `${MONTHS[viewM]} ${viewY}`;
       // announce to screen readers only after scrolling settles — a live #calLabel would queue
@@ -690,14 +695,28 @@ function positionEndless() {
   }
   _endlessNeedsPos = false; _entryPos = false;
 }
+// Retry positionEndless until it actually runs (the view can stay hidden past a fixed 300ms on a
+// slow device / long view-transition). Condition-based, not fixed timeouts — so the month restore
+// always completes AND the flags always clear (the onMonth guard above must never stick, or scroll
+// tracking would silently stop). Hard ceiling ~2s: give up positioning but force-clear the flags.
+function scheduleEntryPosition() {
+  let tries = 0;
+  const attempt = () => {
+    if (!_entryPos && !_endlessNeedsPos) return;   // positioned (positionEndless cleared the flags)
+    positionEndless();
+    if (!_entryPos && !_endlessNeedsPos) return;   // just succeeded
+    if (++tries > 20) { _endlessNeedsPos = false; _entryPos = false; return; }   // failsafe: never leave the guard stuck
+    setTimeout(attempt, 100);
+  };
+  requestAnimationFrame(attempt);
+}
 let _calDirty = false;
 document.addEventListener('jwh:route', (e) => {
   if (e.detail?.route !== 'calendar') return;
   if (_calDirty) { _calDirty = false; render(); }   // EF3: catch up on changes made while hidden
   if (mode === 'month') {
     _entryPos = true;
-    requestAnimationFrame(positionEndless);
-    setTimeout(positionEndless, 300);   // again after the view transition settles — the rAF can land while the view is still hidden
+    scheduleEntryPosition();
   } else {
     window.scrollTo(0, 0);   // the router no longer resets the window for #/calendar (endless month owns it) — non-month modes still start at top
   }

@@ -443,7 +443,9 @@ function wireInspect() {
     if (!toks.length) return;
     e.preventDefault();
     const i = toks.indexOf(sent.querySelector('.gtok-cur'));
-    const next = e.key === 'ArrowRight' ? Math.min(i + 1, toks.length - 1) : Math.max(i - 1, 0);
+    const next = i === -1
+      ? (e.key === 'ArrowRight' ? 0 : toks.length - 1)   // nothing selected: enter from the matching end (← → last)
+      : (e.key === 'ArrowRight' ? Math.min(i + 1, toks.length - 1) : Math.max(i - 1, 0));
     showStrip(toks[next]);
   });
   // strip close: ✕, click-away, or another popover system opening

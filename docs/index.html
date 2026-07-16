@@ -76,40 +76,82 @@
   <h1 id="routeH1" class="sr-only"></h1>
   <div class="view" id="view-dashboard" data-route="dashboard">
 
-  <!-- ===== HERO: the countdown is the hero (spec A·Kakemono) ===== -->
-  <section class="dash-hero" aria-labelledby="heroTitleH">
-    <div class="scroll-rail" aria-hidden="true">私の一年<small>2026—2027</small></div>
-    <div class="dash-hero-main">
-      <div class="sun-ink" aria-hidden="true"></div>
-      <p class="dash-kicker">My save file · Tokyo</p>
-      <h1 id="heroTitleH" class="dash-h1">My Year<br>in Japan</h1>
-      <p class="dash-sub">Synths in Ochanomizu, Super Potato afternoons, listening bars, and meetups where I bring a build to show — plus the paperwork that keeps me here.</p>
-      <div class="hero-count" id="heroCount" role="status" aria-live="polite">
-        <span class="hc-num count">—</span>
-        <span class="hc-meta"><span class="hc-unit"></span><span class="hc-date">NRT · 2026-06-30</span></span>
+  <!-- ===== ALMANAC (暦) home — spine | seasonal hero | almanac columns ===== -->
+  <div class="alm">
+    <aside class="alm-spine" aria-hidden="true">
+      <span class="spine-jp" lang="ja">私の一年</span>
+      <span class="spine-years">2026 — 2027</span>
+      <span class="spine-rule"></span>
+      <div class="hanko" lang="ja"><span>私</span><span>の</span><span>一</span><span>年</span></div>
+    </aside>
+
+    <div class="alm-body">
+
+      <!-- hero: the season, not the title (dashboard.js fills from lib/sekki.js) -->
+      <section class="sekki" aria-labelledby="heroTitleH">
+        <div class="sekki-info">
+          <p class="sekki-kicker"><span lang="ja">二十四節気</span> · my save file · tokyo</p>
+          <h1 class="sekki-name" id="heroTitleH">My Year in Japan</h1>
+          <p class="sekki-72" id="sekkiKo" hidden></p>
+          <p class="sekki-wx wx-strip" id="wxStrip" hidden></p>
+        </div>
+        <div class="sekki-season" id="sekkiSeason" aria-hidden="true"></div>
+        <div class="sekki-dial">
+          <div class="dial" id="heroCount" role="status" aria-live="polite">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="track" cx="60" cy="60" r="52"></circle>
+              <circle class="arc" id="dialArc" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="dial-core"><b class="hc-num">—</b><span class="hc-unit"></span></div>
+          </div>
+          <p class="dial-cap hc-date">NRT · 2026-06-30</p>
+        </div>
+      </section>
+
+      <!-- almanac columns -->
+      <div class="alm-grid">
+        <section class="alm-card" id="wToday" aria-labelledby="hToday">
+          <h2 class="alm-h" id="hToday"><span class="jp2" lang="ja">今日</span><span class="rom" id="todayRom">today</span></h2>
+          <div class="widget-body"></div>
+        </section>
+
+        <section class="alm-card" id="wDeadlines" aria-labelledby="hDdl">
+          <h2 class="alm-h" id="hDdl"><span class="jp2" lang="ja">締切</span><span class="rom">deadlines &amp; book-by</span></h2>
+          <div class="widget-body"></div>
+        </section>
+
+        <div class="col-side">
+          <section class="alm-card" id="wProgress" aria-labelledby="hPrg">
+            <h2 class="alm-h" id="hPrg"><span class="jp2" lang="ja">進捗</span><span class="rom">progress</span></h2>
+            <div class="widget-body"></div>
+          </section>
+          <section class="alm-card" id="wSpend" aria-labelledby="hSpd">
+            <h2 class="alm-h" id="hSpd"><span class="jp2" lang="ja">出費</span><span class="rom">spend</span></h2>
+            <div class="widget-body"></div>
+          </section>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ===== NEEDS ME: promoted essentials (spec B·Engawa strip) ===== -->
-  <section class="needs-me" aria-labelledby="needsMeH">
-    <h2 id="needsMeH" class="sr-only" data-i18n="head.dashboard.needs">What needs me</h2>
-    <div class="widget widget-today" id="wToday"><h3 class="widget-h"><span aria-hidden="true">🗓</span> <span data-i18n="head.widget.today">Today</span></h3><div class="widget-body"></div></div>
-    <div class="widget widget-readiness" id="wReadiness"><h3 class="widget-h"><span aria-hidden="true">🧭</span> <span data-i18n="head.readiness">Trip readiness</span></h3><div class="widget-body"></div></div>
-    <div class="widget" id="wSpend"><h3 class="widget-h"><span aria-hidden="true">💴</span> <span data-i18n="head.widget.spend">Quick spend</span></h3><div class="widget-body"></div></div>
-    <div class="widget" id="wDeadlines"><h3 class="widget-h"><span aria-hidden="true">⚖️</span> <span data-i18n="head.widget.deadlines">Next deadlines</span></h3><div class="widget-body"></div></div>
-    <div class="widget" id="wProgress"><h3 class="widget-h"><span aria-hidden="true">✅</span> <span data-i18n="head.widget.checklist">Checklist</span></h3><div class="widget-body"></div></div>
-    <div class="widget" id="wPhrase"><h3 class="widget-h"><span aria-hidden="true">🗣</span> <span data-i18n="head.widget.potd">Phrase of the day</span></h3><div class="widget-body"></div></div>
-  </section>
+      <!-- this week strip -->
+      <section class="almwk" id="wWeek" aria-labelledby="hWk">
+        <h2 class="alm-h" id="hWk"><span class="jp2" lang="ja">今週</span><span class="rom" id="weekRom">this week</span></h2>
+        <div class="widget-body"></div>
+      </section>
 
-  <!-- ===== TEASERS: demoted content, one line each ===== -->
-  <section class="dash-teasers" aria-labelledby="moreH">
-    <h2 id="moreH" class="sr-only" data-i18n="head.dashboard.more">More</h2>
-    <div class="teaser" id="tBookBy"><span class="teaser-h"><span aria-hidden="true">🎟️</span> <span data-i18n="head.teaser.bookby">Book-by</span></span><div class="teaser-body"></div></div>
-    <div class="teaser" id="tEvents"><span class="teaser-h"><span aria-hidden="true">📅</span> <span data-i18n="head.teaser.upcoming">Upcoming</span></span><div class="teaser-body"></div></div>
-    <div class="teaser" id="tPlan"><span class="teaser-h"><span aria-hidden="true">🗺️</span> <span data-i18n="head.teaser.dayplan">Day plan</span></span><div class="teaser-body"></div></div>
-    <div class="teaser" id="tBudget"><span class="teaser-h"><span aria-hidden="true">💴</span> <span data-i18n="head.teaser.budget">Budget</span></span><div class="teaser-body"></div></div>
-  </section>
+      <!-- phrase of the day (phraseday.js fills .widget-body) -->
+      <section class="alm-card phr" id="wPhrase" aria-labelledby="hPhr">
+        <h2 class="alm-h" id="hPhr"><span class="jp2" lang="ja">今日の一言</span><span class="rom">phrase of the day</span></h2>
+        <div class="widget-body"></div>
+      </section>
+
+      <!-- quiet footnotes -->
+      <section class="alm-foot" aria-label="More">
+        <div class="teaser" id="tPlan"><span class="teaser-h"><span aria-hidden="true">🗺️</span> <span data-i18n="head.teaser.dayplan">Day plan</span></span><div class="teaser-body"></div></div>
+        <div class="teaser" id="tBudget"><span class="teaser-h"><span aria-hidden="true">💴</span> <span data-i18n="head.teaser.budget">Budget</span></span><div class="teaser-body"></div></div>
+      </section>
+
+    </div><!-- /alm-body -->
+  </div><!-- /alm -->
 
   </div><!-- /view-dashboard -->
 

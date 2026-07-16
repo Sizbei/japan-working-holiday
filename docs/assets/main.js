@@ -19,7 +19,7 @@ import { initRouter } from './router.js';
 import { registerLazyRoute } from './lazyroutes.js';
 import { mountGestures } from './gestures.js';
 import { mountPalette } from './palette.js';
-import { mountGuide, applyHomeLayout, applyCompact } from './guide.js';
+import { mountGuide, applyCompact } from './guide.js';
 import { initKonami } from './konami.js';
 import { mountEaster } from './easter.js';
 import { stagger } from './motion.js';
@@ -46,7 +46,6 @@ document.addEventListener('jwh:storage-full', () => {
 mountGate(boot);
 
 function boot() {
-  applyHomeLayout();   // set <html data-home> before the dashboard paints (avoids a layout flash)
   applyCompact();      // set <html data-compact> just as early — mini-titles must not flash in
   fetch('data/tips.json', { cache: 'no-store' })
     .then(r => { if (!r.ok) throw new Error('Failed to load tips.json'); return r.json(); })

@@ -29,7 +29,7 @@ function weekListHTML() {
     const rows = dayEvs.map(e => {
       const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s;
       const cont = isMultiDay(e) ? (d === s ? `<span class="wkl-cont">→ ${esc(fmtShort(en))}</span>` : d === en ? '<span class="wkl-cont">ends</span>' : '<span class="wkl-cont">ongoing ┄</span>') : '';
-      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${cont}</button>`;
+      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${cont}</button>`;
     }).join('') || '<p class="wkl-empty">No events</p>';
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
     return `<section class="wkl-day${cls}">
@@ -88,7 +88,7 @@ function gridHTML(days, isDay) {
       const w = 100 / b.cols, left = b.col * w;
       const tm = b.ev.time + (b.ev.endTime ? '–' + b.ev.endTime : '');
       const aria = `${b.ev.time}${b.ev.endTime ? ' to ' + b.ev.endTime : ''}, ${b.ev.title}`;
-      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" aria-label="${esc(aria)}">`
+      return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" data-ev="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" aria-label="${esc(aria)}">`
         + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(b.ev.title)}</span></button>`;
     }).join('');
     const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
@@ -129,11 +129,11 @@ function barHTML(p) {
   const user = e.source === 'user';   // only your own events resize (baked spans are fixed research)
   const gl = (user && !p.contL) ? '<span class="wk-resize wk-resize-l" aria-hidden="true"></span>' : '';   // grips only on edges visible this week
   const gr = (user && !p.contR) ? '<span class="wk-resize wk-resize-r" aria-hidden="true"></span>' : '';
-  return `<button type="button" class="wk-bar${cls}${user ? ' wk-user' : ''}" data-id="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
+  return `<button type="button" class="wk-bar${cls}${user ? ' wk-user' : ''}" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
     + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
 }
 function chipHTML(e) {
-  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
+  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
 }
 export function wireWeek() {
   const view = $('#calView'); if (!view) return;

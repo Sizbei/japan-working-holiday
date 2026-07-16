@@ -490,7 +490,7 @@ function onCalKeydown(e) {
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
 
   if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') {
-    const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev]');
+    const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
     const id = _sidePanelEv || chip?.dataset.ev;
     if (id) { e.preventDefault(); removeEventByKey(id); }
     return;
@@ -1107,7 +1107,7 @@ function eventMenuItems(ev) {
 
 // Resolve a DOM node to event menu items, or null if it's not an event trigger. Exported for gestures.js.
 export function getEventMenu(node) {
-  const trig = node?.closest?.('.cal-chip[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev]');
+  const trig = node?.closest?.('.cal-chip[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
   if (!trig) return null;
   const ev = allEvents().find(x => x.id === trig.dataset.ev);
   return ev ? eventMenuItems(ev) : null;

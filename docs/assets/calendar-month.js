@@ -19,21 +19,38 @@ const MONTH_SINGLES = 4;      // rows per cell — all chips, or 3 chips + "+N m
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 
-// full range: month before the earliest event → month after the latest (today always included)
-function dataRange() {
-  let lo = TODAY.slice(0, 7), hi = TODAY.slice(0, 7);
-  for (const e of allEvents()) {
-    const s = String(e.date || '').slice(0, 7), en = String(e.endDate || e.date || '').slice(0, 7);
-    if (s && s < lo) lo = s;
-    if (en && en > hi) hi = en;
-  }
-  const step = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
-  return { lo: step(lo, -1), hi: step(hi, 1) };
+// TRUE infinite scroll: the grid renders a WINDOW of months (not the whole data range), tight around
+// today, and extends on demand as you scroll to either end — so there's no hard April "wall". The
+// window is module state so extensions persist across re-renders / route re-entry.
+const stepYM = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
+const CAL_CHUNK = 6;          // months added each time you reach an edge
+let _winLo = null, _winHi = null;   // YYYY-MM, inclusive
+function initWindow() { const t = TODAY.slice(0, 7); _winLo = stepYM(t, -2); _winHi = stepYM(t, 14); }   // a little lead-in, ~15 months ahead
+export function calWindow() { if (_winLo === null) initWindow(); return { lo: _winLo, hi: _winHi }; }
+// widen the window (today always stays inside — we only widen)
+export function extendWindow(dir) {
+  if (_winLo === null) initWindow();
+  if (dir < 0) _winLo = stepYM(_winLo, -CAL_CHUNK); else _winHi = stepYM(_winHi, CAL_CHUNK);
+}
+// anchor the current scroll to a day cell near the top of the viewport so a prepend/append doesn't jump
+export function captureAnchor() {
+  const grid = $('#calView .cal-grid'); if (!grid) return null;
+  const gr = grid.getBoundingClientRect();
+  const cell = document.elementFromPoint(gr.left + gr.width / 2, Math.max(gr.top, 0) + 40)?.closest?.('.cal-cell[data-day]');
+  if (!cell) return null;
+  return { day: cell.dataset.day, offset: cell.getBoundingClientRect().top - gr.top };
+}
+export function restoreAnchor(a) {
+  if (!a) return;
+  const grid = $('#calView .cal-grid'); if (!grid) return;
+  const cell = grid.querySelector(`.cal-cell[data-day="${a.day}"]`); if (!cell) return;
+  const delta = (cell.getBoundingClientRect().top - grid.getBoundingClientRect().top) - a.offset;
+  if (grid.scrollHeight > grid.clientHeight + 4) grid.scrollTop += delta; else window.scrollBy(0, delta);
 }
 
 export function monthHTML() {
   const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const { lo, hi } = dataRange();
+  const { lo, hi } = calWindow();
   const rangeStart = (() => { const first = lo + '-01'; const dow = new Date(first + 'T00:00:00Z').getUTCDay(); return addDaysISO(first, -dow); })();
   const lastDay = (() => { const d = new Date(Date.UTC(+hi.slice(0, 4), +hi.slice(5, 7), 0)); return d.toISOString().slice(0, 10); })();
   const rangeEnd = (() => { const dow = new Date(lastDay + 'T00:00:00Z').getUTCDay(); return addDaysISO(lastDay, 6 - dow); })();
@@ -135,9 +152,23 @@ export function scrollToMonth(ym, smooth) { scrollTargetTo($(`#calView .cal-msep
 export function scrollToDay(iso, smooth) { scrollTargetTo($(`#calView .cal-cell[data-day="${iso}"]`), smooth, 'center'); }
 // watch scrolling; report the month whose separator is closest above the viewport top → the
 // coordinator updates label / mini-nav / cockpit ("the rest of the page reacts").
-export function wireEndless(onMonth) {
+export function wireEndless(onMonth, onExtend) {
   const grid = $('#calView .cal-grid'); if (!grid) return;
   let raf = 0, lastYm = '';
+  // infinite scroll: -1 when within ~a screen of the top, +1 near the bottom, else 0. Works in both
+  // scroll modes (internal grid ≥821px, window <821px).
+  const nearEdge = () => {
+    if (grid.scrollHeight > grid.clientHeight + 4) {   // internal grid scroll
+      if (grid.scrollTop < 500) return -1;
+      if (grid.scrollTop > grid.scrollHeight - grid.clientHeight - 500) return 1;
+      return 0;
+    }
+    const cells = grid.querySelectorAll('.cal-cell[data-day]');
+    if (!cells.length) return 0;
+    if (cells[0].getBoundingClientRect().top > -500) return -1;
+    if (cells[cells.length - 1].getBoundingClientRect().bottom < window.innerHeight + 500) return 1;
+    return 0;
+  };
   const topline = () => {
     // month of the day cell at the READING LINE (middle of the grid's visible box, middle
     // column). The sentinels mark week TOPS and a week can straddle two months — the cell
@@ -161,6 +192,10 @@ export function wireEndless(onMonth) {
       if (grid.offsetParent === null) return;   // hidden (left the route) — every rect is 0 and topline would pick the LAST month, clobbering viewY/viewM
       const ym = topline();
       if (ym && ym !== lastYm) { lastYm = ym; onMonth(+ym.slice(0, 4), +ym.slice(5, 7) - 1); }
+      if (onExtend && !_extending) {   // grow the window when you reach an end (anchored re-render, no jump)
+        const dir = nearEdge();
+        if (dir) { _extending = true; try { onExtend(dir); } finally { _extending = false; } }
+      }
     });
   };
   grid.addEventListener('scroll', onScroll, { passive: true });          // compact: the grid scrolls internally
@@ -172,7 +207,7 @@ export function wireEndless(onMonth) {
     document.getElementById('main')?.addEventListener('scroll', relay, { passive: true });
   }
 }
-let _endlessWired = false, _endlessOnScroll = null;
+let _endlessWired = false, _endlessOnScroll = null, _extending = false;
 
 // ---- month cockpit: up next · book by · tasks due ----
 function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }

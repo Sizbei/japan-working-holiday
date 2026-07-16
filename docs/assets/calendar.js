@@ -23,7 +23,7 @@ import { prefersReducedMotion } from './motion.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { agendaHTML, wireAgenda } from './calendar-agenda.js';
 import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
-import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay } from './calendar-month.js';
+import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay, extendWindow, captureAnchor, restoreAnchor } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
@@ -613,6 +613,12 @@ function render() {
       renderMiniNav();
       dimFocus();
       if (panel && !panel.hidden) { panel.innerHTML = panelHTML(); wirePanel(); }
+    }, (dir) => {
+      // reached an end → grow the window and re-render, anchored so the view doesn't jump (infinite scroll)
+      const a = captureAnchor();
+      extendWindow(dir);
+      render();
+      restoreAnchor(a);
     });
     dimFocus();   // initial focal state (re-renders too — cells are rebuilt without .moff)
     if (oldGrid) {   // restore (same-session re-render)
@@ -677,10 +683,11 @@ function dimFocus() {
 function positionEndless() {
   if ((!_endlessNeedsPos && !_entryPos) || mode !== 'month') return;
   const grid = $('#calView .cal-grid');
-  if (!grid || grid.offsetParent === null) return;   // still hidden (view-transition class toggle is async) — the 300ms retry catches it
+  if (!grid || grid.offsetParent === null) return;   // still hidden (view-transition class toggle is async) — the retry loop catches it
+  const targetDay = _endlessNeedsPos ? (weekAnchor || TODAY) : null;
+  const targetYm = _endlessNeedsPos ? targetDay.slice(0, 7) : `${viewY}-${String(viewM + 1).padStart(2, '0')}`;
   if (_endlessNeedsPos) {
-    const day = weekAnchor || TODAY;
-    scrollToDay(day, false);   // first render: land on today
+    scrollToDay(targetDay, false);   // first render: land on today
     // web-font load reflows the months of rows ABOVE today (serif separators) and the scroll
     // drifts — re-center once metrics are final (no-op when fonts were already cached).
     // Skip if the user has already scrolled away (reflow alone doesn't move scrollY).
@@ -688,12 +695,19 @@ function positionEndless() {
     document.fonts?.ready?.then(() => {
       const g = $('#calView .cal-grid')?.scrollTop || 0;
       if (Math.abs(window.scrollY - y0) > 80 || Math.abs(g - g0) > 80) return;
-      scrollToDay(day, false);
+      scrollToDay(targetDay, false);
     });
   } else {
-    scrollToMonth(`${viewY}-${String(viewM + 1).padStart(2, '0')}`, false);   // re-entry: restore the month you were viewing
+    scrollToMonth(targetYm, false);   // re-entry: restore the month you were viewing
   }
-  _endlessNeedsPos = false; _entryPos = false;
+  // VERIFY the scroll actually landed on the target month (a scroll issued mid-view-transition can be
+  // measured against stale metrics and no-op, leaving the grid at the top). Only clear the retry flags
+  // once the reading-line month matches — otherwise scheduleEntryPosition tries again. This is what
+  // makes tab-switch reliably show the current month, not the top.
+  const sep = grid.querySelector(`.cal-msep[data-ym="${targetYm}"]`);
+  const landed = sep ? Math.abs(sep.getBoundingClientRect().top - grid.getBoundingClientRect().top) < grid.clientHeight
+    : true;   // target month not in the window (shouldn't happen) — don't spin
+  if (landed) { _endlessNeedsPos = false; _entryPos = false; }
 }
 // Retry positionEndless until it actually runs (the view can stay hidden past a fixed 300ms on a
 // slow device / long view-transition). Condition-based, not fixed timeouts — so the month restore

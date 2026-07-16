@@ -23,13 +23,19 @@ import { prefersReducedMotion } from './motion.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { agendaHTML, wireAgenda } from './calendar-agenda.js';
 import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
-import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay, extendWindow, captureAnchor, restoreAnchor } from './calendar-month.js';
+import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay, extendWindow, ensureWindowCovers, captureAnchor, restoreAnchor } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
 import { askCalendar } from './lib/modal.js';
 import { CAL_PALETTE, normalizeCalendars, addCalendar, updateCalendar, removeCalendar, nextColor } from './lib/calendars.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
+
+// Jump helpers: an explicit month/day jump (Prev/Next, Today, quick-add, mini-cal) may target a
+// month outside the infinite-scroll window — widen the window to include it (re-render), THEN scroll.
+// Without this the target separator/cell wouldn't exist yet and the scroll would silently no-op.
+function goMonth(ym, smooth) { if (ensureWindowCovers(ym)) render(); scrollToMonth(ym, smooth); }
+function goDay(dayIso, smooth) { if (ensureWindowCovers(String(dayIso).slice(0, 7))) render(); scrollToDay(dayIso, smooth); }
 
 let DATA = null;
 export let viewY = 2026, viewM = 5;
@@ -277,7 +283,7 @@ function wireToolbar() {
   $('#calNext')?.addEventListener('click', () => shift(1));
   $('#calToday')?.addEventListener('click', () => {
     const t = parseISO(TODAY); weekAnchor = TODAY;
-    if (mode === 'month') { scrollToDay(TODAY, !prefersReducedMotion()); return; }   // endless: navigate by scroll
+    if (mode === 'month') { goDay(TODAY, !prefersReducedMotion()); return; }   // endless: navigate by scroll
     viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render();
   });
   $('#calModeMonth')?.addEventListener('click', () => { mode = 'month'; render(); });
@@ -313,7 +319,7 @@ function wireQuickAdd() {
     input.value = ''; hint.textContent = '';
     dndToast(`Added: ${title} · ${fmtShort(p.date)}`);
     input.focus({ preventScroll: true });                                       // a bare focus() yanked the endless grid back to the top
-    requestAnimationFrame(() => scrollToDay(p.date, !prefersReducedMotion()));  // land on the new event
+    requestAnimationFrame(() => goDay(p.date, !prefersReducedMotion()));  // land on the new event
   });
 }
 // Quick-add + search live in a popover (owner: keep the toolbar row clear for calendar space).
@@ -344,7 +350,7 @@ function shift(d) {
   if (mode === 'day') { weekAnchor = addDaysISO(weekAnchor, d); render(); return; }          // day mode steps by a day
   // endless month: ‹ › scroll to the neighbouring month's separator; the scroll handler updates the label
   let y = viewY, m = viewM + d; while (m < 0) { m += 12; y--; } while (m > 11) { m -= 12; y++; }
-  scrollToMonth(`${y}-${String(m + 1).padStart(2, '0')}`, !prefersReducedMotion());
+  goMonth(`${y}-${String(m + 1).padStart(2, '0')}`, !prefersReducedMotion());
 }
 
 // jump the month view to a given ISO date (used by event search)
@@ -499,7 +505,7 @@ function onCalKeydown(e) {
   if (e.key === 't' || e.key === 'T') {
     e.preventDefault(); weekAnchor = TODAY;
     if (mode !== 'month') { const t = parseISO(TODAY); if (t) { viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); } mode = 'month'; render(); }
-    scrollToDay(TODAY, !prefersReducedMotion());
+    goDay(TODAY, !prefersReducedMotion());
     $(`#calView .cal-date[data-day="${TODAY}"]`)?.focus({ preventScroll: true }); return;
   }
   if (e.key === 'n' || e.key === 'N') {
@@ -554,7 +560,7 @@ function renderMiniNav() {
 function jumpToDate(iso) {
   const t = parseISO(iso); if (!t) return;
   if (mode === 'week' || mode === 'day') { weekAnchor = iso; viewY = t.getUTCFullYear(); viewM = t.getUTCMonth(); render(); return; }
-  scrollToDay(iso, !prefersReducedMotion());   // endless month: navigate by scrolling, not re-rendering
+  goDay(iso, !prefersReducedMotion());   // endless month: navigate by scrolling, not re-rendering
 }
 
 // month grid: clicking a date number (or "+N more") zooms into that WEEK — the re-render
@@ -614,11 +620,10 @@ function render() {
       dimFocus();
       if (panel && !panel.hidden) { panel.innerHTML = panelHTML(); wirePanel(); }
     }, (dir) => {
-      // reached an end → grow the window and re-render, anchored so the view doesn't jump (infinite scroll)
+      // reached an end → grow the window and re-render, anchored so the view doesn't jump (infinite
+      // scroll). Skip the re-render at the cap (extendWindow returns false → nothing to redraw).
       const a = captureAnchor();
-      extendWindow(dir);
-      render();
-      restoreAnchor(a);
+      if (extendWindow(dir)) { render(); restoreAnchor(a); }
     });
     dimFocus();   // initial focal state (re-renders too — cells are rebuilt without .moff)
     if (oldGrid) {   // restore (same-session re-render)

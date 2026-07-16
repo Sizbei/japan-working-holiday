@@ -24,19 +24,36 @@ const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUT
 // window is module state so extensions persist across re-renders / route re-entry.
 const stepYM = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
 const CAL_CHUNK = 6;          // months added each time you reach an edge
+const CAL_CAP = 72;          // don't auto-extend past ~6 years either side of today (bounds the DOM)
 let _winLo = null, _winHi = null;   // YYYY-MM, inclusive
 function initWindow() { const t = TODAY.slice(0, 7); _winLo = stepYM(t, -2); _winHi = stepYM(t, 14); }   // a little lead-in, ~15 months ahead
 export function calWindow() { if (_winLo === null) initWindow(); return { lo: _winLo, hi: _winHi }; }
-// widen the window (today always stays inside — we only widen)
+// widen the window one chunk (today always stays inside — we only widen). Returns true if it changed;
+// stops at CAL_CAP so a pinned edge-scroll can't grow the DOM without bound.
 export function extendWindow(dir) {
   if (_winLo === null) initWindow();
-  if (dir < 0) _winLo = stepYM(_winLo, -CAL_CHUNK); else _winHi = stepYM(_winHi, CAL_CHUNK);
+  const t = TODAY.slice(0, 7);
+  if (dir < 0) { const n = stepYM(_winLo, -CAL_CHUNK); if (n < stepYM(t, -CAL_CAP)) return false; _winLo = n; return true; }
+  const n = stepYM(_winHi, CAL_CHUNK); if (n > stepYM(t, CAL_CAP)) return false; _winHi = n; return true;
 }
-// anchor the current scroll to a day cell near the top of the viewport so a prepend/append doesn't jump
+// explicit jumps (Prev/Next, quick-add, mini-cal) can target a month outside the window — widen to
+// include it (no cap: the user asked to go there). Returns true if the window changed.
+export function ensureWindowCovers(ym) {
+  if (_winLo === null) initWindow();
+  let changed = false;
+  while (ym < _winLo) { _winLo = stepYM(_winLo, -CAL_CHUNK); changed = true; }
+  while (ym > _winHi) { _winHi = stepYM(_winHi, CAL_CHUNK); changed = true; }
+  return changed;
+}
+// anchor the current scroll to a day cell at the READING LINE (middle of the VISIBLE grid, below the
+// sticky topbar/nav) so a prepend/append doesn't jump. Reuses topline()'s probe point on purpose —
+// a fixed top+Npx offset would land inside the sticky chrome in window-scroll mode.
 export function captureAnchor() {
   const grid = $('#calView .cal-grid'); if (!grid) return null;
   const gr = grid.getBoundingClientRect();
-  const cell = document.elementFromPoint(gr.left + gr.width / 2, Math.max(gr.top, 0) + 40)?.closest?.('.cal-cell[data-day]');
+  const x = gr.left + gr.width / 2;
+  const y = (Math.max(gr.top, 0) + Math.min(gr.bottom, window.innerHeight)) / 2;
+  const cell = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
   if (!cell) return null;
   return { day: cell.dataset.day, offset: cell.getBoundingClientRect().top - gr.top };
 }
@@ -194,7 +211,10 @@ export function wireEndless(onMonth, onExtend) {
       if (ym && ym !== lastYm) { lastYm = ym; onMonth(+ym.slice(0, 4), +ym.slice(5, 7) - 1); }
       if (onExtend && !_extending) {   // grow the window when you reach an end (anchored re-render, no jump)
         const dir = nearEdge();
-        if (dir) { _extending = true; try { onExtend(dir); } finally { _extending = false; } }
+        const now = Date.now();
+        if (dir && now - _lastExtend > 200) {   // cooldown: a pinned edge-scroll can't extend every frame
+          _lastExtend = now; _extending = true; try { onExtend(dir); } finally { _extending = false; }
+        }
       }
     });
   };
@@ -207,7 +227,7 @@ export function wireEndless(onMonth, onExtend) {
     document.getElementById('main')?.addEventListener('scroll', relay, { passive: true });
   }
 }
-let _endlessWired = false, _endlessOnScroll = null, _extending = false;
+let _endlessWired = false, _endlessOnScroll = null, _extending = false, _lastExtend = 0;
 
 // ---- month cockpit: up next · book by · tasks due ----
 function sevOf(iso) { const d = daysBetween(TODAY, iso); if (d === null) return ''; if (d < 0) return 'overdue'; if (d <= 14) return 'due-soon'; return 'upcoming'; }

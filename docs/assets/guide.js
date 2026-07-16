@@ -5,7 +5,6 @@
 
 import { $, $$, esc } from './lib/dom.js';
 import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
-import { HOME_LAYOUTS, HOME_LAYOUT_LABELS, normalizeHomeLayout } from './lib/homelayout.js';
 import { listCtl, LISTCTL } from './lib/listctl.js';
 import { usageSummary } from './lib/usage.js';
 import { ROUTES, routeLabel } from './router.js';
@@ -17,8 +16,6 @@ const LISTCTL_OPTS = [
   { v: LISTCTL.PILLS, label: 'Pills' },
 ];
 
-// Reflect the persisted home-layout theme onto <html data-home>. Exported so main.js can call
-// it as early as possible in boot (before the dashboard paints) to avoid a layout flash.
 // Compact pages: <html data-compact="on"> shrinks every pillar-head to a one-line mini-title
 // (kanji + lede hidden), merges the route-nav INTO the topbar (desktop only — on mobile the nav
 // is a drawer and must stay put), and lets the calendar height-lock to the viewport.
@@ -55,10 +52,6 @@ function wireNavFades(nav) {
   requestAnimationFrame(fades);
 }
 DESKTOP.addEventListener('change', relocateNav);   // crossing 820px must restore the drawer / re-merge
-
-export function applyHomeLayout() {
-  document.documentElement.dataset.home = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
-}
 
 // ---- Nav customization (owner 2026-07-13: show/hide + reorder ANY page in the top nav; grew out
 // of the earlier "surface the Phrases page" toggle). Deep links keep working for hidden routes —
@@ -127,10 +120,9 @@ export function applyNav() {
 
 export function mountGuide() {
   applyNav();
-  // apply persisted reduce-motion + home layout on boot (theme + arcade are restored by their own modules)
+  // apply persisted reduce-motion on boot (theme + arcade are restored by their own modules)
   if (getRaw(KEYS.reduceMotion, '') === 'on') document.documentElement.dataset.reduceMotion = 'on';
   if (getRaw(KEYS.mapDark, '') === 'on') document.documentElement.dataset.mapDark = 'on';
-  applyHomeLayout();
   $('#guideBtn')?.addEventListener('click', () => openGuide());
 }
 
@@ -186,7 +178,6 @@ function openGuide() {
   const mapDark = document.documentElement.dataset.mapDark === 'on';
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
-  const homeLayout = normalizeHomeLayout(getRaw(KEYS.homeLayout, ''));
   const listCtlCur = listCtl();
   const navHidden = new Set(navHiddenSet());
   ov = document.createElement('div');
@@ -211,12 +202,6 @@ function openGuide() {
 
     <section class="guide-sec">
       <h3 class="guide-h">Settings</h3>
-      <div class="set-row">
-        <div class="set-text"><span class="set-label">Home layout</span><span class="set-sub">How the Dashboard arranges itself</span></div>
-        <div class="set-seg" role="radiogroup" aria-label="Home layout">
-          ${HOME_LAYOUTS.map(l => `<button type="button" class="seg-btn" role="radio" data-home-opt="${l}" aria-checked="${l === homeLayout ? 'true' : 'false'}">${HOME_LAYOUT_LABELS[l]}</button>`).join('')}
-        </div>
-      </div>
       <div class="set-row">
         <div class="set-text"><span class="set-label">List controls</span><span class="set-sub">How Checklist &amp; Packing search and add</span></div>
         <div class="set-seg" role="radiogroup" aria-label="List controls">
@@ -306,12 +291,6 @@ function openGuide() {
     setRaw(KEYS.sound, on ? 'off' : 'on');
     setSwitch('setSound', !on);
   });
-  $$('.set-seg [data-home-opt]', ov).forEach(b => b.addEventListener('click', () => {
-    const v = normalizeHomeLayout(b.dataset.homeOpt);
-    setRaw(KEYS.homeLayout, v);
-    applyHomeLayout();                                         // live: reflects onto <html data-home> immediately
-    $$('.set-seg [data-home-opt]', ov).forEach(x => x.setAttribute('aria-checked', x.dataset.homeOpt === v ? 'true' : 'false'));
-  }));
   $$('.set-seg [data-listctl-opt]', ov).forEach(b => b.addEventListener('click', () => {
     const v = b.dataset.listctlOpt === LISTCTL.PILLS ? LISTCTL.PILLS : LISTCTL.QUICKLINE;
     setRaw(KEYS.listCtl, v);

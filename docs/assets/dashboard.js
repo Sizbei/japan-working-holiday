@@ -19,7 +19,7 @@ import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
 import { loadPlans } from './lib/dayplan.js';
 import { summary, fmtYen } from './lib/budget.js';
 import { progress } from './lib/packing.js';
-import { readiness } from './lib/readiness.js';
+import { sekkiFor } from './lib/sekki.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -27,6 +27,7 @@ export function mountDashboard(data, today) {
   DATA = data;
   TODAY = today || nowISO();
   initTheme();
+  renderSekki();
   renderCountdown();
   setInterval(renderCountdown, 60000);   // roll the countdown over at midnight without a reload (spec §6)
   wireBell();
@@ -54,6 +55,7 @@ function gcDismissed() {
 function refresh() {
   TODAY = nowISO();   // a tab left open across midnight must not keep computing against yesterday
   gcDismissed();
+  renderSekki();      // date-derived (sekki/kō/date lines) — must roll over at midnight too
   const alerts = computeAlerts(buildItems(), TODAY, get(KEYS.dismissed, []) || []);
   renderBadge(alerts);
   renderPanel(alerts);
@@ -85,81 +87,7 @@ function refreshTeasers() {
       : `Runway: ${s.runwayMonths === Infinity ? 'sustainable' : s.runwayMonths + ' mo'} · ${arrived ? `burn ${fmtYen(s.monthlyTotal)}/mo` : `to land ${fmtYen(s.toLand)}`}${inUsd}`;
   teaser('#tBudget', budgetText, '#/budget');
 
-  renderReadiness();
-}
-
-// "Trip readiness" widget — one weighted score over checklist + packing + budget, with a 3-part
-// breakdown and days-to-arrival. Read-only (reads localStorage fresh, dispatches nothing).
-function renderReadiness() {
-  const el = $('#wReadiness');
-  if (!el) return;
-
-  const checks = get(KEYS.checklist, {}) || {};
-  const allChecks = checklistItems(DATA);
-  const ckDone = allChecks.filter(it => checks[it.id]).length;
-  const checklistPct = allChecks.length ? Math.round((ckDone / allChecks.length) * 100) : 0;
-
-  const pk = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
-
-  const budgetState = get(KEYS.budget, {}) || {};
-  const s = summary(DATA.budget || { currency: 'JPY', oneTime: [], monthly: [] }, budgetState);
-  const noBudget = s.oneTimeTotal === 0 && s.monthlyTotal === 0 && !(budgetState.savings > 0);
-  const budgetReady = noBudget ? 'unset'
-    : (s.runwayMonths === Infinity || s.runwayMonths >= 6) ? 'ready'
-    : 'tight';
-
-  const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
-
-  // Post-arrival, "trip readiness" (packing + visa prep) is a finished story — the score that
-  // matters now is settling in: the Do Now / dependency-bucket / Later checklist phases.
-  if (c.phase === 'arrived') {
-    const SETTLE = ['Do Now', 'Needs Residence', 'Needs Number', 'Later'];
-    const items = (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || []);
-    const done = items.filter(it => checks[it.id]).length;
-    const pct = items.length ? Math.round((done / items.length) * 100) : 100;
-    const tone = pct >= 75 ? 'good' : pct >= 40 ? 'ok' : 'low';
-    const bLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[budgetReady] || 'unset';
-    const h = el.querySelector('.widget-h [data-i18n]');
-    if (h) { h.textContent = 'Settling in'; h.dataset.i18n = 'head.readiness.arrived'; }
-    const bodyA = el.querySelector('.widget-body');
-    if (bodyA) bodyA.innerHTML = `
-    <div class="rdy" data-tone="${esc(tone)}">
-      <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(pct))}">${esc(String(pct))}</span><span class="rdy-pct">%</span><span class="sr-only"> settled in</span></div>
-      <div class="rdy-meta">
-        <div class="rdy-days">Day ${esc(String((c.days ?? 0) + 1))} in Japan</div>
-        <div class="rdy-parts">
-          <a href="#/checklist">Settling-in tasks ${esc(String(done))}/${esc(String(items.length))}</a>
-          <span aria-hidden="true">·</span>
-          <a href="#/budget">Budget ${esc(bLabel)}</a>
-        </div>
-      </div>
-    </div>
-    ${yearStatsHTML()}`;
-    return;
-  }
-
-  const r = readiness({ checklistPct, packingPct: pk.pct, budgetReady, daysToArrival: c.days });
-  const budgetLabel = { ready: 'ready', tight: 'tight', unset: 'unset' }[r.parts[2].status] || 'unset';
-  const toneWord = { good: 'on track', ok: 'getting there', low: 'just starting' }[r.tone] || '';
-  const daysLine = c.phase === 'arrived'
-    ? `Day ${(c.days ?? 0) + 1} in Japan`
-    : `${c.days ?? '—'} day${c.days === 1 ? '' : 's'} to Tokyo`;
-
-  const bodyB = el.querySelector('.widget-body');
-  if (bodyB) bodyB.innerHTML = `
-    <div class="rdy" data-tone="${esc(r.tone)}">
-      <div class="rdy-score"><span class="rdy-num" data-countup="${esc(String(r.score))}">${esc(String(r.score))}</span><span class="rdy-pct">%</span><span class="sr-only"> ready — ${esc(toneWord)}</span></div>
-      <div class="rdy-meta">
-        <div class="rdy-days">${esc(daysLine)}</div>
-        <div class="rdy-parts">
-          <a href="#/checklist">Checklist ${esc(String(r.parts[0].pct))}%</a>
-          <span aria-hidden="true">·</span>
-          <a href="#/packing">Packing ${esc(String(r.parts[1].pct))}%</a>
-          <span aria-hidden="true">·</span>
-          <a href="#/budget">Budget ${esc(budgetLabel)}</a>
-        </div>
-      </div>
-    </div>`;
+  renderProgress();   // budget/packing bits inside 進捗 read localStorage fresh — same trigger as the teasers
 }
 
 function dismiss(id) {
@@ -192,13 +120,41 @@ function buildItems() {
   return items.filter(it => it.when >= floor);
 }
 
-// ---- countdown: hero numeral (canonical) + small topbar copy ----
+// ---- hero: the season band (lib/sekki.js) — sekki name, current/next kō, season kanji ----
+const WDAY_JP = ['日', '月', '火', '水', '木', '金', '土'];
+const WDAY_EN = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+function renderSekki() {
+  const s = sekkiFor(TODAY);
+  if (!s) return;   // lookup failed — the static "My Year in Japan" heading stays
+  const h1 = $('#heroTitleH');
+  if (h1) h1.innerHTML = `${esc(s.sekki.kanji)}<small>${esc(s.sekki.romaji)} — ${esc(s.sekki.en)} · ${esc(fmtShort(s.sekki.startISO))} – ${esc(fmtShort(s.sekki.endISO))}</small>`;
+  const ko = $('#sekkiKo');
+  if (ko) {
+    ko.hidden = false;
+    ko.innerHTML = `<span lang="ja">七十二候</span> <b lang="ja">${esc(s.ko.kanji)}</b> <em>${esc(s.ko.romaji)}</em> — ${esc(s.ko.en)} · ${esc(fmtShort(s.ko.startISO))}–${esc(fmtShort(s.ko.endISO))}`
+      + `<br><span class="next">next <span lang="ja">${esc(s.nextKo.kanji)}</span> — ${esc(s.nextKo.en)} · ${esc(fmtShort(s.nextKo.startISO))}</span>`;
+  }
+  const season = $('#sekkiSeason');
+  if (season) season.innerHTML = `<span class="k" lang="ja">${esc(s.season.kanji)}</span><span class="e">${esc(s.season.en)}</span>`;
+  // date lines in the column headings
+  const t = new Date(TODAY + 'T00:00:00Z'), dow = t.getUTCDay();
+  const rom = $('#todayRom');
+  if (rom) rom.textContent = `today · ${WDAY_EN[dow]} ${fmtShort(TODAY).toLowerCase()}`;
+  const wk = $('#weekRom');
+  if (wk) {
+    const end = new Date(t); end.setUTCDate(end.getUTCDate() + 6);
+    wk.textContent = `this week · ${fmtShort(TODAY).toLowerCase()} – ${fmtShort(end.toISOString().slice(0, 10)).toLowerCase()}`;
+  }
+}
+
+// ---- countdown: the hinomaru year dial (canonical) + small topbar copy ----
 // Recomputes "today" each call so the minute-timer (mountDashboard) rolls the count over at midnight.
+const DIAL_C = 2 * Math.PI * 52;   // circumference of the r=52 dial circle
 function renderCountdown() {
   if (nowISO() !== TODAY) refresh();   // midnight rolled over — recompute alerts/widgets, not just the number
   const c = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO());
   const arrived = c.phase === 'arrived';
-  // day-in-Japan counts INCLUSIVELY (landing day = day 1) — matches the Settling-in widget
+  // day-in-Japan counts INCLUSIVELY (landing day = day 1) — matches the Progress card
   const dayN = arrived ? (c.days ?? 0) + 1 : c.days;
   // topbar (decorative, aria-hidden in markup)
   const el = $('#countdown');
@@ -208,22 +164,23 @@ function renderCountdown() {
     if (el.innerHTML !== html) el.innerHTML = html;
     el.classList.toggle('arrived', arrived);
   }
-  // hero (the aria-live region) — only mutate when the day count actually changes, so the
+  // dial (the aria-live region) — only mutate when the day count actually changes, so the
   // minute-timer never re-announces the same number to screen readers.
   const hero = $('#heroCount');
   if (hero) {
     const num = String(dayN ?? '');
     const numEl = hero.querySelector('.hc-num');
     if (numEl?.textContent !== num) {
-      const unit = arrived ? (dayN === 1 ? 'day in Japan' : 'days in Japan') : (dayN === 1 ? 'day until I land' : 'days until I land');
+      const unit = arrived ? 'of 365 日' : (dayN === 1 ? 'day to NRT' : 'days to NRT');
       if (numEl) numEl.textContent = num;
       const unitEl = hero.querySelector('.hc-unit');
       if (unitEl) unitEl.textContent = unit;
-    }
-    // sub-label was hardcoded "NRT · 2026-06-30" — post-arrival it should read the settled-in phase
-    if (arrived) {
-      const dateEl = hero.querySelector('.hc-date');
-      if (dateEl) dateEl.textContent = 'Tokyo · since Jun 30';
+      hero.setAttribute('aria-label', arrived ? `Day ${num} of 365 in Japan` : `${num} days until landing`);
+      // the red arc: elapsed share of the year (CSS transitions the first set → a one-time draw-in)
+      const arc = $('#dialArc');
+      if (arc) arc.style.strokeDasharray = `${arrived ? Math.min(DIAL_C, (Number(dayN) / 365) * DIAL_C).toFixed(1) : 0} 999`;
+      const dateEl = $('.dial-cap');
+      if (dateEl) dateEl.textContent = arrived ? 'landed NRT · 2026-06-30' : 'NRT · 2026-06-30';
     }
     hero.classList.toggle('arrived', arrived);
   }
@@ -314,10 +271,11 @@ function renderPanel(alerts) {
 // ---- home: promoted "needs me" cards + demoted teasers ----
 function renderWidgets(alerts) {
   renderToday();
+  renderWeek();
   renderSpend();
-  fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task'), 3);
+  fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task' || a.kind === 'book'), 6);
   renderProgress();
-  renderTeasers(alerts);
+  renderTeasers();
 }
 
 
@@ -350,12 +308,12 @@ function renderSpend() {
   if (el.contains(document.activeElement)) return;   // mid-typing — totals catch up next refresh
   const items = (get(KEYS.spend, {}) || {}).items || [];
   el.querySelector('.widget-body').innerHTML = `
+    <p class="spd-line" id="spendTot">${spendTotalsHTML(items)}</p>
     <form id="spendQuick" class="w-spend-form">
       <input id="spendInput" class="w-spend-in" type="text" inputmode="text" enterkeyhint="done"
         placeholder="1200 ramen" aria-label="Quick spend — amount then note, e.g. 1200 ramen" autocomplete="off">
       <button type="submit" class="w-spend-add" aria-label="Add spend">＋</button>
     </form>
-    <p class="w-spend-tot" id="spendTot">${spendTotalsHTML(items)}</p>
     <p class="w-spend-hint" id="spendQHint" role="status"></p>`;
   el.querySelector('#spendQuick').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -377,35 +335,59 @@ function renderSpend() {
 
 function spendTotalsHTML(items) {
   const todaySum = items.filter(i => i && i.date === TODAY).reduce((s, i) => s + (i.amount || 0), 0);
-  return `today ¥${todaySum.toLocaleString()} · month ¥${monthTotal(items, TODAY.slice(0, 7)).toLocaleString()} — <a href="#/budget">budget</a>`;
+  return `<span lang="ja">今日</span> <b>¥${todaySum.toLocaleString()}</b><span class="sep">│</span><span lang="ja">月</span> <b>¥${monthTotal(items, TODAY.slice(0, 7)).toLocaleString()}</b><span class="sep">│</span><a href="#/budget">budget →</a>`;
 }
 
-// "Today" — the post-arrival lead widget: today's day plan, today's events, tasks due today.
+// "今日 Today" — the lead almanac column: today's day plan, today's events, tasks due today.
 function renderToday() {
   const el = $('#wToday');
   if (!el) return;
+  const row = (href, t, title, small) =>
+    `<li><a href="${href}"><span class="tdy-t">${t}</span><span class="tdy-what"><b>${title}</b>${small ? `<small>${small}</small>` : ''}</span></a></li>`;
   const bits = [];
   const plan = (loadPlans() || {})[TODAY];
   if (plan && plan.stops && plan.stops.length) {
     const t = plan.stops.find(s => s.startTime)?.startTime || '';
-    bits.push(`<li><a href="#/plan"><span class="w-when">${esc(t || 'plan')}</span> ${esc(clip(plan.title || 'Day plan', 38))} · ${plan.stops.length} stop${plan.stops.length === 1 ? '' : 's'}</a> <a class="wt-map" href="#/map" aria-label="Show today's route on the map">🧭</a></li>`);
+    bits.push(row('#/plan', esc(t || 'plan'), esc(clip(plan.title || 'Day plan', 44)), `${plan.stops.length} stop${plan.stops.length === 1 ? '' : 's'} · open the planner`));
   }
   allEvents()
     .filter(e => { const d = (e.date || '').slice(0, 10); const end = (e.endDate || '').slice(0, 10); return d === TODAY || (d < TODAY && end >= TODAY); })
     .slice(0, 3)
-    .forEach(e => bits.push(`<li><a href="#/calendar"><span class="w-when">${esc(e.time || 'today')}</span> ${esc(clip(e.title, 46))}</a></li>`));
+    .forEach(e => bits.push(row('#/calendar', esc(e.time || 'today'), esc(clip(e.title, 52)), e.area ? esc(clip(e.area, 44)) : '')));
   const due = get(KEYS.due, {}) || {};
   const checks = get(KEYS.checklist, {}) || {};
   checklistItems(DATA).filter(it => due[it.id] === TODAY && !checks[it.id]).slice(0, 2)
-    .forEach(it => bits.push(`<li><a href="#/checklist"><span class="w-when">due</span> ${esc(clip(it.task, 46))}</a></li>`));
+    .forEach(it => bits.push(row('#/checklist', 'due', esc(clip(it.task, 52)), '')));
   // 縁 birthdays — device-local People data; only ever appears ON the day (zero ambient noise)
   (get(KEYS.people, []) || []).filter(p => isBirthday(p.birthday, TODAY)).slice(0, 2)
-    .forEach(p => bits.push(`<li><a href="#/people"><span class="w-when">🎂</span> ${esc(clip(String(p.name || ''), 40))}’s birthday</a></li>`));
+    .forEach(p => bits.push(row('#/people', '🎂', esc(clip(String(p.name || ''), 40)) + '’s birthday', '')));
   const body = el.querySelector('.widget-body'); if (!body) return;
-  body.innerHTML = tripBandHTML() + `<div class="wx-strip" id="wxStrip" hidden></div>` + (bits.length
-    ? `<ul>${bits.join('')}</ul>`
+  body.innerHTML = tripBandHTML() + (bits.length
+    ? `<ul class="tdy-list">${bits.join('')}</ul>`
     : `<p class="w-empty">Nothing on for today — <a href="#/plan">plan a day</a> or <a href="#/explore">find something</a>.</p>`);
-  renderWxStrip();   // fill from cache synchronously; refreshWeather() re-fills when a fetch lands
+}
+
+// "今週 This week" — a horizontal chip strip of the next 7 days' events; stays carry booked state.
+function renderWeek() {
+  const el = $('#wWeek');
+  if (!el) return;
+  const body = el.querySelector('.widget-body'); if (!body) return;
+  const end = new Date(TODAY + 'T00:00:00Z'); end.setUTCDate(end.getUTCDate() + 6);
+  const endISO = end.toISOString().slice(0, 10);
+  const evs = allEvents()
+    .filter(e => { const d = (e.date || '').slice(0, 10); return d >= TODAY && d <= endISO; })
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+    .slice(0, 12);
+  if (!evs.length) { body.innerHTML = `<p class="w-empty">A quiet week so far — <a href="#/calendar">open the calendar</a>.</p>`; return; }
+  body.innerHTML = `<div class="awk-strip">${evs.map(e => {
+    const d = new Date(e.date.slice(0, 10) + 'T00:00:00Z');
+    const cat = /^[a-z]+$/.test(e.category || '') ? e.category : 'personal';
+    const isStay = /^stay:/i.test(e.title || '');
+    const status = isStay ? (stayBooked(e) ? '<small class="ok2">✓ booked</small>' : '<small class="warn2">not booked yet</small>') : '';
+    return `<a class="awk-chip" href="#/calendar"><span class="d" lang="ja">${WDAY_JP[d.getUTCDay()]}<b>${d.getUTCDate()}</b></span>`
+      + `<span class="dot" style="background:var(--c-${cat})" aria-hidden="true"></span>`
+      + `<span class="w">${esc(clip(e.title, 60))}${status}</span></a>`;
+  }).join('')}</div>`;
 }
 
 // ---- local weather strip (Open-Meteo, keyless) — top of the Today widget ----
@@ -435,15 +417,6 @@ function renderWxStrip() {
     + (w.rainPct != null && w.rainPct > 0 ? ` · <span aria-hidden="true">☔</span> <span class="sr-only">rain </span>${esc(String(w.rainPct))}% <span class="wx-dim">today</span>` : '')
     + (w.sunrise && w.sunset ? ` <span class="wx-dim">· <span aria-hidden="true">🌅</span><span class="sr-only">sunrise </span>${esc(w.sunrise)} <span aria-hidden="true">🌇</span><span class="sr-only">sunset </span>${esc(w.sunset)}</span>` : '');
 }
-// "year so far" stat strip (expansion ledger S7) — read-only, derived from existing stores;
-// fills the Settling-in card's spare space instead of orphaning a 7th grid cell
-function yearStatsHTML() {
-  const visited = loadPlaces().filter(p => p.visited).length;
-  const tasksDone = Object.keys(get(KEYS.checklist, {}) || {}).length;
-  const st = (n, label) => `<span class="ys-stat"><b>${esc(String(n))}</b> ${esc(label)}</span>`;
-  return `<div class="ys-strip">${st(visited, 'places visited')}<span aria-hidden="true">·</span>${st(tasksDone, 'tasks done')}</div>`;
-}
-
 // ¥→USD for the budget teaser (er-api, keyless). 24h TTL — FX day-precision is plenty here.
 let fxInFlight = false;
 async function refreshRates() {
@@ -475,11 +448,8 @@ async function refreshWeather() {
   finally { wxInFlight = false; }
   renderWxStrip();
 }
-function renderTeasers(alerts) {
-  const book = alerts.find(a => a.kind === 'book');
-  teaser('#tBookBy', book ? `${fmtShort(book.when)} · ${clip(book.title, 38)}` : 'Nothing to book yet', '#/deadlines');
-  const ev = alerts.find(a => a.kind === 'event');
-  teaser('#tEvents', ev ? `${fmtShort(ev.when)} · ${clip(ev.title, 38)}` : 'No upcoming events', '#/calendar');
+function renderTeasers() {
+  // book-by alerts fold into 締切 (fill above); upcoming events live in the 今週 strip
   const plans = loadPlans();
   const date = Object.keys(plans).filter(d => plans[d] && plans[d].stops && plans[d].stops.length && d >= TODAY).sort()[0];
   teaser('#tPlan', date ? `${date === TODAY ? 'Today' : fmtShort(date)} · ${plans[date].stops.length} stop${plans[date].stops.length === 1 ? '' : 's'}` : 'Plan a day', '#/plan');
@@ -494,29 +464,49 @@ function fill(sel, list, max = 5) {
   const el = $(sel);
   if (!el) return;
   const body = list.length
-    ? `<ul>${list.slice(0, max).map(a => `<li class="sev-${a.severity}">
+    ? `<ul class="ddl-list">${list.slice(0, max).map(a => `<li class="sev-${a.severity}">
         <a href="#/${a.kind === 'event' ? 'calendar' : (a.kind === 'book' || a.kind === 'deadline') ? 'deadlines' : 'checklist'}">
-        <span class="w-when">${esc(fmtShort(a.when))}</span> ${esc(clip(a.title, 52))}</a></li>`).join('')}</ul>`
+        <span class="ddl-d">${esc(fmtShort(a.when))}</span>
+        <span class="ddl-w">${esc(clip(a.title, 56))}${a.days === 0 ? ' <span class="ddl-tag">today</span>' : a.severity === 'overdue' ? ' <span class="ddl-tag">overdue</span>' : ''}</span></a></li>`).join('')}</ul>`
     : `<p class="w-empty">Nothing due soon</p>`;
   el.querySelector('.widget-body').innerHTML = body;
 }
+// "進捗 Progress" — the settling-in + checklist bars (post-arrival) or checklist + packing
+// (pre-arrival), with a budget word and the year-so-far stats. Reads localStorage fresh.
 function renderProgress() {
   const el = $('#wProgress');
   if (!el) return;
   const checks = get(KEYS.checklist, {}) || {};
-  // Post-arrival, scope to the same settling-in phases the readiness widget counts, so the two
-  // widgets agree. Pre-arrival, count every checklist item (the full yearlong plan).
+  const budgetState = get(KEYS.budget, {}) || {};
+  const s = summary(DATA.budget || { currency: 'JPY', oneTime: [], monthly: [] }, budgetState);
+  const noBudget = s.oneTimeTotal === 0 && s.monthlyTotal === 0 && !(budgetState.savings > 0);
+  const budgetWord = noBudget ? 'unset' : (s.runwayMonths === Infinity || s.runwayMonths >= 6) ? 'ready' : 'tight';
+  const bar = (jp, en, done, total, href) => {
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    return `<a class="prg-lbl" href="${href}"><span class="n"><b lang="ja">${jp}</b>${en}</span><span class="v">${done} / ${total}</span></a>
+      <div class="prg-bar" role="img" aria-label="${esc(en)} ${done} of ${total}"><i style="width:${pct}%"></i></div>`;
+  };
   const arrived = countdown(DATA.meta?.arrival_date || '2026-06-30', nowISO()).phase === 'arrived';
-  const SETTLE = ['Do Now', 'Needs Residence', 'Needs Number', 'Later'];
-  const all = arrived
-    ? (DATA.checklist || []).filter(p => SETTLE.some(s => (p.phase || '').startsWith(s))).flatMap(p => p.items || [])
-    : checklistItems(DATA);
-  const done = all.filter(it => checks[it.id]).length;
-  const pct = all.length ? Math.round((done / all.length) * 100) : 0;
-  el.querySelector('.widget-body').innerHTML = `
-    <div class="w-prog"><div class="w-bar"><i style="width:${pct}%"></i></div>
-    <span class="w-pct">${pct}% · ${done}/${all.length}</span></div>
-    <a class="w-link" href="#/checklist">Open checklist →</a>`;
+  let rows;
+  if (arrived) {
+    const SETTLE = ['Do Now', 'Needs Residence', 'Needs Number', 'Later'];
+    const settle = (DATA.checklist || []).filter(p => SETTLE.some(x => (p.phase || '').startsWith(x))).flatMap(p => p.items || []);
+    const allChecks = checklistItems(DATA);
+    rows = `<div class="prg-row">${bar('定着', 'settling in', settle.filter(it => checks[it.id]).length, settle.length, '#/checklist')}</div>
+      <div class="prg-row">${bar('手続き', 'checklist', allChecks.filter(it => checks[it.id]).length, allChecks.length, '#/checklist')}</div>`;
+  } else {
+    const allChecks = checklistItems(DATA);
+    const pk = progress([...(DATA.packing || []), ...(get(KEYS.packCustom, []) || [])], get(KEYS.packing, {}) || {});
+    rows = `<div class="prg-row">${bar('手続き', 'checklist', allChecks.filter(it => checks[it.id]).length, allChecks.length, '#/checklist')}</div>
+      <div class="prg-row">${bar('荷造り', 'packing', pk.done, pk.total, '#/packing')}</div>`;
+  }
+  el.querySelector('.widget-body').innerHTML = rows
+    + `<p class="prg-meta"><a href="#/budget">budget ${esc(budgetWord)}</a><span aria-hidden="true">·</span>${yearStatsInline()}</p>`;
+}
+function yearStatsInline() {
+  const visited = loadPlaces().filter(p => p.visited).length;
+  const tasksDone = Object.keys(get(KEYS.checklist, {}) || {}).length;
+  return `<span>${esc(String(visited))} places visited</span><span aria-hidden="true">·</span><span>${esc(String(tasksDone))} tasks done</span>`;
 }
 
 // ---- theme (owns the top-bar toggle) ----

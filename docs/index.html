@@ -521,20 +521,32 @@
   <div class="view" id="view-eats" data-route="eats">
   <section id="eats">
     <div class="pillar-head"><span class="jp" lang="ja" aria-hidden="true">食べ歩き</span><h2 data-i18n="head.eats">Eats</h2></div>
-    <p class="lede">Rate the places you eat — a quick star and a one-liner. Paste a Google Maps link (or none — the pin searches the name), and any eat with a location also shows on your <a href="#/map">Map</a>. <span id="eatsCount" class="eat-count" role="status" aria-live="polite"></span></p>
-    <form class="eats-add" id="eatsAdd" autocomplete="off">
-      <input type="text" id="eatName" placeholder="Restaurant / dish" aria-label="Restaurant name" required>
-      <div class="eats-add-stars" id="eatAdd" data-rating="0" role="group" aria-label="Star rating">
-        <button type="button" class="eat-star" data-n="1" aria-label="1 star" aria-pressed="false">☆</button>
-        <button type="button" class="eat-star" data-n="2" aria-label="2 stars" aria-pressed="false">☆</button>
-        <button type="button" class="eat-star" data-n="3" aria-label="3 stars" aria-pressed="false">☆</button>
-        <button type="button" class="eat-star" data-n="4" aria-label="4 stars" aria-pressed="false">☆</button>
-        <button type="button" class="eat-star" data-n="5" aria-label="5 stars" aria-pressed="false">☆</button>
+    <p class="lede">Rate the places you eat — a quick star and a one-liner. Paste a Google Maps link (or none — the pin searches the name), and any eat with a location also shows on your <a href="#/map">Map</a>.</p>
+    <form class="eats-add alm-card" id="eatsAdd" autocomplete="off" aria-label="Log an eat">
+      <h3 class="alm-h"><span class="jp2" lang="ja">記録</span><span class="rom">log an eat</span></h3>
+      <div class="ea-row">
+        <input type="text" id="eatName" placeholder="Restaurant / dish" aria-label="Restaurant name" required>
+        <div class="eats-add-stars" id="eatAdd" data-rating="0" role="group" aria-label="Star rating">
+          <button type="button" class="eat-star" data-n="1" aria-label="1 star" aria-pressed="false">☆</button>
+          <button type="button" class="eat-star" data-n="2" aria-label="2 stars" aria-pressed="false">☆</button>
+          <button type="button" class="eat-star" data-n="3" aria-label="3 stars" aria-pressed="false">☆</button>
+          <button type="button" class="eat-star" data-n="4" aria-label="4 stars" aria-pressed="false">☆</button>
+          <button type="button" class="eat-star" data-n="5" aria-label="5 stars" aria-pressed="false">☆</button>
+        </div>
       </div>
-      <input type="text" id="eatNote" placeholder="One-liner (optional)" aria-label="One-line note">
-      <input type="url" id="eatLink" placeholder="Google Maps link (optional)" aria-label="Google Maps link" inputmode="url">
-      <button type="submit" class="btn primary">Add</button>
+      <div class="ea-row">
+        <input type="text" id="eatNote" placeholder="One-liner — “the yuzu shio, always” (optional)" aria-label="One-line note">
+        <input type="url" id="eatLink" placeholder="Google Maps link (optional)" aria-label="Google Maps link" inputmode="url">
+        <button type="submit" class="btn primary">Add</button>
+      </div>
     </form>
+    <div class="eats-bar">
+      <p id="eatsStats" class="eats-stats" role="status" aria-live="polite"></p>
+      <div class="eats-sort" id="eatsSort" role="group" aria-label="Sort eats" hidden>
+        <button type="button" class="es-btn" data-sort="new" aria-pressed="true">newest</button>
+        <button type="button" class="es-btn" data-sort="best" aria-pressed="false">best</button>
+      </div>
+    </div>
     <div id="eatsList" class="eats-list"></div>
   </section>
   </div><!-- /view-eats -->

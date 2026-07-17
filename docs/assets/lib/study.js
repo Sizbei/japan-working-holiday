@@ -397,6 +397,84 @@ export function unitProgress(unit, statePoints = {}) {
   return { introduced, total, state };
 }
 
+// ── R8: unit checkpoints (the Coursera module quiz — pure logic) ─────────────
+// A small deterministic Fisher–Yates (LCG-driven), mirroring questions.js — the only shuffle in
+// this module (hash above is the only other determinism source).
+function lcgShuffle(n, seed) {
+  const idx = Array.from({ length: n }, (_, i) => i);
+  let s = (seed >>> 0) || 1;
+  for (let i = n - 1; i > 0; i--) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    const j = s % (i + 1);
+    const t = idx[i]; idx[i] = idx[j]; idx[j] = t;
+  }
+  return idx;
+}
+
+const CHECKPOINT_N = 10;
+const CHECKPOINT_TYPES = ['mcq', 'scramble', 'cloze'];
+
+// checkpointQuestions(unit, pointsById, seed) → 10 descriptors { id, exampleIdx, type } drawn from
+// the unit's points, mixing mcq/scramble/cloze. Deterministic by seed; NEVER the identical item
+// (id+exampleIdx+type) twice — a unit smaller than 10 points repeats a point with a DIFFERENT
+// example/format (the ≥18-item pool post-R5 guarantees this is always satisfiable). Descriptors
+// only (pure — no example content needed beyond a count): the UI resolves each descriptor to a
+// real card via questions.js, degrading a type that can't render (scramble-less / mcq-less) to
+// cloze at render time.
+export function checkpointQuestions(unit, pointsById = {}, seed = 1) {
+  const ids = ((unit && unit.points) || []).slice();
+  if (!ids.length) return [];
+  const nEx = (id) => { const p = pointsById[id]; return (p && Array.isArray(p.examples) && p.examples.length) ? p.examples.length : 1; };
+  const walk = lcgShuffle(ids.length, (seed >>> 0) || 1).map(i => ids[i]);   // seeded point order
+  const used = new Set();
+  const out = [];
+  for (let round = 0; out.length < CHECKPOINT_N && round < CHECKPOINT_TYPES.length * 8; round++) {
+    for (let k = 0; k < walk.length && out.length < CHECKPOINT_N; k++) {
+      const id = walk[k];
+      const ne = nEx(id);
+      const combos = CHECKPOINT_TYPES.length * ne;
+      for (let a = 0; a < combos; a++) {                 // enumerate (type, example) pairs; take first unused
+        const idx = round + k + a;
+        const type = CHECKPOINT_TYPES[idx % CHECKPOINT_TYPES.length];
+        const exampleIdx = Math.floor(idx / CHECKPOINT_TYPES.length) % ne;
+        const key = id + '|' + exampleIdx + '|' + type;
+        if (!used.has(key)) { used.add(key); out.push({ id, exampleIdx, type }); break; }
+      }
+    }
+  }
+  return out.slice(0, CHECKPOINT_N);
+}
+
+// recordCheckpoint(state, unitId, score, passMark=8) → new state with the unit's checkpoint record
+// updated: attempts++, best = max(best, score), passed = passed || score ≥ passMark. Checkpoints
+// are FORMATIVE — this NEVER touches points/scheduling (the SRS gate is the only mastery truth).
+// `state.units` is initialised on first write (the reserved shape from newState), so a migrated v1
+// state with no `units` key gains one here without a schema bump.
+export function recordCheckpoint(state, unitId, score, passMark = 8) {
+  const units = state.units || {};
+  const prev = (units[unitId] && units[unitId].checkpoint) || { passed: false, best: 0, attempts: 0 };
+  const checkpoint = { passed: prev.passed || score >= passMark, best: Math.max(prev.best || 0, score), attempts: (prev.attempts || 0) + 1 };
+  return { ...state, units: { ...units, [unitId]: { ...units[unitId], checkpoint } } };
+}
+
+// checkpointPassed(state, unitId) → whether this unit's checkpoint has ever been passed (✓★ gold).
+export function checkpointPassed(state, unitId) {
+  const u = (state.units || {})[unitId];
+  return !!(u && u.checkpoint && u.checkpoint.passed);
+}
+
+// nextCheckpointUnit(unitsList, statePoints, unitsState) → the first unit (in list order) whose
+// lessons are all done (unitProgress → 'done') but whose checkpoint isn't passed yet, else null.
+// This is the Continue state machine's "unlocked checkpoint" slot — it sits BEFORE new lessons.
+export function nextCheckpointUnit(unitsList, statePoints = {}, unitsState = {}) {
+  for (const u of (unitsList || [])) {
+    if (unitProgress(u, statePoints).state !== 'done') continue;
+    const rec = unitsState[u.id];
+    if (!(rec && rec.checkpoint && rec.checkpoint.passed)) return u;
+  }
+  return null;
+}
+
 // testOutResult(state, id, passes, now) → pure. `passes` is the array of the timed checks'
 // pass/fail booleans. Both (≥2) pass → the point lands at Mature (S=14, D=5, due now+14d): known
 // material re-enters at a fortnight, not re-flooding weekly reviews; a false positive fails its

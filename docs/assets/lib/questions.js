@@ -1,9 +1,9 @@
 'use strict';
 // Pure question generators + answer-matching for #/study (the grammar gym). R2 ships the
 // typed-cloze generator and the answer arbitration; R4 adds the ★-scramble (文の組み立て)
-// generator; MCQ/passage generators land in later rounds (R8/R12). 100% pure: no DOM, no
-// store, no Date. Node-import-safe and unit-tested from the repo root (see tests/lib.test.mjs).
-// Plan: specs/plans/2026-07-17-grammar-mastery-program.md (R2 + R4).
+// generator; R8 adds the 文法形式 MCQ generator (`mcqFor`); the passage generator lands in R12.
+// 100% pure: no DOM, no store, no Date. Node-import-safe and unit-tested from the repo root
+// (see tests/lib.test.mjs). Plan: specs/plans/2026-07-17-grammar-mastery-program.md (R2/R4/R8).
 
 import { readingOf } from './grammar.js';
 
@@ -186,4 +186,46 @@ export function scramblable(point) {
   const exs = (point && Array.isArray(point.examples)) ? point.examples : [];
   for (let i = 0; i < exs.length; i++) if (scrambleFor(point, i)) return true;
   return false;
+}
+
+// ── 文法形式 MCQ (4-choice) ─────────────────────────────────────────────────
+// The wrong-answer surfaces for a 4-choice MCQ on `point`: its confusables' `pattern` fields (in
+// confusable order) followed by its authored `distractors[]`, deduped, with the point's own
+// pattern excluded. Mirrors scripts/validate-grammar.mjs `mcqOptions` EXACTLY, kept local so
+// questions.js stays a runtime module (the validator is a build script — never imported at
+// runtime, never in the SW cache). `byId` resolves confusable ids → points; accepts a Map or a
+// plain id→point object.
+function mcqWrongOptions(point, byId) {
+  const own = point && point.pattern;
+  const get = (k) => (byId && typeof byId.get === 'function') ? byId.get(k) : (byId ? byId[k] : undefined);
+  const seen = new Set();
+  const out = [];
+  const add = (s) => { if (typeof s !== 'string' || !s || s === own || seen.has(s)) return; seen.add(s); out.push(s); };
+  (Array.isArray(point && point.confusable) ? point.confusable : []).forEach(cid => { const c = get(cid); if (c) add(c.pattern); });
+  (Array.isArray(point && point.distractors) ? point.distractors : []).forEach(add);
+  return out;
+}
+
+// mcqFor(point, allPointsById, exampleIdx, seed?) → { stem:[blanked tokens], options:[4 surface
+// strings], correct: idx, en } or null when the point can't yield a 4-choice item (no `p` span to
+// blank, or <3 wrong options — R7's ≥3 gate makes the latter impossible corpus-wide). The stem
+// reuses clozeFor's blanking, but the answer is CHOSEN from `options`, not typed. Deterministic by
+// seed: the 3 wrong options are the first 3 of a seeded shuffle of the curated wrong-option pool
+// (all curated, so "the 3 closest" == any deterministic 3), and the 4 options are then shuffled by
+// a derived seed; `correct` is the post-shuffle index of the point's own pattern. Never emits a
+// duplicate option (the pool is deduped and excludes the pattern).
+export function mcqFor(point, allPointsById, exampleIdx = 0, seed) {
+  if (!point || !point.pattern) return null;
+  const { blankedTokens } = clozeFor(point, exampleIdx);
+  if (!blankedTokens.some(b => b.blank)) return null;
+  const wrongs = mcqWrongOptions(point, allPointsById);
+  if (wrongs.length < 3) return null;
+  const sd = (seed == null) ? seedHash(String((point && point.id) || '') + ':mcq:' + exampleIdx) : (seed >>> 0);
+  const picked = lcgShuffle(wrongs.length, sd).slice(0, 3).map(i => wrongs[i]);
+  const four = [point.pattern, ...picked];
+  const perm = lcgShuffle(4, (sd ^ 0x9e3779b9) >>> 0);   // derived seed → independent option order
+  const options = perm.map(i => four[i]);
+  const correct = perm.indexOf(0);                        // four[0] is the answer; find its new slot
+  const ex = (point.examples && point.examples[exampleIdx]) || null;
+  return { stem: blankedTokens, options, correct, en: (ex && ex.en) || '' };
 }

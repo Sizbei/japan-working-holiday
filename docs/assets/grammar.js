@@ -184,10 +184,29 @@ function wireBar(root) {
     }
     const rel = e.target.closest('.g-rel-chip');
     if (rel) { jumpTo(rel.dataset.target); return; }
+    const duel = e.target.closest('.g-duel-chip');
+    if (duel) { openDuel(duel.dataset.duelSelf, duel.dataset.duelOther); return; }
     const tok = e.target.closest('.gtok');
     if (tok) showStrip(tok);
   });
   wireInspect();
+}
+
+// R8: resolve a point (fetching its level if needed) then open the nuance duel over the pair. The
+// duel is self-contained + formative — it never touches #/study state or the SRS scheduler.
+async function ensurePointData(id) {
+  let pt = findPoint(id);
+  if (pt) return pt;
+  const m = /^n([1-5])-/.exec(id);
+  const lvl = m ? 'N' + m[1] : null;
+  if (lvl && FILES[lvl]) { await load(lvl, { render: false }); pt = findPoint(id); }
+  return pt || null;
+}
+async function openDuel(selfId, otherId) {
+  const [a, b] = await Promise.all([ensurePointData(selfId), ensurePointData(otherId)]);
+  if (!a || !b) return;
+  try { const m = await import('./study-duel.js'); m.openDuel(a, b); }
+  catch (err) { console.error('duel failed to load', err); }
 }
 
 async function jumpTo(id) {
@@ -298,6 +317,7 @@ function cardHTML(p, delay = -1) {
       ${pegHTML(p)}
       ${p.caution ? `<p class="g-caution">⚠ ${esc(p.caution)}</p>` : ''}
       ${(p.related || []).length ? `<p class="g-rel">See also ${p.related.map(relChip).join(' ')}</p>` : ''}
+      ${(p.confusable || []).length ? `<p class="g-duel-row"><span class="g-duel-lead">Drill the difference</span> ${p.confusable.map(id => duelChip(p.id, id)).join(' ')}</p>` : ''}
       <div class="g-foot">
         <button type="button" class="g-mark g-mark-done" data-mark="done" aria-pressed="${prog.done.includes(p.id)}">✓ Studied</button>
         <button type="button" class="g-mark g-mark-shaky" data-mark="shaky" aria-pressed="${prog.shaky.includes(p.id)}">◆ Shaky</button>
@@ -322,6 +342,13 @@ function exampleHTML(ex) {
 function relChip(id) {
   const pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
   return `<button type="button" class="g-rel-chip" data-target="${esc(id)}" lang="ja">${esc(pt ? pt.pattern : id)}</button>`;
+}
+
+// R8: a "vs 〜X" chip that opens the nuance duel (this point vs the confusable) — the primary entry
+// to the drill. The other pattern may live in an unfetched level; label falls back to the id.
+function duelChip(selfId, id) {
+  const pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
+  return `<button type="button" class="g-duel-chip" data-duel-self="${esc(selfId)}" data-duel-other="${esc(id)}" lang="ja">vs ${esc(pt ? pt.pattern : id)}</button>`;
 }
 
 // R6 archetype→register cheat-sheet: a static disclosure (built once with the bar). TWO opposite

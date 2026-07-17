@@ -20,10 +20,11 @@ import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf } from './lib/study.js';
-import { clozeFor, checkAnswer, scramblable, scrambleFor } from './lib/questions.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit } from './lib/study.js';
+import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
 import { scrambleCard } from './study-scramble.js';
+import { mcqCard } from './study-mcq.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -150,6 +151,10 @@ function continueState() {
   if (placedEmpty && noPoints) return { kind: 'placement' };
   const q = buildQueue(state, now);
   if (q.reviews.length) return { kind: 'due', due: q.reviews.length };
+  // R8: an unlocked (lessons-done) but unpassed checkpoint is the next Continue action, BEFORE new
+  // lessons — so checkpoints happen in the zero-decision flow, not as an optional side quest.
+  const cpUnit = nextCheckpointUnit(units, state.points, state.units || {});
+  if (cpUnit) return { kind: 'checkpoint', unit: cpUnit };
   const ids = lessonIds();
   if (ids.length && q.lessons > 0) {
     const u = unitOf(ids[0]);
@@ -163,6 +168,7 @@ function continueButtonHTML(cs) {
     case 'session': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="continue">▶ Continue session — ${esc(String(cs.pos + 1))}/${esc(String(cs.total))}</button>`;
     case 'placement': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="placementStart">▶ Start placement</button>`;
     case 'due': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="start">▶ Start today's session — ${esc(String(cs.due))} due</button>`;
+    case 'checkpoint': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="checkpoint" data-unit="${esc(cs.unit.id)}">▶ Checkpoint: ${esc(cs.unit.title)} <span class="stu-cont-sub">(10 Q)</span></button>`;
     case 'lessons': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="learn">▶ Learn next: ${esc(cs.title)} <span class="stu-cont-sub">(${esc(String(cs.n))} new)</span></button>`;
     default: return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="start" disabled>✓ All caught up — nothing due</button>`;
   }
@@ -186,11 +192,20 @@ function levelCardHTML(level) {
   const rows = open ? lus.map(u => {
     const pr = unitProgress(u, state.points);
     const pct = pr.total ? Math.round(pr.introduced / pr.total * 100) : 0;
-    return `<div class="stu-unit stu-unit-${esc(pr.state)}">
-      <span class="stu-unit-glyph" aria-hidden="true">${GLYPH[pr.state]}</span>
-      <span class="stu-unit-title">${esc(u.title)}</span>
-      <span class="stu-unit-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>
-      <span class="stu-unit-n">${esc(String(pr.introduced))}/${esc(String(pr.total))}</span></div>`;
+    // R8 unit-state glyphs: ✓★ gold once the checkpoint is passed; a lessons-done-but-unpassed
+    // unit surfaces its "Checkpoint" button; ●/○ otherwise.
+    const passed = pr.state === 'done' && checkpointPassed(state, u.id);
+    const glyph = passed ? '✓★' : GLYPH[pr.state];
+    const cls = passed ? 'stu-unit-passed' : `stu-unit-${esc(pr.state)}`;
+    const cpBtn = (pr.state === 'done' && !passed)
+      ? `<button type="button" class="stu-btn stu-btn-ghost stu-cp-btn" data-act="checkpoint" data-unit="${esc(u.id)}">Checkpoint · 10 Q →</button>` : '';
+    return `<div class="stu-unit-item">
+      <div class="stu-unit ${cls}">
+        <span class="stu-unit-glyph" aria-hidden="true">${glyph}</span>
+        <span class="stu-unit-title">${esc(u.title)}</span>
+        <span class="stu-unit-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>
+        <span class="stu-unit-n">${esc(String(pr.introduced))}/${esc(String(pr.total))}</span></div>
+      ${cpBtn}</div>`;
   }).join('') : '';
   return `<div class="stu-lvl-card${open ? ' is-open' : ''}">
     <button type="button" class="stu-lvl-head" data-act="expand" data-level="${esc(level)}" aria-expanded="${open ? 'true' : 'false'}">
@@ -230,6 +245,7 @@ function announceHome(cs) {
     session: `Session in progress — ${cs.pos + 1} of ${cs.total}. Continue to resume.`,
     placement: 'Course home. Start placement to sort what you already know.',
     due: `Course home. ${cs.due} reviews due today.`,
+    checkpoint: `Course home. Checkpoint unlocked for ${cs.unit.title}. Continue to take the 10-question quiz.`,
     lessons: `Course home. Next lesson: ${cs.title}.`,
     'caught-up': 'Course home. All caught up — nothing due.',
   }[cs.kind];
@@ -302,9 +318,28 @@ async function ensureAllLevels() {
   await Promise.all(LEVELS.filter(l => !levelFetched[l]).map(loadLevel));
 }
 
+// R8: run a unit's 10-question checkpoint (lazy study-lessons.js flow). Every level must be warm so
+// the MCQ generator can resolve cross-level confusables into 4-choice sets.
+async function launchCheckpoint(unitId) {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    await ensureAllLevels();
+    const unit = units.find(u => u.id === unitId);
+    if (!unit) { renderCourseHome(); return; }
+    const m = await import('./study-lessons.js');
+    activeFlow = m.startCheckpoint(flowCtx(), unit);
+  } catch (err) {
+    console.error('checkpoint failed to load', err);
+    renderCourseHome();
+    announce('Could not load the checkpoint — check your connection and try again.');
+  } finally { launching = false; }
+}
+
 async function continueSession() {
   if (!state.session || !state.session.queue.length) { renderCourseHome(); return; }
   await ensureLevelsFor(state.session.queue);   // no-op if the mount prefetch already finished
+  await ensureAllLevels();                      // MCQ cards need every level's confusables resolvable
   renderCard();
 }
 
@@ -333,17 +368,42 @@ function buildCard() {
   if (!point || !Array.isArray(point.examples) || !point.examples.length) return null;
   const p = state.points[id];
   const exIdx = (((p && p.reps) || 0) + idHash(id)) % point.examples.length;
-  // Format mix by stage (R4): young/mature/deep points alternate typed-cloze / ★-scramble day by
-  // day; seed/sprout/ghost points stay cloze-only (fresh material is produced, not reassembled).
-  const stage = p ? stageOf(p) : 'seed';
-  const eligible = !(p && p.ghost) && (stage === 'young' || stage === 'mature' || stage === 'deep');
-  if (eligible && scramblable(point) && (idHash(id) + Math.floor(Date.now() / DAY)) % 2 === 0) {
+  const fmt = pickFormat(id, point, p);
+  if (fmt === 'scramble') {
     const sIdx = scrambleFor(point, exIdx) ? exIdx : point.examples.findIndex((_, i) => scrambleFor(point, i));
     if (sIdx >= 0) return { id, exIdx: sIdx, point, type: 'scramble' };
+  }
+  if (fmt === 'mcq') {
+    const mcq = mcqFor(point, pointsCache, exIdx);
+    if (mcq) return { id, exIdx, point, type: 'mcq', mcq };   // else fall through to cloze
   }
   const { blankedTokens, answers } = clozeFor(point, exIdx);
   if (!answers.length) return null;   // degenerate example with no p token — skip
   return { id, exIdx, point, type: 'cloze', blankedTokens, answers };
+}
+
+// Format mix by stage (R4/R8): young/mature/deep points rotate typed-cloze / ★-scramble / MCQ,
+// deterministic by id + day. Seed/sprout/ghost stay cloze (fresh material is produced, not
+// recognised). N1 / `written-formal` points gate as RECOGNITION (lib/study.js gateMode), so they
+// bias toward MCQ/scramble over typed cloze — producing a written-register point from memory is
+// fake rigor; the exam recognises it. Falls back to whatever the point can actually render.
+function pickFormat(id, point, p) {
+  const stage = p ? stageOf(p) : 'seed';
+  if ((p && p.ghost) || !(stage === 'young' || stage === 'mature' || stage === 'deep')) return 'cloze';
+  const canScr = scramblable(point);
+  const canMcq = !!mcqFor(point, pointsCache, 0);
+  const rot = (idHash(id) + Math.floor(Date.now() / DAY)) % 3;
+  const recog = gateMode(point, { level: point.level, flags: point.flags }) === 'recognition';
+  if (recog) {                                   // prefer recognition formats; avoid typed cloze
+    if (rot % 2 === 0 && canScr) return 'scramble';
+    if (canMcq) return 'mcq';
+    if (canScr) return 'scramble';
+    return 'cloze';
+  }
+  if (rot === 1 && canScr) return 'scramble';
+  if (rot === 2 && canMcq) return 'mcq';
+  if (rot === 0) return 'cloze';
+  return canScr ? 'scramble' : (canMcq ? 'mcq' : 'cloze');
 }
 
 // small stable hash so the shown example is deterministic across a resume (no Math.random)
@@ -361,6 +421,7 @@ function renderCard() {
     return;
   }
   if (card.type === 'scramble') { renderScrambleCard(); return; }
+  if (card.type === 'mcq') { renderMcqCard(); return; }
   phase = 'input';
   const sentence = renderSentence(card.blankedTokens, false);
   const total = s.queue.length, n = s.pos + 1;
@@ -401,6 +462,37 @@ function renderScrambleCard() {
   const hostEl = root.querySelector('#stuScramHost');
   cardCtl = scrambleCard({ announce }, hostEl, card.point, card.exIdx, { grade: true, onResult: onScrambleResult });
   announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — arrange the pieces to build the sentence.`);
+}
+
+// ── MCQ card (R8) ────────────────────────────────────────────────────────────
+// The third card type: mounts the shared study-mcq.js sub-controller (recognition-style — a
+// correct pick opens Hard/Good/Easy) and parks it in cardCtl. onMcqResult is the one place
+// scheduling happens for this card.
+function renderMcqCard() {
+  const s = state.session;
+  const total = s.queue.length, n = s.pos + 1;
+  phase = 'mcq';
+  root.innerHTML = `
+    <div class="stu-card stu-card-mcq">
+      <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span></p>
+      <div id="stuMcqHost"></div>
+    </div>`;
+  const hostEl = root.querySelector('#stuMcqHost');
+  cardCtl = mcqCard({ announce }, hostEl, card.mcq, { grade: true, point: card.point, onResult: onMcqResult });
+  announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — choose the grammar that fills the blank.`);
+}
+
+// Correct pick → the learner's Hard/Good/Easy; wrong pick → Again (typedCorrect:false → grade 1).
+function onMcqResult({ pass, chosen }) {
+  const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
+  const now = Date.now();
+  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
+  state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
+  save();
+  cardCtl = null;
+  renderCard();
 }
 
 // Correct order → the learner's Hard/Good/Easy; wrong order → Again (typedCorrect:false → grade 1).
@@ -572,6 +664,14 @@ function wireRoot() {
   // (Enter/Space on a focused control) fall through to native activation to avoid double-fire.
   root.addEventListener('keydown', (e) => {
     if (e.isComposing || e.keyCode === 229) return;   // don't fight an IME (matches gestures.js)
+    // While a card/flow owns the keyboard, keep its control keys (digits, Enter/Space/Esc)
+    // from bubbling to gestures.js's document-level 1-9 route-nav — otherwise answering an
+    // MCQ or grading a card would navigate the learner away. gestures ignores defaultPrevented,
+    // so stopPropagation is the guard.
+    const cardActive = activeFlow || cardCtl || ['input', 'close', 'graded', 'wrong', 'scramble', 'mcq'].includes(phase);
+    if (cardActive && ((e.key >= '1' && e.key <= '9') || e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
+      e.stopPropagation();
+    }
     if (activeFlow) { activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
     if (cardCtl) { cardCtl.onKey(e); return; }         // a live ★-scramble card owns its keys
     const t = e.target;
@@ -610,6 +710,7 @@ function act(name, btn) {
     case 'start': if (!btn.disabled) startSession(); break;
     case 'continue': continueSession(); break;
     case 'learn': launchLessons(); break;
+    case 'checkpoint': launchCheckpoint(btn.dataset.unit); break;
     case 'placementStart': launchPlacement(); break;
     case 'expand': toggleLevel(btn.dataset.level); break;
     case 'check': submitAnswer(); break;

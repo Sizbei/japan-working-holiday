@@ -62,6 +62,7 @@ export const KEYS = {
   ankiDeck: 'jwh-anki-deck-v1',
   anki: 'jwh-anki-v1',               // Core-2000 rapid refresher: { v, cards, pos, shaky, shuffle, seed }
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)
+  study: 'jwh-study-v1',             // grammar gym SRS engine: { v, points, session, units, log, settings } (lib/study.js)
   mapDark: 'jwh-mapdark-v1',         // dark map tiles opt-in ('on'/'') — CSS filter, dark theme only
   navShow: 'jwh-navshow-v1',         // (legacy) optional routes surfaced in the nav — migrated into navHidden on first read
   navOrder: 'jwh-navorder-v1',       // user's nav page order (array of route ids across ALL candidates)

@@ -3882,8 +3882,12 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-deck.is-active .ank-deck-pick{ color: var(--ink); font-weight:700; }
 .ank-deck-n{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .ank-deck-c{ flex:none; font-family: var(--mono); font-size:.66rem; color: var(--ink-faint); background: var(--bg); border:1px solid var(--line); border-radius:100px; padding:0 .4rem; }
-.ank-deck-x{ flex:none; border:none; border-left:1px solid var(--line); background:none; color: var(--ink-faint); font-size:.7rem; padding:0 .5rem; cursor:pointer; }
+.ank-deck-edit, .ank-deck-x{ flex:none; border:none; border-left:1px solid var(--line); background:none; color: var(--ink-faint); font-size:.7rem; padding:0 .5rem; cursor:pointer; }
+.ank-deck-edit:hover{ color: var(--indigo); background: color-mix(in srgb, var(--indigo) 10%, transparent); }
 .ank-deck-x:hover{ color: var(--danger, #c0392b); background: color-mix(in srgb, var(--danger, #c0392b) 10%, transparent); }
+/* example-sentence audio button (2nd audio) — small, inline after the sentence */
+.ank-sentaudio{ border:none; background:none; cursor:pointer; font-size:.9rem; padding:0 .2rem; vertical-align:middle; opacity:.75; }
+.ank-sentaudio:hover{ opacity:1; }
 .ank-deck-add{ font-family: var(--mono); font-size:.72rem; font-weight:700; border:1px dashed var(--line); background:none; color: var(--ink-soft); border-radius: var(--r-sm); padding:.3rem .6rem; cursor:pointer; }
 .ank-deck-add:hover{ border-color: var(--indigo); color: var(--ink); }
 

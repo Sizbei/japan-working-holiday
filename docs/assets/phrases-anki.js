@@ -11,7 +11,7 @@
 
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, del, getRaw, setRaw } from './lib/store.js';
-import { confirmModal } from './lib/modal.js';
+import { confirmModal, askText } from './lib/modal.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
@@ -31,7 +31,7 @@ let root = null;
 // advancing a card rewrites ONE deck, not the whole library. Media is deck-scoped (<id>/<filename>).
 const deckKey = id => 'jwh-anki-d-' + id;
 function genId() { return 'd' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36); }
-function deckBody(d) { return { cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay }; }
+function deckBody(d) { return { cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay, chunk: d.chunk | 0 }; }
 
 function loadLib() {
   const raw = get(KEYS.ankiLib, null);
@@ -70,6 +70,7 @@ function loadDeck() {
     seed: Number.isFinite(d.seed) ? d.seed : 1,
     view: d.view === 'skim' ? 'skim' : 'stream',
     autoplay: !!d.autoplay,
+    chunk: Number.isFinite(d.chunk) ? d.chunk : 0,   // the set you were on (100-card chunk) — restored on re-entry
   };
 }
 // persist the ACTIVE deck's data (one key — never touches other decks). set() returns false on a full
@@ -91,6 +92,13 @@ function switchDeck(id) {
   if (!lib.decks.some(d => d.id === id) || id === lib.active) return;
   lib.active = id; saveLib(lib);
   stream = null; DATA = null; render();
+}
+function renameDeck(id, name) {
+  const lib = loadLib();
+  const d = lib.decks.find(x => x.id === id);
+  if (!d) return;
+  d.name = String(name || '').trim().slice(0, 60) || d.name;
+  saveLib(lib);
 }
 function deleteDeck(id) {
   del(deckKey(id));
@@ -227,6 +235,22 @@ function colIdx(createSql, name) {
   if (!inner) return -1;
   return inner[1].split(',').map(s => s.trim().split(/\s+/)[0].replace(/["'\u0060\[\]]/g, '')).indexOf(name);
 }
+// the real deck name lives in the collection's `col.decks` JSON ({deckId: {name, dyn}}). Pick the first
+// real (non-Default, non-filtered) deck; deck paths are "Parent::Child" so keep the leaf. '' → caller
+// falls back to the filename. Best-effort — any schema surprise just yields '' (never throws the import).
+function readDeckName(db) {
+  try {
+    const colTbl = sqliteTables(db).find(t => t.name === 'col');
+    if (!colTbl) return '';
+    const di = colIdx(colTbl.sql, 'decks');
+    if (di < 0) return '';
+    const row = sqliteRows(db, 'col')[0];
+    const decks = JSON.parse(row && row[di] || '{}');
+    const names = Object.values(decks).filter(d => d && d.name && d.name !== 'Default' && !d.dyn).map(d => String(d.name));
+    const name = names.sort((a, b) => a.length - b.length)[0] || '';   // shortest = usually the top-level deck
+    return (name.includes('::') ? name.split('::').pop() : name).trim().slice(0, 60);
+  } catch { return ''; }
+}
 const MAX_APKG = 300 * 1024 * 1024;   // 300MB — a Core-2000-with-audio apkg is ~50MB; guards f.arrayBuffer() OOM on a hostile huge file
 const MEDIA_CAP = 250 * 1024 * 1024;  // stop writing media to IndexedDB past this (quota guard)
 async function importApkg(f) {
@@ -253,7 +277,8 @@ async function importApkg(f) {
       try { manifest = parseMediaManifest(await readZipEntry(u8, byName.get('media'))); } catch { manifest = null; }
     }
     const res = cardsFromRows(rows);
-    DATA = { ...res, apkg: { u8, byName, manifest, rows }, nCols: Math.max(...rows.slice(0, 50).map(r => r.length)), fileName: String(f.name || '').replace(/\.apkg$/i, '').trim() };
+    DATA = { ...res, apkg: { u8, byName, manifest, rows }, nCols: Math.max(...rows.slice(0, 50).map(r => r.length)),
+      fileName: String(f.name || '').replace(/\.apkg$/i, '').trim(), deckName: readDeckName(db) };
     renderImport(DATA);
   } catch (err) { showErr(friendlyErr(err)); }
 }
@@ -261,17 +286,24 @@ async function importApkg(f) {
 // extract only the media the kept cards actually reference; attach a/img refs to the cards. Media is
 // stored under DECK-SCOPED keys (`<deckId>/<filename>`) so decks in the library don't collide and a
 // delete only drops that deck's blobs — NOT mediaClear() (which would wipe every other deck's media).
-async function attachMedia(cards, apkg, deckId, onProgress) {
+async function attachMedia(cards, apkg, deckId, cols, onProgress) {
   const { u8, byName, manifest, rows } = apkg;
   if (!manifest) return cards.map(({ srcIdx, ...c }) => c);
+  const wordCols = [cols?.expression, cols?.reading].filter(i => i >= 0);   // WORD audio lives in these
   const out = cards.map(c => {
     const fields = rows[c.srcIdx] || [];
-    let a = null, img = null;
-    for (const f of fields) { a = a || soundRef(f); img = img || imgRef(f); }
+    // TWO audios: the word's own pronunciation (in the expression/reading field) AND the example
+    // sentence's audio (in the sentence field) — many vocab decks ship both; we used to keep only the first.
+    let a = null, a2 = null, img = null;
+    for (const i of wordCols) a = a || soundRef(fields[i]);
+    if (cols?.sentence >= 0) a2 = soundRef(fields[cols.sentence]);
+    if (!a) for (const f of fields) { a = soundRef(f); if (a) break; }   // fallback: first sound anywhere
+    for (const f of fields) { img = img || imgRef(f); }
+    if (a2 && a2 === a) a2 = null;                                        // same file → not a distinct 2nd audio
     const { srcIdx, ...rest } = c;
-    return { ...rest, ...(a && manifest.has(a) ? { a } : {}), ...(img && manifest.has(img) ? { img } : {}) };
+    return { ...rest, ...(a && manifest.has(a) ? { a } : {}), ...(a2 && manifest.has(a2) ? { a2 } : {}), ...(img && manifest.has(img) ? { img } : {}) };
   });
-  const refs = [...new Set(out.flatMap(c => [c.a, c.img].filter(Boolean)))];
+  const refs = [...new Set(out.flatMap(c => [c.a, c.a2, c.img].filter(Boolean)))];
   let total = 0;
   const MIME = { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', m4a: 'audio/mp4', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml' };
   for (let i = 0; i < refs.length; i++) {
@@ -339,12 +371,13 @@ function showPreview(res) {
   $('#ankSave')?.addEventListener('click', async () => {
     const btn = $('#ankSave');
     const id = genId();
-    const name = (DATA?.fileName || '').slice(0, 60) || `Deck ${deckMeta().length + 1}`;
+    // the deck's OWN name from the .apkg, falling back to the filename, then a generic label
+    const name = (DATA?.deckName || DATA?.fileName || '').slice(0, 60) || `Deck ${deckMeta().length + 1}`;
     let cards = res.cards;
     if (DATA?.apkg) {
       try {
         if (btn) { btn.disabled = true; btn.textContent = 'Importing media…'; }
-        cards = await attachMedia(res.cards, DATA.apkg, id, (n, t) => { if (btn) btn.textContent = `Importing media… ${n}/${t}`; });
+        cards = await attachMedia(res.cards, DATA.apkg, id, res.cols, (n, t) => { if (btn) btn.textContent = `Importing media… ${n}/${t}`; });
       } catch (err) {
         console.error('[anki] media import', err);
         showErr('Media import failed (' + (err?.message || err) + ') — the deck was saved without audio/images.');
@@ -385,6 +418,7 @@ function deckBarHTML() {
       <button type="button" class="ank-deck-pick" data-deck="${esc(d.id)}"${on ? ' aria-current="true"' : ''} title="${esc(d.name)} — ${esc(String(d.cardCount))} cards">
         <span class="ank-deck-n">${esc(d.name)}</span><span class="ank-deck-c">${esc(String(d.cardCount))}</span>
       </button>
+      <button type="button" class="ank-deck-edit" data-rename-deck="${esc(d.id)}" aria-label="Rename deck ${esc(d.name)}" title="Rename deck">✎</button>
       <button type="button" class="ank-deck-x" data-del-deck="${esc(d.id)}" aria-label="Delete deck ${esc(d.name)}" title="Delete deck">✕</button>
     </span>`;
   }).join('');
@@ -462,7 +496,9 @@ function refreshPileChip() {
 function renderStream(deck) {
   const nChunks = chunkCount(deck.cards.length, CHUNK);
   const mode = stream && stream.deck === deck ? stream.mode : 'chunk';
-  const chunk = stream && stream.deck === deck && stream.chunk < nChunks ? stream.chunk : 0;
+  const chunk = stream && stream.deck === deck && stream.chunk < nChunks
+    ? stream.chunk
+    : Math.min(Math.max(0, deck.chunk | 0), Math.max(0, nChunks - 1));   // fresh load → the persisted set (not always chunk 1)
   const order = orderFor(deck, chunk, mode);
   if (mode === 'pile' && !order.length) { renderAllClear(deck); return; }
   const pos = mode === 'pile' ? 0 : Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
@@ -512,7 +548,9 @@ function renderAllClear(deck) {
 function renderSkim(deck) {
   const nChunks = chunkCount(deck.cards.length, CHUNK);
   const mode = stream && stream.deck === deck ? stream.mode : 'chunk';
-  const chunk = stream && stream.deck === deck && stream.chunk < nChunks ? stream.chunk : 0;
+  const chunk = stream && stream.deck === deck && stream.chunk < nChunks
+    ? stream.chunk
+    : Math.min(Math.max(0, deck.chunk | 0), Math.max(0, nChunks - 1));   // fresh load → the persisted set (not always chunk 1)
   const order = orderFor(deck, chunk, mode);
   stream = { deck, mode, chunk, idx: 0, order };
   if (mode === 'pile' && !order.length) { renderAllClear(deck); return; }
@@ -587,16 +625,20 @@ function fillMedia(card) {
       el.src = _imgUrl; el.hidden = false;
     }).catch(() => {});
   }
-  $('#ankAudio')?.addEventListener('click', (e) => {
-    e.stopPropagation();   // play audio without also advancing the card (the card click = next)
-    getMedia(card.a).then(b => {
+  // play a media file (word audio #ankAudio, or the example-sentence audio #ankAudio2) — one at a time.
+  const play = (file) => (e) => {
+    e.stopPropagation();   // play without also advancing the card (the card click = next)
+    getMedia(file).then(b => {
       if (tok !== _mediaTok || !b) return;   // ignore a stale in-flight read when a newer card loaded
+      if (_audio) { try { _audio.pause(); } catch { /* already stopped */ } }
       const u = URL.createObjectURL(b);
       _audio = new Audio(u);
       _audio.addEventListener('ended', () => URL.revokeObjectURL(u), { once: true });
       _audio.play().catch(() => {});
     }).catch(() => {});
-  });
+  };
+  $('#ankAudio')?.addEventListener('click', play(card.a));
+  if (card.a2) $('#ankAudio2')?.addEventListener('click', play(card.a2));
 }
 
 // the meaning field of many decks is a part-of-speech label ("Noun", "Verb"…) rather than a gloss;
@@ -634,7 +676,8 @@ function paintCard() {
   if (!el || !card) return;
   const isShaky = deck.shaky.includes(card.id);
   const hair = (card.s || card.sm) ? `<div class="ank-hair" aria-hidden="true"></div>` : '';
-  const sent = card.s ? `<div class="ank-sent" lang="ja">${sentenceHTML(card.s, card.w)}</div>` : '';
+  const sentAudio = card.a2 ? ` <button type="button" class="ank-sentaudio" id="ankAudio2" aria-label="Play sentence audio">🔊</button>` : '';
+  const sent = card.s ? `<div class="ank-sent" lang="ja">${sentenceHTML(card.s, card.w)}${sentAudio}</div>` : '';
   const sentM = card.sm ? `<div class="ank-sentm">${esc(card.sm)}</div>` : '';
   // reading now rides ABOVE the word as ruby (toggle-able via the site .furi-off rule); the meaning
   // field is a POS tag when it names a part of speech, otherwise a meaning line under the word.
@@ -680,6 +723,7 @@ function persistPos() {
   const { deck, chunk, idx, mode } = stream;
   if (mode === 'pile') return;   // the pile is a snapshot run — it does not own a resume slot
   deck.pos[chunk] = idx;
+  deck.chunk = chunk;            // remember WHICH set you're on, so re-entry doesn't drop back to chunk 1
   saveDeck(deck);
 }
 
@@ -730,6 +774,7 @@ function switchChunk(chunk) {
   const order = orderFor(deck, chunk, 'chunk');
   const pos = Math.min(Math.max(0, deck.pos[chunk] | 0), Math.max(0, order.length - 1));
   stream = { deck, mode: 'chunk', chunk, idx: pos, order };
+  persistPos();   // remember the new set immediately — leaving without advancing must still resume here
   deck.view === 'skim' ? renderSkim(deck) : rePaintAfterSwitch();
 }
 function enterPile() {
@@ -777,6 +822,14 @@ function wireCommon() {
 function wireDeckChips() {
   $('#ankAddDeck')?.addEventListener('click', enterImport);
   root.querySelectorAll('.ank-deck-pick[data-deck]').forEach(b => b.addEventListener('click', () => switchDeck(b.dataset.deck)));
+  root.querySelectorAll('.ank-deck-edit[data-rename-deck]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.renameDeck;
+    const meta = deckMeta().find(d => d.id === id);
+    const name = await askText('Rename deck', { value: meta?.name || '', placeholder: 'Deck name', ok: 'Rename' });
+    if (name == null || !String(name).trim()) return;
+    renameDeck(id, name);
+    render();
+  }));
   root.querySelectorAll('.ank-deck-x[data-del-deck]').forEach(b => b.addEventListener('click', async () => {
     const id = b.dataset.delDeck;
     const meta = deckMeta().find(d => d.id === id);

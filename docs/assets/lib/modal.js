@@ -8,7 +8,7 @@ import { esc } from './dom.js';
 import { openDatePicker } from '../datepicker.js';
 import { normalizeTag } from './tags.js';
 
-function openDialog(innerHTML, { onMount, initialFocus } = {}) {
+export function openDialog(innerHTML, { onMount, initialFocus } = {}) {
   return new Promise((resolve) => {
     const prev = document.activeElement;
     const ov = document.createElement('div');

@@ -11242,6 +11242,9653 @@
    ],
    "en": "About next month's Kyoto trip — I tried putting together a plan. First, let's decide to take an early-morning bullet train. I want to go around the famous temples before they get crowded, you see. After that, while we're going to Kyoto, shall we also make a side trip to Nara? However, the second day looks like rain, so on that day let's make it the art museum instead. I'll book the hotel early. I'm looking forward to it.",
    "confidence": "high"
+  },
+  {
+   "id": "p-n2-1",
+   "level": "N2",
+   "title": "人事部からのお知らせ",
+   "tokens": [
+    {
+     "t": "社員各位",
+     "f": [
+      [
+       "社員",
+       "しゃいん"
+      ],
+      [
+       "各位",
+       "かくい"
+      ]
+     ],
+     "g": "all staff"
+    },
+    "、",
+    {
+     "t": "人事部",
+     "f": [
+      [
+       "人事部",
+       "じんじぶ"
+      ]
+     ],
+     "g": "HR dept"
+    },
+    "より",
+    {
+     "t": "在宅勤務制度",
+     "f": [
+      [
+       "在宅",
+       "ざいたく"
+      ],
+      [
+       "勤務",
+       "きんむ"
+      ],
+      [
+       "制度",
+       "せいど"
+      ]
+     ],
+     "g": "telework system"
+    },
+    "について",
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notice"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来月",
+       "らいげつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "より",
+    {
+     "t": "本制度",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "制度",
+       "せいど"
+      ]
+     ],
+     "g": "this system"
+    },
+    "を",
+    {
+     "t": "導入",
+     "f": [
+      [
+       "導入",
+       "どうにゅう"
+      ]
+     ],
+     "g": "introduce"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "申請",
+     "f": [
+      [
+       "申請",
+       "しんせい"
+      ]
+     ],
+     "g": "application"
+    },
+    "は",
+    "、",
+    {
+     "t": "就業規則",
+     "f": [
+      [
+       "就業",
+       "しゅうぎょう"
+      ],
+      [
+       "規則",
+       "きそく"
+      ]
+     ],
+     "g": "work regulations"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "審査",
+     "f": [
+      [
+       "審査",
+       "しんさ"
+      ]
+     ],
+     "g": "review"
+    },
+    "いたします",
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "育児",
+     "f": [
+      [
+       "育児",
+       "いくじ"
+      ]
+     ],
+     "g": "childcare"
+    },
+    "や",
+    {
+     "t": "介護",
+     "f": [
+      [
+       "介護",
+       "かいご"
+      ]
+     ],
+     "g": "nursing care"
+    },
+    "の",
+    {
+     "t": "事情",
+     "f": [
+      [
+       "事情",
+       "じじょう"
+      ]
+     ],
+     "g": "circumstances"
+    },
+    "が",
+    "ある",
+    {
+     "t": "社員",
+     "f": [
+      [
+       "社員",
+       "しゃいん"
+      ]
+     ],
+     "g": "staff"
+    },
+    "については",
+    "、",
+    {
+     "t": "優先的",
+     "f": [
+      [
+       "優先",
+       "ゆうせん"
+      ],
+      [
+       "的",
+       "てき"
+      ]
+     ],
+     "g": "preferential"
+    },
+    "に",
+    {
+     "t": "承認",
+     "f": [
+      [
+       "承認",
+       "しょうにん"
+      ]
+     ],
+     "g": "approve"
+    },
+    "いたします",
+    "。",
+    "ただし",
+    "、",
+    {
+     "t": "出社",
+     "f": [
+      [
+       "出社",
+       "しゅっしゃ"
+      ]
+     ],
+     "g": "office attendance"
+    },
+    "が",
+    {
+     "t": "求められる",
+     "f": [
+      [
+       "求",
+       "もと"
+      ],
+      [
+       "められる",
+       ""
+      ]
+     ],
+     "g": "is required"
+    },
+    {
+     "t": "部署",
+     "f": [
+      [
+       "部署",
+       "ぶしょ"
+      ]
+     ],
+     "g": "department"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "適用",
+     "f": [
+      [
+       "適用",
+       "てきよう"
+      ]
+     ],
+     "g": "application"
+    },
+    "を",
+    {
+     "t": "見送ら",
+     "f": [
+      [
+       "見",
+       "み"
+      ],
+      [
+       "送",
+       "おく"
+      ],
+      [
+       "ら",
+       ""
+      ]
+     ],
+     "g": "forgo (neg. stem)"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "ご理解",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "理解",
+       "りかい"
+      ]
+     ],
+     "g": "understanding"
+    },
+    "の",
+    "ほど",
+    {
+     "t": "お願い",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "request"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly do"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "に基づいて",
+     "options": [
+      "に基づいて",
+      "に反して",
+      "に加えて",
+      "をめぐって"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-motozuite"
+    },
+    {
+     "n": 1,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "つまり",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "においては",
+     "options": [
+      "においては",
+      "をめぐっては",
+      "にわたっては",
+      "をはじめ"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 3,
+     "answer": "ざるを得ません",
+     "options": [
+      "ざるを得ません",
+      "わけにはいきません",
+      "かねません",
+      "得ません"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-zaru-wo-enai"
+    }
+   ],
+   "en": "To all staff: a notice from HR regarding the telework system. From next month we will introduce this system. Applications will be reviewed based on the work regulations. Note that staff with childcare or nursing-care circumstances will be approved on a priority basis. However, for departments where office attendance is required, we have no choice but to forgo applying it. We ask for your understanding.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-2",
+   "level": "N2",
+   "title": "在留カード更新のお知らせ",
+   "tokens": [
+    {
+     "t": "在留資格",
+     "f": [
+      [
+       "在留",
+       "ざいりゅう"
+      ],
+      [
+       "資格",
+       "しかく"
+      ]
+     ],
+     "g": "residence status"
+    },
+    "を",
+    {
+     "t": "お持ち",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "持",
+       "も"
+      ],
+      [
+       "ち",
+       ""
+      ]
+     ],
+     "g": "hold"
+    },
+    "の",
+    {
+     "t": "皆様",
+     "f": [
+      [
+       "皆様",
+       "みなさま"
+      ]
+     ],
+     "g": "everyone"
+    },
+    "に",
+    "、",
+    {
+     "t": "出入国在留管理庁",
+     "f": [
+      [
+       "出入国",
+       "しゅつにゅうこく"
+      ],
+      [
+       "在留",
+       "ざいりゅう"
+      ],
+      [
+       "管理庁",
+       "かんりちょう"
+      ]
+     ],
+     "g": "Immigration Services Agency"
+    },
+    "より",
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notice"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "在留カード",
+     "f": [
+      [
+       "在留",
+       "ざいりゅう"
+      ],
+      [
+       "カード",
+       ""
+      ]
+     ],
+     "g": "residence card"
+    },
+    "の",
+    {
+     "t": "有効期限",
+     "f": [
+      [
+       "有効",
+       "ゆうこう"
+      ],
+      [
+       "期限",
+       "きげん"
+      ]
+     ],
+     "g": "expiry date"
+    },
+    "が",
+    {
+     "t": "近づいて",
+     "f": [
+      [
+       "近",
+       "ちか"
+      ],
+      [
+       "づいて",
+       ""
+      ]
+     ],
+     "g": "approaching"
+    },
+    "おります",
+    "。",
+    {
+     "t": "更新",
+     "f": [
+      [
+       "更新",
+       "こうしん"
+      ]
+     ],
+     "g": "renewal"
+    },
+    "の",
+    {
+     "t": "申請",
+     "f": [
+      [
+       "申請",
+       "しんせい"
+      ]
+     ],
+     "g": "application"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "パスポート",
+     "f": [
+      [
+       "パスポート",
+       ""
+      ]
+     ],
+     "g": "passport"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "写真",
+     "f": [
+      [
+       "写真",
+       "しゃしん"
+      ]
+     ],
+     "g": "photo"
+    },
+    {
+     "t": "一枚",
+     "f": [
+      [
+       "一枚",
+       "いちまい"
+      ]
+     ],
+     "g": "one sheet"
+    },
+    "が",
+    {
+     "t": "必要",
+     "f": [
+      [
+       "必要",
+       "ひつよう"
+      ]
+     ],
+     "g": "necessary"
+    },
+    "です",
+    "。",
+    {
+     "t": "期限",
+     "f": [
+      [
+       "期限",
+       "きげん"
+      ]
+     ],
+     "g": "deadline"
+    },
+    "を",
+    {
+     "t": "過ぎます",
+     "f": [
+      [
+       "過",
+       "す"
+      ],
+      [
+       "ぎます",
+       ""
+      ]
+     ],
+     "g": "pass"
+    },
+    "と",
+    "、",
+    {
+     "t": "資格",
+     "f": [
+      [
+       "資格",
+       "しかく"
+      ]
+     ],
+     "g": "status"
+    },
+    "を",
+    {
+     "t": "失う",
+     "f": [
+      [
+       "失",
+       "うしな"
+      ],
+      [
+       "う",
+       ""
+      ]
+     ],
+     "g": "lose"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "お早めに",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "めに",
+       ""
+      ]
+     ],
+     "g": "promptly"
+    },
+    {
+     "t": "手続き",
+     "f": [
+      [
+       "手",
+       "て"
+      ],
+      [
+       "続",
+       "つづ"
+      ],
+      [
+       "き",
+       ""
+      ]
+     ],
+     "g": "procedure"
+    },
+    "を",
+    {
+     "t": "お済ませ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "済",
+       "す"
+      ],
+      [
+       "ませ",
+       ""
+      ]
+     ],
+     "g": "complete"
+    },
+    "ください",
+    "。",
+    "なお",
+    "、",
+    {
+     "t": "お電話",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "電話",
+       "でんわ"
+      ]
+     ],
+     "g": "phone"
+    },
+    "での",
+    {
+     "t": "お問い合わせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "問",
+       "と"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "わせ",
+       ""
+      ]
+     ],
+     "g": "inquiry"
+    },
+    "には",
+    {
+     "t": "応じ",
+     "f": [
+      [
+       "応",
+       "おう"
+      ],
+      [
+       "じ",
+       ""
+      ]
+     ],
+     "g": "respond (stem)"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "においては",
+     "options": [
+      "においては",
+      "に反しては",
+      "をめぐっては",
+      "にわたっては"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 1,
+     "answer": "に加えて",
+     "options": [
+      "に加えて",
+      "に反して",
+      "に基づいて",
+      "にかけて"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-kuwaete"
+    },
+    {
+     "n": 2,
+     "answer": "恐れがあります",
+     "options": [
+      "恐れがあります",
+      "一方です",
+      "限りです",
+      "次第です"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-osore-ga-aru"
+    },
+    {
+     "n": 3,
+     "answer": "したがって",
+     "options": [
+      "したがって",
+      "しかし",
+      "たとえば",
+      "ところで"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "かねます",
+     "options": [
+      "かねます",
+      "得ます",
+      "つつあります",
+      "かねません"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-kaneru"
+    }
+   ],
+   "en": "To everyone holding residence status: a notice from the Immigration Services Agency. The validity of your residence card is approaching its expiry. For the renewal application, in addition to your passport, one photo is required. If the deadline passes, there is a risk of losing your status. Therefore, please complete the procedure promptly. Please note that we are unable to respond to inquiries by telephone.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-3",
+   "level": "N2",
+   "title": "職場とAIをめぐる論説",
+   "tokens": [
+    {
+     "t": "職場",
+     "f": [
+      [
+       "職場",
+       "しょくば"
+      ]
+     ],
+     "g": "workplace"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "人工知能",
+     "f": [
+      [
+       "人工",
+       "じんこう"
+      ],
+      [
+       "知能",
+       "ちのう"
+      ]
+     ],
+     "g": "artificial intelligence"
+    },
+    "の",
+    {
+     "t": "導入",
+     "f": [
+      [
+       "導入",
+       "どうにゅう"
+      ]
+     ],
+     "g": "introduction"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "様々",
+     "f": [
+      [
+       "様々",
+       "さまざま"
+      ]
+     ],
+     "g": "various"
+    },
+    "な",
+    {
+     "t": "議論",
+     "f": [
+      [
+       "議論",
+       "ぎろん"
+      ]
+     ],
+     "g": "debate"
+    },
+    "が",
+    {
+     "t": "交わされて",
+     "f": [
+      [
+       "交",
+       "か"
+      ],
+      [
+       "わされて",
+       ""
+      ]
+     ],
+     "g": "are exchanged"
+    },
+    "いる",
+    "。",
+    {
+     "t": "業務",
+     "f": [
+      [
+       "業務",
+       "ぎょうむ"
+      ]
+     ],
+     "g": "operations"
+    },
+    "の",
+    {
+     "t": "効率化",
+     "f": [
+      [
+       "効率",
+       "こうりつ"
+      ],
+      [
+       "化",
+       "か"
+      ]
+     ],
+     "g": "efficiency"
+    },
+    "が",
+    {
+     "t": "進んで",
+     "f": [
+      [
+       "進",
+       "すす"
+      ],
+      [
+       "んで",
+       ""
+      ]
+     ],
+     "g": "advancing"
+    },
+    "いる",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "雇用",
+     "f": [
+      [
+       "雇用",
+       "こよう"
+      ]
+     ],
+     "g": "employment"
+    },
+    "への",
+    {
+     "t": "影響",
+     "f": [
+      [
+       "影響",
+       "えいきょう"
+      ]
+     ],
+     "g": "impact"
+    },
+    "を",
+    {
+     "t": "懸念",
+     "f": [
+      [
+       "懸念",
+       "けねん"
+      ]
+     ],
+     "g": "concern"
+    },
+    "する",
+    {
+     "t": "声",
+     "f": [
+      [
+       "声",
+       "こえ"
+      ]
+     ],
+     "g": "voices"
+    },
+    "も",
+    {
+     "t": "多い",
+     "f": [
+      [
+       "多",
+       "おお"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "many"
+    },
+    "。",
+    {
+     "t": "技術",
+     "f": [
+      [
+       "技術",
+       "ぎじゅつ"
+      ]
+     ],
+     "g": "technology"
+    },
+    "の",
+    {
+     "t": "恩恵",
+     "f": [
+      [
+       "恩恵",
+       "おんけい"
+      ]
+     ],
+     "g": "benefits"
+    },
+    "を",
+    {
+     "t": "認め",
+     "f": [
+      [
+       "認",
+       "みと"
+      ],
+      [
+       "め",
+       ""
+      ]
+     ],
+     "g": "acknowledge (stem)"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "も",
+    "、",
+    "その",
+    {
+     "t": "負",
+     "f": [
+      [
+       "負",
+       "ふ"
+      ]
+     ],
+     "g": "negative"
+    },
+    "の",
+    {
+     "t": "側面",
+     "f": [
+      [
+       "側面",
+       "そくめん"
+      ]
+     ],
+     "g": "aspects"
+    },
+    "から",
+    {
+     "t": "目",
+     "f": [
+      [
+       "目",
+       "め"
+      ]
+     ],
+     "g": "eyes"
+    },
+    "を",
+    "そらす",
+    "べきではない",
+    "。",
+    "こうした",
+    {
+     "t": "変化",
+     "f": [
+      [
+       "変化",
+       "へんか"
+      ]
+     ],
+     "g": "change"
+    },
+    "は",
+    "、",
+    {
+     "t": "今後",
+     "f": [
+      [
+       "今後",
+       "こんご"
+      ]
+     ],
+     "g": "hereafter"
+    },
+    "も",
+    {
+     "t": "加速",
+     "f": [
+      [
+       "加速",
+       "かそく"
+      ]
+     ],
+     "g": "accelerate"
+    },
+    "して",
+    "いく",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "における",
+     "options": [
+      "における",
+      "において",
+      "に対する",
+      "にわたる"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-okeru"
+    },
+    {
+     "n": 1,
+     "answer": "をめぐって",
+     "options": [
+      "をめぐって",
+      "にわたって",
+      "をはじめ",
+      "に反して"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-wo-megutte"
+    },
+    {
+     "n": 2,
+     "answer": "一方",
+     "options": [
+      "一方",
+      "つまり",
+      "なぜなら",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "つつ",
+     "options": [
+      "つつ",
+      "ゆえ",
+      "べく",
+      "まい"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-tsutsu"
+    },
+    {
+     "n": 4,
+     "answer": "であろう",
+     "options": [
+      "であろう",
+      "である",
+      "であるか",
+      "であった"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "In recent years, various debates have been exchanged surrounding the introduction of artificial intelligence in the workplace. The streamlining of operations is advancing. On the other hand, there are also many voices concerned about the impact on employment. While acknowledging the benefits of the technology, we should not avert our eyes from its negative aspects. This change will likely continue to accelerate in the years ahead.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-4",
+   "level": "N2",
+   "title": "価格改定のご案内",
+   "tokens": [
+    "拝啓",
+    "、",
+    {
+     "t": "時下",
+     "f": [
+      [
+       "時下",
+       "じか"
+      ]
+     ],
+     "g": "these days"
+    },
+    "ますます",
+    {
+     "t": "ご清栄",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "清栄",
+       "せいえい"
+      ]
+     ],
+     "g": "prosperity"
+    },
+    "のこと",
+    "と",
+    {
+     "t": "お慶び",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "慶",
+       "よろこ"
+      ],
+      [
+       "び",
+       ""
+      ]
+     ],
+     "g": "delight"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly say"
+    },
+    "。",
+    "さて",
+    "、",
+    {
+     "t": "原材料費",
+     "f": [
+      [
+       "原材料",
+       "げんざいりょう"
+      ],
+      [
+       "費",
+       "ひ"
+      ]
+     ],
+     "g": "raw-material costs"
+    },
+    "の",
+    {
+     "t": "高騰",
+     "f": [
+      [
+       "高騰",
+       "こうとう"
+      ]
+     ],
+     "g": "sharp rise"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来月",
+       "らいげつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "より",
+    {
+     "t": "製品価格",
+     "f": [
+      [
+       "製品",
+       "せいひん"
+      ],
+      [
+       "価格",
+       "かかく"
+      ]
+     ],
+     "g": "product prices"
+    },
+    "を",
+    {
+     "t": "改定",
+     "f": [
+      [
+       "改定",
+       "かいてい"
+      ]
+     ],
+     "g": "revise"
+    },
+    "させていただきます",
+    "。",
+    {
+     "t": "弊社",
+     "f": [
+      [
+       "弊社",
+       "へいしゃ"
+      ]
+     ],
+     "g": "our company"
+    },
+    "は",
+    "、",
+    "これまで",
+    {
+     "t": "品質",
+     "f": [
+      [
+       "品質",
+       "ひんしつ"
+      ]
+     ],
+     "g": "quality"
+    },
+    "の",
+    {
+     "t": "維持",
+     "f": [
+      [
+       "維持",
+       "いじ"
+      ]
+     ],
+     "g": "maintenance"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "価格",
+     "f": [
+      [
+       "価格",
+       "かかく"
+      ]
+     ],
+     "g": "price"
+    },
+    "の",
+    {
+     "t": "安定",
+     "f": [
+      [
+       "安定",
+       "あんてい"
+      ]
+     ],
+     "g": "stability"
+    },
+    "にも",
+    {
+     "t": "努めて",
+     "f": [
+      [
+       "努",
+       "つと"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "strive"
+    },
+    "まいりました",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "現在",
+     "f": [
+      [
+       "現在",
+       "げんざい"
+      ]
+     ],
+     "g": "current"
+    },
+    "の",
+    {
+     "t": "情勢",
+     "f": [
+      [
+       "情勢",
+       "じょうせい"
+      ]
+     ],
+     "g": "conditions"
+    },
+    "の",
+    "もと",
+    "では",
+    "、",
+    {
+     "t": "現行価格",
+     "f": [
+      [
+       "現行",
+       "げんこう"
+      ],
+      [
+       "価格",
+       "かかく"
+      ]
+     ],
+     "g": "current price"
+    },
+    "を",
+    {
+     "t": "維持",
+     "f": [
+      [
+       "維持",
+       "いじ"
+      ]
+     ],
+     "g": "maintain"
+    },
+    "いたし",
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "状況",
+     "f": [
+      [
+       "状況",
+       "じょうきょう"
+      ]
+     ],
+     "g": "situation"
+    },
+    "でございます",
+    "。",
+    {
+     "t": "何卒",
+     "f": [
+      [
+       "何卒",
+       "なにとぞ"
+      ]
+     ],
+     "g": "kindly"
+    },
+    {
+     "t": "ご理解",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "理解",
+       "りかい"
+      ]
+     ],
+     "g": "understanding"
+    },
+    "を",
+    {
+     "t": "賜ります",
+     "f": [
+      [
+       "賜",
+       "たまわ"
+      ],
+      [
+       "ります",
+       ""
+      ]
+     ],
+     "g": "receive (humble)"
+    },
+    "よう",
+    {
+     "t": "お願い",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "request"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly say"
+    },
+    "。",
+    "敬具"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "に伴い",
+     "options": [
+      "に伴い",
+      "に反し",
+      "を込め",
+      "にかけ"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-tomonatte"
+    },
+    {
+     "n": 1,
+     "answer": "に加えて",
+     "options": [
+      "に加えて",
+      "に反して",
+      "において",
+      "をめぐって"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-kuwaete"
+    },
+    {
+     "n": 2,
+     "answer": "しかしながら",
+     "options": [
+      "しかしながら",
+      "したがって",
+      "なお",
+      "すなわち"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "かねる",
+     "options": [
+      "かねる",
+      "得る",
+      "かねない",
+      "つつある"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-kaneru"
+    }
+   ],
+   "en": "Dear Sir/Madam, we are delighted to hear of your ever-growing prosperity. Now, accompanying the sharp rise in raw-material costs, we will revise our product prices from next month. Until now, in addition to maintaining quality, we have also striven to keep prices stable. However, under the current conditions, we are in a situation where we are unable to maintain the current prices. We humbly ask for your understanding. Sincerely.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-5",
+   "level": "N2",
+   "title": "情報セキュリティ運用ルール",
+   "tokens": [
+    {
+     "t": "情報",
+     "f": [
+      [
+       "情報",
+       "じょうほう"
+      ]
+     ],
+     "g": "information"
+    },
+    {
+     "t": "セキュリティ",
+     "f": [
+      [
+       "セキュリティ",
+       ""
+      ]
+     ],
+     "g": "security"
+    },
+    {
+     "t": "強化",
+     "f": [
+      [
+       "強化",
+       "きょうか"
+      ]
+     ],
+     "g": "strengthening"
+    },
+    "のため",
+    "、",
+    {
+     "t": "全社員",
+     "f": [
+      [
+       "全",
+       "ぜん"
+      ],
+      [
+       "社員",
+       "しゃいん"
+      ]
+     ],
+     "g": "all staff"
+    },
+    "を",
+    {
+     "t": "対象",
+     "f": [
+      [
+       "対象",
+       "たいしょう"
+      ]
+     ],
+     "g": "target"
+    },
+    "に",
+    {
+     "t": "新た",
+     "f": [
+      [
+       "新",
+       "あら"
+      ],
+      [
+       "た",
+       ""
+      ]
+     ],
+     "g": "new"
+    },
+    "な",
+    {
+     "t": "運用",
+     "f": [
+      [
+       "運用",
+       "うんよう"
+      ]
+     ],
+     "g": "operational"
+    },
+    {
+     "t": "ルール",
+     "f": [
+      [
+       "ルール",
+       ""
+      ]
+     ],
+     "g": "rules"
+    },
+    "を",
+    {
+     "t": "定めます",
+     "f": [
+      [
+       "定",
+       "さだ"
+      ],
+      [
+       "めます",
+       ""
+      ]
+     ],
+     "g": "establish"
+    },
+    "。",
+    {
+     "t": "本ルール",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "ルール",
+       ""
+      ]
+     ],
+     "g": "these rules"
+    },
+    "を",
+    "よく",
+    {
+     "t": "ご確認",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "確認",
+       "かくにん"
+      ]
+     ],
+     "g": "check"
+    },
+    "いただいた",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "日々",
+     "f": [
+      [
+       "日々",
+       "ひび"
+      ]
+     ],
+     "g": "daily"
+    },
+    "の",
+    {
+     "t": "業務",
+     "f": [
+      [
+       "業務",
+       "ぎょうむ"
+      ]
+     ],
+     "g": "work"
+    },
+    "にあたってください",
+    "。",
+    "まず",
+    "、",
+    {
+     "t": "離席",
+     "f": [
+      [
+       "離席",
+       "りせき"
+      ]
+     ],
+     "g": "leaving one's seat"
+    },
+    "する",
+    {
+     "t": "際",
+     "f": [
+      [
+       "際",
+       "さい"
+      ]
+     ],
+     "g": "occasion"
+    },
+    "は",
+    {
+     "t": "必ず",
+     "f": [
+      [
+       "必",
+       "かなら"
+      ],
+      [
+       "ず",
+       ""
+      ]
+     ],
+     "g": "without fail"
+    },
+    {
+     "t": "画面",
+     "f": [
+      [
+       "画面",
+       "がめん"
+      ]
+     ],
+     "g": "screen"
+    },
+    "を",
+    {
+     "t": "ロック",
+     "f": [
+      [
+       "ロック",
+       ""
+      ]
+     ],
+     "g": "lock"
+    },
+    "すること",
+    "。",
+    "また",
+    "、",
+    {
+     "t": "機密文書",
+     "f": [
+      [
+       "機密",
+       "きみつ"
+      ],
+      [
+       "文書",
+       "ぶんしょ"
+      ]
+     ],
+     "g": "confidential documents"
+    },
+    "は",
+    {
+     "t": "施錠",
+     "f": [
+      [
+       "施錠",
+       "せじょう"
+      ]
+     ],
+     "g": "locking"
+    },
+    "された",
+    {
+     "t": "棚",
+     "f": [
+      [
+       "棚",
+       "たな"
+      ]
+     ],
+     "g": "cabinet"
+    },
+    "に",
+    {
+     "t": "保管",
+     "f": [
+      [
+       "保管",
+       "ほかん"
+      ]
+     ],
+     "g": "store"
+    },
+    "すること",
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "私物",
+     "f": [
+      [
+       "私物",
+       "しぶつ"
+      ]
+     ],
+     "g": "personal"
+    },
+    "の",
+    {
+     "t": "記録媒体",
+     "f": [
+      [
+       "記録",
+       "きろく"
+      ],
+      [
+       "媒体",
+       "ばいたい"
+      ]
+     ],
+     "g": "storage media"
+    },
+    "の",
+    {
+     "t": "持ち込み",
+     "f": [
+      [
+       "持",
+       "も"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "込",
+       "こ"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "bringing in"
+    },
+    "は",
+    "、",
+    {
+     "t": "原則",
+     "f": [
+      [
+       "原則",
+       "げんそく"
+      ]
+     ],
+     "g": "principle"
+    },
+    "として",
+    {
+     "t": "禁止",
+     "f": [
+      [
+       "禁止",
+       "きんし"
+      ]
+     ],
+     "g": "prohibit"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "本ルール",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "ルール",
+       ""
+      ]
+     ],
+     "g": "these rules"
+    },
+    "は",
+    "、",
+    {
+     "t": "全部署",
+     "f": [
+      [
+       "全",
+       "ぜん"
+      ],
+      [
+       "部署",
+       "ぶしょ"
+      ]
+     ],
+     "g": "all departments"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "適用",
+     "f": [
+      [
+       "適用",
+       "てきよう"
+      ]
+     ],
+     "g": "apply"
+    },
+    "されます",
+    "。",
+    {
+     "t": "会社",
+     "f": [
+      [
+       "会社",
+       "かいしゃ"
+      ]
+     ],
+     "g": "company"
+    },
+    "の",
+    {
+     "t": "一員",
+     "f": [
+      [
+       "一員",
+       "いちいん"
+      ]
+     ],
+     "g": "member"
+    },
+    "である",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "一人ひとり",
+     "f": [
+      [
+       "一人",
+       "ひとり"
+      ],
+      [
+       "ひとり",
+       ""
+      ]
+     ],
+     "g": "each person"
+    },
+    "が",
+    {
+     "t": "情報管理",
+     "f": [
+      [
+       "情報",
+       "じょうほう"
+      ],
+      [
+       "管理",
+       "かんり"
+      ]
+     ],
+     "g": "information management"
+    },
+    "の",
+    {
+     "t": "責任",
+     "f": [
+      [
+       "責任",
+       "せきにん"
+      ]
+     ],
+     "g": "responsibility"
+    },
+    "を",
+    {
+     "t": "自覚",
+     "f": [
+      [
+       "自覚",
+       "じかく"
+      ]
+     ],
+     "g": "be aware"
+    },
+    "すべきです",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "上で",
+     "options": [
+      "上で",
+      "上に",
+      "ものの",
+      "ながら"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ue-de"
+    },
+    {
+     "n": 1,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "たとえば",
+      "要するに"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "にわたって",
+     "options": [
+      "にわたって",
+      "にかけて",
+      "をめぐって",
+      "に沿って"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-watatte"
+    },
+    {
+     "n": 3,
+     "answer": "からには",
+     "options": [
+      "からには",
+      "からといって",
+      "にしては",
+      "どころか"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-kara-ni-wa"
+    }
+   ],
+   "en": "To strengthen information security, we are establishing new operational rules for all staff. After carefully reviewing these rules, please carry out your daily work. First, when leaving your seat, always lock your screen. Also, store confidential documents in a locked cabinet. Please note that bringing in personal storage media is, in principle, prohibited. These rules apply across all departments. Now that you are a member of the company, each and every person should be aware of the responsibility of managing information.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-6",
+   "level": "N2",
+   "title": "賃貸借契約書（抜粋）",
+   "tokens": [
+    {
+     "t": "本契約",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "契約",
+       "けいやく"
+      ]
+     ],
+     "g": "this contract"
+    },
+    "は",
+    "、",
+    {
+     "t": "契約期間",
+     "f": [
+      [
+       "契約",
+       "けいやく"
+      ],
+      [
+       "期間",
+       "きかん"
+      ]
+     ],
+     "g": "contract period"
+    },
+    "の",
+    {
+     "t": "満了",
+     "f": [
+      [
+       "満了",
+       "まんりょう"
+      ]
+     ],
+     "g": "expiry"
+    },
+    "とともに",
+    {
+     "t": "終了",
+     "f": [
+      [
+       "終了",
+       "しゅうりょう"
+      ]
+     ],
+     "g": "terminate"
+    },
+    "するものとします",
+    "。",
+    {
+     "t": "借主",
+     "f": [
+      [
+       "借主",
+       "かりぬし"
+      ]
+     ],
+     "g": "tenant"
+    },
+    "は",
+    "、",
+    {
+     "t": "本物件",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "物件",
+       "ぶっけん"
+      ]
+     ],
+     "g": "this property"
+    },
+    "を",
+    {
+     "t": "契約",
+     "f": [
+      [
+       "契約",
+       "けいやく"
+      ]
+     ],
+     "g": "contract"
+    },
+    "の",
+    {
+     "t": "定め",
+     "f": [
+      [
+       "定",
+       "さだ"
+      ],
+      [
+       "め",
+       ""
+      ]
+     ],
+     "g": "provisions"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "使用",
+     "f": [
+      [
+       "使用",
+       "しよう"
+      ]
+     ],
+     "g": "use"
+    },
+    "しなければなりません",
+    "。",
+    {
+     "t": "貸主",
+     "f": [
+      [
+       "貸主",
+       "かしぬし"
+      ]
+     ],
+     "g": "landlord"
+    },
+    "が",
+    {
+     "t": "認めない",
+     "f": [
+      [
+       "認",
+       "みと"
+      ],
+      [
+       "めない",
+       ""
+      ]
+     ],
+     "g": "does not approve"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "室内",
+     "f": [
+      [
+       "室内",
+       "しつない"
+      ]
+     ],
+     "g": "interior"
+    },
+    "の",
+    {
+     "t": "改装",
+     "f": [
+      [
+       "改装",
+       "かいそう"
+      ]
+     ],
+     "g": "renovation"
+    },
+    "を",
+    {
+     "t": "行う",
+     "f": [
+      [
+       "行",
+       "おこな"
+      ],
+      [
+       "う",
+       ""
+      ]
+     ],
+     "g": "carry out"
+    },
+    "ことはできません",
+    "。",
+    {
+     "t": "禁止事項",
+     "f": [
+      [
+       "禁止",
+       "きんし"
+      ],
+      [
+       "事項",
+       "じこう"
+      ]
+     ],
+     "g": "prohibited items"
+    },
+    "に",
+    {
+     "t": "違反",
+     "f": [
+      [
+       "違反",
+       "いはん"
+      ]
+     ],
+     "g": "violate"
+    },
+    "した",
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場合",
+       "ばあい"
+      ]
+     ],
+     "g": "case"
+    },
+    "、",
+    {
+     "t": "契約",
+     "f": [
+      [
+       "契約",
+       "けいやく"
+      ]
+     ],
+     "g": "contract"
+    },
+    "を",
+    {
+     "t": "解除される",
+     "f": [
+      [
+       "解除",
+       "かいじょ"
+      ],
+      [
+       "される",
+       ""
+      ]
+     ],
+     "g": "be canceled"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "退去",
+     "f": [
+      [
+       "退去",
+       "たいきょ"
+      ]
+     ],
+     "g": "move-out"
+    },
+    "の",
+    {
+     "t": "際",
+     "f": [
+      [
+       "際",
+       "さい"
+      ]
+     ],
+     "g": "time"
+    },
+    "は",
+    "、",
+    {
+     "t": "原状回復",
+     "f": [
+      [
+       "原状",
+       "げんじょう"
+      ],
+      [
+       "回復",
+       "かいふく"
+      ]
+     ],
+     "g": "restoration"
+    },
+    "の",
+    {
+     "t": "費用",
+     "f": [
+      [
+       "費用",
+       "ひよう"
+      ]
+     ],
+     "g": "cost"
+    },
+    "を",
+    {
+     "t": "借主",
+     "f": [
+      [
+       "借主",
+       "かりぬし"
+      ]
+     ],
+     "g": "tenant"
+    },
+    "が",
+    {
+     "t": "負担",
+     "f": [
+      [
+       "負担",
+       "ふたん"
+      ]
+     ],
+     "g": "bear"
+    },
+    "するものとします",
+    "。",
+    {
+     "t": "確認",
+     "f": [
+      [
+       "確認",
+       "かくにん"
+      ]
+     ],
+     "g": "confirmation"
+    },
+    "が",
+    {
+     "t": "取れ",
+     "f": [
+      [
+       "取",
+       "と"
+      ],
+      [
+       "れ",
+       ""
+      ]
+     ],
+     "g": "obtained (stem)"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "改めて",
+     "f": [
+      [
+       "改",
+       "あらた"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "again"
+    },
+    {
+     "t": "ご説明",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "説明",
+       "せつめい"
+      ]
+     ],
+     "g": "explain"
+    },
+    "いたします",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "に基づき",
+     "options": [
+      "に基づき",
+      "に反し",
+      "をめぐり",
+      "にかけ"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-motozuite"
+    },
+    {
+     "n": 1,
+     "answer": "限り",
+     "options": [
+      "限り",
+      "こと",
+      "わけ",
+      "もの"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-nai-kagiri"
+    },
+    {
+     "n": 2,
+     "answer": "恐れがあります",
+     "options": [
+      "恐れがあります",
+      "一方です",
+      "ものです",
+      "限りです"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-osore-ga-aru"
+    },
+    {
+     "n": 3,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "つまり",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "次第",
+     "options": [
+      "次第",
+      "限り",
+      "上に",
+      "ばかり"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-shidai"
+    }
+   ],
+   "en": "This contract shall terminate upon the expiry of the contract period. The tenant must use this property in accordance with the provisions of the contract. Unless the landlord gives approval, the tenant may not carry out interior renovations. In the event of a violation of the prohibited items, there is a risk that the contract will be canceled. Please note that, at the time of moving out, the tenant shall bear the cost of restoring the property to its original state. As soon as confirmation is obtained, we will explain again.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-7",
+   "level": "N2",
+   "title": "サービス障害のお詫び",
+   "tokens": [
+    "このたび",
+    "は",
+    "、",
+    {
+     "t": "弊社",
+     "f": [
+      [
+       "弊社",
+       "へいしゃ"
+      ]
+     ],
+     "g": "our company"
+    },
+    {
+     "t": "サービス",
+     "f": [
+      [
+       "サービス",
+       ""
+      ]
+     ],
+     "g": "service"
+    },
+    "の",
+    {
+     "t": "障害",
+     "f": [
+      [
+       "障害",
+       "しょうがい"
+      ]
+     ],
+     "g": "outage"
+    },
+    "により",
+    "、",
+    {
+     "t": "お客様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "客",
+       "きゃく"
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "customers"
+    },
+    "に",
+    {
+     "t": "多大なる",
+     "f": [
+      [
+       "多大",
+       "ただい"
+      ],
+      [
+       "なる",
+       ""
+      ]
+     ],
+     "g": "immense"
+    },
+    {
+     "t": "ご迷惑",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "迷惑",
+       "めいわく"
+      ]
+     ],
+     "g": "inconvenience"
+    },
+    "を",
+    "おかけしました",
+    "こと",
+    "を",
+    "、",
+    {
+     "t": "深く",
+     "f": [
+      [
+       "深",
+       "ふか"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "deeply"
+    },
+    {
+     "t": "お詫び",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "詫",
+       "わ"
+      ],
+      [
+       "び",
+       ""
+      ]
+     ],
+     "g": "apologize"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly do"
+    },
+    "。",
+    {
+     "t": "先週末",
+     "f": [
+      [
+       "先週",
+       "せんしゅう"
+      ],
+      [
+       "末",
+       "まつ"
+      ]
+     ],
+     "g": "last weekend"
+    },
+    "、",
+    {
+     "t": "当社",
+     "f": [
+      [
+       "当社",
+       "とうしゃ"
+      ]
+     ],
+     "g": "our company"
+    },
+    "の",
+    {
+     "t": "システム",
+     "f": [
+      [
+       "システム",
+       ""
+      ]
+     ],
+     "g": "system"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "大規模",
+     "f": [
+      [
+       "大規模",
+       "だいきぼ"
+      ]
+     ],
+     "g": "large-scale"
+    },
+    "な",
+    {
+     "t": "通信障害",
+     "f": [
+      [
+       "通信",
+       "つうしん"
+      ],
+      [
+       "障害",
+       "しょうがい"
+      ]
+     ],
+     "g": "communications failure"
+    },
+    "が",
+    {
+     "t": "発生",
+     "f": [
+      [
+       "発生",
+       "はっせい"
+      ]
+     ],
+     "g": "occur"
+    },
+    "いたしました",
+    "。",
+    {
+     "t": "多く",
+     "f": [
+      [
+       "多",
+       "おお"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "many"
+    },
+    "の",
+    {
+     "t": "お客様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "客",
+       "きゃく"
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "customers"
+    },
+    "に",
+    {
+     "t": "ご利用",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "利用",
+       "りよう"
+      ]
+     ],
+     "g": "use"
+    },
+    "いただいて",
+    "いた",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "長時間",
+     "f": [
+      [
+       "長時間",
+       "ちょうじかん"
+      ]
+     ],
+     "g": "long hours"
+    },
+    "にわたり",
+    {
+     "t": "サービス",
+     "f": [
+      [
+       "サービス",
+       ""
+      ]
+     ],
+     "g": "service"
+    },
+    "を",
+    {
+     "t": "停止",
+     "f": [
+      [
+       "停止",
+       "ていし"
+      ]
+     ],
+     "g": "halt"
+    },
+    "せ",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "影響",
+     "f": [
+      [
+       "影響",
+       "えいきょう"
+      ]
+     ],
+     "g": "impact"
+    },
+    "を",
+    {
+     "t": "受けた",
+     "f": [
+      [
+       "受",
+       "う"
+      ],
+      [
+       "けた",
+       ""
+      ]
+     ],
+     "g": "affected"
+    },
+    {
+     "t": "お客様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "客",
+       "きゃく"
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "customers"
+    },
+    "には",
+    "、",
+    {
+     "t": "後日",
+     "f": [
+      [
+       "後日",
+       "ごじつ"
+      ]
+     ],
+     "g": "later"
+    },
+    "、",
+    {
+     "t": "個別",
+     "f": [
+      [
+       "個別",
+       "こべつ"
+      ]
+     ],
+     "g": "individually"
+    },
+    "に",
+    {
+     "t": "ご連絡",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "連絡",
+       "れんらく"
+      ]
+     ],
+     "g": "contact"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "再発防止",
+     "f": [
+      [
+       "再発",
+       "さいはつ"
+      ],
+      [
+       "防止",
+       "ぼうし"
+      ]
+     ],
+     "g": "recurrence prevention"
+    },
+    "に",
+    {
+     "t": "努めて",
+     "f": [
+      [
+       "努",
+       "つと"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "endeavor"
+    },
+    "まいる",
+    {
+     "t": "所存",
+     "f": [
+      [
+       "所存",
+       "しょぞん"
+      ]
+     ],
+     "g": "intention"
+    },
+    "でございます",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "において",
+     "options": [
+      "において",
+      "をめぐって",
+      "にかけて",
+      "をはじめ"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 1,
+     "answer": "にもかかわらず",
+     "options": [
+      "にもかかわらず",
+      "にあたって",
+      "をきっかけに",
+      "のみならず"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-nimo-kakawarazu"
+    },
+    {
+     "n": 2,
+     "answer": "ざるを得ませんでした",
+     "options": [
+      "ざるを得ませんでした",
+      "得ませんでした",
+      "かねませんでした",
+      "つつありました"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-zaru-wo-enai"
+    },
+    {
+     "n": 3,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "したがって",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "We deeply apologize for the immense inconvenience caused to our customers by this service outage. Last weekend, a large-scale communications failure occurred in our company's system. Despite the fact that many customers were using it, we had no choice but to suspend the service for many hours. Please note that we will contact affected customers individually at a later date. It is our intention to strive to prevent any recurrence.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-8",
+   "level": "N2",
+   "title": "公開セミナー開催のご案内",
+   "tokens": [
+    "この",
+    {
+     "t": "度",
+     "f": [
+      [
+       "度",
+       "たび"
+      ]
+     ],
+     "g": "occasion"
+    },
+    "、",
+    {
+     "t": "当研究所",
+     "f": [
+      [
+       "当",
+       "とう"
+      ],
+      [
+       "研究所",
+       "けんきゅうじょ"
+      ]
+     ],
+     "g": "our institute"
+    },
+    "では",
+    "、",
+    {
+     "t": "地域経済",
+     "f": [
+      [
+       "地域",
+       "ちいき"
+      ],
+      [
+       "経済",
+       "けいざい"
+      ]
+     ],
+     "g": "regional economy"
+    },
+    "を",
+    {
+     "t": "テーマ",
+     "f": [
+      [
+       "テーマ",
+       ""
+      ]
+     ],
+     "g": "theme"
+    },
+    "とした",
+    {
+     "t": "公開",
+     "f": [
+      [
+       "公開",
+       "こうかい"
+      ]
+     ],
+     "g": "public"
+    },
+    {
+     "t": "セミナー",
+     "f": [
+      [
+       "セミナー",
+       ""
+      ]
+     ],
+     "g": "seminar"
+    },
+    "を",
+    {
+     "t": "開催",
+     "f": [
+      [
+       "開催",
+       "かいさい"
+      ]
+     ],
+     "g": "hold"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "本セミナー",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "セミナー",
+       ""
+      ]
+     ],
+     "g": "this seminar"
+    },
+    "では",
+    "、",
+    {
+     "t": "大学教授",
+     "f": [
+      [
+       "大学",
+       "だいがく"
+      ],
+      [
+       "教授",
+       "きょうじゅ"
+      ]
+     ],
+     "g": "university professors"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "行政",
+     "f": [
+      [
+       "行政",
+       "ぎょうせい"
+      ]
+     ],
+     "g": "government"
+    },
+    "や",
+    {
+     "t": "企業",
+     "f": [
+      [
+       "企業",
+       "きぎょう"
+      ]
+     ],
+     "g": "companies"
+    },
+    "で",
+    {
+     "t": "活躍",
+     "f": [
+      [
+       "活躍",
+       "かつやく"
+      ]
+     ],
+     "g": "active"
+    },
+    "する",
+    {
+     "t": "専門家",
+     "f": [
+      [
+       "専門家",
+       "せんもんか"
+      ]
+     ],
+     "g": "experts"
+    },
+    "を",
+    {
+     "t": "お招き",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "招",
+       "まね"
+      ],
+      [
+       "き",
+       ""
+      ]
+     ],
+     "g": "invite"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "講演",
+     "f": [
+      [
+       "講演",
+       "こうえん"
+      ]
+     ],
+     "g": "lectures"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "最新",
+     "f": [
+      [
+       "最新",
+       "さいしん"
+      ]
+     ],
+     "g": "latest"
+    },
+    "の",
+    {
+     "t": "研究成果",
+     "f": [
+      [
+       "研究",
+       "けんきゅう"
+      ],
+      [
+       "成果",
+       "せいか"
+      ]
+     ],
+     "g": "research results"
+    },
+    "を",
+    {
+     "t": "分かりやすく",
+     "f": [
+      [
+       "分",
+       "わ"
+      ],
+      [
+       "かりやすく",
+       ""
+      ]
+     ],
+     "g": "clearly"
+    },
+    {
+     "t": "ご紹介",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "紹介",
+       "しょうかい"
+      ]
+     ],
+     "g": "introduce"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "会場",
+     "f": [
+      [
+       "会場",
+       "かいじょう"
+      ]
+     ],
+     "g": "venue"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "参加者",
+     "f": [
+      [
+       "参加",
+       "さんか"
+      ],
+      [
+       "者",
+       "しゃ"
+      ]
+     ],
+     "g": "participants"
+    },
+    {
+     "t": "同士",
+     "f": [
+      [
+       "同士",
+       "どうし"
+      ]
+     ],
+     "g": "among"
+    },
+    "の",
+    {
+     "t": "交流会",
+     "f": [
+      [
+       "交流",
+       "こうりゅう"
+      ],
+      [
+       "会",
+       "かい"
+      ]
+     ],
+     "g": "networking event"
+    },
+    "も",
+    {
+     "t": "予定",
+     "f": [
+      [
+       "予定",
+       "よてい"
+      ]
+     ],
+     "g": "plan"
+    },
+    "しております",
+    "。",
+    {
+     "t": "参加費",
+     "f": [
+      [
+       "参加",
+       "さんか"
+      ],
+      [
+       "費",
+       "ひ"
+      ]
+     ],
+     "g": "participation fee"
+    },
+    "は",
+    {
+     "t": "無料",
+     "f": [
+      [
+       "無料",
+       "むりょう"
+      ]
+     ],
+     "g": "free"
+    },
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "事前",
+     "f": [
+      [
+       "事前",
+       "じぜん"
+      ]
+     ],
+     "g": "advance"
+    },
+    "の",
+    {
+     "t": "申し込み",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "込",
+       "こ"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "registration"
+    },
+    "が",
+    {
+     "t": "必要",
+     "f": [
+      [
+       "必要",
+       "ひつよう"
+      ]
+     ],
+     "g": "required"
+    },
+    "です",
+    "。",
+    {
+     "t": "定員",
+     "f": [
+      [
+       "定員",
+       "ていいん"
+      ]
+     ],
+     "g": "capacity"
+    },
+    "に",
+    {
+     "t": "達し",
+     "f": [
+      [
+       "達",
+       "たっ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "reach (stem)"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "受付",
+     "f": [
+      [
+       "受付",
+       "うけつけ"
+      ]
+     ],
+     "g": "registration desk"
+    },
+    "を",
+    {
+     "t": "締め切らせて",
+     "f": [
+      [
+       "締",
+       "し"
+      ],
+      [
+       "め",
+       ""
+      ],
+      [
+       "切",
+       "き"
+      ],
+      [
+       "らせて",
+       ""
+      ]
+     ],
+     "g": "close"
+    },
+    "いただきます",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "をはじめ",
+     "options": [
+      "をはじめ",
+      "をめぐって",
+      "において",
+      "にわたって"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-wo-hajime"
+    },
+    {
+     "n": 1,
+     "answer": "を通じて",
+     "options": [
+      "を通じて",
+      "をめぐって",
+      "に反して",
+      "にかけて"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-wo-tsuujite"
+    },
+    {
+     "n": 2,
+     "answer": "において",
+     "options": [
+      "において",
+      "を通じて",
+      "をはじめ",
+      "に基づいて"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 3,
+     "answer": "ただし",
+     "options": [
+      "ただし",
+      "したがって",
+      "たとえば",
+      "要するに"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "次第",
+     "options": [
+      "次第",
+      "限り",
+      "上に",
+      "ばかり"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-shidai"
+    }
+   ],
+   "en": "On this occasion, our institute will hold a public seminar on the theme of the regional economy. In this seminar, we will invite, beginning with university professors, experts active in government and business. Through the lectures, we will introduce the latest research findings in an accessible way. At the venue, a networking event among participants is also planned. Participation is free. However, advance registration is required. As soon as capacity is reached, we will close registration.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-9",
+   "level": "N2",
+   "title": "製品自主回収のお知らせ",
+   "tokens": [
+    {
+     "t": "平素",
+     "f": [
+      [
+       "平素",
+       "へいそ"
+      ]
+     ],
+     "g": "always"
+    },
+    "より",
+    {
+     "t": "弊社製品",
+     "f": [
+      [
+       "弊社",
+       "へいしゃ"
+      ],
+      [
+       "製品",
+       "せいひん"
+      ]
+     ],
+     "g": "our products"
+    },
+    "を",
+    {
+     "t": "ご愛用",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "愛用",
+       "あいよう"
+      ]
+     ],
+     "g": "patronize"
+    },
+    "いただき",
+    "、",
+    {
+     "t": "厚く",
+     "f": [
+      [
+       "厚",
+       "あつ"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "deeply"
+    },
+    {
+     "t": "御礼",
+     "f": [
+      [
+       "御",
+       "おん"
+      ],
+      [
+       "礼",
+       "れい"
+      ]
+     ],
+     "g": "thanks"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly say"
+    },
+    "。",
+    "この",
+    {
+     "t": "度",
+     "f": [
+      [
+       "度",
+       "たび"
+      ]
+     ],
+     "g": "time"
+    },
+    "、",
+    {
+     "t": "弊社",
+     "f": [
+      [
+       "弊社",
+       "へいしゃ"
+      ]
+     ],
+     "g": "our company"
+    },
+    "が",
+    {
+     "t": "製造",
+     "f": [
+      [
+       "製造",
+       "せいぞう"
+      ]
+     ],
+     "g": "manufacture"
+    },
+    "した",
+    {
+     "t": "電気ケトル",
+     "f": [
+      [
+       "電気",
+       "でんき"
+      ],
+      [
+       "ケトル",
+       ""
+      ]
+     ],
+     "g": "electric kettle"
+    },
+    "の",
+    {
+     "t": "一部",
+     "f": [
+      [
+       "一部",
+       "いちぶ"
+      ]
+     ],
+     "g": "some"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "製品",
+     "f": [
+      [
+       "製品",
+       "せいひん"
+      ]
+     ],
+     "g": "product"
+    },
+    "の",
+    {
+     "t": "不具合",
+     "f": [
+      [
+       "不具合",
+       "ふぐあい"
+      ]
+     ],
+     "g": "defect"
+    },
+    "が",
+    {
+     "t": "判明",
+     "f": [
+      [
+       "判明",
+       "はんめい"
+      ]
+     ],
+     "g": "come to light"
+    },
+    "いたしました",
+    "。",
+    {
+     "t": "当該製品",
+     "f": [
+      [
+       "当該",
+       "とうがい"
+      ],
+      [
+       "製品",
+       "せいひん"
+      ]
+     ],
+     "g": "the product"
+    },
+    "を",
+    {
+     "t": "使用",
+     "f": [
+      [
+       "使用",
+       "しよう"
+      ]
+     ],
+     "g": "use"
+    },
+    {
+     "t": "し続けた",
+     "f": [
+      [
+       "し",
+       ""
+      ],
+      [
+       "続",
+       "つづ"
+      ],
+      [
+       "けた",
+       ""
+      ]
+     ],
+     "g": "continued using"
+    },
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場合",
+       "ばあい"
+      ]
+     ],
+     "g": "case"
+    },
+    "、",
+    {
+     "t": "発熱",
+     "f": [
+      [
+       "発熱",
+       "はつねつ"
+      ]
+     ],
+     "g": "overheating"
+    },
+    "や",
+    {
+     "t": "発火",
+     "f": [
+      [
+       "発火",
+       "はっか"
+      ]
+     ],
+     "g": "ignition"
+    },
+    "の",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    "つきましては",
+    "、",
+    {
+     "t": "対象製品",
+     "f": [
+      [
+       "対象",
+       "たいしょう"
+      ],
+      [
+       "製品",
+       "せいひん"
+      ]
+     ],
+     "g": "affected products"
+    },
+    "を",
+    {
+     "t": "自主回収",
+     "f": [
+      [
+       "自主",
+       "じしゅ"
+      ],
+      [
+       "回収",
+       "かいしゅう"
+      ]
+     ],
+     "g": "voluntary recall"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "安全性",
+     "f": [
+      [
+       "安全",
+       "あんぜん"
+      ],
+      [
+       "性",
+       "せい"
+      ]
+     ],
+     "g": "safety"
+    },
+    "を",
+    {
+     "t": "最優先",
+     "f": [
+      [
+       "最",
+       "さい"
+      ],
+      [
+       "優先",
+       "ゆうせん"
+      ]
+     ],
+     "g": "top priority"
+    },
+    "に",
+    {
+     "t": "考え",
+     "f": [
+      [
+       "考",
+       "かんが"
+      ],
+      [
+       "え",
+       ""
+      ]
+     ],
+     "g": "consider"
+    },
+    "、",
+    {
+     "t": "販売",
+     "f": [
+      [
+       "販売",
+       "はんばい"
+      ]
+     ],
+     "g": "sales"
+    },
+    "を",
+    {
+     "t": "一時停止",
+     "f": [
+      [
+       "一時",
+       "いちじ"
+      ],
+      [
+       "停止",
+       "ていし"
+      ]
+     ],
+     "g": "temporarily halt"
+    },
+    "せ",
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "判断",
+     "f": [
+      [
+       "判断",
+       "はんだん"
+      ]
+     ],
+     "g": "judge"
+    },
+    "いたしました",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "回収",
+     "f": [
+      [
+       "回収",
+       "かいしゅう"
+      ]
+     ],
+     "g": "recall"
+    },
+    "の",
+    {
+     "t": "対象",
+     "f": [
+      [
+       "対象",
+       "たいしょう"
+      ]
+     ],
+     "g": "target"
+    },
+    "となる",
+    "のは",
+    "、",
+    {
+     "t": "製造番号",
+     "f": [
+      [
+       "製造",
+       "せいぞう"
+      ],
+      [
+       "番号",
+       "ばんごう"
+      ]
+     ],
+     "g": "serial number"
+    },
+    "が",
+    "Ａ",
+    "で",
+    {
+     "t": "始まる",
+     "f": [
+      [
+       "始",
+       "はじ"
+      ],
+      [
+       "まる",
+       ""
+      ]
+     ],
+     "g": "begins"
+    },
+    {
+     "t": "製品",
+     "f": [
+      [
+       "製品",
+       "せいひん"
+      ]
+     ],
+     "g": "products"
+    },
+    "のみ",
+    "でございます",
+    "。",
+    {
+     "t": "詳細",
+     "f": [
+      [
+       "詳細",
+       "しょうさい"
+      ]
+     ],
+     "g": "details"
+    },
+    "につきましては",
+    "、",
+    {
+     "t": "専用窓口",
+     "f": [
+      [
+       "専用",
+       "せんよう"
+      ],
+      [
+       "窓口",
+       "まどぐち"
+      ]
+     ],
+     "g": "dedicated desk"
+    },
+    "まで",
+    {
+     "t": "お問い合わせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "問",
+       "と"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "わせ",
+       ""
+      ]
+     ],
+     "g": "inquire"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "において",
+     "options": [
+      "において",
+      "をめぐって",
+      "にかけて",
+      "をはじめ"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 1,
+     "answer": "恐れがあります",
+     "options": [
+      "恐れがあります",
+      "限りです",
+      "一方です",
+      "おかげです"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-osore-ga-aru"
+    },
+    {
+     "n": 2,
+     "answer": "ざるを得ないと",
+     "options": [
+      "ざるを得ないと",
+      "得ないと",
+      "かねないと",
+      "つつあると"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-zaru-wo-enai"
+    },
+    {
+     "n": 3,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "したがって",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "We are always grateful for your patronage of our products. On this occasion, a defect has come to light in some of the electric kettles manufactured by our company. If use of the product is continued, there is a risk of overheating or ignition. Accordingly, we will conduct a voluntary recall of the affected products. Placing safety as our highest priority, we judged that we had no choice but to temporarily suspend sales. Please note that only products whose serial number begins with A are subject to the recall. For details, please inquire at our dedicated desk.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n2-10",
+   "level": "N2",
+   "title": "お打ち合わせのお願い",
+   "tokens": [
+    {
+     "t": "株式会社",
+     "f": [
+      [
+       "株式",
+       "かぶしき"
+      ],
+      [
+       "会社",
+       "かいしゃ"
+      ]
+     ],
+     "g": "Co., Ltd."
+    },
+    {
+     "t": "みどり商事",
+     "f": [
+      [
+       "みどり",
+       ""
+      ],
+      [
+       "商事",
+       "しょうじ"
+      ]
+     ],
+     "g": "Midori Trading"
+    },
+    "　",
+    {
+     "t": "田中様",
+     "f": [
+      [
+       "田中",
+       "たなか"
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "Mr. Tanaka"
+    },
+    "　",
+    "いつも",
+    {
+     "t": "大変",
+     "f": [
+      [
+       "大変",
+       "たいへん"
+      ]
+     ],
+     "g": "greatly"
+    },
+    {
+     "t": "お世話",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "世話",
+       "せわ"
+      ]
+     ],
+     "g": "care"
+    },
+    "になって",
+    "おります",
+    "。",
+    {
+     "t": "株式会社",
+     "f": [
+      [
+       "株式",
+       "かぶしき"
+      ],
+      [
+       "会社",
+       "かいしゃ"
+      ]
+     ],
+     "g": "Co., Ltd."
+    },
+    "さくら",
+    "の",
+    {
+     "t": "佐藤",
+     "f": [
+      [
+       "佐藤",
+       "さとう"
+      ]
+     ],
+     "g": "Sato"
+    },
+    "でございます",
+    "。",
+    {
+     "t": "先日",
+     "f": [
+      [
+       "先日",
+       "せんじつ"
+      ]
+     ],
+     "g": "the other day"
+    },
+    {
+     "t": "ご依頼",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "依頼",
+       "いらい"
+      ]
+     ],
+     "g": "request"
+    },
+    "いただいた",
+    {
+     "t": "見積書",
+     "f": [
+      [
+       "見積",
+       "みつもり"
+      ],
+      [
+       "書",
+       "しょ"
+      ]
+     ],
+     "g": "estimate"
+    },
+    "の",
+    {
+     "t": "件",
+     "f": [
+      [
+       "件",
+       "けん"
+      ]
+     ],
+     "g": "matter"
+    },
+    "で",
+    "、",
+    {
+     "t": "ご連絡",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "連絡",
+       "れんらく"
+      ]
+     ],
+     "g": "contact"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly do"
+    },
+    "。",
+    {
+     "t": "ご提示",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "提示",
+       "ていじ"
+      ]
+     ],
+     "g": "presented"
+    },
+    "の",
+    {
+     "t": "条件",
+     "f": [
+      [
+       "条件",
+       "じょうけん"
+      ]
+     ],
+     "g": "conditions"
+    },
+    "を",
+    {
+     "t": "社内",
+     "f": [
+      [
+       "社内",
+       "しゃない"
+      ]
+     ],
+     "g": "internally"
+    },
+    "で",
+    {
+     "t": "慎重",
+     "f": [
+      [
+       "慎重",
+       "しんちょう"
+      ]
+     ],
+     "g": "carefully"
+    },
+    "に",
+    {
+     "t": "検討",
+     "f": [
+      [
+       "検討",
+       "けんとう"
+      ]
+     ],
+     "g": "consider"
+    },
+    "した",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "改めて",
+     "f": [
+      [
+       "改",
+       "あらた"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "anew"
+    },
+    {
+     "t": "ご提案",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "提案",
+       "ていあん"
+      ]
+     ],
+     "g": "proposal"
+    },
+    "を",
+    "まとめました",
+    "。",
+    {
+     "t": "詳細",
+     "f": [
+      [
+       "詳細",
+       "しょうさい"
+      ]
+     ],
+     "g": "details"
+    },
+    "は",
+    "、",
+    {
+     "t": "添付",
+     "f": [
+      [
+       "添付",
+       "てんぷ"
+      ]
+     ],
+     "g": "attached"
+    },
+    "の",
+    {
+     "t": "資料",
+     "f": [
+      [
+       "資料",
+       "しりょう"
+      ]
+     ],
+     "g": "materials"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "ご説明",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "説明",
+       "せつめい"
+      ]
+     ],
+     "g": "explain"
+    },
+    "しております",
+    "。",
+    "なお",
+    "、",
+    {
+     "t": "ご予算",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "予算",
+       "よさん"
+      ]
+     ],
+     "g": "budget"
+    },
+    "の",
+    {
+     "t": "ご都合",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "都合",
+       "つごう"
+      ]
+     ],
+     "g": "circumstances"
+    },
+    "によっては",
+    "、",
+    {
+     "t": "一部",
+     "f": [
+      [
+       "一部",
+       "いちぶ"
+      ]
+     ],
+     "g": "some"
+    },
+    "の",
+    {
+     "t": "ご要望",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "要望",
+       "ようぼう"
+      ]
+     ],
+     "g": "requests"
+    },
+    "には",
+    {
+     "t": "お応え",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "応",
+       "こた"
+      ],
+      [
+       "え",
+       ""
+      ]
+     ],
+     "g": "meet"
+    },
+    "いたし",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "来週中",
+     "f": [
+      [
+       "来週",
+       "らいしゅう"
+      ],
+      [
+       "中",
+       "ちゅう"
+      ]
+     ],
+     "g": "within next week"
+    },
+    "に",
+    {
+     "t": "一度",
+     "f": [
+      [
+       "一度",
+       "いちど"
+      ]
+     ],
+     "g": "once"
+    },
+    "、",
+    {
+     "t": "打ち合わせ",
+     "f": [
+      [
+       "打",
+       "う"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "わせ",
+       ""
+      ]
+     ],
+     "g": "meeting"
+    },
+    "の",
+    {
+     "t": "お時間",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "時間",
+       "じかん"
+      ]
+     ],
+     "g": "time"
+    },
+    "を",
+    {
+     "t": "頂戴",
+     "f": [
+      [
+       "頂戴",
+       "ちょうだい"
+      ]
+     ],
+     "g": "receive"
+    },
+    "できますでしょうか",
+    "。",
+    {
+     "t": "ご多用",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "多用",
+       "たよう"
+      ]
+     ],
+     "g": "busyness"
+    },
+    "のところ",
+    {
+     "t": "恐縮",
+     "f": [
+      [
+       "恐縮",
+       "きょうしゅく"
+      ]
+     ],
+     "g": "sorry to trouble"
+    },
+    "ですが",
+    "、",
+    {
+     "t": "ご検討",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "検討",
+       "けんとう"
+      ]
+     ],
+     "g": "consideration"
+    },
+    "のほど",
+    "よろしく",
+    {
+     "t": "お願い",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "request"
+    },
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly do"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "上で",
+     "options": [
+      "上で",
+      "上に",
+      "ばかりに",
+      "たびに"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ue-de"
+    },
+    {
+     "n": 1,
+     "answer": "において",
+     "options": [
+      "において",
+      "にわたって",
+      "をめぐって",
+      "にかけて"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-ni-oite"
+    },
+    {
+     "n": 2,
+     "answer": "かねます",
+     "options": [
+      "かねます",
+      "得ます",
+      "かねません",
+      "つつあります"
+     ],
+     "kind": "grammar",
+     "pointId": "n2-kaneru"
+    },
+    {
+     "n": 3,
+     "answer": "つきましては",
+     "options": [
+      "つきましては",
+      "しかしながら",
+      "たとえば",
+      "にもかかわらず"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Dear Mr. Tanaka of Midori Trading Co., Ltd. Thank you as always for your kind support. This is Sato of Sakura Co., Ltd. I am writing regarding the estimate you requested the other day. After carefully considering the conditions you presented internally, we have compiled a fresh proposal. The details are explained in the attached materials. Please note that, depending on your budget, we may be unable to meet some of your requests. Regarding this, could we possibly receive some of your time for a meeting within next week? I am sorry to trouble you while you are busy, but I kindly ask for your consideration.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-1",
+   "level": "N1",
+   "title": "社説――地方の衰退を憂う",
+   "tokens": [
+    {
+     "t": "地方",
+     "f": [
+      [
+       "地",
+       "ち"
+      ],
+      [
+       "方",
+       "ほう"
+      ]
+     ],
+     "g": "the regions"
+    },
+    "の",
+    {
+     "t": "人口",
+     "f": [
+      [
+       "人",
+       "じん"
+      ],
+      [
+       "口",
+       "こう"
+      ]
+     ],
+     "g": "population"
+    },
+    {
+     "t": "減少",
+     "f": [
+      [
+       "減",
+       "げん"
+      ],
+      [
+       "少",
+       "しょう"
+      ]
+     ],
+     "g": "decline"
+    },
+    "は",
+    "、",
+    "もはや",
+    {
+     "t": "一部",
+     "f": [
+      [
+       "一",
+       "いち"
+      ],
+      [
+       "部",
+       "ぶ"
+      ]
+     ],
+     "g": "a part"
+    },
+    "の",
+    {
+     "t": "地域",
+     "f": [
+      [
+       "地",
+       "ち"
+      ],
+      [
+       "域",
+       "いき"
+      ]
+     ],
+     "g": "area"
+    },
+    "に",
+    {
+     "t": "限った",
+     "f": [
+      [
+       "限",
+       "かぎ"
+      ],
+      [
+       "った",
+       ""
+      ]
+     ],
+     "g": "limited to"
+    },
+    {
+     "t": "問題",
+     "f": [
+      [
+       "問",
+       "もん"
+      ],
+      [
+       "題",
+       "だい"
+      ]
+     ],
+     "g": "problem"
+    },
+    "では",
+    "ない",
+    "。",
+    "かつて",
+    {
+     "t": "活気",
+     "f": [
+      [
+       "活",
+       "かっ"
+      ],
+      [
+       "気",
+       "き"
+      ]
+     ],
+     "g": "vitality"
+    },
+    "に",
+    {
+     "t": "満ちた",
+     "f": [
+      [
+       "満",
+       "み"
+      ],
+      [
+       "ちた",
+       ""
+      ]
+     ],
+     "g": "full of"
+    },
+    {
+     "t": "商店街",
+     "f": [
+      [
+       "商",
+       "しょう"
+      ],
+      [
+       "店",
+       "てん"
+      ],
+      [
+       "街",
+       "がい"
+      ]
+     ],
+     "g": "shopping street"
+    },
+    "も",
+    "、",
+    "いま",
+    "や",
+    "シャッター",
+    "が",
+    {
+     "t": "目立つ",
+     "f": [
+      [
+       "目",
+       "め"
+      ],
+      [
+       "立",
+       "だ"
+      ],
+      [
+       "つ",
+       ""
+      ]
+     ],
+     "g": "conspicuous"
+    },
+    "ばかり",
+    "で",
+    "ある",
+    "。",
+    {
+     "t": "若者",
+     "f": [
+      [
+       "若",
+       "わか"
+      ],
+      [
+       "者",
+       "もの"
+      ]
+     ],
+     "g": "the young"
+    },
+    "の",
+    {
+     "t": "流出",
+     "f": [
+      [
+       "流",
+       "りゅう"
+      ],
+      [
+       "出",
+       "しゅつ"
+      ]
+     ],
+     "g": "outflow"
+    },
+    "により",
+    "、",
+    "いまや",
+    {
+     "t": "多く",
+     "f": [
+      [
+       "多",
+       "おお"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "many"
+    },
+    "の",
+    {
+     "t": "自治体",
+     "f": [
+      [
+       "自",
+       "じ"
+      ],
+      [
+       "治",
+       "ち"
+      ],
+      [
+       "体",
+       "たい"
+      ]
+     ],
+     "g": "municipalities"
+    },
+    "が",
+    {
+     "t": "統廃合",
+     "f": [
+      [
+       "統",
+       "とう"
+      ],
+      [
+       "廃",
+       "はい"
+      ],
+      [
+       "合",
+       "ごう"
+      ]
+     ],
+     "g": "consolidation"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    "これ",
+    "は",
+    {
+     "t": "長年",
+     "f": [
+      [
+       "長",
+       "なが"
+      ],
+      [
+       "年",
+       "ねん"
+      ]
+     ],
+     "g": "long years"
+    },
+    "の",
+    {
+     "t": "都市",
+     "f": [
+      [
+       "都",
+       "と"
+      ],
+      [
+       "市",
+       "し"
+      ]
+     ],
+     "g": "city"
+    },
+    "への",
+    {
+     "t": "一極",
+     "f": [
+      [
+       "一",
+       "いっ"
+      ],
+      [
+       "極",
+       "きょく"
+      ]
+     ],
+     "g": "single-pole"
+    },
+    {
+     "t": "集中",
+     "f": [
+      [
+       "集",
+       "しゅう"
+      ],
+      [
+       "中",
+       "ちゅう"
+      ]
+     ],
+     "g": "concentration"
+    },
+    "が",
+    {
+     "t": "招いた",
+     "f": [
+      [
+       "招",
+       "まね"
+      ],
+      [
+       "いた",
+       ""
+      ]
+     ],
+     "g": "invited"
+    },
+    {
+     "t": "帰結",
+     "f": [
+      [
+       "帰",
+       "き"
+      ],
+      [
+       "結",
+       "けつ"
+      ]
+     ],
+     "g": "consequence"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "対策",
+     "f": [
+      [
+       "対",
+       "たい"
+      ],
+      [
+       "策",
+       "さく"
+      ]
+     ],
+     "g": "countermeasures"
+    },
+    "は",
+    {
+     "t": "急務",
+     "f": [
+      [
+       "急",
+       "きゅう"
+      ],
+      [
+       "務",
+       "む"
+      ]
+     ],
+     "g": "urgent task"
+    },
+    "である",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "財源",
+     "f": [
+      [
+       "財",
+       "ざい"
+      ],
+      [
+       "源",
+       "げん"
+      ]
+     ],
+     "g": "financial resources"
+    },
+    "の",
+    {
+     "t": "確保",
+     "f": [
+      [
+       "確",
+       "かく"
+      ],
+      [
+       "保",
+       "ほ"
+      ]
+     ],
+     "g": "securing"
+    },
+    "は",
+    {
+     "t": "容易",
+     "f": [
+      [
+       "容",
+       "よう"
+      ],
+      [
+       "易",
+       "い"
+      ]
+     ],
+     "g": "easy"
+    },
+    "ではない",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-wo-yoginaku-sareru",
+     "answer": "余儀なくされている",
+     "options": [
+      "余儀なくされている",
+      "ざるを得ない",
+      "べく",
+      "まい"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-ni-hokanaranai",
+     "answer": "にほかならない",
+     "options": [
+      "にほかならない",
+      "ざるを得ない",
+      "べく",
+      "かねる"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "したがって",
+     "options": [
+      "したがって",
+      "たとえば",
+      "ところが",
+      "なぜなら"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "discourse",
+     "pointId": "n1-to-wa-ie",
+     "answer": "とはいえ",
+     "options": [
+      "とはいえ",
+      "それゆえ",
+      "つまり",
+      "そこで"
+     ]
+    }
+   ],
+   "en": "The population decline of the regions is no longer a problem limited to certain areas. Shopping streets once full of vitality now show nothing but shuttered fronts. Owing to the outflow of the young, many municipalities are now being forced into mergers. This is nothing other than the consequence of long years of single-pole concentration in the cities. Therefore, countermeasures are an urgent task. That said, securing the financial resources is not easy.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-2",
+   "level": "N1",
+   "title": "施設利用規約",
+   "tokens": [
+    {
+     "t": "本",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "施設",
+     "f": [
+      [
+       "施",
+       "し"
+      ],
+      [
+       "設",
+       "せつ"
+      ]
+     ],
+     "g": "facility"
+    },
+    "を",
+    {
+     "t": "利用",
+     "f": [
+      [
+       "利",
+       "り"
+      ],
+      [
+       "用",
+       "よう"
+      ]
+     ],
+     "g": "use"
+    },
+    "する",
+    {
+     "t": "者",
+     "f": [
+      [
+       "者",
+       "もの"
+      ]
+     ],
+     "g": "person"
+    },
+    "は",
+    "、",
+    {
+     "t": "次",
+     "f": [
+      [
+       "次",
+       "つぎ"
+      ]
+     ],
+     "g": "following"
+    },
+    "の",
+    {
+     "t": "規則",
+     "f": [
+      [
+       "規",
+       "き"
+      ],
+      [
+       "則",
+       "そく"
+      ]
+     ],
+     "g": "rules"
+    },
+    "を",
+    {
+     "t": "遵守",
+     "f": [
+      [
+       "遵",
+       "じゅん"
+      ],
+      [
+       "守",
+       "しゅ"
+      ]
+     ],
+     "g": "observe"
+    },
+    "し",
+    "なければ",
+    "ならない",
+    "。",
+    {
+     "t": "違反者",
+     "f": [
+      [
+       "違",
+       "い"
+      ],
+      [
+       "反",
+       "はん"
+      ],
+      [
+       "者",
+       "しゃ"
+      ]
+     ],
+     "g": "violators"
+    },
+    "に",
+    "は",
+    "、",
+    {
+     "t": "退館",
+     "f": [
+      [
+       "退",
+       "たい"
+      ],
+      [
+       "館",
+       "かん"
+      ]
+     ],
+     "g": "removal from the building"
+    },
+    "を",
+    {
+     "t": "命じる",
+     "f": [
+      [
+       "命",
+       "めい"
+      ],
+      [
+       "じる",
+       ""
+      ]
+     ],
+     "g": "order"
+    },
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場",
+       "ば"
+      ],
+      [
+       "合",
+       "あい"
+      ]
+     ],
+     "g": "case"
+    },
+    "が",
+    "ある",
+    "。",
+    {
+     "t": "館内",
+     "f": [
+      [
+       "館",
+       "かん"
+      ],
+      [
+       "内",
+       "ない"
+      ]
+     ],
+     "g": "inside the building"
+    },
+    "に",
+    "おいて",
+    "、",
+    {
+     "t": "許可",
+     "f": [
+      [
+       "許",
+       "きょ"
+      ],
+      [
+       "可",
+       "か"
+      ]
+     ],
+     "g": "permission"
+    },
+    "なく",
+    {
+     "t": "火気",
+     "f": [
+      [
+       "火",
+       "か"
+      ],
+      [
+       "気",
+       "き"
+      ]
+     ],
+     "g": "open flame"
+    },
+    "を",
+    {
+     "t": "用いる",
+     "f": [
+      [
+       "用",
+       "もち"
+      ],
+      [
+       "いる",
+       ""
+      ]
+     ],
+     "g": "use"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "t": "飲食",
+     "f": [
+      [
+       "飲",
+       "いん"
+      ],
+      [
+       "食",
+       "しょく"
+      ]
+     ],
+     "g": "eating and drinking"
+    },
+    "は",
+    "、",
+    {
+     "t": "区域",
+     "f": [
+      [
+       "区",
+       "く"
+      ],
+      [
+       "域",
+       "いき"
+      ]
+     ],
+     "g": "zone"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "一律",
+     "f": [
+      [
+       "一",
+       "いち"
+      ],
+      [
+       "律",
+       "りつ"
+      ]
+     ],
+     "g": "uniformly"
+    },
+    "に",
+    {
+     "t": "禁止",
+     "f": [
+      [
+       "禁",
+       "きん"
+      ],
+      [
+       "止",
+       "し"
+      ]
+     ],
+     "g": "prohibited"
+    },
+    "する",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "本",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "規約",
+     "f": [
+      [
+       "規",
+       "き"
+      ],
+      [
+       "約",
+       "やく"
+      ]
+     ],
+     "g": "terms"
+    },
+    "は",
+    {
+     "t": "本日",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ],
+      [
+       "日",
+       "じつ"
+      ]
+     ],
+     "g": "today"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "効力",
+     "f": [
+      [
+       "効",
+       "こう"
+      ],
+      [
+       "力",
+       "りょく"
+      ]
+     ],
+     "g": "effect"
+    },
+    "を",
+    {
+     "t": "生じる",
+     "f": [
+      [
+       "生",
+       "しょう"
+      ],
+      [
+       "じる",
+       ""
+      ]
+     ],
+     "g": "take"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-bekarazu",
+     "answer": "べからず",
+     "options": [
+      "べからず",
+      "ざるを得ず",
+      "ながら",
+      "つつ"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-wo-towazu",
+     "answer": "を問わず",
+     "options": [
+      "を問わず",
+      "に応じて",
+      "をもって",
+      "に至って"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "したがって",
+      "あるいは"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-wo-motte",
+     "answer": "をもって",
+     "options": [
+      "をもって",
+      "に際して",
+      "を踏まえ",
+      "に先立ち"
+     ]
+    }
+   ],
+   "en": "Any person using this facility must observe the following rules. Violators may be ordered to leave the building. Inside the building, open flames must not be used without permission. Eating and drinking is uniformly prohibited regardless of the zone. Note that these terms take effect as of today.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-3",
+   "level": "N1",
+   "title": "講義――言語の変遷",
+   "tokens": [
+    {
+     "t": "言語",
+     "f": [
+      [
+       "言",
+       "げん"
+      ],
+      [
+       "語",
+       "ご"
+      ]
+     ],
+     "g": "language"
+    },
+    "は",
+    "、",
+    "いかに",
+    {
+     "t": "伝統",
+     "f": [
+      [
+       "伝",
+       "でん"
+      ],
+      [
+       "統",
+       "とう"
+      ]
+     ],
+     "g": "tradition"
+    },
+    "ある",
+    "もの",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "時代",
+     "f": [
+      [
+       "時",
+       "じ"
+      ],
+      [
+       "代",
+       "だい"
+      ]
+     ],
+     "g": "era"
+    },
+    "の",
+    {
+     "t": "変化",
+     "f": [
+      [
+       "変",
+       "へん"
+      ],
+      [
+       "化",
+       "か"
+      ]
+     ],
+     "g": "change"
+    },
+    "から",
+    {
+     "t": "逃れる",
+     "f": [
+      [
+       "逃",
+       "のが"
+      ],
+      [
+       "れる",
+       ""
+      ]
+     ],
+     "g": "escape"
+    },
+    "こと",
+    "は",
+    "できない",
+    "。",
+    {
+     "t": "例えば",
+     "f": [
+      [
+       "例",
+       "たと"
+      ],
+      [
+       "えば",
+       ""
+      ]
+     ],
+     "g": "for example"
+    },
+    "、",
+    {
+     "t": "一世紀",
+     "f": [
+      [
+       "一",
+       "いっ"
+      ],
+      [
+       "世",
+       "せい"
+      ],
+      [
+       "紀",
+       "き"
+      ]
+     ],
+     "g": "a century"
+    },
+    {
+     "t": "前",
+     "f": [
+      [
+       "前",
+       "まえ"
+      ]
+     ],
+     "g": "ago"
+    },
+    "の",
+    {
+     "t": "文章",
+     "f": [
+      [
+       "文",
+       "ぶん"
+      ],
+      [
+       "章",
+       "しょう"
+      ]
+     ],
+     "g": "writing"
+    },
+    "は",
+    "、",
+    {
+     "t": "現代",
+     "f": [
+      [
+       "現",
+       "げん"
+      ],
+      [
+       "代",
+       "だい"
+      ]
+     ],
+     "g": "modern"
+    },
+    "の",
+    {
+     "t": "読者",
+     "f": [
+      [
+       "読",
+       "どく"
+      ],
+      [
+       "者",
+       "しゃ"
+      ]
+     ],
+     "g": "readers"
+    },
+    "に",
+    "は",
+    {
+     "t": "難解",
+     "f": [
+      [
+       "難",
+       "なん"
+      ],
+      [
+       "解",
+       "かい"
+      ]
+     ],
+     "g": "abstruse"
+    },
+    "に",
+    {
+     "t": "映る",
+     "f": [
+      [
+       "映",
+       "うつ"
+      ],
+      [
+       "る",
+       ""
+      ]
+     ],
+     "g": "appear"
+    },
+    "。",
+    {
+     "t": "新語",
+     "f": [
+      [
+       "新",
+       "しん"
+      ],
+      [
+       "語",
+       "ご"
+      ]
+     ],
+     "g": "new words"
+    },
+    "が",
+    {
+     "t": "生まれる",
+     "f": [
+      [
+       "生",
+       "う"
+      ],
+      [
+       "まれる",
+       ""
+      ]
+     ],
+     "g": "be born"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "古い",
+     "f": [
+      [
+       "古",
+       "ふる"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "old"
+    },
+    {
+     "t": "語彙",
+     "f": [
+      [
+       "語",
+       "ご"
+      ],
+      [
+       "彙",
+       "い"
+      ]
+     ],
+     "g": "vocabulary"
+    },
+    "は",
+    {
+     "t": "廃れて",
+     "f": [
+      [
+       "廃",
+       "すた"
+      ],
+      [
+       "れて",
+       ""
+      ]
+     ],
+     "g": "fall out of use"
+    },
+    "ゆく",
+    "。",
+    {
+     "t": "近代",
+     "f": [
+      [
+       "近",
+       "きん"
+      ],
+      [
+       "代",
+       "だい"
+      ]
+     ],
+     "g": "modern era"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "初めて",
+     "f": [
+      [
+       "初",
+       "はじ"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "for the first time"
+    },
+    "その",
+    {
+     "t": "速度",
+     "f": [
+      [
+       "速",
+       "そく"
+      ],
+      [
+       "度",
+       "ど"
+      ]
+     ],
+     "g": "pace"
+    },
+    "は",
+    {
+     "t": "加速",
+     "f": [
+      [
+       "加",
+       "か"
+      ],
+      [
+       "速",
+       "そく"
+      ]
+     ],
+     "g": "acceleration"
+    },
+    "し",
+    "、",
+    {
+     "t": "世代",
+     "f": [
+      [
+       "世",
+       "せ"
+      ],
+      [
+       "代",
+       "だい"
+      ]
+     ],
+     "g": "generation"
+    },
+    {
+     "t": "間",
+     "f": [
+      [
+       "間",
+       "かん"
+      ]
+     ],
+     "g": "between"
+    },
+    "の",
+    {
+     "t": "断絶",
+     "f": [
+      [
+       "断",
+       "だん"
+      ],
+      [
+       "絶",
+       "ぜつ"
+      ]
+     ],
+     "g": "rupture"
+    },
+    "さえ",
+    {
+     "t": "生じた",
+     "f": [
+      [
+       "生",
+       "しょう"
+      ],
+      [
+       "じた",
+       ""
+      ]
+     ],
+     "g": "arose"
+    },
+    "。",
+    "これ",
+    "こそ",
+    {
+     "t": "言語",
+     "f": [
+      [
+       "言",
+       "げん"
+      ],
+      [
+       "語",
+       "ご"
+      ]
+     ],
+     "g": "language"
+    },
+    "の",
+    {
+     "t": "宿命",
+     "f": [
+      [
+       "宿",
+       "しゅく"
+      ],
+      [
+       "命",
+       "めい"
+      ]
+     ],
+     "g": "destiny"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-to-iedomo",
+     "answer": "といえども",
+     "options": [
+      "といえども",
+      "にほかならず",
+      "をもって",
+      "が早いか"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "discourse",
+     "answer": "一方で",
+     "options": [
+      "一方で",
+      "ゆえに",
+      "なぜなら",
+      "たとえば"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "grammar",
+     "pointId": "n1-ni-itatte",
+     "answer": "に至って",
+     "options": [
+      "に至って",
+      "に先立って",
+      "を問わず",
+      "といえども"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-ni-hokanaranai",
+     "answer": "にほかならない",
+     "options": [
+      "にほかならない",
+      "べからず",
+      "まい",
+      "っこない"
+     ]
+    }
+   ],
+   "en": "Language, however great a tradition it may possess, cannot escape the changes of the era. For example, writing from a century ago appears abstruse to modern readers. New words are born, while old vocabulary falls out of use. Only upon reaching the modern age did this pace accelerate, and even ruptures between generations arose. This is nothing other than the destiny of language.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-4",
+   "level": "N1",
+   "title": "卒業式 式辞",
+   "tokens": [
+    {
+     "t": "卒業",
+     "f": [
+      [
+       "卒",
+       "そつ"
+      ],
+      [
+       "業",
+       "ぎょう"
+      ]
+     ],
+     "g": "graduation"
+    },
+    "の",
+    {
+     "t": "日",
+     "f": [
+      [
+       "日",
+       "ひ"
+      ]
+     ],
+     "g": "day"
+    },
+    "を",
+    {
+     "t": "迎える",
+     "f": [
+      [
+       "迎",
+       "むか"
+      ],
+      [
+       "える",
+       ""
+      ]
+     ],
+     "g": "welcome"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    "ひとこと",
+    {
+     "t": "祝辞",
+     "f": [
+      [
+       "祝",
+       "しゅく"
+      ],
+      [
+       "辞",
+       "じ"
+      ]
+     ],
+     "g": "congratulatory words"
+    },
+    "を",
+    {
+     "t": "述べ",
+     "f": [
+      [
+       "述",
+       "の"
+      ],
+      [
+       "べ",
+       ""
+      ]
+     ],
+     "g": "offer"
+    },
+    "たい",
+    "。",
+    {
+     "t": "諸君",
+     "f": [
+      [
+       "諸",
+       "しょ"
+      ],
+      [
+       "君",
+       "くん"
+      ]
+     ],
+     "g": "you all"
+    },
+    "が",
+    {
+     "t": "重ねて",
+     "f": [
+      [
+       "重",
+       "かさ"
+      ],
+      [
+       "ねて",
+       ""
+      ]
+     ],
+     "g": "accumulated"
+    },
+    "きた",
+    {
+     "t": "努力",
+     "f": [
+      [
+       "努",
+       "ど"
+      ],
+      [
+       "力",
+       "りょく"
+      ]
+     ],
+     "g": "effort"
+    },
+    "は",
+    "、",
+    {
+     "t": "決して",
+     "f": [
+      [
+       "決",
+       "けっ"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "never"
+    },
+    {
+     "t": "無駄",
+     "f": [
+      [
+       "無",
+       "む"
+      ],
+      [
+       "駄",
+       "だ"
+      ]
+     ],
+     "g": "in vain"
+    },
+    "に",
+    "は",
+    "ならない",
+    "。",
+    {
+     "t": "諸君",
+     "f": [
+      [
+       "諸",
+       "しょ"
+      ],
+      [
+       "君",
+       "くん"
+      ]
+     ],
+     "g": "you all"
+    },
+    "の",
+    {
+     "t": "前途",
+     "f": [
+      [
+       "前",
+       "ぜん"
+      ],
+      [
+       "途",
+       "と"
+      ]
+     ],
+     "g": "future"
+    },
+    "は",
+    "、",
+    {
+     "t": "学業",
+     "f": [
+      [
+       "学",
+       "がく"
+      ],
+      [
+       "業",
+       "ぎょう"
+      ]
+     ],
+     "g": "studies"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "people"
+    },
+    "との",
+    {
+     "t": "絆",
+     "f": [
+      [
+       "絆",
+       "きずな"
+      ]
+     ],
+     "g": "bonds"
+    },
+    "に",
+    "よって",
+    "も",
+    {
+     "t": "築かれる",
+     "f": [
+      [
+       "築",
+       "きず"
+      ],
+      [
+       "かれる",
+       ""
+      ]
+     ],
+     "g": "be built"
+    },
+    "。",
+    {
+     "t": "努力",
+     "f": [
+      [
+       "努",
+       "ど"
+      ],
+      [
+       "力",
+       "りょく"
+      ]
+     ],
+     "g": "effort"
+    },
+    "が",
+    {
+     "t": "報われない",
+     "f": [
+      [
+       "報",
+       "むく"
+      ],
+      [
+       "われない",
+       ""
+      ]
+     ],
+     "g": "go unrewarded"
+    },
+    "こと",
+    "も",
+    "あろう",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "歩み",
+     "f": [
+      [
+       "歩",
+       "あゆ"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "onward steps"
+    },
+    "を",
+    {
+     "t": "止める",
+     "f": [
+      [
+       "止",
+       "と"
+      ],
+      [
+       "める",
+       ""
+      ]
+     ],
+     "g": "stop"
+    },
+    "こと",
+    "なかれ",
+    "。",
+    {
+     "t": "諸君",
+     "f": [
+      [
+       "諸",
+       "しょ"
+      ],
+      [
+       "君",
+       "くん"
+      ]
+     ],
+     "g": "you all"
+    },
+    "の",
+    {
+     "t": "活躍",
+     "f": [
+      [
+       "活",
+       "かつ"
+      ],
+      [
+       "躍",
+       "やく"
+      ]
+     ],
+     "g": "success"
+    },
+    "を",
+    {
+     "t": "願って",
+     "f": [
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "wish for"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-ni-atatte",
+     "answer": "にあたり",
+     "options": [
+      "にあたり",
+      "にあって",
+      "を問わず",
+      "ながらも"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-wa-motoyori",
+     "answer": "はもとより",
+     "options": [
+      "はもとより",
+      "ゆえに",
+      "たりとも",
+      "なくして"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "それでも",
+     "options": [
+      "それでも",
+      "したがって",
+      "すなわち",
+      "および"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-te-yamanai",
+     "answer": "やまない",
+     "options": [
+      "やまない",
+      "かねない",
+      "っこない",
+      "得ない"
+     ]
+    }
+   ],
+   "en": "On the occasion of welcoming this day of graduation, I wish to offer a few congratulatory words. The effort you have accumulated will never be in vain. Your future will be built not only by your studies but also by the bonds you form with others. There will be times when effort goes unrewarded; even so, never stop your onward steps. I wish for your success without cease.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-5",
+   "level": "N1",
+   "title": "白書――外国人材の受け入れ",
+   "tokens": [
+    {
+     "t": "少子",
+     "f": [
+      [
+       "少",
+       "しょう"
+      ],
+      [
+       "子",
+       "し"
+      ]
+     ],
+     "g": "declining birthrate"
+    },
+    {
+     "t": "高齢化",
+     "f": [
+      [
+       "高",
+       "こう"
+      ],
+      [
+       "齢",
+       "れい"
+      ],
+      [
+       "化",
+       "か"
+      ]
+     ],
+     "g": "aging"
+    },
+    "の",
+    {
+     "t": "進展",
+     "f": [
+      [
+       "進",
+       "しん"
+      ],
+      [
+       "展",
+       "てん"
+      ]
+     ],
+     "g": "progress"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "外国",
+     "f": [
+      [
+       "外",
+       "がい"
+      ],
+      [
+       "国",
+       "こく"
+      ]
+     ],
+     "g": "foreign"
+    },
+    {
+     "t": "人材",
+     "f": [
+      [
+       "人",
+       "じん"
+      ],
+      [
+       "材",
+       "ざい"
+      ]
+     ],
+     "g": "human resources"
+    },
+    "の",
+    {
+     "t": "受け入れ",
+     "f": [
+      [
+       "受",
+       "う"
+      ],
+      [
+       "け",
+       ""
+      ],
+      [
+       "入",
+       "い"
+      ],
+      [
+       "れ",
+       ""
+      ]
+     ],
+     "g": "acceptance"
+    },
+    "は",
+    {
+     "t": "不可避",
+     "f": [
+      [
+       "不",
+       "ふ"
+      ],
+      [
+       "可",
+       "か"
+      ],
+      [
+       "避",
+       "ひ"
+      ]
+     ],
+     "g": "inevitable"
+    },
+    "である",
+    "。",
+    {
+     "t": "政府",
+     "f": [
+      [
+       "政",
+       "せい"
+      ],
+      [
+       "府",
+       "ふ"
+      ]
+     ],
+     "g": "the government"
+    },
+    "は",
+    "、",
+    {
+     "t": "受け入れ",
+     "f": [
+      [
+       "受",
+       "う"
+      ],
+      [
+       "け",
+       ""
+      ],
+      [
+       "入",
+       "い"
+      ],
+      [
+       "れ",
+       ""
+      ]
+     ],
+     "g": "acceptance"
+    },
+    {
+     "t": "環境",
+     "f": [
+      [
+       "環",
+       "かん"
+      ],
+      [
+       "境",
+       "きょう"
+      ]
+     ],
+     "g": "environment"
+    },
+    "の",
+    {
+     "t": "整備",
+     "f": [
+      [
+       "整",
+       "せい"
+      ],
+      [
+       "備",
+       "び"
+      ]
+     ],
+     "g": "development"
+    },
+    "と",
+    {
+     "t": "共生",
+     "f": [
+      [
+       "共",
+       "きょう"
+      ],
+      [
+       "生",
+       "せい"
+      ]
+     ],
+     "g": "coexistence"
+    },
+    {
+     "t": "社会",
+     "f": [
+      [
+       "社",
+       "しゃ"
+      ],
+      [
+       "会",
+       "かい"
+      ]
+     ],
+     "g": "society"
+    },
+    "の",
+    {
+     "t": "実現",
+     "f": [
+      [
+       "実",
+       "じつ"
+      ],
+      [
+       "現",
+       "げん"
+      ]
+     ],
+     "g": "realization"
+    },
+    "に",
+    {
+     "t": "取り組む",
+     "f": [
+      [
+       "取",
+       "と"
+      ],
+      [
+       "り",
+       ""
+      ],
+      [
+       "組",
+       "く"
+      ],
+      [
+       "む",
+       ""
+      ]
+     ],
+     "g": "tackle"
+    },
+    {
+     "t": "必要",
+     "f": [
+      [
+       "必",
+       "ひつ"
+      ],
+      [
+       "要",
+       "よう"
+      ]
+     ],
+     "g": "need"
+    },
+    "が",
+    "ある",
+    "。",
+    {
+     "t": "業種",
+     "f": [
+      [
+       "業",
+       "ぎょう"
+      ],
+      [
+       "種",
+       "しゅ"
+      ]
+     ],
+     "g": "industry"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "労働力",
+     "f": [
+      [
+       "労",
+       "ろう"
+      ],
+      [
+       "働",
+       "どう"
+      ],
+      [
+       "力",
+       "りょく"
+      ]
+     ],
+     "g": "labor force"
+    },
+    "の",
+    {
+     "t": "不足",
+     "f": [
+      [
+       "不",
+       "ふ"
+      ],
+      [
+       "足",
+       "そく"
+      ]
+     ],
+     "g": "shortage"
+    },
+    "は",
+    {
+     "t": "深刻",
+     "f": [
+      [
+       "深",
+       "しん"
+      ],
+      [
+       "刻",
+       "こく"
+      ]
+     ],
+     "g": "serious"
+    },
+    "さ",
+    "を",
+    {
+     "t": "増して",
+     "f": [
+      [
+       "増",
+       "ま"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "increasing"
+    },
+    "いる",
+    "。",
+    {
+     "t": "制度",
+     "f": [
+      [
+       "制",
+       "せい"
+      ],
+      [
+       "度",
+       "ど"
+      ]
+     ],
+     "g": "system"
+    },
+    "の",
+    {
+     "t": "整備",
+     "f": [
+      [
+       "整",
+       "せい"
+      ],
+      [
+       "備",
+       "び"
+      ]
+     ],
+     "g": "development"
+    },
+    "は",
+    "、",
+    {
+     "t": "企業",
+     "f": [
+      [
+       "企",
+       "き"
+      ],
+      [
+       "業",
+       "ぎょう"
+      ]
+     ],
+     "g": "enterprises"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "社会",
+     "f": [
+      [
+       "社",
+       "しゃ"
+      ],
+      [
+       "会",
+       "かい"
+      ]
+     ],
+     "g": "society"
+    },
+    {
+     "t": "全体",
+     "f": [
+      [
+       "全",
+       "ぜん"
+      ],
+      [
+       "体",
+       "たい"
+      ]
+     ],
+     "g": "as a whole"
+    },
+    "に",
+    "も",
+    {
+     "t": "及ぶ",
+     "f": [
+      [
+       "及",
+       "およ"
+      ],
+      [
+       "ぶ",
+       ""
+      ]
+     ],
+     "g": "extend to"
+    },
+    {
+     "t": "課題",
+     "f": [
+      [
+       "課",
+       "か"
+      ],
+      [
+       "題",
+       "だい"
+      ]
+     ],
+     "g": "challenge"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-wo-fumaete",
+     "answer": "踏まえれば",
+     "options": [
+      "踏まえれば",
+      "いえど",
+      "ながら",
+      "まい"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-wo-towazu",
+     "answer": "を問わず",
+     "options": [
+      "を問わず",
+      "に至って",
+      "をもって",
+      "ならでは"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "pointId": "n1-wa-motoyori",
+     "answer": "はもとより",
+     "options": [
+      "はもとより",
+      "たりとも",
+      "ゆえに",
+      "にして"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-ni-hokanaranai",
+     "answer": "にほかならない",
+     "options": [
+      "にほかならない",
+      "べからず",
+      "かねない",
+      "まい"
+     ]
+    }
+   ],
+   "en": "Given the advance of the declining birthrate and aging, the acceptance of foreign human resources is unavoidable. The government must work to develop an environment for their acceptance and to realize a society of coexistence. Regardless of industry, the labor shortage is growing ever more serious. The development of the system is a challenge not only for enterprises but one that extends to society as a whole.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-6",
+   "level": "N1",
+   "title": "随筆――故郷の四季",
+   "tokens": [
+    {
+     "t": "故郷",
+     "f": [
+      [
+       "故",
+       "こ"
+      ],
+      [
+       "郷",
+       "きょう"
+      ]
+     ],
+     "g": "home town"
+    },
+    "の",
+    {
+     "t": "駅",
+     "f": [
+      [
+       "駅",
+       "えき"
+      ]
+     ],
+     "g": "station"
+    },
+    "に",
+    {
+     "t": "降り立つ",
+     "f": [
+      [
+       "降",
+       "お"
+      ],
+      [
+       "り",
+       ""
+      ],
+      [
+       "立",
+       "た"
+      ],
+      [
+       "つ",
+       ""
+      ]
+     ],
+     "g": "alight"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    "なつかしい",
+    {
+     "t": "潮",
+     "f": [
+      [
+       "潮",
+       "しお"
+      ]
+     ],
+     "g": "tide"
+    },
+    "の",
+    {
+     "t": "香り",
+     "f": [
+      [
+       "香",
+       "かお"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "scent"
+    },
+    "が",
+    {
+     "t": "鼻",
+     "f": [
+      [
+       "鼻",
+       "はな"
+      ]
+     ],
+     "g": "nose"
+    },
+    "を",
+    {
+     "t": "突いた",
+     "f": [
+      [
+       "突",
+       "つ"
+      ],
+      [
+       "いた",
+       ""
+      ]
+     ],
+     "g": "struck"
+    },
+    "。",
+    {
+     "t": "幼い",
+     "f": [
+      [
+       "幼",
+       "おさな"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "young"
+    },
+    {
+     "t": "頃",
+     "f": [
+      [
+       "頃",
+       "ころ"
+      ]
+     ],
+     "g": "days"
+    },
+    "に",
+    {
+     "t": "遊んだ",
+     "f": [
+      [
+       "遊",
+       "あそ"
+      ],
+      [
+       "んだ",
+       ""
+      ]
+     ],
+     "g": "played"
+    },
+    {
+     "t": "路地",
+     "f": [
+      [
+       "路",
+       "ろ"
+      ],
+      [
+       "地",
+       "じ"
+      ]
+     ],
+     "g": "alley"
+    },
+    "は",
+    "、",
+    {
+     "t": "記憶",
+     "f": [
+      [
+       "記",
+       "き"
+      ],
+      [
+       "憶",
+       "おく"
+      ]
+     ],
+     "g": "memory"
+    },
+    "の",
+    "まま",
+    "に",
+    {
+     "t": "残って",
+     "f": [
+      [
+       "残",
+       "のこ"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "remained"
+    },
+    "いた",
+    "。",
+    {
+     "t": "季節",
+     "f": [
+      [
+       "季",
+       "き"
+      ],
+      [
+       "節",
+       "せつ"
+      ]
+     ],
+     "g": "season"
+    },
+    "が",
+    {
+     "t": "何",
+     "f": [
+      [
+       "何",
+       "なに"
+      ]
+     ],
+     "g": "what"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    "この",
+    {
+     "t": "町",
+     "f": [
+      [
+       "町",
+       "まち"
+      ]
+     ],
+     "g": "town"
+    },
+    "は",
+    {
+     "t": "変わらない",
+     "f": [
+      [
+       "変",
+       "か"
+      ],
+      [
+       "わらない",
+       ""
+      ]
+     ],
+     "g": "unchanging"
+    },
+    "。",
+    {
+     "t": "都会",
+     "f": [
+      [
+       "都",
+       "と"
+      ],
+      [
+       "会",
+       "かい"
+      ]
+     ],
+     "g": "the city"
+    },
+    "の",
+    {
+     "t": "喧騒",
+     "f": [
+      [
+       "喧",
+       "けん"
+      ],
+      [
+       "騒",
+       "そう"
+      ]
+     ],
+     "g": "clamor"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    "この",
+    {
+     "t": "静けさ",
+     "f": [
+      [
+       "静",
+       "しず"
+      ],
+      [
+       "けさ",
+       ""
+      ]
+     ],
+     "g": "stillness"
+    },
+    "こそ",
+    "が",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "I"
+    },
+    "の",
+    {
+     "t": "原点",
+     "f": [
+      [
+       "原",
+       "げん"
+      ],
+      [
+       "点",
+       "てん"
+      ]
+     ],
+     "g": "origin"
+    },
+    "である",
+    "。",
+    "ふるさと",
+    "を",
+    {
+     "t": "思う",
+     "f": [
+      [
+       "思",
+       "おも"
+      ],
+      [
+       "う",
+       ""
+      ]
+     ],
+     "g": "think of"
+    },
+    {
+     "t": "気持ち",
+     "f": [
+      [
+       "気",
+       "き"
+      ],
+      [
+       "持",
+       "も"
+      ],
+      [
+       "ち",
+       ""
+      ]
+     ],
+     "g": "feeling"
+    },
+    "は",
+    {
+     "t": "募って",
+     "f": [
+      [
+       "募",
+       "つの"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "grow ever stronger"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-ya-ina-ya",
+     "answer": "や否や",
+     "options": [
+      "や否や",
+      "ものの",
+      "ながらも",
+      "つつ"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-de-are",
+     "answer": "であれ",
+     "options": [
+      "であれ",
+      "であり",
+      "として",
+      "ながら"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "をよそに",
+     "options": [
+      "をよそに",
+      "ゆえに",
+      "に応じて",
+      "はもとより"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-te-yamanai",
+     "answer": "やまない",
+     "options": [
+      "やまない",
+      "かねない",
+      "っこない",
+      "得ない"
+     ]
+    }
+   ],
+   "en": "The moment I alighted at my home-town station, the nostalgic scent of the tide struck my nose. The alleys where I played as a child remained just as I remembered them. Whatever the season may be, this town does not change. Heedless of the city's clamor, it is precisely this stillness that is my origin. The feeling with which I think of my home town never ceases to grow.",
+   "confidence": "medium"
+  },
+  {
+   "id": "p-n1-7",
+   "level": "N1",
+   "title": "新規事業 企画提案書",
+   "tokens": [
+    {
+     "t": "新規",
+     "f": [
+      [
+       "新",
+       "しん"
+      ],
+      [
+       "規",
+       "き"
+      ]
+     ],
+     "g": "new"
+    },
+    {
+     "t": "事業",
+     "f": [
+      [
+       "事",
+       "じ"
+      ],
+      [
+       "業",
+       "ぎょう"
+      ]
+     ],
+     "g": "venture"
+    },
+    "を",
+    {
+     "t": "立ち上げる",
+     "f": [
+      [
+       "立",
+       "た"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げる",
+       ""
+      ]
+     ],
+     "g": "launch"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "以下",
+     "f": [
+      [
+       "以",
+       "い"
+      ],
+      [
+       "下",
+       "か"
+      ]
+     ],
+     "g": "the following"
+    },
+    "の",
+    {
+     "t": "提案",
+     "f": [
+      [
+       "提",
+       "てい"
+      ],
+      [
+       "案",
+       "あん"
+      ]
+     ],
+     "g": "proposal"
+    },
+    "を",
+    {
+     "t": "申し上げます",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly present"
+    },
+    "。",
+    {
+     "t": "市場",
+     "f": [
+      [
+       "市",
+       "し"
+      ],
+      [
+       "場",
+       "じょう"
+      ]
+     ],
+     "g": "market"
+    },
+    "の",
+    {
+     "t": "動向",
+     "f": [
+      [
+       "動",
+       "どう"
+      ],
+      [
+       "向",
+       "こう"
+      ]
+     ],
+     "g": "trends"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "需要",
+     "f": [
+      [
+       "需",
+       "じゅ"
+      ],
+      [
+       "要",
+       "よう"
+      ]
+     ],
+     "g": "demand"
+    },
+    "は",
+    {
+     "t": "着実",
+     "f": [
+      [
+       "着",
+       "ちゃく"
+      ],
+      [
+       "実",
+       "じつ"
+      ]
+     ],
+     "g": "steady"
+    },
+    "に",
+    {
+     "t": "拡大",
+     "f": [
+      [
+       "拡",
+       "かく"
+      ],
+      [
+       "大",
+       "だい"
+      ]
+     ],
+     "g": "expanding"
+    },
+    "し",
+    "て",
+    "いる",
+    "。",
+    {
+     "t": "競合",
+     "f": [
+      [
+       "競",
+       "きょう"
+      ],
+      [
+       "合",
+       "ごう"
+      ]
+     ],
+     "g": "competing"
+    },
+    {
+     "t": "他社",
+     "f": [
+      [
+       "他",
+       "た"
+      ],
+      [
+       "社",
+       "しゃ"
+      ]
+     ],
+     "g": "other firms"
+    },
+    "に",
+    {
+     "t": "先んじて",
+     "f": [
+      [
+       "先",
+       "さき"
+      ],
+      [
+       "んじて",
+       ""
+      ]
+     ],
+     "g": "ahead of"
+    },
+    "、",
+    {
+     "t": "独自",
+     "f": [
+      [
+       "独",
+       "どく"
+      ],
+      [
+       "自",
+       "じ"
+      ]
+     ],
+     "g": "unique"
+    },
+    "の",
+    {
+     "t": "強み",
+     "f": [
+      [
+       "強",
+       "つよ"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "strength"
+    },
+    "を",
+    {
+     "t": "打ち出す",
+     "f": [
+      [
+       "打",
+       "う"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "す",
+       ""
+      ]
+     ],
+     "g": "put forward"
+    },
+    "べき",
+    "で",
+    "ある",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "参入",
+     "f": [
+      [
+       "参",
+       "さん"
+      ],
+      [
+       "入",
+       "にゅう"
+      ]
+     ],
+     "g": "market entry"
+    },
+    "は",
+    {
+     "t": "早い",
+     "f": [
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "early"
+    },
+    "ほど",
+    {
+     "t": "有利",
+     "f": [
+      [
+       "有",
+       "ゆう"
+      ],
+      [
+       "利",
+       "り"
+      ]
+     ],
+     "g": "advantageous"
+    },
+    "である",
+    "。",
+    {
+     "t": "本",
+     "f": [
+      [
+       "本",
+       "ほん"
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "計画",
+     "f": [
+      [
+       "計",
+       "けい"
+      ],
+      [
+       "画",
+       "かく"
+      ]
+     ],
+     "g": "plan"
+    },
+    "は",
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来",
+       "らい"
+      ],
+      [
+       "月",
+       "げつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "着手",
+     "f": [
+      [
+       "着",
+       "ちゃく"
+      ],
+      [
+       "手",
+       "しゅ"
+      ]
+     ],
+     "g": "commencement"
+    },
+    "し",
+    "たい",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-ni-atatte",
+     "answer": "にあたり",
+     "options": [
+      "にあたり",
+      "において",
+      "ざるを得ず",
+      "つつ"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-wo-fumaete",
+     "answer": "踏まえると",
+     "options": [
+      "踏まえると",
+      "いえど",
+      "まい",
+      "つつ"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "したがって",
+     "options": [
+      "したがって",
+      "しかしながら",
+      "ちなみに",
+      "あるいは"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-wo-motte",
+     "answer": "をもって",
+     "options": [
+      "をもって",
+      "に至って",
+      "ならでは",
+      "を問わず"
+     ]
+    }
+   ],
+   "en": "In launching the new venture, I humbly present the following proposal. Taking the market trends into account, demand is steadily expanding. We should get ahead of competitors and put forward our own distinctive strengths. Therefore, the earlier the entry, the more advantageous it is. I should like to commence this plan as of next month.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-8",
+   "level": "N1",
+   "title": "在留資格更新のお知らせ",
+   "tokens": [
+    {
+     "t": "在留",
+     "f": [
+      [
+       "在",
+       "ざい"
+      ],
+      [
+       "留",
+       "りゅう"
+      ]
+     ],
+     "g": "residence"
+    },
+    {
+     "t": "資格",
+     "f": [
+      [
+       "資",
+       "し"
+      ],
+      [
+       "格",
+       "かく"
+      ]
+     ],
+     "g": "status"
+    },
+    "の",
+    {
+     "t": "更新",
+     "f": [
+      [
+       "更",
+       "こう"
+      ],
+      [
+       "新",
+       "しん"
+      ]
+     ],
+     "g": "renewal"
+    },
+    "に",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "下記",
+     "f": [
+      [
+       "下",
+       "か"
+      ],
+      [
+       "記",
+       "き"
+      ]
+     ],
+     "g": "the following"
+    },
+    "の",
+    {
+     "t": "書類",
+     "f": [
+      [
+       "書",
+       "しょ"
+      ],
+      [
+       "類",
+       "るい"
+      ]
+     ],
+     "g": "documents"
+    },
+    "を",
+    {
+     "t": "御",
+     "f": [
+      [
+       "御",
+       "ご"
+      ]
+     ],
+     "g": "(hon.)"
+    },
+    {
+     "t": "用意",
+     "f": [
+      [
+       "用",
+       "よう"
+      ],
+      [
+       "意",
+       "い"
+      ]
+     ],
+     "g": "preparation"
+    },
+    "ください",
+    "。",
+    {
+     "t": "書類",
+     "f": [
+      [
+       "書",
+       "しょ"
+      ],
+      [
+       "類",
+       "るい"
+      ]
+     ],
+     "g": "documents"
+    },
+    "に",
+    {
+     "t": "不備",
+     "f": [
+      [
+       "不",
+       "ふ"
+      ],
+      [
+       "備",
+       "び"
+      ]
+     ],
+     "g": "deficiency"
+    },
+    "が",
+    "ある",
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場",
+       "ば"
+      ],
+      [
+       "合",
+       "あい"
+      ]
+     ],
+     "g": "case"
+    },
+    "、",
+    {
+     "t": "再度",
+     "f": [
+      [
+       "再",
+       "さい"
+      ],
+      [
+       "度",
+       "ど"
+      ]
+     ],
+     "g": "again"
+    },
+    "の",
+    {
+     "t": "来庁",
+     "f": [
+      [
+       "来",
+       "らい"
+      ],
+      [
+       "庁",
+       "ちょう"
+      ]
+     ],
+     "g": "office visit"
+    },
+    "を",
+    {
+     "t": "お願い",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "request"
+    },
+    "する",
+    "こと",
+    "が",
+    "ある",
+    "。",
+    {
+     "t": "申請",
+     "f": [
+      [
+       "申",
+       "しん"
+      ],
+      [
+       "請",
+       "せい"
+      ]
+     ],
+     "g": "application"
+    },
+    "は",
+    "、",
+    {
+     "t": "期限",
+     "f": [
+      [
+       "期",
+       "き"
+      ],
+      [
+       "限",
+       "げん"
+      ]
+     ],
+     "g": "deadline"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "受理",
+     "f": [
+      [
+       "受",
+       "じゅ"
+      ],
+      [
+       "理",
+       "り"
+      ]
+     ],
+     "g": "acceptance"
+    },
+    "いたし",
+    "ます",
+    "。",
+    {
+     "t": "窓口",
+     "f": [
+      [
+       "窓",
+       "まど"
+      ],
+      [
+       "口",
+       "ぐち"
+      ]
+     ],
+     "g": "counter"
+    },
+    "は",
+    {
+     "t": "混雑",
+     "f": [
+      [
+       "混",
+       "こん"
+      ],
+      [
+       "雑",
+       "ざつ"
+      ]
+     ],
+     "g": "congestion"
+    },
+    "する",
+    {
+     "t": "恐れ",
+     "f": [
+      [
+       "恐",
+       "おそ"
+      ],
+      [
+       "れ",
+       ""
+      ]
+     ],
+     "g": "risk"
+    },
+    "が",
+    "ある",
+    "。",
+    {
+     "t": "混雑",
+     "f": [
+      [
+       "混",
+       "こん"
+      ],
+      [
+       "雑",
+       "ざつ"
+      ]
+     ],
+     "g": "congestion"
+    },
+    "を",
+    {
+     "t": "避ける",
+     "f": [
+      [
+       "避",
+       "さ"
+      ],
+      [
+       "ける",
+       ""
+      ]
+     ],
+     "g": "avoid"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "早め",
+     "f": [
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "め",
+       ""
+      ]
+     ],
+     "g": "early"
+    },
+    "に",
+    {
+     "t": "御",
+     "f": [
+      [
+       "御",
+       "ご"
+      ]
+     ],
+     "g": "(hon.)"
+    },
+    {
+     "t": "来庁",
+     "f": [
+      [
+       "来",
+       "らい"
+      ],
+      [
+       "庁",
+       "ちょう"
+      ]
+     ],
+     "g": "visit to the office"
+    },
+    "ください",
+    "。",
+    {
+     "t": "不明",
+     "f": [
+      [
+       "不",
+       "ふ"
+      ],
+      [
+       "明",
+       "めい"
+      ]
+     ],
+     "g": "unclear"
+    },
+    "な",
+    {
+     "t": "点",
+     "f": [
+      [
+       "点",
+       "てん"
+      ]
+     ],
+     "g": "points"
+    },
+    "は",
+    {
+     "t": "窓口",
+     "f": [
+      [
+       "窓",
+       "まど"
+      ],
+      [
+       "口",
+       "ぐち"
+      ]
+     ],
+     "g": "counter"
+    },
+    "に",
+    {
+     "t": "お尋ね",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "尋",
+       "たず"
+      ],
+      [
+       "ね",
+       ""
+      ]
+     ],
+     "g": "inquire"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-ni-sakidatte",
+     "answer": "先立ち",
+     "options": [
+      "先立ち",
+      "問わず",
+      "ならでは",
+      "もって"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-wo-motte",
+     "answer": "をもって",
+     "options": [
+      "をもって",
+      "を問わず",
+      "に至って",
+      "ならでは"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "grammar",
+     "pointId": "n1-beku",
+     "answer": "べく",
+     "options": [
+      "べく",
+      "べからず",
+      "まい",
+      "ものの"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "discourse",
+     "answer": "ください",
+     "options": [
+      "ください",
+      "まい",
+      "べからず",
+      "かねる"
+     ]
+    }
+   ],
+   "en": "Prior to renewing your residence status, please prepare the documents listed below. Should there be any deficiency in the documents, you may be asked to come to the office again. Applications will be accepted as of the deadline. The counter is liable to become congested; in order to avoid the congestion, please visit the office early. For any unclear points, please inquire at the counter.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n1-9",
+   "level": "N1",
+   "title": "映画批評――過剰なる感傷",
+   "tokens": [
+    "この",
+    {
+     "t": "作品",
+     "f": [
+      [
+       "作",
+       "さく"
+      ],
+      [
+       "品",
+       "ひん"
+      ]
+     ],
+     "g": "work"
+    },
+    "は",
+    "、",
+    {
+     "t": "映像",
+     "f": [
+      [
+       "映",
+       "えい"
+      ],
+      [
+       "像",
+       "ぞう"
+      ]
+     ],
+     "g": "visuals"
+    },
+    "の",
+    {
+     "t": "美しさ",
+     "f": [
+      [
+       "美",
+       "うつく"
+      ],
+      [
+       "しさ",
+       ""
+      ]
+     ],
+     "g": "beauty"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "物語",
+     "f": [
+      [
+       "物",
+       "もの"
+      ],
+      [
+       "語",
+       "がたり"
+      ]
+     ],
+     "g": "story"
+    },
+    "の",
+    {
+     "t": "展開",
+     "f": [
+      [
+       "展",
+       "てん"
+      ],
+      [
+       "開",
+       "かい"
+      ]
+     ],
+     "g": "development"
+    },
+    "は",
+    {
+     "t": "凡庸",
+     "f": [
+      [
+       "凡",
+       "ぼん"
+      ],
+      [
+       "庸",
+       "よう"
+      ]
+     ],
+     "g": "mediocre"
+    },
+    "である",
+    "。",
+    {
+     "t": "脚本",
+     "f": [
+      [
+       "脚",
+       "きゃく"
+      ],
+      [
+       "本",
+       "ほん"
+      ]
+     ],
+     "g": "the screenplay"
+    },
+    "の",
+    {
+     "t": "緩慢さ",
+     "f": [
+      [
+       "緩",
+       "かん"
+      ],
+      [
+       "慢",
+       "まん"
+      ],
+      [
+       "さ",
+       ""
+      ]
+     ],
+     "g": "sluggishness"
+    },
+    "は",
+    "、",
+    {
+     "t": "観客",
+     "f": [
+      [
+       "観",
+       "かん"
+      ],
+      [
+       "客",
+       "きゃく"
+      ]
+     ],
+     "g": "the audience"
+    },
+    "の",
+    {
+     "t": "集中",
+     "f": [
+      [
+       "集",
+       "しゅう"
+      ],
+      [
+       "中",
+       "ちゅう"
+      ]
+     ],
+     "g": "concentration"
+    },
+    "を",
+    {
+     "t": "削ぐ",
+     "f": [
+      [
+       "削",
+       "そ"
+      ],
+      [
+       "ぐ",
+       ""
+      ]
+     ],
+     "g": "blunt"
+    },
+    "。",
+    {
+     "t": "感傷",
+     "f": [
+      [
+       "感",
+       "かん"
+      ],
+      [
+       "傷",
+       "しょう"
+      ]
+     ],
+     "g": "sentimentality"
+    },
+    "に",
+    {
+     "t": "流され",
+     "f": [
+      [
+       "流",
+       "なが"
+      ],
+      [
+       "され",
+       ""
+      ]
+     ],
+     "g": "be swept"
+    },
+    "すぎ",
+    "、",
+    {
+     "t": "見る",
+     "f": [
+      [
+       "見",
+       "み"
+      ],
+      [
+       "る",
+       ""
+      ]
+     ],
+     "g": "watch"
+    },
+    "に",
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "場面",
+     "f": [
+      [
+       "場",
+       "ば"
+      ],
+      [
+       "面",
+       "めん"
+      ]
+     ],
+     "g": "scenes"
+    },
+    "すら",
+    "ある",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "主演",
+     "f": [
+      [
+       "主",
+       "しゅ"
+      ],
+      [
+       "演",
+       "えん"
+      ]
+     ],
+     "g": "lead"
+    },
+    {
+     "t": "俳優",
+     "f": [
+      [
+       "俳",
+       "はい"
+      ],
+      [
+       "優",
+       "ゆう"
+      ]
+     ],
+     "g": "actor"
+    },
+    "の",
+    {
+     "t": "演技",
+     "f": [
+      [
+       "演",
+       "えん"
+      ],
+      [
+       "技",
+       "ぎ"
+      ]
+     ],
+     "g": "acting"
+    },
+    "は",
+    {
+     "t": "見事",
+     "f": [
+      [
+       "見",
+       "み"
+      ],
+      [
+       "事",
+       "ごと"
+      ]
+     ],
+     "g": "superb"
+    },
+    "で",
+    "、",
+    "それ",
+    "は",
+    {
+     "t": "賞賛",
+     "f": [
+      [
+       "賞",
+       "しょう"
+      ],
+      [
+       "賛",
+       "さん"
+      ]
+     ],
+     "g": "praise"
+    },
+    "に",
+    {
+     "t": "値する",
+     "f": [
+      [
+       "値",
+       "あたい"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "be worthy"
+    },
+    "。",
+    {
+     "t": "惜しい",
+     "f": [
+      [
+       "惜",
+       "お"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "regrettable"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "grammar",
+     "pointId": "n1-to-wa-ie",
+     "answer": "とはいえ",
+     "options": [
+      "とはいえ",
+      "ゆえに",
+      "をもって",
+      "が早いか"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-ni-taenai",
+     "answer": "堪えない",
+     "options": [
+      "堪えない",
+      "あたらない",
+      "かねない",
+      "まい"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "discourse",
+     "answer": "もっとも",
+     "options": [
+      "もっとも",
+      "したがって",
+      "つまり",
+      "なぜなら"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "grammar",
+     "pointId": "n1-kagiri-da",
+     "answer": "限りだ",
+     "options": [
+      "限りだ",
+      "までだ",
+      "っこない",
+      "しまつだ"
+     ]
+    }
+   ],
+   "en": "Beautiful though its visuals are, this work's storytelling is mediocre. The sluggishness of the screenplay blunts the audience's concentration. It indulges too far in sentimentality, and there are even scenes one can hardly bear to watch. To be sure, the lead actor's performance is superb, and that is worthy of praise. It is a great pity.",
+   "confidence": "medium"
+  },
+  {
+   "id": "p-n1-10",
+   "level": "N1",
+   "title": "弔辞",
+   "tokens": [
+    {
+     "t": "先生",
+     "f": [
+      [
+       "先",
+       "せん"
+      ],
+      [
+       "生",
+       "せい"
+      ]
+     ],
+     "g": "sensei"
+    },
+    "の",
+    {
+     "t": "訃報",
+     "f": [
+      [
+       "訃",
+       "ふ"
+      ],
+      [
+       "報",
+       "ほう"
+      ]
+     ],
+     "g": "news of death"
+    },
+    "に",
+    {
+     "t": "接し",
+     "f": [
+      [
+       "接",
+       "せっ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "receiving"
+    },
+    "、",
+    {
+     "t": "謹んで",
+     "f": [
+      [
+       "謹",
+       "つつし"
+      ],
+      [
+       "んで",
+       ""
+      ]
+     ],
+     "g": "respectfully"
+    },
+    {
+     "t": "哀悼",
+     "f": [
+      [
+       "哀",
+       "あい"
+      ],
+      [
+       "悼",
+       "とう"
+      ]
+     ],
+     "g": "mourning"
+    },
+    "の",
+    {
+     "t": "意",
+     "f": [
+      [
+       "意",
+       "い"
+      ]
+     ],
+     "g": "sentiment"
+    },
+    "を",
+    {
+     "t": "表し",
+     "f": [
+      [
+       "表",
+       "あらわ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "express"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "t": "生前",
+     "f": [
+      [
+       "生",
+       "せい"
+      ],
+      [
+       "前",
+       "ぜん"
+      ]
+     ],
+     "g": "in life"
+    },
+    "、",
+    {
+     "t": "身",
+     "f": [
+      [
+       "身",
+       "み"
+      ]
+     ],
+     "g": "oneself"
+    },
+    "に",
+    {
+     "t": "余る",
+     "f": [
+      [
+       "余",
+       "あま"
+      ],
+      [
+       "る",
+       ""
+      ]
+     ],
+     "g": "more than one deserves"
+    },
+    {
+     "t": "御",
+     "f": [
+      [
+       "御",
+       "ご"
+      ]
+     ],
+     "g": "(hon.)"
+    },
+    {
+     "t": "指導",
+     "f": [
+      [
+       "指",
+       "し"
+      ],
+      [
+       "導",
+       "どう"
+      ]
+     ],
+     "g": "guidance"
+    },
+    "を",
+    {
+     "t": "賜り",
+     "f": [
+      [
+       "賜",
+       "たまわ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "received"
+    },
+    "、",
+    {
+     "t": "感謝",
+     "f": [
+      [
+       "感",
+       "かん"
+      ],
+      [
+       "謝",
+       "しゃ"
+      ]
+     ],
+     "g": "gratitude"
+    },
+    "の",
+    {
+     "t": "念",
+     "f": [
+      [
+       "念",
+       "ねん"
+      ]
+     ],
+     "g": "feeling"
+    },
+    "に",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "t": "先生",
+     "f": [
+      [
+       "先",
+       "せん"
+      ],
+      [
+       "生",
+       "せい"
+      ]
+     ],
+     "g": "sensei"
+    },
+    "から",
+    {
+     "t": "授かった",
+     "f": [
+      [
+       "授",
+       "さず"
+      ],
+      [
+       "かった",
+       ""
+      ]
+     ],
+     "g": "received"
+    },
+    {
+     "t": "教え",
+     "f": [
+      [
+       "教",
+       "おし"
+      ],
+      [
+       "え",
+       ""
+      ]
+     ],
+     "g": "teachings"
+    },
+    "を",
+    "、",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "we"
+    },
+    "たち",
+    "は",
+    {
+     "t": "生涯",
+     "f": [
+      [
+       "生",
+       "しょう"
+      ],
+      [
+       "涯",
+       "がい"
+      ]
+     ],
+     "g": "for life"
+    },
+    {
+     "t": "忘れない",
+     "f": [
+      [
+       "忘",
+       "わす"
+      ],
+      [
+       "れない",
+       ""
+      ]
+     ],
+     "g": "will not forget"
+    },
+    "。",
+    {
+     "t": "温厚",
+     "f": [
+      [
+       "温",
+       "おん"
+      ],
+      [
+       "厚",
+       "こう"
+      ]
+     ],
+     "g": "gentle"
+    },
+    "な",
+    "お",
+    {
+     "t": "人柄",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ],
+      [
+       "柄",
+       "がら"
+      ]
+     ],
+     "g": "character"
+    },
+    "は",
+    "、",
+    {
+     "t": "教え子",
+     "f": [
+      [
+       "教",
+       "おし"
+      ],
+      [
+       "え",
+       ""
+      ],
+      [
+       "子",
+       "ご"
+      ]
+     ],
+     "g": "students"
+    },
+    "の",
+    {
+     "t": "胸",
+     "f": [
+      [
+       "胸",
+       "むね"
+      ]
+     ],
+     "g": "hearts"
+    },
+    "に",
+    {
+     "t": "偲ばれ",
+     "f": [
+      [
+       "偲",
+       "しの"
+      ],
+      [
+       "ばれ",
+       ""
+      ]
+     ],
+     "g": "be fondly remembered"
+    },
+    "、",
+    {
+     "t": "寂しい",
+     "f": [
+      [
+       "寂",
+       "さび"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "lonely"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "安らかに",
+     "f": [
+      [
+       "安",
+       "やす"
+      ],
+      [
+       "らかに",
+       ""
+      ]
+     ],
+     "g": "peacefully"
+    },
+    "お",
+    {
+     "t": "眠り",
+     "f": [
+      [
+       "眠",
+       "ねむ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "rest"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "kind": "discourse",
+     "answer": "ます",
+     "options": [
+      "ます",
+      "まい",
+      "べし",
+      "なかれ"
+     ]
+    },
+    {
+     "n": 1,
+     "kind": "grammar",
+     "pointId": "n1-ni-taenai",
+     "answer": "堪えません",
+     "options": [
+      "堪えません",
+      "過ぎません",
+      "足りません",
+      "なりません"
+     ]
+    },
+    {
+     "n": 2,
+     "kind": "grammar",
+     "pointId": "n1-kagiri-da",
+     "answer": "限りだ",
+     "options": [
+      "限りだ",
+      "までだ",
+      "っこない",
+      "しまつだ"
+     ]
+    },
+    {
+     "n": 3,
+     "kind": "discourse",
+     "answer": "どうか",
+     "options": [
+      "どうか",
+      "もはや",
+      "まさか",
+      "いまさら"
+     ]
+    }
+   ],
+   "en": "On receiving news of your passing, sensei, I respectfully express my sentiments of mourning. In life I received from you guidance more than I deserved, and I cannot contain my feelings of gratitude. The teachings we received from you we will not forget for the rest of our lives. Your gentle character is fondly remembered in the hearts of your students, and I am filled with loneliness. Please, rest in peace.",
+   "confidence": "medium"
   }
  ]
 }

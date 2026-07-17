@@ -2961,16 +2961,24 @@ test('exam: buildExam — per-level composition matches the JLPT format facts (N
   }
 });
 
-test('exam: buildExam — N2/N1 have no passages until R14 → graceful shortfall, exam still assembles', () => {
+test('exam: buildExam — N2/N1 fill their full passage quota (R14 banks landed)', () => {
   const { byLevel, passages } = loadCorpus();
   for (const level of ['N2', 'N1']) {
     const ex = buildExam(level, byLevel, passages, 7);
     assert.equal(ex.counts.kata, KATA_COUNT[level], `${level} 形式`);
     assert.equal(ex.counts.star, STAR_COUNT, `${level} ★`);
-    assert.equal(ex.counts.passage, 0, `${level} has 0 passages pre-R14`);
-    assert.equal(ex.shortfall.passage, PASSAGE_COUNT, `${level} logs the 5-item passage gap`);
-    assert.ok(ex.items.length > 0 && ex.items.every(it => it.format !== 'passage'), `${level} runs without passage items`);
+    assert.equal(ex.counts.passage, PASSAGE_COUNT, `${level} now fills all 5 passage items`);
+    assert.equal(ex.shortfall.passage, 0, `${level} no longer has a passage gap`);
+    assert.equal(ex.items.length, KATA_COUNT[level] + STAR_COUNT + PASSAGE_COUNT, `${level} full-length mock`);
   }
+});
+
+test('exam: buildExam — empty passages arg still degrades gracefully (shortfall path)', () => {
+  const { byLevel } = loadCorpus();
+  const ex = buildExam('N2', byLevel, [], 7);
+  assert.equal(ex.counts.passage, 0);
+  assert.equal(ex.shortfall.passage, PASSAGE_COUNT);
+  assert.ok(ex.items.every(it => it.format !== 'passage'));
 });
 
 test('exam: buildExam — deterministic by seed; different seed → different draw', () => {

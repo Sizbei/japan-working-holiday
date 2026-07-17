@@ -11,7 +11,7 @@
 
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, del, getRaw, setRaw } from './lib/store.js';
-import { confirmModal, askText } from './lib/modal.js';
+import { confirmModal, askText, openDialog } from './lib/modal.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
@@ -140,6 +140,33 @@ function revealOrAdvance() {
   else advance(1);
 }
 
+// quick-edit the CURRENT card's fields (fix an import typo / bad column split) — writes back to the deck.
+const EDIT_FIELDS = [['w', 'Word'], ['r', 'Reading'], ['m', 'Meaning'], ['s', 'Example sentence'], ['sm', 'Sentence meaning']];
+async function editCard() {
+  if (!stream || stream.deck.view === 'skim') return;
+  if (document.querySelector('[aria-modal="true"]')) return;   // a dialog is already open — don't stack
+  const card = stream.order?.[stream.idx];
+  if (!card) return;
+  stopAuto();
+  const body = EDIT_FIELDS.map(([k, label]) =>
+    `<label class="ank-edit-f"><span>${esc(label)}</span><input data-f="${k}" value="${esc(card[k] || '')}" lang="ja"></label>`).join('');
+  const vals = await openDialog(
+    `<h2 id="amTitle" class="app-modal-title">Edit card</h2><div class="app-modal-body ank-edit">${body}</div>
+     <div class="app-modal-acts"><button type="button" class="am-btn" data-cancel>Cancel</button><button type="button" class="am-btn am-primary" data-save>Save</button></div>`,
+    { onMount: (el, done) => {
+        el.querySelector('[data-cancel]').addEventListener('click', () => done(null));
+        el.querySelector('[data-save]').addEventListener('click', () => {
+          const out = {}; el.querySelectorAll('input[data-f]').forEach(i => out[i.dataset.f] = i.value.trim());
+          done(out);
+        });
+      }, initialFocus: 'input[data-f="w"]' });
+  if (!vals) { scheduleAuto(); return; }   // cancelled
+  const target = stream.deck.cards.find(c => c.id === card.id) || card;   // same object either way, by id to be safe
+  Object.assign(target, vals);
+  saveDeck(stream.deck);
+  paintCard();
+}
+
 // ---- auto-advance: hands-free drilling. Delay (seconds) cycles off → 4s → 8s. Each tick does one
 // revealOrAdvance (so a hidden card flips, then advances) — the resulting paintCard/revealCard reschedules,
 // which also resets the countdown on any manual step. Stops itself when the deck isn't visible.
@@ -191,6 +218,7 @@ function wireDeckKeys() {
     if (e.key === 'p' || e.key === 'P') { $('#ankAudio')?.click(); return; }
     if (e.key === 'n' || e.key === 'N') { e.preventDefault(); flipHira(); return; }   // n = hiragana
     if (e.key === 'm' || e.key === 'M') { e.preventDefault(); flipEn(); return; }     // m = English
+    if (e.key === 'e' || e.key === 'E') { e.preventDefault(); editCard(); return; }   // e = edit this card
     if (e.key === 'ArrowDown') { e.preventDefault(); revealCard(); return; }          // ↓ = reveal the hidden side
     if (e.key === ' ') { e.preventDefault(); revealOrAdvance(); return; }             // Space = flip to the answer, then advance
     if (e.key === 'ArrowRight' || e.key === '.') { e.preventDefault(); advance(1); }   // . = forward (skip without revealing)
@@ -516,6 +544,7 @@ function barHTML(deck) {
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
         <button type="button" class="ank-mini" id="ankAutoAdv" title="Auto-advance through cards (tap to cycle the delay)">⏱ Auto-advance</button>
+        <button type="button" class="ank-mini" id="ankEdit" title="Edit this card's fields — key: e">✎ Edit</button>
       </div>
       <div class="ank-search-wrap">
         <input type="search" id="ankSearch" class="ank-search" placeholder="Search this deck…" aria-label="Search cards in this deck" autocomplete="off">
@@ -553,7 +582,7 @@ function renderStream(deck) {
       <span class="ank-tap ank-tap-r" id="ankTapNext" aria-hidden="true"><span class="ank-tap-hint">›</span></span>
     </div>
     <div class="ank-prog" id="ankProg"></div>
-    <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · tap the card = next</p>
+    <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · <b>E</b> edit · tap the card = next</p>
     <div class="ank-controls" role="group" aria-label="Card controls">
       <button type="button" class="ank-ctl ank-ctl-prev" id="ankPrevBtn">◀ Back</button>
       <button type="button" class="ank-ctl ank-ctl-icon" id="ankAudioBtn" aria-label="Play audio">🔊</button>
@@ -871,6 +900,7 @@ function wireCommon() {
     setRaw(KEYS.ankiAutoAdv, nextSecs);
     syncAutoAdv(); scheduleAuto();
   });
+  $('#ankEdit')?.addEventListener('click', editCard);
   wireSearch();
   wireDeckChips();
   applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar

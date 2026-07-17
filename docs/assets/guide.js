@@ -58,6 +58,7 @@ DESKTOP.addEventListener('change', relocateNav);   // crossing 820px must restor
 // parseRoute validates against router ROUTES + HIDDEN, independent of nav visibility. ----
 const NAV_ALL = [
   { r: 'dashboard', label: 'Dashboard', i18n: 'nav.dashboard' },
+  { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },   // owner: Phrases sits right after Dashboard (main study surface)
   { r: 'calendar', label: 'Calendar', i18n: 'nav.calendar' },
   { r: 'plan', label: 'Plan a Day', i18n: 'nav.plan' },
   { r: 'map', label: 'Map', i18n: 'nav.map' },
@@ -68,7 +69,6 @@ const NAV_ALL = [
   { r: 'budget', label: 'Budget', i18n: 'nav.budget' },
   { r: 'rooms', label: 'Rooms', i18n: 'nav.rooms' },
   { r: 'emergency', label: 'Emergency', i18n: 'nav.emergency' },
-  { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },
   { r: 'survival', label: 'Useful phrases', i18n: 'nav.survival' },
   { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
   { r: 'study', label: 'Grammar Gym', i18n: 'nav.study' },
@@ -81,7 +81,7 @@ const NAV_META = (r) => NAV_ALL.find(o => o.r === r);
 // migrate the legacy navShow (which optional routes were surfaced) into a hidden set. Default (no
 // stored navHidden): hide all optional routes except phrases, PLUS the routes the owner doesn't use
 // (emergency/map/explore) — all still reachable by deep link and re-enableable in this panel.
-const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore'];
+const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore', 'rooms', 'people'];   // owner: Rooms + People off the nav for now (deep links still work; re-enable in the panel)
 function navHiddenSet() {
   const v = get(KEYS.navHidden, null);
   if (Array.isArray(v)) return v.filter(r => NAV_KNOWN.has(r));

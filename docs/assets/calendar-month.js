@@ -24,10 +24,19 @@ const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUT
 // SLIDES the window (drop CAL_CHUNK off the far end, add it to the near end). Module state, so it
 // persists across re-renders / route re-entry.
 const stepYM = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
-const CAL_SIZE = 18;          // months kept in the DOM at once (bounds re-render cost)
-const CAL_CHUNK = 6;          // months the window slides when you reach an edge
+const CAL_SIZE = 9;           // months kept in the DOM at once — small = fast initial paint + fast slide
+const CAL_HALF = Math.floor(CAL_SIZE / 2);   // months either side of the centred month
+const CAL_CHUNK = 3;          // months the window slides when you reach an edge
 let _winLo = null, _winHi = null;   // YYYY-MM, inclusive (span = CAL_SIZE)
-function initWindow() { const t = TODAY.slice(0, 7); _winLo = stepYM(t, -2); _winHi = stepYM(t, CAL_SIZE - 3); }   // today near the top
+// CENTER the window on a month (target in the MIDDLE, with buffer above+below). Centring is what
+// makes tab-switch safe: positioning to a CENTRED month lands mid-window, never at an edge, so the
+// near-edge auto-extend can't fire on entry and run away. Returns true if the window changed.
+export function centerWindowOn(ym) {
+  const lo = stepYM(ym, -CAL_HALF), hi = stepYM(ym, CAL_SIZE - 1 - CAL_HALF);
+  if (lo === _winLo && hi === _winHi) return false;
+  _winLo = lo; _winHi = hi; return true;
+}
+function initWindow() { centerWindowOn(TODAY.slice(0, 7)); }
 export function calWindow() { if (_winLo === null) initWindow(); return { lo: _winLo, hi: _winHi }; }
 // slide the window one chunk toward dir — bounded DOM, truly infinite (no absolute cap). Always changes.
 export function extendWindow(dir) {
@@ -36,13 +45,12 @@ export function extendWindow(dir) {
   _winLo = stepYM(_winLo, n); _winHi = stepYM(_winHi, n);
   return true;
 }
-// explicit jumps (Prev/Next, Today, quick-add, mini-cal) — recenter the window on the target month if
-// it's outside the window, so the target cell/separator exists before we scroll to it. Returns changed.
+// explicit jumps (Prev/Next, Today, quick-add, mini-cal): re-center on the target if it's outside the
+// window OR within a chunk of an edge (so scrolling to it doesn't immediately trip auto-extend). Returns changed.
 export function ensureWindowCovers(ym) {
   if (_winLo === null) initWindow();
-  if (ym >= _winLo && ym <= _winHi) return false;
-  _winLo = stepYM(ym, -2); _winHi = stepYM(ym, CAL_SIZE - 3);
-  return true;
+  if (ym >= stepYM(_winLo, CAL_CHUNK) && ym <= stepYM(_winHi, -CAL_CHUNK)) return false;   // safely mid-window
+  return centerWindowOn(ym);
 }
 // anchor the current scroll to a day cell at the READING LINE (middle of the VISIBLE grid, below the
 // sticky topbar/nav) so a prepend/append doesn't jump. Reuses topline()'s probe point on purpose —
@@ -178,14 +186,21 @@ export function wireEndless(onMonth, onExtend) {
   // scroll modes (internal grid ≥821px, window <821px).
   const nearEdge = () => {
     if (grid.scrollHeight > grid.clientHeight + 4) {   // internal grid scroll
-      if (grid.scrollTop < 500) return -1;
-      if (grid.scrollTop > grid.scrollHeight - grid.clientHeight - 500) return 1;
+      // load ~a screen ahead of the edge, but never more than 40% of the scroll range — so a CENTRED
+      // month (the entry state) is never inside both edges' trigger zones on a tall screen (→ no runaway).
+      const buf = Math.min(grid.clientHeight, (grid.scrollHeight - grid.clientHeight) * 0.4);
+      if (grid.scrollTop < buf) return -1;
+      if (grid.scrollTop > grid.scrollHeight - grid.clientHeight - buf) return 1;
       return 0;
     }
     const cells = grid.querySelectorAll('.cal-cell[data-day]');
     if (!cells.length) return 0;
-    if (cells[0].getBoundingClientRect().top > -500) return -1;
-    if (cells[cells.length - 1].getBoundingClientRect().bottom < window.innerHeight + 500) return 1;
+    const top = cells[0].getBoundingClientRect().top, bot = cells[cells.length - 1].getBoundingClientRect().bottom;
+    // same proportional cap as the internal-grid branch: never more than 40% of the scrollable extent,
+    // so a centred month can't sit inside both edges' trigger zones on a tall-but-narrow viewport.
+    const buf = Math.min(window.innerHeight, Math.max(0, (bot - top) - window.innerHeight) * 0.4);
+    if (top > -buf) return -1;
+    if (bot < window.innerHeight + buf) return 1;
     return 0;
   };
   const topline = () => {

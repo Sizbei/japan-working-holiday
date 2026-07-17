@@ -17,12 +17,14 @@
 // esc(); ruby via rubyHTML; token spans use .stok, NEVER .jp.
 
 import { $, esc } from './lib/dom.js';
+import { nowISO } from './lib/dates.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, STAGES, LEVEL_TOTALS } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
+import { celebrate } from './celebrate.js';
 import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
@@ -152,20 +154,8 @@ function lessonIds() {
 }
 function unitOf(id) { return units.find(u => u.points.includes(id)) || null; }
 
-// R10: light mastery surfacing for the course home — mastered (gate-passed) count per level (the
-// goal-gradient numerator) + how many points are currently IN the gate (at Deep, being gated). The
-// full mastery analytics tab is R15; this is just the two headline counts. Reads state.points only
-// (no corpus needed), so it's correct even when levels are cold.
-function masteryStats() {
-  const perLevel = { N5: 0, N4: 0, N3: 0, N2: 0, N1: 0 };
-  let inGate = 0;
-  for (const [id, p] of Object.entries(state.points)) {
-    const st = stageOf(p);
-    if (st === 'mastered') { const lv = levelOf(id); if (lv && perLevel[lv] != null) perLevel[lv]++; }
-    else if (st === 'deep') inGate++;
-  }
-  return { perLevel, inGate };
-}
+// R10 mastery surfacing (mastered-per-level + in-gate counts) is now the pure lib selector
+// masteryStats(state) — reused here and by the R11 dashboard widget (single source of truth).
 
 // the pool for the optional "Build a sentence" drill: Deep + Mastered points whose corpus data is
 // loaded (so a model example is available). Practice-only — never scheduled.
@@ -314,7 +304,7 @@ function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
   teardownGateTimer();
   const cs = continueState();
-  const mstats = masteryStats();
+  const mstats = masteryStats(state);
   const examVal = state.settings.examLevel || '';
   const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
   const cards = units.length ? LEVELS.map(l => levelCardHTML(l, mstats)).join('')
@@ -379,7 +369,10 @@ function flowCtx() {
     getState: () => state,
     commit: (ns) => { state = ns; save(); },
     announce, ensureLevelsFor,
-    done: () => { activeFlow = null; renderCourseHome(); },
+    // Completing a lessons batch, placement sweep, or unit checkpoint is a "day shown up"
+    // too — record it toward the streak (recordSession is idempotent per calendar day, so a
+    // day that also does a review session still counts exactly once).
+    done: () => { activeFlow = null; state = recordSession(state, nowISO()); save(); renderCourseHome(); },
   };
 }
 
@@ -681,11 +674,13 @@ function onMcqResult({ pass, chosen }) {
   const now = Date.now();
   const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
+  const snap = progressSnap(card.id);
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
   if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
   else maybeGhostExit(card.id, wasGhost);
+  celebrateProgress(card.id, snap, card.point.pattern);
   cardCtl = null;
   renderCard();
 }
@@ -696,13 +691,34 @@ function onScrambleResult({ pass, chosen }) {
   const now = Date.now();
   const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
+  const snap = progressSnap(card.id);
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
   if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
   else maybeGhostExit(card.id, wasGhost);
+  celebrateProgress(card.id, snap, card.point.pattern);
   cardCtl = null;
   renderCard();
+}
+
+// R11: celebrate() on the two milestone transitions a graded answer can trigger — a first climb to
+// Mature (a real stage-up, NOT a gate-fail demotion that also lands at Mature), and a LEVEL
+// completion (its final point mastered — a bigger moment, stacked after the gate's own Mastered
+// burst). `snap` is captured BEFORE review(): the point's stage + its level's mastered count.
+// celebrate() self-gates on the reduce-motion / celebrations-off preferences.
+function progressSnap(id) {
+  const lv = levelOf(id);
+  return { stage: stageOf(state.points[id] || null), lv, mastered: lv ? masteryStats(state).perLevel[lv] : 0 };
+}
+function celebrateProgress(id, snap, pattern) {
+  const p = state.points[id];
+  if (!p) return;
+  const after = stageOf(p);
+  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) celebrate(`Mature — ${pattern || ''} 🌳`);
+  const lv = snap.lv;
+  if (lv && LEVEL_TOTALS[lv] && after === 'mastered' && snap.mastered < LEVEL_TOTALS[lv]
+      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) celebrate(`${lv} complete — every point mastered! 🏆`);
 }
 
 // R9: when a point that WAS a ghost is no longer one after grading, it just passed its 2nd clean
@@ -893,11 +909,13 @@ function grade(g, { typedCorrect = true } = {}) {
   const now = Date.now();
   const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
+  const snap = progressSnap(card.id);
   state = review(state, card.id, { pass, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: typedCorrect });
   save();
   if (gate) gateFeedback(card.point, state.points[card.id], pass, announce);
   else maybeGhostExit(card.id, wasGhost);
+  celebrateProgress(card.id, snap, card.point.pattern);
   renderCard();
 }
 
@@ -910,12 +928,21 @@ function renderSummary() {
   const n = graded.length;
   const okN = graded.filter(r => r.ok).length;
   const acc = n ? Math.round(okN / n * 100) : 0;
+  // R11: a session that reaches this summary bumps the days-shown-up streak + the weekly-goal
+  // counter EXACTLY ONCE. recordSession is idempotent per calendar day (a resumed/re-rendered
+  // session can't double-count), and the hadSession guard blocks a re-entry after the session has
+  // already closed (state.session === null → empty results, must not record).
+  const hadSession = !!state.session;
   state = sessionEnd(state);
   state = { ...state, lastSession: Date.now() };
+  if (hadSession) state = recordSession(state, nowISO());
   save();
 
   const now = Date.now();
   const nextDue = Object.values(state.points).filter(p => !p.suspended && p.due != null && p.due > now && p.due <= now + DAY).length;
+  const streakN = (state.settings.streak && state.settings.streak.count) || 0;
+  const weekDone = (state.settings.week && state.settings.week.done) || 0;
+  const weekGoal = state.settings.weeklyGoal || 5;
   root.innerHTML = `
     <div class="stu-summary">
       <div class="stu-sum-art" aria-hidden="true">✓</div>
@@ -923,12 +950,13 @@ function renderSummary() {
       <div class="stu-stats">
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(n))}</span><span class="stu-stat-l">reviewed</span></div>
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(acc))}%</span><span class="stu-stat-l">accuracy</span></div>
+        <div class="stu-stat"><span class="stu-stat-n">🔥 ${esc(String(streakN))}</span><span class="stu-stat-l">day streak</span></div>
       </div>
-      <p class="stu-note">${nextDue ? `${esc(String(nextDue))} due in the next 24 hours.` : 'Nothing else due in the next 24 hours.'}</p>
+      <p class="stu-note">${esc(String(weekDone))} / ${esc(String(weekGoal))} sessions this week · ${nextDue ? `${esc(String(nextDue))} due in the next 24 hours.` : 'nothing else due in the next 24 hours.'}</p>
       <button type="button" class="stu-btn stu-btn-primary" data-act="done">Done</button>
     </div>`;
   root.querySelector('.stu-btn-primary')?.focus({ preventScroll: true });
-  announce(`Session complete. ${n} reviewed, ${acc}% accuracy. ${nextDue} due in the next 24 hours.`);
+  announce(`Session complete. ${n} reviewed, ${acc}% accuracy. ${streakN}-day streak. ${nextDue} due in the next 24 hours.`);
 }
 
 // ── wiring (delegated once on the persistent root) ───────────────────────────

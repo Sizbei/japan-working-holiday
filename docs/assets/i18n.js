@@ -34,6 +34,7 @@ export const STRINGS = {
   'head.widget.spend': 'クイック出費',
   'head.widget.deadlines': '次の締め切り',
   'head.widget.checklist': 'チェックリスト',
+  'head.widget.study': '文法ジム',
   'head.dashboard.more': 'その他',
   'head.teaser.bookby': '予約期限',
   'head.teaser.upcoming': '近日予定',

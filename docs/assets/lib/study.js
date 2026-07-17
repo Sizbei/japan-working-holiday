@@ -15,7 +15,7 @@ const RETENTION = 0.90;         // desired retention (fixed)
 const GROWTH = 1.2;             // success stability-growth constant (tunable ≤1.6 — see sim)
 const DAY = 86400000;           // ms per day
 const MIN = 60000;              // ms per minute
-const CURRENT_V = 2;            // store schema version
+const CURRENT_V = 3;            // store schema version
 
 // First-rating table, indexed by grade g∈{1,2,3,4} → S0[g−1]; D0 = clamp(5 − 1.5·(g−3), 1, 10).
 const S0 = [0.4, 0.6, 2.4, 5.8];
@@ -29,6 +29,9 @@ const GHOST_STEPS = [10 * MIN, 1 * DAY];
 const LEECH_AT = 5, SUSPEND_AT = 8;
 // Stability floor (days) for the Deep stage — also the ceiling a failed gate demotes back below.
 const DEEP_MIN = 21;
+// R11 habit engine: 2 auto-freezes/month bridge missed days; the JLPT corpus is fixed at 353 points.
+const FREEZE_MAX = 2;
+export const LEVEL_TOTALS = { N5: 82, N4: 86, N3: 72, N2: 66, N1: 47 };
 
 // Named stage ladder, derived from stability S (Mastered additionally requires the gate).
 export const STAGES = ['seed', 'sprout', 'young', 'mature', 'deep', 'mastered'];
@@ -100,7 +103,10 @@ export function newState(now = 0) {
     log: [],
     lastSession: now,
     settings: {
-      newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2,
+      newPerDay: 4, capReviews: 45, weeklyGoal: 5,
+      // R11 (v3): the days-shown-up streak + monthly freeze bank + the weekly-goal counter.
+      streak: { count: 0, lastDay: null, freezes: FREEZE_MAX, lastFreezeMonth: null },
+      week: { done: 0, weekStart: null },
       placed: [],           // levels the placement sweep has run for (v2)
       examLevel: null,      // exam-priority lever: null | 'N3' | 'N2' | 'N1' (v2)
     },
@@ -111,8 +117,18 @@ export function newState(now = 0) {
 // preserving user data; an unknown/corrupt shape resets to a fresh state so a bad restore can
 // never brick boot. v1→v2 adds settings.placed (placement bookkeeping) + settings.examLevel
 // (the exam-priority lever) without disturbing points/session/units.
+// v2→v3 (R11) folds the old top-level `settings.freezes` + `settings.streak.last` into the streak
+// sub-shape { count, lastDay, freezes, lastFreezeMonth } and adds the weekly counter, preserving any
+// streak progress a v2 user had accrued.
 const UPGRADERS = {
   1: (s) => ({ ...s, v: 2, settings: { ...s.settings, placed: [], examLevel: null } }),
+  2: (s) => {
+    const { freezes, ...rest } = s.settings || {};
+    const old = rest.streak || {};
+    return { ...s, v: 3, settings: { ...rest,
+      streak: { count: old.count || 0, lastDay: old.lastDay || old.last || null, freezes: (typeof freezes === 'number' ? freezes : FREEZE_MAX), lastFreezeMonth: null },
+      week: { done: 0, weekStart: null } } };
+  },
 };
 export function migrate(state, upgraders = UPGRADERS, target = CURRENT_V) {
   if (!state || typeof state !== 'object' || typeof state.v !== 'number') return newState(0);
@@ -523,4 +539,87 @@ export function unsuspend(state, id, now) {
   // Drop lapses just below SUSPEND_AT so the point gets a real second chance: markLeech only
   // re-suspends at >= SUSPEND_AT, so a PASS now keeps it in play and only a fresh FAIL re-suspends.
   return setPoint(state, id, { ...p, suspended: false, leech: true, lapses: Math.min(p.lapses || 0, SUSPEND_AT - 1), due: now });
+}
+
+// ── R11: habit engine (streak + weekly goal + mastery rollup — pure, ISO-clocked) ─────────────
+// Every function takes an ISO 'YYYY-MM-DD' day (never Date.now()) so the dashboard supplies the day
+// and the logic stays deterministic/testable. All ISO→day math parses at UTC midnight, so the day
+// arithmetic is consistent regardless of the timezone the ISO string was produced in.
+const monthOf = (iso) => String(iso).slice(0, 7);                         // 'YYYY-MM'
+const isoToDays = (iso) => Math.floor(Date.parse(String(iso) + 'T00:00:00Z') / DAY);
+const addDaysISO = (iso, n) => new Date((isoToDays(iso) + n) * DAY).toISOString().slice(0, 10);
+const gapDays = (aISO, bISO) => isoToDays(bISO) - isoToDays(aISO);        // whole days a→b
+// Monday-based week start (JLPT study weeks read Mon–Sun); epoch 1970-01-01 was a Thursday.
+function weekStartISO(iso) {
+  const d = isoToDays(iso);
+  const dow = new Date(d * DAY).getUTCDay();                              // 0=Sun … 6=Sat
+  return new Date((d - ((dow + 6) % 7)) * DAY).toISOString().slice(0, 10);
+}
+
+// recordSession(state, todayISO) → new state, called ONCE when a session reaches its summary.
+// Idempotent per calendar day (a second call the same day — resume/re-render — is a no-op), so it
+// never double-counts. Streak: +1 on the next day; a gap of >1 day resets to 1 UNLESS the missed
+// day(s) are covered by freezes (up to FREEZE_MAX/month, auto-spent, replenished at each new month
+// via lastFreezeMonth). Weekly `done` bumps once, reset when the Monday week rolls over.
+export function recordSession(state, todayISO) {
+  const s = state.settings || {};
+  const streak = s.streak || { count: 0, lastDay: null, freezes: FREEZE_MAX, lastFreezeMonth: null };
+  const week = s.week || { done: 0, weekStart: null };
+  if (streak.lastDay === todayISO) return state;             // already counted today — max 1/day
+
+  const month = monthOf(todayISO);
+  let freezes = streak.lastFreezeMonth !== month ? FREEZE_MAX : streak.freezes;   // monthly replenish
+
+  let count;
+  if (!streak.lastDay) {
+    count = 1;
+  } else {
+    const gap = gapDays(streak.lastDay, todayISO);
+    if (gap <= 1) {                                          // next day (or a backwards clock anomaly)
+      count = (streak.count || 0) + 1;
+    } else {
+      const missed = gap - 1;                                // consecutive missed days between then and now
+      if (missed <= freezes) { freezes -= missed; count = (streak.count || 0) + 1; }   // bridge with freezes
+      else count = 1;                                        // too big a gap → streak resets
+    }
+  }
+
+  const ws = weekStartISO(todayISO);
+  const done = (week.weekStart === ws ? (week.done || 0) : 0) + 1;
+  return { ...state, settings: { ...s,
+    streak: { count, lastDay: todayISO, freezes, lastFreezeMonth: month },
+    week: { done, weekStart: ws } } };
+}
+
+// streakInfo(state, todayISO) → { count, freezes, atRisk }. `freezes` is the effective count with the
+// monthly replenish applied (pure derivation — no mutation). `atRisk` = shown up yesterday but not
+// today (the streak is live and one missed day from spending a freeze / resetting).
+export function streakInfo(state, todayISO) {
+  const st = (state.settings && state.settings.streak) || { count: 0, lastDay: null, freezes: FREEZE_MAX, lastFreezeMonth: null };
+  const freezes = st.lastFreezeMonth !== monthOf(todayISO) ? FREEZE_MAX : st.freezes;
+  const count = st.count || 0;
+  return { count, freezes, atRisk: count > 0 && st.lastDay === addDaysISO(todayISO, -1) };
+}
+
+// weeklyInfo(state, todayISO) → { done, goal, weekStart }. `done` reads 0 once the Monday week has
+// rolled past the stored weekStart (the reset is realised lazily here, committed by the next session).
+export function weeklyInfo(state, todayISO) {
+  const s = state.settings || {};
+  const week = s.week || { done: 0, weekStart: null };
+  const ws = weekStartISO(todayISO);
+  return { done: week.weekStart === ws ? (week.done || 0) : 0, goal: s.weeklyGoal || 5, weekStart: ws };
+}
+
+// masteryStats(state) → { perLevel:{N5..N1 mastered counts}, totals:LEVEL_TOTALS, inGate }. Pure over
+// state.points (level via id prefix), so it's correct even when no corpus files are loaded — which is
+// exactly the dashboard case. inGate = points currently at Deep (their next review is a mastery check).
+export function masteryStats(state) {
+  const perLevel = { N5: 0, N4: 0, N3: 0, N2: 0, N1: 0 };
+  let inGate = 0;
+  for (const [id, p] of Object.entries((state && state.points) || {})) {
+    const st = stageOf(p);
+    if (st === 'mastered') { const lv = levelOfId(id); if (lv && perLevel[lv] != null) perLevel[lv]++; }
+    else if (st === 'deep') inGate++;
+  }
+  return { perLevel, totals: LEVEL_TOTALS, inGate };
 }

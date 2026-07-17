@@ -20,6 +20,7 @@ import { loadPlans } from './lib/dayplan.js';
 import { summary, fmtYen } from './lib/budget.js';
 import { progress } from './lib/packing.js';
 import { sekkiFor } from './lib/sekki.js';
+import { migrate as migrateStudy, buildQueue, streakInfo, weeklyInfo, masteryStats } from './lib/study.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -38,7 +39,9 @@ export function mountDashboard(data, today) {
   // Budget/packing mutations happen on their OWN routes and re-render locally; they intentionally
   // do NOT dispatch jwh:data-changed (that would trigger no-op re-renders across other listeners).
   // So landing back on the dashboard is the natural refresh trigger for their teasers.
-  document.addEventListener('jwh:route', (e) => { if (e.detail && e.detail.route === 'dashboard') { refreshTeasers(); refreshWeather(); } });
+  // A full refresh on landing (not just the teasers): the study widget + the reviews-due bell item
+  // also read state mutated on #/study, which — like budget/packing — doesn't dispatch data-changed.
+  document.addEventListener('jwh:route', (e) => { if (e.detail && e.detail.route === 'dashboard') { refresh(); refreshWeather(); } });
 }
 
 function gcDismissed() {
@@ -114,6 +117,14 @@ function buildItems() {
     if (start >= TODAY) items.push({ id: 'ev-' + e.id + '@' + start, title: e.title, when: start, kind: 'event', detail: e.area }); // future starts only — not already-running seasons
     if (e.bookBy && e.source === 'user') items.push({ id: 'bk-' + e.id + '@' + e.bookBy, title: 'Book: ' + e.title, when: e.bookBy, kind: 'book', detail: e.bookingNotes });   // baked book-by already covered by bookByTimeline — don't double-count
   });
+  // R11: grammar reviews due today — ONE aggregate item (never one per point), fed through the same
+  // computeAlerts/dismiss/GC pipeline as everything else. The @date-encoded id means today's dismiss
+  // suppresses only today; tomorrow mints a fresh id. No overlap with any other source (its own kind).
+  const study = get(KEYS.study, null);
+  if (study) {
+    const dueN = buildQueue(migrateStudy(study), Date.now()).reviews.length;
+    if (dueN > 0) items.push({ id: 'study-reviews@' + TODAY, title: dueN + ' grammar review' + (dueN === 1 ? '' : 's') + ' due', when: TODAY, kind: 'review', detail: 'Grammar Gym — clear them in one bounded session.' });
+  }
   // Drop dead history: a deadline/book/task more than 30 days past isn't actionable — it's just
   // clutter that re-floods the bell. Future + ≤30-day-past items are kept (still worth surfacing).
   const floor = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
@@ -215,8 +226,8 @@ function renderBadge(alerts) {
   const overdue = alerts.some(a => a.severity === 'overdue');
   badge.classList.toggle('hot', overdue);
 }
-const ICON = { deadline: '⚖️', book: '🎟️', task: '✅', event: '📅' };
-const ROUTE_FOR = { deadline: '#/deadlines', book: '#/deadlines', task: '#/checklist', event: '#/calendar' };
+const ICON = { deadline: '⚖️', book: '🎟️', task: '✅', event: '📅', review: '🎴' };
+const ROUTE_FOR = { deadline: '#/deadlines', book: '#/deadlines', task: '#/checklist', event: '#/calendar', review: '#/study' };
 function clip(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; }
 function renderPanel(alerts) {
   const panel = $('#notifPanel');
@@ -275,7 +286,66 @@ function renderWidgets(alerts) {
   renderSpend();
   fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task' || a.kind === 'book'), 6);
   renderProgress();
+  renderStudy();
   renderTeasers();
+}
+
+// ---- 文法ジム Grammar Gym widget (R11 habit dashboard) ----------------------------------------
+// The daily front door to #/study: today's due-review count → a ▶ Train button, the days-shown-up
+// streak flame (+ monthly freeze bank + an at-risk nudge), the weekly-goal ring, and per-level
+// goal-gradient mastery rings. All state is derived by the pure lib selectors (streakInfo /
+// weeklyInfo / masteryStats / buildQueue) from jwh-study-v1 — read fresh each render. The flame's
+// pulse + the rings' draw-in are CSS-only, so the app's reduce-motion toggle (and the OS setting)
+// stop them. Every dynamic string through esc().
+function stwRingHTML(done, total, aria) {
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const C = 2 * Math.PI * 15.5, off = C * (1 - pct / 100);
+  return `<span class="stw-ring" role="img" aria-label="${esc(aria)}">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="stw-ring-bg" cx="18" cy="18" r="15.5"/>
+    <circle class="stw-ring-fg" cx="18" cy="18" r="15.5" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
+    <span class="stw-ring-txt">${esc(String(done))}<small>/${esc(String(total))}</small></span></span>`;
+}
+function renderStudy() {
+  const el = $('#wStudy');
+  if (!el) return;
+  const body = el.querySelector('.widget-body');
+  if (!body) return;
+  const stored = get(KEYS.study, null);
+  if (!stored) {   // never opened the gym — a plain onboarding CTA, no streak/rings to show
+    body.innerHTML = `<a class="stw-cta" href="#/study"><b>▶ Start the Grammar Gym</b><small>Drill JLPT grammar — one bounded session a day</small></a>`;
+    return;
+  }
+  const st = migrateStudy(stored);
+  const due = buildQueue(st, Date.now()).reviews.length;
+  const si = streakInfo(st, TODAY);
+  const wi = weeklyInfo(st, TODAY);
+  const ms = masteryStats(st);
+
+  const levels = ['N5', 'N4', 'N3', 'N2', 'N1'].filter(l => ms.perLevel[l] > 0);
+  const masteryHTML = levels.length
+    ? `<div class="stw-mastery">${levels.map(l =>
+        `<div class="stw-lvl">${stwRingHTML(ms.perLevel[l], ms.totals[l], `${l} ${ms.perLevel[l]} of ${ms.totals[l]} mastered`)}<span class="stw-lvl-l">${esc(l)}</span></div>`).join('')}</div>`
+    : `<p class="stw-hint">No points mastered yet — the rings fill as you clear mastery gates.</p>`;
+  const trainLabel = due > 0 ? `▶ Train — ${due} due` : '▶ Open the gym';
+  const riskHTML = si.atRisk
+    ? `<p class="stw-risk">Study today to keep your ${esc(String(si.count))}-day streak alive.</p>` : '';
+
+  body.innerHTML = `
+    <div class="stw-top">
+      <div class="stw-streak${si.atRisk ? ' is-risk' : ''}" role="img" aria-label="${esc(String(si.count))} day streak, ${esc(String(si.freezes))} freezes left this month">
+        <span class="stw-flame" aria-hidden="true">🔥</span>
+        <span class="stw-streak-n">${esc(String(si.count))}</span>
+        <span class="stw-streak-l">day${si.count === 1 ? '' : 's'}<br>streak</span>
+        <span class="stw-freeze" title="Streak freezes left this month">❄️${esc(String(si.freezes))}</span>
+      </div>
+      <div class="stw-week">
+        ${stwRingHTML(wi.done, wi.goal, `${wi.done} of ${wi.goal} sessions this week`)}
+        <span class="stw-week-l">this<br>week</span>
+      </div>
+    </div>
+    ${riskHTML}
+    ${masteryHTML}
+    <a class="stw-train" href="#/study">${esc(trainLabel)}</a>`;
 }
 
 

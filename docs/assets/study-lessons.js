@@ -17,9 +17,11 @@
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { pegHTML, flagBadgesHTML } from './lib/peg.js';
-import { clozeFor, checkAnswer, scrambleFor } from './lib/questions.js';
-import { review, effectiveGrade, testOutResult, gateMode } from './lib/study.js';
+import { clozeFor, checkAnswer, scrambleFor, mcqFor } from './lib/questions.js';
+import { review, effectiveGrade, testOutResult, gateMode, checkpointQuestions, recordCheckpoint, hash } from './lib/study.js';
 import { scrambleCard } from './study-scramble.js';
+import { mcqCard } from './study-mcq.js';
+import { celebrate } from './celebrate.js';
 
 const NEW_PER_DAY_FALLBACK = 4;
 const TESTOUT_SECONDS = 20;   // soft display timer only — NO hard cutoff in R3
@@ -384,47 +386,63 @@ export function startPlacement(ctx, levels) {
 }
 
 // ── Flow 3: the test-out runner ───────────────────────────────────────────────
-// For each queued id: 2 hint-free checks on DISTINCT examples (exampleIdx 0 and 1). Both pass →
-// testOutResult lands the point at Mature (~2-week due); any fail → the point is left unseeded, so
-// it re-enters as a normal lesson.
-// R4: modality follows the point's gate mode (lib/study.js gateMode) — N1 / `written-formal`
-// points test out via recognition (★-scramble) where the example is scramble-able; every other
-// point stays typed cloze (with the soft ~20s timer, display only, no cutoff).
-// TODO(R8): add the confusable-MCQ recognition item (and the written-formal 文法形式 MCQ) once the
-// R8 MCQ generator + distractor data land — scramble alone covers recognition for now.
+// For each queued id: 3 hint-free checks — 2 typed clozes on DISTINCT examples + 1 confusable
+// 文法形式 MCQ (R8). ALL pass → testOutResult lands the point at Mature (~2-week due); any fail →
+// the point is left unseeded, so it re-enters as a normal lesson.
+// Modality follows the point's gate mode (lib/study.js gateMode) — N1 / `written-formal` points are
+// the whole-test-out recognition case: ★-scramble where the example scrambles, else MCQ. An MCQ
+// item that can't assemble (no confusables resolvable) degrades to a cloze.
+function testOutItems(p) {
+  const recog = gateMode(p, { level: p.level, flags: p.flags }) === 'recognition';
+  if (recog) return [
+    { type: scrambleFor(p, 0) ? 'scramble' : 'mcq', ex: 0 },
+    { type: scrambleFor(p, 1) ? 'scramble' : 'mcq', ex: 1 },
+    { type: 'mcq', ex: 0 },
+  ];
+  return [{ type: 'cloze', ex: 0 }, { type: 'cloze', ex: 1 }, { type: 'mcq', ex: 0 }];
+}
+
 export function startTestOuts(ctx, ids, { host, onDone } = {}) {
   const { root, pointsCache } = ctx;
   const container = host || root;
   const queue = ids.slice();
-  let i = 0, exN = 0, results = [];
+  let i = 0, cursor = 0, items = [], results = [];
   let sub = null;
   let passedCount = 0;
 
-  function renderShell(pattern, level, recog) {
+  const PROMPT = { cloze: 'Prove it — type', scramble: 'Prove it — build the sentence with', mcq: 'Prove it — pick the grammar for' };
+  function renderShell(pattern, level, type) {
     container.innerHTML = `
       <div class="stu-testout">
         <div class="stu-lesson-top"><span class="stu-lesson-tag">Test-out · ${esc(String(i + 1))}/${esc(String(queue.length))}</span><span class="stu-lvl">${esc(level || '')}</span></div>
-        <p class="stu-mc-q">${recog ? 'Prove it — build the sentence with' : 'Prove it — type'} <b lang="ja">${esc(pattern || '')}</b> (${esc(String(exN + 1))} of 2).</p>
+        <p class="stu-mc-q">${PROMPT[type] || PROMPT.cloze} <b lang="ja">${esc(pattern || '')}</b> (${esc(String(cursor + 1))} of ${esc(String(items.length))}).</p>
         <div id="stuClozeHost"></div>
       </div>`;
   }
 
-  function renderEx() {
+  function startPoint() {
     const p = pointsCache[queue[i]];
     if (!p || !Array.isArray(p.examples) || p.examples.length < 2) { skipPoint(); return; }
-    // recognition (★-scramble) for N1 / written-formal points where this example scrambles; else cloze
-    const recog = gateMode(p, { level: p.level, flags: p.flags }) === 'recognition' && !!scrambleFor(p, exN);
-    renderShell(p.pattern, p.level, recog);
+    items = testOutItems(p); cursor = 0; results = [];
+    renderItem();
+  }
+
+  function renderItem() {
+    const p = pointsCache[queue[i]];
+    let { type, ex } = items[cursor];
+    let mcq = null;
+    if (type === 'mcq') { mcq = mcqFor(p, pointsCache, ex); if (!mcq) type = 'cloze'; }   // degrade if unassemblable
+    renderShell(p.pattern, p.level, type);
     const hostEl = container.querySelector('#stuClozeHost');
     const onResult = (res) => {
       results.push(!!res.pass);
-      exN++;
-      if (exN >= 2) commitPoint();
-      else renderEx();
+      cursor++;
+      if (cursor >= items.length) commitPoint();
+      else renderItem();
     };
-    sub = recog
-      ? scrambleCard(ctx, hostEl, p, exN, { grade: false, onResult })
-      : clozeCard(ctx, hostEl, p, exN, { timer: true, onResult });
+    sub = type === 'scramble' ? scrambleCard(ctx, hostEl, p, ex, { grade: false, onResult })
+      : type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, onResult })
+      : clozeCard(ctx, hostEl, p, ex, { timer: true, onResult });
   }
 
   function commitPoint() {
@@ -435,7 +453,7 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
     advance();
   }
   function skipPoint() { advance(); }
-  function advance() { i++; exN = 0; results = []; if (i >= queue.length) finish(); else renderEx(); }
+  function advance() { i++; cursor = 0; items = []; results = []; if (i >= queue.length) finish(); else startPoint(); }
 
   function finish() {
     sub = null;
@@ -450,7 +468,7 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
     ctx.announce(`${passedCount} of ${queue.length} tested out. The rest return as lessons.`);
   }
 
-  renderEx();
+  startPoint();
   const controller = {
     teardown() { if (sub && sub.teardown) sub.teardown(); },
     onAct(name, btn) {
@@ -460,6 +478,108 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
     onKey(e) { if (sub) sub.onKey(e); },
   };
   return controller;
+}
+
+// ── Flow 4: the unit checkpoint (R8 — the Coursera module quiz) ───────────────
+// A 10-question quiz (mcq/scramble/cloze mix, from lib/study.js checkpointQuestions) over ONE
+// unit's points. ≥8/10 → ✓★ gold + celebrate(); below → the missed points are surfaced ("review
+// these" — they're already in the SRS, so nothing is scheduled here) and a Retake is offered.
+// FORMATIVE: pass or fail, this only writes the unit's checkpoint record via recordCheckpoint — it
+// NEVER calls review()/testOutResult, so the SRS gate stays the only mastery truth. The quiz seed
+// folds in the attempt count so a retake draws different items.
+export function startCheckpoint(ctx, unit) {
+  const { root, pointsCache } = ctx;
+  const PASS = 8, TOTAL = 10;
+
+  function attemptsSoFar() {
+    const u = (ctx.getState().units || {})[unit.id];
+    return (u && u.checkpoint && u.checkpoint.attempts) || 0;
+  }
+
+  let qs = [], qi = 0, correctN = 0, missed = [];
+  let sub = null;
+
+  function begin() {
+    const seed = hash(unit.id + ':cp:' + attemptsSoFar()) || 1;
+    qs = checkpointQuestions(unit, pointsCache, seed);
+    qi = 0; correctN = 0; missed = [];
+    if (!qs.length) { finish(); return; }
+    renderQ();
+  }
+
+  function renderQ() {
+    sub = null;
+    const q = qs[qi];
+    const p = pointsCache[q.id];
+    if (!p || !Array.isArray(p.examples) || !p.examples.length) { onQ({ pass: false }); return; }
+    let type = q.type, ex = Math.min(q.exampleIdx || 0, p.examples.length - 1);
+    let mcq = null;
+    if (type === 'mcq') { mcq = mcqFor(p, pointsCache, ex); if (!mcq) type = scrambleFor(p, ex) ? 'scramble' : 'cloze'; }
+    if (type === 'scramble' && !scrambleFor(p, ex)) type = 'cloze';
+    root.innerHTML = `
+      <div class="stu-testout stu-checkpoint">
+        <div class="stu-lesson-top"><span class="stu-lesson-tag">Checkpoint · ${esc(String(qi + 1))}/${esc(String(TOTAL))}</span><span class="stu-lvl">${esc(unit.level || '')}</span></div>
+        <p class="stu-cp-unit">${esc(unit.title || '')}</p>
+        <div class="stu-cp-bar" aria-hidden="true"><i style="width:${Math.round(qi / TOTAL * 100)}%"></i></div>
+        <div id="stuClozeHost"></div>
+      </div>`;
+    const hostEl = root.querySelector('#stuClozeHost');
+    sub = type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, onResult: onQ })
+      : type === 'scramble' ? scrambleCard(ctx, hostEl, p, ex, { grade: false, onResult: onQ })
+      : clozeCard(ctx, hostEl, p, ex, { timer: false, onResult: onQ });
+    ctx.announce(`Checkpoint question ${qi + 1} of ${TOTAL}.`);
+  }
+
+  function onQ(res) {
+    if (res && res.pass) correctN++;
+    else { const id = qs[qi] && qs[qi].id; if (id && !missed.includes(id)) missed.push(id); }
+    qi++;
+    if (qi >= qs.length) finish();
+    else renderQ();
+  }
+
+  function finish() {
+    sub = null;
+    const passed = correctN >= PASS;
+    ctx.commit(recordCheckpoint(ctx.getState(), unit.id, correctN, PASS));   // formative record only
+    if (passed) celebrate(`Checkpoint passed — ${unit.title} ✓★`);
+    const missedHTML = (!passed && missed.length)
+      ? `<div class="stu-cp-missed"><p class="stu-note">Review these — they'll come back on their normal schedule:</p>
+           <ul class="stu-cp-missed-list">${missed.map(id => {
+             const p = pointsCache[id];
+             return `<li lang="ja">${esc(p ? p.pattern : id)}</li>`;
+           }).join('')}</ul></div>` : '';
+    const actions = passed
+      ? `<button type="button" class="stu-btn stu-btn-primary" data-act="cpDone">Done ⏎</button>`
+      : `<button type="button" class="stu-btn stu-btn-ghost" data-act="cpDone">Done</button>
+         <button type="button" class="stu-btn stu-btn-primary" data-act="cpRetake">Retake ⏎</button>`;
+    root.innerHTML = `
+      <div class="stu-summary">
+        <div class="stu-sum-art" aria-hidden="true">${passed ? '✓★' : '🎯'}</div>
+        <h3 class="stu-sum-h">${esc(String(correctN))}/${esc(String(TOTAL))} — ${passed ? 'checkpoint passed' : 'not yet'}</h3>
+        <p class="stu-note">${passed ? `${esc(unit.title)} is gold. On to the next.` : `Need ${PASS} to pass. Give it another go when you're ready.`}</p>
+        ${missedHTML}
+        <div class="stu-controls">${actions}</div>
+      </div>`;
+    focusIn(root, '.stu-btn-primary');
+    ctx.announce(`Checkpoint ${passed ? 'passed' : 'not passed'}. ${correctN} of ${TOTAL} correct.`);
+  }
+
+  begin();
+  return {
+    teardown() { if (sub && sub.teardown) sub.teardown(); },
+    onAct(name, btn) {
+      if (sub) { sub.onAct(name, btn); return; }
+      if (name === 'cpDone') ctx.done();
+      else if (name === 'cpRetake') begin();
+    },
+    onKey(e) {
+      if (sub) { sub.onKey(e); return; }
+      const t = e.target;
+      if (t && t.tagName === 'BUTTON') return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const b = root.querySelector('.stu-controls .stu-btn-primary'); if (b) b.click(); }
+    },
+  };
 }
 
 export { NEW_PER_DAY_FALLBACK };

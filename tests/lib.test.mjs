@@ -1840,6 +1840,7 @@ import {
   newState, migrate, review, buildQueue, interleave, deferCard, amnesty,
   seedImport, hash, sessionStart, sessionRecord, sessionEnd,
   lessonOrder, unitProgress, testOutResult,
+  checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
 } from '../docs/assets/lib/study.js';
 
 const DAY = 86400000, MIN = 60000;
@@ -2154,6 +2155,76 @@ test('study: testOutResult — 2 passes land Mature ~2wk; any fail leaves state 
   assert.equal(testOutResult(s0, 'n5-wa', [true], now), s0);           // too few checks → unchanged
 });
 
+// ── R8: unit checkpoints ──────────────────────────────────────────────────────
+test('study: checkpointQuestions — 10 items, no identical (id+example+type) twice, deterministic', () => {
+  const unit = { id: 'n5-u1', level: 'N5', points: ['a', 'b', 'c', 'd', 'e', 'f'] };   // 6-point unit (<10)
+  const byId = {};
+  for (const id of unit.points) byId[id] = { id, examples: [{ ja: [] }, { ja: [] }, { ja: [] }] };   // 3 examples each
+  const qs = checkpointQuestions(unit, byId, 12345);
+  assert.equal(qs.length, 10);
+  const keys = qs.map(q => `${q.id}|${q.exampleIdx}|${q.type}`);
+  assert.equal(new Set(keys).size, 10, 'no identical item twice');
+  for (const q of qs) {
+    assert.ok(unit.points.includes(q.id));
+    assert.ok(['mcq', 'scramble', 'cloze'].includes(q.type));
+    assert.ok(q.exampleIdx >= 0 && q.exampleIdx < 3);
+  }
+  assert.deepEqual(checkpointQuestions(unit, byId, 12345), qs);                     // deterministic by seed
+  assert.notDeepEqual(checkpointQuestions(unit, byId, 999), qs);                    // different seed → different draw
+  const types = new Set(qs.map(q => q.type));
+  assert.ok(types.size >= 2, 'mixes formats');
+});
+
+test('study: checkpointQuestions — big unit covers distinct points; empty unit → []', () => {
+  const pts = Array.from({ length: 14 }, (_, i) => 'p' + i);
+  const unit = { id: 'n3-u1', level: 'N3', points: pts };
+  const byId = {}; for (const id of pts) byId[id] = { id, examples: [{ ja: [] }, { ja: [] }, { ja: [] }] };
+  const qs = checkpointQuestions(unit, byId, 7);
+  assert.equal(qs.length, 10);
+  assert.ok(new Set(qs.map(q => q.id)).size >= 8, 'draws from many distinct points');
+  assert.deepEqual(checkpointQuestions({ id: 'x', points: [] }, byId, 1), []);
+});
+
+test('study: recordCheckpoint — attempts/best/passed accumulate; formative (points untouched)', () => {
+  let st = newState(T0);
+  st = { ...st, points: { 'n5-a': { S: 7, reps: 1 } } };
+  const pointsBefore = st.points;
+  st = recordCheckpoint(st, 'n5-u1', 6);                     // below pass mark
+  assert.deepEqual(st.units['n5-u1'].checkpoint, { passed: false, best: 6, attempts: 1 });
+  assert.equal(checkpointPassed(st, 'n5-u1'), false);
+  st = recordCheckpoint(st, 'n5-u1', 9);                     // pass
+  assert.deepEqual(st.units['n5-u1'].checkpoint, { passed: true, best: 9, attempts: 2 });
+  assert.equal(checkpointPassed(st, 'n5-u1'), true);
+  st = recordCheckpoint(st, 'n5-u1', 4);                     // a later worse retake keeps passed + best
+  assert.deepEqual(st.units['n5-u1'].checkpoint, { passed: true, best: 9, attempts: 3 });
+  assert.equal(st.points, pointsBefore, 'scheduling untouched (formative)');   // same points ref → no writes
+});
+
+test('study: recordCheckpoint — works on a migrated state with no units key (no schema bump)', () => {
+  const v1 = { v: 1, points: {}, session: null, log: [], lastSession: 0, settings: { newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2 } };
+  const s = migrate(v1);                                     // v1→v2, still no units key guaranteed
+  const out = recordCheckpoint(s, 'n5-u1', 10);
+  assert.equal(out.units['n5-u1'].checkpoint.passed, true);
+  assert.equal(checkpointPassed(out, 'n5-u1'), true);
+});
+
+test('study: nextCheckpointUnit — first lessons-done, unpassed unit in order (Continue priority)', () => {
+  const units = [
+    { id: 'n5-u1', level: 'N5', points: ['a', 'b'] },
+    { id: 'n5-u2', level: 'N5', points: ['c', 'd'] },
+    { id: 'n5-u3', level: 'N5', points: ['e', 'f'] },
+  ];
+  // u1 fully introduced + passed, u2 fully introduced + unpassed, u3 partial
+  const statePoints = { a: {}, b: {}, c: {}, d: {}, e: {} };
+  const unitsState = { 'n5-u1': { checkpoint: { passed: true, best: 10, attempts: 1 } } };
+  const next = nextCheckpointUnit(units, statePoints, unitsState);
+  assert.equal(next.id, 'n5-u2', 'skips passed u1, skips partial u3');
+  // everything done + passed → null
+  assert.equal(nextCheckpointUnit(units, { a: {}, b: {}, c: {}, d: {}, e: {}, f: {} },
+    { 'n5-u1': { checkpoint: { passed: true } }, 'n5-u2': { checkpoint: { passed: true } }, 'n5-u3': { checkpoint: { passed: true } } }), null);
+  assert.equal(nextCheckpointUnit([], {}, {}), null);
+});
+
 // deterministic ~88% pass LCG shared by the sims below
 function lcg(seed) {
   let s = seed >>> 0;
@@ -2315,7 +2386,7 @@ test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sti
 // ─────────────────────────────────────────────────────────────────────────────
 // questions.js — R2 typed-cloze generator + answer arbitration (pure)
 // ─────────────────────────────────────────────────────────────────────────────
-import { clozeFor, normalizeAnswer, levenshtein, checkAnswer, scrambleFor, scramblable } from '../docs/assets/lib/questions.js';
+import { clozeFor, normalizeAnswer, levenshtein, checkAnswer, scrambleFor, scramblable, mcqFor } from '../docs/assets/lib/questions.js';
 
 // real-shaped fixture: p tokens are objects, non-p tokens mix string + object, p is
 // NON-contiguous (indices 2 and 4), and the p surfaces differ from their kana readings.
@@ -2474,6 +2545,56 @@ test('questions: scramblable — the known scramble-less points degrade', () => 
     assert.ok(p, `${id} present`);
     assert.equal(scramblable(p), false, `${id} is not scramble-able`);
   }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// questions.js — R8 文法形式 MCQ generator (pure)
+// ─────────────────────────────────────────────────────────────────────────────
+const mcqA = { id: 'n5-a', pattern: '〜ように', level: 'N5', confusable: ['n5-b', 'n5-c'], distractors: ['〜そうに'],
+  examples: [{ ja: [{ t: '会議', f: [['会議', 'かいぎ']], g: 'meeting' }, 'に', { t: '間に合う', f: [['間に合う', 'まにあう']], g: 'in time' }, { t: 'ように', f: [['ように', '']], p: 1 }, '。'], en: 'so as to make the meeting.' }] };
+const mcqB = { id: 'n5-b', pattern: '〜ために', level: 'N5', confusable: ['n5-a'] };
+const mcqC = { id: 'n5-c', pattern: '〜のに', level: 'N5', confusable: ['n5-a'] };
+
+test('questions: mcqFor — 4 options, one correct = the pattern, wrongs ⊆ mcqOptions, blanked stem', () => {
+  const byId = new Map([['n5-a', mcqA], ['n5-b', mcqB], ['n5-c', mcqC]]);
+  const m = mcqFor(mcqA, byId, 0, 42);
+  assert.equal(m.options.length, 4);
+  assert.equal(new Set(m.options).size, 4, 'no duplicate option');
+  assert.equal(m.options[m.correct], '〜ように', 'correct option is the point pattern');
+  assert.equal(m.options.filter(o => o === '〜ように').length, 1, 'exactly one correct');
+  const pool = mcqOptions(mcqA, byId);                              // the validator helper
+  for (const o of m.options) if (o !== '〜ように') assert.ok(pool.includes(o), `wrong "${o}" from mcqOptions`);
+  assert.ok(m.stem.some(t => t.blank), 'stem has a blank');
+  assert.ok(m.stem.some(t => !t.blank), 'stem keeps non-p tokens');
+  assert.equal(m.en, 'so as to make the meeting.');
+});
+
+test('questions: mcqFor — deterministic by seed; null when <3 wrong options', () => {
+  const byId = new Map([['n5-a', mcqA], ['n5-b', mcqB], ['n5-c', mcqC]]);
+  assert.deepEqual(mcqFor(mcqA, byId, 0, 7), mcqFor(mcqA, byId, 0, 7));       // same seed reproducible
+  assert.deepEqual(mcqFor(mcqA, byId, 0), mcqFor(mcqA, byId, 0));             // default seed reproducible
+  // mcqB has one confusable (n5-a) and no distractors → only 1 wrong option → cannot make a 4-set
+  assert.equal(mcqFor(mcqB, byId, 0, 1), null);
+  assert.equal(mcqFor(null, byId, 0), null);
+});
+
+test('questions: mcqFor — every one of the 353 real points yields a valid 4-option MCQ (leans on R7 ≥3 gate)', () => {
+  const dir = new URL('../docs/data/', import.meta.url);
+  const files = ['n5', 'n4', 'n3', 'n2', 'n1'].map(l => JSON.parse(readFileSync(new URL(`grammar-${l}.json`, dir), 'utf8')));
+  const all = files.flat();
+  const byId = new Map(all.map(p => [p.id, p]));
+  let n = 0;
+  for (const p of all) {
+    const m = mcqFor(p, byId, 0);
+    assert.ok(m, `${p.id} → MCQ`);
+    assert.equal(m.options.length, 4, `${p.id} options`);
+    assert.equal(new Set(m.options).size, 4, `${p.id} distinct options`);
+    assert.equal(m.options[m.correct], p.pattern, `${p.id} correct = pattern`);
+    const pool = mcqOptions(p, byId);
+    for (const o of m.options) if (o !== p.pattern) assert.ok(pool.includes(o), `${p.id} wrong "${o}" ⊆ mcqOptions`);
+    n++;
+  }
+  assert.equal(n, 353);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

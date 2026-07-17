@@ -160,8 +160,8 @@ function wireDeckKeys() {
     if (e.key === 'n' || e.key === 'N') { e.preventDefault(); flipHira(); return; }   // n = hiragana
     if (e.key === 'm' || e.key === 'M') { e.preventDefault(); flipEn(); return; }     // m = English
     if (e.key === 'ArrowDown') { e.preventDefault(); revealCard(); return; }          // ↓ = reveal the hidden side
-    if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
+    if (e.key === ' ' || e.key === 'ArrowRight' || e.key === '.') { e.preventDefault(); advance(1); }   // . = forward
+    else if (e.key === 'ArrowLeft' || e.key === ',') { e.preventDefault(); advance(-1); }               // , = back
     else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }
   });
 }

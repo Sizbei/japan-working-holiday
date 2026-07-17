@@ -587,9 +587,14 @@ export function recordSession(state, todayISO) {
 
   const ws = weekStartISO(todayISO);
   const done = (week.weekStart === ws ? (week.done || 0) : 0) + 1;
+  // R15: a lifetime "days shown up" tally for the JLPT Master certificate. Bumped once per calendar
+  // day (this branch only runs on a genuinely new day — the same-day early-return above guards it),
+  // so it's a true lifetime count that never resets on a streak break. Tolerant of absence (examLog
+  // precedent — additive, no schema bump); a migrated state without it starts from 0 here.
+  const daysStudied = ((s.daysStudied || 0) + 1);
   return { ...state, settings: { ...s,
     streak: { count, lastDay: todayISO, freezes, lastFreezeMonth: month },
-    week: { done, weekStart: ws } } };
+    week: { done, weekStart: ws }, daysStudied } };
 }
 
 // streakInfo(state, todayISO) → { count, freezes, atRisk }. `freezes` is the effective count with the
@@ -623,4 +628,196 @@ export function masteryStats(state) {
     else if (st === 'deep') inGate++;
   }
   return { perLevel, totals: LEVEL_TOTALS, inGate };
+}
+
+// ── R15: analytics, course-% rollups, pacing projection, the Master moment (pure) ────────────────
+// The fixed corpus size — the single source of "all points" for course-% and the certificate.
+const CORPUS_TOTAL = Object.values(LEVEL_TOTALS).reduce((a, b) => a + b, 0);   // 353
+export { CORPUS_TOTAL };
+
+// courseRollup(state, unitsList) → { units:[…], perLevel:{…}, overall:{…} }, every % KEYED ON POINT
+// MASTERY (a point's SRS gate), NEVER on unit checkpoints — checkpoints decorate and direct, they
+// can never block 100% (the plan is explicit). A unit/level/overall % is mastered-points / total.
+// Level denominators are the fixed LEVEL_TOTALS (so a level reads 0% honestly before any point of it
+// is seeded), unit denominators are the unit's own point count.
+export function courseRollup(state, unitsList = []) {
+  const points = (state && state.points) || {};
+  const isMastered = (id) => stageOf(points[id]) === 'mastered';
+  const units = (unitsList || []).map(u => {
+    const pts = (u && u.points) || [];
+    let mastered = 0;
+    for (const id of pts) if (isMastered(id)) mastered++;
+    return { id: u.id, level: u.level, title: u.title, mastered, total: pts.length,
+      pct: pts.length ? Math.round(mastered / pts.length * 100) : 0 };
+  });
+  const perLevel = {};
+  for (const lv of Object.keys(LEVEL_TOTALS)) perLevel[lv] = { mastered: 0, total: LEVEL_TOTALS[lv], pct: 0 };
+  for (const [id, p] of Object.entries(points)) {
+    if (stageOf(p) !== 'mastered') continue;
+    const lv = levelOfId(id);
+    if (lv && perLevel[lv]) perLevel[lv].mastered++;
+  }
+  let overallM = 0;
+  for (const lv of Object.keys(perLevel)) {
+    overallM += perLevel[lv].mastered;
+    perLevel[lv].pct = perLevel[lv].total ? Math.round(perLevel[lv].mastered / perLevel[lv].total * 100) : 0;
+  }
+  return { units, perLevel,
+    overall: { mastered: overallM, total: CORPUS_TOTAL, pct: CORPUS_TOTAL ? Math.round(overallM / CORPUS_TOTAL * 100) : 0 } };
+}
+
+// isMasterComplete(state) → every one of the 353 corpus points has reached Mastered (its gate
+// passed). The real JLPT Master certificate trigger. 353/353 → true, 352 → false.
+export function isMasterComplete(state) {
+  let mastered = 0;
+  for (const p of Object.values((state && state.points) || {})) if (stageOf(p) === 'mastered') mastered++;
+  return mastered >= CORPUS_TOTAL;
+}
+
+// estimatedRetention(state, now) → { mean, n }. Mean FSRS retrievability across every non-suspended
+// point with a stability, i.e. "if you tested everything you've started right now, what share would
+// you recall?" — a single honest today-number for the analytics tab.
+export function estimatedRetention(state, now) {
+  let sum = 0, n = 0;
+  for (const p of Object.values((state && state.points) || {})) {
+    if (!p || p.suspended || !(p.S > 0)) continue;
+    sum += retrievability((now - (p.last ?? now)) / DAY, p.S);
+    n++;
+  }
+  return { mean: n ? sum / n : 0, n };
+}
+
+// mockTrend(state) → { [level]: [{ date, pct, raw, total }] } extracted from the bounded examLog ring,
+// in log order (oldest → newest) — the per-level sparkline source for the analytics tab.
+export function mockTrend(state) {
+  const log = Array.isArray(state && state.examLog) ? state.examLog : [];
+  const byLevel = {};
+  for (const e of log) {
+    if (!e || !e.level) continue;
+    const total = e.total || 0;
+    const pct = total ? Math.round((e.raw || 0) / total * 100) : 0;
+    (byLevel[e.level] || (byLevel[e.level] = [])).push({ date: e.date || null, pct, raw: e.raw || 0, total });
+  }
+  return byLevel;
+}
+
+// clusterWeakness(clusters, points, mockClusters) → the worst confusable trap-families, sorted worst
+// first, so the learner drills the clusters actually costing them marks. Pure: the confusable graph
+// lives in the corpus (not this engine), so the UI supplies `clusters` = [{ key, label, ids:[…] }];
+// this rolls up each family's lapse load (from state.points) + its live leech count + any mock
+// wrong-pick tally (mockClusters = { [clusterKey]: wrongCount }, from the persisted examLog byCluster).
+// Score = lapses + 2·leeches + mockWrong; families with no signal are dropped.
+export function clusterWeakness(clusters, points = {}, mockClusters = {}) {
+  const out = [];
+  for (const c of (clusters || [])) {
+    const ids = (c && c.ids) || [];
+    let lapses = 0, leeches = 0;
+    for (const id of ids) {
+      const p = points[id];
+      if (!p) continue;
+      lapses += p.lapses || 0;
+      if (p.leech) leeches++;
+    }
+    const mock = mockClusters[c.key] || 0;
+    const score = lapses + 2 * leeches + mock;
+    if (score > 0) out.push({ key: c.key, label: c.label || c.key, ids, lapses, leeches, mock, score });
+  }
+  out.sort((a, b) => (b.score - a.score) || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  return out;
+}
+
+// mockClustersFromLog(state) → { [confusableId]: totalWrongPicks } aggregated across every mock in
+// examLog that recorded a byCluster tally (post-R15 entries). Feeds clusterWeakness's mock signal.
+export function mockClustersFromLog(state) {
+  const log = Array.isArray(state && state.examLog) ? state.examLog : [];
+  const acc = {};
+  for (const e of log) {
+    const bc = e && e.byCluster;
+    if (!bc) continue;
+    for (const key of Object.keys(bc)) {
+      const rec = bc[key];
+      const cid = (rec && rec.cluster) || key;
+      const count = (rec && rec.count) || 0;
+      if (cid && cid !== 'other') acc[cid] = (acc[cid] || 0) + count;
+    }
+  }
+  return acc;
+}
+
+// masteryLagDays(grade) → the ideal number of days from first seeing a point to passing its gate,
+// derived FROM THE ENGINE ITSELF by walking one point through on-schedule successful reviews
+// (Seed → Deep → 3 distinct gate passes). No magic constant: change a scheduler weight and the
+// projection moves with it. Deterministic (no clock, no randomness); memoised per grade.
+const _lagCache = {};
+export function masteryLagDays(grade = 3) {
+  if (_lagCache[grade] != null) return _lagCache[grade];
+  const id = '_lagsim';
+  let now = 0;
+  let s = review(newState(0), id, { pass: true, grade }, now);   // seed
+  let guard = 0;
+  while (stageOf(s.points[id]) !== 'deep' && guard++ < 200) {
+    now = s.points[id].due;
+    s = review(s, id, { pass: true, grade }, now);
+  }
+  let ex = 0;
+  while (!(s.points[id].gate && s.points[id].gate.passed) && guard++ < 200) {
+    now = s.points[id].due;
+    s = review(s, id, { pass: true, grade, exampleIdx: (ex++) % 3, mode: 'gate' }, now);
+  }
+  return (_lagCache[grade] = Math.round(now / DAY));
+}
+
+// paceProjection(state, now, opts) → { done, mastered, total, seeded, unseeded, newPerDay, seedDays,
+// lag, daysOut, projected } — the honest projected all-gates-passed date. The finish is the later of
+// (a) seeding the remaining unseen points at settings.newPerDay/day, THEN one full maturation lag,
+// and (b) the remaining maturation of the least-mature point already in flight (a stage→fraction of
+// the full lag). Conservative by design — the plan wants an honest projection, not an optimistic one.
+const STAGE_LAG_FRAC = { seed: 1, sprout: 0.82, young: 0.62, mature: 0.42, deep: 0.28 };
+export function paceProjection(state, now, opts = {}) {
+  const points = (state && state.points) || {};
+  const seeded = Object.keys(points).length;
+  let mastered = 0;
+  const unmastered = [];
+  for (const p of Object.values(points)) {
+    const st = stageOf(p);
+    if (st === 'mastered') mastered++; else unmastered.push(st);
+  }
+  const lag = opts.lagDays != null ? opts.lagDays : masteryLagDays();
+  if (mastered >= CORPUS_TOTAL) return { done: true, mastered, total: CORPUS_TOTAL, seeded, unseeded: 0, newPerDay: (state.settings && state.settings.newPerDay) || 4, seedDays: 0, lag, daysOut: 0, projected: now };
+  const newPerDay = Math.max(1, (state.settings && state.settings.newPerDay) || 4);
+  const unseeded = Math.max(0, CORPUS_TOTAL - seeded);
+  const seedDays = Math.ceil(unseeded / newPerDay);
+  let daysOut = unseeded > 0 ? seedDays + lag : 0;               // newest cohort finishes last
+  for (const st of unmastered) daysOut = Math.max(daysOut, Math.round(lag * (STAGE_LAG_FRAC[st] ?? 1)));
+  daysOut = Math.max(daysOut, 1);
+  return { done: false, mastered, total: CORPUS_TOTAL, seeded, unseeded, newPerDay, seedDays, lag, daysOut, projected: now + daysOut * DAY };
+}
+
+// repaceNewPerDay(state, targetISO, now) → the settings.newPerDay that would land all gates by
+// targetISO, clamped to a sane 1..40 (never above the review cap). Reserves one full maturation lag
+// before the target and spreads the unseeded points across the seeding days that remain. Pure math —
+// the caller applies it to settings ONLY on an explicit tap (never silently).
+export function repaceNewPerDay(state, targetISO, now, opts = {}) {
+  const points = (state && state.points) || {};
+  const unseeded = Math.max(0, CORPUS_TOTAL - Object.keys(points).length);
+  const cur = (state.settings && state.settings.newPerDay) || 4;
+  if (unseeded <= 0) return cur;                                 // nothing left to accelerate
+  const lag = opts.lagDays != null ? opts.lagDays : masteryLagDays();
+  const targetMs = Date.parse(String(targetISO) + 'T00:00:00Z');
+  if (!Number.isFinite(targetMs)) return cur;
+  const seedWindow = Math.floor((targetMs - now) / DAY) - lag;   // days left to seed after reserving maturation
+  if (seedWindow <= 0) return 40;                                // target already infeasible → recommend the ceiling
+  return Math.max(1, Math.min(40, Math.ceil(unseeded / seedWindow)));
+}
+
+// certStats(state) → { reviews, accuracy, days } for the JLPT Master certificate. All derived from
+// existing pure state: total reviews = Σ reps; lifetime review accuracy ≈ (reviews − lapses)/reviews
+// (an honest estimate — each lapse is one failed review); days = the lifetime days-shown-up tally.
+export function certStats(state) {
+  let reviews = 0, lapses = 0;
+  for (const p of Object.values((state && state.points) || {})) { reviews += p.reps || 0; lapses += p.lapses || 0; }
+  const acc = reviews ? Math.round((reviews - lapses) / reviews * 100) : 0;
+  const s = (state && state.settings) || {};
+  const days = s.daysStudied || (s.streak && s.streak.count) || 0;
+  return { reviews, accuracy: clamp(acc, 0, 100), days };
 }

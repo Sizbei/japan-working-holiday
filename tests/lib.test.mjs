@@ -1941,6 +1941,8 @@ import {
   checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
   leechList, ghostCount, unsuspend,
   recordSession, streakInfo, weeklyInfo, masteryStats, LEVEL_TOTALS,
+  courseRollup, isMasterComplete, estimatedRetention, mockTrend, clusterWeakness,
+  mockClustersFromLog, masteryLagDays, paceProjection, repaceNewPerDay, certStats, CORPUS_TOTAL,
 } from '../docs/assets/lib/study.js';
 
 const DAY = 86400000, MIN = 60000;
@@ -2675,6 +2677,162 @@ test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sti
   st2 = { ...st2, points: { g2: { D: 5, S: 60, last: T, due: T, stage: 'mastered', reps: 15, lapses: 0, ghost: null, gate: { passes: [0, 1, 2], passed: true } } } };
   st2 = review(st2, 'g2', { pass: false, grade: 1, mode: 'review' }, T);
   assert.equal(st2.points.g2.gate.passed, true);         // Mastered is not revoked by a lapse
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// study.js — R15 analytics, pacing projection, the Master moment (pure)
+// ─────────────────────────────────────────────────────────────────────────────
+// a point at Mastered = its gate passed; a mid-ladder point = has reps + a stability.
+const mastered = () => ({ D: 5, S: 60, last: T0, due: T0 + 40 * DAY, reps: 15, lapses: 0, ghost: null, gate: { passes: [0, 1, 2], passed: true } });
+const midYoung = (over = {}) => ({ D: 5, S: 6, last: T0, due: T0 + 6 * DAY, reps: 3, lapses: 0, ghost: null, gate: null, ...over });
+
+test('study R15: isMasterComplete — 353/353 true, 352 false', () => {
+  assert.equal(CORPUS_TOTAL, 353);
+  const full = newState(T0);
+  for (let i = 0; i < 353; i++) full.points['p' + i] = mastered();
+  assert.equal(isMasterComplete(full), true, '353 mastered → complete');
+  const one = full.points['p0'];
+  delete full.points['p0'];
+  full.points['p0'] = midYoung();               // one point knocked back below Mastered
+  assert.equal(Object.keys(full.points).length, 353);
+  assert.equal(isMasterComplete(full), false, '352 mastered → not complete');
+  assert.equal(isMasterComplete(newState(T0)), false, 'empty store → not complete');
+  void one;
+});
+
+test('study R15: courseRollup — % KEYED ON MASTERY (gates), never on checkpoints', () => {
+  const units = [
+    { id: 'n5-u1', level: 'N5', title: 'U1', points: ['n5-a', 'n5-b', 'n5-c', 'n5-d'] },
+    { id: 'n4-u1', level: 'N4', title: 'U1', points: ['n4-a', 'n4-b'] },
+  ];
+  let s = newState(T0);
+  s.points['n5-a'] = mastered();
+  s.points['n5-b'] = mastered();
+  s.points['n5-c'] = midYoung();                 // seeded but NOT mastered
+  s.points['n4-a'] = mastered();
+  // pass EVERY unit's checkpoint — must NOT change any course-%
+  s = { ...s, units: { 'n5-u1': { checkpoint: { passed: true } }, 'n4-u1': { checkpoint: { passed: true } } } };
+  const r = courseRollup(s, units);
+  const u1 = r.units.find(u => u.id === 'n5-u1');
+  assert.equal(u1.mastered, 2);
+  assert.equal(u1.pct, 50, 'unit % = mastered/total, unaffected by a passed checkpoint');
+  // level % keys on the FIXED LEVEL_TOTALS denominator (honest 0% before seeding)
+  assert.equal(r.perLevel.N5.mastered, 2);
+  assert.equal(r.perLevel.N5.total, LEVEL_TOTALS.N5);
+  assert.equal(r.perLevel.N5.pct, Math.round(2 / LEVEL_TOTALS.N5 * 100));
+  assert.equal(r.perLevel.N1.pct, 0, 'untouched level reads 0%, not undefined');
+  assert.equal(r.overall.total, 353);
+  assert.equal(r.overall.mastered, 3);
+});
+
+test('study R15: estimatedRetention — mean retrievability, decays with elapsed time', () => {
+  let s = newState(T0);
+  s.points['a'] = { S: 10, last: T0, reps: 2, suspended: false };
+  s.points['b'] = { S: 10, last: T0, reps: 2, suspended: false };
+  assert.equal(estimatedRetention(s, T0).mean, 1, 'seen right now → full recall');
+  assert.equal(estimatedRetention(s, T0).n, 2);
+  const later = estimatedRetention(s, T0 + 20 * DAY);
+  assert.ok(later.mean > 0 && later.mean < 1, 'decays below 1 as days pass');
+  // suspended + no-stability points are excluded
+  s.points['c'] = { S: 10, last: T0, suspended: true };
+  s.points['d'] = { S: 0, last: T0 };
+  assert.equal(estimatedRetention(s, T0).n, 2, 'suspended + S=0 excluded');
+});
+
+test('study R15: mockTrend + mockClustersFromLog — extracted per level from examLog', () => {
+  const s = { ...newState(T0), examLog: [
+    { level: 'N3', date: '2026-11-01', raw: 12, total: 24, byCluster: { c1: { count: 2, cluster: 'n3-x' }, other: { count: 1 } } },
+    { level: 'N3', date: '2026-11-08', raw: 18, total: 24 },
+    { level: 'N2', date: '2027-03-01', raw: 10, total: 22 },
+  ] };
+  const t = mockTrend(s);
+  assert.equal(t.N3.length, 2);
+  assert.deepEqual(t.N3.map(e => e.pct), [50, 75], 'oldest→newest, pct computed');
+  assert.equal(t.N2[0].pct, Math.round(10 / 22 * 100));
+  const mc = mockClustersFromLog(s);
+  assert.equal(mc['n3-x'], 2, 'wrong picks aggregate by confusable id; "other" dropped');
+  assert.equal(mc.other, undefined);
+});
+
+test('study R15: clusterWeakness — worst trap families first, empty when no signal', () => {
+  const clusters = [
+    { key: 'cond', label: 'Conditionals', ids: ['a', 'b'] },
+    { key: 'evid', label: 'Evidentials', ids: ['c', 'd'] },
+    { key: 'calm', label: 'Calm', ids: ['e'] },
+  ];
+  const points = {
+    a: { lapses: 3, leech: false }, b: { lapses: 5, leech: true },   // cond: 8 + 2 = 10 + mock
+    c: { lapses: 2, leech: false }, d: { lapses: 1, leech: false },   // evid: 3
+    e: { lapses: 0, leech: false },                                   // calm: 0 → dropped
+  };
+  const w = clusterWeakness(clusters, points, { cond: 4 });
+  assert.equal(w.length, 2, 'no-signal family dropped');
+  assert.equal(w[0].key, 'cond');
+  assert.equal(w[0].score, 3 + 5 + 2 * 1 + 4, 'lapses + 2·leeches + mock');
+  assert.equal(w[1].key, 'evid');
+  assert.deepEqual(clusterWeakness([], {}, {}), []);
+});
+
+test('study R15: masteryLagDays — engine-derived, ordered by grade, deterministic', () => {
+  const good = masteryLagDays(3);
+  assert.ok(good > 120 && good < 400, `Seed→Mastered lag is a sane ~months figure (${good}d)`);
+  assert.equal(masteryLagDays(3), good, 'memoised — identical on re-call');
+  assert.ok(masteryLagDays(2) < good && good < masteryLagDays(4), 'a higher grade grows S faster → longer intervals → more days to reach the gate: Hard < Good < Easy');
+});
+
+test('study R15: paceProjection — sane future date, pulls in as points master', () => {
+  let s = seedImport(newState(T0), { done: Array.from({ length: 50 }, (_, i) => 'n5-p' + i) }, T0);
+  const p = paceProjection(s, T0);
+  assert.equal(p.done, false);
+  assert.equal(p.total, 353);
+  assert.equal(p.unseeded, 303);
+  assert.ok(p.projected > T0, 'projected finish is in the future');
+  assert.ok(p.daysOut > p.lag, 'finish = seed time + a maturation lag');
+  // a fully-mastered store → done, zero days out
+  const full = newState(T0);
+  for (let i = 0; i < 353; i++) full.points['p' + i] = mastered();
+  const pf = paceProjection(full, T0);
+  assert.equal(pf.done, true);
+  assert.equal(pf.daysOut, 0);
+  // more seeding pulls the projection IN (fewer unseeded → less seed time)
+  let s2 = seedImport(newState(T0), { done: Array.from({ length: 200 }, (_, i) => 'n5-p' + i) }, T0);
+  assert.ok(paceProjection(s2, T0).daysOut < p.daysOut, 'seeding more shortens the projection');
+});
+
+test('study R15: repaceNewPerDay — clamps 1..40, explicit target math', () => {
+  const s = seedImport(newState(T0), { done: Array.from({ length: 50 }, (_, i) => 'n5-p' + i) }, T0);
+  // a comfortable far target needs a modest drip
+  const far = repaceNewPerDay(s, '2027-07-04', T0);
+  assert.ok(far >= 1 && far <= 40);
+  // an infeasible near target (inside one maturation lag) → the 40 ceiling, never above the cap
+  assert.equal(repaceNewPerDay(s, '2026-12-06', T0), 40);
+  // nothing unseeded → keep current newPerDay
+  const full = newState(T0);
+  for (let i = 0; i < 353; i++) full.points['p' + i] = mastered();
+  assert.equal(repaceNewPerDay(full, '2027-07-04', T0), full.settings.newPerDay);
+  // a garbage target → current newPerDay (never NaN)
+  assert.equal(repaceNewPerDay(s, 'not-a-date', T0), s.settings.newPerDay);
+});
+
+test('study R15: certStats — reviews Σreps, accuracy from lapses, days from lifetime tally', () => {
+  let s = newState(T0);
+  s.points['a'] = { reps: 10, lapses: 1 };
+  s.points['b'] = { reps: 10, lapses: 1 };
+  s = { ...s, settings: { ...s.settings, daysStudied: 42 } };
+  const c = certStats(s);
+  assert.equal(c.reviews, 20);
+  assert.equal(c.accuracy, Math.round((20 - 2) / 20 * 100));   // 90
+  assert.equal(c.days, 42);
+  assert.equal(certStats(newState(T0)).accuracy, 0, 'no reviews → 0, never NaN');
+});
+
+test('study R15: recordSession bumps the lifetime daysStudied tally (once/day)', () => {
+  let s = recordSession(newState(T0), '2026-08-03');
+  assert.equal(s.settings.daysStudied, 1);
+  s = recordSession(s, '2026-08-03');            // same day → no-op
+  assert.equal(s.settings.daysStudied, 1);
+  s = recordSession(s, '2026-08-04');            // new day → +1
+  assert.equal(s.settings.daysStudied, 2);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

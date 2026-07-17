@@ -1,0 +1,586 @@
+[
+  {
+    "id": "n5-u1",
+    "level": "N5",
+    "title": "First sentences — です & the case particles",
+    "points": [
+      "n5-desu",
+      "n5-ja-arimasen",
+      "n5-wa",
+      "n5-ga-subject",
+      "n5-wo",
+      "n5-ni-time",
+      "n5-de-place",
+      "n5-e",
+      "n5-to-and",
+      "n5-ya",
+      "n5-no",
+      "n5-mo"
+    ]
+  },
+  {
+    "id": "n5-u2",
+    "level": "N5",
+    "title": "Questions & verb forms — か・ね・よ and polite/plain conjugation",
+    "points": [
+      "n5-ka",
+      "n5-ne",
+      "n5-yo",
+      "n5-masu",
+      "n5-masen",
+      "n5-mashita",
+      "n5-masen-deshita",
+      "n5-nai",
+      "n5-nakatta"
+    ]
+  },
+  {
+    "id": "n5-u3",
+    "level": "N5",
+    "title": "The て-form opens up — requests, let’s, can & must",
+    "points": [
+      "n5-te-iru",
+      "n5-te-kudasai",
+      "n5-naide-kudasai",
+      "n5-mashou",
+      "n5-mashou-ka",
+      "n5-masen-ka",
+      "n5-tari-tari",
+      "n5-nakereba-narimasen",
+      "n5-nakute-mo-ii",
+      "n5-koto-ga-dekimasu"
+    ]
+  },
+  {
+    "id": "n5-u4",
+    "level": "N5",
+    "title": "Wants, opinions & explanations",
+    "points": [
+      "n5-no-ga-suki",
+      "n5-no-ga-jouzu",
+      "n5-ga-hoshii",
+      "n5-sugimasu",
+      "n5-n-desu",
+      "n5-to-omoimasu",
+      "n5-deshou",
+      "n5-mada",
+      "n5-mou"
+    ]
+  },
+  {
+    "id": "n5-u5",
+    "level": "N5",
+    "title": "Amounts, limits & comparisons",
+    "points": [
+      "n5-gurai",
+      "n5-goro",
+      "n5-dake",
+      "n5-shika-nai",
+      "n5-yori-hou-ga",
+      "n5-de-ichiban",
+      "n5-toki",
+      "n5-ta-ato-de",
+      "n5-kata",
+      "n5-ni-ikimasu"
+    ]
+  },
+  {
+    "id": "n5-u6",
+    "level": "N5",
+    "title": "Everyday phrases & first connectors",
+    "points": [
+      "n5-amari-nai",
+      "n5-zenzen-nai",
+      "n5-wa-dou-desu-ka",
+      "n5-wo-kudasai",
+      "n5-ku-narimasu",
+      "n5-ni-narimasu",
+      "n5-no-nominalizer",
+      "n5-kute",
+      "n5-ni-shimasu",
+      "n5-deshou-ka",
+      "n5-naide",
+      "n5-kedo",
+      "n5-ga-but",
+      "n5-demo"
+    ]
+  },
+  {
+    "id": "n5-u7",
+    "level": "N5",
+    "title": "Joining ideas — connectors & sequence",
+    "points": [
+      "n5-soshite",
+      "n5-sorekara",
+      "n5-dakara",
+      "n5-to-issho-ni",
+      "n5-te-linking",
+      "n5-donna",
+      "n5-te-kara",
+      "n5-mae-ni",
+      "n5-mo-mo"
+    ]
+  },
+  {
+    "id": "n5-u8",
+    "level": "N5",
+    "title": "Existence, experience & advice",
+    "points": [
+      "n5-tai",
+      "n5-ga-arimasu",
+      "n5-temo-ii",
+      "n5-te-wa-ikemasen",
+      "n5-nagara",
+      "n5-ta-koto-ga-arimasu",
+      "n5-ta-hou-ga-ii",
+      "n5-kara",
+      "n5-tsumori"
+    ]
+  },
+  {
+    "id": "n4-u1",
+    "level": "N4",
+    "title": "Conditionals & volition — たら・ば・なら・と and 〜よう",
+    "points": [
+      "n4-tara",
+      "n4-ba",
+      "n4-nara",
+      "n4-to-conditional",
+      "n4-temo",
+      "n4-you-ni-naru",
+      "n4-you-ni-suru",
+      "n4-you-to-omou",
+      "n4-volitional"
+    ]
+  },
+  {
+    "id": "n4-u2",
+    "level": "N4",
+    "title": "Guessing & hearsay — かも・はず・そう・よう・みたい・らしい",
+    "points": [
+      "n4-yotei",
+      "n4-kamoshiremasen",
+      "n4-hazu",
+      "n4-sou-hearsay",
+      "n4-sou-looks",
+      "n4-you-desu",
+      "n4-mitai",
+      "n4-rashii"
+    ]
+  },
+  {
+    "id": "n4-u3",
+    "level": "N4",
+    "title": "Passive, potential & causative",
+    "points": [
+      "n4-passive",
+      "n4-potential",
+      "n4-causative",
+      "n4-causative-passive",
+      "n4-nasai",
+      "n4-na-prohibition"
+    ]
+  },
+  {
+    "id": "n4-u4",
+    "level": "N4",
+    "title": "The て-form family — しまう・おく・みる & giving/receiving",
+    "points": [
+      "n4-te-shimau",
+      "n4-te-oku",
+      "n4-te-miru",
+      "n4-te-ageru",
+      "n4-te-kureru",
+      "n4-te-morau",
+      "n4-te-iku",
+      "n4-te-kuru",
+      "n4-te-aru",
+      "n4-hajimeru",
+      "n4-owaru",
+      "n4-yasui",
+      "n4-nikui"
+    ]
+  },
+  {
+    "id": "n4-u5",
+    "level": "N4",
+    "title": "こと phrases, quoting & connectors",
+    "points": [
+      "n4-koto-ga-aru",
+      "n4-koto-ni-suru",
+      "n4-koto-ni-naru",
+      "n4-to-iu",
+      "n4-toka",
+      "n4-nado",
+      "n4-shi",
+      "n4-noni",
+      "n4-node",
+      "n4-keredomo",
+      "n4-ga-suru"
+    ]
+  },
+  {
+    "id": "n4-u6",
+    "level": "N4",
+    "title": "Time spans, limits & “just”",
+    "points": [
+      "n4-aida-ni",
+      "n4-made",
+      "n4-made-ni",
+      "n4-bakari",
+      "n4-ta-bakari",
+      "n4-tokoro",
+      "n4-ta-mama",
+      "n4-nakute",
+      "n4-ka-dou-ka",
+      "n4-embedded-q",
+      "n4-to-itte-imashita"
+    ]
+  },
+  {
+    "id": "n4-u7",
+    "level": "N4",
+    "title": "Purpose, regret & casual expressions",
+    "points": [
+      "n4-tame-ni",
+      "n4-you-ni-purpose",
+      "n4-ba-yokatta",
+      "n4-tara-dou",
+      "n4-sonna-ni",
+      "n4-kana",
+      "n4-darou",
+      "n4-zutsu"
+    ]
+  },
+  {
+    "id": "n4-u8",
+    "level": "N4",
+    "title": "Keigo — honorific & humble forms",
+    "points": [
+      "n4-o-ni-naru",
+      "n4-o-suru",
+      "n4-sonkeigo-verbs",
+      "n4-kenjougo-verbs",
+      "n4-o-kudasai",
+      "n4-de-gozaimasu"
+    ]
+  },
+  {
+    "id": "n4-u9",
+    "level": "N4",
+    "title": "Feelings, needs & softeners",
+    "points": [
+      "n4-to-onaji",
+      "n4-garu",
+      "n4-tagaru",
+      "n4-te-sumimasen",
+      "n4-te-yokatta",
+      "n4-te-hoshii",
+      "n4-hitsuyou-ga-aru",
+      "n4-mieru-kikoeru",
+      "n4-ndesu-ga",
+      "n4-mo-emphasis",
+      "n4-nakute-wa-ikemasen",
+      "n4-nakya",
+      "n4-baai",
+      "n4-hodo"
+    ]
+  },
+  {
+    "id": "n3-u1",
+    "level": "N3",
+    "title": "Timing & intervals — うちに・たびに・ぶりに",
+    "points": [
+      "n3-uchi-ni",
+      "n3-tabi-ni",
+      "n3-totan",
+      "n3-saichuu",
+      "n3-ta-kiri",
+      "n3-buri",
+      "n3-tsuide-ni"
+    ]
+  },
+  {
+    "id": "n3-u2",
+    "level": "N3",
+    "title": "Conditions, extremes & degree — さえ・ほど・くらい",
+    "points": [
+      "n3-to-shitara",
+      "n3-tatoe-temo",
+      "n3-sae",
+      "n3-sae-ba",
+      "n3-ni-tsurete",
+      "n3-ba-hodo",
+      "n3-hodo-nai",
+      "n3-kurai",
+      "n3-betsu-ni-nai"
+    ]
+  },
+  {
+    "id": "n3-u3",
+    "level": "N3",
+    "title": "Cause, reason & logic — わけ・はず・せい・おかげ",
+    "points": [
+      "n3-dake-de-naku",
+      "n3-ijou",
+      "n3-kuse-ni",
+      "n3-wari-ni",
+      "n3-okage-de",
+      "n3-sei-de",
+      "n3-kara-to-itte",
+      "n3-to-iu-no-wa",
+      "n3-to-iu-koto",
+      "n3-koto-wa-nai",
+      "n3-wake-da",
+      "n3-wake-de-wa-nai",
+      "n3-wake-ni-wa-ikanai",
+      "n3-hazu-ga-nai",
+      "n3-ni-chigainai"
+    ]
+  },
+  {
+    "id": "n3-u4",
+    "level": "N3",
+    "title": "Verb compounds & manner — かける・きる・続ける",
+    "points": [
+      "n3-toori-ni",
+      "n3-you-to-suru",
+      "n3-kake",
+      "n3-gachi",
+      "n3-gimi",
+      "n3-ppoi",
+      "n3-tsuzukeru",
+      "n3-dasu",
+      "n3-kiru",
+      "n3-au",
+      "n3-naosu",
+      "n3-sasete-itadaku",
+      "n3-rareru-keigo",
+      "n3-zu-ni",
+      "n3-nakanaka-nai"
+    ]
+  },
+  {
+    "id": "n3-u5",
+    "level": "N3",
+    "title": "Reporting & relating — について・に対して・によって",
+    "points": [
+      "n3-tokoro-datta",
+      "n3-te-bakari-iru",
+      "n3-te-hajimete",
+      "n3-you-ni-iu",
+      "n3-te-itadakemasen-ka",
+      "n3-ni-tsuite",
+      "n3-ni-taishite",
+      "n3-ni-totte",
+      "n3-ni-yotte",
+      "n3-ni-yoru-to",
+      "n3-to-shite"
+    ]
+  },
+  {
+    "id": "n3-u6",
+    "level": "N3",
+    "title": "Emphasis, casual speech & suffixes — こそ・なんか・的",
+    "points": [
+      "n3-no-kawari-ni",
+      "n3-wa-mochiron",
+      "n3-nanka",
+      "n3-koso",
+      "n3-datte",
+      "n3-tte",
+      "n3-muke",
+      "n3-muki",
+      "n3-teki",
+      "n3-sa",
+      "n3-juu",
+      "n3-goto-ni",
+      "n3-hazu-datta",
+      "n3-beki",
+      "n3-ni-kurabete"
+    ]
+  },
+  {
+    "id": "n2-u1",
+    "level": "N2",
+    "title": "Concession & “even if” — ものの・つつ・としても",
+    "points": [
+      "n2-monono",
+      "n2-nagara-mo",
+      "n2-tsutsu",
+      "n2-tsutsu-aru",
+      "n2-to-shite-mo",
+      "n2-ni-shite-mo",
+      "n2-ni-shite-wa",
+      "n2-kara-ni-wa",
+      "n2-bakari-ni",
+      "n2-bakari-ka",
+      "n2-nomi-narazu"
+    ]
+  },
+  {
+    "id": "n2-u2",
+    "level": "N2",
+    "title": "Addition & simultaneity — 上に・一方・次第",
+    "points": [
+      "n2-ue-ni",
+      "n2-ue-de",
+      "n2-ippou",
+      "n2-ippou-da",
+      "n2-hanmen",
+      "n2-to-douji-ni",
+      "n2-ka-to-omottara",
+      "n2-shidai",
+      "n2-shidai-de"
+    ]
+  },
+  {
+    "id": "n2-u3",
+    "level": "N2",
+    "title": "Scope & extent — 限り・にわたって・を中心に",
+    "points": [
+      "n2-sura",
+      "n2-mono-nara",
+      "n2-nai-kagiri",
+      "n2-kagiri",
+      "n2-dake-atte",
+      "n2-dake-ni",
+      "n2-ni-kakete",
+      "n2-ni-watatte",
+      "n2-wo-tsuujite",
+      "n2-wo-chuushin-ni",
+      "n2-wo-hajime"
+    ]
+  },
+  {
+    "id": "n2-u4",
+    "level": "N2",
+    "title": "Formal relations — に関して・に基づいて・において",
+    "points": [
+      "n2-ni-kanshite",
+      "n2-ni-kuwaete",
+      "n2-ni-hanshite",
+      "n2-ni-motozuite",
+      "n2-wo-megutte",
+      "n2-ni-sotte",
+      "n2-ni-oite",
+      "n2-ni-okeru",
+      "n2-to-tomo-ni",
+      "n2-ni-tomonatte"
+    ]
+  },
+  {
+    "id": "n2-u5",
+    "level": "N2",
+    "title": "Inability, certainty & judgement — かねる・得る・に決まっている",
+    "points": [
+      "n2-darake",
+      "n2-ppanashi",
+      "n2-kaneru",
+      "n2-kanenai",
+      "n2-uru",
+      "n2-you-ga-nai",
+      "n2-ni-suginai",
+      "n2-to-wa-kagiranai",
+      "n2-mono-da",
+      "n2-mono-ka",
+      "n2-wake-ga-nai",
+      "n2-ni-kimatte-iru"
+    ]
+  },
+  {
+    "id": "n2-u6",
+    "level": "N2",
+    "title": "Compulsion & strong feeling — ざるを得ない・てたまらない・ことか",
+    "points": [
+      "n2-shika-nai",
+      "n2-zaru-wo-enai",
+      "n2-zu-ni-wa-irarenai",
+      "n2-te-naranai",
+      "n2-te-tamaranai",
+      "n2-te-shikata-ga-nai",
+      "n2-koto-da",
+      "n2-koto-ka",
+      "n2-koto-ni",
+      "n2-nai-koto-wa-nai",
+      "n2-mai",
+      "n2-osore-ga-aru",
+      "n2-nimo-kakawarazu"
+    ]
+  },
+  {
+    "id": "n1-u1",
+    "level": "N1",
+    "title": "Concession & instant timing — とはいえ・が早いか・なり",
+    "points": [
+      "n1-to-wa-ie",
+      "n1-to-iedomo",
+      "n1-dokoroka",
+      "n1-dokoro-de-wa-nai",
+      "n1-ga-hayai-ka",
+      "n1-ya-ina-ya",
+      "n1-nari",
+      "n1-katawara",
+      "n1-gatera",
+      "n1-ni-shiro-ni-seyo",
+      "n1-de-are",
+      "n1-to-ii-to-ii"
+    ]
+  },
+  {
+    "id": "n1-u2",
+    "level": "N1",
+    "title": "Formal scope & occasion — はもとより・に至るまで・に際して",
+    "points": [
+      "n1-to-iwazu",
+      "n1-wa-motoyori",
+      "n1-naradewa",
+      "n1-wo-yoso-ni",
+      "n1-wo-motte",
+      "n1-ni-itatte",
+      "n1-ni-itaru-made",
+      "n1-wo-kawakiri-ni",
+      "n1-ni-saishite",
+      "n1-ni-atatte",
+      "n1-ni-sakidatte",
+      "n1-wo-fumaete"
+    ]
+  },
+  {
+    "id": "n1-u3",
+    "level": "N1",
+    "title": "Conditions & literary states — をもって・いかん・まみれ・めく",
+    "points": [
+      "n1-ni-sokushite",
+      "n1-no-moto-de",
+      "n1-wo-towazu",
+      "n1-ni-kakawarazu",
+      "n1-ikan",
+      "n1-mamire",
+      "n1-zukume",
+      "n1-meku",
+      "n1-te-yamanai",
+      "n1-ni-taenai",
+      "n1-kagiri-da",
+      "n1-shimatsu-da"
+    ]
+  },
+  {
+    "id": "n1-u4",
+    "level": "N1",
+    "title": "Finality & strong assertion — までだ・べく・を余儀なくされる",
+    "points": [
+      "n1-made-da",
+      "n1-made-mo-nai",
+      "n1-bekarazu",
+      "n1-beku",
+      "n1-kkonai",
+      "n1-naide-wa-sumanai",
+      "n1-wo-yoginaku-sareru",
+      "n1-ni-hokanaranai",
+      "n1-to-atte",
+      "n1-tomo-naru-to",
+      "n1-hame-ni-naru"
+    ]
+  }
+]

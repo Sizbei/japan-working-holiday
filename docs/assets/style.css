@@ -4584,3 +4584,115 @@ html[data-reduce-motion="on"] .stu-mock-timer.is-low{ animation: none; }
 .stu-mock-warn{ font-size:.85rem; padding:.6rem .8rem; background: color-mix(in srgb, var(--warn-fill) 10%, var(--bg-soft)); border-radius: var(--r-sm); margin:.4rem 0 0; }
 .stu-mock-report-foot{ display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center; padding-top:.4rem; }
 @media (max-width: 640px){ .stu-mock-pcell{ width:2.2rem; height:2.2rem; } .stu-mock-nav{ flex-wrap:wrap; } }
+
+/* ===== R15 — Mastery analytics tab (Progress) + JLPT Master certificate ===== */
+.stu-stats-view{ display:flex; flex-direction:column; gap:1.1rem; }
+.stu-stats-top{ display:flex; align-items:center; gap:.7rem; }
+.stu-stats-title{ margin:0; font-size:1.15rem; font-weight:800; }
+.stu-stats-h{ margin:0 0 .5rem; font-size:.95rem; font-weight:700; }
+.stu-stats-view section{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.1rem; }
+
+/* pacing */
+.stu-pace-proj{ margin:.2rem 0 .6rem; }
+.stu-pace-date{ color: var(--gold-ink); }
+.stu-pace-anchors{ list-style:none; margin:.3rem 0 .7rem; padding:0; display:flex; flex-direction:column; gap:.35rem; }
+.stu-pace-anchor{ display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; font-size:.88rem; padding:.35rem .6rem; border-radius: var(--r-sm); border:1px solid var(--line); }
+.stu-pace-anchor-date{ font-weight:700; font-variant-numeric: tabular-nums; }
+.stu-pace-anchor-target{ color: var(--ink-soft, #666); }
+.stu-pace-anchor-verdict{ margin-left:auto; font-weight:600; }
+.stu-pace-ahead{ background: color-mix(in srgb, var(--ok-fill) 9%, var(--bg-soft)); }
+.stu-pace-ahead .stu-pace-anchor-verdict{ color: var(--ok-ink); }
+.stu-pace-behind .stu-pace-anchor-verdict{ color: var(--bad-ink); }
+.stu-repace{ margin:.2rem 0; }
+.stu-pace-caveat{ margin-top:.5rem; }
+
+/* course-% rollup */
+.stu-roll-overall{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:.7rem; }
+.stu-roll-overall-pct{ font-size:1.9rem; font-weight:800; color: var(--gold-ink); font-variant-numeric: tabular-nums; line-height:1; }
+.stu-roll-row{ display:flex; align-items:center; gap:.6rem; margin:.3rem 0; font-size:.88rem; }
+.stu-roll-lv{ flex:0 0 2.2rem; font-weight:700; }
+.stu-roll-bar{ flex:1 1 auto; height:.55rem; background: color-mix(in srgb, var(--line) 60%, transparent); border-radius: var(--r-pill); overflow:hidden; }
+.stu-roll-bar>i{ display:block; height:100%; background: var(--ok-fill); border-radius: inherit; }
+.stu-roll-n{ flex:0 0 auto; font-variant-numeric: tabular-nums; }
+
+/* retention */
+.stu-ret-line{ margin:.2rem 0; display:flex; align-items:baseline; gap:.5rem; flex-wrap:wrap; }
+.stu-ret-pct{ font-size:1.6rem; font-weight:800; color: var(--ok-ink); font-variant-numeric: tabular-nums; }
+
+/* mock trend sparklines */
+.stu-trend-row{ display:flex; align-items:center; gap:.7rem; margin:.35rem 0; font-size:.88rem; }
+.stu-trend-lv{ flex:0 0 2.2rem; font-weight:700; }
+.stu-trend-spark{ flex:0 0 auto; color: var(--indigo-ink); display:inline-flex; }
+.stu-spark{ width:120px; height:32px; }
+.stu-trend-last{ margin-left:auto; font-variant-numeric: tabular-nums; }
+
+/* weakest clusters */
+.stu-weak-row{ display:flex; align-items:baseline; justify-content:space-between; gap:.7rem; margin:.3rem 0; padding:.35rem 0; border-bottom:1px dashed var(--line); flex-wrap:wrap; }
+.stu-weak-row:last-child{ border-bottom:0; }
+.stu-weak-label{ font-weight:600; }
+
+/* ── 353-cell mastery heat grid — dual-encoded (tint + fill-height + aria) ── */
+.stu-hc-legend{ display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-bottom:.7rem; font-size:.76rem; }
+.stu-hc-key{ display:inline-flex; align-items:center; gap:.3rem; }
+.stu-hc-level{ margin-top:.6rem; }
+.stu-hc-level-h{ font-weight:700; font-size:.82rem; margin-bottom:.3rem; }
+.stu-hc-grid{ display:flex; flex-wrap:wrap; gap:2px; }
+.stu-hc{ position:relative; width:18px; height:18px; padding:0; border:1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  border-radius:3px; background: var(--bg-sunk, #f2eee4); cursor:pointer; overflow:hidden; transition: transform .12s ease, box-shadow .12s ease; }
+.stu-hc>i{ position:absolute; left:0; right:0; bottom:0; display:block; background: color-mix(in srgb, var(--ok-ink) 55%, transparent); }
+.stu-hc:hover, .stu-hc:focus-visible{ transform: scale(1.35); z-index:2; box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,.25)); outline:2px solid var(--indigo-ink); outline-offset:1px; }
+@media (prefers-reduced-motion: reduce){ .stu-hc{ transition:none } }
+/* the 6-step growth ramp: Seed (faint) → Deep (saturated green) → Mastered (gold). The tint AND the
+   fill-height bar both climb with the stage, so stage reads without relying on hue (colorblind-safe). */
+.stu-hc-none{ background: transparent; border-style:dashed; opacity:.7; }
+.stu-hc-seed{ background: color-mix(in srgb, var(--ok-fill) 12%, var(--bg-soft)); }
+.stu-hc-sprout{ background: color-mix(in srgb, var(--ok-fill) 26%, var(--bg-soft)); }
+.stu-hc-young{ background: color-mix(in srgb, var(--ok-fill) 42%, var(--bg-soft)); }
+.stu-hc-mature{ background: color-mix(in srgb, var(--ok-fill) 60%, var(--bg-soft)); }
+.stu-hc-deep{ background: color-mix(in srgb, var(--ok-fill) 82%, var(--bg-soft)); }
+.stu-hc-deep>i{ background: color-mix(in srgb, #fff 30%, transparent); }
+.stu-hc-mastered{ background: var(--gold); border-color: var(--gold-ink); }
+.stu-hc-mastered>i{ background: color-mix(in srgb, #fff 35%, transparent); }
+.stu-hc-detail{ margin-top:.7rem; min-height:1.2rem; }
+.stu-hc-card{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; padding:.6rem .8rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-sunk, var(--bg-soft)); }
+.stu-hc-card-pat{ font-weight:700; }
+.stu-hc-card-mean{ color: var(--ink-soft, #666); font-size:.85rem; }
+.stu-hc-card-stage{ margin-left:auto; font-size:.75rem; font-weight:700; padding:.1rem .5rem; border-radius: var(--r-pill); background: color-mix(in srgb, var(--line) 55%, transparent); }
+.stu-hc-stage-mastered{ background: color-mix(in srgb, var(--gold) 30%, transparent); color: var(--gold-ink); }
+.stu-hc-stage-deep{ background: color-mix(in srgb, var(--ok-fill) 25%, transparent); color: var(--ok-ink); }
+
+/* certificate entry + locked note */
+.stu-cert-entry{ text-align:center; }
+.stu-cert-locked{ text-align:center; }
+
+/* ── JLPT Master certificate card ── */
+.stu-cert-preview-note{ text-align:center; }
+.stu-cert{ display:flex; justify-content:center; padding:.4rem 0; }
+.stu-cert-inner{ position:relative; max-width:520px; width:100%; text-align:center; padding:2rem 1.6rem; border-radius: var(--r-lg);
+  border:2px solid var(--gold-ink); background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--gold) 14%, var(--bg-soft)), var(--bg-soft) 70%);
+  box-shadow: var(--shadow); }
+.stu-cert-seal{ font-size:2.6rem; line-height:1; }
+.stu-cert-kicker{ margin:.4rem 0 0; text-transform:uppercase; letter-spacing:.18em; font-size:.68rem; font-weight:700; color: var(--gold-ink); }
+.stu-cert-title{ margin:.2rem 0; font-size:2rem; font-weight:800; }
+.stu-cert-sub{ margin:0 0 1rem; font-size:.9rem; color: var(--ink-soft, #555); }
+.stu-cert-rings{ display:flex; justify-content:center; gap:.5rem; flex-wrap:wrap; margin:.6rem 0 1rem; }
+.stu-cert-ring{ display:inline-flex; flex-direction:column; align-items:center; gap:.1rem; width:3rem; height:3rem; justify-content:center;
+  border-radius:50%; border:2px solid var(--gold-ink); background: color-mix(in srgb, var(--gold) 12%, var(--bg-soft)); }
+.stu-cert-ring-lv{ font-size:.78rem; }
+.stu-cert-ring-pct{ font-size:.66rem; font-weight:700; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+.stu-cert-stats{ display:flex; justify-content:center; gap:1.4rem; margin:.4rem 0 1rem; }
+.stu-cert-stat{ display:flex; flex-direction:column; }
+.stu-cert-stat-n{ font-size:1.5rem; font-weight:800; font-variant-numeric: tabular-nums; }
+.stu-cert-stat-l{ font-size:.7rem; color: var(--ink-soft, #666); }
+.stu-cert-date{ margin:0; font-size:.8rem; color: var(--ink-soft, #666); }
+.stu-cert-foot{ display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; margin-top:.9rem; }
+@media (max-width: 640px){ .stu-hc{ width:16px; height:16px; } .stu-cert-stats{ gap:1rem; } }
+
+/* print exactly the certificate card (the classic print-one-element visibility trick) */
+@media print {
+  body.stu-cert-printing *{ visibility:hidden; }
+  body.stu-cert-printing .stu-cert, body.stu-cert-printing .stu-cert *{ visibility:visible; }
+  body.stu-cert-printing .stu-cert{ position:absolute; inset:0 0 auto 0; margin:0 auto; padding-top:2rem; }
+  body.stu-cert-printing .stu-cert-inner{ box-shadow:none; }
+}

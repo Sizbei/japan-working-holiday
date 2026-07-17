@@ -350,7 +350,7 @@ function examController(ctx, passages) {
     // persist to the ring log for R15's trendline
     try {
       const st = ctx.getState();
-      ctx.commit(recordExam(st, { level: exam.level, date: nowISO(), raw: score.raw, total: score.total, byFormat: score.byFormat }));
+      ctx.commit(recordExam(st, { level: exam.level, date: nowISO(), raw: score.raw, total: score.total, byFormat: score.byFormat, byCluster: score.byCluster }));
     } catch (err) { console.error('[study-exam] record', err); }
 
     root.innerHTML = `

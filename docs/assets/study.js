@@ -21,7 +21,7 @@ import { nowISO } from './lib/dates.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, STAGES, LEVEL_TOTALS } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
 import { celebrate } from './celebrate.js';
@@ -327,6 +327,7 @@ function renderCourseHome(focusSel) {
       ${leechPanelHTML()}
       <div class="stu-home-foot">
         ${buildBtn}
+        <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart">📊 Progress</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
         <label class="stu-exam"><span>Preparing for</span>
@@ -466,6 +467,47 @@ async function launchExam() {
   } finally { launching = false; }
 }
 
+// R15: the Mastery analytics tab (lazy study-stats.js). Warm every level (the heat grid needs each
+// point's pattern + the confusable graph for the weakness rollup), then hand off; the flow owns the
+// analytics + certificate screens and parks itself in activeFlow. A heat-grid cell tap routes back
+// through ctx.drill → a focused single-card session (the studyLeech path). `view:'cert'` opens the
+// certificate directly (the master-complete moment).
+function statsCtx(opts) {
+  return {
+    root, announce, pointsCache, units,
+    getState: () => state,
+    commit: (ns) => { state = ns; save(); },
+    ensureAllLevels,
+    drill: async (id) => { activeFlow = null; if (await studyLeech(id) === 'kept') await launchStats(); },
+    done: () => { activeFlow = null; renderCourseHome('.stu-stats-btn'); },
+    ...(opts || {}),
+  };
+}
+async function launchStats(opts) {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    await ensureAllLevels();
+    const m = await import('./study-stats.js');
+    activeFlow = m.startStats(statsCtx(), opts || {});
+  } catch (err) {
+    console.error('progress tab failed to load', err);
+    renderCourseHome();
+    announce('Could not load Progress — check your connection and try again.');
+  } finally { launching = false; }
+}
+
+// The JLPT Master moment: all 353 gates just passed. Open the certificate screen directly (it plays
+// the celebration burst, self-gated on reduce-motion). Guarded so a mid-session render can't re-fire.
+async function launchCertificate() {
+  if (activeFlow) return;
+  try {
+    await ensureAllLevels();
+    const m = await import('./study-stats.js');
+    activeFlow = m.startStats(statsCtx(), { view: 'cert' });
+  } catch (err) { console.error('certificate failed to load', err); }
+}
+
 // R8: run a unit's 10-question checkpoint (lazy study-lessons.js flow). Every level must be warm so
 // the MCQ generator can resolve cross-level confusables into 4-choice sets.
 async function launchCheckpoint(unitId) {
@@ -493,7 +535,7 @@ async function studyLeech(id) {
   // a focused leech drill replaces state.session — never discard an in-flight session silently
   if (state.session && state.session.queue && state.session.pos < state.session.queue.length) {
     const ok = await confirmModal('You have a session in progress. Start a focused leech drill and discard the rest of that session?', { ok: 'Drill this leech', cancel: 'Keep my session', danger: true });
-    if (!ok) return;
+    if (!ok) return 'kept';   // caller (heat-grid drill) restores its screen; the leech deck stays on the course home
   }
   launching = true;
   try {
@@ -733,7 +775,7 @@ function onScrambleResult({ pass, chosen }) {
 // celebrate() self-gates on the reduce-motion / celebrations-off preferences.
 function progressSnap(id) {
   const lv = levelOf(id);
-  return { stage: stageOf(state.points[id] || null), lv, mastered: lv ? masteryStats(state).perLevel[lv] : 0 };
+  return { stage: stageOf(state.points[id] || null), lv, mastered: lv ? masteryStats(state).perLevel[lv] : 0, complete: isMasterComplete(state) };
 }
 function celebrateProgress(id, snap, pattern) {
   const p = state.points[id];
@@ -743,6 +785,9 @@ function celebrateProgress(id, snap, pattern) {
   const lv = snap.lv;
   if (lv && LEVEL_TOTALS[lv] && after === 'mastered' && snap.mastered < LEVEL_TOTALS[lv]
       && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) celebrate(`${lv} complete — every point mastered! 🏆`);
+  // R15: the JLPT Master moment — the final gate just passed (was incomplete, now 353/353). Open the
+  // certificate after this card's own bursts settle (the cert screen plays its own celebration).
+  if (!snap.complete && isMasterComplete(state)) setTimeout(() => launchCertificate(), 1200);
 }
 
 // R9: when a point that WAS a ghost is no longer one after grading, it just passed its 2nd clean
@@ -1059,6 +1104,7 @@ function act(name, btn) {
     case 'checkpoint': launchCheckpoint(btn.dataset.unit); break;
     case 'placementStart': launchPlacement(); break;
     case 'buildStart': launchBuild(); break;
+    case 'statsStart': launchStats(); break;
     case 'examStart': launchExam(); break;
     case 'expand': toggleLevel(btn.dataset.level); break;
     case 'leechStudy': studyLeech(btn.dataset.id); break;

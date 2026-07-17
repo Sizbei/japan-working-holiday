@@ -58,7 +58,7 @@ function wireNavDrawer() {
     document.documentElement.classList.toggle('nav-open', open);   // lock body scroll while open
     // iOS Safari ignores overflow:hidden on html for touch scrolling — pin the body instead
     if (open) { lockY = window.scrollY; document.body.style.position = 'fixed'; document.body.style.top = `-${lockY}px`; document.body.style.left = '0'; document.body.style.right = '0'; }
-    else { document.body.style.position = ''; document.body.style.top = ''; document.body.style.left = ''; document.body.style.right = ''; window.scrollTo({ top: lockY, behavior: 'auto' }); }
+    else { document.body.style.position = ''; document.body.style.top = ''; document.body.style.left = ''; document.body.style.right = ''; window.scrollTo({ top: lockY, behavior: 'instant' }); }   // 'instant' not 'auto' — restore the pre-lock position without animating (CSS scroll-behavior:smooth would)
     if (open) nav.querySelector('a[aria-current="page"], a')?.focus();
     else btn.focus();
   };

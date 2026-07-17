@@ -164,7 +164,10 @@ export function monthHTML() {
 function scrollTargetTo(el, smooth, align) {
   if (!el) return;
   const grid = $('#calView .cal-grid');
-  const behavior = smooth ? 'smooth' : 'auto';
+  // 'instant' (not 'auto') for the non-smooth case: 'auto' follows the global html{scroll-behavior:smooth}
+  // so "instant" positioning would actually animate — and a positioning scroll toward today's month (a
+  // large offset) still running when you switch tabs clamps to the next page's BOTTOM. 'instant' jumps.
+  const behavior = smooth ? 'smooth' : 'instant';
   if (grid && grid.scrollHeight > grid.clientHeight + 4) {
     // compact: the grid scrolls internally — scrollIntoView scrolls EVERY ancestor and would
     // drag the window past the app shell (footer sliver); move only the grid

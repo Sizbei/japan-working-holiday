@@ -15,6 +15,12 @@
    "n2-monono",
    "n1-to-iedomo"
   ],
+  "confusable": [
+   "n2-monono",
+   "n2-nagara-mo",
+   "n1-to-iedomo",
+   "n2-nimo-kakawarazu"
+  ],
   "examples": [
    {
     "ja": [
@@ -291,6 +297,12 @@
   "related": [
    "n1-to-wa-ie"
   ],
+  "confusable": [
+   "n2-monono",
+   "n2-nagara-mo",
+   "n1-to-wa-ie",
+   "n2-nimo-kakawarazu"
+  ],
   "examples": [
    {
     "ja": [
@@ -542,6 +554,13 @@
    "n2-bakari-ka",
    "n1-dokoro-de-wa-nai"
   ],
+  "confusable": [
+   "n1-dokoro-de-wa-nai"
+  ],
+  "distractors": [
+   "〜はおろか",
+   "〜にひきかえ"
+  ],
   "examples": [
    {
     "ja": [
@@ -775,6 +794,14 @@
   "related": [
    "n1-dokoroka"
   ],
+  "confusable": [
+   "n1-dokoroka"
+  ],
+  "distractors": [
+   "〜にすぎない",
+   "〜に違いない",
+   "〜にほかならない"
+  ],
   "examples": [
    {
     "ja": [
@@ -996,6 +1023,13 @@
   "related": [
    "n1-ya-ina-ya",
    "n1-nari"
+  ],
+  "confusable": [
+   "n3-totan",
+   "n1-ya-ina-ya",
+   "n1-nari",
+   "n2-shidai",
+   "n2-ka-to-omottara"
   ],
   "examples": [
    {
@@ -1345,6 +1379,13 @@
    "n1-ga-hayai-ka",
    "n1-nari"
   ],
+  "confusable": [
+   "n3-totan",
+   "n1-ga-hayai-ka",
+   "n1-nari",
+   "n2-shidai",
+   "n2-ka-to-omottara"
+  ],
   "examples": [
    {
     "ja": [
@@ -1656,6 +1697,13 @@
    "n1-ya-ina-ya",
    "n2-ka-to-omottara"
   ],
+  "confusable": [
+   "n3-totan",
+   "n1-ga-hayai-ka",
+   "n1-ya-ina-ya",
+   "n2-shidai",
+   "n2-ka-to-omottara"
+  ],
   "examples": [
    {
     "ja": [
@@ -1953,6 +2001,11 @@
    "parallel"
   ],
   "related": [
+   "n1-gatera"
+  ],
+  "confusable": [
+   "n5-nagara",
+   "n2-tsutsu",
    "n1-gatera"
   ],
   "examples": [
@@ -2258,6 +2311,11 @@
    "n1-katawara",
    "n5-nagara"
   ],
+  "confusable": [
+   "n5-nagara",
+   "n2-tsutsu",
+   "n1-katawara"
+  ],
   "examples": [
    {
     "ja": [
@@ -2517,6 +2575,13 @@
   ],
   "related": [
    "n1-de-are"
+  ],
+  "confusable": [
+   "n1-de-are",
+   "n1-wo-towazu",
+   "n1-ni-kakawarazu",
+   "n1-to-ii-to-ii",
+   "n1-to-iwazu"
   ],
   "examples": [
    {
@@ -2801,6 +2866,17 @@
    "n1-ni-shiro-ni-seyo",
    "n2-ni-shite-mo"
   ],
+  "confusable": [
+   "n1-ni-shiro-ni-seyo",
+   "n1-wo-towazu",
+   "n1-ni-kakawarazu",
+   "n1-to-ii-to-ii",
+   "n1-to-iwazu",
+   "n2-to-shite-mo",
+   "n2-ni-shite-mo",
+   "n3-tatoe-temo",
+   "n4-temo"
+  ],
   "examples": [
    {
     "ja": [
@@ -3058,6 +3134,13 @@
    "parallel"
   ],
   "related": [
+   "n1-to-iwazu"
+  ],
+  "confusable": [
+   "n1-ni-shiro-ni-seyo",
+   "n1-de-are",
+   "n1-wo-towazu",
+   "n1-ni-kakawarazu",
    "n1-to-iwazu"
   ],
   "examples": [
@@ -3356,6 +3439,13 @@
   "related": [
    "n1-to-ii-to-ii"
   ],
+  "confusable": [
+   "n1-ni-shiro-ni-seyo",
+   "n1-de-are",
+   "n1-wo-towazu",
+   "n1-ni-kakawarazu",
+   "n1-to-ii-to-ii"
+  ],
   "examples": [
    {
     "ja": [
@@ -3617,6 +3707,14 @@
   "related": [
    "n2-nomi-narazu"
   ],
+  "confusable": [
+   "n3-dake-de-naku",
+   "n2-bakari-ka",
+   "n2-nomi-narazu",
+   "n3-wa-mochiron",
+   "n2-ue-ni",
+   "n2-ni-kuwaete"
+  ],
   "examples": [
    {
     "ja": [
@@ -3860,6 +3958,11 @@
   "related": [
    "n2-dake-atte"
   ],
+  "confusable": [
+   "n2-dake-atte",
+   "n2-dake-ni",
+   "n3-wari-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -4080,6 +4183,11 @@
   ],
   "related": [
    "n2-ni-hanshite"
+  ],
+  "confusable": [
+   "n2-nimo-kakawarazu",
+   "n1-ni-kakawarazu",
+   "n1-wo-towazu"
   ],
   "examples": [
    {
@@ -4572,6 +4680,16 @@
   "related": [
    "n2-ni-oite"
   ],
+  "confusable": [
+   "n2-ni-kakete",
+   "n2-ni-watatte",
+   "n2-wo-tsuujite",
+   "n1-ni-itaru-made",
+   "n1-wo-kawakiri-ni",
+   "n2-ni-oite",
+   "n2-ni-okeru",
+   "n1-no-moto-de"
+  ],
   "register": "formal/written",
   "caution": "The 'as of (a date/time)' boundary sense and the 'by means of' instrument sense are different — for a concrete physical tool prefer で; をもって is for ceremonial dates or abstract means.",
   "peg": {
@@ -4926,6 +5044,11 @@
   "confidence": "high",
   "related": [
    "n1-ni-itaru-made"
+  ],
+  "confusable": [
+   "n1-ni-saishite",
+   "n1-ni-atatte",
+   "n1-ni-sakidatte"
   ],
   "register": "written",
   "caution": "Don't confuse に至って (finally reaching an extreme stage before acting) with に至るまで (spanning a range down to even the smallest item) — they are different patterns.",
@@ -5285,6 +5408,13 @@
   "related": [
    "n1-ni-itatte"
   ],
+  "confusable": [
+   "n2-ni-kakete",
+   "n2-ni-watatte",
+   "n2-wo-tsuujite",
+   "n1-wo-motte",
+   "n1-wo-kawakiri-ni"
+  ],
   "register": "written",
   "caution": "It marks the extreme endpoint of an exhaustive range ('down to even'), not a time deadline — for 'up until (a time)' use plain まで, not に至るまで.",
   "peg": {
@@ -5625,6 +5755,16 @@
   "related": [
    "n2-wo-hajime"
   ],
+  "confusable": [
+   "n2-ni-kakete",
+   "n2-ni-watatte",
+   "n2-wo-tsuujite",
+   "n1-wo-motte",
+   "n1-ni-itaru-made",
+   "n2-wo-hajime",
+   "n2-wo-chuushin-ni",
+   "n2-wo-megutte"
+  ],
   "register": "formal/written",
   "caution": "The starting event must launch an expanding, ongoing series (a tour, a chain of openings) — don't use を皮切りに for a one-off first step that leads nowhere further.",
   "peg": {
@@ -5913,6 +6053,11 @@
   "confidence": "high",
   "related": [
    "n1-ni-atatte"
+  ],
+  "confusable": [
+   "n1-ni-atatte",
+   "n1-ni-sakidatte",
+   "n1-ni-itatte"
   ],
   "register": "formal/written",
   "caution": "に際して is for a specific one-time occasion or event, not an ongoing condition — and it's more solemn than plain とき; don't use it for everyday situations.",
@@ -6209,6 +6354,11 @@
    "n1-ni-saishite",
    "n1-ni-sakidatte"
   ],
+  "confusable": [
+   "n1-ni-saishite",
+   "n1-ni-sakidatte",
+   "n1-ni-itatte"
+  ],
   "register": "formal/written",
   "caution": "Reserve にあたって for a positive, significant undertaking one is about to begin — using it for a trivial or negative event sounds off; and it points forward, not backward.",
   "peg": {
@@ -6485,6 +6635,11 @@
   "confidence": "high",
   "related": [
    "n1-ni-atatte"
+  ],
+  "confusable": [
+   "n1-ni-saishite",
+   "n1-ni-atatte",
+   "n1-ni-itatte"
   ],
   "register": "formal/written",
   "caution": "に先立って means preparation done in advance of a big event, so the two clauses share a topic — don't use it for two unrelated sequential actions where 前に would do.",
@@ -6775,6 +6930,13 @@
   "related": [
    "n2-ni-motozuite"
   ],
+  "confusable": [
+   "n2-ni-motozuite",
+   "n2-ni-sotte",
+   "n1-ni-sokushite",
+   "n1-no-moto-de",
+   "n3-toori-ni"
+  ],
   "register": "formal/written",
   "caution": "を踏まえて takes established facts/results as a basis for what follows — don't confuse it with を込めて ('putting feeling into'); the noun before it must be information, not emotion.",
   "peg": {
@@ -7061,6 +7223,13 @@
   "related": [
    "n2-ni-sotte"
   ],
+  "confusable": [
+   "n2-ni-motozuite",
+   "n2-ni-sotte",
+   "n1-wo-fumaete",
+   "n1-no-moto-de",
+   "n3-toori-ni"
+  ],
   "register": "formal/written",
   "caution": "に即して conforms to concrete facts, rules, or reality — don't swap it for に沿って, which follows an abstract line/policy/wish; 即して needs a factual, rule-like standard.",
   "peg": {
@@ -7326,6 +7495,16 @@
   "level": "N1",
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n2-ni-motozuite",
+   "n2-ni-sotte",
+   "n1-ni-sokushite",
+   "n1-wo-fumaete",
+   "n3-toori-ni",
+   "n2-ni-oite",
+   "n2-ni-okeru",
+   "n1-wo-motte"
+  ],
   "register": "formal/written",
   "caution": "のもとで marks the conditions/supervision under which something happens; don't confuse it with のもとに, which more often frames a premise or principle ('on the basis of').",
   "peg": {
@@ -7610,6 +7789,15 @@
   "related": [
    "n1-ni-kakawarazu"
   ],
+  "confusable": [
+   "n1-ni-shiro-ni-seyo",
+   "n1-de-are",
+   "n1-ni-kakawarazu",
+   "n1-to-ii-to-ii",
+   "n1-to-iwazu",
+   "n1-wo-yoso-ni",
+   "n2-nimo-kakawarazu"
+  ],
   "register": "formal/written",
   "caution": "It pairs with a noun naming a category of variation (年齢を問わず, 経験を問わず) — don't attach を問わず to a full yes/no clause; for that use かどうかにかかわらず.",
   "peg": {
@@ -7887,6 +8075,15 @@
    "n2-to-wa-kagiranai",
    "n2-nimo-kakawarazu"
   ],
+  "confusable": [
+   "n1-ni-shiro-ni-seyo",
+   "n1-de-are",
+   "n1-wo-towazu",
+   "n1-to-ii-to-ii",
+   "n1-to-iwazu",
+   "n1-wo-yoso-ni",
+   "n2-nimo-kakawarazu"
+  ],
   "register": "formal/written",
   "caution": "Don't confuse にかかわらず ('regardless of') with にもかかわらず ('despite the fact that') — the も version concedes a surprising contrast, the plain version dismisses a variable.",
   "peg": {
@@ -8100,6 +8297,11 @@
   "level": "N1",
   "confidence": "high",
   "related": [
+   "n2-shidai-de"
+  ],
+  "confusable": [
+   "n3-ni-yoru-to",
+   "n3-ni-yotte",
    "n2-shidai-de"
   ],
   "register": "formal/written",
@@ -8338,6 +8540,11 @@
    "n2-darake",
    "n1-zukume"
   ],
+  "confusable": [
+   "n2-darake",
+   "n1-zukume",
+   "n2-ppanashi"
+  ],
   "register": "neutral",
   "caution": "まみれ only attaches to a clinging physical substance (泥, 汗, 血, 借金) — don't use it for abstract states or a mere abundance of good things; that's ずくめ or だらけ territory.",
   "peg": {
@@ -8549,6 +8756,11 @@
   "confidence": "high",
   "related": [
    "n1-mamire"
+  ],
+  "confusable": [
+   "n2-darake",
+   "n1-mamire",
+   "n2-ppanashi"
   ],
   "register": "neutral",
   "caution": "ずくめ is 'entirely composed of' one thing (often positive: いいことずくめ), while だらけ is 'full of' scattered unwanted things (間違いだらけ) — don't treat them as synonyms.",
@@ -8777,6 +8989,11 @@
   "related": [
    "n3-ppoi"
   ],
+  "confusable": [
+   "n3-gachi",
+   "n3-gimi",
+   "n3-ppoi"
+  ],
   "register": "written",
   "caution": "めく is a verb suffix, so conjugate it (春めく→春めいた, 謎めいている) — treating it as a noun or na-adjective is wrong; and it means 'take on the air of', not literal becoming.",
   "peg": {
@@ -8805,6 +9022,12 @@
   ],
   "related": [
    "n2-te-naranai",
+   "n1-ni-taenai"
+  ],
+  "confusable": [
+   "n2-koto-ka",
+   "n1-kagiri-da",
+   "n2-koto-ni",
    "n1-ni-taenai"
   ],
   "examples": [
@@ -9043,6 +9266,12 @@
   "related": [
    "n1-te-yamanai"
   ],
+  "confusable": [
+   "n2-koto-ka",
+   "n1-kagiri-da",
+   "n2-koto-ni",
+   "n1-te-yamanai"
+  ],
   "examples": [
    {
     "ja": [
@@ -9276,6 +9505,12 @@
   ],
   "related": [
    "n2-kagiri"
+  ],
+  "confusable": [
+   "n2-koto-ka",
+   "n2-koto-ni",
+   "n1-ni-taenai",
+   "n1-te-yamanai"
   ],
   "examples": [
    {
@@ -9511,6 +9746,11 @@
   ],
   "related": [
    "n1-hame-ni-naru"
+  ],
+  "confusable": [
+   "n1-wo-yoginaku-sareru",
+   "n1-hame-ni-naru",
+   "n1-naide-wa-sumanai"
   ],
   "examples": [
    {
@@ -9823,6 +10063,11 @@
   "related": [
    "n1-made-mo-nai"
   ],
+  "confusable": [
+   "n3-koto-wa-nai",
+   "n1-made-mo-nai",
+   "n5-nakute-mo-ii"
+  ],
   "examples": [
    {
     "ja": [
@@ -10044,6 +10289,11 @@
   ],
   "related": [
    "n1-made-da"
+  ],
+  "confusable": [
+   "n3-koto-wa-nai",
+   "n1-made-da",
+   "n5-nakute-mo-ii"
   ],
   "examples": [
    {
@@ -10277,6 +10527,11 @@
   "related": [
    "n3-beki"
   ],
+  "confusable": [
+   "n2-mai",
+   "n2-mono-ka",
+   "n1-kkonai"
+  ],
   "examples": [
    {
     "ja": [
@@ -10457,6 +10712,12 @@
   ],
   "related": [
    "n4-tame-ni"
+  ],
+  "confusable": [
+   "n4-tame-ni",
+   "n4-you-ni-purpose",
+   "n4-you-ni-suru",
+   "n4-you-ni-naru"
   ],
   "examples": [
    {
@@ -10715,6 +10976,19 @@
   "related": [
    "n2-wake-ga-nai"
   ],
+  "confusable": [
+   "n2-kaneru",
+   "n2-kanenai",
+   "n2-you-ga-nai",
+   "n2-osore-ga-aru",
+   "n2-wake-ga-nai",
+   "n2-ni-kimatte-iru",
+   "n3-ni-chigainai",
+   "n1-ni-hokanaranai",
+   "n2-mai",
+   "n2-mono-ka",
+   "n1-bekarazu"
+  ],
   "examples": [
    {
     "ja": [
@@ -10955,6 +11229,11 @@
   ],
   "related": [
    "n2-zaru-wo-enai"
+  ],
+  "confusable": [
+   "n1-wo-yoginaku-sareru",
+   "n1-hame-ni-naru",
+   "n1-shimatsu-da"
   ],
   "examples": [
    {
@@ -11236,6 +11515,11 @@
   "related": [
    "n2-zaru-wo-enai"
   ],
+  "confusable": [
+   "n1-hame-ni-naru",
+   "n1-shimatsu-da",
+   "n1-naide-wa-sumanai"
+  ],
   "examples": [
    {
     "ja": [
@@ -11507,6 +11791,12 @@
   ],
   "related": [
    "n2-ni-suginai"
+  ],
+  "confusable": [
+   "n2-wake-ga-nai",
+   "n2-ni-kimatte-iru",
+   "n3-ni-chigainai",
+   "n1-kkonai"
   ],
   "examples": [
    {
@@ -11788,6 +12078,11 @@
   ],
   "related": [
    "n2-dake-ni",
+   "n1-tomo-naru-to"
+  ],
+  "confusable": [
+   "n3-ijou",
+   "n2-kara-ni-wa",
    "n1-tomo-naru-to"
   ],
   "examples": [
@@ -12090,6 +12385,11 @@
   "related": [
    "n1-to-atte"
   ],
+  "confusable": [
+   "n3-ijou",
+   "n2-kara-ni-wa",
+   "n1-to-atte"
+  ],
   "examples": [
    {
     "ja": [
@@ -12349,6 +12649,11 @@
   ],
   "related": [
    "n1-shimatsu-da"
+  ],
+  "confusable": [
+   "n1-wo-yoginaku-sareru",
+   "n1-shimatsu-da",
+   "n1-naide-wa-sumanai"
   ],
   "examples": [
    {

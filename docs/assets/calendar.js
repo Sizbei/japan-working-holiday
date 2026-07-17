@@ -23,7 +23,7 @@ import { prefersReducedMotion } from './motion.js';
 import { monthGrid, addMonths, WEEKDAYS_SHORT } from './lib/minical.js';
 import { agendaHTML, wireAgenda } from './calendar-agenda.js';
 import { weekHTML, dayHTML, wireWeek, weekLabel } from './calendar-week.js';
-import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay, extendWindow, ensureWindowCovers, captureAnchor, restoreAnchor } from './calendar-month.js';
+import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireReschedule, wireEndless, scrollToMonth, scrollToDay, extendWindow, ensureWindowCovers, centerWindowOn, captureAnchor, restoreAnchor } from './calendar-month.js';
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
@@ -692,29 +692,38 @@ function positionEndless() {
   if ((!_endlessNeedsPos && !_entryPos) || mode !== 'month') return;
   const grid = $('#calView .cal-grid');
   if (!grid || grid.offsetParent === null) return;   // still hidden (view-transition class toggle is async) — the retry loop catches it
-  const targetDay = _endlessNeedsPos ? (weekAnchor || TODAY) : null;
-  const targetYm = _endlessNeedsPos ? targetDay.slice(0, 7) : `${viewY}-${String(viewM + 1).padStart(2, '0')}`;
-  if (_endlessNeedsPos) {
-    scrollToDay(targetDay, false);   // first render: land on today
-    // web-font load reflows the months of rows ABOVE today (serif separators) and the scroll
-    // drifts — re-center once metrics are final (no-op when fonts were already cached).
-    // Skip if the user has already scrolled away (reflow alone doesn't move scrollY).
-    const y0 = window.scrollY, g0 = $('#calView .cal-grid')?.scrollTop || 0;
-    document.fonts?.ready?.then(() => {
-      const g = $('#calView .cal-grid')?.scrollTop || 0;
-      if (Math.abs(window.scrollY - y0) > 80 || Math.abs(g - g0) > 80) return;
-      scrollToDay(targetDay, false);
-    });
-  } else {
-    scrollToMonth(targetYm, false);   // re-entry: restore the month you were viewing
-  }
+  // Always land on the current month (owner: tab-switch should show "now", not where I'd scrolled).
+  const targetDay = _endlessNeedsPos ? (weekAnchor || TODAY) : TODAY;
+  const targetYm = targetDay.slice(0, 7);
+  // Self-sufficient centring: if the target month isn't CENTRED in the window (window-scroll mode can
+  // drift the window while the view is hidden, so the target month may be absent entirely), re-centre
+  // and rebuild, then let the retry loop scroll on the fresh, centred DOM. A centred target lands
+  // mid-window with buffer on both sides — never at an edge, so the auto-extend can't run away. Without
+  // this, a target month missing from the window made the "landed" check below give up at the top.
+  if (centerWindowOn(targetYm)) { render(); return; }
+  scrollToDay(targetDay, false);
+  // web-font load reflows the months ABOVE (serif separators) and the scroll drifts — re-center once
+  // metrics are final (no-op when fonts were cached). Skip if the user has already scrolled away.
+  const y0 = window.scrollY, g0 = $('#calView .cal-grid')?.scrollTop || 0;
+  document.fonts?.ready?.then(() => {
+    const g = $('#calView .cal-grid')?.scrollTop || 0;
+    if (Math.abs(window.scrollY - y0) > 80 || Math.abs(g - g0) > 80) return;
+    scrollToDay(targetDay, false);
+  });
   // VERIFY the scroll actually landed on the target month (a scroll issued mid-view-transition can be
   // measured against stale metrics and no-op, leaving the grid at the top). Only clear the retry flags
   // once the reading-line month matches — otherwise scheduleEntryPosition tries again. This is what
   // makes tab-switch reliably show the current month, not the top.
+  // Mode-aware landed check. In INTERNAL-grid mode the reading line is the grid's top; in WINDOW-scroll
+  // mode (viewport <821px) the grid IS full-height so grid.clientHeight is a useless tolerance — the
+  // target sits at the viewport reading line instead. Clear the retry flags ONLY once the target month
+  // is actually there; if it's absent (window drifted), keep retrying rather than giving up at the top —
+  // otherwise onExtend unblocks with the grid at an edge and slides the window away from the target.
   const sep = grid.querySelector(`.cal-msep[data-ym="${targetYm}"]`);
-  const landed = sep ? Math.abs(sep.getBoundingClientRect().top - grid.getBoundingClientRect().top) < grid.clientHeight
-    : true;   // target month not in the window (shouldn't happen) — don't spin
+  const internal = grid.scrollHeight > grid.clientHeight + 4;
+  const landed = !sep ? false
+    : internal ? Math.abs(sep.getBoundingClientRect().top - grid.getBoundingClientRect().top) < grid.clientHeight
+    : Math.abs(sep.getBoundingClientRect().top - window.innerHeight / 2) < window.innerHeight;
   if (landed) { _endlessNeedsPos = false; _entryPos = false; }
 }
 // Retry positionEndless until it actually runs (the view can stay hidden past a fixed 300ms on a
@@ -735,11 +744,18 @@ function scheduleEntryPosition() {
 let _calDirty = false;
 document.addEventListener('jwh:route', (e) => {
   if (e.detail?.route !== 'calendar') return;
-  if (_calDirty) { _calDirty = false; render(); }   // EF3: catch up on changes made while hidden
   if (mode === 'month') {
+    // CENTER the window on today before positioning: a centred month lands mid-window (buffer both
+    // sides), so the scroll never lands at an edge → the near-edge auto-extend can't fire on entry
+    // and climb "higher and higher". Re-render only when the window actually moved (or data changed).
+    const changed = centerWindowOn(TODAY.slice(0, 7));
+    if (changed || _calDirty) render();
+    _calDirty = false;
     _entryPos = true;
     scheduleEntryPosition();
   } else {
+    if (_calDirty) { _calDirty = false; render(); }   // EF3: catch up on changes made while hidden
+
     window.scrollTo(0, 0);   // the router no longer resets the window for #/calendar (endless month owns it) — non-month modes still start at top
   }
   requestAnimationFrame(alignRail);

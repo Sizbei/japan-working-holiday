@@ -13,6 +13,7 @@ export const STRINGS = {
   'nav.phrases': '言葉',
   'nav.survival': '便利フレーズ',
   'nav.grammar': '文法',
+  'nav.study': '文法ジム',
   'nav.packing': '荷造り',
   'nav.deadlines': '締め切り',
   'nav.calendar': 'カレンダー',

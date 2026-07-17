@@ -44,6 +44,7 @@ export function mountGrammar() {
         <span class="g-tab-ind" id="gTabInd" aria-hidden="true"></span>
         ${LEVELS.map(l => `<button type="button" class="g-tab" data-level="${l}" aria-pressed="${l === state.level}">${l}<span class="g-count" data-count="${l}"></span></button>`).join('')}
       </div>
+      <a class="g-gym" href="#/study" title="Train your marked points in the Grammar Gym">🏋 Gym</a>
       <button type="button" class="g-furi" id="gFuri"></button>
       <button type="button" class="g-shaky-f" id="gShakyF" aria-pressed="false" title="Show only ◆ shaky points">◆ <span id="gShakyN">0</span></button>
       <button type="button" class="g-export" id="gExport" disabled title="Export every ◆ point as an Anki TSV file">⬇ ◆→Anki</button>

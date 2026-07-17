@@ -327,6 +327,7 @@ function renderCourseHome(focusSel) {
       ${leechPanelHTML()}
       <div class="stu-home-foot">
         ${buildBtn}
+        <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
         <label class="stu-exam"><span>Preparing for</span>
           <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
@@ -439,6 +440,29 @@ async function launchBuild() {
     console.error('build failed to load', err);
     renderCourseHome();
     announce('Could not load the practice drill — check your connection and try again.');
+  } finally { launching = false; }
+}
+
+// R13: the timed mock-exam mode (lazy study-exam.js). Warm every level (the exam's MCQ items need
+// cross-level confusables resolvable) then hand off; the exam owns the picker → run → report screens
+// and parks itself in activeFlow. Its ctx mirrors flowCtx but done() just returns home (no streak
+// bump — the mock is a self-check, not a scheduled review session).
+async function launchExam() {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    await ensureAllLevels();
+    const m = await import('./study-exam.js');
+    activeFlow = await m.startExam({
+      root, announce, pointsCache,
+      getState: () => state,
+      commit: (ns) => { state = ns; save(); },
+      done: () => { activeFlow = null; renderCourseHome('.stu-mock-btn'); },
+    });
+  } catch (err) {
+    console.error('mock exam failed to load', err);
+    renderCourseHome();
+    announce('Could not load the mock exam — check your connection and try again.');
   } finally { launching = false; }
 }
 
@@ -1035,6 +1059,7 @@ function act(name, btn) {
     case 'checkpoint': launchCheckpoint(btn.dataset.unit); break;
     case 'placementStart': launchPlacement(); break;
     case 'buildStart': launchBuild(); break;
+    case 'examStart': launchExam(); break;
     case 'expand': toggleLevel(btn.dataset.level); break;
     case 'leechStudy': studyLeech(btn.dataset.id); break;
     case 'leechDuel': leechDuel(btn.dataset.id, btn.dataset.other); break;

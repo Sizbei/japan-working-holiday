@@ -101,6 +101,7 @@ export function newState(now = 0) {
     session: null,
     units: {},              // per-unit { checkpoint } — reserved for R8 (units are R3's data layer)
     log: [],
+    examLog: [],            // R13 mock-exam ring log — appended by lib/exam.js recordExam (reserved, no schema bump)
     lastSession: now,
     settings: {
       newPerDay: 4, capReviews: 45, weeklyGoal: 5,

@@ -142,13 +142,78 @@
      "。"
     ],
     "en": "I'll write down the station's name before I forget."
+   },
+   {
+    "ja": [
+     {
+      "t": "若い",
+      "f": [
+       [
+        "若",
+        "わか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "young"
+     },
+     {
+      "t": "うちに",
+      "f": [
+       [
+        "うちに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "たくさん",
+      "f": [
+       [
+        "たくさん",
+        ""
+       ]
+      ],
+      "g": "a lot"
+     },
+     {
+      "t": "旅行",
+      "f": [
+       [
+        "旅",
+        "りょ"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "travel"
+     },
+     "し",
+     "たい",
+     "です",
+     "。"
+    ],
+    "en": "While I'm still young, I want to travel a lot."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n4-aida-ni"
-  ]
+  ],
+  "peg": {
+   "ja": "若いうちに、世界を見ておきたい。",
+   "romaji": "Wakai uchi ni, sekai o mite okitai.",
+   "en": "While you're young, you should see the world.",
+   "source": "葬送のフリーレン — Frieren (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-tabi-ni",
@@ -331,13 +396,101 @@
      "。"
     ],
     "en": "Every time I go to the ward office, a different document is required."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "曲",
+      "f": [
+       [
+        "曲",
+        "きょく"
+       ]
+      ],
+      "g": "song"
+     },
+     "を",
+     {
+      "t": "聞く",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "hear"
+     },
+     {
+      "t": "たびに",
+      "f": [
+       [
+        "たびに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "を",
+     {
+      "t": "思い出し",
+      "f": [
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "い",
+        ""
+       ],
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "remember (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "Every time I hear this song, I remember Tokyo."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-goto-ni"
-  ]
+  ],
+  "peg": {
+   "ja": "この海を見るたびに、仲間を思い出す。",
+   "romaji": "Kono umi o miru tabi ni, nakama o omoidasu.",
+   "en": "Every time I see this sea, I remember my crew.",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-totan",
@@ -512,6 +665,67 @@
      "。"
     ],
     "en": "The moment I stepped outside, it started to rain."
+   },
+   {
+    "ja": [
+     {
+      "t": "布団",
+      "f": [
+       [
+        "布",
+        "ふ"
+       ],
+       [
+        "団",
+        "とん"
+       ]
+      ],
+      "g": "futon"
+     },
+     "に",
+     {
+      "t": "入っ",
+      "f": [
+       [
+        "入",
+        "はい"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "get in (ta-stem)"
+     },
+     {
+      "t": "たとたん",
+      "f": [
+       [
+        "たとたん",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "眠っ",
+      "f": [
+       [
+        "眠",
+        "ねむ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "fall asleep (te-form)"
+     },
+     "て",
+     "しまいました",
+     "。"
+    ],
+    "en": "The moment I got into the futon, I fell fast asleep."
    }
   ],
   "level": "N3",
@@ -520,7 +734,15 @@
    "n2-to-douji-ni",
    "n2-ka-to-omottara",
    "n2-shidai"
-  ]
+  ],
+  "peg": {
+   "ja": "ドアを開けたとたん、敵が現れた。",
+   "romaji": "Doa o aketa totan, teki ga arawareta.",
+   "en": "The moment I opened the door, the enemy appeared.",
+   "source": "進撃の巨人 — Eren (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-saichuu",
@@ -701,11 +923,83 @@
      "。"
     ],
     "en": "Right in the middle of cooking, the share house fire alarm went off."
+   },
+   {
+    "ja": [
+     {
+      "t": "掃除",
+      "f": [
+       [
+        "掃",
+        "そう"
+       ],
+       [
+        "除",
+        "じ"
+       ]
+      ],
+      "g": "cleaning"
+     },
+     "の",
+     {
+      "t": "最中",
+      "f": [
+       [
+        "最",
+        "さい"
+       ],
+       [
+        "中",
+        "ちゅう"
+       ]
+      ],
+      "p": 1,
+      "g": "middle"
+     },
+     "に",
+     {
+      "t": "大家",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "家",
+        "や"
+       ]
+      ],
+      "g": "landlord"
+     },
+     "さん",
+     "が",
+     {
+      "t": "来",
+      "f": [
+       [
+        "来",
+        "き"
+       ]
+      ],
+      "g": "come (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "The landlord showed up right in the middle of cleaning."
    }
   ],
   "level": "N3",
   "confidence": "high",
-  "related": []
+  "related": [],
+  "peg": {
+   "ja": "戦いの最中に、気を抜くな。",
+   "romaji": "Tatakai no saichū ni, ki o nuku na.",
+   "en": "In the thick of battle, don't let your guard down.",
+   "source": "鬼滅の刃 — Tomioka (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ta-kiri",
@@ -872,13 +1166,92 @@
      "。"
     ],
     "en": "I bought the study book but haven't opened it even once since."
+   },
+   {
+    "ja": [
+     {
+      "t": "実家",
+      "f": [
+       [
+        "実",
+        "じっ"
+       ],
+       [
+        "家",
+        "か"
+       ]
+      ],
+      "g": "parents' home"
+     },
+     "を",
+     {
+      "t": "出",
+      "f": [
+       [
+        "出",
+        "で"
+       ]
+      ],
+      "g": "leave (ta-stem)"
+     },
+     {
+      "t": "たきり",
+      "f": [
+       [
+        "たきり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "一度",
+      "f": [
+       [
+        "一",
+        "いち"
+       ],
+       [
+        "度",
+        "ど"
+       ]
+      ],
+      "g": "once"
+     },
+     "も",
+     {
+      "t": "帰っ",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "go back (te-form)"
+     },
+     "ていません",
+     "。"
+    ],
+    "en": "I haven't gone back even once since I left my parents' home."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-buri"
-  ]
+  ],
+  "peg": {
+   "ja": "あの日別れたきり、彼には会っていない。",
+   "romaji": "Ano hi wakareta kiri, kare ni wa atte inai.",
+   "en": "Since we parted that day, I haven't seen him.",
+   "source": "君の名は。— Taki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-buri",
@@ -1031,13 +1404,81 @@
      "。"
     ],
     "en": "It cleared up for the first time in a week, so I aired out the futon."
+   },
+   {
+    "ja": [
+     {
+      "t": "二年",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "two years"
+     },
+     {
+      "t": "ぶりに",
+      "f": [
+       [
+        "ぶりに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "温泉",
+      "f": [
+       [
+        "温",
+        "おん"
+       ],
+       [
+        "泉",
+        "せん"
+       ]
+      ],
+      "g": "hot spring"
+     },
+     "に",
+     {
+      "t": "行き",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "go (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I went to an onsen for the first time in two years."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-ta-kiri"
-  ]
+  ],
+  "peg": {
+   "ja": "十年ぶりに、故郷の空を見上げた。",
+   "romaji": "Jūnen buri ni, kokyō no sora o miageta.",
+   "en": "For the first time in ten years, I looked up at my hometown sky.",
+   "source": "鋼の錬金術師 — Edward (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-tsuide-ni",
@@ -1215,11 +1656,98 @@
      "。"
     ],
     "en": "While on my walk, I checked out the nearby park too."
+   },
+   {
+    "ja": [
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "に",
+     {
+      "t": "行く",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "go"
+     },
+     {
+      "t": "ついでに",
+      "f": [
+       [
+        "ついでに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "銀行",
+      "f": [
+       [
+        "銀",
+        "ぎん"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "bank"
+     },
+     "に",
+     {
+      "t": "寄り",
+      "f": [
+       [
+        "寄",
+        "よ"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "stop by (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "On my way to the ward office, I stopped by the bank too."
    }
   ],
   "level": "N3",
   "confidence": "high",
-  "related": []
+  "related": [],
+  "peg": {
+   "ja": "散歩のついでに、君を助けてやろう。",
+   "romaji": "Sanpo no tsuide ni, kimi o tasukete yarō.",
+   "en": "While I'm out for a walk, I'll help you out.",
+   "source": "モブサイコ100 — Reigen (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-to-shitara",
@@ -1391,6 +1919,79 @@
      "。"
     ],
     "en": "If I assume I work weekends, does the hourly wage go up?"
+   },
+   {
+    "ja": [
+     {
+      "t": "ビザ",
+      "f": [
+       [
+        "ビザ",
+        ""
+       ]
+      ],
+      "g": "visa"
+     },
+     "を",
+     {
+      "t": "延長",
+      "f": [
+       [
+        "延",
+        "えん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "extend"
+     },
+     "する",
+     {
+      "t": "としたら",
+      "f": [
+       [
+        "としたら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "どんな",
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "documents"
+     },
+     "が",
+     {
+      "t": "必要",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ]
+      ],
+      "g": "necessary"
+     },
+     "ですか",
+     "。"
+    ],
+    "en": "Supposing I extend my visa, what documents would I need?"
    }
   ],
   "level": "N3",
@@ -1398,7 +1999,15 @@
   "related": [
    "n4-tara",
    "n2-mono-nara"
-  ]
+  ],
+  "peg": {
+   "ja": "もし世界を救えるとしたら、君はどうする？",
+   "romaji": "Moshi sekai o sukueru to shitara, kimi wa dō suru?",
+   "en": "Supposing you could save the world, what would you do?",
+   "source": "魔法少女まどか☆マギカ — Kyubey (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-tatoe-temo",
@@ -1579,6 +2188,94 @@
      "。"
     ],
     "en": "Even if the pay is low, I want to keep this job."
+   },
+   {
+    "ja": [
+     {
+      "t": "たとえ",
+      "f": [
+       [
+        "たとえ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "が",
+     {
+      "t": "下手",
+      "f": [
+       [
+        "下",
+        "へ"
+       ],
+       [
+        "手",
+        "た"
+       ]
+      ],
+      "g": "bad at"
+     },
+     {
+      "t": "でも",
+      "f": [
+       [
+        "でも",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "話し",
+      "f": [
+       [
+        "話",
+        "はな"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "speak (masu-stem)"
+     },
+     {
+      "t": "続け",
+      "f": [
+       [
+        "続",
+        "つづ"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "g": "continue (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "Even if my Japanese is poor, I'll keep on speaking."
    }
   ],
   "level": "N3",
@@ -1586,7 +2283,15 @@
   "related": [
    "n4-temo",
    "n2-to-shite-mo"
-  ]
+  ],
+  "peg": {
+   "ja": "たとえ倒れても、俺は前に進む。",
+   "romaji": "Tatoe taorete mo, ore wa mae ni susumu.",
+   "en": "Even if I fall, I'll keep moving forward.",
+   "source": "僕のヒーローアカデミア — Deku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-sae",
@@ -1746,6 +2451,82 @@
      "。"
     ],
     "en": "I'm so busy I don't even have time to drink water."
+   },
+   {
+    "ja": [
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "が",
+     {
+      "t": "忙しく",
+      "f": [
+       [
+        "忙",
+        "いそが"
+       ],
+       [
+        "しく",
+        ""
+       ]
+      ],
+      "g": "busy"
+     },
+     "て",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "の",
+     {
+      "t": "勉強",
+      "f": [
+       [
+        "勉",
+        "べん"
+       ],
+       [
+        "強",
+        "きょう"
+       ]
+      ],
+      "g": "study"
+     },
+     {
+      "t": "さえ",
+      "f": [
+       [
+        "さえ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "できません",
+     "。"
+    ],
+    "en": "My part-time job is so busy I can't even study Japanese."
    }
   ],
   "level": "N3",
@@ -1754,7 +2535,15 @@
    "n3-sae-ba",
    "n3-datte",
    "n2-sura"
-  ]
+  ],
+  "peg": {
+   "ja": "お前の名前さえ、俺は忘れない。",
+   "romaji": "Omae no namae sae, ore wa wasurenai.",
+   "en": "I won't forget even your name.",
+   "source": "BLEACH — Ichigo (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-sae-ba",
@@ -1906,13 +2695,97 @@
      "。"
     ],
     "en": "As long as I have time, I'll study every day."
+   },
+   {
+    "ja": [
+     {
+      "t": "パスワード",
+      "f": [
+       [
+        "パスワード",
+        ""
+       ]
+      ],
+      "g": "password"
+     },
+     {
+      "t": "さえ",
+      "f": [
+       [
+        "さえ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "分かれ",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かれ",
+        ""
+       ]
+      ],
+      "g": "understand (ba-form)"
+     },
+     {
+      "t": "ば",
+      "f": [
+       [
+        "ば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "ネット",
+      "f": [
+       [
+        "ネット",
+        ""
+       ]
+      ],
+      "g": "internet"
+     },
+     "が",
+     {
+      "t": "使え",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "え",
+        ""
+       ]
+      ],
+      "g": "can use"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "As long as I know the password, I can use the internet."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-sae"
-  ]
+  ],
+  "peg": {
+   "ja": "君さえいれば、他には何もいらない。",
+   "romaji": "Kimi sae ireba, hoka ni wa nani mo iranai.",
+   "en": "As long as I have you, I need nothing else.",
+   "source": "CLANNAD — Tomoya (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ni-tsurete",
@@ -2073,12 +2946,108 @@
      "。"
     ],
     "en": "As I got used to Japanese, daily life became easier."
+   },
+   {
+    "ja": [
+     {
+      "t": "時間",
+      "f": [
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "time"
+     },
+     "が",
+     {
+      "t": "たつ",
+      "f": [
+       [
+        "たつ",
+        ""
+       ]
+      ],
+      "g": "pass"
+     },
+     {
+      "t": "につれて",
+      "f": [
+       [
+        "につれて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "の",
+     {
+      "t": "生活",
+      "f": [
+       [
+        "生",
+        "せい"
+       ],
+       [
+        "活",
+        "かつ"
+       ]
+      ],
+      "g": "life"
+     },
+     "に",
+     {
+      "t": "慣れ",
+      "f": [
+       [
+        "慣",
+        "な"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "get used to (te-form)"
+     },
+     "てきました",
+     "。"
+    ],
+    "en": "As time went by, I got used to life in Tokyo."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n2-ippou-da"
+  ],
+  "peg": {
+   "ja": "強くなるにつれて、孤独も深くなる。",
+   "romaji": "Tsuyoku naru ni tsurete, kodoku mo fukaku naru.",
+   "en": "As you grow stronger, your solitude deepens too.",
+   "source": "呪術廻戦 — Gojo (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
   ]
  },
  {
@@ -2220,13 +3189,130 @@
      "。"
     ],
     "en": "The more you practice, the better you get."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "は",
+     {
+      "t": "歩け",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "g": "walk (ba-form)"
+     },
+     {
+      "t": "ば",
+      "f": [
+       [
+        "ば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "歩く",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "walk"
+     },
+     {
+      "t": "ほど",
+      "f": [
+       [
+        "ほど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "新しい",
+      "f": [
+       [
+        "新",
+        "あたら"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "new"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shops"
+     },
+     "を",
+     {
+      "t": "見つけ",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "つけ",
+        ""
+       ]
+      ],
+      "g": "find (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "The more you walk around Tokyo, the more new shops you discover."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n4-hodo"
-  ]
+  ],
+  "peg": {
+   "ja": "戦えば戦うほど、俺は強くなる。",
+   "romaji": "Tatakaeba tatakau hodo, ore wa tsuyoku naru.",
+   "en": "The more I fight, the stronger I get.",
+   "source": "ドラゴンボール — Goku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-hodo-nai",
@@ -2370,13 +3456,90 @@
      "。"
     ],
     "en": "There's no season as gloomy as the rainy season."
+   },
+   {
+    "ja": [
+     {
+      "t": "富士山",
+      "f": [
+       [
+        "富",
+        "ふ"
+       ],
+       [
+        "士",
+        "じ"
+       ],
+       [
+        "山",
+        "さん"
+       ]
+      ],
+      "g": "Mt. Fuji"
+     },
+     {
+      "t": "ほど",
+      "f": [
+       [
+        "ほど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "美しい",
+      "f": [
+       [
+        "美",
+        "うつく"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "beautiful"
+     },
+     {
+      "t": "山",
+      "f": [
+       [
+        "山",
+        "やま"
+       ]
+      ],
+      "g": "mountain"
+     },
+     {
+      "t": "はない",
+      "f": [
+       [
+        "はない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "There's no mountain as beautiful as Mt. Fuji."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n4-hodo"
-  ]
+  ],
+  "peg": {
+   "ja": "仲間ほど大切なものはない。",
+   "romaji": "Nakama hodo taisetsu na mono wa nai.",
+   "en": "There's nothing as precious as my crew.",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-kurai",
@@ -2491,12 +3654,83 @@
      "。"
     ],
     "en": "I was so happy I could have cried."
+   },
+   {
+    "ja": [
+     {
+      "t": "お腹",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "腹",
+        "なか"
+       ]
+      ],
+      "g": "stomach"
+     },
+     "が",
+     {
+      "t": "空い",
+      "f": [
+       [
+        "空",
+        "す"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "be empty (te-form)"
+     },
+     "て",
+     {
+      "t": "倒れる",
+      "f": [
+       [
+        "倒",
+        "たお"
+       ],
+       [
+        "れる",
+        ""
+       ]
+      ],
+      "g": "collapse"
+     },
+     {
+      "t": "くらい",
+      "f": [
+       [
+        "くらい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "でした",
+     "。"
+    ],
+    "en": "I was so hungry I could have collapsed."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n5-gurai"
+  ],
+  "peg": {
+   "ja": "死ぬくらい、修行はきつかった。",
+   "romaji": "Shinu kurai, shugyō wa kitsukatta.",
+   "en": "The training was so brutal it nearly killed me.",
+   "source": "ドラゴンボール — Goku (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
   ]
  },
  {
@@ -2623,12 +3857,80 @@
      "。"
     ],
     "en": "This izakaya isn't particularly expensive."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "街",
+      "f": [
+       [
+        "街",
+        "まち"
+       ]
+      ],
+      "g": "neighborhood"
+     },
+     "は",
+     {
+      "t": "別に",
+      "f": [
+       [
+        "別",
+        "べつ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "particularly"
+     },
+     {
+      "t": "不便",
+      "f": [
+       [
+        "不",
+        "ふ"
+       ],
+       [
+        "便",
+        "べん"
+       ]
+      ],
+      "g": "inconvenient"
+     },
+     {
+      "t": "じゃない",
+      "f": [
+       [
+        "じゃない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "This neighborhood isn't particularly inconvenient."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n5-amari-nai"
+  ],
+  "peg": {
+   "ja": "別に、君のためじゃないんだからね。",
+   "romaji": "Betsu ni, kimi no tame ja nai n dakara ne.",
+   "en": "It's not particularly for your sake, okay?",
+   "source": "とらドラ！— Taiga (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
   ]
  },
  {
@@ -2798,6 +4100,77 @@
      "。"
     ],
     "en": "He can speak not only English but also Japanese."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "は",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "trains"
+     },
+     {
+      "t": "だけでなく",
+      "f": [
+       [
+        "だけでなく",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "バス",
+      "f": [
+       [
+        "バス",
+        ""
+       ]
+      ],
+      "g": "buses"
+     },
+     "も",
+     {
+      "t": "便利",
+      "f": [
+       [
+        "便",
+        "べん"
+       ],
+       [
+        "利",
+        "り"
+       ]
+      ],
+      "g": "convenient"
+     },
+     "です",
+     "。"
+    ],
+    "en": "In Tokyo, not only the trains but the buses too are convenient."
    }
   ],
   "level": "N3",
@@ -2806,7 +4179,15 @@
    "n5-dake",
    "n3-wa-mochiron",
    "n2-bakari-ka"
-  ]
+  ],
+  "peg": {
+   "ja": "力だけでなく、心も鍛えろ。",
+   "romaji": "Chikara dake de naku, kokoro mo kitaero.",
+   "en": "Train not only your strength but your heart.",
+   "source": "鬼滅の刃 — Urokodaki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ijou",
@@ -2960,12 +4341,87 @@
      "。"
     ],
     "en": "Since I work in Japan, I have to pay taxes."
+   },
+   {
+    "ja": [
+     {
+      "t": "契約",
+      "f": [
+       [
+        "契",
+        "けい"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "sign a contract"
+     },
+     "した",
+     {
+      "t": "以上",
+      "f": [
+       [
+        "以",
+        "い"
+       ],
+       [
+        "上",
+        "じょう"
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "を",
+     {
+      "t": "払わ",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "わ",
+        ""
+       ]
+      ],
+      "g": "pay"
+     },
+     "なければなりません",
+     "。"
+    ],
+    "en": "Now that I've signed the contract, I have to pay the rent."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n2-kara-ni-wa"
+  ],
+  "peg": {
+   "ja": "戦うと決めた以上、後悔はしない。",
+   "romaji": "Tatakau to kimeta ijō, kōkai wa shinai.",
+   "en": "Now that I've decided to fight, I won't regret it.",
+   "source": "進撃の巨人 — Eren (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
   ]
  },
  {
@@ -3098,6 +4554,59 @@
      "。"
     ],
     "en": "Even though he doesn't know the way, he tries to lead."
+   },
+   {
+    "ja": [
+     {
+      "t": "約束",
+      "f": [
+       [
+        "約",
+        "やく"
+       ],
+       [
+        "束",
+        "そく"
+       ]
+      ],
+      "g": "promise"
+     },
+     "した",
+     {
+      "t": "くせに",
+      "f": [
+       [
+        "くせに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     {
+      "t": "来",
+      "f": [
+       [
+        "来",
+        "こ"
+       ]
+      ],
+      "g": "come (nai-stem)"
+     },
+     "なかった",
+     "。"
+    ],
+    "en": "Even though he promised, he didn't come."
    }
   ],
   "level": "N3",
@@ -3106,6 +4615,17 @@
    "n3-wari-ni",
    "n4-noni",
    "n2-monono"
+  ],
+  "peg": {
+   "ja": "弱いくせに、口だけは達者だな。",
+   "romaji": "Yowai kuse ni, kuchi dake wa tassha da na.",
+   "en": "You're weak, yet all you've got is a big mouth.",
+   "source": "NARUTO — Sasuke (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken",
+   "rude-in-life"
   ]
  },
  {
@@ -3260,6 +4780,74 @@
      "。"
     ],
     "en": "For how young he is, he's very composed."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "place"
+     },
+     "は",
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     {
+      "t": "わりに",
+      "f": [
+       [
+        "わりに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "量",
+      "f": [
+       [
+        "量",
+        "りょう"
+       ]
+      ],
+      "g": "portion"
+     },
+     "が",
+     {
+      "t": "多い",
+      "f": [
+       [
+        "多",
+        "おお"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "large"
+     },
+     "です",
+     "。"
+    ],
+    "en": "For how cheap it is, this place gives big portions."
    }
   ],
   "level": "N3",
@@ -3268,7 +4856,15 @@
    "n3-kuse-ni",
    "n3-ni-kurabete",
    "n2-ni-shite-wa"
-  ]
+  ],
+  "peg": {
+   "ja": "子供のわりに、なかなか肝が据わっている。",
+   "romaji": "Kodomo no wari ni, nakanaka kimo ga suwatte iru.",
+   "en": "For a kid, you've got quite some nerve.",
+   "source": "鬼滅の刃 — Rengoku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-okage-de",
@@ -3409,13 +5005,82 @@
      "。"
     ],
     "en": "Thanks to this study book, I passed the exam."
+   },
+   {
+    "ja": [
+     {
+      "t": "先輩",
+      "f": [
+       [
+        "先",
+        "せん"
+       ],
+       [
+        "輩",
+        "ぱい"
+       ]
+      ],
+      "g": "senpai"
+     },
+     "の",
+     {
+      "t": "おかげで",
+      "f": [
+       [
+        "おかげで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "work"
+     },
+     "に",
+     {
+      "t": "慣れ",
+      "f": [
+       [
+        "慣",
+        "な"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "get used to (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "Thanks to my senpai, I got used to the job."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-sei-de"
-  ]
+  ],
+  "peg": {
+   "ja": "お前のおかげで、俺は立ち上がれた。",
+   "romaji": "Omae no okage de, ore wa tachiagareta.",
+   "en": "Thanks to you, I was able to stand up again.",
+   "source": "僕のヒーローアカデミア — Deku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-sei-de",
@@ -3556,6 +5221,75 @@
      "。"
     ],
     "en": "Because of the typhoon, the flight was cancelled."
+   },
+   {
+    "ja": [
+     {
+      "t": "寝坊",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "坊",
+        "ぼう"
+       ]
+      ],
+      "g": "oversleep"
+     },
+     "した",
+     {
+      "t": "せいで",
+      "f": [
+       [
+        "せいで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "に",
+     {
+      "t": "乗り遅れ",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "り",
+        ""
+       ],
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "miss (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "Because I overslept, I missed the train."
    }
   ],
   "level": "N3",
@@ -3563,7 +5297,15 @@
   "related": [
    "n3-okage-de",
    "n2-bakari-ni"
-  ]
+  ],
+  "peg": {
+   "ja": "油断したせいで、敵に逃げられた。",
+   "romaji": "Yudan shita sei de, teki ni nigerareta.",
+   "en": "Because I let my guard down, the enemy got away.",
+   "source": "呪術廻戦 — Nanami (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-kara-to-itte",
@@ -3719,11 +5461,63 @@
      "。"
     ],
     "en": "Just because it's cheap doesn't mean the quality is bad."
+   },
+   {
+    "ja": [
+     {
+      "t": "セール",
+      "f": [
+       [
+        "セール",
+        ""
+       ]
+      ],
+      "g": "sale"
+     },
+     "だ",
+     {
+      "t": "からといって",
+      "f": [
+       [
+        "からといって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "買い",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "buy (masu-stem)"
+     },
+     "すぎて",
+     "は",
+     "いけません",
+     "。"
+    ],
+    "en": "Just because it's a sale doesn't mean you should overbuy."
    }
   ],
   "level": "N3",
   "confidence": "low",
-  "related": []
+  "related": [],
+  "peg": {
+   "ja": "強いからといって、勝てるとは限らない。",
+   "romaji": "Tsuyoi kara to itte, kateru to wa kagiranai.",
+   "en": "Just because you're strong doesn't mean you'll win.",
+   "source": "ハイキュー!! — Ushijima (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-to-iu-no-wa",
@@ -3889,6 +5683,91 @@
      "。"
     ],
     "en": "A 'zairyu card' is a foreigner's ID."
+   },
+   {
+    "ja": [
+     {
+      "t": "敷金",
+      "f": [
+       [
+        "敷",
+        "しき"
+       ],
+       [
+        "金",
+        "きん"
+       ]
+      ],
+      "g": "deposit"
+     },
+     {
+      "t": "というのは",
+      "f": [
+       [
+        "というのは",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "退去",
+      "f": [
+       [
+        "退",
+        "たい"
+       ],
+       [
+        "去",
+        "きょ"
+       ]
+      ],
+      "g": "moving out"
+     },
+     {
+      "t": "時",
+      "f": [
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "at the time of"
+     },
+     "に",
+     {
+      "t": "返っ",
+      "f": [
+       [
+        "返",
+        "かえ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "come back (te-form)"
+     },
+     "てくる",
+     {
+      "t": "お金",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "金",
+        "かね"
+       ]
+      ],
+      "g": "money"
+     },
+     "です",
+     "。"
+    ],
+    "en": "'Shikikin' means the money that comes back to you when you move out."
    }
   ],
   "level": "N3",
@@ -3896,7 +5775,15 @@
   "related": [
    "n3-to-iu-koto",
    "n4-to-iu"
-  ]
+  ],
+  "peg": {
+   "ja": "友達というのは、そばにいてくれる者のことだ。",
+   "romaji": "Tomodachi to iu no wa, soba ni ite kureru mono no koto da.",
+   "en": "A friend is someone who stays by your side.",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-to-iu-koto",
@@ -4028,13 +5915,107 @@
      "。"
     ],
     "en": "The fact that rent is going up is a big deal."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "Japan"
+     },
+     "で",
+     {
+      "t": "働く",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "work"
+     },
+     {
+      "t": "ということ",
+      "f": [
+       [
+        "ということ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "は",
+     {
+      "t": "税金",
+      "f": [
+       [
+        "税",
+        "ぜい"
+       ],
+       [
+        "金",
+        "きん"
+       ]
+      ],
+      "g": "taxes"
+     },
+     "を",
+     {
+      "t": "払う",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "う",
+        ""
+       ]
+      ],
+      "g": "pay"
+     },
+     {
+      "t": "ということ",
+      "f": [
+       [
+        "ということ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "だ",
+     "。"
+    ],
+    "en": "Working in Japan means paying taxes."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n3-to-iu-no-wa"
-  ]
+  ],
+  "peg": {
+   "ja": "生きるということは、戦い続けるということだ。",
+   "romaji": "Ikiru to iu koto wa, tatakai tsuzukeru to iu koto da.",
+   "en": "To live is to keep on fighting.",
+   "source": "進撃の巨人 — Levi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-koto-wa-nai",
@@ -4158,13 +6139,67 @@
      "。"
     ],
     "en": "There's no need to worry about it alone."
+   },
+   {
+    "ja": [
+     {
+      "t": "一人",
+      "f": [
+       [
+        "一",
+        "ひと"
+       ],
+       [
+        "人",
+        "り"
+       ]
+      ],
+      "g": "alone"
+     },
+     "で",
+     {
+      "t": "悩む",
+      "f": [
+       [
+        "悩",
+        "なや"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "worry"
+     },
+     {
+      "t": "ことはない",
+      "f": [
+       [
+        "ことはない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "よ",
+     "。"
+    ],
+    "en": "There's no need to worry all by yourself."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n4-hitsuyou-ga-aru"
-  ]
+  ],
+  "peg": {
+   "ja": "泣くことはない、まだ終わっていない。",
+   "romaji": "Naku koto wa nai, mada owatte inai.",
+   "en": "There's no need to cry; it's not over yet.",
+   "source": "鬼滅の刃 — Tanjiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-wake-da",
@@ -4340,6 +6375,77 @@
      "。"
     ],
     "en": "He's been in Tokyo ten years. That's why he knows the streets."
+   },
+   {
+    "ja": [
+     {
+      "t": "エアコン",
+      "f": [
+       [
+        "エアコン",
+        ""
+       ]
+      ],
+      "g": "air conditioner"
+     },
+     "を",
+     {
+      "t": "つけっぱなし",
+      "f": [
+       [
+        "つけっぱなし",
+        ""
+       ]
+      ],
+      "g": "left on"
+     },
+     "だった",
+     {
+      "t": "電気代",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "気",
+        "き"
+       ],
+       [
+        "代",
+        "だい"
+       ]
+      ],
+      "g": "electricity bill"
+     },
+     "が",
+     {
+      "t": "高い",
+      "f": [
+       [
+        "高",
+        "たか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "high"
+     },
+     {
+      "t": "わけだ",
+      "f": [
+       [
+        "わけだ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The AC was left on the whole time — no wonder the electricity bill is high."
    }
   ],
   "level": "N3",
@@ -4347,7 +6453,15 @@
   "related": [
    "n3-wake-de-wa-nai",
    "n3-wake-ni-wa-ikanai"
-  ]
+  ],
+  "peg": {
+   "ja": "なるほど、それで負けたわけだ。",
+   "romaji": "Naruhodo, sore de maketa wake da.",
+   "en": "I see — so that's why you lost.",
+   "source": "デスノート — L (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-wake-de-wa-nai",
@@ -4462,6 +6576,69 @@
      "。"
     ],
     "en": "It doesn't mean I work overtime every single day."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "が",
+     {
+      "t": "全く",
+      "f": [
+       [
+        "全",
+        "まった"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "(not) at all"
+     },
+     {
+      "t": "話せない",
+      "f": [
+       [
+        "話",
+        "はな"
+       ],
+       [
+        "せない",
+        ""
+       ]
+      ],
+      "g": "cannot speak"
+     },
+     {
+      "t": "わけではない",
+      "f": [
+       [
+        "わけではない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's not that I can't speak Japanese at all."
    }
   ],
   "level": "N3",
@@ -4472,7 +6649,15 @@
    "n2-ni-suginai",
    "n2-to-wa-kagiranai",
    "n2-nai-koto-wa-nai"
-  ]
+  ],
+  "peg": {
+   "ja": "勝てないわけではないが、油断は禁物だ。",
+   "romaji": "Katenai wake de wa nai ga, yudan wa kinmotsu da.",
+   "en": "It's not that we can't win, but we mustn't be careless.",
+   "source": "コードギアス — Lelouch (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-wake-ni-wa-ikanai",
@@ -4607,6 +6792,62 @@
      "。"
     ],
     "en": "I can't very well turn down my boss's invitation."
+   },
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "だから",
+     {
+      "t": "休む",
+      "f": [
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "take off work"
+     },
+     {
+      "t": "わけにはいかない",
+      "f": [
+       [
+        "わけにはいかない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The interview's tomorrow, so I can't very well skip work."
    }
   ],
   "level": "N3",
@@ -4615,7 +6856,15 @@
    "n3-wake-da",
    "n3-wake-de-wa-nai",
    "n2-shika-nai"
-  ]
+  ],
+  "peg": {
+   "ja": "ここで逃げるわけにはいかない。",
+   "romaji": "Koko de nigeru wake ni wa ikanai.",
+   "en": "I can't very well run away here.",
+   "source": "鬼滅の刃 — Tanjiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-hazu-ga-nai",
@@ -4739,6 +6988,53 @@
      "。"
     ],
     "en": "There's no way a shop is open at this hour."
+   },
+   {
+    "ja": [
+     "あんなに",
+     {
+      "t": "練習",
+      "f": [
+       [
+        "練",
+        "れん"
+       ],
+       [
+        "習",
+        "しゅう"
+       ]
+      ],
+      "g": "practice"
+     },
+     "した",
+     "のだから",
+     {
+      "t": "落ちる",
+      "f": [
+       [
+        "落",
+        "お"
+       ],
+       [
+        "ちる",
+        ""
+       ]
+      ],
+      "g": "fail (an exam)"
+     },
+     {
+      "t": "はずがない",
+      "f": [
+       [
+        "はずがない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I practiced so hard, there's no way I'll fail."
    }
   ],
   "level": "N3",
@@ -4748,6 +7044,16 @@
    "n3-hazu-datta",
    "n4-hazu",
    "n2-wake-ga-nai"
+  ],
+  "peg": {
+   "ja": "あいつが負けるはずがない。",
+   "romaji": "Aitsu ga makeru hazu ga nai.",
+   "en": "There's no way he'd lose.",
+   "source": "ハイキュー!! — Hinata (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "anime-common"
   ]
  },
  {
@@ -4914,6 +7220,86 @@
      "。"
     ],
     "en": "He must be from Hokkaido, no doubt."
+   },
+   {
+    "ja": [
+     {
+      "t": "電気",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "気",
+        "き"
+       ]
+      ],
+      "g": "lights"
+     },
+     "が",
+     {
+      "t": "ついている",
+      "f": [
+       [
+        "ついている",
+        ""
+       ]
+      ],
+      "g": "be on"
+     },
+     "から",
+     {
+      "t": "誰か",
+      "f": [
+       [
+        "誰",
+        "だれ"
+       ],
+       [
+        "か",
+        ""
+       ]
+      ],
+      "g": "someone"
+     },
+     {
+      "t": "家",
+      "f": [
+       [
+        "家",
+        "いえ"
+       ]
+      ],
+      "g": "home"
+     },
+     "に",
+     "いる",
+     {
+      "t": "に違いない",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "違",
+        "ちが"
+       ],
+       [
+        "い",
+        ""
+       ],
+       [
+        "ない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The lights are on, so someone must be home."
    }
   ],
   "level": "N3",
@@ -4921,7 +7307,15 @@
   "related": [
    "n3-hazu-ga-nai",
    "n2-ni-kimatte-iru"
-  ]
+  ],
+  "peg": {
+   "ja": "この気配、あいつに違いない。",
+   "romaji": "Kono kehai, aitsu ni chigainai.",
+   "en": "This presence — it must be him.",
+   "source": "呪術廻戦 — Megumi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-toori-ni",
@@ -5083,13 +7477,99 @@
      "。"
     ],
     "en": "I transferred at the station just as my senior told me."
+   },
+   {
+    "ja": [
+     {
+      "t": "地図",
+      "f": [
+       [
+        "地",
+        "ち"
+       ],
+       [
+        "図",
+        "ず"
+       ]
+      ],
+      "g": "map"
+     },
+     "の",
+     {
+      "t": "通り",
+      "f": [
+       [
+        "通",
+        "とお"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "as/according to"
+     },
+     "に",
+     {
+      "t": "歩い",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "walk (ta-form)"
+     },
+     "たら",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "に",
+     {
+      "t": "着き",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "arrive (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "When I walked just as the map showed, I reached the station."
    }
   ],
   "level": "N3",
   "confidence": "high",
   "related": [
    "n4-to-onaji"
-  ]
+  ],
+  "peg": {
+   "ja": "計画通り。",
+   "romaji": "Keikaku-dōri.",
+   "en": "Just as planned.",
+   "source": "デスノート (Death Note) — 夜神月",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n3-you-to-suru",
@@ -5278,9 +7758,77 @@
      "。"
     ],
     "en": "I try to speak in Japanese, but the words just won't come out."
+   },
+   {
+    "ja": [
+     {
+      "t": "早く",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "寝よう",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "よう",
+        ""
+       ]
+      ],
+      "g": "sleep (volitional)"
+     },
+     {
+      "t": "とした",
+      "f": [
+       [
+        "とした",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "が",
+     {
+      "t": "眠れ",
+      "f": [
+       [
+        "眠",
+        "ねむ"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "can sleep"
+     },
+     "なかった",
+     "。"
+    ],
+    "en": "I tried to go to sleep early, but I couldn't."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "人を理解しようとする。",
+   "romaji": "Hito o rikai shiyō to suru.",
+   "en": "I'll try to understand people.",
+   "source": "葬送のフリーレン — Frieren (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-kake",
@@ -5458,9 +8006,85 @@
      "。"
     ],
     "en": "He started to say something, then suddenly went quiet."
+   },
+   {
+    "ja": [
+     {
+      "t": "飲み",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "drink (masu-stem)"
+     },
+     {
+      "t": "かけ",
+      "f": [
+       [
+        "かけ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "の",
+     {
+      "t": "コーヒー",
+      "f": [
+       [
+        "コーヒー",
+        ""
+       ]
+      ],
+      "g": "coffee"
+     },
+     "を",
+     {
+      "t": "机",
+      "f": [
+       [
+        "机",
+        "つくえ"
+       ]
+      ],
+      "g": "desk"
+     },
+     "に",
+     {
+      "t": "置き",
+      "f": [
+       [
+        "置",
+        "お"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "put (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I set my half-finished coffee on the desk."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "やりかけたことは、最後までやる。",
+   "romaji": "Yarikaketa koto wa, saigo made yaru.",
+   "en": "What I've started, I finish to the end.",
+   "source": "宇宙兄弟 — Mutta (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-gachi",
@@ -5609,9 +8233,67 @@
      "。"
     ],
     "en": "After a night shift, I tend to skip breakfast."
+   },
+   {
+    "ja": [
+     {
+      "t": "冬",
+      "f": [
+       [
+        "冬",
+        "ふゆ"
+       ]
+      ],
+      "g": "winter"
+     },
+     "は",
+     {
+      "t": "家",
+      "f": [
+       [
+        "家",
+        "いえ"
+       ]
+      ],
+      "g": "home"
+     },
+     "に",
+     {
+      "t": "こもり",
+      "f": [
+       [
+        "こもり",
+        ""
+       ]
+      ],
+      "g": "shut oneself in (masu-stem)"
+     },
+     {
+      "t": "がち",
+      "f": [
+       [
+        "がち",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "に",
+     "なります",
+     "。"
+    ],
+    "en": "In winter I tend to shut myself in at home."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "一人だと、暗く考えがちになる。",
+   "romaji": "Hitori da to, kuraku kangaegachi ni naru.",
+   "en": "When I'm alone, I tend to think dark thoughts.",
+   "source": "四月は君の嘘 — Kousei (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-gimi",
@@ -5771,9 +8453,80 @@
      "。"
     ],
     "en": "I feel a cold coming on, so I'll head home early today."
+   },
+   {
+    "ja": [
+     {
+      "t": "最近",
+      "f": [
+       [
+        "最",
+        "さい"
+       ],
+       [
+        "近",
+        "きん"
+       ]
+      ],
+      "g": "lately"
+     },
+     {
+      "t": "少し",
+      "f": [
+       [
+        "少",
+        "すこ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "a little"
+     },
+     {
+      "t": "疲れ",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "tired (masu-stem)"
+     },
+     {
+      "t": "気味",
+      "f": [
+       [
+        "気",
+        "ぎ"
+       ],
+       [
+        "味",
+        "み"
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "Lately I've been feeling a touch tired."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "最近、少し疲れ気味だ。",
+   "romaji": "Saikin, sukoshi tsukaregimi da.",
+   "en": "Lately I've been a bit worn out.",
+   "source": "エヴァンゲリオン — Shinji (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ppoi",
@@ -5933,9 +8686,67 @@
      "。"
     ],
     "en": "He's forgetful, so I check with him again and again."
+   },
+   {
+    "ja": [
+     "あの",
+     {
+      "t": "店員",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "shop clerk"
+     },
+     "は",
+     "ちょっと",
+     {
+      "t": "怒り",
+      "f": [
+       [
+        "怒",
+        "おこ"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "get angry (masu-stem)"
+     },
+     {
+      "t": "っぽい",
+      "f": [
+       [
+        "っぽい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "です",
+     "。"
+    ],
+    "en": "That shop clerk is a bit quick-tempered."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "お前、意外と子供っぽいな。",
+   "romaji": "Omae, igai to kodomoppoi na.",
+   "en": "You're surprisingly childish.",
+   "source": "とらドラ！— Ryuuji (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n3-tsuzukeru",
@@ -6099,9 +8910,88 @@
      "。"
     ],
     "en": "The train wouldn't come, so I kept waiting at the station."
+   },
+   {
+    "ja": [
+     {
+      "t": "諦め",
+      "f": [
+       [
+        "諦",
+        "あきら"
+       ],
+       [
+        "め",
+        ""
+       ]
+      ],
+      "g": "give up (masu-stem)"
+     },
+     "ずに",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "勉強",
+      "f": [
+       [
+        "勉",
+        "べん"
+       ],
+       [
+        "強",
+        "きょう"
+       ]
+      ],
+      "g": "study"
+     },
+     "し",
+     {
+      "t": "続け",
+      "f": [
+       [
+        "続",
+        "つづ"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "keep (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "I'll keep studying Japanese without giving up."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "諦めずに、走り続けろ。",
+   "romaji": "Akiramezu ni, hashiri tsuzukero.",
+   "en": "Don't give up — keep on running.",
+   "source": "ハイキュー!! — Coach Ukai (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-dasu",
@@ -6265,9 +9155,103 @@
      "。"
     ],
     "en": "The baby next to me suddenly burst out crying."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "動き",
+      "f": [
+       [
+        "動",
+        "うご"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "move (masu-stem)"
+     },
+     {
+      "t": "出し",
+      "f": [
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "start (masu-stem)"
+     },
+     "た",
+     "とき",
+     {
+      "t": "忘れ物",
+      "f": [
+       [
+        "忘",
+        "わす"
+       ],
+       [
+        "れ",
+        ""
+       ],
+       [
+        "物",
+        "もの"
+       ]
+      ],
+      "g": "forgotten item"
+     },
+     "に",
+     {
+      "t": "気づき",
+      "f": [
+       [
+        "気",
+        "き"
+       ],
+       [
+        "づき",
+        ""
+       ]
+      ],
+      "g": "notice (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "The moment the train started moving, I realized I'd forgotten something."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "ベルが鳴ると、彼は走り出した。",
+   "romaji": "Beru ga naru to, kare wa hashiridashita.",
+   "en": "When the bell rang, he broke into a run.",
+   "source": "スラムダンク — Sakuragi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-kiru",
@@ -6439,9 +9423,93 @@
      "。"
     ],
     "en": "I managed to run the marathon all the way to the finish."
+   },
+   {
+    "ja": [
+     {
+      "t": "初",
+      "f": [
+       [
+        "初",
+        "はつ"
+       ]
+      ],
+      "g": "first"
+     },
+     {
+      "t": "給料",
+      "f": [
+       [
+        "給",
+        "きゅう"
+       ],
+       [
+        "料",
+        "りょう"
+       ]
+      ],
+      "g": "paycheck"
+     },
+     "を",
+     {
+      "t": "一日",
+      "f": [
+       [
+        "一",
+        "いち"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "one day"
+     },
+     "で",
+     {
+      "t": "使い",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "use (masu-stem)"
+     },
+     {
+      "t": "切っ",
+      "f": [
+       [
+        "切",
+        "き"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "completely (ta-stem)"
+     },
+     "てしまいました",
+     "。"
+    ],
+    "en": "I blew through my whole first paycheck in a single day."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "最後まで、この力を使い切る。",
+   "romaji": "Saigo made, kono chikara o tsukaikiru.",
+   "en": "I'll use up this power to the very end.",
+   "source": "ドラゴンボール — Goku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-au",
@@ -6597,9 +9665,94 @@
      "。"
     ],
     "en": "When we're in trouble, my friends and I help each other out."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "に",
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "と",
+     {
+      "t": "励まし",
+      "f": [
+       [
+        "励",
+        "はげ"
+       ],
+       [
+        "まし",
+        ""
+       ]
+      ],
+      "g": "encourage (masu-stem)"
+     },
+     {
+      "t": "合い",
+      "f": [
+       [
+        "合",
+        "あ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "mutually (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "Before the interview, my friend and I cheered each other on."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "仲間と支え合って、ここまで来た。",
+   "romaji": "Nakama to sasae atte, koko made kita.",
+   "en": "We supported each other and made it this far.",
+   "source": "ONE PIECE — Nami (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-naosu",
@@ -6775,9 +9928,90 @@
      "。"
     ],
     "en": "My pronunciation was off, so I said it over again in front of the teacher."
+   },
+   {
+    "ja": [
+     {
+      "t": "履歴書",
+      "f": [
+       [
+        "履",
+        "り"
+       ],
+       [
+        "歴",
+        "れき"
+       ],
+       [
+        "書",
+        "しょ"
+       ]
+      ],
+      "g": "resume"
+     },
+     "を",
+     {
+      "t": "何度も",
+      "f": [
+       [
+        "何",
+        "なん"
+       ],
+       [
+        "度",
+        "ど"
+       ],
+       [
+        "も",
+        ""
+       ]
+      ],
+      "g": "many times"
+     },
+     {
+      "t": "書き",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "write (masu-stem)"
+     },
+     {
+      "t": "直し",
+      "f": [
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "redo (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I rewrote my resume over and over."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "何度でも、立ち直してみせる。",
+   "romaji": "Nando demo, tachinaoshite miseru.",
+   "en": "No matter how many times, I'll pick myself back up.",
+   "source": "僕のヒーローアカデミア — Deku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-sasete-itadaku",
@@ -6920,9 +10154,78 @@
      "。"
     ],
     "en": "Might I be allowed to leave a little early tomorrow?"
+   },
+   {
+    "ja": [
+     {
+      "t": "本日",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "日",
+        "じつ"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "早めに",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "めに",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "帰ら",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "ら",
+        ""
+       ]
+      ],
+      "g": "go home (nai-stem)"
+     },
+     {
+      "t": "せていただきます",
+      "f": [
+       [
+        "せていただきます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "If it's all right, I'll take my leave a bit early today."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "本日は、私が案内させていただきます。",
+   "romaji": "Honjitsu wa, watashi ga annai sasete itadakimasu.",
+   "en": "Today, I shall humbly show you the way.",
+   "source": "黒執事 — Sebastian (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "keigo-critical"
+  ]
  },
  {
   "id": "n3-rareru-keigo",
@@ -7041,9 +10344,65 @@
      "。"
     ],
     "en": "The president reads the newspaper every morning. (honorific)"
+   },
+   {
+    "ja": [
+     {
+      "t": "社長",
+      "f": [
+       [
+        "社",
+        "しゃ"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "company president"
+     },
+     "は",
+     "もう",
+     {
+      "t": "帰ら",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "ら",
+        ""
+       ]
+      ],
+      "g": "go home (nai-stem)"
+     },
+     {
+      "t": "れました",
+      "f": [
+       [
+        "れました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The president has already gone home."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "会長はもう帰られました。",
+   "romaji": "Kaichō wa mō kaeraremashita.",
+   "en": "The president has already gone home.",
+   "source": "かぐや様は告らせたい — Hayasaka (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "keigo-critical"
+  ]
  },
  {
   "id": "n3-zu-ni",
@@ -7205,9 +10564,90 @@
      "。"
     ],
     "en": "Don't worry about anything and just leave it to me."
+   },
+   {
+    "ja": [
+     {
+      "t": "朝ご飯",
+      "f": [
+       [
+        "朝",
+        "あさ"
+       ],
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "breakfast"
+     },
+     "を",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (nai-stem)"
+     },
+     {
+      "t": "ずに",
+      "f": [
+       [
+        "ずに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "家",
+      "f": [
+       [
+        "家",
+        "いえ"
+       ]
+      ],
+      "g": "home"
+     },
+     "を",
+     {
+      "t": "出",
+      "f": [
+       [
+        "出",
+        "で"
+       ]
+      ],
+      "g": "leave (ta-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I left home without eating breakfast."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "振り返らずに、前を向いて歩け。",
+   "romaji": "Furikaerazu ni, mae o muite aruke.",
+   "en": "Walk forward without looking back.",
+   "source": "鋼の錬金術師 — Edward (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n3-nakanaka-nai",
@@ -7326,9 +10766,88 @@
      "。"
     ],
     "en": "Kanji are hard, and I just can't seem to memorize them."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "では",
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     {
+      "t": "アパート",
+      "f": [
+       [
+        "アパート",
+        ""
+       ]
+      ],
+      "g": "apartment"
+     },
+     "が",
+     {
+      "t": "なかなか",
+      "f": [
+       [
+        "なかなか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "見つかり",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "つかり",
+        ""
+       ]
+      ],
+      "g": "be found (masu-stem)"
+     },
+     "ません",
+     "。"
+    ],
+    "en": "In Tokyo, a cheap apartment is hard to find."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "答えが、なかなか見つからない。",
+   "romaji": "Kotae ga, nakanaka mitsukaranai.",
+   "en": "The answer just won't come easily.",
+   "source": "PSYCHO-PASS — Akane (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-tokoro-datta",
@@ -7480,9 +10999,78 @@
      "。"
     ],
     "en": "I very nearly dropped my wallet."
+   },
+   {
+    "ja": [
+     "もう",
+     {
+      "t": "少し",
+      "f": [
+       [
+        "少",
+        "すこ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "a little"
+     },
+     "で",
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "を",
+     {
+      "t": "逃す",
+      "f": [
+       [
+        "逃",
+        "のが"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "miss"
+     },
+     {
+      "t": "ところだった",
+      "f": [
+       [
+        "ところだった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I almost missed the last train."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "危なかった、もう少しで死ぬところだった。",
+   "romaji": "Abunakatta, mō sukoshi de shinu tokoro datta.",
+   "en": "That was close — I nearly died.",
+   "source": "呪術廻戦 — Itadori (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-te-bakari-iru",
@@ -7631,9 +11219,73 @@
      "。"
     ],
     "en": "He does nothing but complain and never actually does anything."
+   },
+   {
+    "ja": [
+     {
+      "t": "ルームメイト",
+      "f": [
+       [
+        "ルームメイト",
+        ""
+       ]
+      ],
+      "g": "roommate"
+     },
+     "は",
+     {
+      "t": "文句",
+      "f": [
+       [
+        "文",
+        "もん"
+       ],
+       [
+        "句",
+        "く"
+       ]
+      ],
+      "g": "complaints"
+     },
+     "を",
+     {
+      "t": "言っ",
+      "f": [
+       [
+        "言",
+        "い"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "say (te-form)"
+     },
+     {
+      "t": "てばかりいます",
+      "f": [
+       [
+        "てばかりいます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My roommate does nothing but complain."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "泣いてばかりいると、前に進めないぞ。",
+   "romaji": "Naite bakari iru to, mae ni susumenai zo.",
+   "en": "If you do nothing but cry, you can't move forward.",
+   "source": "鬼滅の刃 — Zenitsu (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-te-hajimete",
@@ -7806,9 +11458,99 @@
      "。"
     ],
     "en": "It was only after coming to Japan that I first tried natto."
+   },
+   {
+    "ja": [
+     {
+      "t": "一人暮らし",
+      "f": [
+       [
+        "一",
+        "ひと"
+       ],
+       [
+        "人",
+        "り"
+       ],
+       [
+        "暮",
+        "ぐ"
+       ],
+       [
+        "らし",
+        ""
+       ]
+      ],
+      "g": "living alone"
+     },
+     "を",
+     "して",
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "only after"
+     },
+     {
+      "t": "親",
+      "f": [
+       [
+        "親",
+        "おや"
+       ]
+      ],
+      "g": "parents"
+     },
+     "の",
+     {
+      "t": "ありがたさ",
+      "f": [
+       [
+        "ありがたさ",
+        ""
+       ]
+      ],
+      "g": "how grateful one should be"
+     },
+     "が",
+     {
+      "t": "分かり",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かり",
+        ""
+       ]
+      ],
+      "g": "understand (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "Only after living on my own did I realize how much my parents did for me."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "失って初めて、その大切さに気づいた。",
+   "romaji": "Ushinatte hajimete, sono taisetsusa ni kizuita.",
+   "en": "Only after losing it did I realize how precious it was.",
+   "source": "四月は君の嘘 — Kousei (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-you-ni-iu",
@@ -7949,9 +11691,92 @@
      "。"
     ],
     "en": "The manager told me not to be late."
+   },
+   {
+    "ja": [
+     {
+      "t": "医者",
+      "f": [
+       [
+        "医",
+        "い"
+       ],
+       [
+        "者",
+        "しゃ"
+       ]
+      ],
+      "g": "doctor"
+     },
+     "に",
+     {
+      "t": "お酒",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "酒",
+        "さけ"
+       ]
+      ],
+      "g": "alcohol"
+     },
+     "を",
+     {
+      "t": "控える",
+      "f": [
+       [
+        "控",
+        "ひか"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "g": "cut down"
+     },
+     {
+      "t": "ように",
+      "f": [
+       [
+        "ように",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "言わ",
+      "f": [
+       [
+        "言",
+        "い"
+       ],
+       [
+        "わ",
+        ""
+       ]
+      ],
+      "g": "be told (passive)"
+     },
+     "れました",
+     "。"
+    ],
+    "en": "The doctor told me to go easy on alcohol."
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "無理をしないように、と伝えてくれ。",
+   "romaji": "Muri o shinai yō ni, to tsutaete kure.",
+   "en": "Tell him not to overdo it.",
+   "source": "呪術廻戦 — Nanami (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-te-itadakemasen-ka",
@@ -8072,9 +11897,66 @@
      "。"
     ],
     "en": "Could you kindly explain it to me one more time?"
+   },
+   {
+    "ja": [
+     "すみません",
+     "、",
+     {
+      "t": "写真",
+      "f": [
+       [
+        "写",
+        "しゃ"
+       ],
+       [
+        "真",
+        "しん"
+       ]
+      ],
+      "g": "photo"
+     },
+     "を",
+     {
+      "t": "撮っ",
+      "f": [
+       [
+        "撮",
+        "と"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "take (te-form)"
+     },
+     {
+      "t": "ていただけませんか",
+      "f": [
+       [
+        "ていただけませんか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Excuse me, could you kindly take a photo for me?"
    }
   ],
-  "level": "N3"
+  "level": "N3",
+  "peg": {
+   "ja": "少し待っていただけませんか。",
+   "romaji": "Sukoshi matte itadakemasen ka.",
+   "en": "Could you kindly wait a moment?",
+   "source": "ヴァイオレット・エヴァーガーデン — Violet (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "keigo-critical"
+  ]
  },
  {
   "id": "n3-ni-tsuite",
@@ -8215,9 +12097,77 @@
      "。"
     ],
     "en": "I'm studying about Japanese culture."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "Japan"
+     },
+     "の",
+     {
+      "t": "税金",
+      "f": [
+       [
+        "税",
+        "ぜい"
+       ],
+       [
+        "金",
+        "きん"
+       ]
+      ],
+      "g": "taxes"
+     },
+     {
+      "t": "について",
+      "f": [
+       [
+        "について",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "調べ",
+      "f": [
+       [
+        "調",
+        "しら"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "look into (te-form)"
+     },
+     "ています",
+     "。"
+    ],
+    "en": "I'm looking into Japanese taxes."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "その事件について、話がある。",
+   "romaji": "Sono jiken ni tsuite, hanashi ga aru.",
+   "en": "There's something I want to discuss about that case.",
+   "source": "名探偵コナン — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ni-taishite",
@@ -8403,9 +12353,112 @@
      "。"
     ],
     "en": "My brother likes meat. In contrast, I like fish."
+   },
+   {
+    "ja": [
+     {
+      "t": "お客様",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "客",
+        "きゃく"
+       ],
+       [
+        "様",
+        "さま"
+       ]
+      ],
+      "g": "customer"
+     },
+     {
+      "t": "に対して",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "対",
+        "たい"
+       ],
+       [
+        "し",
+        ""
+       ],
+       [
+        "て",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "丁寧な",
+      "f": [
+       [
+        "丁",
+        "てい"
+       ],
+       [
+        "寧",
+        "ねい"
+       ],
+       [
+        "な",
+        ""
+       ]
+      ],
+      "g": "polite"
+     },
+     {
+      "t": "言葉",
+      "f": [
+       [
+        "言",
+        "こと"
+       ],
+       [
+        "葉",
+        "ば"
+       ]
+      ],
+      "g": "words"
+     },
+     "を",
+     {
+      "t": "使います",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "use"
+     },
+     "。"
+    ],
+    "en": "Toward customers, you use polite language."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "強き者に対して、決して媚びない。",
+   "romaji": "Tsuyoki mono ni taishite, kesshite kobinai.",
+   "en": "I'll never grovel before the powerful.",
+   "source": "進撃の巨人 — Levi (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n3-ni-totte",
@@ -8551,9 +12604,81 @@
      "。"
     ],
     "en": "For me, Tokyo summers are too hot."
+   },
+   {
+    "ja": [
+     {
+      "t": "外国人",
+      "f": [
+       [
+        "外",
+        "がい"
+       ],
+       [
+        "国",
+        "こく"
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "foreigner"
+     },
+     {
+      "t": "にとって",
+      "f": [
+       [
+        "にとって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "は",
+     {
+      "t": "難しい",
+      "f": [
+       [
+        "難",
+        "むずか"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "difficult"
+     },
+     "です",
+     "。"
+    ],
+    "en": "For a foreigner, kanji is difficult."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "君にとって、俺は何だ？",
+   "romaji": "Kimi ni totte, ore wa nan da?",
+   "en": "What am I to you?",
+   "source": "コードギアス — Suzaku (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ni-yotte",
@@ -8690,9 +12815,94 @@
      "。"
     ],
     "en": "The trains stopped due to the typhoon."
+   },
+   {
+    "ja": [
+     {
+      "t": "季節",
+      "f": [
+       [
+        "季",
+        "き"
+       ],
+       [
+        "節",
+        "せつ"
+       ]
+      ],
+      "g": "season"
+     },
+     {
+      "t": "によって",
+      "f": [
+       [
+        "によって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "の",
+     {
+      "t": "景色",
+      "f": [
+       [
+        "景",
+        "け"
+       ],
+       [
+        "色",
+        "しき"
+       ]
+      ],
+      "g": "scenery"
+     },
+     "は",
+     {
+      "t": "変わり",
+      "f": [
+       [
+        "変",
+        "か"
+       ],
+       [
+        "わり",
+        ""
+       ]
+      ],
+      "g": "change (masu-stem)"
+     },
+     "ます",
+     "。"
+    ],
+    "en": "Depending on the season, Tokyo's scenery changes."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "努力によって、運命は変えられる。",
+   "romaji": "Doryoku ni yotte, unmei wa kaerareru.",
+   "en": "Through effort, fate can be changed.",
+   "source": "Fate/stay night — Emiya (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n3-ni-yoru-to",
@@ -8844,9 +13054,78 @@
      "。"
     ],
     "en": "According to my friend, that izakaya is cheap."
+   },
+   {
+    "ja": [
+     {
+      "t": "天気予報",
+      "f": [
+       [
+        "天",
+        "てん"
+       ],
+       [
+        "気",
+        "き"
+       ],
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "報",
+        "ほう"
+       ]
+      ],
+      "g": "weather forecast"
+     },
+     {
+      "t": "によると",
+      "f": [
+       [
+        "によると",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "雪",
+      "f": [
+       [
+        "雪",
+        "ゆき"
+       ]
+      ],
+      "g": "snow"
+     },
+     "だ",
+     "そうです",
+     "。"
+    ],
+    "en": "According to the forecast, it'll snow tomorrow."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "報告によると、敵艦が接近している。",
+   "romaji": "Hōkoku ni yoru to, tekikan ga sekkin shite iru.",
+   "en": "According to the report, the enemy ship is approaching.",
+   "source": "機動戦士ガンダム — Bright (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-to-shite",
@@ -8984,9 +13263,73 @@
      "。"
     ],
     "en": "I'm using this room as a bedroom."
+   },
+   {
+    "ja": [
+     {
+      "t": "ワーホリ",
+      "f": [
+       [
+        "ワーホリ",
+        ""
+       ]
+      ],
+      "g": "working holiday"
+     },
+     {
+      "t": "として",
+      "f": [
+       [
+        "として",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "で",
+     {
+      "t": "働い",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "work (te-form)"
+     },
+     "ています",
+     "。"
+    ],
+    "en": "As a working holiday worker, I'm working in Tokyo."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "軍人として、命令には従う。",
+   "romaji": "Gunjin to shite, meirei ni wa shitagau.",
+   "en": "As a soldier, I follow orders.",
+   "source": "鋼の錬金術師 — Mustang (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-no-kawari-ni",
@@ -9177,9 +13520,81 @@
      "。"
     ],
     "en": "I'll clean. In exchange, you cook."
+   },
+   {
+    "ja": [
+     {
+      "t": "現金",
+      "f": [
+       [
+        "現",
+        "げん"
+       ],
+       [
+        "金",
+        "きん"
+       ]
+      ],
+      "g": "cash"
+     },
+     {
+      "t": "の代わりに",
+      "f": [
+       [
+        "の",
+        ""
+       ],
+       [
+        "代",
+        "か"
+       ],
+       [
+        "わりに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "ICカード",
+      "f": [
+       [
+        "ICカード",
+        ""
+       ]
+      ],
+      "g": "IC card"
+     },
+     "で",
+     {
+      "t": "払い",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "pay (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "Instead of cash, I paid with my IC card."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "肉の代わりに魚を出そう。",
+   "romaji": "Niku no kawari ni sakana wo dasou.",
+   "en": "Instead of meat, I'll serve fish.",
+   "source": "ONE PIECE — サンジ (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-wa-mochiron",
@@ -9339,9 +13754,77 @@
      "。"
     ],
     "en": "He can speak Japanese, let alone English."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     {
+      "t": "はもちろん",
+      "f": [
+       [
+        "はもちろん",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "平日",
+      "f": [
+       [
+        "平",
+        "へい"
+       ],
+       [
+        "日",
+        "じつ"
+       ]
+      ],
+      "g": "weekday"
+     },
+     "も",
+     {
+      "t": "混ん",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "ん",
+        ""
+       ]
+      ],
+      "g": "crowded (te-iru)"
+     },
+     "でいます",
+     "。"
+    ],
+    "en": "Weekends of course, but weekdays are packed too."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "勝利はもちろん、全員無事に帰る。",
+   "romaji": "Shōri wa mochiron, zen'in buji ni kaeru.",
+   "en": "Victory of course, but we all get home safe too.",
+   "source": "ハイキュー!! — Daichi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-nanka",
@@ -9475,9 +13958,76 @@
      "。"
     ],
     "en": "Someone like me still can't read kanji."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "疲れた",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "be tired"
+     },
+     "から",
+     {
+      "t": "料理",
+      "f": [
+       [
+        "料",
+        "りょう"
+       ],
+       [
+        "理",
+        "り"
+       ]
+      ],
+      "g": "cooking"
+     },
+     {
+      "t": "なんか",
+      "f": [
+       [
+        "なんか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "したくない",
+     "。"
+    ],
+    "en": "I'm tired today, so I don't feel like cooking or anything."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "涙なんか、見せたくなかった。",
+   "romaji": "Namida nanka, misetakunakatta.",
+   "en": "I didn't want to show any tears or anything.",
+   "source": "CLANNAD — Nagisa (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n3-koso",
@@ -9578,9 +14128,70 @@
      "。"
     ],
     "en": "The thanks are mine — thank *you*."
+   },
+   {
+    "ja": [
+     {
+      "t": "今年",
+      "f": [
+       [
+        "今年",
+        "ことし"
+       ]
+      ],
+      "g": "this year"
+     },
+     {
+      "t": "こそ",
+      "f": [
+       [
+        "こそ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "N3",
+      "f": [
+       [
+        "N3",
+        ""
+       ]
+      ],
+      "g": "the N3"
+     },
+     "に",
+     {
+      "t": "合格",
+      "f": [
+       [
+        "合",
+        "ごう"
+       ],
+       [
+        "格",
+        "かく"
+       ]
+      ],
+      "g": "pass (exam)"
+     },
+     "し",
+     "たいです",
+     "。"
+    ],
+    "en": "This year for sure, I want to pass the N3."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "今度こそ、必ず君を守る。",
+   "romaji": "Kondo koso, kanarazu kimi o mamoru.",
+   "en": "This time for sure, I'll protect you.",
+   "source": "美少女戦士セーラームーン — Tuxedo Mask (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-datte",
@@ -9722,9 +14333,71 @@
      "。"
     ],
     "en": "I want to go to the izakaya too, you know."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     {
+      "t": "だって",
+      "f": [
+       [
+        "だって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "たまには",
+      "f": [
+       [
+        "たまには",
+        ""
+       ]
+      ],
+      "g": "once in a while"
+     },
+     {
+      "t": "贅沢",
+      "f": [
+       [
+        "贅",
+        "ぜい"
+       ],
+       [
+        "沢",
+        "たく"
+       ]
+      ],
+      "g": "splurge"
+     },
+     "し",
+     "たいです",
+     "。"
+    ],
+    "en": "Even I want to treat myself once in a while."
    }
   ],
-  "confidence": "low"
+  "confidence": "low",
+  "peg": {
+   "ja": "俺だって、強くなりたいんだ。",
+   "romaji": "Ore datte, tsuyoku naritai n da.",
+   "en": "I want to get strong too, you know.",
+   "source": "NARUTO — Konohamaru (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n3-tte",
@@ -9858,9 +14531,83 @@
      "？"
     ],
     "en": "Share houses — are they cheap?"
+   },
+   {
+    "ja": [
+     {
+      "t": "田中",
+      "f": [
+       [
+        "田",
+        "た"
+       ],
+       [
+        "中",
+        "なか"
+       ]
+      ],
+      "g": "Tanaka"
+     },
+     "さん",
+     {
+      "t": "って",
+      "f": [
+       [
+        "って",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "本当に",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "当",
+        "とう"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "g": "really"
+     },
+     {
+      "t": "優しい",
+      "f": [
+       [
+        "優",
+        "やさ"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "kind"
+     },
+     "ね",
+     "。"
+    ],
+    "en": "Tanaka-san is really kind, isn't she."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "友情って、案外いいもんだな。",
+   "romaji": "Yūjō tte, angai ii mon da na.",
+   "en": "This friendship thing is surprisingly nice.",
+   "source": "銀魂 — Gintoki (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n3-muke",
@@ -10026,9 +14773,89 @@
      "。"
     ],
     "en": "I'm looking for a Japanese class aimed at beginners."
+   },
+   {
+    "ja": [
+     "これ",
+     "は",
+     {
+      "t": "初心者",
+      "f": [
+       [
+        "初",
+        "しょ"
+       ],
+       [
+        "心",
+        "しん"
+       ],
+       [
+        "者",
+        "しゃ"
+       ]
+      ],
+      "g": "beginner"
+     },
+     {
+      "t": "向け",
+      "f": [
+       [
+        "向",
+        "む"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "aimed at"
+     },
+     "の",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "の",
+     {
+      "t": "本",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "book"
+     },
+     "です",
+     "。"
+    ],
+    "en": "This is a Japanese book aimed at beginners."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "これは初心者向けの訓練だ。",
+   "romaji": "Kore wa shoshinsha muke no kunren da.",
+   "en": "This is training meant for beginners.",
+   "source": "僕のヒーローアカデミア — All Might (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-muki",
@@ -10163,9 +14990,73 @@
      "。"
     ],
     "en": "This job is suited for students."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "job"
+     },
+     "は",
+     {
+      "t": "初心者",
+      "f": [
+       [
+        "初",
+        "しょ"
+       ],
+       [
+        "心",
+        "しん"
+       ],
+       [
+        "者",
+        "しゃ"
+       ]
+      ],
+      "g": "beginner"
+     },
+     {
+      "t": "向き",
+      "f": [
+       [
+        "向",
+        "む"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "suited for"
+     },
+     "です",
+     "。"
+    ],
+    "en": "This job is well suited for beginners."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "お前は、リーダー向きの男だ。",
+   "romaji": "Omae wa, rīdā muki no otoko da.",
+   "en": "You're the type suited to be a leader.",
+   "source": "ハイキュー!! — Sugawara (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-teki",
@@ -10314,9 +15205,82 @@
      "。"
     ],
     "en": "I'm moving for economic reasons."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本人",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "Japanese people"
+     },
+     "は",
+     {
+      "t": "基本",
+      "f": [
+       [
+        "基",
+        "き"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "basic"
+     },
+     {
+      "t": "的",
+      "f": [
+       [
+        "的",
+        "てき"
+       ]
+      ],
+      "p": 1
+     },
+     "に",
+     {
+      "t": "親切",
+      "f": [
+       [
+        "親",
+        "しん"
+       ],
+       [
+        "切",
+        "せつ"
+       ]
+      ],
+      "g": "kind"
+     },
+     "です",
+     "。"
+    ],
+    "en": "Japanese people are basically kind."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "基本的に、俺は諦めが悪い。",
+   "romaji": "Kihonteki ni, ore wa akirame ga warui.",
+   "en": "Basically, I'm terrible at giving up.",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-sa",
@@ -10464,9 +15428,85 @@
      "。"
     ],
     "en": "I've gotten used to the convenience of the trains."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "の",
+     {
+      "t": "夏",
+      "f": [
+       [
+        "夏",
+        "なつ"
+       ]
+      ],
+      "g": "summer"
+     },
+     "の",
+     {
+      "t": "暑",
+      "f": [
+       [
+        "暑",
+        "あつ"
+       ]
+      ],
+      "g": "hot"
+     },
+     {
+      "t": "さ",
+      "f": [
+       [
+        "さ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "には",
+     {
+      "t": "驚き",
+      "f": [
+       [
+        "驚",
+        "おどろ"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "be surprised (masu-stem)"
+     },
+     "ました",
+     "。"
+    ],
+    "en": "I was shocked by the intensity of Tokyo's summer heat."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "その強さの秘密を、教えてくれ。",
+   "romaji": "Sono tsuyosa no himitsu o, oshiete kure.",
+   "en": "Tell me the secret of that strength.",
+   "source": "ドラゴンボール — Vegeta (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-juu",
@@ -10604,9 +15644,80 @@
      "。"
     ],
     "en": "The cat ran all over the house."
+   },
+   {
+    "ja": [
+     {
+      "t": "一日",
+      "f": [
+       [
+        "一",
+        "いち"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "one day"
+     },
+     {
+      "t": "中",
+      "f": [
+       [
+        "中",
+        "じゅう"
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "の",
+     {
+      "t": "準備",
+      "f": [
+       [
+        "準",
+        "じゅん"
+       ],
+       [
+        "備",
+        "び"
+       ]
+      ],
+      "g": "preparation"
+     },
+     "を",
+     "し",
+     "ました",
+     "。"
+    ],
+    "en": "I spent the whole day preparing for the interview."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "一日中、剣を振り続けた。",
+   "romaji": "Ichinichijū, ken o furitsuzuketa.",
+   "en": "I kept swinging my sword all day long.",
+   "source": "鬼滅の刃 — Tanjiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-goto-ni",
@@ -10769,9 +15880,77 @@
      "。"
     ],
     "en": "I take out the burnable garbage every three days."
+   },
+   {
+    "ja": [
+     {
+      "t": "一年",
+      "f": [
+       [
+        "一",
+        "いち"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "one year"
+     },
+     {
+      "t": "ごとに",
+      "f": [
+       [
+        "ごとに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "契約",
+      "f": [
+       [
+        "契",
+        "けい"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "contract"
+     },
+     "を",
+     {
+      "t": "更新",
+      "f": [
+       [
+        "更",
+        "こう"
+       ],
+       [
+        "新",
+        "しん"
+       ]
+      ],
+      "g": "renew"
+     },
+     "します",
+     "。"
+    ],
+    "en": "Every year, I renew the contract."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "季節ごとに、景色は姿を変える。",
+   "romaji": "Kisetsu goto ni, keshiki wa sugata o kaeru.",
+   "en": "With each season, the scenery changes its form.",
+   "source": "夏目友人帳 — Natsume (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-hazu-datta",
@@ -10937,9 +16116,88 @@
      "。"
     ],
     "en": "The train was supposed to arrive at nine."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     {
+      "t": "届く",
+      "f": [
+       [
+        "届",
+        "とど"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "arrive"
+     },
+     {
+      "t": "はずだった",
+      "f": [
+       [
+        "はずだった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "のに",
+     {
+      "t": "荷物",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "package"
+     },
+     "が",
+     "まだ",
+     {
+      "t": "来ない",
+      "f": [
+       [
+        "来",
+        "こ"
+       ],
+       [
+        "ない",
+        ""
+       ]
+      ],
+      "g": "not come"
+     },
+     "。"
+    ],
+    "en": "The package was supposed to arrive today, but it still hasn't come."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "今日で、全て終わるはずだった。",
+   "romaji": "Kyō de, subete owaru hazu datta.",
+   "en": "Today, everything was supposed to end.",
+   "source": "STEINS;GATE — Okabe (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-beki",
@@ -11102,9 +16360,80 @@
      "。"
     ],
     "en": "You ought to start saving money now."
+   },
+   {
+    "ja": [
+     {
+      "t": "体調",
+      "f": [
+       [
+        "体",
+        "たい"
+       ],
+       [
+        "調",
+        "ちょう"
+       ]
+      ],
+      "g": "physical condition"
+     },
+     "が",
+     {
+      "t": "悪い",
+      "f": [
+       [
+        "悪",
+        "わる"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "bad"
+     },
+     "なら",
+     {
+      "t": "無理",
+      "f": [
+       [
+        "無",
+        "む"
+       ],
+       [
+        "理",
+        "り"
+       ]
+      ],
+      "g": "overexertion"
+     },
+     "を",
+     "する",
+     {
+      "t": "べき",
+      "f": [
+       [
+        "べき",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "ではありません",
+     "。"
+    ],
+    "en": "If you're not feeling well, you shouldn't push yourself."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "守るべきものが、俺にはある。",
+   "romaji": "Mamoru beki mono ga, ore ni wa aru.",
+   "en": "I have something I must protect.",
+   "source": "鬼滅の刃 — Tanjiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n3-ni-kurabete",
@@ -11265,8 +16594,102 @@
      "。"
     ],
     "en": "Compared to Tokyo, Hokkaido is cool."
+   },
+   {
+    "ja": [
+     {
+      "t": "去年",
+      "f": [
+       [
+        "去",
+        "きょ"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "last year"
+     },
+     {
+      "t": "に比べて",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "比",
+        "くら"
+       ],
+       [
+        "べ",
+        ""
+       ],
+       [
+        "て",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "が",
+     {
+      "t": "ずいぶん",
+      "f": [
+       [
+        "ずいぶん",
+        ""
+       ]
+      ],
+      "g": "considerably"
+     },
+     {
+      "t": "上達",
+      "f": [
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "達",
+        "たつ"
+       ]
+      ],
+      "g": "improve"
+     },
+     "しました",
+     "。"
+    ],
+    "en": "Compared to last year, my Japanese has improved a lot."
    }
   ],
-  "confidence": "high"
+  "confidence": "high",
+  "peg": {
+   "ja": "あの頃に比べて、俺は強くなった。",
+   "romaji": "Ano koro ni kurabete, ore wa tsuyoku natta.",
+   "en": "Compared to back then, I've grown stronger.",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  }
 ]

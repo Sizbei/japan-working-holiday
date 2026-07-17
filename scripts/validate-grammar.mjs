@@ -12,6 +12,9 @@ import { join, basename } from 'node:path';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const CONFIDENCE = ['high', 'medium', 'low'];
+const PEG_KINDS = ['verbatim', 'styled'];
+// Register-honesty tags (yakuwarigo research). Absence of flags = standard neutral-polite.
+const FLAG_VOCAB = ['anime-common', 'casual-spoken', 'written-formal', 'yakuwarigo-recognize-only', 'rude-in-life', 'keigo-critical'];
 const ID_RE = /^n[1-5]-[a-z0-9]+(-[a-z0-9]+)*$/;
 const KANA_SEG = /^[ぁ-ゖァ-ヺーー]*$/;        // token furigana readings
 const READING_RE = /^[ぁ-ゖーー〜・]+$/;                  // point reading: hiragana + 〜 + ・ (dual-form patterns)
@@ -45,8 +48,36 @@ export function validatePoints(points, level, allIds) {
     else p.related.forEach(r => { if (!allIds.has(r)) bad(id, `related → unknown id ${r}`); });
     if (seenPatterns.has(p.pattern)) bad(id, `duplicate pattern (also ${seenPatterns.get(p.pattern)})`);
     seenPatterns.set(p.pattern, id);
-    if (!Array.isArray(p.examples) || p.examples.length < 1 || p.examples.length > 3) {
-      bad(id, 'examples must be an array of 1–3'); return;
+    // peg (R5 anime doctrine): a famous line (verbatim) or in-character original (styled)
+    // as the retrieval hook — NOT a hint tier. Verbatim is catchphrase-length + attributed.
+    if (!p.peg || typeof p.peg !== 'object' || Array.isArray(p.peg)) bad(id, 'missing peg object');
+    else {
+      const peg = p.peg;
+      for (const k of ['ja', 'romaji', 'en', 'source', 'kind']) {
+        if (typeof peg[k] !== 'string' || !peg[k]) bad(id, `peg.${k} must be a non-empty string`);
+      }
+      if (typeof peg.kind === 'string' && !PEG_KINDS.includes(peg.kind)) bad(id, `peg.kind must be one of ${PEG_KINDS.join('|')}`);
+      if (typeof peg.source === 'string' && peg.source.length < 2) bad(id, 'peg.source too short (need ≥2 chars)');
+      if (peg.kind === 'verbatim' && typeof peg.ja === 'string') {
+        if ([...peg.ja].length > 40) bad(id, `verbatim peg.ja > 40 code points (${[...peg.ja].length})`);
+        if (peg.ja.includes('\n')) bad(id, 'verbatim peg.ja must be a single line');
+      }
+      if (peg.kind === 'verbatim' && typeof peg.source === 'string' && !(peg.source.includes('—') || peg.source.includes(' - '))) {
+        bad(id, 'verbatim peg.source needs attribution (e.g. "Title — Character")');
+      }
+    }
+    // flags[] (register honesty): closed vocabulary, no duplicates, may be empty
+    if (!Array.isArray(p.flags)) bad(id, 'flags must be an array (may be empty)');
+    else {
+      const seenFlags = new Set();
+      p.flags.forEach(fl => {
+        if (!FLAG_VOCAB.includes(fl)) bad(id, `unknown flag ${JSON.stringify(fl)}`);
+        if (seenFlags.has(fl)) bad(id, `duplicate flag ${JSON.stringify(fl)}`);
+        seenFlags.add(fl);
+      });
+    }
+    if (!Array.isArray(p.examples) || p.examples.length !== 3) {
+      bad(id, 'examples must be an array of exactly 3'); return;
     }
     p.examples.forEach((ex, j) => {
       const at = `${id} ex[${j}]`;
@@ -127,7 +158,9 @@ function main() {
   for (const { file, level, points } of loaded) {
     const errs = validatePoints(points, level, allIds);
     total += errs.length;
-    console.log(`${basename(file)}: ${points.length} points, ${errs.length} errors`);
+    const pegged = points.filter(p => p && p.peg).length;
+    const flagged = points.filter(p => p && Array.isArray(p.flags) && p.flags.length).length;
+    console.log(`${basename(file)}: ${points.length} points (${pegged}/${points.length} pegs, ${flagged} flagged), ${errs.length} errors`);
     errs.forEach(e => console.log('  ✗ ' + e));
   }
   // Units file — validated against the union of every point id (only when the default full run

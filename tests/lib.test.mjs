@@ -2168,7 +2168,7 @@ test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sti
 // ─────────────────────────────────────────────────────────────────────────────
 // questions.js — R2 typed-cloze generator + answer arbitration (pure)
 // ─────────────────────────────────────────────────────────────────────────────
-import { clozeFor, normalizeAnswer, levenshtein, checkAnswer } from '../docs/assets/lib/questions.js';
+import { clozeFor, normalizeAnswer, levenshtein, checkAnswer, scrambleFor, scramblable } from '../docs/assets/lib/questions.js';
 
 // real-shaped fixture: p tokens are objects, non-p tokens mix string + object, p is
 // NON-contiguous (indices 2 and 4), and the p surfaces differ from their kana readings.
@@ -2244,6 +2244,87 @@ test('questions: multi-p cloze — each blank carries ITS OWN fill, answers stay
   assert.equal(blanks.length, 2);
   assert.deepEqual(blanks.map(b => b.fill), ['たり', 'たり']);  // per-blank reveal text
   assert.ok(c.answers.includes('たりたり'));                     // typed answer stays merged
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// questions.js — R4 ★-scramble (文の組み立て) generator (pure)
+// ─────────────────────────────────────────────────────────────────────────────
+// real-shaped fixture: 6 usable units after punctuation is glued to the preceding chunk.
+const scramblePoint = {
+  id: 'x-scram',
+  examples: [{
+    ja: [
+      { t: '駅', f: [['駅', 'えき']], g: 'station' },
+      'に',
+      { t: '着い', f: [['着', 'つ'], ['い', '']], g: 'arrive' },
+      { t: 'たら', f: [['たら', '']], p: 1 },
+      '、',
+      { t: '電話', f: [['電', 'でん'], ['話', 'わ']], g: 'phone' },
+      'します', '。',
+    ],
+    en: 'When I arrive at the station, I call.',
+  }],
+};
+const surfaceOfJa = (ja) => ja.map(t => (typeof t === 'string' ? t : (t.t || ''))).join('');
+
+test('questions: scrambleFor — 4 chunks, exact reassembly, star ∈ {1,2}', () => {
+  const s = scrambleFor(scramblePoint, 0);
+  assert.equal(s.chunks.length, 4);
+  assert.equal(s.order.length, 4);
+  assert.equal(s.order.map(i => s.chunks[i].text).join(''), surfaceOfJa(scramblePoint.examples[0].ja));
+  assert.ok(s.star === 1 || s.star === 2, `star ${s.star} in {1,2}`);
+  assert.deepEqual([...s.order].sort(), [0, 1, 2, 3]);   // order is a permutation of the 4 chunk indices
+});
+
+test('questions: scrambleFor — deterministic; seed shuffles PRESENTATION only', () => {
+  assert.deepEqual(scrambleFor(scramblePoint, 0, 12345), scrambleFor(scramblePoint, 0, 12345));  // fixed seed reproducible
+  assert.deepEqual(scrambleFor(scramblePoint, 0), scrambleFor(scramblePoint, 0));                 // default seed reproducible
+  const surf = surfaceOfJa(scramblePoint.examples[0].ja);
+  for (const seed of [1, 2, 7, 99]) {                     // any seed still reassembles the same sentence
+    const s = scrambleFor(scramblePoint, 0, seed);
+    assert.equal(s.chunks.length, 4);
+    assert.equal(s.order.map(i => s.chunks[i].text).join(''), surf);
+  }
+});
+
+test('questions: scramblable — < 4 usable tokens degrades cleanly to null', () => {
+  const short = { examples: [{ ja: [{ t: 'もう', f: [['もう', '']] }, { t: '帰らなきゃ', f: [['帰', 'かえ'], ['らなきゃ', '']], p: 1 }, '。'], en: 'gotta go' }] };
+  assert.equal(scrambleFor(short, 0), null);
+  assert.equal(scramblable(short), false);
+  assert.equal(scramblable(scramblePoint), true);
+  assert.equal(scrambleFor({ examples: [] }, 0), null);   // no example → null
+});
+
+test('questions: scrambleFor — corpus-wide validity ≥97%, exact reassembly + star everywhere', () => {
+  const dir = new URL('../docs/data/', import.meta.url);
+  const levels = ['n5', 'n4', 'n3', 'n2', 'n1'];
+  let total = 0, valid = 0;
+  for (const l of levels) {
+    const pts = JSON.parse(readFileSync(new URL(`grammar-${l}.json`, dir), 'utf8'));
+    for (const p of pts) {
+      for (let i = 0; i < (p.examples || []).length; i++) {
+        total++;
+        const s = scrambleFor(p, i);
+        if (!s) continue;
+        valid++;
+        assert.equal(s.chunks.length, 4, `${p.id}#${i} chunks`);
+        assert.equal(s.order.map(k => s.chunks[k].text).join(''), surfaceOfJa(p.examples[i].ja), `${p.id}#${i} reassembly`);
+        assert.ok(s.star === 1 || s.star === 2, `${p.id}#${i} star`);
+        assert.ok(s.order.some((v, k) => v !== k), `${p.id}#${i} presented pre-solved (identity)`);
+      }
+    }
+  }
+  assert.ok(valid / total >= 0.97, `scramble coverage ${(valid / total * 100).toFixed(1)}% ≥ 97%`);
+});
+
+test('questions: scramblable — the 3 known scramble-less points degrade', () => {
+  const pool = ['n5', 'n4'].flatMap(l =>
+    JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8')));
+  for (const id of ['n5-wa-dou-desu-ka', 'n4-te-sumimasen', 'n4-nakya']) {
+    const p = pool.find(x => x.id === id);
+    assert.ok(p, `${id} present`);
+    assert.equal(scramblable(p), false, `${id} is not scramble-able`);
+  }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -99,6 +99,19 @@ function boot() {
       };
       document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'grammar') loadGrammar(); });
       if (/^#\/?grammar$/.test(location.hash)) loadGrammar();
+      // Grammar Gym (#/study) — the SRS session runner rides the same lazy pattern; the module +
+      // its per-level data fetch load on first entry (specs/plans/2026-07-17-grammar-mastery-program.md R2)
+      let studyLoaded = false;
+      const loadStudy = () => {
+        if (studyLoaded) return;
+        studyLoaded = true;
+        const view = document.getElementById('view-study');
+        view?.setAttribute('aria-busy', 'true');
+        import('./study.js').then(m => { m.mountStudy(); view?.removeAttribute('aria-busy'); })
+          .catch(err => { studyLoaded = false; view?.removeAttribute('aria-busy'); console.error('[boot] study', err); });
+      };
+      document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'study') loadStudy(); });
+      if (/^#\/?study$/.test(location.hash)) loadStudy();
       // EF5: route-only pages lazy-load on first entry (~76KB off the boot path). people feeds the
       // calendar "縁 met here" jump (jwh:people-open) which awaits ensureRoute('people') in calendar.js.
       safe(() => registerLazyRoute(['people'], () => import('./people.js').then(m => m.mountPeople(data))));

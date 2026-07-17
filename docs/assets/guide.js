@@ -71,6 +71,7 @@ const NAV_ALL = [
   { r: 'phrases', label: 'Phrases', i18n: 'nav.phrases' },
   { r: 'survival', label: 'Useful phrases', i18n: 'nav.survival' },
   { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
+  { r: 'study', label: 'Grammar Gym', i18n: 'nav.study' },
   { r: 'packing', label: 'Packing', i18n: 'nav.packing' },
   { r: 'deadlines', label: 'Deadlines', i18n: 'nav.deadlines' },
 ];
@@ -84,7 +85,7 @@ const NAV_HIDDEN_DEFAULT = ['emergency', 'map', 'explore'];
 function navHiddenSet() {
   const v = get(KEYS.navHidden, null);
   if (Array.isArray(v)) return v.filter(r => NAV_KNOWN.has(r));
-  const OPT = ['phrases', 'survival', 'grammar', 'packing', 'deadlines'];
+  const OPT = ['phrases', 'survival', 'grammar', 'study', 'packing', 'deadlines'];
   const shown = get(KEYS.navShow, null);
   const shownArr = Array.isArray(shown) ? shown : ['phrases'];
   return [...OPT.filter(r => !shownArr.includes(r)), ...NAV_HIDDEN_DEFAULT];

@@ -88,6 +88,20 @@
    "action": "To reclaim the 20.42% withheld on a pension lump-sum AND to settle year-2 residence tax (levied on Jan-1-2027 residency, can bill after you go), appoint a Tax Payment Administrator at the ward tax office before leaving. Without it you forfeit the refund. Lump-sum claimable within 2 years of departure. Note: the 20.42% withholding applies to the Employees' Pension (厚生年金) lump-sum; if you only ever pay National Pension (国民年金, Cat-1) the lump-sum has no income-tax withholding. The lump-sum cap rose to 96 contribution months (8 yrs) for departures on/after 1 Apr 2026 (was 60) — rates for months 61+ still pending; verify closer.",
    "dueBy": "2027-05-15",
    "confidence": "high"
+  },
+  {
+   "item": "Register for the December JLPT (MyJLPT)",
+   "timing": "Registration window ~late Aug–mid Sep 2026 (fills in days)",
+   "action": "Create a MyJLPT account and apply online for the Dec 6 2026 sitting (target N3) as soon as the window opens — popular test sites sell out within days. From 2026, test-takers in Japan must hold mid/long-term residence status and enter a 在留カード number; your WHV card is issued at NRT on landing, so complete the 14-day address registration promptly. Verify the exact window on jlpt.jp in late July.",
+   "dueBy": "2026-08-25",
+   "confidence": "medium"
+  },
+  {
+   "item": "Register for the July 2027 JLPT (MyJLPT)",
+   "timing": "Registration window ~mid-Mar–early Apr 2027",
+   "action": "Apply online via MyJLPT for the Jul 4 2027 sitting (target N2, or N1 — decide in spring). Same 在留カード residence-status requirement. Dates estimated — verify on jlpt.jp closer to the window.",
+   "dueBy": "2027-03-15",
+   "confidence": "medium"
   }
  ],
  "bookByTimeline": [
@@ -2832,6 +2846,32 @@
    "confidence": "low",
    "sources": [],
    "bookingNotes": "Back from Hokkaido (GK104 lands NRT ~12:10) + 3pm Shinagawa checkup this day. Bed still TBD: your share house if the move-in is ready, else a hostel/net-café bridge for the Jul 24–26 Tokyo nights (fireworks the 25th, WonderFes the 26th). See the 'Book Tokyo beds Jul 24–26' to-do."
+  },
+  {
+   "id": "ev-jlpt-2026-dec",
+   "title": "📝 JLPT (target N3)",
+   "date": "2026-12-06",
+   "category": "personal",
+   "area": "Tokyo test site (assigned at registration)",
+   "why": "First realistic sitting. Register via MyJLPT in the late-Aug–mid-Sep window; needs mid/long-term residence status + 在留カード number.",
+   "confidence": "medium",
+   "sources": [
+    "https://www.jlpt.jp/e/"
+   ],
+   "bookingNotes": "Date estimated from the JLPT's fixed first-Sunday-of-December pattern — verify on jlpt.jp when registration opens (~late Aug 2026)."
+  },
+  {
+   "id": "ev-jlpt-2027-jul",
+   "title": "📝 JLPT (target N2/N1)",
+   "date": "2027-07-04",
+   "category": "personal",
+   "area": "Tokyo test site (assigned at registration)",
+   "why": "Second sitting — N1 grammar should be fully covered by then; N2 vs N1 is a spring call. Register ~mid-Mar–early-Apr 2027.",
+   "confidence": "low",
+   "sources": [
+    "https://www.jlpt.jp/e/"
+   ],
+   "bookingNotes": "2027 date estimated — verify on jlpt.jp closer to the registration window."
   }
  ],
  "homeNotes": [

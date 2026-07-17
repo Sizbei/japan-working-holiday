@@ -2096,3 +2096,84 @@ test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sti
   st2 = review(st2, 'g2', { pass: false, grade: 1, mode: 'review' }, T);
   assert.equal(st2.points.g2.gate.passed, true);         // Mastered is not revoked by a lapse
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// questions.js — R2 typed-cloze generator + answer arbitration (pure)
+// ─────────────────────────────────────────────────────────────────────────────
+import { clozeFor, normalizeAnswer, levenshtein, checkAnswer } from '../docs/assets/lib/questions.js';
+
+// real-shaped fixture: p tokens are objects, non-p tokens mix string + object, p is
+// NON-contiguous (indices 2 and 4), and the p surfaces differ from their kana readings.
+const clozePoint = {
+  id: 'x-tabete-kara',
+  examples: [{
+    ja: [
+      { t: '朝', f: [['朝', 'あさ']], g: 'morning' },
+      'ご飯',                                              // string token (mixed)
+      { t: '食べ', f: [['食', 'た'], ['べ', '']], p: 1 },   // p — surface 食べ / reading たべ
+      'て',
+      { t: 'から', f: [['から', '']], p: 1 },              // p (non-contiguous) — から / から
+      { t: '行く', f: [['行', 'い'], ['く', '']], g: 'go' },
+      '。',
+    ],
+    en: 'After eating breakfast, I go.',
+  }],
+};
+
+test('questions: clozeFor blanks exactly the p tokens, preserves the rest', () => {
+  const { blankedTokens, exampleIdx } = clozeFor(clozePoint, 0);
+  assert.equal(exampleIdx, 0);
+  assert.equal(blankedTokens.length, 7);
+  const blanks = blankedTokens.map(b => !!b.blank);
+  assert.deepEqual(blanks, [false, false, true, false, true, false, false]);   // p at 2 and 4
+  assert.equal(blankedTokens[1].token, 'ご飯');                                 // string token intact
+  assert.equal(blankedTokens[0].token.t, '朝');                                 // object token intact
+});
+
+test('questions: answers include the concatenated surface AND the kana reading', () => {
+  const { answers } = clozeFor(clozePoint, 0);
+  assert.ok(answers.includes('食べから'), 'surface accepted');
+  assert.ok(answers.includes('たべから'), 'kana reading accepted');
+});
+
+test('questions: normalizeAnswer folds katakana + full-width and strips space/、。', () => {
+  assert.equal(normalizeAnswer('カラ'), 'から');            // katakana → hiragana
+  assert.equal(normalizeAnswer(' から 。'), 'から');        // trim + strip space + 。
+  assert.equal(normalizeAnswer('た　べ、'), 'たべ');        // full-width space (NFKC) + 、 stripped
+  assert.equal(normalizeAnswer('ｶﾗ'), 'から');            // half-width katakana → hiragana via NFKC
+});
+
+test('questions: levenshtein basic distances', () => {
+  assert.equal(levenshtein('たべから', 'たべから'), 0);
+  assert.equal(levenshtein('たべから', 'たべかろ'), 1);     // one substitution
+  assert.equal(levenshtein('から', 'かﾗ'), 1);
+});
+
+test('questions: checkAnswer — exact match on surface or kana', () => {
+  const { answers } = clozeFor(clozePoint, 0);
+  assert.deepEqual(checkAnswer('たべから', answers), { ok: true, close: false });
+  assert.deepEqual(checkAnswer('食べから', answers), { ok: true, close: false });
+  assert.deepEqual(checkAnswer('タベカラ', answers), { ok: true, close: false });   // katakana input folds
+});
+
+test('questions: checkAnswer — close (distance 1) and wrong', () => {
+  const { answers } = clozeFor(clozePoint, 0);
+  assert.deepEqual(checkAnswer('たべかろ', answers), { ok: false, close: true });   // 1 off
+  assert.deepEqual(checkAnswer('ぜんぜんちがう', answers), { ok: false, close: false });
+  assert.deepEqual(checkAnswer('', answers), { ok: false, close: false });          // empty never matches
+});
+
+test('questions: multi-p cloze — each blank carries ITS OWN fill, answers stay merged', () => {
+  const pt = { examples: [{ ja: [
+    { t: '掃除し', f: [['掃除し', 'そうじし']], g: 'clean' },
+    { t: 'たり', f: [['たり', '']], p: 1 },
+    { t: '洗濯し', f: [['洗濯し', 'せんたくし']], g: 'laundry' },
+    { t: 'たり', f: [['たり', '']], p: 1 },
+    'します', '。',
+  ], en: 'I do things like cleaning and laundry.' }] };
+  const c = clozeFor(pt, 0);
+  const blanks = c.blankedTokens.filter(b => b.blank);
+  assert.equal(blanks.length, 2);
+  assert.deepEqual(blanks.map(b => b.fill), ['たり', 'たり']);  // per-blank reveal text
+  assert.ok(c.answers.includes('たりたり'));                     // typed answer stays merged
+});

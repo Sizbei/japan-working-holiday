@@ -78,6 +78,40 @@ export function validatePoints(points, level, allIds) {
   return errs;
 }
 
+const UNIT_ID_RE = /^n[1-5]-u\d+$/;
+
+// Pure: validate the R3 unit map (grammar-units.json). `allIds` (a Set) is the union of every
+// corpus point id. Checks: unit id shape, level enum + level↔point-prefix agreement, sizes
+// 6–16, no duplicate/unknown point ids, and — across all units — every corpus id covered
+// EXACTLY once (the units are a navigation layer over the same 353 points, no gaps, no overlap).
+export function validateUnits(units, allIds) {
+  const errs = [];
+  const bad = (id, msg) => errs.push(`${id || '(no unit id)'}: ${msg}`);
+  if (!Array.isArray(units)) return ['file: top level must be an array of units'];
+  const seenUnitIds = new Set();
+  const coverage = new Map();   // point id → count across all units
+  units.forEach((u, i) => {
+    const id = u && u.id;
+    if (!u || typeof u !== 'object') return bad(`[${i}]`, 'not an object');
+    if (!UNIT_ID_RE.test(String(id || ''))) bad(id || `[${i}]`, 'bad unit id format (want n<level>-u<n>)');
+    if (seenUnitIds.has(id)) bad(id, 'duplicate unit id');
+    seenUnitIds.add(id);
+    if (!LEVELS.includes(u.level)) bad(id, 'bad level enum');
+    if (!u.title || typeof u.title !== 'string') bad(id, 'missing title');
+    if (!Array.isArray(u.points)) { bad(id, 'points must be an array'); return; }
+    if (u.points.length < 6 || u.points.length > 16) bad(id, `unit size ${u.points.length} out of range 6–16`);
+    const levelPrefix = String(u.level || '').toLowerCase() + '-';
+    u.points.forEach(pid => {
+      if (!allIds.has(pid)) bad(id, `unknown point id ${pid}`);
+      else if (u.level && !String(pid).startsWith(levelPrefix)) bad(id, `point ${pid} is not level ${u.level}`);
+      coverage.set(pid, (coverage.get(pid) || 0) + 1);
+    });
+  });
+  for (const [pid, n] of coverage) if (n > 1) bad('(coverage)', `point ${pid} appears in ${n} units`);
+  for (const pid of allIds) if (!coverage.has(pid)) bad('(coverage)', `point ${pid} is in no unit`);
+  return errs;
+}
+
 function main() {
   const dataDir = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'docs', 'data');
   const files = process.argv.slice(2).length
@@ -95,6 +129,23 @@ function main() {
     total += errs.length;
     console.log(`${basename(file)}: ${points.length} points, ${errs.length} errors`);
     errs.forEach(e => console.log('  ✗ ' + e));
+  }
+  // Units file — validated against the union of every point id (only when the default full run
+  // is used, or when it's explicitly passed).
+  const unitsPath = join(dataDir, 'grammar-units.json');
+  const runningDefault = !process.argv.slice(2).length;
+  const unitsPassed = process.argv.slice(2).some(f => /grammar-units\.json$/.test(f));
+  if (runningDefault || unitsPassed) {
+    try {
+      const units = JSON.parse(readFileSync(unitsPath, 'utf8'));
+      const errs = validateUnits(units, allIds);
+      total += errs.length;
+      console.log(`grammar-units.json: ${Array.isArray(units) ? units.length : 0} units, ${errs.length} errors`);
+      errs.forEach(e => console.log('  ✗ ' + e));
+    } catch (err) {
+      total += 1;
+      console.log(`grammar-units.json: read/parse error — ${err.message}`);
+    }
   }
   process.exit(total ? 1 : 0);
 }

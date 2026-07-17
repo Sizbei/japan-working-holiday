@@ -1692,6 +1692,7 @@ import {
   STAGES, stageOf, retrievability, nextInterval, effectiveGrade, gateMode,
   newState, migrate, review, buildQueue, interleave, deferCard, amnesty,
   seedImport, hash, sessionStart, sessionRecord, sessionEnd,
+  lessonOrder, unitProgress, testOutResult,
 } from '../docs/assets/lib/study.js';
 
 const DAY = 86400000, MIN = 60000;
@@ -1929,14 +1930,81 @@ test('study: seedImport — deterministic stagger + ghost import', () => {
   assert.equal(hash('d1'), hash('d1'));                                // hash is pure
 });
 
-test('study: migrate — corrupt → fresh, v1 passthrough', () => {
-  assert.equal(migrate(null).v, 1);
-  assert.equal(migrate({ nope: 1 }).v, 1);
+test('study: migrate — corrupt → fresh, current-version passthrough', () => {
+  assert.equal(migrate(null).v, 2);
+  assert.equal(migrate({ nope: 1 }).v, 2);
   assert.deepEqual(migrate(null).points, {});
-  assert.equal(migrate({ v: 99, points: { x: 1 } }).v, 1);             // unknown version → fresh
+  assert.equal(migrate({ v: 99, points: { x: 1 } }).v, 2);            // unknown/future version → fresh
   assert.deepEqual(migrate({ v: 99 }).points, {});
   const good = newState(T0);
-  assert.equal(migrate(good), good);                                   // v1 identity passthrough
+  assert.equal(migrate(good), good);                                   // current-version identity passthrough
+});
+
+test('study: migrate v1→v2 preserves points, gains settings.placed + examLevel', () => {
+  const v1 = {
+    v: 1, points: { 'n5-wa': { S: 7, D: 5, due: 100 } }, session: null, units: {}, log: [],
+    lastSession: 0,
+    settings: { newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2 },
+  };
+  const v2 = migrate(v1);
+  assert.equal(v2.v, 2);
+  assert.deepEqual(v2.points, { 'n5-wa': { S: 7, D: 5, due: 100 } });  // real points survive the chain
+  assert.deepEqual(v2.settings.placed, []);                            // new v2 field
+  assert.equal(v2.settings.examLevel, null);                           // new v2 field
+  assert.equal(v2.settings.newPerDay, 4);                              // old settings preserved
+  assert.equal(v1.settings.placed, undefined);                         // input untouched (immutable)
+});
+
+test('study: lessonOrder walks N5-first, unit order, unseeded only', () => {
+  const units = [
+    { id: 'n4-u1', level: 'N4', title: '', points: ['n4-a', 'n4-b'] },  // deliberately N4 first in the array
+    { id: 'n5-u1', level: 'N5', title: '', points: ['n5-a', 'n5-b'] },
+    { id: 'n5-u2', level: 'N5', title: '', points: ['n5-c', 'n5-d'] },
+  ];
+  const order = lessonOrder(units, { 'n5-b': { S: 7 } });               // n5-b already seeded → skipped
+  assert.deepEqual(order, ['n5-a', 'n5-c', 'n5-d', 'n4-a', 'n4-b']);    // N5 units before N4, unit order kept
+});
+
+test('study: lessonOrder emits unseeded same/lower-level prereqs first (higher-level skipped)', () => {
+  const units = [
+    { id: 'n5-u1', level: 'N5', title: '', points: ['n5-base'] },
+    { id: 'n4-u1', level: 'N4', title: '', points: ['n4-x'] },
+  ];
+  const related = { 'n4-x': ['n4-y', 'n5-base', 'n1-nope'] };           // n1-nope is higher-level → not a prereq
+  const order = lessonOrder(units, {}, { related });
+  assert.deepEqual(order, ['n5-base', 'n4-y', 'n4-x']);                 // n4-y pulled before n4-x; n5-base once
+  assert.ok(!order.includes('n1-nope'));
+});
+
+test('study: lessonOrder — exam lever jumps that level first, pulling prereqs (closure)', () => {
+  const units = [
+    { id: 'n5-u1', level: 'N5', title: '', points: ['n5-p'] },
+    { id: 'n4-u1', level: 'N4', title: '', points: ['n4-q'] },
+    { id: 'n3-u1', level: 'N3', title: '', points: ['n3-goal'] },
+  ];
+  const related = { 'n3-goal': ['n5-p', 'n4-q'] };
+  const order = lessonOrder(units, {}, { examLevel: 'N3', related });
+  assert.deepEqual(order, ['n5-p', 'n4-q', 'n3-goal']);                 // N3 first, prereqs ahead, no later dup
+  assert.equal(order.length, 3);
+});
+
+test('study: unitProgress — untouched / inprogress / done', () => {
+  const unit = { id: 'n5-u1', level: 'N5', title: '', points: ['a', 'b', 'c'] };
+  assert.deepEqual(unitProgress(unit, {}), { introduced: 0, total: 3, state: 'untouched' });
+  assert.deepEqual(unitProgress(unit, { a: { S: 1 } }), { introduced: 1, total: 3, state: 'inprogress' });
+  assert.deepEqual(unitProgress(unit, { a: {}, b: {}, c: {} }), { introduced: 3, total: 3, state: 'done' });
+});
+
+test('study: testOutResult — 2 passes land Mature ~2wk; any fail leaves state unchanged', () => {
+  const now = T0, s0 = newState(now);
+  const st = testOutResult(s0, 'n5-wa', [true, true], now);
+  const p = st.points['n5-wa'];
+  assert.equal(p.stage, 'mature');
+  assert.equal(p.S, 14);
+  assert.equal(p.D, 5);
+  assert.equal(p.due, now + 14 * DAY);
+  assert.equal(testOutResult(s0, 'n5-wa', [true, false], now), s0);     // any fail → unchanged
+  assert.equal(testOutResult(s0, 'n5-wa', [true], now), s0);           // too few checks → unchanged
 });
 
 // deterministic ~88% pass LCG shared by the sims below
@@ -2081,8 +2149,8 @@ test('study: migrate — upgraders are INVOKED and user data survives the chain'
   assert.equal(out.marked, true);                       // upgrader 1 actually ran
   assert.deepEqual(out.points, { a: { S: 9, D: 5 } });  // data preserved, not wiped
   assert.deepEqual(st.points, { a: { S: 9, D: 5 } });   // input untouched
-  // chain that cannot reach the target still resets to fresh
-  assert.equal(migrate({ v: 1 }, {}, 3).v, 1);
+  // chain that cannot reach the target still resets to fresh (newState = current version)
+  assert.equal(migrate({ v: 1 }, {}, 3).v, 2);
 });
 
 test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sticky', () => {
@@ -2176,4 +2244,39 @@ test('questions: multi-p cloze — each blank carries ITS OWN fill, answers stay
   assert.equal(blanks.length, 2);
   assert.deepEqual(blanks.map(b => b.fill), ['たり', 'たり']);  // per-blank reveal text
   assert.ok(c.answers.includes('たりたり'));                     // typed answer stays merged
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// grammar-units.json — R3 unit map + validateUnits, run against the REAL corpus
+// ─────────────────────────────────────────────────────────────────────────────
+import { validateUnits } from '../scripts/validate-grammar.mjs';
+
+test('units: validateUnits passes over the real corpus (all 353 points, each in one unit)', () => {
+  const dir = new URL('../docs/data/', import.meta.url);
+  const levels = ['n5', 'n4', 'n3', 'n2', 'n1'];
+  const loaded = levels.map(l => ({
+    level: l.toUpperCase(),
+    points: JSON.parse(readFileSync(new URL(`grammar-${l}.json`, dir), 'utf8')),
+  }));
+  const allIds = new Set(loaded.flatMap(x => x.points.map(p => p.id)));
+  assert.equal([...allIds].length, 353);
+  for (const { level, points } of loaded) assert.deepEqual(validatePoints(points, level, allIds), []);
+  const units = JSON.parse(readFileSync(new URL('grammar-units.json', dir), 'utf8'));
+  assert.deepEqual(validateUnits(units, allIds), []);
+});
+
+test('units: validateUnits catches size, unknown-id, duplicate-coverage, gap and level errors', () => {
+  const allIds = new Set(['n5-a', 'n5-b', 'n5-c', 'n5-d', 'n5-e', 'n5-f']);
+  const full = ['n5-a', 'n5-b', 'n5-c', 'n5-d', 'n5-e', 'n5-f'];
+  assert.deepEqual(validateUnits([{ id: 'n5-u1', level: 'N5', title: 'T', points: full }], allIds), []);
+  assert.ok(validateUnits([{ id: 'n5-u1', level: 'N5', title: 'T', points: ['n5-a'] }], allIds).some(e => /out of range/.test(e)));
+  assert.ok(validateUnits([{ id: 'n5-u1', level: 'N5', title: 'T', points: ['n5-a', 'n5-b', 'n5-c', 'n5-d', 'n5-e', 'n5-x'] }], allIds).some(e => /unknown point id n5-x/.test(e)));
+  const dup = [
+    { id: 'n5-u1', level: 'N5', title: 'T', points: full },
+    { id: 'n5-u2', level: 'N5', title: 'T', points: full },
+  ];
+  assert.ok(validateUnits(dup, allIds).some(e => /appears in 2 units/.test(e)));
+  assert.ok(validateUnits([{ id: 'n5-u1', level: 'N5', title: 'T', points: ['n5-a', 'n5-b', 'n5-c', 'n5-d', 'n5-e'] }], allIds).some(e => /is in no unit/.test(e)));  // n5-f gap
+  assert.ok(validateUnits([{ id: 'n5-x1', level: 'N5', title: 'T', points: full }], allIds).some(e => /bad unit id/.test(e)));
+  assert.ok(validateUnits([{ id: 'n4-u1', level: 'N4', title: 'T', points: full }], allIds).some(e => /not level N4/.test(e)));
 });

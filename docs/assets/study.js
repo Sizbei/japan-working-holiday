@@ -4,9 +4,12 @@
 // (lib/study.js) and the pure R2 cloze/answer generators (lib/questions.js). This module owns
 // ONLY the UI + persistence wiring — no scheduling maths live here.
 //
-// R2 scope: typed-cloze cards on due points, per-answer write-through, mid-session resume.
-// Lessons / course home / scramble / MCQ / gate mode / hints arrive in later rounds; this is
-// the shell they grow inside. Plan: specs/plans/2026-07-17-grammar-mastery-program.md (R2).
+// R3 grows the Coursera face BESIDE the untouched R2 session runner: the course home (the new
+// #/study landing — five level cards with progress rings → unit accordion), ONE priority-ordered
+// ▶ Continue button, the exam-priority lever, and the entry points into the lazy `study-lessons.js`
+// flows (3-beat lessons, placement sweep, test-out). The R2 typed-cloze session below is
+// unchanged — Continue state 3 launches it exactly as before.
+// Plan: specs/plans/2026-07-17-grammar-mastery-program.md (R2 + R3).
 //
 // Conventions honoured here (binding): keyboard scoped to the study root with a BUTTON/INPUT
 // guard; root carries data-no-swipe; the live region is a STATIC sibling (#stuLive) of the
@@ -17,19 +20,24 @@ import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress } from './lib/study.js';
 import { clozeFor, checkAnswer } from './lib/questions.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
+const UNITS_FILE = 'data/grammar-units.json';
+const EXAM_LEVELS = [['', 'Not preparing'], ['N3', 'N3 · Dec 2026'], ['N2', 'N2 · Jul 2027'], ['N1', 'N1 · Jul 2027']];
 const DAY = 86400000;
 
 let state = null;                 // the store record (lib/study.js shape)
+let units = [];                   // grammar-units.json — the R3 unit map (fetched once)
 const pointsCache = {};           // id → point data (examples etc.), filled by fetched levels
 const levelFetched = {};          // level → true once its file is loaded
 let root = null;
 let card = null;                  // { id, exIdx, point, blankedTokens, answers } for the live card
 let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong'
+let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
+const expandedLevels = new Set(); // course-home accordion: which level cards are open
 
 // ── boot ───────────────────────────────────────────────────────────────────
 export async function mountStudy() {
@@ -57,17 +65,31 @@ export async function mountStudy() {
 
   wireRoot();
   applyFuri();
-  // Land on the Today screen; when a session is in flight it shows the "Continue session — n/N"
-  // button. Prefetch the in-flight queue's levels up front so Continue (and every subsequent
-  // synchronous renderCard) has its point data ready — a missing level must never make a card
-  // silently skip.
-  renderToday();
+  await loadUnits();
+  // Land on the course home. Its ▶ Continue button resolves to the right next action (resume /
+  // placement / due session / next lesson / caught-up). Prefetch the in-flight queue's levels so
+  // a resumed session's synchronous renderCard has its point data ready.
+  renderCourseHome();
   if (state.session && state.session.queue.length) {
     await ensureLevelsFor(state.session.queue);
   }
 }
 
 function save() { set(KEYS.study, state); }
+
+// ── units (the R3 course/syllabus map — one small file, SWR-cached like the grammar files) ──
+async function loadUnits() {
+  if (units.length) return;
+  try {
+    const r = await fetch(UNITS_FILE);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const u = await r.json();
+    if (Array.isArray(u)) units = u;
+  } catch (err) {
+    units = [];   // course home degrades to the Continue button + a note if units can't load
+    console.error('[study] load units', err);
+  }
+}
 
 // ── data: lazy per-level fetch (same SWR-cached files the grammar page uses) ──
 function levelOf(id) { const m = /^n([1-5])-/.exec(String(id || '')); return m ? 'N' + m[1] : null; }
@@ -98,40 +120,187 @@ function applyFuri() {
   $('#study')?.classList.toggle('furi-off', off);
 }
 
-// ── Today screen ─────────────────────────────────────────────────────────────
-function renderToday() {
-  phase = 'idle'; card = null;
-  const now = Date.now();
-  const q = buildQueue(state, now);
-  const due = q.reviews.length;
-  const resuming = !!(state.session && state.session.queue.length);
-  const pos = resuming ? state.session.pos : 0;
-  const total = resuming ? state.session.queue.length : due;
-  const primary = resuming
-    ? `<button type="button" class="stu-btn stu-btn-primary" data-act="continue">Continue session — ${esc(String(pos + 1))}/${esc(String(total))}</button>`
-    : (due
-      ? `<button type="button" class="stu-btn stu-btn-primary" data-act="start">Start session — ${esc(String(due))} due</button>`
-      : `<button type="button" class="stu-btn stu-btn-primary" data-act="start" disabled>Nothing due — mark points ✓ on the Grammar page to seed reviews</button>`);
+// ── Course home (the #/study landing) ────────────────────────────────────────
+// The Coursera syllabus: five level cards (progress ring + unit count), each expanding to a unit
+// accordion, over ONE priority-ordered ▶ Continue button + the exam-priority lever.
+// NOTE: ✓★ gold (checkpoint-passed) decoration arrives with R8; R3 shows the plain
+// ○ untouched / ● in-progress / ✓ done ladder from unitProgress().
+const GLYPH = { done: '✓', inprogress: '●', untouched: '○' };
 
+function relatedMap() {
+  const m = {};
+  for (const id in pointsCache) { const r = pointsCache[id] && pointsCache[id].related; if (Array.isArray(r)) m[id] = r; }
+  return m;
+}
+function lessonIds() {
+  return lessonOrder(units, state.points, { examLevel: state.settings.examLevel || null, related: relatedMap() });
+}
+function unitOf(id) { return units.find(u => u.points.includes(id)) || null; }
+
+// The ▶ Continue state machine, in strict priority order.
+function continueState() {
+  const now = Date.now();
+  const s = state.session;
+  if (s && s.queue && s.queue.length && s.pos < s.queue.length) return { kind: 'session', pos: s.pos, total: s.queue.length };
+  const placedEmpty = !(state.settings.placed && state.settings.placed.length);
+  const noPoints = Object.keys(state.points).length === 0;
+  if (placedEmpty && noPoints) return { kind: 'placement' };
+  const q = buildQueue(state, now);
+  if (q.reviews.length) return { kind: 'due', due: q.reviews.length };
+  const ids = lessonIds();
+  if (ids.length && q.lessons > 0) {
+    const u = unitOf(ids[0]);
+    return { kind: 'lessons', n: Math.min(q.lessons, ids.length), title: u ? u.title : '' };
+  }
+  return { kind: 'caught-up' };
+}
+
+function continueButtonHTML(cs) {
+  switch (cs.kind) {
+    case 'session': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="continue">▶ Continue session — ${esc(String(cs.pos + 1))}/${esc(String(cs.total))}</button>`;
+    case 'placement': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="placementStart">▶ Start placement</button>`;
+    case 'due': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="start">▶ Start today's session — ${esc(String(cs.due))} due</button>`;
+    case 'lessons': return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="learn">▶ Learn next: ${esc(cs.title)} <span class="stu-cont-sub">(${esc(String(cs.n))} new)</span></button>`;
+    default: return `<button type="button" class="stu-btn stu-btn-primary stu-cont" data-act="start" disabled>✓ All caught up — nothing due</button>`;
+  }
+}
+
+function ringHTML(introduced, total) {
+  const pct = total ? Math.round(introduced / total * 100) : 0;
+  const C = 2 * Math.PI * 15.5;   // r=15.5
+  const off = C * (1 - pct / 100);
+  return `<span class="stu-ring" role="img" aria-label="${esc(String(pct))}% introduced">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="stu-ring-bg" cx="18" cy="18" r="15.5"/>
+    <circle class="stu-ring-fg" cx="18" cy="18" r="15.5" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
+    <span class="stu-ring-pct">${esc(String(pct))}%</span></span>`;
+}
+
+function levelCardHTML(level) {
+  const lus = units.filter(u => u.level === level);
+  let intro = 0, total = 0;
+  for (const u of lus) { const pr = unitProgress(u, state.points); intro += pr.introduced; total += pr.total; }
+  const open = expandedLevels.has(level);
+  const rows = open ? lus.map(u => {
+    const pr = unitProgress(u, state.points);
+    const pct = pr.total ? Math.round(pr.introduced / pr.total * 100) : 0;
+    return `<div class="stu-unit stu-unit-${esc(pr.state)}">
+      <span class="stu-unit-glyph" aria-hidden="true">${GLYPH[pr.state]}</span>
+      <span class="stu-unit-title">${esc(u.title)}</span>
+      <span class="stu-unit-bar" aria-hidden="true"><i style="width:${pct}%"></i></span>
+      <span class="stu-unit-n">${esc(String(pr.introduced))}/${esc(String(pr.total))}</span></div>`;
+  }).join('') : '';
+  return `<div class="stu-lvl-card${open ? ' is-open' : ''}">
+    <button type="button" class="stu-lvl-head" data-act="expand" data-level="${esc(level)}" aria-expanded="${open ? 'true' : 'false'}">
+      ${ringHTML(intro, total)}
+      <span class="stu-lvl-name">${esc(level)}</span>
+      <span class="stu-lvl-meta">${esc(String(lus.length))} units · ${esc(String(intro))}/${esc(String(total))} introduced</span>
+      <span class="stu-lvl-caret" aria-hidden="true">${open ? '▾' : '▸'}</span>
+    </button>
+    ${open ? `<div class="stu-unit-list">${rows}</div>` : ''}</div>`;
+}
+
+function renderCourseHome(focusSel) {
+  phase = 'idle'; card = null; activeFlow = null;
+  const cs = continueState();
+  const examVal = state.settings.examLevel || '';
+  const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
+  const cards = units.length ? LEVELS.map(levelCardHTML).join('')
+    : `<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p>`;
   root.innerHTML = `
-    <div class="stu-today">
-      <h3 class="stu-today-h">Today's session</h3>
-      <div class="stu-stats">
-        <div class="stu-stat"><span class="stu-stat-n">${esc(String(due))}</span><span class="stu-stat-l">reviews due</span></div>
-        <div class="stu-stat"><span class="stu-stat-n">${esc(String(q.lessons))}</span><span class="stu-stat-l">new lessons</span></div>
+    <div class="stu-home">
+      <div class="stu-cont-wrap">${continueButtonHTML(cs)}</div>
+      <div class="stu-home-cards">${cards}</div>
+      <div class="stu-home-foot">
+        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
+        <label class="stu-exam"><span>Preparing for</span>
+          <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
       </div>
-      ${primary}
-      <p class="stu-note">Typed-cloze review over your due grammar points. Guided lessons, scramble &amp; the mastery gate arrive in later updates.</p>
     </div>`;
-  const btn = root.querySelector('.stu-btn-primary');
-  if (btn && !btn.disabled) btn.focus({ preventScroll: true });
-  announce(resuming
-    ? `Session in progress — ${pos + 1} of ${total}`
-    : (due ? `${due} reviews due today` : 'No reviews due — caught up'));
+  const focusEl = (focusSel && root.querySelector(focusSel)) || root.querySelector('.stu-cont');
+  if (focusEl && !focusEl.disabled) focusEl.focus({ preventScroll: true });
+  else root.querySelector('.stu-cont')?.focus({ preventScroll: true });
+  announceHome(cs);
+}
+
+function announceHome(cs) {
+  const msg = {
+    session: `Session in progress — ${cs.pos + 1} of ${cs.total}. Continue to resume.`,
+    placement: 'Course home. Start placement to sort what you already know.',
+    due: `Course home. ${cs.due} reviews due today.`,
+    lessons: `Course home. Next lesson: ${cs.title}.`,
+    'caught-up': 'Course home. All caught up — nothing due.',
+  }[cs.kind];
+  announce(msg || 'Course home.');
+}
+
+function toggleLevel(level) {
+  if (expandedLevels.has(level)) expandedLevels.delete(level); else expandedLevels.add(level);
+  renderCourseHome(`.stu-lvl-head[data-level="${level}"]`);
+}
+
+function setExamLevel(v) {
+  const examLevel = v || null;
+  state = { ...state, settings: { ...state.settings, examLevel } };
+  save();
+  renderCourseHome('.stu-exam-sel');
+}
+
+// ── flow launchers (lazy-import study-lessons.js; park the returned controller in activeFlow) ──
+function flowCtx() {
+  return {
+    root, pointsCache, units,
+    getState: () => state,
+    commit: (ns) => { state = ns; save(); },
+    announce, ensureLevelsFor,
+    done: () => { activeFlow = null; renderCourseHome(); },
+  };
+}
+
+let launching = false;   // re-entrancy guard: a fast double-tap must not spawn two flows
+
+async function launchLessons() {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    // The prereq closure in lessonOrder needs the FULL related map — warm every level first
+    // (SWR-cached after the first visit), or the exam lever could front-run a prerequisite.
+    await ensureAllLevels();
+    const ids = lessonIds();
+    const q = buildQueue(state, Date.now());
+    const take = Math.min(q.lessons || state.settings.newPerDay || 4, ids.length);
+    const todays = ids.slice(0, take);
+    if (!todays.length) { renderCourseHome(); return; }
+    const m = await import('./study-lessons.js');
+    activeFlow = m.startLessons(flowCtx(), todays);
+  } catch (err) {
+    console.error('lessons failed to load', err);
+    renderCourseHome();
+    announce('Could not load lessons — check your connection and try again.');
+  } finally { launching = false; }
+}
+
+async function launchPlacement() {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    const placed = state.settings.placed || [];
+    const un = LEVELS.filter(l => !placed.includes(l));
+    const levels = un.length ? un : LEVELS.slice();   // all placed already → allow a re-sweep
+    const m = await import('./study-lessons.js');
+    activeFlow = m.startPlacement(flowCtx(), levels);
+  } catch (err) {
+    console.error('placement failed to load', err);
+    renderCourseHome();
+    announce('Could not load placement — check your connection and try again.');
+  } finally { launching = false; }
+}
+
+async function ensureAllLevels() {
+  await Promise.all(LEVELS.filter(l => !levelFetched[l]).map(loadLevel));
 }
 
 async function continueSession() {
-  if (!state.session || !state.session.queue.length) { renderToday(); return; }
+  if (!state.session || !state.session.queue.length) { renderCourseHome(); return; }
   await ensureLevelsFor(state.session.queue);   // no-op if the mount prefetch already finished
   renderCard();
 }
@@ -139,7 +308,7 @@ async function continueSession() {
 async function startSession() {
   const now = Date.now();
   const q = buildQueue(state, now);
-  if (!q.reviews.length) { renderToday(); return; }
+  if (!q.reviews.length) { renderCourseHome(); return; }
   state = sessionStart(state, q);
   save();
   await ensureLevelsFor(state.session.queue);
@@ -332,9 +501,18 @@ function renderSummary() {
 function wireRoot() {
   root.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]');
-    if (b) { act(b.dataset.act, b); return; }
+    if (b) {
+      if (b.tagName === 'SELECT') return;          // <select> handled by the change listener below
+      if (activeFlow) { activeFlow.onAct(b.dataset.act, b); return; }   // a lesson/placement/test-out owns its buttons
+      act(b.dataset.act, b); return;
+    }
     const tapR = e.target.closest('.stu-tap-r'); if (tapR) { primaryAction(); return; }
     const tapL = e.target.closest('.stu-tap-l'); if (tapL) { secondaryAction(); }
+  });
+
+  // exam-priority lever (a <select> — not a click/data-act)
+  root.addEventListener('change', (e) => {
+    const sel = e.target.closest('.stu-exam-sel'); if (sel) setExamLevel(sel.value);
   });
 
   // keyboard: scoped to the study root only, with a phase-aware dispatch. The typed input owns
@@ -342,6 +520,7 @@ function wireRoot() {
   // (Enter/Space on a focused control) fall through to native activation to avoid double-fire.
   root.addEventListener('keydown', (e) => {
     if (e.isComposing || e.keyCode === 229) return;   // don't fight an IME (matches gestures.js)
+    if (activeFlow) { activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
     const t = e.target;
     if (phase === 'input') {
       if (e.key === 'Enter') { e.preventDefault(); submitAnswer(); }
@@ -365,21 +544,28 @@ function wireRoot() {
     }
   });
 
-  // repaint furigana toggle if it changes elsewhere on the site while this page is mounted
-  document.addEventListener('jwh:route', (e) => { if (e.detail?.route === 'study') applyFuri(); });
+  // repaint furigana toggle if it changes elsewhere; stop a test-out's soft timer if the user
+  // navigates away mid-flow (display-only, but don't leave an interval running off-screen).
+  document.addEventListener('jwh:route', (e) => {
+    if (e.detail?.route === 'study') { applyFuri(); return; }
+    if (activeFlow && activeFlow.teardown) activeFlow.teardown();
+  });
 }
 
 function act(name, btn) {
   switch (name) {
     case 'start': if (!btn.disabled) startSession(); break;
     case 'continue': continueSession(); break;
+    case 'learn': launchLessons(); break;
+    case 'placementStart': launchPlacement(); break;
+    case 'expand': toggleLevel(btn.dataset.level); break;
     case 'check': submitAnswer(); break;
     case 'reveal': if (phase === 'input') reveal('wrong'); break;
     case 'accept': acceptClose(); break;
     case 'reject': rejectClose(); break;
     case 'grade': grade(parseInt(btn.dataset.g, 10)); break;
     case 'again': grade(1, { typedCorrect: false }); break;
-    case 'done': renderToday(); break;
+    case 'done': renderCourseHome(); break;
   }
 }
 

@@ -15,7 +15,7 @@ const RETENTION = 0.90;         // desired retention (fixed)
 const GROWTH = 1.2;             // success stability-growth constant (tunable ≤1.6 — see sim)
 const DAY = 86400000;           // ms per day
 const MIN = 60000;              // ms per minute
-const CURRENT_V = 1;            // store schema version
+const CURRENT_V = 2;            // store schema version
 
 // First-rating table, indexed by grade g∈{1,2,3,4} → S0[g−1]; D0 = clamp(5 − 1.5·(g−3), 1, 10).
 const S0 = [0.4, 0.6, 2.4, 5.8];
@@ -96,17 +96,23 @@ export function newState(now = 0) {
     v: CURRENT_V,
     points: {},
     session: null,
-    units: {},
+    units: {},              // per-unit { checkpoint } — reserved for R8 (units are R3's data layer)
     log: [],
     lastSession: now,
-    settings: { newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2 },
+    settings: {
+      newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2,
+      placed: [],           // levels the placement sweep has run for (v2)
+      examLevel: null,      // exam-priority lever: null | 'N3' | 'N2' | 'N1' (v2)
+    },
   };
 }
 
-// Migration scaffold: a chain of v→v+1 upgraders. v1 is identity (no upgraders yet); an
-// unknown/corrupt shape resets to a fresh state so a bad restore can never brick boot.
+// Migration scaffold: a chain of v→v+1 upgraders. Each key `n` upgrades a v=n state to v=n+1,
+// preserving user data; an unknown/corrupt shape resets to a fresh state so a bad restore can
+// never brick boot. v1→v2 adds settings.placed (placement bookkeeping) + settings.examLevel
+// (the exam-priority lever) without disturbing points/session/units.
 const UPGRADERS = {
-  // 1: (s) => ({ ...s, v: 2, /* … */ }),   // ← first real upgrader lands with the next shape bump
+  1: (s) => ({ ...s, v: 2, settings: { ...s.settings, placed: [], examLevel: null } }),
 };
 export function migrate(state, upgraders = UPGRADERS, target = CURRENT_V) {
   if (!state || typeof state !== 'object' || typeof state.v !== 'number') return newState(0);
@@ -337,4 +343,71 @@ export function sessionRecord(state, result) {
 }
 export function sessionEnd(state) {
   return { ...state, session: null };
+}
+
+// ── R3: course-home lesson ordering, unit progress, test-out ─────────────────
+const LEVEL_RANK = { N5: 0, N4: 1, N3: 2, N2: 3, N1: 4 };
+const levelOfId = (id) => { const m = /^n([1-5])-/.exec(String(id)); return m ? 'N' + m[1] : null; };
+
+// lessonOrder(unitsList, statePoints, opts) → ordered array of UNSEEDED point ids (a point is
+// "seeded" once it exists in statePoints). Walks units level-by-level N5→N1 in unit order;
+// within the walk a point's unseeded `related` PREREQUISITES (same or lower level, resolvable to
+// a level) are emitted first via a cycle-guarded closure, so a prerequisite is never front-run.
+// opts: { examLevel, related }. related is the { id: [relatedIds] } prerequisite map (the pure
+// engine can't read the corpus, so the caller supplies it; absent → plain unit order). When
+// examLevel is set, that level's units jump to the front of the walk, pulling their unseeded
+// prerequisites along (closure) — the exam-priority lever.
+export function lessonOrder(unitsList, statePoints = {}, opts = {}) {
+  const related = opts.related || {};
+  const examLevel = opts.examLevel || null;
+  const seeded = (id) => !!statePoints[id];
+
+  const byLevel = { N5: [], N4: [], N3: [], N2: [], N1: [] };
+  for (const u of (unitsList || [])) if (byLevel[u.level]) byLevel[u.level].push(u);
+
+  let walk = ['N5', 'N4', 'N3', 'N2', 'N1'];
+  if (examLevel && byLevel[examLevel]) walk = [examLevel, ...walk.filter(l => l !== examLevel)];
+
+  const out = [], added = new Set();
+  const push = (id, guard) => {
+    if (added.has(id) || seeded(id) || guard.has(id)) return;
+    guard.add(id);
+    const myRank = LEVEL_RANK[levelOfId(id)] ?? 99;
+    for (const rid of (related[id] || [])) {
+      if (added.has(rid) || seeded(rid)) continue;
+      const rRank = LEVEL_RANK[levelOfId(rid)];
+      if (rRank == null || rRank > myRank) continue;   // unresolvable / higher-level → not a prereq
+      push(rid, guard);
+    }
+    if (!added.has(id)) { out.push(id); added.add(id); }
+  };
+  for (const lv of walk) for (const u of byLevel[lv]) for (const id of u.points) push(id, new Set());
+  return out;
+}
+
+// unitProgress(unit, statePoints) → { introduced, total, state }. introduced = points already in
+// state; done = every point introduced. (✓★ gold — the checkpoint-passed decoration — arrives
+// with R8; this reports the plain ○ untouched / ● inprogress / ✓ done ladder.)
+export function unitProgress(unit, statePoints = {}) {
+  const pts = (unit && unit.points) || [];
+  const total = pts.length;
+  let introduced = 0;
+  for (const id of pts) if (statePoints[id]) introduced++;
+  const state = introduced === 0 ? 'untouched' : (total > 0 && introduced >= total ? 'done' : 'inprogress');
+  return { introduced, total, state };
+}
+
+// testOutResult(state, id, passes, now) → pure. `passes` is the array of the timed checks'
+// pass/fail booleans. Both (≥2) pass → the point lands at Mature (S=14, D=5, due now+14d): known
+// material re-enters at a fortnight, not re-flooding weekly reviews; a false positive fails its
+// ~2-week review and demotes normally. Any fail (or too few checks) → state returned UNCHANGED,
+// and the caller routes the point into the normal lesson queue (unseeded).
+export function testOutResult(state, id, passes, now) {
+  const arr = Array.isArray(passes) ? passes : [];
+  if (arr.length < 2 || !arr.every(Boolean)) return state;   // any fail → normal lesson path
+  const p = {
+    D: 5, S: 14, last: now, reps: 2, lapses: 0, ghost: null, gate: null,
+    leech: false, suspended: false, defers: 0, due: now + 14 * DAY,
+  };
+  return setPoint(state, id, { ...p, stage: stageOf(p) });
 }

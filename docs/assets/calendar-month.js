@@ -52,7 +52,10 @@ export function captureAnchor() {
   const gr = grid.getBoundingClientRect();
   const x = gr.left + gr.width / 2;
   const y = (Math.max(gr.top, 0) + Math.min(gr.bottom, window.innerHeight)) / 2;
-  const cell = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
+  let cell = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
+  if (!cell) {   // elementFromPoint can miss (a chip/overlay intercepts the point) — scan for the first cell past the reading line so a slide still preserves scroll
+    for (const c of grid.querySelectorAll('.cal-cell[data-day]')) { if (c.getBoundingClientRect().bottom >= y) { cell = c; break; } }
+  }
   if (!cell) return null;
   return { day: cell.dataset.day, offset: cell.getBoundingClientRect().top - gr.top };
 }

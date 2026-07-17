@@ -20,6 +20,26 @@ const KANA_SEG = /^[ぁ-ゖァ-ヺーー]*$/;        // token furigana readings
 const READING_RE = /^[ぁ-ゖーー〜・]+$/;                  // point reading: hiragana + 〜 + ・ (dual-form patterns)
 const KANJI = /[一-鿿々]/;
 
+// Shared per-object-token furigana check (used by BOTH example tokens and passage tokens):
+// t present, f is a non-empty [surface, reading] segment list whose readings are kana and
+// whose surfaces concatenate back to t, and p (when present) is 1. Returns false (and records
+// exactly one error) on the two short-circuit conditions — missing t / missing f — so callers
+// can skip their own p/g checks on a token already known malformed, mirroring the original
+// inline logic. g and p-anchor semantics stay at the call site (they differ per surface).
+function checkTokenShape(tok, tat, bad) {
+  if (!tok.t || typeof tok.t !== 'string') { bad(tat, 'object token missing t'); return false; }
+  if (!Array.isArray(tok.f) || !tok.f.length) { bad(tat, `"${tok.t}": missing f segments`); return false; }
+  let cat = '';
+  tok.f.forEach(seg => {
+    if (!Array.isArray(seg) || seg.length !== 2 || !seg[0] || typeof seg[1] !== 'string') return bad(tat, `"${tok.t}": bad f segment`);
+    if (!KANA_SEG.test(seg[1])) bad(tat, `"${tok.t}": reading not kana: ${seg[1]}`);
+    cat += seg[0];
+  });
+  if (cat !== tok.t) bad(tat, `f segments "${cat}" ≠ t "${tok.t}"`);
+  if (tok.p !== undefined && tok.p !== 1) bad(tat, 'p must be 1 when present');
+  return true;
+}
+
 // Pure: validate an array of points for one level file. `allIds` (a Set) enables
 // cross-file `related`/`confusable` referential checks — pass the union of every loaded
 // file's ids. `allById` (an id→point Map, OPTIONAL) additionally enables the R7 confusable
@@ -121,16 +141,7 @@ export function validatePoints(points, level, allIds, allById) {
         const tat = `${at} tok[${k}]`;
         if (typeof tok === 'string') { if (!tok) bad(tat, 'empty string token'); return; }
         if (!tok || typeof tok !== 'object') return bad(tat, 'bad token type');
-        if (!tok.t || typeof tok.t !== 'string') return bad(tat, 'object token missing t');
-        if (!Array.isArray(tok.f) || !tok.f.length) return bad(tat, `"${tok.t}": missing f segments`);
-        let cat = '';
-        tok.f.forEach(seg => {
-          if (!Array.isArray(seg) || seg.length !== 2 || !seg[0] || typeof seg[1] !== 'string') return bad(tat, `"${tok.t}": bad f segment`);
-          if (!KANA_SEG.test(seg[1])) bad(tat, `"${tok.t}": reading not kana: ${seg[1]}`);
-          cat += seg[0];
-        });
-        if (cat !== tok.t) bad(tat, `f segments "${cat}" ≠ t "${tok.t}"`);
-        if (tok.p !== undefined && tok.p !== 1) bad(tat, 'p must be 1 when present');
+        if (!checkTokenShape(tok, tat, bad)) return;
         if (tok.p) hasP = true;
         // g: required on non-p tokens; optional (but non-empty) on p tokens
         if (!tok.p && !tok.g) bad(tat, `"${tok.t}": non-p token missing g`);
@@ -197,13 +208,110 @@ export function validateUnits(units, allIds) {
   return errs;
 }
 
+const PASSAGE_ID_RE = /^p-(n[1-5])-\d+$/;
+const BLANK_KINDS = ['grammar', 'discourse'];
+
+// Pure: validate the R12 passage bank (grammar-passages.json). `bank` is the parsed file
+// object `{ passages:[...] }`; `allIds` (a Set) is the union of every corpus point id (pass
+// the full grammar corpus so grammar-blank pointIds resolve).
+//
+// SCHEMA (JLPT 文章の文法 / passage cloze — each blank is a 4-choice question mixing grammar-
+// point blanks with discourse blanks: conjunctions, demonstratives, sentence-final register):
+//   passage = { id:'p-n5-1', level:'N5', title, tokens[], blanks[], en, confidence }
+//   tokens[] = the SAME mixed token model as example.ja — bare `"string"` tokens + `{t,f,g}`
+//     furigana objects — PLUS inline blank markers `{ blank:true, n:<0-based> }` that mark
+//     where a choice is removed. (No `p` anchor: passages have blanks, not a pattern token.)
+//   blanks[] = one entry per blank, KEYED BY `n` (not token index, so token edits don't
+//     renumber): { n, answer, options:[4], kind:'grammar'|'discourse', pointId? }. `answer`
+//     is the correct surface and must be one of the 4 distinct `options`. grammar blanks carry
+//     a `pointId` resolving to a real grammar point; discourse blanks (register/connective/
+//     demonstrative) carry none, though a pointId is allowed if it resolves.
+// Rules: id shape + id-level↔level agreement, unique ids; level enum; title/en non-empty;
+//   tokens non-empty with each object token passing checkTokenShape (shared with examples);
+//   blank markers have a unique non-negative integer n; blanks[] and the in-token markers are
+//   in exact bijection by n; 4–5 blanks per passage; kind enum; exactly 4 distinct non-empty
+//   options containing answer; grammar⇒pointId resolves; confidence enum.
+export function validatePassages(bank, allIds) {
+  const errs = [];
+  const bad = (id, msg) => errs.push(`${id || '(no id)'}: ${msg}`);
+  if (!bank || typeof bank !== 'object' || !Array.isArray(bank.passages)) {
+    return ['file: top level must be an object { passages: [...] }'];
+  }
+  const seenIds = new Set();
+  bank.passages.forEach((p, i) => {
+    const id = p && p.id;
+    if (!p || typeof p !== 'object') return bad(`[${i}]`, 'not an object');
+    const idm = PASSAGE_ID_RE.exec(String(id || ''));
+    if (!idm) bad(id || `[${i}]`, 'bad id format (want p-n<level>-<n>)');
+    if (seenIds.has(id)) bad(id, 'duplicate passage id');
+    seenIds.add(id);
+    if (!LEVELS.includes(p.level)) bad(id, 'bad level enum');
+    if (idm && p.level && idm[1] !== String(p.level).toLowerCase()) bad(id, `id level ${idm[1]} ≠ level ${p.level}`);
+    if (!p.title || typeof p.title !== 'string') bad(id, 'missing title');
+    if (!p.en || typeof p.en !== 'string') bad(id, 'missing en');
+    if (!CONFIDENCE.includes(p.confidence)) bad(id, 'bad confidence');
+
+    // tokens[] + collect the blank markers found inline
+    const markerNs = new Set();
+    if (!Array.isArray(p.tokens) || !p.tokens.length) { bad(id, 'tokens must be a non-empty array'); }
+    else p.tokens.forEach((tok, k) => {
+      const tat = `${id} tok[${k}]`;
+      if (typeof tok === 'string') { if (!tok) bad(tat, 'empty string token'); return; }
+      if (!tok || typeof tok !== 'object') return bad(tat, 'bad token type');
+      if (tok.blank === true) {
+        if (!Number.isInteger(tok.n) || tok.n < 0) return bad(tat, 'blank marker n must be a non-negative integer');
+        if (markerNs.has(tok.n)) bad(tat, `duplicate blank marker n=${tok.n}`);
+        markerNs.add(tok.n);
+        return;
+      }
+      checkTokenShape(tok, tat, bad);   // furigana object token — same rules as examples
+      if (tok.g !== undefined && (typeof tok.g !== 'string' || !tok.g)) bad(tat, `"${tok.t}": empty g`);
+    });
+
+    // blanks[] ↔ markers bijection + per-blank shape
+    if (!Array.isArray(p.blanks)) { bad(id, 'blanks must be an array'); return; }
+    if (p.blanks.length < 4 || p.blanks.length > 5) bad(id, `passage must have 4–5 blanks (has ${p.blanks.length})`);
+    const entryNs = new Set();
+    p.blanks.forEach((b, j) => {
+      const bat = `${id} blank[${j}]`;
+      if (!b || typeof b !== 'object') return bad(bat, 'not an object');
+      if (!Number.isInteger(b.n) || b.n < 0) bad(bat, 'blank n must be a non-negative integer');
+      else {
+        if (entryNs.has(b.n)) bad(bat, `duplicate blank entry n=${b.n}`);
+        entryNs.add(b.n);
+        if (!markerNs.has(b.n)) bad(bat, `blank n=${b.n} has no {blank:true,n:${b.n}} marker in tokens`);
+      }
+      if (!BLANK_KINDS.includes(b.kind)) bad(bat, `bad kind (want ${BLANK_KINDS.join('|')})`);
+      if (!Array.isArray(b.options)) bad(bat, 'options must be an array');
+      else {
+        if (b.options.length !== 4) bad(bat, `options must have exactly 4 entries (has ${b.options.length})`);
+        const seenOpt = new Set();
+        b.options.forEach(o => {
+          if (typeof o !== 'string' || !o) bad(bat, `option must be a non-empty string (got ${JSON.stringify(o)})`);
+          else if (seenOpt.has(o)) bad(bat, `duplicate option "${o}"`);
+          seenOpt.add(o);
+        });
+      }
+      if (typeof b.answer !== 'string' || !b.answer) bad(bat, 'answer must be a non-empty string');
+      else if (Array.isArray(b.options) && !b.options.includes(b.answer)) bad(bat, `answer "${b.answer}" is not one of options`);
+      if (b.kind === 'grammar' && !b.pointId) bad(bat, 'grammar blank needs a pointId');
+      if (b.pointId !== undefined && !allIds.has(b.pointId)) bad(bat, `pointId → unknown grammar id ${b.pointId}`);
+    });
+    // every in-token marker must have a matching blanks[] entry
+    for (const n of markerNs) if (!entryNs.has(n)) bad(id, `blank marker n=${n} in tokens has no blanks[] entry`);
+  });
+  return errs;
+}
+
 function main() {
   const dataDir = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'docs', 'data');
   const files = process.argv.slice(2).length
     ? process.argv.slice(2)
     : readdirSync(dataDir).filter(f => /^grammar-n[1-5]\.json$/.test(f)).map(f => join(dataDir, f));
   if (!files.length) { console.error('no grammar-*.json files found'); process.exit(1); }
-  const loaded = files.map(f => {
+  // Only grammar-n<level>.json files are point corpora; grammar-units.json / grammar-passages.json
+  // are validated by their own blocks below (never as a points array).
+  const loaded = files.filter(f => /grammar-n[1-5]\.json$/.test(f)).map(f => {
     const level = (basename(f).match(/grammar-(n[1-5])\.json/) || [])[1]?.toUpperCase();
     return { file: f, level, points: JSON.parse(readFileSync(f, 'utf8')) };
   });
@@ -234,6 +342,28 @@ function main() {
     } catch (err) {
       total += 1;
       console.log(`grammar-units.json: read/parse error — ${err.message}`);
+    }
+  }
+  // Passage bank (R12) — grammar blanks resolve against the FULL corpus, so build the id set
+  // from every grammar-n file on disk (not just whatever was passed). Runs on the default full
+  // run or when the passages file is explicitly passed.
+  const passagesPath = join(dataDir, 'grammar-passages.json');
+  const passagesPassed = process.argv.slice(2).some(f => /grammar-passages\.json$/.test(f));
+  if (runningDefault || passagesPassed) {
+    try {
+      const corpusIds = new Set(readdirSync(dataDir)
+        .filter(f => /^grammar-n[1-5]\.json$/.test(f))
+        .flatMap(f => JSON.parse(readFileSync(join(dataDir, f), 'utf8')).map(p => p && p.id)));
+      const bank = JSON.parse(readFileSync(passagesPath, 'utf8'));
+      const errs = validatePassages(bank, corpusIds);
+      total += errs.length;
+      const n = bank && Array.isArray(bank.passages) ? bank.passages.length : 0;
+      const blanks = bank && Array.isArray(bank.passages) ? bank.passages.reduce((s, p) => s + (Array.isArray(p.blanks) ? p.blanks.length : 0), 0) : 0;
+      console.log(`grammar-passages.json: ${n} passages (${blanks} blanks), ${errs.length} errors`);
+      errs.forEach(e => console.log('  ✗ ' + e));
+    } catch (err) {
+      total += 1;
+      console.log(`grammar-passages.json: read/parse error — ${err.message}`);
     }
   }
   process.exit(total ? 1 : 0);

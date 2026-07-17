@@ -14,6 +14,7 @@ import { mountAccordion } from './collapse.js';
 import { effectiveLines, sum, summary, fmtYen, fmtCad } from './lib/budget.js';
 import { parseSpend, monthTotal, spendSummary, pruneSpend } from './lib/spend.js';
 import { nowISO, fmtShort } from './lib/dates.js';
+import { prefersReducedMotion } from './motion.js';
 
 // hardcoded fallback if tips.json has no budget block (defensive — UI must still mount)
 const FALLBACK = { currency: 'JPY', oneTime: [], monthly: [] };
@@ -61,12 +62,17 @@ function renderSpend() {
     .map(it => `<li class="sp-row"><span class="sp-date">${esc(fmtShort(it.date))}</span><span class="sp-note">${esc(it.note || '—')}</span><span class="sp-amt">${fmtYen(it.amount)}</span><button type="button" class="sp-del" data-del="${esc(it.id)}" aria-label="Delete ${fmtYen(it.amount)} ${esc(it.note || '')}">✕</button></li>`).join('');
   const [yy, mm] = spendYm.split('-');
   const monthName = new Date(Date.UTC(+yy, +mm - 1, 1)).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  // pace tick: where "today" sits in the month, so the fill reads against it at a glance
+  const today = nowISO();
+  const daysIn = new Date(Date.UTC(+yy, +mm, 0)).getUTCDate();
+  const pacePct = isNow ? Math.min(100, Math.round((+today.slice(8, 10) / daysIn) * 100)) : null;
+  const barTone = total > planned ? 'over' : (planned > 0 && total / planned >= .85 ? 'near' : '');
   card.innerHTML = `
-    <div class="sp-head"><h3 class="sp-h">Spent ${isNow ? 'this month' : `— ${esc(monthName)} ${esc(yy)}`}</h3>
+    <div class="sp-head"><h3 class="alm-h sp-h"><span class="jp2" lang="ja">出費</span><span class="rom">spent ${isNow ? 'this month' : `— ${esc(monthName.toLowerCase())} ${esc(yy)}`}</span></h3>
       <span class="sp-nav"><button type="button" class="sp-mv" data-mv="-1" aria-label="Previous month">‹</button><button type="button" class="sp-mv" data-mv="1" aria-label="Next month" ${isNow ? 'disabled' : ''}>›</button></span></div>
     <div class="sp-total"><b>${fmtYen(total)}</b>${planned > 0 ? ` <span class="sp-of">of ${fmtYen(planned)} planned</span>` : ''}</div>
-    ${planned > 0 ? `<div class="sp-bar" role="img" aria-label="${pct}% of planned monthly burn"><i style="width:${pct}%" class="${total > planned ? 'over' : ''}"></i></div>` : ''}
-    ${isNow ? `<form id="spendAdd" class="sp-add" autocomplete="off"><span class="sp-plus" aria-hidden="true">＋</span><input type="text" id="spendInput" placeholder="1200 ramen · ¥3,400 drinks yesterday · 1.2k combini" aria-label="Quick-add a spend — amount then note, optional trailing date word"><span class="sp-hint" id="spendHint" aria-live="polite"></span></form>` : ''}
+    ${planned > 0 ? `<div class="sp-bar" role="img" aria-label="${pct}% of planned monthly burn${pacePct != null ? `, ${pacePct}% of the month elapsed` : ''}"><i style="width:${pct}%" class="${barTone}"></i>${pacePct != null ? `<span class="sp-tick" style="left:${pacePct}%" title="today"></span>` : ''}</div>` : ''}
+    ${isNow ? `<form id="bdgSpendAdd" class="sp-add" autocomplete="off"><span class="sp-plus" aria-hidden="true">＋</span><input type="text" id="bdgSpendIn" placeholder="1200 ramen · ¥3,400 drinks yesterday · 1.2k combini" aria-label="Quick-add a spend — amount then note, optional trailing date word"><span class="sp-hint" id="bdgSpendHint" aria-live="polite"></span></form>` : ''}
     ${rows ? `<ul class="sp-list">${rows}</ul>` : `<p class="sp-empty">${isNow ? 'Nothing logged yet — add your first spend above.' : 'Nothing logged this month.'}</p>`}
     <p class="sp-foot">history kept 18 months · runway counts spends since your savings entry · this device only</p>`;
   card.querySelectorAll('.sp-mv').forEach(b => b.addEventListener('click', () => {
@@ -75,13 +81,14 @@ function renderSpend() {
     const floorYm = items.length ? items.reduce((m, it) => { const y = String(it.date || '').slice(0, 7); return y && y < m ? y : m; }, nowISO().slice(0, 7)) : nowISO().slice(0, 7);
     if (next <= nowISO().slice(0, 7) && next >= floorYm) { spendYm = next; renderSpend(); }   // clamp to real data — no infinite empty past
   }));
-  card.querySelector('#spendAdd')?.addEventListener('submit', (e) => {
+  card.querySelector('#bdgSpendAdd')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const input = card.querySelector('#spendInput');
+    const input = card.querySelector('#bdgSpendIn');
     const parsed = parseSpend(input.value, nowISO());
-    if (!parsed) { const h = card.querySelector('#spendHint'); if (h) h.textContent = 'amount first — e.g. “1200 ramen”'; return; }
+    if (!parsed) { const h = card.querySelector('#bdgSpendHint'); if (h) h.textContent = 'amount first — e.g. “1200 ramen”'; return; }
     saveSpend([{ id: 's' + Date.now(), ...parsed }, ...loadSpend()]);
-    const inp = $('#spendInput'); if (inp) { inp.focus(); }   // card re-rendered — re-find + keep the flow going
+    const inp = $('#bdgSpendIn'); if (inp) { inp.focus(); }   // card re-rendered — re-find + keep the flow going
+    // (ids are bdg-prefixed: the dashboard's quick-spend widget owns #spendInput — duplicate ids broke document-level lookups)
   });
   card.querySelectorAll('.sp-del').forEach(b => b.addEventListener('click', async () => {
     if (!await confirmModal('Delete this spend entry?', { ok: 'Delete', danger: true })) return;
@@ -129,14 +136,14 @@ function clampInt(v) { return Math.max(0, Math.round(+v || 0)); }
 // coerce the CAD rate (yen-per-1-CAD): blank/≤0/non-finite → 0 (off). fmtCad re-guards anyway.
 function clampRate(v) { const n = +v; return n > 0 ? n : 0; }
 
-// ---- summary band ----
+// ---- summary band — hierarchy: runway is THE number; the rest is an agate list ----
 function renderSummary() {
   const band = $('#budgetSummary');
   if (!band) return;
-  const s = summary(BAKED, load());
+  const st = load();
+  const s = summary(BAKED, st);
 
   const runwayInf = s.runwayMonths === Infinity;
-  const runwayText = runwayInf ? '∞ / sustainable' : `${s.runwayMonths} mo`;
   // color the net/runway: green sustainable, amber tight (<6mo), red (<3mo)
   let tone = 'good';
   if (!runwayInf) tone = s.runwayMonths < 3 ? 'bad' : (s.runwayMonths < 6 ? 'warn' : 'good');
@@ -144,42 +151,43 @@ function renderSummary() {
   const netSign = s.monthlyNet > 0 ? '+' : (s.monthlyNet < 0 ? '−' : '±');
   const netAbs = fmtYen(Math.abs(s.monthlyNet));
   // stage 3 (design loop): an untouched page screamed "−¥190,000 / 0 mo" in alarm red before the
-  // user ever typed a number. Unconfigured (no savings AND no income) → neutral em-dashes + a
-  // hint; the alarm tones only ever color REAL numbers.
-  const st = load();
+  // user ever typed a number. Unconfigured (no savings AND no income) → a designed unset state
+  // (quiet dash + a button that focuses the savings input); alarm tones only color REAL numbers.
   const configured = (+st.savings || 0) > 0 || (+st.monthlyIncome || 0) > 0;
 
-  // optional CAD twin under each yen figure — only when a positive rate is set (fmtCad → '' otherwise).
-  const rate = clampRate(load().cadRate);
-  const cad = (yen) => { const t = fmtCad(yen, rate); return t ? `<span class="bdg-cad">≈ ${esc(t)}</span>` : ''; };
-  const netCad = (() => { const t = fmtCad(s.monthlyNet, rate); return t ? `<span class="bdg-cad">≈ ${esc(t)}</span>` : ''; })();   // fmtCad owns the sign now
+  // optional CAD twin — only when a positive rate is set (fmtCad → '' otherwise).
+  const rate = clampRate(st.cadRate);
+  const cad = (yen) => { const t = fmtCad(yen, rate); return t ? ` <span class="bdg-cad">≈ ${esc(t)}</span>` : ''; };
 
-  band.innerHTML = `
-    <div class="bdg-stat">
-      <span class="bdg-stat-label">To land</span>
-      <span class="bdg-stat-num">${esc(fmtYen(s.toLand))}</span>
-      ${cad(s.toLand)}
-    </div>
-    <div class="bdg-stat">
-      <span class="bdg-stat-label">Monthly burn</span>
-      <span class="bdg-stat-num">${esc(fmtYen(s.monthlyTotal))}</span>
-      ${cad(s.monthlyTotal)}
-    </div>
-    <div class="bdg-stat ${configured ? `bdg-${esc(tone)}` : ''}">
-      <span class="bdg-stat-label">Net / mo</span>
-      <span class="bdg-stat-num">${configured ? esc(netSign + netAbs) : '—'}</span>
-      ${configured ? netCad : ''}
-    </div>
-    <div class="bdg-stat ${configured ? `bdg-${esc(tone)}` : ''}">
-      <span class="bdg-stat-label">Runway</span>
-      <span class="bdg-stat-num">${configured ? esc(runwayText) : '—'}</span>
-      ${configured ? '' : '<span class="bdg-cad">set savings below ↓</span>'}
-    </div>
-    <div class="bdg-stat bdg-after">
-      <span class="bdg-stat-label">After setup</span>
-      <span class="bdg-stat-num">${configured ? esc(fmtYen(s.afterLanding)) : '—'}</span>
-      ${configured ? cad(s.afterLanding) : ''}
-    </div>`;
+  // actuals beat estimates: with real spends logged since the savings entry, show measured runway
+  const sp = configured ? spendSummary(loadSpend(), s.monthlyTotal, +st.savings || 0, +st.monthlyIncome || 0, nowISO(), st.savingsAsOf) : null;
+  const actualLine = (sp && sp.confident)
+    ? `<span class="bdg-hero-sub">by your logged spends ~${sp.actualRunwayMonths === Infinity ? '∞' : esc(String(sp.actualRunwayMonths)) + ' mo'}</span>` : '';
+
+  const hero = configured
+    ? `<div class="bdg-hero bdg-${esc(tone)}">
+        <span class="bdg-hero-label"><span lang="ja">残り</span> runway</span>
+        <span class="bdg-hero-num">${runwayInf ? '∞' : `${esc(String(s.runwayMonths))}<small>mo</small>`}</span>
+        <span class="bdg-hero-sub">${runwayInf ? 'income covers the burn — sustainable' : `net ${esc(netSign + netAbs)} / mo`}${cad(s.monthlyNet)}</span>
+        ${actualLine}
+      </div>`
+    : `<div class="bdg-hero bdg-unset">
+        <span class="bdg-hero-label"><span lang="ja">残り</span> runway</span>
+        <span class="bdg-hero-num">—</span>
+        <button type="button" class="bdg-hero-go" id="bdgSetupGo">set your savings ↓</button>
+      </div>`;
+
+  band.innerHTML = `${hero}
+    <dl class="bdg-rest">
+      <div class="bdg-row"><dt>monthly burn</dt><dd>${esc(fmtYen(s.monthlyTotal))}${cad(s.monthlyTotal)}</dd></div>
+      <div class="bdg-row"><dt>after setup</dt><dd>${configured ? esc(fmtYen(s.afterLanding)) + cad(s.afterLanding) : '—'}</dd></div>
+      <div class="bdg-row"><dt>to land (one-time)</dt><dd>${esc(fmtYen(s.toLand))}${cad(s.toLand)}</dd></div>
+    </dl>`;
+  $('#bdgSetupGo')?.addEventListener('click', () => {
+    const inp = $('#budgetSavings');
+    inp?.scrollIntoView({ block: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    inp?.focus({ preventScroll: true });
+  });
 }
 
 // ---- one line row: label + editable amount + remove × ----

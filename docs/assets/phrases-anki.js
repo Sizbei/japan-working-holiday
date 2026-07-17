@@ -735,12 +735,25 @@ function persistPos() {
 }
 
 function advance(delta) {
-  const { order, idx } = stream;
+  const { deck, order, idx, mode, chunk } = stream;
   const next = idx + delta;
-  if (next < 0 || next >= order.length) return;
-  stream.idx = next;
-  paintCard();
-  persistPos();
+  if (next >= 0 && next < order.length) {
+    stream.idx = next;
+    paintCard();
+    persistPos();
+    return;
+  }
+  // stepped off the end/start of the current pile — hop to the adjacent pile (chunk mode only; the
+  // shaky pile is a self-contained run). Forward → first card of the next pile; back → last of the prev.
+  if (mode !== 'chunk') return;
+  const nChunks = chunkCount(deck.cards.length, CHUNK);
+  if (delta > 0 && chunk + 1 < nChunks) {
+    deck.pos[chunk + 1] = 0;
+    switchChunk(chunk + 1);
+  } else if (delta < 0 && chunk > 0) {
+    deck.pos[chunk - 1] = Math.max(0, orderFor(deck, chunk - 1, 'chunk').length - 1);
+    switchChunk(chunk - 1);
+  }
 }
 
 // jump to a GLOBAL card number (1-based across the whole deck) — resolves to its chunk + index.

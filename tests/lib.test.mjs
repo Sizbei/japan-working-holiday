@@ -1371,6 +1371,104 @@ test('validator rejects a point that cannot assemble ≥3 MCQ wrong-options', ()
   assert.ok(errs.some(e => /assemble ≥3 MCQ wrong-options/.test(e)));
 });
 
+// ---- R12: passage bank + validatePassages (文章の文法 / passage cloze) ----
+import { validatePassages } from '../scripts/validate-grammar.mjs';
+
+const P_IDS = new Set(['n5-wa']);
+// A valid 4-choice blank (grammar kind → resolvable pointId).
+const okBlank = (n, over = {}) => ({ n, answer: 'は', options: ['は', 'が', 'を', 'に'], kind: 'grammar', pointId: 'n5-wa', ...over });
+// A valid passage: one furigana token + 4 blank markers, blanks[] in bijection by n.
+const okPassage = (over = {}) => ({
+  id: 'p-n5-1', level: 'N5', title: 'テスト',
+  tokens: [
+    { t: '店', f: [['店', 'みせ']], g: 'shop' },
+    { blank: true, n: 0 }, { blank: true, n: 1 }, { blank: true, n: 2 }, { blank: true, n: 3 },
+    '。',
+  ],
+  blanks: [okBlank(0), okBlank(1), okBlank(2), okBlank(3)],
+  en: 'test.', confidence: 'high',
+  ...over,
+});
+// A passage carrying exactly k blank markers + k matching blanks[] entries (for the count rule).
+const passageWithBlanks = (k) => okPassage({
+  tokens: [...Array(k)].map((_, i) => ({ blank: true, n: i })).concat(['。']),
+  blanks: [...Array(k)].map((_, i) => okBlank(i)),
+});
+const onlyP = (over) => validatePassages({ passages: [okPassage(over)] }, P_IDS);
+
+test('validatePassages accepts a well-formed passage', () => {
+  assert.deepEqual(validatePassages({ passages: [okPassage()] }, P_IDS), []);
+});
+
+test('validatePassages accepts a discourse blank without a pointId', () => {
+  const disc = okPassage({ blanks: [okBlank(0, { kind: 'discourse', answer: 'そして', options: ['そして', 'でも', 'だから', 'しかし'], pointId: undefined }), okBlank(1), okBlank(2), okBlank(3)] });
+  assert.deepEqual(validatePassages({ passages: [disc] }, P_IDS), []);
+});
+
+test('validatePassages rejects a blank with no options', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { options: undefined }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /options must be an array/.test(e)));
+});
+
+test('validatePassages rejects answer not among options', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { answer: 'ぜ' }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /is not one of options/.test(e)));
+});
+
+test('validatePassages rejects a duplicate option', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { options: ['は', 'は', 'を', 'に'] }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /duplicate option/.test(e)));
+});
+
+test('validatePassages rejects an options count other than 4', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { options: ['は', 'が', 'を'] }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /exactly 4 entries/.test(e)));
+});
+
+test('validatePassages rejects an unresolvable grammar pointId', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { pointId: 'n5-ghost' }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /unknown grammar id n5-ghost/.test(e)));
+});
+
+test('validatePassages rejects a missing kind', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { kind: undefined }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /bad kind/.test(e)));
+});
+
+test('validatePassages rejects a grammar blank with no pointId', () => {
+  assert.ok(onlyP({ blanks: [okBlank(0, { pointId: undefined }), okBlank(1), okBlank(2), okBlank(3)] }).some(e => /grammar blank needs a pointId/.test(e)));
+});
+
+test('validatePassages enforces 4–5 blanks per passage', () => {
+  assert.ok(validatePassages({ passages: [passageWithBlanks(3)] }, P_IDS).some(e => /4–5 blanks/.test(e)));
+  assert.ok(validatePassages({ passages: [passageWithBlanks(6)] }, P_IDS).some(e => /4–5 blanks/.test(e)));
+  assert.deepEqual(validatePassages({ passages: [passageWithBlanks(5)] }, P_IDS), []);
+});
+
+test('validatePassages rejects a token whose f-segments do not concat to t', () => {
+  assert.ok(onlyP({ tokens: [
+    { t: '食べて', f: [['食', 'た'], ['べ', '']], g: 'eat' },   // 食べ ≠ 食べて
+    { blank: true, n: 0 }, { blank: true, n: 1 }, { blank: true, n: 2 }, { blank: true, n: 3 }, '。',
+  ] }).some(e => /≠ t/.test(e)));
+});
+
+test('validatePassages rejects a marker/entry mismatch (bijection by n)', () => {
+  // marker n=3 present in tokens but no blanks[] entry for it, and a blanks[] entry n=9 with no marker
+  const p = okPassage({ blanks: [okBlank(0), okBlank(1), okBlank(2), okBlank(9)] });
+  const errs = validatePassages({ passages: [p] }, P_IDS);
+  assert.ok(errs.some(e => /blank n=9 has no .*marker/.test(e)));
+  assert.ok(errs.some(e => /blank marker n=3 in tokens has no blanks\[\] entry/.test(e)));
+});
+
+test('validatePassages rejects a bad id and confidence', () => {
+  assert.ok(onlyP({ id: 'n5-1' }).some(e => /bad id format/.test(e)));
+  assert.ok(onlyP({ confidence: 'certain' }).some(e => /bad confidence/.test(e)));
+});
+
+test('passages: validatePassages passes over the real seed bank (the R12 data gate)', () => {
+  const files = ['n5', 'n4', 'n3', 'n2', 'n1'].map(l =>
+    JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8')));
+  const allIds = new Set(files.flat().map(p => p.id));
+  const bank = JSON.parse(readFileSync(new URL('../docs/data/grammar-passages.json', import.meta.url), 'utf8'));
+  assert.deepEqual(validatePassages(bank, allIds), []);
+  assert.ok(bank.passages.length >= 2, 'seed needs ≥2 passages');
+  bank.passages.forEach(p => assert.ok(p.blanks.length >= 4 && p.blanks.length <= 5, `${p.id} blank count`));
+});
+
 
 import { shakyRows } from '../docs/assets/lib/grammar.js';
 test('shakyRows: level order N5→N1, deck order within, tags + TSV round-trip', () => {

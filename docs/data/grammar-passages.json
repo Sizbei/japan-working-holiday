@@ -1,0 +1,11247 @@
+{
+ "passages": [
+  {
+   "id": "p-n5-1",
+   "level": "N5",
+   "title": "コンビニのお知らせ",
+   "tokens": [
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    "から",
+    "、",
+    {
+     "t": "この",
+     "f": [
+      [
+       "この",
+       ""
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "店",
+     "f": [
+      [
+       "店",
+       "みせ"
+      ]
+     ],
+     "g": "shop"
+    },
+    "は",
+    {
+     "t": "朝",
+     "f": [
+      [
+       "朝",
+       "あさ"
+      ]
+     ],
+     "g": "morning"
+    },
+    {
+     "t": "7時",
+     "f": [
+      [
+       "7",
+       "しち"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "7 o'clock"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "開きます",
+     "f": [
+      [
+       "開",
+       "あ"
+      ],
+      [
+       "きます",
+       ""
+      ]
+     ],
+     "g": "opens"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "新しい",
+     "f": [
+      [
+       "新",
+       "あたら"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "new"
+    },
+    {
+     "t": "パン",
+     "f": [
+      [
+       "パン",
+       ""
+      ]
+     ],
+     "g": "bread"
+    },
+    "も",
+    {
+     "t": "売ります",
+     "f": [
+      [
+       "売",
+       "う"
+      ],
+      [
+       "ります",
+       ""
+      ]
+     ],
+     "g": "sells"
+    },
+    "。",
+    {
+     "t": "コーヒー",
+     "f": [
+      [
+       "コーヒー",
+       ""
+      ]
+     ],
+     "g": "coffee"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "100円",
+     "f": [
+      [
+       "100",
+       "ひゃく"
+      ],
+      [
+       "円",
+       "えん"
+      ]
+     ],
+     "g": "100 yen"
+    },
+    "です",
+    "。",
+    "ぜひ",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    },
+    {
+     "n": 1,
+     "answer": "そして",
+     "options": [
+      "そして",
+      "でも",
+      "だから",
+      "それとも"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "だけ",
+     "options": [
+      "だけ",
+      "しか",
+      "まで",
+      "ごろ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-dake"
+    },
+    {
+     "n": 3,
+     "answer": "きて",
+     "options": [
+      "きて",
+      "いって",
+      "みて",
+      "して"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-te-kudasai"
+    }
+   ],
+   "en": "From tomorrow, this shop opens at 7 in the morning. And we will also sell new bread. Coffee is only 100 yen. Please come by all means.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-2",
+   "level": "N5",
+   "title": "シェアハウスのメール",
+   "tokens": [
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    "の",
+    {
+     "t": "掃除",
+     "f": [
+      [
+       "掃",
+       "そう"
+      ],
+      [
+       "除",
+       "じ"
+      ]
+     ],
+     "g": "cleaning"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "こと",
+     "f": [
+      [
+       "こと",
+       ""
+      ]
+     ],
+     "g": "matter / thing"
+    },
+    "を",
+    {
+     "t": "知らせます",
+     "f": [
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせます",
+       ""
+      ]
+     ],
+     "g": "let (you) know"
+    },
+    "。",
+    {
+     "t": "朝",
+     "f": [
+      [
+       "朝",
+       "あさ"
+      ]
+     ],
+     "g": "morning"
+    },
+    {
+     "t": "10時",
+     "f": [
+      [
+       "10",
+       "じゅう"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "10 o'clock"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "みんな",
+     "f": [
+      [
+       "みんな",
+       ""
+      ]
+     ],
+     "g": "everyone"
+    },
+    "で",
+    {
+     "t": "掃除",
+     "f": [
+      [
+       "掃",
+       "そう"
+      ],
+      [
+       "除",
+       "じ"
+      ]
+     ],
+     "g": "cleaning"
+    },
+    "を",
+    {
+     "t": "します",
+     "f": [
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "do"
+    },
+    "。",
+    {
+     "t": "ゴミ",
+     "f": [
+      [
+       "ゴミ",
+       ""
+      ]
+     ],
+     "g": "trash"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "捨てて",
+     "f": [
+      [
+       "捨",
+       "す"
+      ],
+      [
+       "てて",
+       ""
+      ]
+     ],
+     "g": "throw away"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "キッチン",
+     "f": [
+      [
+       "キッチン",
+       ""
+      ]
+     ],
+     "g": "kitchen"
+    },
+    "も",
+    {
+     "t": "綺麗",
+     "f": [
+      [
+       "綺麗",
+       "きれい"
+      ]
+     ],
+     "g": "clean / tidy"
+    },
+    "に",
+    {
+     "t": "して",
+     "f": [
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "make"
+    },
+    "ください",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    },
+    {
+     "n": 2,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "しかし",
+      "だから"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "ね",
+     "options": [
+      "ね",
+      "よ",
+      "か",
+      "わ"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "This is to let you know about tomorrow's cleaning. At 10 in the morning we will all clean together. Please throw away the trash. And then, please make the kitchen clean too, okay?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-3",
+   "level": "N5",
+   "title": "東京日記",
+   "tokens": [
+    {
+     "t": "今日",
+     "f": [
+      [
+       "今日",
+       "きょう"
+      ]
+     ],
+     "g": "today"
+    },
+    "は",
+    {
+     "t": "渋谷",
+     "f": [
+      [
+       "渋谷",
+       "しぶや"
+      ]
+     ],
+     "g": "Shibuya"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "買い物",
+     "f": [
+      [
+       "買",
+       "か"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "物",
+       "もの"
+      ]
+     ],
+     "g": "shopping"
+    },
+    "を",
+    {
+     "t": "しました",
+     "f": [
+      [
+       "しました",
+       ""
+      ]
+     ],
+     "g": "did"
+    },
+    "。",
+    {
+     "t": "デパート",
+     "f": [
+      [
+       "デパート",
+       ""
+      ]
+     ],
+     "g": "department store"
+    },
+    "で",
+    {
+     "t": "新しい",
+     "f": [
+      [
+       "新",
+       "あたら"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "new"
+    },
+    {
+     "t": "かばん",
+     "f": [
+      [
+       "かばん",
+       ""
+      ]
+     ],
+     "g": "bag"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "買いました",
+     "f": [
+      [
+       "買",
+       "か"
+      ],
+      [
+       "いました",
+       ""
+      ]
+     ],
+     "g": "bought"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "コーヒー",
+     "f": [
+      [
+       "コーヒー",
+       ""
+      ]
+     ],
+     "g": "coffee"
+    },
+    "も",
+    {
+     "t": "飲みました",
+     "f": [
+      [
+       "飲",
+       "の"
+      ],
+      [
+       "みました",
+       ""
+      ]
+     ],
+     "g": "drank"
+    },
+    "。",
+    {
+     "t": "かばん",
+     "f": [
+      [
+       "かばん",
+       ""
+      ]
+     ],
+     "g": "bag"
+    },
+    "は",
+    {
+     "t": "高かった",
+     "f": [
+      [
+       "高",
+       "たか"
+      ],
+      [
+       "かった",
+       ""
+      ]
+     ],
+     "g": "was expensive"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    "とても",
+    {
+     "t": "気に入って",
+     "f": [
+      [
+       "気",
+       "き"
+      ],
+      [
+       "に",
+       ""
+      ],
+      [
+       "入",
+       "い"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "am fond of"
+    },
+    "います",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "で",
+     "options": [
+      "で",
+      "に",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-de-place"
+    },
+    {
+     "n": 1,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "で"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 2,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "または"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "けど",
+     "options": [
+      "けど",
+      "から",
+      "ので",
+      "し"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-kedo"
+    }
+   ],
+   "en": "Today I went shopping in Shibuya. At a department store I bought a new bag. And then I also drank coffee. The bag was expensive, but I really like it.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-10",
+   "level": "N5",
+   "title": "区役所からの手紙",
+   "tokens": [
+    {
+     "t": "在留カード",
+     "f": [
+      [
+       "在",
+       "ざい"
+      ],
+      [
+       "留",
+       "りゅう"
+      ],
+      [
+       "カード",
+       ""
+      ]
+     ],
+     "g": "residence card"
+    },
+    "が",
+    {
+     "t": "できました",
+     "f": [
+      [
+       "できました",
+       ""
+      ]
+     ],
+     "g": "is ready"
+    },
+    "。",
+    {
+     "t": "来週",
+     "f": [
+      [
+       "来週",
+       "らいしゅう"
+      ]
+     ],
+     "g": "next week"
+    },
+    "、",
+    {
+     "t": "区役所",
+     "f": [
+      [
+       "区役所",
+       "くやくしょ"
+      ]
+     ],
+     "g": "ward office"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "取り",
+     "f": [
+      [
+       "取",
+       "と"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "pick up"
+    },
+    "に",
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    "ください",
+    "。",
+    {
+     "t": "受付",
+     "f": [
+      [
+       "受付",
+       "うけつけ"
+      ]
+     ],
+     "g": "reception"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "9時",
+     "f": [
+      [
+       "9",
+       "く"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "9 o'clock"
+    },
+    "から",
+    {
+     "t": "5時",
+     "f": [
+      [
+       "5",
+       "ご"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "5 o'clock"
+    },
+    "まで",
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "パスポート",
+     "f": [
+      [
+       "パスポート",
+       ""
+      ]
+     ],
+     "g": "passport"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "忘れないで",
+     "f": [
+      [
+       "忘",
+       "わす"
+      ],
+      [
+       "れないで",
+       ""
+      ]
+     ],
+     "g": "don't forget"
+    },
+    "ください",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    },
+    {
+     "n": 1,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "を",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 2,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 4,
+     "answer": "ね",
+     "options": [
+      "ね",
+      "よ",
+      "か",
+      "わ"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Your residence card is ready. Next week, please come to the ward office to pick it up. The reception desk is open from 9 to 5. And also, please don't forget your passport, okay?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-11",
+   "level": "N5",
+   "title": "電車のお知らせ",
+   "tokens": [
+    {
+     "t": "今日",
+     "f": [
+      [
+       "今日",
+       "きょう"
+      ]
+     ],
+     "g": "today"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "電車",
+     "f": [
+      [
+       "電",
+       "でん"
+      ],
+      [
+       "車",
+       "しゃ"
+      ]
+     ],
+     "g": "train"
+    },
+    "が",
+    {
+     "t": "遅れて",
+     "f": [
+      [
+       "遅",
+       "おく"
+      ],
+      [
+       "れて",
+       ""
+      ]
+     ],
+     "g": "delayed"
+    },
+    "います",
+    "。",
+    {
+     "t": "ICカード",
+     "f": [
+      [
+       "ICカード",
+       ""
+      ]
+     ],
+     "g": "IC card"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "チャージ",
+     "f": [
+      [
+       "チャージ",
+       ""
+      ]
+     ],
+     "g": "charging"
+    },
+    "は",
+    {
+     "t": "改札",
+     "f": [
+      [
+       "改札",
+       "かいさつ"
+      ]
+     ],
+     "g": "ticket gate"
+    },
+    "の",
+    {
+     "t": "前",
+     "f": [
+      [
+       "前",
+       "まえ"
+      ]
+     ],
+     "g": "front"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "できます",
+     "f": [
+      [
+       "できます",
+       ""
+      ]
+     ],
+     "g": "can do"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "切符",
+     "f": [
+      [
+       "切符",
+       "きっぷ"
+      ]
+     ],
+     "g": "ticket"
+    },
+    "も",
+    {
+     "t": "買えます",
+     "f": [
+      [
+       "買",
+       "か"
+      ],
+      [
+       "えます",
+       ""
+      ]
+     ],
+     "g": "can buy"
+    },
+    "。",
+    {
+     "t": "急いで",
+     "f": [
+      [
+       "急",
+       "いそ"
+      ],
+      [
+       "いで",
+       ""
+      ]
+     ],
+     "g": "hurrying"
+    },
+    "いる",
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "person"
+    },
+    "は",
+    {
+     "t": "走らないで",
+     "f": [
+      [
+       "走",
+       "はし"
+      ],
+      [
+       "らないで",
+       ""
+      ]
+     ],
+     "g": "don't run"
+    },
+    "ください",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 1,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 2,
+     "answer": "で",
+     "options": [
+      "で",
+      "に",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-de-place"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "ね",
+     "options": [
+      "ね",
+      "よ",
+      "か",
+      "わ"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Today the trains are delayed. IC card charging can be done in front of the ticket gate. And also, you can buy paper tickets too. People in a hurry, please don't run, okay?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-12",
+   "level": "N5",
+   "title": "居酒屋のメニュー",
+   "tokens": [
+    {
+     "t": "当店",
+     "f": [
+      [
+       "当店",
+       "とうてん"
+      ]
+     ],
+     "g": "our shop"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "ビール",
+     "f": [
+      [
+       "ビール",
+       ""
+      ]
+     ],
+     "g": "beer"
+    },
+    "は",
+    {
+     "t": "350円",
+     "f": [
+      [
+       "350",
+       "さんびゃくごじゅう"
+      ],
+      [
+       "円",
+       "えん"
+      ]
+     ],
+     "g": "350 yen"
+    },
+    "です",
+    "。",
+    {
+     "t": "おすすめ",
+     "f": [
+      [
+       "おすすめ",
+       ""
+      ]
+     ],
+     "g": "recommendation"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "焼き鳥",
+     "f": [
+      [
+       "焼",
+       "や"
+      ],
+      [
+       "き",
+       ""
+      ],
+      [
+       "鳥",
+       "とり"
+      ]
+     ],
+     "g": "yakitori"
+    },
+    "です",
+    "。",
+    "とても",
+    {
+     "t": "おいしい",
+     "f": [
+      [
+       "おいしい",
+       ""
+      ]
+     ],
+     "g": "delicious"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    "ぜひ",
+    {
+     "t": "食べて",
+     "f": [
+      [
+       "食",
+       "た"
+      ],
+      [
+       "べて",
+       ""
+      ]
+     ],
+     "g": "eat"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "あたたかい",
+     "f": [
+      [
+       "あたたかい",
+       ""
+      ]
+     ],
+     "g": "warm"
+    },
+    {
+     "t": "お茶",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "茶",
+       "ちゃ"
+      ]
+     ],
+     "g": "tea"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    {
+     "t": "無料",
+     "f": [
+      [
+       "無料",
+       "むりょう"
+      ]
+     ],
+     "g": "free"
+    },
+    "で",
+    {
+     "t": "出します",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "serve"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 2,
+     "answer": "から",
+     "options": [
+      "から",
+      "けど",
+      "が",
+      "より"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-kara"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    }
+   ],
+   "en": "Our shop's beer is 350 yen. The recommendation is yakitori. Because it's very delicious, please try it by all means. And also, we serve warm tea for free.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-13",
+   "level": "N5",
+   "title": "クリニックの問診票",
+   "tokens": [
+    {
+     "t": "はじめて",
+     "f": [
+      [
+       "はじめて",
+       ""
+      ]
+     ],
+     "g": "first time"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "方",
+     "f": [
+      [
+       "方",
+       "かた"
+      ]
+     ],
+     "g": "person (polite)"
+    },
+    "は",
+    {
+     "t": "名前",
+     "f": [
+      [
+       "名前",
+       "なまえ"
+      ]
+     ],
+     "g": "name"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "書いて",
+     "f": [
+      [
+       "書",
+       "か"
+      ],
+      [
+       "いて",
+       ""
+      ]
+     ],
+     "g": "write"
+    },
+    "ください",
+    "。",
+    {
+     "t": "今日",
+     "f": [
+      [
+       "今日",
+       "きょう"
+      ]
+     ],
+     "g": "today"
+    },
+    "は",
+    {
+     "t": "どうしました",
+     "f": [
+      [
+       "どうしました",
+       ""
+      ]
+     ],
+     "g": "what happened"
+    },
+    "か",
+    "。",
+    {
+     "t": "熱",
+     "f": [
+      [
+       "熱",
+       "ねつ"
+      ]
+     ],
+     "g": "fever"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "あります",
+     "f": [
+      [
+       "あります",
+       ""
+      ]
+     ],
+     "g": "there is"
+    },
+    "か",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "薬",
+     "f": [
+      [
+       "薬",
+       "くすり"
+      ]
+     ],
+     "g": "medicine"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    {
+     "t": "アレルギー",
+     "f": [
+      [
+       "アレルギー",
+       ""
+      ]
+     ],
+     "g": "allergy"
+    },
+    "が",
+    {
+     "t": "あります",
+     "f": [
+      [
+       "あります",
+       ""
+      ]
+     ],
+     "g": "there is"
+    },
+    "か",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 2,
+     "answer": "が",
+     "options": [
+      "が",
+      "を",
+      "に",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ga-subject"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    }
+   ],
+   "en": "First-time visitors, please write your name. What is wrong today? Do you have a fever? Also, do you have an allergy to any medicine?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-14",
+   "level": "N5",
+   "title": "アパートの内見メッセージ",
+   "tokens": [
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    "、",
+    {
+     "t": "アパート",
+     "f": [
+      [
+       "アパート",
+       ""
+      ]
+     ],
+     "g": "apartment"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "見に",
+     "f": [
+      [
+       "見",
+       "み"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "to see"
+    },
+    {
+     "t": "行き",
+     "f": [
+      [
+       "行",
+       "い"
+      ],
+      [
+       "き",
+       ""
+      ]
+     ],
+     "g": "go"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "です",
+    "。",
+    {
+     "t": "この",
+     "f": [
+      [
+       "この",
+       ""
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "部屋",
+     "f": [
+      [
+       "部屋",
+       "へや"
+      ]
+     ],
+     "g": "room"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "いい",
+     "f": [
+      [
+       "いい",
+       ""
+      ]
+     ],
+     "g": "good"
+    },
+    "です",
+    "。",
+    {
+     "t": "家賃",
+     "f": [
+      [
+       "家賃",
+       "やちん"
+      ]
+     ],
+     "g": "rent"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "8万円",
+     "f": [
+      [
+       "8",
+       "はち"
+      ],
+      [
+       "万",
+       "まん"
+      ],
+      [
+       "円",
+       "えん"
+      ]
+     ],
+     "g": "80,000 yen"
+    },
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "ペット",
+     "f": [
+      [
+       "ペット",
+       ""
+      ]
+     ],
+     "g": "pet"
+    },
+    "を",
+    {
+     "t": "飼っても",
+     "f": [
+      [
+       "飼",
+       "か"
+      ],
+      [
+       "っても",
+       ""
+      ]
+     ],
+     "g": "keep (may)"
+    },
+    "いい",
+    "です",
+    "か",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 1,
+     "answer": "たい",
+     "options": [
+      "たい",
+      "たかった",
+      "たくない",
+      "ました"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-tai"
+    },
+    {
+     "n": 2,
+     "answer": "が",
+     "options": [
+      "が",
+      "を",
+      "に",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ga-subject"
+    },
+    {
+     "n": 3,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "を",
+      "の"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 4,
+     "answer": "でも",
+     "options": [
+      "でも",
+      "そして",
+      "だから",
+      "または"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Hi Tanaka. I want to go and see the apartment tomorrow. This room is good. The rent is 80,000 yen. But is it OK to keep a pet?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-15",
+   "level": "N5",
+   "title": "アルバイトのシフト",
+   "tokens": [
+    {
+     "t": "来週",
+     "f": [
+      [
+       "来週",
+       "らいしゅう"
+      ]
+     ],
+     "g": "next week"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "シフト",
+     "f": [
+      [
+       "シフト",
+       ""
+      ]
+     ],
+     "g": "shift"
+    },
+    "を",
+    {
+     "t": "送ります",
+     "f": [
+      [
+       "送",
+       "おく"
+      ],
+      [
+       "ります",
+       ""
+      ]
+     ],
+     "g": "send"
+    },
+    "。",
+    {
+     "t": "月曜日",
+     "f": [
+      [
+       "月曜日",
+       "げつようび"
+      ]
+     ],
+     "g": "Monday"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "水曜日",
+     "f": [
+      [
+       "水曜日",
+       "すいようび"
+      ]
+     ],
+     "g": "Wednesday"
+    },
+    "は",
+    {
+     "t": "夜",
+     "f": [
+      [
+       "夜",
+       "よる"
+      ]
+     ],
+     "g": "night"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "働いて",
+     "f": [
+      [
+       "働",
+       "はたら"
+      ],
+      [
+       "いて",
+       ""
+      ]
+     ],
+     "g": "work"
+    },
+    "ください",
+    "。",
+    {
+     "t": "金曜日",
+     "f": [
+      [
+       "金曜日",
+       "きんようび"
+      ]
+     ],
+     "g": "Friday"
+    },
+    "は",
+    {
+     "t": "休み",
+     "f": [
+      [
+       "休",
+       "やす"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "day off"
+    },
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "土曜日",
+     "f": [
+      [
+       "土曜日",
+       "どようび"
+      ]
+     ],
+     "g": "Saturday"
+    },
+    "は",
+    {
+     "t": "忙しい",
+     "f": [
+      [
+       "忙",
+       "いそが"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "busy"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "早く",
+     "f": [
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "early"
+    },
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "と",
+     "options": [
+      "と",
+      "に",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-to-and"
+    },
+    {
+     "n": 2,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    },
+    {
+     "n": 3,
+     "answer": "でも",
+     "options": [
+      "でも",
+      "そして",
+      "だから",
+      "または"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "から",
+     "options": [
+      "から",
+      "けど",
+      "が",
+      "より"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-kara"
+    }
+   ],
+   "en": "I will send next week's shift. On Monday and Wednesday, please work at night. Friday is a day off. But because Saturday is busy, please come early.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-16",
+   "level": "N5",
+   "title": "ごみの出し方",
+   "tokens": [
+    {
+     "t": "ごみ",
+     "f": [
+      [
+       "ごみ",
+       ""
+      ]
+     ],
+     "g": "trash"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "出し方",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "方",
+       "かた"
+      ]
+     ],
+     "g": "way to put out"
+    },
+    "を",
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notice"
+    },
+    "します",
+    "。",
+    {
+     "t": "月曜日",
+     "f": [
+      [
+       "月曜日",
+       "げつようび"
+      ]
+     ],
+     "g": "Monday"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "木曜日",
+     "f": [
+      [
+       "木曜日",
+       "もくようび"
+      ]
+     ],
+     "g": "Thursday"
+    },
+    "は",
+    {
+     "t": "燃える",
+     "f": [
+      [
+       "燃",
+       "も"
+      ],
+      [
+       "える",
+       ""
+      ]
+     ],
+     "g": "burnable"
+    },
+    {
+     "t": "ごみ",
+     "f": [
+      [
+       "ごみ",
+       ""
+      ]
+     ],
+     "g": "trash"
+    },
+    "です",
+    "。",
+    {
+     "t": "ペットボトル",
+     "f": [
+      [
+       "ペットボトル",
+       ""
+      ]
+     ],
+     "g": "plastic bottle"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "火曜日",
+     "f": [
+      [
+       "火曜日",
+       "かようび"
+      ]
+     ],
+     "g": "Tuesday"
+    },
+    "に",
+    {
+     "t": "出して",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "put out"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "缶",
+     "f": [
+      [
+       "缶",
+       "かん"
+      ]
+     ],
+     "g": "can"
+    },
+    "と",
+    {
+     "t": "びん",
+     "f": [
+      [
+       "びん",
+       ""
+      ]
+     ],
+     "g": "bottle"
+    },
+    "は",
+    {
+     "t": "金曜日",
+     "f": [
+      [
+       "金曜日",
+       "きんようび"
+      ]
+     ],
+     "g": "Friday"
+    },
+    "です",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "と",
+     "options": [
+      "と",
+      "に",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-to-and"
+    },
+    {
+     "n": 2,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "に",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "よ",
+     "options": [
+      "よ",
+      "ね",
+      "か",
+      "わ"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "We are letting you know how to put out the trash. Monday and Thursday are for burnable trash. Please put out plastic bottles on Tuesday. And then, cans and bottles are on Friday, you know.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-17",
+   "level": "N5",
+   "title": "近所の日記",
+   "tokens": [
+    {
+     "t": "今日",
+     "f": [
+      [
+       "今日",
+       "きょう"
+      ]
+     ],
+     "g": "today"
+    },
+    "は",
+    {
+     "t": "近所",
+     "f": [
+      [
+       "近所",
+       "きんじょ"
+      ]
+     ],
+     "g": "neighborhood"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "公園",
+     "f": [
+      [
+       "公園",
+       "こうえん"
+      ]
+     ],
+     "g": "park"
+    },
+    "を",
+    {
+     "t": "散歩しました",
+     "f": [
+      [
+       "散歩",
+       "さんぽ"
+      ],
+      [
+       "しました",
+       ""
+      ]
+     ],
+     "g": "took a walk"
+    },
+    "。",
+    {
+     "t": "天気",
+     "f": [
+      [
+       "天気",
+       "てんき"
+      ]
+     ],
+     "g": "weather"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "よかった",
+     "f": [
+      [
+       "よかった",
+       ""
+      ]
+     ],
+     "g": "was good"
+    },
+    "です",
+    "。",
+    {
+     "t": "花",
+     "f": [
+      [
+       "花",
+       "はな"
+      ]
+     ],
+     "g": "flower"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "たくさん",
+    {
+     "t": "咲いて",
+     "f": [
+      [
+       "咲",
+       "さ"
+      ],
+      [
+       "いて",
+       ""
+      ]
+     ],
+     "g": "blooming"
+    },
+    "いました",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "犬",
+     "f": [
+      [
+       "犬",
+       "いぬ"
+      ]
+     ],
+     "g": "dog"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    {
+     "t": "一緒に",
+     "f": [
+      [
+       "一緒",
+       "いっしょ"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "together"
+    },
+    {
+     "t": "走りました",
+     "f": [
+      [
+       "走",
+       "はし"
+      ],
+      [
+       "りました",
+       ""
+      ]
+     ],
+     "g": "ran"
+    },
+    "。",
+    "とても",
+    {
+     "t": "楽しかった",
+     "f": [
+      [
+       "楽",
+       "たの"
+      ],
+      [
+       "しかった",
+       ""
+      ]
+     ],
+     "g": "was fun"
+    },
+    "です",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "は",
+     "options": [
+      "は",
+      "に",
+      "を",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 2,
+     "answer": "が",
+     "options": [
+      "が",
+      "を",
+      "に",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ga-subject"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "と",
+     "options": [
+      "と",
+      "に",
+      "で",
+      "を"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-to-issho-ni"
+    }
+   ],
+   "en": "Today I took a walk through the neighborhood park. The weather was nice. Many flowers were blooming. And then, I ran together with a dog. It was really fun.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-18",
+   "level": "N5",
+   "title": "コンビニのアルバイト募集",
+   "tokens": [
+    {
+     "t": "アルバイト",
+     "f": [
+      [
+       "アルバイト",
+       ""
+      ]
+     ],
+     "g": "part-time job"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "募集して",
+     "f": [
+      [
+       "募集",
+       "ぼしゅう"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "recruiting"
+    },
+    "います",
+    "。",
+    {
+     "t": "日本語",
+     "f": [
+      [
+       "日本語",
+       "にほんご"
+      ]
+     ],
+     "g": "Japanese"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "少し",
+    {
+     "t": "できる",
+     "f": [
+      [
+       "できる",
+       ""
+      ]
+     ],
+     "g": "can do"
+    },
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "person"
+    },
+    "が",
+    {
+     "t": "いい",
+     "f": [
+      [
+       "いい",
+       ""
+      ]
+     ],
+     "g": "good"
+    },
+    "です",
+    "。",
+    {
+     "t": "時給",
+     "f": [
+      [
+       "時給",
+       "じきゅう"
+      ]
+     ],
+     "g": "hourly wage"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "1200円",
+     "f": [
+      [
+       "1200",
+       "せんにひゃく"
+      ],
+      [
+       "円",
+       "えん"
+      ]
+     ],
+     "g": "1200 yen"
+    },
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "夜",
+     "f": [
+      [
+       "夜",
+       "よる"
+      ]
+     ],
+     "g": "night"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    {
+     "t": "働ける",
+     "f": [
+      [
+       "働",
+       "はたら"
+      ],
+      [
+       "ける",
+       ""
+      ]
+     ],
+     "g": "can work"
+    },
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "person"
+    },
+    "は",
+    {
+     "t": "大歓迎",
+     "f": [
+      [
+       "大歓迎",
+       "だいかんげい"
+      ]
+     ],
+     "g": "very welcome"
+    },
+    "です",
+    "。",
+    {
+     "t": "電話",
+     "f": [
+      [
+       "電話",
+       "でんわ"
+      ]
+     ],
+     "g": "phone"
+    },
+    "で",
+    {
+     "t": "連絡して",
+     "f": [
+      [
+       "連絡",
+       "れんらく"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "contact"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 1,
+     "answer": "が",
+     "options": [
+      "が",
+      "を",
+      "に",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ga-subject"
+    },
+    {
+     "n": 2,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "を",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "でも",
+      "だから",
+      "しかし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "に",
+     "options": [
+      "に",
+      "で",
+      "を",
+      "へ"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-ni-time"
+    }
+   ],
+   "en": "We are recruiting part-timers. Someone who can speak a little Japanese is good. The hourly wage is 1200 yen. And also, people who can work at night are very welcome. Please contact us by phone.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n5-19",
+   "level": "N5",
+   "title": "シェアハウスのルール",
+   "tokens": [
+    {
+     "t": "シェアハウス",
+     "f": [
+      [
+       "シェアハウス",
+       ""
+      ]
+     ],
+     "g": "share house"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "ルール",
+     "f": [
+      [
+       "ルール",
+       ""
+      ]
+     ],
+     "g": "rules"
+    },
+    "を",
+    {
+     "t": "説明します",
+     "f": [
+      [
+       "説明",
+       "せつめい"
+      ],
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "explain"
+    },
+    "。",
+    {
+     "t": "夜",
+     "f": [
+      [
+       "夜",
+       "よる"
+      ]
+     ],
+     "g": "night"
+    },
+    {
+     "t": "11時",
+     "f": [
+      [
+       "11",
+       "じゅういち"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "11 o'clock"
+    },
+    "からは",
+    {
+     "t": "静かに",
+     "f": [
+      [
+       "静",
+       "しず"
+      ],
+      [
+       "かに",
+       ""
+      ]
+     ],
+     "g": "quietly"
+    },
+    {
+     "t": "して",
+     "f": [
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "do"
+    },
+    "ください",
+    "。",
+    {
+     "t": "友達",
+     "f": [
+      [
+       "友達",
+       "ともだち"
+      ]
+     ],
+     "g": "friend"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "呼んでも",
+     "f": [
+      [
+       "呼",
+       "よ"
+      ],
+      [
+       "んでも",
+       ""
+      ]
+     ],
+     "g": "may invite"
+    },
+    "いい",
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "パーティー",
+     "f": [
+      [
+       "パーティー",
+       ""
+      ]
+     ],
+     "g": "party"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "しないで",
+     "f": [
+      [
+       "しないで",
+       ""
+      ]
+     ],
+     "g": "don't do"
+    },
+    "ください",
+    "。",
+    "それから",
+    "、",
+    {
+     "t": "キッチン",
+     "f": [
+      [
+       "キッチン",
+       ""
+      ]
+     ],
+     "g": "kitchen"
+    },
+    "は",
+    {
+     "t": "きれいに",
+     "f": [
+      [
+       "きれいに",
+       ""
+      ]
+     ],
+     "g": "cleanly"
+    },
+    {
+     "t": "使って",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "use"
+    },
+    "ください",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "の",
+     "options": [
+      "の",
+      "が",
+      "を",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-no"
+    },
+    {
+     "n": 1,
+     "answer": "を",
+     "options": [
+      "を",
+      "が",
+      "は",
+      "に"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wo"
+    },
+    {
+     "n": 2,
+     "answer": "でも",
+     "options": [
+      "でも",
+      "そして",
+      "だから",
+      "または"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "は",
+     "options": [
+      "は",
+      "が",
+      "に",
+      "も"
+     ],
+     "kind": "grammar",
+     "pointId": "n5-wa"
+    },
+    {
+     "n": 4,
+     "answer": "ね",
+     "options": [
+      "ね",
+      "よ",
+      "か",
+      "わ"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Let me explain the share house rules. After 11 at night, please be quiet. You may invite friends. But please don't have parties. Also, please use the kitchen cleanly, okay?",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-1",
+   "level": "N4",
+   "title": "シェアハウスの相談メール",
+   "tokens": [
+    {
+     "t": "キッチン",
+     "f": [
+      [
+       "キッチン",
+       ""
+      ]
+     ],
+     "g": "kitchen"
+    },
+    "の",
+    {
+     "t": "こと",
+     "f": [
+      [
+       "こと",
+       ""
+      ]
+     ],
+     "g": "matter"
+    },
+    "で",
+    "、",
+    {
+     "t": "メール",
+     "f": [
+      [
+       "メール",
+       ""
+      ]
+     ],
+     "g": "email"
+    },
+    "します",
+    "。",
+    {
+     "t": "昨日",
+     "f": [
+      [
+       "昨日",
+       "きのう"
+      ]
+     ],
+     "g": "yesterday"
+    },
+    "、",
+    {
+     "t": "洗い物",
+     "f": [
+      [
+       "洗",
+       "あら"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "物",
+       "もの"
+      ]
+     ],
+     "g": "dishes"
+    },
+    "が",
+    {
+     "t": "そのまま",
+     "f": [
+      [
+       "そのまま",
+       ""
+      ]
+     ],
+     "g": "as it is"
+    },
+    "に",
+    {
+     "t": "なって",
+     "f": [
+      [
+       "なって",
+       ""
+      ]
+     ],
+     "g": "become"
+    },
+    "いました",
+    "。",
+    {
+     "t": "使っ",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "っ",
+       ""
+      ]
+     ],
+     "g": "use"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    "すぐ",
+    {
+     "t": "洗って",
+     "f": [
+      [
+       "洗",
+       "あら"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "wash"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "です",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "夜",
+     "f": [
+      [
+       "夜",
+       "よる"
+      ]
+     ],
+     "g": "night"
+    },
+    "は",
+    {
+     "t": "音",
+     "f": [
+      [
+       "音",
+       "おと"
+      ]
+     ],
+     "g": "noise"
+    },
+    "が",
+    {
+     "t": "大きい",
+     "f": [
+      [
+       "大",
+       "おお"
+      ],
+      [
+       "きい",
+       ""
+      ]
+     ],
+     "g": "loud"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "静か",
+     "f": [
+      [
+       "静",
+       "しず"
+      ],
+      [
+       "か",
+       ""
+      ]
+     ],
+     "g": "quiet"
+    },
+    "に",
+    {
+     "t": "して",
+     "f": [
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "make"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "たら",
+     "options": [
+      "たら",
+      "ば",
+      "なら",
+      "と"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-tara"
+    },
+    {
+     "n": 1,
+     "answer": "ほしい",
+     "options": [
+      "ほしい",
+      "みたい",
+      "らしい",
+      "そう"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-hoshii"
+    },
+    {
+     "n": 2,
+     "answer": "それに",
+     "options": [
+      "それに",
+      "しかし",
+      "つまり",
+      "ところで"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "ので",
+     "options": [
+      "ので",
+      "のに",
+      "なら",
+      "たら"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-node"
+    }
+   ],
+   "en": "I'm emailing about the kitchen. Yesterday the dishes were left as they were. When you use them, I'd like you to wash them right away. Also, at night the noise is loud, so please be quiet.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-2",
+   "level": "N4",
+   "title": "店長からの仕事の説明",
+   "tokens": [
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    "は",
+    {
+     "t": "初めて",
+     "f": [
+      [
+       "初",
+       "はじ"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "first"
+    },
+    "の",
+    {
+     "t": "仕事",
+     "f": [
+      [
+       "仕",
+       "し"
+      ],
+      [
+       "事",
+       "ごと"
+      ]
+     ],
+     "g": "job"
+    },
+    "です",
+    "ね",
+    "。",
+    "まず",
+    "、",
+    {
+     "t": "制服",
+     "f": [
+      [
+       "制",
+       "せい"
+      ],
+      [
+       "服",
+       "ふく"
+      ]
+     ],
+     "g": "uniform"
+    },
+    "に",
+    {
+     "t": "着替えて",
+     "f": [
+      [
+       "着",
+       "き"
+      ],
+      [
+       "替",
+       "が"
+      ],
+      [
+       "えて",
+       ""
+      ]
+     ],
+     "g": "change into"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "ください",
+    "。",
+    {
+     "t": "この",
+     "f": [
+      [
+       "この",
+       ""
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "ボタン",
+     "f": [
+      [
+       "ボタン",
+       ""
+      ]
+     ],
+     "g": "button"
+    },
+    "を",
+    {
+     "t": "押す",
+     "f": [
+      [
+       "押",
+       "お"
+      ],
+      [
+       "す",
+       ""
+      ]
+     ],
+     "g": "press"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "レシート",
+     "f": [
+      [
+       "レシート",
+       ""
+      ]
+     ],
+     "g": "receipt"
+    },
+    "が",
+    {
+     "t": "出ます",
+     "f": [
+      [
+       "出",
+       "で"
+      ],
+      [
+       "ます",
+       ""
+      ]
+     ],
+     "g": "comes out"
+    },
+    "。",
+    {
+     "t": "分からない",
+     "f": [
+      [
+       "分",
+       "わ"
+      ],
+      [
+       "からない",
+       ""
+      ]
+     ],
+     "g": "not understand"
+    },
+    {
+     "t": "こと",
+     "f": [
+      [
+       "こと",
+       ""
+      ]
+     ],
+     "g": "thing"
+    },
+    "が",
+    "あれ",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    "すぐ",
+    {
+     "t": "聞いて",
+     "f": [
+      [
+       "聞",
+       "き"
+      ],
+      [
+       "いて",
+       ""
+      ]
+     ],
+     "g": "ask"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "忙しい",
+     "f": [
+      [
+       "忙",
+       "いそが"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "busy"
+    },
+    {
+     "t": "時",
+     "f": [
+      [
+       "時",
+       "とき"
+      ]
+     ],
+     "g": "time"
+    },
+    "は",
+    {
+     "t": "自分",
+     "f": [
+      [
+       "自",
+       "じ"
+      ],
+      [
+       "分",
+       "ぶん"
+      ]
+     ],
+     "g": "oneself"
+    },
+    "で",
+    {
+     "t": "考え",
+     "f": [
+      [
+       "考",
+       "かんが"
+      ],
+      [
+       "え",
+       ""
+      ]
+     ],
+     "g": "think"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "いけません",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "おいて",
+     "options": [
+      "おいて",
+      "しまって",
+      "みて",
+      "あって"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-oku"
+    },
+    {
+     "n": 1,
+     "answer": "と",
+     "options": [
+      "と",
+      "たら",
+      "なら",
+      "ば"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-to-conditional"
+    },
+    {
+     "n": 2,
+     "answer": "ば",
+     "options": [
+      "ば",
+      "ながら",
+      "ては",
+      "ずに"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-ba"
+    },
+    {
+     "n": 3,
+     "answer": "しかし",
+     "options": [
+      "しかし",
+      "だから",
+      "それに",
+      "つまり"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "なくては",
+     "options": [
+      "なくては",
+      "ないで",
+      "なくても",
+      "ながら"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-nakute-wa-ikemasen"
+    }
+   ],
+   "en": "Tomorrow is your first day of work, isn't it. First, change into your uniform beforehand. When you press this button, the receipt comes out. If there's something you don't understand, ask right away. However, when it's busy, you have to think for yourself.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-3",
+   "level": "N4",
+   "title": "区役所からのお知らせ",
+   "tokens": [
+    {
+     "t": "区役所",
+     "f": [
+      [
+       "区",
+       "く"
+      ],
+      [
+       "役",
+       "やく"
+      ],
+      [
+       "所",
+       "しょ"
+      ]
+     ],
+     "g": "ward office"
+    },
+    "から",
+    "の",
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notice"
+    },
+    "です",
+    "。",
+    {
+     "t": "引っ越して",
+     "f": [
+      [
+       "引",
+       "ひ"
+      ],
+      [
+       "っ",
+       ""
+      ],
+      [
+       "越",
+       "こ"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "move house"
+    },
+    "から",
+    {
+     "t": "二週間",
+     "f": [
+      [
+       "二",
+       "に"
+      ],
+      [
+       "週",
+       "しゅう"
+      ],
+      [
+       "間",
+       "かん"
+      ]
+     ],
+     "g": "two weeks"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "届け出て",
+     "f": [
+      [
+       "届",
+       "とど"
+      ],
+      [
+       "け",
+       ""
+      ],
+      [
+       "出",
+       "で"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "register / report"
+    },
+    "ください",
+    "。",
+    {
+     "t": "必要",
+     "f": [
+      [
+       "必",
+       "ひつ"
+      ],
+      [
+       "要",
+       "よう"
+      ]
+     ],
+     "g": "necessary"
+    },
+    "な",
+    {
+     "t": "書類",
+     "f": [
+      [
+       "書",
+       "しょ"
+      ],
+      [
+       "類",
+       "るい"
+      ]
+     ],
+     "g": "documents"
+    },
+    "は",
+    "、",
+    {
+     "t": "在留",
+     "f": [
+      [
+       "在",
+       "ざい"
+      ],
+      [
+       "留",
+       "りゅう"
+      ]
+     ],
+     "g": "residence"
+    },
+    {
+     "t": "カード",
+     "f": [
+      [
+       "カード",
+       ""
+      ]
+     ],
+     "g": "card"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "です",
+    "。",
+    {
+     "t": "窓口",
+     "f": [
+      [
+       "窓",
+       "まど"
+      ],
+      [
+       "口",
+       "ぐち"
+      ]
+     ],
+     "g": "counter"
+    },
+    "が",
+    {
+     "t": "混んで",
+     "f": [
+      [
+       "混",
+       "こ"
+      ],
+      [
+       "んで",
+       ""
+      ]
+     ],
+     "g": "crowded"
+    },
+    "いる",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "午前中",
+     "f": [
+      [
+       "午",
+       "ご"
+      ],
+      [
+       "前",
+       "ぜん"
+      ],
+      [
+       "中",
+       "ちゅう"
+      ]
+     ],
+     "g": "morning"
+    },
+    "に",
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "と",
+    "、",
+    {
+     "t": "早く",
+     "f": [
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "quickly"
+    },
+    {
+     "t": "終わります",
+     "f": [
+      [
+       "終",
+       "お"
+      ],
+      [
+       "わります",
+       ""
+      ]
+     ],
+     "g": "finishes"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "詳しい",
+     "f": [
+      [
+       "詳",
+       "くわ"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "detailed"
+    },
+    "こと",
+    "は",
+    {
+     "t": "ホームページ",
+     "f": [
+      [
+       "ホームページ",
+       ""
+      ]
+     ],
+     "g": "website"
+    },
+    "で",
+    {
+     "t": "確認して",
+     "f": [
+      [
+       "確",
+       "かく"
+      ],
+      [
+       "認",
+       "にん"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "check"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "までに",
+     "options": [
+      "までに",
+      "まで",
+      "までは",
+      "ながら"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-made-ni"
+    },
+    {
+     "n": 1,
+     "answer": "など",
+     "options": [
+      "など",
+      "や",
+      "しか",
+      "ばかり"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-nado"
+    },
+    {
+     "n": 2,
+     "answer": "ので",
+     "options": [
+      "ので",
+      "のに",
+      "なら",
+      "たら"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-node"
+    },
+    {
+     "n": 3,
+     "answer": "いただく",
+     "options": [
+      "いただく",
+      "おく",
+      "しまう",
+      "いく"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-kenjougo-verbs"
+    },
+    {
+     "n": 4,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "つまり",
+      "だから"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "This is a notice from the ward office. Within two weeks of moving in, please register. The necessary documents are your residence card and so on. The counter gets crowded, so if we have you come in the morning, it finishes quickly. Also, please check the details on the website.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-4",
+   "level": "N4",
+   "title": "賃貸契約の注意",
+   "tokens": [
+    {
+     "t": "この",
+     "f": [
+      [
+       "この",
+       ""
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "部屋",
+     "f": [
+      [
+       "部",
+       "へ"
+      ],
+      [
+       "屋",
+       "や"
+      ]
+     ],
+     "g": "room"
+    },
+    "では",
+    "、",
+    {
+     "t": "ペット",
+     "f": [
+      [
+       "ペット",
+       ""
+      ]
+     ],
+     "g": "pet"
+    },
+    "を",
+    {
+     "t": "飼っては",
+     "f": [
+      [
+       "飼",
+       "か"
+      ],
+      [
+       "っては",
+       ""
+      ]
+     ],
+     "g": "keep (an animal)"
+    },
+    "いけません",
+    "。",
+    {
+     "t": "楽器",
+     "f": [
+      [
+       "楽",
+       "がっ"
+      ],
+      [
+       "器",
+       "き"
+      ]
+     ],
+     "g": "instrument"
+    },
+    "も",
+    "、",
+    {
+     "t": "夜",
+     "f": [
+      [
+       "夜",
+       "よる"
+      ]
+     ],
+     "g": "night"
+    },
+    {
+     "t": "10時",
+     "f": [
+      [
+       "10",
+       "じゅう"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "10 o'clock"
+    },
+    {
+     "t": "以降",
+     "f": [
+      [
+       "以",
+       "い"
+      ],
+      [
+       "降",
+       "こう"
+      ]
+     ],
+     "g": "after"
+    },
+    "は",
+    {
+     "t": "弾かないで",
+     "f": [
+      [
+       "弾",
+       "ひ"
+      ],
+      [
+       "かないで",
+       ""
+      ]
+     ],
+     "g": "don't play"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "ゴミ",
+     "f": [
+      [
+       "ゴミ",
+       ""
+      ]
+     ],
+     "g": "trash"
+    },
+    "は",
+    {
+     "t": "決められた",
+     "f": [
+      [
+       "決",
+       "き"
+      ],
+      [
+       "められた",
+       ""
+      ]
+     ],
+     "g": "designated"
+    },
+    {
+     "t": "日",
+     "f": [
+      [
+       "日",
+       "ひ"
+      ]
+     ],
+     "g": "day"
+    },
+    "に",
+    {
+     "t": "出す",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "す",
+       ""
+      ]
+     ],
+     "g": "put out"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "t": "壁",
+     "f": [
+      [
+       "壁",
+       "かべ"
+      ]
+     ],
+     "g": "wall"
+    },
+    "に",
+    {
+     "t": "穴",
+     "f": [
+      [
+       "穴",
+       "あな"
+      ]
+     ],
+     "g": "hole"
+    },
+    "を",
+    {
+     "t": "開けた",
+     "f": [
+      [
+       "開",
+       "あ"
+      ],
+      [
+       "けた",
+       ""
+      ]
+     ],
+     "g": "made"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "修理代",
+     "f": [
+      [
+       "修",
+       "しゅう"
+      ],
+      [
+       "理",
+       "り"
+      ],
+      [
+       "代",
+       "だい"
+      ]
+     ],
+     "g": "repair cost"
+    },
+    "を",
+    {
+     "t": "払って",
+     "f": [
+      [
+       "払",
+       "はら"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "pay"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "退去する",
+     "f": [
+      [
+       "退",
+       "たい"
+      ],
+      [
+       "去",
+       "きょ"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "move out"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "一ヶ月",
+     "f": [
+      [
+       "一",
+       "いっ"
+      ],
+      [
+       "ヶ月",
+       "かげつ"
+      ]
+     ],
+     "g": "one month"
+    },
+    {
+     "t": "前",
+     "f": [
+      [
+       "前",
+       "まえ"
+      ]
+     ],
+     "g": "before"
+    },
+    "に",
+    {
+     "t": "連絡して",
+     "f": [
+      [
+       "連",
+       "れん"
+      ],
+      [
+       "絡",
+       "らく"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "contact"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "また",
+     "options": [
+      "また",
+      "しかし",
+      "つまり",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 1,
+     "answer": "必要があります",
+     "options": [
+      "必要があります",
+      "はずです",
+      "ことにします",
+      "つもりです"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-hitsuyou-ga-aru"
+    },
+    {
+     "n": 2,
+     "answer": "場合は",
+     "options": [
+      "場合は",
+      "ために",
+      "ように",
+      "ところ"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-baai"
+    },
+    {
+     "n": 3,
+     "answer": "もらいます",
+     "options": [
+      "もらいます",
+      "くれます",
+      "あげます",
+      "おきます"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-morau"
+    },
+    {
+     "n": 4,
+     "answer": "なら",
+     "options": [
+      "なら",
+      "たら",
+      "ば",
+      "と"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-nara"
+    }
+   ],
+   "en": "In this room, you may not keep pets. Also, please do not play instruments after 10 at night. In addition, trash has to be put out on designated days. If you make a hole in the wall, we will have you pay the repair cost. If you are going to move out, please contact us one month in advance.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-5",
+   "level": "N4",
+   "title": "友だちからのLINE",
+   "tokens": [
+    {
+     "t": "今週",
+     "f": [
+      [
+       "今",
+       "こん"
+      ],
+      [
+       "週",
+       "しゅう"
+      ]
+     ],
+     "g": "this week"
+    },
+    "の",
+    {
+     "t": "土曜日",
+     "f": [
+      [
+       "土",
+       "ど"
+      ],
+      [
+       "曜",
+       "よう"
+      ],
+      [
+       "日",
+       "び"
+      ]
+     ],
+     "g": "Saturday"
+    },
+    "、",
+    {
+     "t": "ひま",
+     "f": [
+      [
+       "ひま",
+       ""
+      ]
+     ],
+     "g": "free"
+    },
+    "？",
+    "もし",
+    {
+     "t": "晴れ",
+     "f": [
+      [
+       "晴",
+       "は"
+      ],
+      [
+       "れ",
+       ""
+      ]
+     ],
+     "g": "clear up"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "近く",
+     "f": [
+      [
+       "近",
+       "ちか"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "nearby"
+    },
+    "の",
+    {
+     "t": "公園",
+     "f": [
+      [
+       "公",
+       "こう"
+      ],
+      [
+       "園",
+       "えん"
+      ]
+     ],
+     "g": "park"
+    },
+    "で",
+    {
+     "t": "ピクニック",
+     "f": [
+      [
+       "ピクニック",
+       ""
+      ]
+     ],
+     "g": "picnic"
+    },
+    "しない",
+    "？",
+    {
+     "t": "お弁当",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "弁",
+       "べん"
+      ],
+      [
+       "当",
+       "とう"
+      ]
+     ],
+     "g": "lunch box"
+    },
+    "は",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "I"
+    },
+    "が",
+    {
+     "t": "作って",
+     "f": [
+      [
+       "作",
+       "つく"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "make"
+    },
+    "いく",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "雨",
+     "f": [
+      [
+       "雨",
+       "あめ"
+      ]
+     ],
+     "g": "rain"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "中止",
+     "f": [
+      [
+       "中",
+       "ちゅう"
+      ],
+      [
+       "止",
+       "し"
+      ]
+     ],
+     "g": "cancelled"
+    },
+    "だ",
+    "ね",
+    "。",
+    {
+     "t": "金曜日",
+     "f": [
+      [
+       "金",
+       "きん"
+      ],
+      [
+       "曜",
+       "よう"
+      ],
+      [
+       "日",
+       "び"
+      ]
+     ],
+     "g": "Friday"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    {
+     "t": "教えて",
+     "f": [
+      [
+       "教",
+       "おし"
+      ],
+      [
+       "えて",
+       ""
+      ]
+     ],
+     "g": "let me know"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "たら",
+     "options": [
+      "たら",
+      "なら",
+      "ば",
+      "と"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-tara"
+    },
+    {
+     "n": 1,
+     "answer": "よ",
+     "options": [
+      "よ",
+      "ね",
+      "か",
+      "な"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "でも",
+     "options": [
+      "でも",
+      "だから",
+      "それに",
+      "つまり"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "なら",
+     "options": [
+      "なら",
+      "たら",
+      "ば",
+      "と"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-nara"
+    },
+    {
+     "n": 4,
+     "answer": "までに",
+     "options": [
+      "までに",
+      "まで",
+      "までは",
+      "ぐらい"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-made-ni"
+    }
+   ],
+   "en": "Are you free this Saturday? If it's sunny, want to have a picnic at the nearby park? I'll bring the lunch, okay. But if it's rain, it's off. Let me know by Friday.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-6",
+   "level": "N4",
+   "title": "クリニックからの案内",
+   "tokens": [
+    {
+     "t": "今日",
+     "f": [
+      [
+       "今日",
+       "きょう"
+      ]
+     ],
+     "g": "today"
+    },
+    "は",
+    {
+     "t": "お疲れさま",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "疲",
+       "つか"
+      ],
+      [
+       "れさま",
+       ""
+      ]
+     ],
+     "g": "good work"
+    },
+    "でした",
+    "。",
+    {
+     "t": "熱",
+     "f": [
+      [
+       "熱",
+       "ねつ"
+      ]
+     ],
+     "g": "fever"
+    },
+    "が",
+    {
+     "t": "下がらなかっ",
+     "f": [
+      [
+       "下",
+       "さ"
+      ],
+      [
+       "がらなかっ",
+       ""
+      ]
+     ],
+     "g": "did not go down"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    "また",
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    "ください",
+    "。",
+    {
+     "t": "この",
+     "f": [
+      [
+       "この",
+       ""
+      ]
+     ],
+     "g": "this"
+    },
+    {
+     "t": "薬",
+     "f": [
+      [
+       "薬",
+       "くすり"
+      ]
+     ],
+     "g": "medicine"
+    },
+    "を",
+    {
+     "t": "飲む",
+     "f": [
+      [
+       "飲",
+       "の"
+      ],
+      [
+       "む",
+       ""
+      ]
+     ],
+     "g": "take"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "少し",
+     "f": [
+      [
+       "少",
+       "すこ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "a little"
+    },
+    {
+     "t": "眠く",
+     "f": [
+      [
+       "眠",
+       "ねむ"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "sleepy"
+    },
+    "なる",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "お酒",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "酒",
+       "さけ"
+      ]
+     ],
+     "g": "alcohol"
+    },
+    "は",
+    {
+     "t": "飲まないで",
+     "f": [
+      [
+       "飲",
+       "の"
+      ],
+      [
+       "まないで",
+       ""
+      ]
+     ],
+     "g": "don't drink"
+    },
+    "ください",
+    "。",
+    {
+     "t": "薬",
+     "f": [
+      [
+       "薬",
+       "くすり"
+      ]
+     ],
+     "g": "medicine"
+    },
+    "を",
+    {
+     "t": "全部",
+     "f": [
+      [
+       "全",
+       "ぜん"
+      ],
+      [
+       "部",
+       "ぶ"
+      ]
+     ],
+     "g": "all"
+    },
+    {
+     "t": "飲み",
+     "f": [
+      [
+       "飲",
+       "の"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "take"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "から",
+    "、",
+    {
+     "t": "もう一度",
+     "f": [
+      [
+       "もう",
+       ""
+      ],
+      [
+       "一",
+       "いち"
+      ],
+      [
+       "度",
+       "ど"
+      ]
+     ],
+     "g": "once more"
+    },
+    {
+     "t": "診察します",
+     "f": [
+      [
+       "診",
+       "しん"
+      ],
+      [
+       "察",
+       "さつ"
+      ],
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "examine"
+    },
+    "。",
+    {
+     "t": "お大事に",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "大",
+       "だい"
+      ],
+      [
+       "事",
+       "じ"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "take care"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "たら",
+     "options": [
+      "たら",
+      "り",
+      "て",
+      "し"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-tara"
+    },
+    {
+     "n": 1,
+     "answer": "と",
+     "options": [
+      "と",
+      "たら",
+      "なら",
+      "ば"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-to-conditional"
+    },
+    {
+     "n": 2,
+     "answer": "かもしれません",
+     "options": [
+      "かもしれません",
+      "はずです",
+      "でしょう",
+      "そうです"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-kamoshiremasen"
+    },
+    {
+     "n": 3,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "しかし",
+      "つまり",
+      "ところで"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "終わって",
+     "options": [
+      "終わって",
+      "始めて",
+      "続けて",
+      "出して"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-owaru"
+    }
+   ],
+   "en": "Good work today. If your fever doesn't go down, please come again. When you take this medicine, you might get a little sleepy. Also, please don't drink alcohol. After you finish taking all the medicine, we'll examine you once more. Take care.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-7",
+   "level": "N4",
+   "title": "区民だより",
+   "tokens": [
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来",
+       "らい"
+      ],
+      [
+       "月",
+       "げつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "、",
+    {
+     "t": "区民",
+     "f": [
+      [
+       "区",
+       "く"
+      ],
+      [
+       "民",
+       "みん"
+      ]
+     ],
+     "g": "residents"
+    },
+    {
+     "t": "センター",
+     "f": [
+      [
+       "センター",
+       ""
+      ]
+     ],
+     "g": "center"
+    },
+    "で",
+    {
+     "t": "夏祭り",
+     "f": [
+      [
+       "夏",
+       "なつ"
+      ],
+      [
+       "祭",
+       "まつ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "summer festival"
+    },
+    "が",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "t": "子どもたち",
+     "f": [
+      [
+       "子",
+       "こ"
+      ],
+      [
+       "どもたち",
+       ""
+      ]
+     ],
+     "g": "children"
+    },
+    "が",
+    {
+     "t": "楽しめる",
+     "f": [
+      [
+       "楽",
+       "たの"
+      ],
+      [
+       "しめる",
+       ""
+      ]
+     ],
+     "g": "can enjoy"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    "たくさん",
+    "の",
+    {
+     "t": "ゲーム",
+     "f": [
+      [
+       "ゲーム",
+       ""
+      ]
+     ],
+     "g": "games"
+    },
+    "を",
+    {
+     "t": "用意しました",
+     "f": [
+      [
+       "用",
+       "よう"
+      ],
+      [
+       "意",
+       "い"
+      ],
+      [
+       "しました",
+       ""
+      ]
+     ],
+     "g": "prepared"
+    },
+    "。",
+    {
+     "t": "参加したけれ",
+     "f": [
+      [
+       "参",
+       "さん"
+      ],
+      [
+       "加",
+       "か"
+      ],
+      [
+       "したけれ",
+       ""
+      ]
+     ],
+     "g": "want to participate"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "来週",
+     "f": [
+      [
+       "来",
+       "らい"
+      ],
+      [
+       "週",
+       "しゅう"
+      ]
+     ],
+     "g": "next week"
+    },
+    "の",
+    {
+     "t": "金曜日",
+     "f": [
+      [
+       "金",
+       "きん"
+      ],
+      [
+       "曜",
+       "よう"
+      ],
+      [
+       "日",
+       "び"
+      ]
+     ],
+     "g": "Friday"
+    },
+    "までに",
+    {
+     "t": "お申し込み",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "込",
+       "こ"
+      ],
+      [
+       "み",
+       ""
+      ]
+     ],
+     "g": "apply"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "雨",
+     "f": [
+      [
+       "雨",
+       "あめ"
+      ]
+     ],
+     "g": "rain"
+    },
+    "の",
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場",
+       "ば"
+      ],
+      [
+       "合",
+       "あい"
+      ]
+     ],
+     "g": "case"
+    },
+    "は",
+    {
+     "t": "中止",
+     "f": [
+      [
+       "中",
+       "ちゅう"
+      ],
+      [
+       "止",
+       "し"
+      ]
+     ],
+     "g": "cancellation"
+    },
+    "に",
+    "なります",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "開かれます",
+     "options": [
+      "開かれます",
+      "開きます",
+      "開けます",
+      "開かせます"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-passive"
+    },
+    {
+     "n": 1,
+     "answer": "ように",
+     "options": [
+      "ように",
+      "ために",
+      "そうに",
+      "みたいに"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-you-ni-purpose"
+    },
+    {
+     "n": 2,
+     "answer": "ば",
+     "options": [
+      "ば",
+      "ながら",
+      "ては",
+      "ずに"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-ba"
+    },
+    {
+     "n": 3,
+     "answer": "ください",
+     "options": [
+      "ください",
+      "なさい",
+      "どうぞ",
+      "ましょう"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-o-kudasai"
+    },
+    {
+     "n": 4,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "つまり",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Next month, a summer festival will be held at the ward residents' center. So that the children can enjoy it, we have prepared many games. If you would like to take part, please apply by next Friday. Note that in case of rain, it will be cancelled.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-8",
+   "level": "N4",
+   "title": "ボランティア募集",
+   "tokens": [
+    {
+     "t": "川",
+     "f": [
+      [
+       "川",
+       "かわ"
+      ]
+     ],
+     "g": "river"
+    },
+    "の",
+    {
+     "t": "清掃",
+     "f": [
+      [
+       "清",
+       "せい"
+      ],
+      [
+       "掃",
+       "そう"
+      ]
+     ],
+     "g": "cleanup"
+    },
+    {
+     "t": "ボランティア",
+     "f": [
+      [
+       "ボランティア",
+       ""
+      ]
+     ],
+     "g": "volunteer"
+    },
+    "を",
+    {
+     "t": "募集しています",
+     "f": [
+      [
+       "募",
+       "ぼ"
+      ],
+      [
+       "集",
+       "しゅう"
+      ],
+      [
+       "しています",
+       ""
+      ]
+     ],
+     "g": "are recruiting"
+    },
+    "。",
+    {
+     "t": "参加して",
+     "f": [
+      [
+       "参",
+       "さん"
+      ],
+      [
+       "加",
+       "か"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "participate"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "方",
+     "f": [
+      [
+       "方",
+       "かた"
+      ]
+     ],
+     "g": "person"
+    },
+    "を",
+    {
+     "t": "探しています",
+     "f": [
+      [
+       "探",
+       "さが"
+      ],
+      [
+       "しています",
+       ""
+      ]
+     ],
+     "g": "are looking for"
+    },
+    "。",
+    {
+     "t": "当日",
+     "f": [
+      [
+       "当",
+       "とう"
+      ],
+      [
+       "日",
+       "じつ"
+      ]
+     ],
+     "g": "the day"
+    },
+    "は",
+    "、",
+    {
+     "t": "動き",
+     "f": [
+      [
+       "動",
+       "うご"
+      ],
+      [
+       "き",
+       ""
+      ]
+     ],
+     "g": "move"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "服",
+     "f": [
+      [
+       "服",
+       "ふく"
+      ]
+     ],
+     "g": "clothes"
+    },
+    "で",
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    "ください",
+    "。",
+    {
+     "t": "飲み物",
+     "f": [
+      [
+       "飲",
+       "の"
+      ],
+      [
+       "み",
+       ""
+      ],
+      [
+       "物",
+       "もの"
+      ]
+     ],
+     "g": "drinks"
+    },
+    "は",
+    "、",
+    "こちら",
+    "で",
+    {
+     "t": "用意して",
+     "f": [
+      [
+       "用",
+       "よう"
+      ],
+      [
+       "意",
+       "い"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "prepared"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "t": "集まった",
+     "f": [
+      [
+       "集",
+       "あつ"
+      ],
+      [
+       "まった",
+       ""
+      ]
+     ],
+     "g": "collected"
+    },
+    {
+     "t": "ゴミ",
+     "f": [
+      [
+       "ゴミ",
+       ""
+      ]
+     ],
+     "g": "trash"
+    },
+    "は",
+    "、",
+    {
+     "t": "市",
+     "f": [
+      [
+       "市",
+       "し"
+      ]
+     ],
+     "g": "city"
+    },
+    "が",
+    {
+     "t": "回収する",
+     "f": [
+      [
+       "回",
+       "かい"
+      ],
+      [
+       "収",
+       "しゅう"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "collect"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "います",
+    "。",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "お子さん",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "子",
+       "こ"
+      ],
+      [
+       "さん",
+       ""
+      ]
+     ],
+     "g": "child"
+    },
+    "と",
+    {
+     "t": "一緒に",
+     "f": [
+      [
+       "一",
+       "いっ"
+      ],
+      [
+       "緒",
+       "しょ"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "together"
+    },
+    {
+     "t": "参加しても",
+     "f": [
+      [
+       "参",
+       "さん"
+      ],
+      [
+       "加",
+       "か"
+      ],
+      [
+       "しても",
+       ""
+      ]
+     ],
+     "g": "even if you take part"
+    },
+    "かまいません",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "くれる",
+     "options": [
+      "くれる",
+      "おく",
+      "しまう",
+      "ください"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-kureru"
+    },
+    {
+     "n": 1,
+     "answer": "やすい",
+     "options": [
+      "やすい",
+      "にくい",
+      "そうな",
+      "たがる"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-yasui"
+    },
+    {
+     "n": 2,
+     "answer": "あります",
+     "options": [
+      "あります",
+      "ください",
+      "みます",
+      "いきます"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-aru"
+    },
+    {
+     "n": 3,
+     "answer": "ことになって",
+     "options": [
+      "ことになって",
+      "ことにして",
+      "ところになって",
+      "ようになって"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-koto-ni-naru"
+    },
+    {
+     "n": 4,
+     "answer": "また",
+     "options": [
+      "また",
+      "しかし",
+      "つまり",
+      "なぜなら"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "We are recruiting volunteers to clean the river. We're looking for people who will take part. On the day, please come in clothes that are easy to move in. Drinks have been prepared here for you. The collected trash is to be picked up by the city. Also, you may take part together with your children.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-9",
+   "level": "N4",
+   "title": "お詫びのメール",
+   "tokens": [
+    {
+     "t": "このたび",
+     "f": [
+      [
+       "このたび",
+       ""
+      ]
+     ],
+     "g": "this time"
+    },
+    "は",
+    "、",
+    {
+     "t": "ご迷惑",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "迷",
+       "めい"
+      ],
+      [
+       "惑",
+       "わく"
+      ]
+     ],
+     "g": "trouble"
+    },
+    "を",
+    {
+     "t": "おかけし",
+     "f": [
+      [
+       "おかけし",
+       ""
+      ]
+     ],
+     "g": "cause"
+    },
+    "、",
+    {
+     "t": "申し訳",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "訳",
+       "わけ"
+      ]
+     ],
+     "g": "apology"
+    },
+    "ございませんでした",
+    "。",
+    {
+     "t": "ご注文",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "注",
+       "ちゅう"
+      ],
+      [
+       "文",
+       "もん"
+      ]
+     ],
+     "g": "order"
+    },
+    "の",
+    {
+     "t": "商品",
+     "f": [
+      [
+       "商",
+       "しょう"
+      ],
+      [
+       "品",
+       "ひん"
+      ]
+     ],
+     "g": "product"
+    },
+    "を",
+    "、",
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "t": "明日",
+     "f": [
+      [
+       "明日",
+       "あした"
+      ]
+     ],
+     "g": "tomorrow"
+    },
+    "には",
+    {
+     "t": "届く",
+     "f": [
+      [
+       "届",
+       "とど"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "arrive"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "送料",
+     "f": [
+      [
+       "送",
+       "そう"
+      ],
+      [
+       "料",
+       "りょう"
+      ]
+     ],
+     "g": "shipping fee"
+    },
+    "は",
+    {
+     "t": "当店",
+     "f": [
+      [
+       "当",
+       "とう"
+      ],
+      [
+       "店",
+       "てん"
+      ]
+     ],
+     "g": "our shop"
+    },
+    "が",
+    {
+     "t": "負担いたします",
+     "f": [
+      [
+       "負",
+       "ふ"
+      ],
+      [
+       "担",
+       "たん"
+      ],
+      [
+       "いたします",
+       ""
+      ]
+     ],
+     "g": "will cover"
+    },
+    "。",
+    "もう",
+    {
+     "t": "少し",
+     "f": [
+      [
+       "少",
+       "すこ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "a little"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "今後",
+     "f": [
+      [
+       "今",
+       "こん"
+      ],
+      [
+       "後",
+       "ご"
+      ]
+     ],
+     "g": "from now on"
+    },
+    "は",
+    "、",
+    {
+     "t": "気",
+     "f": [
+      [
+       "気",
+       "き"
+      ]
+     ],
+     "g": "care"
+    },
+    "をつけて",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "お送りいたします",
+     "options": [
+      "お送りいたします",
+      "お送りになります",
+      "送られます",
+      "お送りください"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-o-suru"
+    },
+    {
+     "n": 1,
+     "answer": "はずです",
+     "options": [
+      "はずです",
+      "かもしれません",
+      "そうです",
+      "ようです"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-hazu"
+    },
+    {
+     "n": 2,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "だから",
+      "それとも"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "お待ちください",
+     "options": [
+      "お待ちください",
+      "お待ちします",
+      "お待ちして",
+      "お待ちになって"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-o-kudasai"
+    },
+    {
+     "n": 4,
+     "answer": "まいります",
+     "options": [
+      "まいります",
+      "いらっしゃいます",
+      "おられます",
+      "ございます"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-kenjougo-verbs"
+    }
+   ],
+   "en": "We are very sorry for the trouble we caused this time. We will send the product you ordered tomorrow. It should arrive by tomorrow. Also, our shop will cover the shipping fee. Please wait a little longer. From now on, we will be careful.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n4-10",
+   "level": "N4",
+   "title": "電車の遅延案内",
+   "tokens": [
+    {
+     "t": "お客様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "客",
+       "きゃく"
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "customers"
+    },
+    "に",
+    {
+     "t": "お知らせいたします",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせいたします",
+       ""
+      ]
+     ],
+     "g": "we announce"
+    },
+    "。",
+    "ただいま",
+    "、",
+    {
+     "t": "人身事故",
+     "f": [
+      [
+       "人",
+       "じん"
+      ],
+      [
+       "身",
+       "しん"
+      ],
+      [
+       "事",
+       "じ"
+      ],
+      [
+       "故",
+       "こ"
+      ]
+     ],
+     "g": "personal-injury accident"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "山手線",
+     "f": [
+      [
+       "山手",
+       "やまのて"
+      ],
+      [
+       "線",
+       "せん"
+      ]
+     ],
+     "g": "Yamanote Line"
+    },
+    "が",
+    {
+     "t": "遅れております",
+     "f": [
+      [
+       "遅",
+       "おく"
+      ],
+      [
+       "れております",
+       ""
+      ]
+     ],
+     "g": "is delayed"
+    },
+    "。",
+    {
+     "t": "事故",
+     "f": [
+      [
+       "事",
+       "じ"
+      ],
+      [
+       "故",
+       "こ"
+      ]
+     ],
+     "g": "accident"
+    },
+    "の",
+    {
+     "t": "影響",
+     "f": [
+      [
+       "影",
+       "えい"
+      ],
+      [
+       "響",
+       "きょう"
+      ]
+     ],
+     "g": "effect"
+    },
+    "で",
+    "、",
+    {
+     "t": "電車",
+     "f": [
+      [
+       "電",
+       "でん"
+      ],
+      [
+       "車",
+       "しゃ"
+      ]
+     ],
+     "g": "train"
+    },
+    "が",
+    {
+     "t": "動かなく",
+     "f": [
+      [
+       "動",
+       "うご"
+      ],
+      [
+       "かなく",
+       ""
+      ]
+     ],
+     "g": "not moving"
+    },
+    "なって",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "ご迷惑",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "迷",
+       "めい"
+      ],
+      [
+       "惑",
+       "わく"
+      ]
+     ],
+     "g": "trouble"
+    },
+    "を",
+    "おかけしております",
+    "。",
+    {
+     "t": "復旧",
+     "f": [
+      [
+       "復",
+       "ふっ"
+      ],
+      [
+       "旧",
+       "きゅう"
+      ]
+     ],
+     "g": "restoration"
+    },
+    {
+     "t": "作業",
+     "f": [
+      [
+       "作",
+       "さ"
+      ],
+      [
+       "業",
+       "ぎょう"
+      ]
+     ],
+     "g": "work"
+    },
+    "を",
+    "しております",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "次",
+     "f": [
+      [
+       "次",
+       "つぎ"
+      ]
+     ],
+     "g": "next"
+    },
+    "の",
+    {
+     "t": "電車",
+     "f": [
+      [
+       "電",
+       "でん"
+      ],
+      [
+       "車",
+       "しゃ"
+      ]
+     ],
+     "g": "train"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "のため",
+     "options": [
+      "のため",
+      "のあいだ",
+      "のうち",
+      "のほう"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-tame-ni"
+    },
+    {
+     "n": 1,
+     "answer": "しまいました",
+     "options": [
+      "しまいました",
+      "おきました",
+      "いました",
+      "みました"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-te-shimau"
+    },
+    {
+     "n": 2,
+     "answer": "そのため",
+     "options": [
+      "そのため",
+      "しかし",
+      "ところで",
+      "たとえば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "ので",
+     "options": [
+      "ので",
+      "のに",
+      "なら",
+      "ところ"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-node"
+    },
+    {
+     "n": 4,
+     "answer": "お待ちください",
+     "options": [
+      "お待ちください",
+      "お待ちします",
+      "お待ちになり",
+      "待ちましょう"
+     ],
+     "kind": "grammar",
+     "pointId": "n4-o-kudasai"
+    }
+   ],
+   "en": "We announce this to our customers. Due to a personal-injury accident, the Yamanote Line is currently delayed. Because of the accident, the trains have stopped moving. For that reason, we are causing you great trouble. We are carrying out restoration work, so please wait for the next train.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-1",
+   "level": "N3",
+   "title": "資源ごみ回収のお知らせ",
+   "tokens": [
+    {
+     "t": "新宿区",
+     "f": [
+      [
+       "新宿区",
+       "しんじゅくく"
+      ]
+     ],
+     "g": "Shinjuku Ward"
+    },
+    "に",
+    {
+     "t": "お住まい",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "住",
+       "す"
+      ],
+      [
+       "まい",
+       ""
+      ]
+     ],
+     "g": "residence"
+    },
+    "の",
+    {
+     "t": "皆様",
+     "f": [
+      [
+       "皆様",
+       "みなさま"
+      ]
+     ],
+     "g": "everyone"
+    },
+    "に",
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notify"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来月",
+       "らいげつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "から",
+    "、",
+    {
+     "t": "資源",
+     "f": [
+      [
+       "資源",
+       "しげん"
+      ]
+     ],
+     "g": "recyclable"
+    },
+    "ごみ",
+    "の",
+    {
+     "t": "回収",
+     "f": [
+      [
+       "回収",
+       "かいしゅう"
+      ]
+     ],
+     "g": "collection"
+    },
+    {
+     "t": "曜日",
+     "f": [
+      [
+       "曜日",
+       "ようび"
+      ]
+     ],
+     "g": "day of the week"
+    },
+    "が",
+    {
+     "t": "変わります",
+     "f": [
+      [
+       "変",
+       "か"
+      ],
+      [
+       "わります",
+       ""
+      ]
+     ],
+     "g": "change"
+    },
+    "。",
+    "ペットボトル",
+    "は",
+    "、",
+    "これまで",
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "火曜日",
+     "f": [
+      [
+       "火曜日",
+       "かようび"
+      ]
+     ],
+     "g": "Tuesday"
+    },
+    "に",
+    {
+     "t": "出して",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "put out"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "古紙",
+     "f": [
+      [
+       "古紙",
+       "こし"
+      ]
+     ],
+     "g": "used paper"
+    },
+    "の",
+    {
+     "t": "回収日",
+     "f": [
+      [
+       "回収日",
+       "かいしゅうび"
+      ]
+     ],
+     "g": "collection day"
+    },
+    "は",
+    {
+     "t": "水曜日",
+     "f": [
+      [
+       "水曜日",
+       "すいようび"
+      ]
+     ],
+     "g": "Wednesday"
+    },
+    "に",
+    "なります",
+    "。",
+    {
+     "t": "分別",
+     "f": [
+      [
+       "分別",
+       "ぶんべつ"
+      ]
+     ],
+     "g": "sorting"
+    },
+    "の",
+    {
+     "t": "方法",
+     "f": [
+      [
+       "方法",
+       "ほうほう"
+      ]
+     ],
+     "g": "method"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "ご不明",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "不明",
+       "ふめい"
+      ]
+     ],
+     "g": "unclear"
+    },
+    "な",
+    {
+     "t": "点",
+     "f": [
+      [
+       "点",
+       "てん"
+      ]
+     ],
+     "g": "point"
+    },
+    "が",
+    "あれば",
+    "、",
+    {
+     "t": "区役所",
+     "f": [
+      [
+       "区役所",
+       "くやくしょ"
+      ]
+     ],
+     "g": "ward office"
+    },
+    "の",
+    {
+     "t": "窓口",
+     "f": [
+      [
+       "窓口",
+       "まどぐち"
+      ]
+     ],
+     "g": "counter"
+    },
+    "まで",
+    {
+     "t": "お問い合わせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "問",
+       "と"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "わせ",
+       ""
+      ]
+     ],
+     "g": "inquire"
+    },
+    "ください",
+    "。",
+    "この",
+    {
+     "t": "新しい",
+     "f": [
+      [
+       "新",
+       "あたら"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "new"
+    },
+    {
+     "t": "制度",
+     "f": [
+      [
+       "制度",
+       "せいど"
+      ]
+     ],
+     "g": "system"
+    },
+    "を",
+    {
+     "t": "ご利用",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "利用",
+       "りよう"
+      ]
+     ],
+     "g": "use"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "方",
+     "f": [
+      [
+       "方",
+       "かた"
+      ]
+     ],
+     "g": "person (honorific)"
+    },
+    "は",
+    "、",
+    {
+     "t": "事前",
+     "f": [
+      [
+       "事前",
+       "じぜん"
+      ]
+     ],
+     "g": "in advance"
+    },
+    "に",
+    {
+     "t": "ご確認",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "確認",
+       "かくにん"
+      ]
+     ],
+     "g": "confirm"
+    },
+    "ください",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "通り",
+     "options": [
+      "通り",
+      "ばかり",
+      "おかげ",
+      "わけ"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-toori-ni"
+    },
+    {
+     "n": 1,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "ところが",
+      "したがって",
+      "たとえ"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "について",
+     "options": [
+      "について",
+      "にとって",
+      "によって",
+      "に対して"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-tsuite"
+    },
+    {
+     "n": 3,
+     "answer": "される",
+     "options": [
+      "される",
+      "させる",
+      "されて",
+      "させられる"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-rareru-keigo"
+    }
+   ],
+   "en": "This is a notice to all residents of Shinjuku Ward. From next month, the collection days for recyclable garbage will change. Please put out PET bottles on Tuesdays, just as before. Also, the collection day for used paper will move to Wednesday. Regarding the sorting method, if anything is unclear, please inquire at the ward office counter. Those who use this new system are asked to confirm the details in advance.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-2",
+   "level": "N3",
+   "title": "上司からの連絡メール",
+   "tokens": [
+    {
+     "t": "お疲れ様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "疲",
+       "つか"
+      ],
+      [
+       "れ",
+       ""
+      ],
+      [
+       "様",
+       "さま"
+      ]
+     ],
+     "g": "thanks for your work"
+    },
+    "です",
+    "。",
+    {
+     "t": "営業部",
+     "f": [
+      [
+       "営業部",
+       "えいぎょうぶ"
+      ]
+     ],
+     "g": "sales department"
+    },
+    "の",
+    {
+     "t": "田中",
+     "f": [
+      [
+       "田中",
+       "たなか"
+      ]
+     ],
+     "g": "Tanaka"
+    },
+    "です",
+    "。",
+    {
+     "t": "来週",
+     "f": [
+      [
+       "来週",
+       "らいしゅう"
+      ]
+     ],
+     "g": "next week"
+    },
+    "の",
+    {
+     "t": "会議",
+     "f": [
+      [
+       "会議",
+       "かいぎ"
+      ]
+     ],
+     "g": "meeting"
+    },
+    "について",
+    {
+     "t": "連絡します",
+     "f": [
+      [
+       "連絡",
+       "れんらく"
+      ],
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "get in touch"
+    },
+    "。",
+    "まず",
+    "、",
+    {
+     "t": "山田",
+     "f": [
+      [
+       "山田",
+       "やまだ"
+      ]
+     ],
+     "g": "Yamada"
+    },
+    "さん",
+    "に",
+    "、",
+    {
+     "t": "資料",
+     "f": [
+      [
+       "資料",
+       "しりょう"
+      ]
+     ],
+     "g": "materials"
+    },
+    "を",
+    {
+     "t": "準備する",
+     "f": [
+      [
+       "準備",
+       "じゅんび"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "prepare"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "伝えて",
+     "f": [
+      [
+       "伝",
+       "つた"
+      ],
+      [
+       "えて",
+       ""
+      ]
+     ],
+     "g": "tell"
+    },
+    "ください",
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "会議",
+     "f": [
+      [
+       "会議",
+       "かいぎ"
+      ]
+     ],
+     "g": "meeting"
+    },
+    "の",
+    {
+     "t": "司会",
+     "f": [
+      [
+       "司会",
+       "しかい"
+      ]
+     ],
+     "g": "chairing"
+    },
+    "は",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "I"
+    },
+    "が",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "。",
+    {
+     "t": "当日",
+     "f": [
+      [
+       "当日",
+       "とうじつ"
+      ]
+     ],
+     "g": "on the day"
+    },
+    "は",
+    {
+     "t": "少し",
+     "f": [
+      [
+       "少",
+       "すこ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "a little"
+    },
+    {
+     "t": "緊張して",
+     "f": [
+      [
+       "緊張",
+       "きんちょう"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "be nervous"
+    },
+    "います",
+    "が",
+    "、",
+    {
+     "t": "皆さん",
+     "f": [
+      [
+       "皆",
+       "みな"
+      ],
+      [
+       "さん",
+       ""
+      ]
+     ],
+     "g": "everyone"
+    },
+    "に",
+    {
+     "t": "手伝って",
+     "f": [
+      [
+       "手伝",
+       "てつだ"
+      ],
+      [
+       "って",
+       ""
+      ]
+     ],
+     "g": "help"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "ご協力",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "協力",
+       "きょうりょく"
+      ]
+     ],
+     "g": "cooperation"
+    },
+    "よろしく",
+    {
+     "t": "お願いします",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "いします",
+       ""
+      ]
+     ],
+     "g": "please"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "ように",
+     "options": [
+      "ように",
+      "ために",
+      "ようで",
+      "みたいに"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-you-ni-iu"
+    },
+    {
+     "n": 1,
+     "answer": "それから",
+     "options": [
+      "それから",
+      "ところが",
+      "なぜなら",
+      "ただし"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "させていただきます",
+     "options": [
+      "させていただきます",
+      "していただきます",
+      "させてくれます",
+      "させられます"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-sasete-itadaku"
+    },
+    {
+     "n": 3,
+     "answer": "いただけませんか",
+     "options": [
+      "いただけませんか",
+      "いただけましたか",
+      "くださいましたか",
+      "いただきましょうか"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-te-itadakemasen-ka"
+    }
+   ],
+   "en": "Thank you for your work. This is Tanaka from Sales. I'm writing about next week's meeting. First, please tell Yamada-san to prepare the materials. After that, I will chair the meeting myself. I'm a little nervous about the day, but could everyone please help me out? Thank you for your cooperation.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-3",
+   "level": "N3",
+   "title": "東京生活の日記",
+   "tokens": [
+    {
+     "t": "東京",
+     "f": [
+      [
+       "東京",
+       "とうきょう"
+      ]
+     ],
+     "g": "Tokyo"
+    },
+    "に",
+    {
+     "t": "来て",
+     "f": [
+      [
+       "来",
+       "き"
+      ],
+      [
+       "て",
+       ""
+      ]
+     ],
+     "g": "come"
+    },
+    {
+     "t": "三か月",
+     "f": [
+      [
+       "三",
+       "さん"
+      ],
+      [
+       "か",
+       ""
+      ],
+      [
+       "月",
+       "げつ"
+      ]
+     ],
+     "g": "three months"
+    },
+    "が",
+    {
+     "t": "過ぎた",
+     "f": [
+      [
+       "過",
+       "す"
+      ],
+      [
+       "ぎた",
+       ""
+      ]
+     ],
+     "g": "passed"
+    },
+    "。",
+    {
+     "t": "最初",
+     "f": [
+      [
+       "最初",
+       "さいしょ"
+      ]
+     ],
+     "g": "at first"
+    },
+    "は",
+    {
+     "t": "日本語",
+     "f": [
+      [
+       "日本語",
+       "にほんご"
+      ]
+     ],
+     "g": "Japanese"
+    },
+    "が",
+    {
+     "t": "下手で",
+     "f": [
+      [
+       "下手",
+       "へた"
+      ],
+      [
+       "で",
+       ""
+      ]
+     ],
+     "g": "bad at"
+    },
+    "、",
+    {
+     "t": "家",
+     "f": [
+      [
+       "家",
+       "いえ"
+      ]
+     ],
+     "g": "home"
+    },
+    "で",
+    "ゲーム",
+    "を",
+    "して",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    "シェアハウス",
+    "の",
+    {
+     "t": "友達",
+     "f": [
+      [
+       "友達",
+       "ともだち"
+      ]
+     ],
+     "g": "friend"
+    },
+    "に",
+    {
+     "t": "誘われて",
+     "f": [
+      [
+       "誘",
+       "さそ"
+      ],
+      [
+       "われて",
+       ""
+      ]
+     ],
+     "g": "be invited"
+    },
+    "、",
+    {
+     "t": "日本語",
+     "f": [
+      [
+       "日本語",
+       "にほんご"
+      ]
+     ],
+     "g": "Japanese"
+    },
+    {
+     "t": "教室",
+     "f": [
+      [
+       "教室",
+       "きょうしつ"
+      ]
+     ],
+     "g": "class"
+    },
+    "に",
+    {
+     "t": "通い始めた",
+     "f": [
+      [
+       "通",
+       "かよ"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "始",
+       "はじ"
+      ],
+      [
+       "めた",
+       ""
+      ]
+     ],
+     "g": "started attending"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "出会った",
+     "f": [
+      [
+       "出会",
+       "であ"
+      ],
+      [
+       "った",
+       ""
+      ]
+     ],
+     "g": "met"
+    },
+    {
+     "t": "人たち",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ],
+      [
+       "たち",
+       ""
+      ]
+     ],
+     "g": "people"
+    },
+    "の",
+    "おかげ",
+    "で",
+    "、",
+    {
+     "t": "今",
+     "f": [
+      [
+       "今",
+       "いま"
+      ]
+     ],
+     "g": "now"
+    },
+    "では",
+    {
+     "t": "会話",
+     "f": [
+      [
+       "会話",
+       "かいわ"
+      ]
+     ],
+     "g": "conversation"
+    },
+    "が",
+    {
+     "t": "楽しく",
+     "f": [
+      [
+       "楽",
+       "たの"
+      ],
+      [
+       "しく",
+       ""
+      ]
+     ],
+     "g": "fun"
+    },
+    "なってきた",
+    "。",
+    {
+     "t": "話そう",
+     "f": [
+      [
+       "話",
+       "はな"
+      ],
+      [
+       "そう",
+       ""
+      ]
+     ],
+     "g": "try to talk"
+    },
+    "とすれば",
+    "するほど",
+    "、",
+    {
+     "t": "上達する",
+     "f": [
+      [
+       "上達",
+       "じょうたつ"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "improve"
+    },
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    "やはり",
+    "、",
+    {
+     "t": "行動する",
+     "f": [
+      [
+       "行動",
+       "こうどう"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "take action"
+    },
+    "こと",
+    "が",
+    {
+     "t": "大切",
+     "f": [
+      [
+       "大切",
+       "たいせつ"
+      ]
+     ],
+     "g": "important"
+    },
+    "な",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "ばかりいた",
+     "options": [
+      "ばかりいた",
+      "かけていた",
+      "つづけていた",
+      "ところだった"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-te-bakari-iru"
+    },
+    {
+     "n": 1,
+     "answer": "ところが",
+     "options": [
+      "ところが",
+      "だから",
+      "つまり",
+      "なお"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "そこで",
+     "options": [
+      "そこで",
+      "そこに",
+      "あそこで",
+      "どこかで"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "わけだ",
+     "options": [
+      "わけだ",
+      "はずだ",
+      "わけがない",
+      "べきだ"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-wake-da"
+    },
+    {
+     "n": 4,
+     "answer": "のである",
+     "options": [
+      "のである",
+      "だろうか",
+      "かもしれない",
+      "わけがない"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "Three months have passed since I came to Tokyo. At first my Japanese was poor, and at home I did nothing but play games. However, invited by a friend from my share house, I started attending a Japanese class. Thanks to the people I met there, conversation has become fun for me now. The more I try to speak, the more I improve — that's just how it works. After all, taking action is what matters.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-4",
+   "level": "N3",
+   "title": "シェアハウス会議の記録",
+   "tokens": [
+    {
+     "t": "第三回",
+     "f": [
+      [
+       "第",
+       "だい"
+      ],
+      [
+       "三",
+       "さん"
+      ],
+      [
+       "回",
+       "かい"
+      ]
+     ],
+     "g": "third"
+    },
+    "ハウスミーティング",
+    "の",
+    {
+     "t": "記録",
+     "f": [
+      [
+       "記録",
+       "きろく"
+      ]
+     ],
+     "g": "minutes"
+    },
+    "です",
+    "。",
+    {
+     "t": "今回",
+     "f": [
+      [
+       "今回",
+       "こんかい"
+      ]
+     ],
+     "g": "this time"
+    },
+    "は",
+    "、",
+    {
+     "t": "共有",
+     "f": [
+      [
+       "共有",
+       "きょうゆう"
+      ]
+     ],
+     "g": "shared"
+    },
+    "スペース",
+    "の",
+    {
+     "t": "使い方",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "方",
+       "かた"
+      ]
+     ],
+     "g": "how to use"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "話し合いました",
+     "f": [
+      [
+       "話",
+       "はな"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "いました",
+       ""
+      ]
+     ],
+     "g": "discussed"
+    },
+    "。",
+    "まず",
+    "、",
+    "キッチン",
+    "は",
+    {
+     "t": "使った",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "った",
+       ""
+      ]
+     ],
+     "g": "used"
+    },
+    {
+     "t": "後",
+     "f": [
+      [
+       "後",
+       "あと"
+      ]
+     ],
+     "g": "after"
+    },
+    "、",
+    {
+     "t": "必ず",
+     "f": [
+      [
+       "必",
+       "かなら"
+      ],
+      [
+       "ず",
+       ""
+      ]
+     ],
+     "g": "always"
+    },
+    {
+     "t": "掃除する",
+     "f": [
+      [
+       "掃除",
+       "そうじ"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "clean"
+    },
+    "こと",
+    "に",
+    {
+     "t": "決まりました",
+     "f": [
+      [
+       "決",
+       "き"
+      ],
+      [
+       "まりました",
+       ""
+      ]
+     ],
+     "g": "was decided"
+    },
+    "。",
+    {
+     "t": "次に",
+     "f": [
+      [
+       "次",
+       "つぎ"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "next"
+    },
+    "、",
+    {
+     "t": "ゴミ出し",
+     "f": [
+      [
+       "ゴミ",
+       ""
+      ],
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "taking out the trash"
+    },
+    "は",
+    {
+     "t": "当番制",
+     "f": [
+      [
+       "当番制",
+       "とうばんせい"
+      ]
+     ],
+     "g": "rotation duty"
+    },
+    "に",
+    "します",
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "当番",
+     "f": [
+      [
+       "当番",
+       "とうばん"
+      ]
+     ],
+     "g": "person on duty"
+    },
+    "の",
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "person"
+    },
+    "が",
+    {
+     "t": "忙しい",
+     "f": [
+      [
+       "忙",
+       "いそが"
+      ],
+      [
+       "しい",
+       ""
+      ]
+     ],
+     "g": "busy"
+    },
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場合",
+       "ばあい"
+      ]
+     ],
+     "g": "case"
+    },
+    "は",
+    "、",
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "誰か",
+     "f": [
+      [
+       "誰",
+       "だれ"
+      ],
+      [
+       "か",
+       ""
+      ]
+     ],
+     "g": "someone"
+    },
+    "が",
+    {
+     "t": "出す",
+     "f": [
+      [
+       "出",
+       "だ"
+      ],
+      [
+       "す",
+       ""
+      ]
+     ],
+     "g": "take out"
+    },
+    "こと",
+    "に",
+    "します",
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    "リビング",
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    {
+     "t": "廊下",
+     "f": [
+      [
+       "廊下",
+       "ろうか"
+      ]
+     ],
+     "g": "hallway"
+    },
+    "も",
+    {
+     "t": "静かに",
+     "f": [
+      [
+       "静",
+       "しず"
+      ],
+      [
+       "かに",
+       ""
+      ]
+     ],
+     "g": "quietly"
+    },
+    {
+     "t": "使いましょう",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "いましょう",
+       ""
+      ]
+     ],
+     "g": "let's use"
+    },
+    "。",
+    {
+     "t": "以上",
+     "f": [
+      [
+       "以上",
+       "いじょう"
+      ]
+     ],
+     "g": "the above"
+    },
+    "の",
+    {
+     "t": "内容",
+     "f": [
+      [
+       "内容",
+       "ないよう"
+      ]
+     ],
+     "g": "content"
+    },
+    "は",
+    "、",
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来月",
+       "らいげつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "から",
+    {
+     "t": "実施する",
+     "f": [
+      [
+       "実施",
+       "じっし"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "implement"
+    },
+    {
+     "t": "予定",
+     "f": [
+      [
+       "予定",
+       "よてい"
+      ]
+     ],
+     "g": "plan"
+    },
+    "です",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "について",
+     "options": [
+      "について",
+      "にとって",
+      "によって",
+      "に対して"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-tsuite"
+    },
+    {
+     "n": 1,
+     "answer": "ただし",
+     "options": [
+      "ただし",
+      "だから",
+      "または",
+      "つまり"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "代わりに",
+     "options": [
+      "代わりに",
+      "ために",
+      "せいで",
+      "おかげで"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-no-kawari-ni"
+    },
+    {
+     "n": 3,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "なぜなら",
+      "たとえ"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "はもちろん",
+     "options": [
+      "はもちろん",
+      "どころか",
+      "にとって",
+      "について"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-wa-mochiron"
+    }
+   ],
+   "en": "These are the minutes of the third house meeting. This time, we discussed how to use the shared spaces. First, it was decided that the kitchen must always be cleaned after use. Next, taking out the trash will be done on a rotation. However, if the person on duty is busy, someone else will take it out in their place. Also, not only the living room but the hallway too — let's keep them quiet. The above will take effect from next month.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-5",
+   "level": "N3",
+   "title": "応募の自己紹介",
+   "tokens": [
+    "はじめまして",
+    "。",
+    {
+     "t": "田中",
+     "f": [
+      [
+       "田中",
+       "たなか"
+      ]
+     ],
+     "g": "Tanaka"
+    },
+    "と",
+    {
+     "t": "申します",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "します",
+       ""
+      ]
+     ],
+     "g": "am called (humble)"
+    },
+    "。",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "I"
+    },
+    "は",
+    {
+     "t": "大学",
+     "f": [
+      [
+       "大学",
+       "だいがく"
+      ]
+     ],
+     "g": "university"
+    },
+    "で",
+    "デザイン",
+    "を",
+    {
+     "t": "勉強し",
+     "f": [
+      [
+       "勉強",
+       "べんきょう"
+      ],
+      [
+       "し",
+       ""
+      ]
+     ],
+     "g": "study"
+    },
+    "、",
+    {
+     "t": "卒業後",
+     "f": [
+      [
+       "卒業",
+       "そつぎょう"
+      ],
+      [
+       "後",
+       "ご"
+      ]
+     ],
+     "g": "after graduation"
+    },
+    "は",
+    {
+     "t": "広告",
+     "f": [
+      [
+       "広告",
+       "こうこく"
+      ]
+     ],
+     "g": "advertising"
+    },
+    {
+     "t": "会社",
+     "f": [
+      [
+       "会社",
+       "かいしゃ"
+      ]
+     ],
+     "g": "company"
+    },
+    "で",
+    "デザイナー",
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "三年間",
+     "f": [
+      [
+       "三",
+       "さん"
+      ],
+      [
+       "年間",
+       "ねんかん"
+      ]
+     ],
+     "g": "for three years"
+    },
+    {
+     "t": "働きました",
+     "f": [
+      [
+       "働",
+       "はたら"
+      ],
+      [
+       "きました",
+       ""
+      ]
+     ],
+     "g": "worked"
+    },
+    "。",
+    "その",
+    {
+     "t": "経験",
+     "f": [
+      [
+       "経験",
+       "けいけん"
+      ]
+     ],
+     "g": "experience"
+    },
+    "を",
+    {
+     "t": "生かして",
+     "f": [
+      [
+       "生",
+       "い"
+      ],
+      [
+       "かして",
+       ""
+      ]
+     ],
+     "g": "make use of"
+    },
+    "、",
+    {
+     "t": "御社",
+     "f": [
+      [
+       "御社",
+       "おんしゃ"
+      ]
+     ],
+     "g": "your company (honorific)"
+    },
+    "で",
+    "さらに",
+    {
+     "t": "成長したい",
+     "f": [
+      [
+       "成長",
+       "せいちょう"
+      ],
+      [
+       "したい",
+       ""
+      ]
+     ],
+     "g": "want to grow"
+    },
+    "と",
+    {
+     "t": "考えております",
+     "f": [
+      [
+       "考",
+       "かんが"
+      ],
+      [
+       "えております",
+       ""
+      ]
+     ],
+     "g": "am thinking (humble)"
+    },
+    "。",
+    {
+     "t": "日本",
+     "f": [
+      [
+       "日本",
+       "にほん"
+      ]
+     ],
+     "g": "Japan"
+    },
+    "で",
+    {
+     "t": "働く",
+     "f": [
+      [
+       "働",
+       "はたら"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "work"
+    },
+    "のは",
+    {
+     "t": "初めて",
+     "f": [
+      [
+       "初",
+       "はじ"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "first time"
+    },
+    "です",
+    "が",
+    "、",
+    {
+     "t": "日本語",
+     "f": [
+      [
+       "日本語",
+       "にほんご"
+      ]
+     ],
+     "g": "Japanese"
+    },
+    "の",
+    {
+     "t": "勉強",
+     "f": [
+      [
+       "勉強",
+       "べんきょう"
+      ]
+     ],
+     "g": "study"
+    },
+    "も",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "まいりました",
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "お客様",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "客様",
+       "きゃくさま"
+      ]
+     ],
+     "g": "customers"
+    },
+    "とも",
+    {
+     "t": "問題なく",
+     "f": [
+      [
+       "問題",
+       "もんだい"
+      ],
+      [
+       "なく",
+       ""
+      ]
+     ],
+     "g": "without trouble"
+    },
+    {
+     "t": "話せる",
+     "f": [
+      [
+       "話",
+       "はな"
+      ],
+      [
+       "せる",
+       ""
+      ]
+     ],
+     "g": "can speak"
+    },
+    "と",
+    {
+     "t": "思います",
+     "f": [
+      [
+       "思",
+       "おも"
+      ],
+      [
+       "います",
+       ""
+      ]
+     ],
+     "g": "think"
+    },
+    "。",
+    "ぜひ",
+    "、",
+    {
+     "t": "面接",
+     "f": [
+      [
+       "面接",
+       "めんせつ"
+      ]
+     ],
+     "g": "interview"
+    },
+    "の",
+    {
+     "t": "機会",
+     "f": [
+      [
+       "機会",
+       "きかい"
+      ]
+     ],
+     "g": "opportunity"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    "どうぞ",
+    "よろしく",
+    {
+     "t": "お願いいたします",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "いいたします",
+       ""
+      ]
+     ],
+     "g": "thank you (humble)"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "として",
+     "options": [
+      "として",
+      "にとって",
+      "について",
+      "に対して"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-to-shite"
+    },
+    {
+     "n": 1,
+     "answer": "続けて",
+     "options": [
+      "続けて",
+      "出して",
+      "切って",
+      "直して"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-tsuzukeru"
+    },
+    {
+     "n": 2,
+     "answer": "そのため",
+     "options": [
+      "そのため",
+      "ところが",
+      "一方",
+      "たとえ"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "いただけませんか",
+     "options": [
+      "いただけませんか",
+      "いただきました",
+      "くださいました",
+      "いただこうか"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-te-itadakemasen-ka"
+    }
+   ],
+   "en": "Nice to meet you. My name is Tanaka. I studied design at university, and after graduating I worked for three years as a designer at an advertising company. Making use of that experience, I hope to grow further at your company. Although it is my first time working in Japan, I have kept studying Japanese. For that reason, I believe I can speak with customers without trouble. Please, could you kindly grant me the chance of an interview? Thank you very much.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-6",
+   "level": "N3",
+   "title": "下北沢の夏祭り",
+   "tokens": [
+    {
+     "t": "下北沢",
+     "f": [
+      [
+       "下北沢",
+       "しもきたざわ"
+      ]
+     ],
+     "g": "Shimokitazawa"
+    },
+    {
+     "t": "商店街",
+     "f": [
+      [
+       "商店街",
+       "しょうてんがい"
+      ]
+     ],
+     "g": "shopping street"
+    },
+    "の",
+    {
+     "t": "発表",
+     "f": [
+      [
+       "発表",
+       "はっぴょう"
+      ]
+     ],
+     "g": "announcement"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "今週末",
+     "f": [
+      [
+       "今週末",
+       "こんしゅうまつ"
+      ]
+     ],
+     "g": "this weekend"
+    },
+    "に",
+    {
+     "t": "恒例",
+     "f": [
+      [
+       "恒例",
+       "こうれい"
+      ]
+     ],
+     "g": "customary"
+    },
+    "の",
+    {
+     "t": "夏祭り",
+     "f": [
+      [
+       "夏",
+       "なつ"
+      ],
+      [
+       "祭",
+       "まつ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "summer festival"
+    },
+    "が",
+    {
+     "t": "開かれる",
+     "f": [
+      [
+       "開",
+       "ひら"
+      ],
+      [
+       "かれる",
+       ""
+      ]
+     ],
+     "g": "be held"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "。",
+    {
+     "t": "祭り",
+     "f": [
+      [
+       "祭",
+       "まつ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "festival"
+    },
+    "では",
+    "、",
+    {
+     "t": "地元",
+     "f": [
+      [
+       "地元",
+       "じもと"
+      ]
+     ],
+     "g": "local"
+    },
+    "の",
+    {
+     "t": "学生",
+     "f": [
+      [
+       "学生",
+       "がくせい"
+      ]
+     ],
+     "g": "students"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    {
+     "t": "作られた",
+     "f": [
+      [
+       "作",
+       "つく"
+      ],
+      [
+       "られた",
+       ""
+      ]
+     ],
+     "g": "made"
+    },
+    {
+     "t": "屋台",
+     "f": [
+      [
+       "屋台",
+       "やたい"
+      ]
+     ],
+     "g": "food stalls"
+    },
+    "が",
+    {
+     "t": "並ぶ",
+     "f": [
+      [
+       "並",
+       "なら"
+      ],
+      [
+       "ぶ",
+       ""
+      ]
+     ],
+     "g": "line up"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "駅前",
+     "f": [
+      [
+       "駅前",
+       "えきまえ"
+      ]
+     ],
+     "g": "in front of the station"
+    },
+    "の",
+    {
+     "t": "広場",
+     "f": [
+      [
+       "広場",
+       "ひろば"
+      ]
+     ],
+     "g": "plaza"
+    },
+    "では",
+    "、",
+    {
+     "t": "盆踊り",
+     "f": [
+      [
+       "盆",
+       "ぼん"
+      ],
+      [
+       "踊",
+       "おど"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "Bon dance"
+    },
+    {
+     "t": "大会",
+     "f": [
+      [
+       "大会",
+       "たいかい"
+      ]
+     ],
+     "g": "event"
+    },
+    "も",
+    {
+     "t": "行われる",
+     "f": [
+      [
+       "行",
+       "おこな"
+      ],
+      [
+       "われる",
+       ""
+      ]
+     ],
+     "g": "be held"
+    },
+    {
+     "t": "予定",
+     "f": [
+      [
+       "予定",
+       "よてい"
+      ]
+     ],
+     "g": "planned"
+    },
+    "だ",
+    "。",
+    {
+     "t": "地域",
+     "f": [
+      [
+       "地域",
+       "ちいき"
+      ]
+     ],
+     "g": "community"
+    },
+    "の",
+    {
+     "t": "人々",
+     "f": [
+      [
+       "人々",
+       "ひとびと"
+      ]
+     ],
+     "g": "people"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "、",
+    "この",
+    {
+     "t": "祭り",
+     "f": [
+      [
+       "祭",
+       "まつ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "festival"
+    },
+    "は",
+    {
+     "t": "一年",
+     "f": [
+      [
+       "一年",
+       "いちねん"
+      ]
+     ],
+     "g": "one year"
+    },
+    "で",
+    {
+     "t": "最も",
+     "f": [
+      [
+       "最",
+       "もっと"
+      ],
+      [
+       "も",
+       ""
+      ]
+     ],
+     "g": "most"
+    },
+    {
+     "t": "楽しみな",
+     "f": [
+      [
+       "楽",
+       "たの"
+      ],
+      [
+       "しみな",
+       ""
+      ]
+     ],
+     "g": "looked-forward-to"
+    },
+    {
+     "t": "行事",
+     "f": [
+      [
+       "行事",
+       "ぎょうじ"
+      ]
+     ],
+     "g": "event"
+    },
+    "の",
+    {
+     "t": "一つ",
+     "f": [
+      [
+       "一",
+       "ひと"
+      ],
+      [
+       "つ",
+       ""
+      ]
+     ],
+     "g": "one"
+    },
+    "である",
+    "。",
+    "なお",
+    "、",
+    {
+     "t": "雨",
+     "f": [
+      [
+       "雨",
+       "あめ"
+      ]
+     ],
+     "g": "rain"
+    },
+    "の",
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場合",
+       "ばあい"
+      ]
+     ],
+     "g": "case"
+    },
+    "は",
+    "、",
+    {
+     "t": "翌日",
+     "f": [
+      [
+       "翌日",
+       "よくじつ"
+      ]
+     ],
+     "g": "the next day"
+    },
+    "に",
+    {
+     "t": "延期される",
+     "f": [
+      [
+       "延期",
+       "えんき"
+      ],
+      [
+       "される",
+       ""
+      ]
+     ],
+     "g": "be postponed"
+    },
+    "とのことだ",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "によると",
+     "options": [
+      "によると",
+      "によって",
+      "について",
+      "にとって"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-yoru-to"
+    },
+    {
+     "n": 1,
+     "answer": "ということだ",
+     "options": [
+      "ということだ",
+      "というものだ",
+      "というわけだ",
+      "というはずだ"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-to-iu-koto"
+    },
+    {
+     "n": 2,
+     "answer": "によって",
+     "options": [
+      "によって",
+      "にとって",
+      "について",
+      "によると"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-yotte"
+    },
+    {
+     "n": 3,
+     "answer": "一方",
+     "options": [
+      "一方",
+      "だから",
+      "つまり",
+      "なお"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 4,
+     "answer": "にとって",
+     "options": [
+      "にとって",
+      "について",
+      "によって",
+      "に対して"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-totte"
+    }
+   ],
+   "en": "According to the Shimokitazawa shopping street's announcement, the customary summer festival will be held this weekend. At the festival, food stalls built by local students will line the street. Meanwhile, at the plaza in front of the station, a Bon dance event is also planned. For the people of the community, this festival is one of the most looked-forward-to events of the year. Note that, in case of rain, it will be postponed to the following day.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-7",
+   "level": "N3",
+   "title": "設備点検のお知らせ",
+   "tokens": [
+    {
+     "t": "入居者",
+     "f": [
+      [
+       "入居者",
+       "にゅうきょしゃ"
+      ]
+     ],
+     "g": "tenants"
+    },
+    "の",
+    {
+     "t": "皆様",
+     "f": [
+      [
+       "皆様",
+       "みなさま"
+      ]
+     ],
+     "g": "everyone"
+    },
+    "へ",
+    "。",
+    {
+     "t": "建物",
+     "f": [
+      [
+       "建物",
+       "たてもの"
+      ]
+     ],
+     "g": "building"
+    },
+    "の",
+    {
+     "t": "設備",
+     "f": [
+      [
+       "設備",
+       "せつび"
+      ]
+     ],
+     "g": "facilities"
+    },
+    {
+     "t": "点検",
+     "f": [
+      [
+       "点検",
+       "てんけん"
+      ]
+     ],
+     "g": "inspection"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    {
+     "t": "お知らせ",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "知",
+       "し"
+      ],
+      [
+       "らせ",
+       ""
+      ]
+     ],
+     "g": "notify"
+    },
+    "いたします",
+    "。",
+    {
+     "t": "来週",
+     "f": [
+      [
+       "来週",
+       "らいしゅう"
+      ]
+     ],
+     "g": "next week"
+    },
+    "の",
+    {
+     "t": "水曜日",
+     "f": [
+      [
+       "水曜日",
+       "すいようび"
+      ]
+     ],
+     "g": "Wednesday"
+    },
+    "、",
+    {
+     "t": "午前",
+     "f": [
+      [
+       "午前",
+       "ごぜん"
+      ]
+     ],
+     "g": "a.m."
+    },
+    {
+     "t": "九時",
+     "f": [
+      [
+       "九",
+       "く"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "9 o'clock"
+    },
+    "から",
+    {
+     "t": "午後",
+     "f": [
+      [
+       "午後",
+       "ごご"
+      ]
+     ],
+     "g": "p.m."
+    },
+    {
+     "t": "三時",
+     "f": [
+      [
+       "三",
+       "さん"
+      ],
+      [
+       "時",
+       "じ"
+      ]
+     ],
+     "g": "3 o'clock"
+    },
+    "まで",
+    "、",
+    {
+     "t": "各部屋",
+     "f": [
+      [
+       "各",
+       "かく"
+      ],
+      [
+       "部屋",
+       "へや"
+      ]
+     ],
+     "g": "each room"
+    },
+    "の",
+    {
+     "t": "給湯器",
+     "f": [
+      [
+       "給湯器",
+       "きゅうとうき"
+      ]
+     ],
+     "g": "water heater"
+    },
+    "を",
+    {
+     "t": "点検いたします",
+     "f": [
+      [
+       "点検",
+       "てんけん"
+      ],
+      [
+       "いたします",
+       ""
+      ]
+     ],
+     "g": "will inspect (humble)"
+    },
+    "。",
+    {
+     "t": "作業中",
+     "f": [
+      [
+       "作業中",
+       "さぎょうちゅう"
+      ]
+     ],
+     "g": "during the work"
+    },
+    "は",
+    "、",
+    {
+     "t": "一時的に",
+     "f": [
+      [
+       "一時的",
+       "いちじてき"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "temporarily"
+    },
+    {
+     "t": "お湯",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "湯",
+       "ゆ"
+      ]
+     ],
+     "g": "hot water"
+    },
+    "が",
+    {
+     "t": "使えなく",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "えなく",
+       ""
+      ]
+     ],
+     "g": "unavailable"
+    },
+    "なります",
+    "。",
+    "つきましては",
+    "、",
+    {
+     "t": "貴重品",
+     "f": [
+      [
+       "貴重品",
+       "きちょうひん"
+      ]
+     ],
+     "g": "valuables"
+    },
+    "を",
+    {
+     "t": "安全な",
+     "f": [
+      [
+       "安全",
+       "あんぜん"
+      ],
+      [
+       "な",
+       ""
+      ]
+     ],
+     "g": "safe"
+    },
+    {
+     "t": "場所",
+     "f": [
+      [
+       "場所",
+       "ばしょ"
+      ]
+     ],
+     "g": "place"
+    },
+    "に",
+    {
+     "t": "移動する",
+     "f": [
+      [
+       "移動",
+       "いどう"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "move"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    {
+     "t": "お願いいたします",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "いいたします",
+       ""
+      ]
+     ],
+     "g": "we ask (humble)"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "当日",
+     "f": [
+      [
+       "当日",
+       "とうじつ"
+      ]
+     ],
+     "g": "on the day"
+    },
+    {
+     "t": "ご在宅",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "在宅",
+       "ざいたく"
+      ]
+     ],
+     "g": "at home (honorific)"
+    },
+    "でない",
+    {
+     "t": "場合",
+     "f": [
+      [
+       "場合",
+       "ばあい"
+      ]
+     ],
+     "g": "case"
+    },
+    "は",
+    "、",
+    {
+     "t": "管理会社",
+     "f": [
+      [
+       "管理",
+       "かんり"
+      ],
+      [
+       "会社",
+       "がいしゃ"
+      ]
+     ],
+     "g": "management company"
+    },
+    "が",
+    {
+     "t": "合鍵",
+     "f": [
+      [
+       "合鍵",
+       "あいかぎ"
+      ]
+     ],
+     "g": "spare key"
+    },
+    "で",
+    {
+     "t": "入室いたします",
+     "f": [
+      [
+       "入室",
+       "にゅうしつ"
+      ],
+      [
+       "いたします",
+       ""
+      ]
+     ],
+     "g": "will enter (humble)"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "、",
+    {
+     "t": "事前",
+     "f": [
+      [
+       "事前",
+       "じぜん"
+      ]
+     ],
+     "g": "advance"
+    },
+    "の",
+    {
+     "t": "ご連絡",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "連絡",
+       "れんらく"
+      ]
+     ],
+     "g": "notice"
+    },
+    "がない",
+    {
+     "t": "部屋",
+     "f": [
+      [
+       "部屋",
+       "へや"
+      ]
+     ],
+     "g": "room"
+    },
+    "には",
+    {
+     "t": "立ち入りません",
+     "f": [
+      [
+       "立",
+       "た"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "入",
+       "い"
+      ],
+      [
+       "りません",
+       ""
+      ]
+     ],
+     "g": "will not enter"
+    },
+    "。",
+    {
+     "t": "ご協力",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "協力",
+       "きょうりょく"
+      ]
+     ],
+     "g": "cooperation"
+    },
+    "を",
+    {
+     "t": "お願いいたします",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "いいたします",
+       ""
+      ]
+     ],
+     "g": "please (humble)"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "について",
+     "options": [
+      "について",
+      "によって",
+      "に対して",
+      "にとって"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-ni-tsuite"
+    },
+    {
+     "n": 1,
+     "answer": "ように",
+     "options": [
+      "ように",
+      "ために",
+      "ような",
+      "そうに"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-you-ni-iu"
+    },
+    {
+     "n": 2,
+     "answer": "なお",
+     "options": [
+      "なお",
+      "しかし",
+      "なぜなら",
+      "たとえ"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "ただし",
+     "options": [
+      "ただし",
+      "だから",
+      "つまり",
+      "または"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "To all tenants. We are writing to inform you about an inspection of the building's facilities. Next Wednesday, from 9 a.m. to 3 p.m., we will inspect the water heater in each room. During the work, hot water will be temporarily unavailable. Accordingly, we ask that you move your valuables to a safe place. Also, if you are not at home on the day, the management company will enter using a spare key. However, we will not enter rooms from which we have received no prior notice. Thank you for your cooperation.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-8",
+   "level": "N3",
+   "title": "お詫びのメール",
+   "tokens": [
+    {
+     "t": "先日",
+     "f": [
+      [
+       "先日",
+       "せんじつ"
+      ]
+     ],
+     "g": "the other day"
+    },
+    "は",
+    "、",
+    {
+     "t": "ご迷惑",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "迷惑",
+       "めいわく"
+      ]
+     ],
+     "g": "trouble"
+    },
+    "を",
+    "おかけして",
+    {
+     "t": "誠に",
+     "f": [
+      [
+       "誠",
+       "まこと"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "truly"
+    },
+    {
+     "t": "申し訳",
+     "f": [
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "訳",
+       "わけ"
+      ]
+     ],
+     "g": "apology"
+    },
+    "ございませんでした",
+    "。",
+    {
+     "t": "納品",
+     "f": [
+      [
+       "納品",
+       "のうひん"
+      ]
+     ],
+     "g": "delivery"
+    },
+    "が",
+    {
+     "t": "遅れた",
+     "f": [
+      [
+       "遅",
+       "おく"
+      ],
+      [
+       "れた",
+       ""
+      ]
+     ],
+     "g": "was late"
+    },
+    "のは",
+    "、",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "my"
+    },
+    "の",
+    {
+     "t": "確認",
+     "f": [
+      [
+       "確認",
+       "かくにん"
+      ]
+     ],
+     "g": "checking"
+    },
+    {
+     "t": "不足",
+     "f": [
+      [
+       "不足",
+       "ぶそく"
+      ]
+     ],
+     "g": "insufficiency"
+    },
+    "が",
+    {
+     "t": "原因",
+     "f": [
+      [
+       "原因",
+       "げんいん"
+      ]
+     ],
+     "g": "cause"
+    },
+    "です",
+    "。",
+    {
+     "t": "決して",
+     "f": [
+      [
+       "決",
+       "けっ"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "by no means"
+    },
+    "、",
+    {
+     "t": "軽く",
+     "f": [
+      [
+       "軽",
+       "かる"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "lightly"
+    },
+    {
+     "t": "考えていた",
+     "f": [
+      [
+       "考",
+       "かんが"
+      ],
+      [
+       "えていた",
+       ""
+      ]
+     ],
+     "g": "was treating"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "ご相談",
+     "f": [
+      [
+       "ご",
+       ""
+      ],
+      [
+       "相談",
+       "そうだん"
+      ]
+     ],
+     "g": "consultation"
+    },
+    "も",
+    "せずに",
+    {
+     "t": "変更",
+     "f": [
+      [
+       "変更",
+       "へんこう"
+      ]
+     ],
+     "g": "change"
+    },
+    "を",
+    {
+     "t": "進めて",
+     "f": [
+      [
+       "進",
+       "すす"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "push ahead"
+    },
+    "しまった",
+    {
+     "t": "点",
+     "f": [
+      [
+       "点",
+       "てん"
+      ]
+     ],
+     "g": "point"
+    },
+    "も",
+    "、",
+    {
+     "t": "深く",
+     "f": [
+      [
+       "深",
+       "ふか"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "deeply"
+    },
+    {
+     "t": "反省しております",
+     "f": [
+      [
+       "反省",
+       "はんせい"
+      ],
+      [
+       "しております",
+       ""
+      ]
+     ],
+     "g": "am reflecting (humble)"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "改めて",
+     "f": [
+      [
+       "改",
+       "あらた"
+      ],
+      [
+       "めて",
+       ""
+      ]
+     ],
+     "g": "again"
+    },
+    {
+     "t": "打ち合わせ",
+     "f": [
+      [
+       "打",
+       "う"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "合",
+       "あ"
+      ],
+      [
+       "わせ",
+       ""
+      ]
+     ],
+     "g": "meeting"
+    },
+    "の",
+    {
+     "t": "時間",
+     "f": [
+      [
+       "時間",
+       "じかん"
+      ]
+     ],
+     "g": "time"
+    },
+    "を",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "今後",
+     "f": [
+      [
+       "今後",
+       "こんご"
+      ]
+     ],
+     "g": "from now on"
+    },
+    "は",
+    "、",
+    {
+     "t": "同じ",
+     "f": [
+      [
+       "同",
+       "おな"
+      ],
+      [
+       "じ",
+       ""
+      ]
+     ],
+     "g": "same"
+    },
+    "ミス",
+    "を",
+    {
+     "t": "繰り返さない",
+     "f": [
+      [
+       "繰",
+       "く"
+      ],
+      [
+       "り",
+       ""
+      ],
+      [
+       "返",
+       "かえ"
+      ],
+      [
+       "さない",
+       ""
+      ]
+     ],
+     "g": "not repeat"
+    },
+    "よう",
+    "、",
+    {
+     "t": "確認",
+     "f": [
+      [
+       "確認",
+       "かくにん"
+      ]
+     ],
+     "g": "checking"
+    },
+    {
+     "t": "作業",
+     "f": [
+      [
+       "作業",
+       "さぎょう"
+      ]
+     ],
+     "g": "work"
+    },
+    "を",
+    {
+     "t": "徹底いたします",
+     "f": [
+      [
+       "徹底",
+       "てってい"
+      ],
+      [
+       "いたします",
+       ""
+      ]
+     ],
+     "g": "will be thorough (humble)"
+    },
+    "。",
+    {
+     "t": "何卒",
+     "f": [
+      [
+       "何卒",
+       "なにとぞ"
+      ]
+     ],
+     "g": "please (formal)"
+    },
+    "よろしく",
+    {
+     "t": "お願い申し上げます",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "願",
+       "ねが"
+      ],
+      [
+       "い",
+       ""
+      ],
+      [
+       "申",
+       "もう"
+      ],
+      [
+       "し",
+       ""
+      ],
+      [
+       "上",
+       "あ"
+      ],
+      [
+       "げます",
+       ""
+      ]
+     ],
+     "g": "humbly ask"
+    },
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "わけではありません",
+     "options": [
+      "わけではありません",
+      "はずがありません",
+      "わけにはいきません",
+      "にちがいありません"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-wake-de-wa-nai"
+    },
+    {
+     "n": 1,
+     "answer": "また",
+     "options": [
+      "また",
+      "しかし",
+      "つまり",
+      "なぜなら"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 2,
+     "answer": "そのため",
+     "options": [
+      "そのため",
+      "ところが",
+      "たとえ",
+      "一方"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "いただけませんか",
+     "options": [
+      "いただけませんか",
+      "いただきました",
+      "くださいました",
+      "いただこうか"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-te-itadakemasen-ka"
+    }
+   ],
+   "en": "I am truly sorry for the trouble I caused the other day. The delay in delivery was due to my own insufficient checking. It is by no means that I took the matter lightly. Also, I deeply regret having pushed ahead with changes without even consulting you. For that reason, could you kindly give me some time to meet again? From now on, so as not to repeat the same mistake, I will be thorough in my checking work. Thank you very much.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-9",
+   "level": "N3",
+   "title": "キャッシュレスについての意見",
+   "tokens": [
+    {
+     "t": "最近",
+     "f": [
+      [
+       "最近",
+       "さいきん"
+      ]
+     ],
+     "g": "recently"
+    },
+    "、",
+    {
+     "t": "東京",
+     "f": [
+      [
+       "東京",
+       "とうきょう"
+      ]
+     ],
+     "g": "Tokyo"
+    },
+    "では",
+    "キャッシュレス",
+    {
+     "t": "決済",
+     "f": [
+      [
+       "決済",
+       "けっさい"
+      ]
+     ],
+     "g": "payment"
+    },
+    "が",
+    "ますます",
+    {
+     "t": "普及している",
+     "f": [
+      [
+       "普及",
+       "ふきゅう"
+      ],
+      [
+       "している",
+       ""
+      ]
+     ],
+     "g": "is spreading"
+    },
+    "。",
+    {
+     "t": "確かに",
+     "f": [
+      [
+       "確",
+       "たし"
+      ],
+      [
+       "かに",
+       ""
+      ]
+     ],
+     "g": "certainly"
+    },
+    "、",
+    {
+     "t": "現金",
+     "f": [
+      [
+       "現金",
+       "げんきん"
+      ]
+     ],
+     "g": "cash"
+    },
+    "を",
+    {
+     "t": "持ち歩かなくて",
+     "f": [
+      [
+       "持",
+       "も"
+      ],
+      [
+       "ち",
+       ""
+      ],
+      [
+       "歩",
+       "ある"
+      ],
+      [
+       "かなくて",
+       ""
+      ]
+     ],
+     "g": "not carry around"
+    },
+    "よい",
+    "ので",
+    {
+     "t": "便利だ",
+     "f": [
+      [
+       "便利",
+       "べんり"
+      ],
+      [
+       "だ",
+       ""
+      ]
+     ],
+     "g": "convenient"
+    },
+    "。",
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "私",
+     "f": [
+      [
+       "私",
+       "わたし"
+      ]
+     ],
+     "g": "I"
+    },
+    "は",
+    "すべて",
+    "の",
+    {
+     "t": "店",
+     "f": [
+      [
+       "店",
+       "みせ"
+      ]
+     ],
+     "g": "shops"
+    },
+    "が",
+    "すぐに",
+    {
+     "t": "現金",
+     "f": [
+      [
+       "現金",
+       "げんきん"
+      ]
+     ],
+     "g": "cash"
+    },
+    "を",
+    "やめる",
+    {
+     "blank": true,
+     "n": 1
+    },
+    "とは",
+    {
+     "t": "思わない",
+     "f": [
+      [
+       "思",
+       "おも"
+      ],
+      [
+       "わない",
+       ""
+      ]
+     ],
+     "g": "don't think"
+    },
+    "。",
+    {
+     "t": "便利",
+     "f": [
+      [
+       "便利",
+       "べんり"
+      ]
+     ],
+     "g": "convenient"
+    },
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "現金",
+     "f": [
+      [
+       "現金",
+       "げんきん"
+      ]
+     ],
+     "g": "cash"
+    },
+    "しか",
+    {
+     "t": "使えない",
+     "f": [
+      [
+       "使",
+       "つか"
+      ],
+      [
+       "えない",
+       ""
+      ]
+     ],
+     "g": "can only use"
+    },
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "people"
+    },
+    "を",
+    {
+     "t": "無視して",
+     "f": [
+      [
+       "無視",
+       "むし"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "ignore"
+    },
+    "よい",
+    {
+     "blank": true,
+     "n": 3
+    },
+    "。",
+    {
+     "t": "お年寄り",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "年寄",
+       "としよ"
+      ],
+      [
+       "り",
+       ""
+      ]
+     ],
+     "g": "the elderly"
+    },
+    "の",
+    {
+     "t": "中",
+     "f": [
+      [
+       "中",
+       "なか"
+      ]
+     ],
+     "g": "among"
+    },
+    "には",
+    "、",
+    "スマートフォン",
+    "を",
+    {
+     "t": "持っていない",
+     "f": [
+      [
+       "持",
+       "も"
+      ],
+      [
+       "っていない",
+       ""
+      ]
+     ],
+     "g": "don't own"
+    },
+    {
+     "t": "人",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ]
+     ],
+     "g": "people"
+    },
+    "も",
+    {
+     "t": "多い",
+     "f": [
+      [
+       "多",
+       "おお"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "many"
+    },
+    "からだ",
+    "。",
+    "そのような",
+    {
+     "t": "人たち",
+     "f": [
+      [
+       "人",
+       "ひと"
+      ],
+      [
+       "たち",
+       ""
+      ]
+     ],
+     "g": "people"
+    },
+    "の",
+    {
+     "t": "不便",
+     "f": [
+      [
+       "不便",
+       "ふべん"
+      ]
+     ],
+     "g": "inconvenience"
+    },
+    "を",
+    {
+     "t": "無視する",
+     "f": [
+      [
+       "無視",
+       "むし"
+      ],
+      [
+       "する",
+       ""
+      ]
+     ],
+     "g": "ignore"
+    },
+    {
+     "blank": true,
+     "n": 4
+    },
+    "。",
+    {
+     "t": "技術",
+     "f": [
+      [
+       "技術",
+       "ぎじゅつ"
+      ]
+     ],
+     "g": "technology"
+    },
+    "の",
+    {
+     "t": "進歩",
+     "f": [
+      [
+       "進歩",
+       "しんぽ"
+      ]
+     ],
+     "g": "progress"
+    },
+    "に対して",
+    "、",
+    {
+     "t": "社会",
+     "f": [
+      [
+       "社会",
+       "しゃかい"
+      ]
+     ],
+     "g": "society"
+    },
+    "は",
+    "もっと",
+    {
+     "t": "慎重に",
+     "f": [
+      [
+       "慎重",
+       "しんちょう"
+      ],
+      [
+       "に",
+       ""
+      ]
+     ],
+     "g": "cautious"
+    },
+    "なる",
+    "べきである",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "しかし",
+     "options": [
+      "しかし",
+      "だから",
+      "つまり",
+      "例えば"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 1,
+     "answer": "べきだ",
+     "options": [
+      "べきだ",
+      "はずだ",
+      "わけだ",
+      "ものだ"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-beki"
+    },
+    {
+     "n": 2,
+     "answer": "だからといって",
+     "options": [
+      "だからといって",
+      "というものだ",
+      "からには",
+      "だけあって"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-kara-to-itte"
+    },
+    {
+     "n": 3,
+     "answer": "わけではない",
+     "options": [
+      "わけではない",
+      "わけにはいかない",
+      "はずがない",
+      "にちがいない"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-wake-de-wa-nai"
+    },
+    {
+     "n": 4,
+     "answer": "わけにはいかない",
+     "options": [
+      "わけにはいかない",
+      "わけではない",
+      "わけがない",
+      "はずがない"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-wake-ni-wa-ikanai"
+    }
+   ],
+   "en": "Recently, cashless payment is spreading more and more in Tokyo. Certainly, it is convenient because you don't have to carry cash around. However, I do not think that every shop should abolish cash right away. Just because it is convenient does not mean it is acceptable to ignore people who can only use cash. This is because, among the elderly, there are many who do not own a smartphone. We cannot simply ignore the inconvenience of such people. In the face of technological progress, society ought to be more cautious.",
+   "confidence": "high"
+  },
+  {
+   "id": "p-n3-10",
+   "level": "N3",
+   "title": "京都旅行の相談",
+   "tokens": [
+    {
+     "t": "来月",
+     "f": [
+      [
+       "来月",
+       "らいげつ"
+      ]
+     ],
+     "g": "next month"
+    },
+    "の",
+    {
+     "t": "京都",
+     "f": [
+      [
+       "京都",
+       "きょうと"
+      ]
+     ],
+     "g": "Kyoto"
+    },
+    {
+     "t": "旅行",
+     "f": [
+      [
+       "旅行",
+       "りょこう"
+      ]
+     ],
+     "g": "trip"
+    },
+    "の",
+    {
+     "t": "件",
+     "f": [
+      [
+       "件",
+       "けん"
+      ]
+     ],
+     "g": "matter"
+    },
+    "だけど",
+    "、",
+    {
+     "t": "計画",
+     "f": [
+      [
+       "計画",
+       "けいかく"
+      ]
+     ],
+     "g": "plan"
+    },
+    "を",
+    {
+     "t": "立てて",
+     "f": [
+      [
+       "立",
+       "た"
+      ],
+      [
+       "てて",
+       ""
+      ]
+     ],
+     "g": "put together"
+    },
+    "みたよ",
+    "。",
+    "まず",
+    "、",
+    {
+     "t": "朝早い",
+     "f": [
+      [
+       "朝",
+       "あさ"
+      ],
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "い",
+       ""
+      ]
+     ],
+     "g": "early-morning"
+    },
+    {
+     "t": "新幹線",
+     "f": [
+      [
+       "新幹線",
+       "しんかんせん"
+      ]
+     ],
+     "g": "bullet train"
+    },
+    "に",
+    {
+     "t": "乗る",
+     "f": [
+      [
+       "乗",
+       "の"
+      ],
+      [
+       "る",
+       ""
+      ]
+     ],
+     "g": "ride"
+    },
+    "ことにしよう",
+    "。",
+    {
+     "t": "混まない",
+     "f": [
+      [
+       "混",
+       "こ"
+      ],
+      [
+       "まない",
+       ""
+      ]
+     ],
+     "g": "not get crowded"
+    },
+    {
+     "blank": true,
+     "n": 0
+    },
+    "、",
+    {
+     "t": "有名な",
+     "f": [
+      [
+       "有名",
+       "ゆうめい"
+      ],
+      [
+       "な",
+       ""
+      ]
+     ],
+     "g": "famous"
+    },
+    {
+     "t": "お寺",
+     "f": [
+      [
+       "お",
+       ""
+      ],
+      [
+       "寺",
+       "てら"
+      ]
+     ],
+     "g": "temples"
+    },
+    "を",
+    {
+     "t": "回りたい",
+     "f": [
+      [
+       "回",
+       "まわ"
+      ],
+      [
+       "りたい",
+       ""
+      ]
+     ],
+     "g": "want to go around"
+    },
+    "からね",
+    "。",
+    "それから",
+    "、",
+    {
+     "t": "京都",
+     "f": [
+      [
+       "京都",
+       "きょうと"
+      ]
+     ],
+     "g": "Kyoto"
+    },
+    "に",
+    {
+     "t": "行く",
+     "f": [
+      [
+       "行",
+       "い"
+      ],
+      [
+       "く",
+       ""
+      ]
+     ],
+     "g": "go"
+    },
+    {
+     "blank": true,
+     "n": 1
+    },
+    "、",
+    {
+     "t": "奈良",
+     "f": [
+      [
+       "奈良",
+       "なら"
+      ]
+     ],
+     "g": "Nara"
+    },
+    "にも",
+    {
+     "t": "足",
+     "f": [
+      [
+       "足",
+       "あし"
+      ]
+     ],
+     "g": "foot"
+    },
+    "を",
+    {
+     "t": "延ばさない",
+     "f": [
+      [
+       "延",
+       "の"
+      ],
+      [
+       "ばさない",
+       ""
+      ]
+     ],
+     "g": "extend (a trip)"
+    },
+    "？",
+    {
+     "blank": true,
+     "n": 2
+    },
+    "、",
+    {
+     "t": "二日目",
+     "f": [
+      [
+       "二日",
+       "ふつか"
+      ],
+      [
+       "目",
+       "め"
+      ]
+     ],
+     "g": "the second day"
+    },
+    "は",
+    {
+     "t": "雨",
+     "f": [
+      [
+       "雨",
+       "あめ"
+      ]
+     ],
+     "g": "rain"
+    },
+    "らしい",
+    "から",
+    "、",
+    {
+     "blank": true,
+     "n": 3
+    },
+    {
+     "t": "日",
+     "f": [
+      [
+       "日",
+       "ひ"
+      ]
+     ],
+     "g": "day"
+    },
+    "は",
+    {
+     "t": "美術館",
+     "f": [
+      [
+       "美術館",
+       "びじゅつかん"
+      ]
+     ],
+     "g": "art museum"
+    },
+    "に",
+    "しよう",
+    "。",
+    "ホテル",
+    "は",
+    {
+     "t": "早めに",
+     "f": [
+      [
+       "早",
+       "はや"
+      ],
+      [
+       "めに",
+       ""
+      ]
+     ],
+     "g": "early"
+    },
+    {
+     "t": "予約して",
+     "f": [
+      [
+       "予約",
+       "よやく"
+      ],
+      [
+       "して",
+       ""
+      ]
+     ],
+     "g": "reserve"
+    },
+    "おくね",
+    "。",
+    {
+     "t": "楽しみにしている",
+     "f": [
+      [
+       "楽",
+       "たの"
+      ],
+      [
+       "しみにしている",
+       ""
+      ]
+     ],
+     "g": "looking forward to it"
+    },
+    "よ",
+    "。"
+   ],
+   "blanks": [
+    {
+     "n": 0,
+     "answer": "うちに",
+     "options": [
+      "うちに",
+      "あいだに",
+      "までに",
+      "ながら"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-uchi-ni"
+    },
+    {
+     "n": 1,
+     "answer": "ついでに",
+     "options": [
+      "ついでに",
+      "おかげで",
+      "かわりに",
+      "とおりに"
+     ],
+     "kind": "grammar",
+     "pointId": "n3-tsuide-ni"
+    },
+    {
+     "n": 2,
+     "answer": "ただし",
+     "options": [
+      "ただし",
+      "だから",
+      "そして",
+      "なぜなら"
+     ],
+     "kind": "discourse"
+    },
+    {
+     "n": 3,
+     "answer": "その",
+     "options": [
+      "その",
+      "この",
+      "あの",
+      "どの"
+     ],
+     "kind": "discourse"
+    }
+   ],
+   "en": "About next month's Kyoto trip — I tried putting together a plan. First, let's decide to take an early-morning bullet train. I want to go around the famous temples before they get crowded, you see. After that, while we're going to Kyoto, shall we also make a side trip to Nara? However, the second day looks like rain, so on that day let's make it the art museum instead. I'll book the hotel early. I'm looking forward to it.",
+   "confidence": "high"
+  }
+ ]
+}

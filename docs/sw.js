@@ -2,9 +2,9 @@
 // Offline service worker — network-first so data/code updates always land when online,
 // with a cached fallback so the whole planner still works at Narita / the ward office.
 
-const CACHE = 'jwh-v356';
+const CACHE = 'jwh-v357';
 const ASSETS = [
-  './', 'index.html', 'data/tips.json', 'data/grammar-n5.json', 'data/grammar-n4.json', 'data/grammar-n3.json', 'data/grammar-n2.json', 'data/grammar-n1.json', 'data/grammar-units.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
+  './', 'index.html', 'data/tips.json', 'data/grammar-n5.json', 'data/grammar-n4.json', 'data/grammar-n3.json', 'data/grammar-n2.json', 'data/grammar-n1.json', 'data/grammar-units.json', 'data/grammar-passages.json', 'manifest.webmanifest', 'icon.svg', 'apple-touch-icon.png',
   'assets/style.css', 'assets/preboot.js', 'assets/main.js', 'assets/content.js', 'assets/checklist-page.js', 'assets/calendar.js', 'assets/calendar-agenda.js', 'assets/calendar-week.js', 'assets/calendar-month.js', 'assets/calendar-editor.js',
   'assets/dashboard.js', 'assets/collapse.js', 'assets/celebrate.js', 'assets/packing.js', 'assets/budget.js', 'assets/phrases.js', 'assets/tracker.js', 'assets/gate.js', 'assets/router.js', 'assets/motion.js', 'assets/anim.js', 'assets/countup.js', 'assets/speak.js', 'assets/pointtosay.js', 'assets/vocab.js', 'assets/kana.js', 'assets/numbers.js', 'assets/signs.js', 'assets/phraseday.js', 'assets/quiz.js', 'assets/pronunciation.js', 'assets/particles.js', 'assets/verbs.js', 'assets/adjectives.js', 'assets/dnd.js', 'assets/konami.js', 'assets/rooms.js', 'assets/map.js', 'assets/plan.js', 'assets/eats.js', 'assets/eventsearch.js', 'assets/expweek.js', 'assets/phrasesboot.js', 'assets/phrases-anki.js', 'assets/grammar.js', 'assets/study.js', 'assets/study-lessons.js', 'assets/study-scramble.js', 'assets/study-mcq.js', 'assets/study-duel.js', 'assets/study-gate.js', 'assets/study-build.js', 'assets/lang.js', 'assets/i18n.js', 'assets/backup.js', 'assets/gestures.js', 'assets/guide.js', 'assets/easter.js', 'assets/people.js', 'assets/lazyroutes.js', 'assets/palette.js', 'assets/emergency.js', 'assets/pocket.js', 'assets/print.js', 'assets/cardtranslate.js', 'assets/datepicker.js', 'assets/google-sync.js',
   'assets/lib/dom.js', 'assets/lib/furigana.js', 'assets/lib/jpdate.js', 'assets/lib/store.js', 'assets/lib/usage.js', 'assets/lib/people.js', 'assets/lib/rooms.js', 'assets/lib/dates.js', 'assets/lib/sekki.js', 'assets/lib/packing.js', 'assets/lib/budget.js', 'assets/lib/spend.js', 'assets/lib/tripseed.js',
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (e) => {
   // SW-cached copy instantly, refresh the cache in the background. Trade-off (deliberate,
   // owner-approved in the efficiency plan): a data deploy shows on the NEXT load, not the
   // current one. Code/asset updates keep the network-first guarantee below.
-  if (/\/data\/(tips|grammar-n[1-5]|grammar-units)\.json$/.test(url.pathname)) {   // grammar-*.json + the units map share the SWR path — same big-JSON pathology
+  if (/\/data\/(tips|grammar-n[1-5]|grammar-units|grammar-passages)\.json$/.test(url.pathname)) {   // grammar-*.json + the units map + the passage bank share the SWR path — same big-JSON pathology
     e.respondWith(caches.match(e.request).then(cached => {
       const net = fetch(e.request, { cache: 'reload' }).then(resp => {
         if (resp && resp.ok && resp.status === 200 && resp.type !== 'opaque') {

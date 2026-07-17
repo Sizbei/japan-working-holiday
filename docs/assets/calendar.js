@@ -701,14 +701,18 @@ function positionEndless() {
   // mid-window with buffer on both sides — never at an edge, so the auto-extend can't run away. Without
   // this, a target month missing from the window made the "landed" check below give up at the top.
   if (centerWindowOn(targetYm)) { render(); return; }
-  scrollToDay(targetDay, false);
-  // web-font load reflows the months ABOVE (serif separators) and the scroll drifts — re-center once
+  // Anchor the current MONTH's start at the reading line (not today-centred): centring today scrolls
+  // July 1–16 above the viewport, so you land mid-month reading into August ("stuck at the bottom").
+  // Month-start puts July 1 at the top — a clean month view — and today stays visible (it's within
+  // the month). This also keeps the target mid-window, so the near-edge auto-extend never fires.
+  scrollToMonth(targetYm, false);
+  // web-font load reflows the months ABOVE (serif separators) and the scroll drifts — re-anchor once
   // metrics are final (no-op when fonts were cached). Skip if the user has already scrolled away.
   const y0 = window.scrollY, g0 = $('#calView .cal-grid')?.scrollTop || 0;
   document.fonts?.ready?.then(() => {
     const g = $('#calView .cal-grid')?.scrollTop || 0;
     if (Math.abs(window.scrollY - y0) > 80 || Math.abs(g - g0) > 80) return;
-    scrollToDay(targetDay, false);
+    scrollToMonth(targetYm, false);
   });
   // VERIFY the scroll actually landed on the target month (a scroll issued mid-view-transition can be
   // measured against stale metrics and no-op, leaving the grid at the top). Only clear the retry flags

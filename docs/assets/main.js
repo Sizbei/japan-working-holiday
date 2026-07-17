@@ -298,12 +298,27 @@ function registerSW() {
   let reloaded = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (reloaded) return;
-    // don't yank the page out from under in-progress input (typing / an open dialog) —
-    // the fresh build simply lands on the user's next natural reload instead
+    // don't yank the page out from under an in-progress interaction (typing, an open dialog, a
+    // drag-reorder, or the long-press quick-action menu) — a reload mid-drag would drop the unsaved
+    // reorder. The fresh build simply lands on the user's next natural reload instead.
     const el = document.activeElement;
     const typing = el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
-    if (typing || document.querySelector('[aria-modal="true"]')) return;
+    if (typing || document.querySelector('[aria-modal="true"], .dnd-dragging, .dnd-grabbed, .lp-menu')) return;
     reloaded = true; location.reload();
   });
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').then((reg) => {
+    if (!reg) return;
+    // A hash-router SPA does no real navigations, so the browser rarely re-checks sw.js on its own — a
+    // tab left open across a deploy keeps running stale code (e.g. an old calendar build). Poll for a
+    // new worker at natural moments (tab refocus, in-app route change); when one is found it installs
+    // → skipWaiting → claims → the controllerchange handler above reloads. Throttled so it's cheap.
+    let last = 0;
+    const check = () => {
+      const now = Date.now();
+      if (now - last < 30000) return;   // at most once / 30s
+      last = now; reg.update().catch(() => {});
+    };
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+    document.addEventListener('jwh:route', check);
+  }).catch(() => {}));
 }

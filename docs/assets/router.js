@@ -52,19 +52,28 @@ function activate(route, { scroll = true } = {}) {
   document.title = TITLES[route] ? `${TITLES[route]} · ${SITE}` : SITE;
   const rh = document.getElementById('routeH1');
   if (rh) { rh.hidden = route === 'dashboard'; rh.textContent = TITLES[route] || SITE; }
+  // Kill smooth scrolling for the DURATION of the swap. Leaving the calendar (window scrolled far down
+  // in window-scroll mode), the browser animates the window toward the new page's clamped BOTTOM — with
+  // the global html{scroll-behavior:smooth} that animation is a visible ~300ms "scroll down for a
+  // second" flash before the reset lands. Forcing 'auto' makes every scroll during the transition
+  // instant, so the reset inside the swap holds and nothing animates. Restored in .then below.
+  const changing = route !== current;   // only reset scroll on a real route change (clicking the active tab shouldn't)
+  const de = document.documentElement;
+  if (changing) de.style.scrollBehavior = 'auto';   // only touch it for a real nav; ALWAYS restored to '' in .then (unconditional, so it can never latch 'auto' — a guarded restore could)
+  const resetTop = () => {
+    document.getElementById('main')?.scrollTo({ top: 0 });
+    if (route !== 'calendar') window.scrollTo({ top: 0 });   // calendar owns its own scroll (positions to today)
+  };
   transitionView(() => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('is-active'));
     target.classList.add('is-active');
+    // reset IN the swap: same frame the new (short) layout applies, so the window never renders at the
+    // clamped bottom — this is what removes the flash (the pre-swap reset ran while the tall calendar
+    // was still laid out; the shrink then re-clamped it)
+    if (scroll && changing) resetTop();
   }).then(() => {
-    // Re-assert the scroll reset AFTER the swap: the sync reset below runs while the OLD (tall calendar)
-    // view is still laid out, so once the view swaps and the document shrinks, the window carries the
-    // calendar's large offset and clamps to the new page's BOTTOM. Resetting here — with the final short
-    // layout — lands at the top and, being instant, cancels any in-flight smooth scroll. Calendar owns
-    // its own scroll, so skip it.
-    if (scroll && route !== 'calendar' && route === current) {   // route===current: skip if a faster later nav already superseded this one
-      document.getElementById('main')?.scrollTo({ top: 0, behavior: 'instant' });
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
+    if (scroll && changing && route === current) resetTop();   // belt-and-suspenders; skip if a faster later nav superseded this
+    de.style.scrollBehavior = '';                  // restore CSS-default smooth for in-page scrolling
     // prefer a VISIBLE heading (compact hides some page titles; focusing a display:none node is a silent no-op)
     const h = [...target.querySelectorAll('h1, h2, h3')].find(x => x.offsetParent !== null) || target.querySelector('h1, h2, h3');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
@@ -88,17 +97,6 @@ function activate(route, { scroll = true } = {}) {
         - (bar.clientWidth - activeNav.offsetWidth) / 2;
       bar.scrollTo({ left: target, behavior: 'instant' });
     }
-  }
-  if (scroll && route !== current) {
-    // Reset scroll with behavior:'instant' — NOT the default 'auto', which follows the global CSS
-    // `html{scroll-behavior:smooth}` (style.css:141) and animates. Leaving the calendar in window-scroll
-    // mode (narrow / zoomed desktop) starts from a large offset; the view-swap shrinks the document so
-    // the window is clamped to the shorter new page's BOTTOM, then the smooth animation crawls back to
-    // 0 — and any quick next tab-click interrupts it, stranding you at the bottom. 'instant' jumps.
-    document.getElementById('main')?.scrollTo({ top: 0, behavior: 'instant' });   // desktop app-shell scroller
-    // the calendar's endless month owns the window scroll (positions to today) — resetting it would
-    // land on the top of the data range; every other route resets the window (footer sliver / narrow)
-    if (route !== 'calendar') window.scrollTo({ top: 0, behavior: 'instant' });
   }
   current = route;
   document.body.dataset.route = route;   // lets CSS scope per-route (e.g. the calendar opts out of the app-shell internal scroll)

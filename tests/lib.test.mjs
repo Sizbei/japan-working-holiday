@@ -2925,3 +2925,132 @@ test('units: validateUnits catches size, unknown-id, duplicate-coverage, gap and
   assert.ok(validateUnits([{ id: 'n5-x1', level: 'N5', title: 'T', points: full }], allIds).some(e => /bad unit id/.test(e)));
   assert.ok(validateUnits([{ id: 'n4-u1', level: 'N4', title: 'T', points: full }], allIds).some(e => /not level N4/.test(e)));
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// exam.js — R13 mock-exam assembly + scoring (pure, deterministic)
+// ─────────────────────────────────────────────────────────────────────────────
+import { buildExam, scoreExam, examBand, recordExam, KATA_COUNT, STAR_COUNT, PASSAGE_COUNT } from '../docs/assets/lib/exam.js';
+
+function loadCorpus() {
+  const dir = new URL('../docs/data/', import.meta.url);
+  const byLevel = {};
+  for (const l of ['n5', 'n4', 'n3', 'n2', 'n1']) {
+    byLevel['N' + l[1]] = JSON.parse(readFileSync(new URL(`grammar-${l}.json`, dir), 'utf8'));
+  }
+  const passages = JSON.parse(readFileSync(new URL('grammar-passages.json', dir), 'utf8'));
+  return { byLevel, passages };
+}
+
+test('exam: buildExam — per-level composition matches the JLPT format facts (N5/N4/N3 fill every quota)', () => {
+  const { byLevel, passages } = loadCorpus();
+  for (const level of ['N5', 'N4', 'N3']) {
+    const ex = buildExam(level, byLevel, passages, 42);
+    assert.equal(ex.counts.kata, KATA_COUNT[level], `${level} 形式`);
+    assert.equal(ex.counts.star, STAR_COUNT, `${level} ★`);
+    assert.equal(ex.counts.passage, PASSAGE_COUNT, `${level} passage`);
+    assert.deepEqual(ex.shortfall, { kata: 0, star: 0, passage: 0 }, `${level} no shortfall`);
+    assert.equal(ex.items.length, KATA_COUNT[level] + STAR_COUNT + PASSAGE_COUNT, `${level} total`);
+    assert.equal(ex.budgetSec, ex.items.length * 60, `${level} budget = 1min/item`);
+    // every item is well-formed for its format
+    for (const it of ex.items) {
+      if (it.format === 'kata') { assert.equal(it.mcq.options.length, 4); assert.equal(it.mcq.options[it.mcq.correct], it.pattern); }
+      else if (it.format === 'star') { assert.equal(it.scramble.chunks.length, 4); assert.equal(it.scramble.order.length, 4); }
+      else if (it.format === 'passage') { assert.ok(it.blank.options.includes(it.blank.answer), 'answer in options'); }
+      else assert.fail('unknown format ' + it.format);
+    }
+  }
+});
+
+test('exam: buildExam — N2/N1 have no passages until R14 → graceful shortfall, exam still assembles', () => {
+  const { byLevel, passages } = loadCorpus();
+  for (const level of ['N2', 'N1']) {
+    const ex = buildExam(level, byLevel, passages, 7);
+    assert.equal(ex.counts.kata, KATA_COUNT[level], `${level} 形式`);
+    assert.equal(ex.counts.star, STAR_COUNT, `${level} ★`);
+    assert.equal(ex.counts.passage, 0, `${level} has 0 passages pre-R14`);
+    assert.equal(ex.shortfall.passage, PASSAGE_COUNT, `${level} logs the 5-item passage gap`);
+    assert.ok(ex.items.length > 0 && ex.items.every(it => it.format !== 'passage'), `${level} runs without passage items`);
+  }
+});
+
+test('exam: buildExam — deterministic by seed; different seed → different draw', () => {
+  const { byLevel, passages } = loadCorpus();
+  assert.deepEqual(buildExam('N5', byLevel, passages, 123), buildExam('N5', byLevel, passages, 123));
+  const a = buildExam('N5', byLevel, passages, 1).items.map(i => i.pointId || (i.passage && i.passage.id));
+  const b = buildExam('N5', byLevel, passages, 2).items.map(i => i.pointId || (i.passage && i.passage.id));
+  assert.notDeepEqual(a, b);
+});
+
+test('exam: buildExam — empty passages arg still yields a full 形式+★ mock with a passage shortfall', () => {
+  const { byLevel } = loadCorpus();
+  const ex = buildExam('N3', byLevel, [], 5);
+  assert.equal(ex.counts.kata, KATA_COUNT.N3);
+  assert.equal(ex.counts.star, STAR_COUNT);
+  assert.equal(ex.counts.passage, 0);
+  assert.equal(ex.shortfall.passage, PASSAGE_COUNT);
+});
+
+test('exam: scoreExam — raw + per-format + all-correct/all-wrong', () => {
+  const questions = [
+    { format: 'kata', pattern: '〜ように', optionClusters: { '〜ために': 'n5-b' }, mcq: { options: ['〜ように', '〜ために', '〜のに', '〜そうに'], correct: 0 } },
+    { format: 'kata', pattern: '〜ために', optionClusters: { '〜ように': 'n5-a' }, mcq: { options: ['〜ために', '〜ように', '〜のに', '〜だけ'], correct: 0 } },
+    { format: 'star', scramble: { order: [2, 0, 3, 1] } },
+    { format: 'passage', blank: { answer: 'に', options: ['に', 'で', 'を', 'へ'] } },
+    { format: 'passage', blank: { answer: 'だけ', options: ['だけ', 'しか', 'まで', 'ごろ'] } },
+  ];
+  // all correct
+  const allRight = [0, 0, [2, 0, 3, 1], 0, 0];
+  let r = scoreExam(allRight, questions);
+  assert.equal(r.raw, 5); assert.equal(r.total, 5);
+  assert.deepEqual(r.byFormat, { kata: { correct: 2, total: 2 }, star: { correct: 1, total: 1 }, passage: { correct: 2, total: 2 } });
+  assert.deepEqual(r.byCluster, {});
+  // all wrong / unanswered
+  const allWrong = [1, 3, [0, 1, 2, 3], 1, null];
+  r = scoreExam(allWrong, questions);
+  assert.equal(r.raw, 0);
+  assert.deepEqual(r.byFormat, { kata: { correct: 0, total: 2 }, star: { correct: 0, total: 1 }, passage: { correct: 0, total: 2 } });
+  assert.equal(r.skipped, 1, 'the one null answer is counted as skipped');
+  // a skipped (blank) 文法形式 item is NOT attributed to a trap cluster — only real mis-picks are
+  const rSkip = scoreExam([null, null, null, null, null], questions);
+  assert.equal(rSkip.skipped, 5);
+  assert.deepEqual(rSkip.byCluster, {}, 'blanks never populate a confusable trap bucket');
+});
+
+test('exam: scoreExam — byCluster attributes a wrong 形式 pick to the confusable cluster (else other)', () => {
+  const questions = [
+    { format: 'kata', pattern: '〜ように', optionClusters: { '〜ために': 'n5-b' }, mcq: { options: ['〜ように', '〜ために', '〜のに', '〜そうに'], correct: 0 } },
+  ];
+  // picked 〜ために (index 1) — a known confusable → cluster n5-b
+  let r = scoreExam([1], questions);
+  assert.equal(r.raw, 0);
+  assert.equal(r.byCluster['n5-b'].count, 1);
+  assert.equal(r.byCluster['n5-b'].chosen, '〜ために');
+  // picked 〜そうに (index 3) — a plain distractor, not in optionClusters → 'other'
+  r = scoreExam([3], questions);
+  assert.equal(r.byCluster.other.count, 1);
+});
+
+test('exam: examBand — directional band thresholds', () => {
+  assert.deepEqual(examBand(0, 10), { pct: 0, label: 'Well below' });
+  assert.deepEqual(examBand(5, 10), { pct: 50, label: 'Approaching' });
+  assert.deepEqual(examBand(7, 10), { pct: 70, label: 'Borderline' });
+  assert.deepEqual(examBand(8, 10), { pct: 80, label: 'On track' });
+  assert.deepEqual(examBand(10, 10), { pct: 100, label: 'Strong' });
+  assert.deepEqual(examBand(0, 0), { pct: 0, label: 'Well below' });
+});
+
+test('exam: recordExam — pure append, bounded ring, initialises from a state without examLog', () => {
+  const s0 = {};                                     // pre-R13 state shape, no examLog
+  const e1 = { level: 'N3', date: '2026-11-01', raw: 15, total: 26, byFormat: {} };
+  const s1 = recordExam(s0, e1);
+  assert.deepEqual(s1.examLog, [e1]);
+  assert.deepEqual(s0, {}, 'input not mutated');
+  const s2 = recordExam(s1, { level: 'N3', date: '2026-11-08', raw: 18, total: 26, byFormat: {} });
+  assert.equal(s2.examLog.length, 2);
+  // bounded: 120 appends keep only the last 100
+  let s = {};
+  for (let i = 0; i < 120; i++) s = recordExam(s, { level: 'N3', date: 'd' + i, raw: i, total: 26, byFormat: {} });
+  assert.equal(s.examLog.length, 100);
+  assert.equal(s.examLog[0].date, 'd20');
+  assert.equal(s.examLog[99].date, 'd119');
+});

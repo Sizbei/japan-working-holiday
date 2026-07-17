@@ -99,3 +99,20 @@ export function mediaPut(name, blob) { return tx('readwrite', s => s.put(blob, n
 export function mediaGet(name) { return tx('readonly', s => s.get(name)).then(v => v ?? null); }
 export function mediaClear() { return tx('readwrite', s => s.clear()).then(() => undefined); }
 export function mediaCount() { return tx('readonly', s => s.count()); }
+// delete every media blob whose key starts with `prefix` (deck-scoped keys are `<deckId>/<filename>`) —
+// used when a deck is removed from the library so its media doesn't leak. No-op in Node (rejects).
+export function mediaDeletePrefix(prefix) {
+  return openDB().then(db => new Promise((resolve, reject) => {
+    const t = db.transaction(STORE, 'readwrite');
+    const store = t.objectStore(STORE);
+    const req = store.openKeyCursor();
+    req.onsuccess = () => {
+      const cur = req.result;
+      if (!cur) return;
+      if (typeof cur.key === 'string' && cur.key.startsWith(prefix)) store.delete(cur.key);
+      cur.continue();
+    };
+    t.oncomplete = () => resolve();
+    t.onerror = () => reject(t.error || new Error('IndexedDB delete-prefix failed'));
+  }));
+}

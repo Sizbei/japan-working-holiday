@@ -133,6 +133,12 @@ function applyToggles() {
 }
 // peek the hidden side on the CURRENT card (transient — paintCard clears it on the next card)
 function revealCard() { $('#ankCard')?.classList.add('ank-revealed'); }
+// flashcard flow: if a field is hidden and not yet shown, the FIRST Space/tap flips to the answer;
+// the next one advances. When nothing is hidden it just advances (fast-refresher behavior).
+function revealOrAdvance() {
+  if (root?.classList.contains('ank-has-hidden') && !$('#ankCard')?.classList.contains('ank-revealed')) revealCard();
+  else advance(1);
+}
 
 export function mountAnki() {
   DATA = null;
@@ -160,8 +166,9 @@ function wireDeckKeys() {
     if (e.key === 'n' || e.key === 'N') { e.preventDefault(); flipHira(); return; }   // n = hiragana
     if (e.key === 'm' || e.key === 'M') { e.preventDefault(); flipEn(); return; }     // m = English
     if (e.key === 'ArrowDown') { e.preventDefault(); revealCard(); return; }          // ↓ = reveal the hidden side
-    if (e.key === ' ' || e.key === 'ArrowRight' || e.key === '.') { e.preventDefault(); advance(1); }   // . = forward
-    else if (e.key === 'ArrowLeft' || e.key === ',') { e.preventDefault(); advance(-1); }               // , = back
+    if (e.key === ' ') { e.preventDefault(); revealOrAdvance(); return; }             // Space = flip to the answer, then advance
+    if (e.key === 'ArrowRight' || e.key === '.') { e.preventDefault(); advance(1); }   // . = forward (skip without revealing)
+    else if (e.key === 'ArrowLeft' || e.key === ',') { e.preventDefault(); advance(-1); }   // , = back
     else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }
   });
 }
@@ -846,7 +853,7 @@ function wireStream() {
   card?.addEventListener('click', (e) => {
     if (e.target.closest('.ank-peek')) { e.stopPropagation(); revealCard(); return; }   // tap the peek = flip, NOT advance
     if (_suppressTap) { _suppressTap = false; return; }
-    advance(1);
+    revealOrAdvance();   // tap flips to the answer first (when something's hidden), then advances
   });
   // touch controls (rebuilt every renderStream) — wire to the SAME actions as the keys.
   // Tap zones sit over the card halves; the bottom bar is the accessible equivalent.

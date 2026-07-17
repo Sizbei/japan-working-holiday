@@ -3863,6 +3863,15 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
    so the card doesn't reflow when you flip them — the answer just appears in place. */
 .ank-hira-off ruby.ank-word rt{ visibility: hidden; }
 .ank-en-off .ank-mean, .ank-en-off .ank-sentm{ visibility: hidden; }
+.ank-ex-off .ank-sent{ visibility: hidden; }
+/* per-card Reveal peek — the "other side": flip the hidden field(s) into view for THIS card only
+   (↓ or tap). Offered only when something is hidden (ank-has-hidden) and not yet revealed. */
+.ank-peek{ display:none; align-items:center; gap:.4rem; margin-top:.5rem; border:1px dashed var(--line); background:none;
+  color: var(--ink-soft); font:inherit; font-size:.8rem; padding:.32rem .8rem; border-radius:100px; cursor:pointer; }
+.ank-peek:hover{ border-color: var(--indigo); color: var(--ink); }
+.ank-peek-k{ font-family: var(--mono); font-size:.68rem; border:1px solid var(--line); border-radius:4px; padding:0 .32rem; }
+.ank-has-hidden #ankCard:not(.ank-revealed) .ank-peek{ display:inline-flex; }
+#ankCard.ank-revealed ruby.ank-word rt, #ankCard.ank-revealed .ank-mean, #ankCard.ank-revealed .ank-sentm, #ankCard.ank-revealed .ank-sent{ visibility: visible !important; }
 
 /* deck library / history — the "Your decks" switch row above the card */
 .ank-decks{ display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin:.1rem 0 .6rem; }

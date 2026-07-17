@@ -64,6 +64,7 @@ export const KEYS = {
   ankiLib: 'jwh-anki-lib-v1',        // deck library INDEX: { v, active, decks:[{id,name,cardCount,importedAt}] }; each deck's data lives under jwh-anki-d-<id>
   ankiHira: 'jwh-anki-hira-v1',      // refresher: hide the reading (hiragana) on cards — 'off' = hidden, '' = shown (default shown)
   ankiEn: 'jwh-anki-en-v1',          // refresher: hide the English meaning on cards — 'off' = hidden (DEFAULT), '' = shown
+  ankiEx: 'jwh-anki-ex-v1',          // refresher: hide the example sentence on cards — 'off' = hidden, '' = shown (default shown)
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)
   study: 'jwh-study-v1',             // grammar gym SRS engine: { v, points, session, units, log, settings } (lib/study.js)
   mapDark: 'jwh-mapdark-v1',         // dark map tiles opt-in ('on'/'') — CSS filter, dark theme only

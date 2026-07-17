@@ -101,20 +101,30 @@ function deleteDeck(id) {
   saveLib(lib);
 }
 
-// Study toggles — hide the reading (hiragana) or the English meaning on cards to self-quiz. Persisted
-// sentinels (own keys, independent of the site-wide furigana). English is HIDDEN by default (owner).
+// Study toggles — hide the reading (hiragana), the English meaning, or the example sentence to
+// self-quiz. Persisted sentinels (own keys, independent of the site furigana). English HIDDEN by default.
 function hiraOff() { return getRaw(KEYS.ankiHira, '') === 'off'; }
 function enOff() { return getRaw(KEYS.ankiEn, 'off') === 'off'; }
+function exOff() { return getRaw(KEYS.ankiEx, '') === 'off'; }
+function flipHira() { setRaw(KEYS.ankiHira, hiraOff() ? '' : 'off'); applyToggles(); }
+function flipEn() { setRaw(KEYS.ankiEn, enOff() ? '' : 'off'); applyToggles(); }
+function flipEx() { setRaw(KEYS.ankiEx, exOff() ? '' : 'off'); applyToggles(); }
 // reflect the toggle state as classes on the deck ROOT (they survive the innerHTML rebuilds) — CSS
-// hides `.ank-word rt` / `.ank-mean`+`.ank-sentm` with visibility so nothing reflows on toggle.
+// hides `.ank-word rt` / `.ank-mean`+`.ank-sentm` / `.ank-sent` with visibility so nothing reflows.
+// ank-has-hidden gates the per-card "Reveal" peek (only offered when something is actually hidden).
 function applyToggles() {
   if (!root) return;
-  const h = hiraOff(), e = enOff();
+  const h = hiraOff(), e = enOff(), x = exOff();
   root.classList.toggle('ank-hira-off', h);
   root.classList.toggle('ank-en-off', e);
+  root.classList.toggle('ank-ex-off', x);
+  root.classList.toggle('ank-has-hidden', h || e || x);
   const hb = $('#ankHira'); if (hb) { hb.classList.toggle('is-on', !h); hb.setAttribute('aria-pressed', String(!h)); }
   const eb = $('#ankEn'); if (eb) { eb.classList.toggle('is-on', !e); eb.setAttribute('aria-pressed', String(!e)); }
+  const xb = $('#ankEx'); if (xb) { xb.classList.toggle('is-on', !x); xb.setAttribute('aria-pressed', String(!x)); }
 }
+// peek the hidden side on the CURRENT card (transient — paintCard clears it on the next card)
+function revealCard() { $('#ankCard')?.classList.add('ank-revealed'); }
 
 export function mountAnki() {
   DATA = null;
@@ -139,6 +149,9 @@ function wireDeckKeys() {
     if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
     if (t && t.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;   // let a focused button activate
     if (e.key === 'p' || e.key === 'P') { $('#ankAudio')?.click(); return; }
+    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); flipHira(); return; }   // n = hiragana
+    if (e.key === 'm' || e.key === 'M') { e.preventDefault(); flipEn(); return; }     // m = English
+    if (e.key === 'ArrowDown') { e.preventDefault(); revealCard(); return; }          // ↓ = reveal the hidden side
     if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
     else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }
@@ -430,8 +443,9 @@ function barHTML(deck) {
           <button type="button" class="ank-mini${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}">▶ Stream</button>
           <button type="button" class="ank-mini${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}">☰ Skim</button>
         </span>
-        <button type="button" class="ank-mini" id="ankHira" title="Show or hide the reading (hiragana)">あ Hiragana</button>
-        <button type="button" class="ank-mini" id="ankEn" title="Show or hide the English meaning">EN English</button>
+        <button type="button" class="ank-mini" id="ankHira" title="Show or hide the reading (hiragana) — key: n">あ Hiragana</button>
+        <button type="button" class="ank-mini" id="ankEn" title="Show or hide the English meaning — key: m">EN English</button>
+        <button type="button" class="ank-mini" id="ankEx" title="Show or hide the example sentence">例 Example</button>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
       </div>
@@ -629,13 +643,15 @@ function paintCard() {
     : `<div class="ank-word" lang="ja">${esc(card.w) || '&nbsp;'}</div>`;
   const isPos = card.m && isPOS(card.m);
   el.classList.toggle('is-shaky', isShaky);
+  el.classList.remove('ank-revealed');   // each new card starts hidden again — reveal is per-card
   el.innerHTML = `
     ${isShaky ? '<span class="ank-flag" aria-label="flagged shaky" title="flagged shaky">◆ shaky</span>' : ''}
     ${isPos ? `<span class="ank-pos">${esc(card.m)}</span>` : ''}
     ${wordHTML}
     ${card.m && !isPos ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
     ${hair}${sent}${sentM}
-    ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}`;
+    ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}
+    <button type="button" class="ank-peek" aria-label="Reveal the hidden side">👁 Reveal <kbd class="ank-peek-k">↓</kbd></button>`;
   fillMedia(card);
   // auto-play audio ONLY when the card actually changed (not on a re-paint from flagging shaky) —
   // gated on card.id. Browsers block play() until a gesture; advancing IS a gesture, so it works
@@ -749,8 +765,9 @@ function wireCommon() {
     stream = { deck, mode: stream.mode, chunk: keep, idx: 0, order: [] };
     deck.view === 'skim' ? renderSkim(deck) : renderStream(deck);
   });
-  $('#ankHira')?.addEventListener('click', () => { setRaw(KEYS.ankiHira, hiraOff() ? '' : 'off'); applyToggles(); });
-  $('#ankEn')?.addEventListener('click', () => { setRaw(KEYS.ankiEn, enOff() ? '' : 'off'); applyToggles(); });
+  $('#ankHira')?.addEventListener('click', flipHira);
+  $('#ankEn')?.addEventListener('click', flipEn);
+  $('#ankEx')?.addEventListener('click', flipEx);
   wireDeckChips();
   applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar
 }
@@ -773,7 +790,11 @@ function wireDeckChips() {
 function wireStream() {
   const card = $('#ankCard');
   const tap = (fn) => () => { if (_suppressTap) { _suppressTap = false; return; } fn(); };   // swallow the click a swipe also fires
-  card?.addEventListener('click', tap(() => advance(1)));
+  card?.addEventListener('click', (e) => {
+    if (e.target.closest('.ank-peek')) { e.stopPropagation(); revealCard(); return; }   // tap the peek = flip, NOT advance
+    if (_suppressTap) { _suppressTap = false; return; }
+    advance(1);
+  });
   // touch controls (rebuilt every renderStream) — wire to the SAME actions as the keys.
   // Tap zones sit over the card halves; the bottom bar is the accessible equivalent.
   $('#ankTapPrev')?.addEventListener('click', tap(() => advance(-1)));

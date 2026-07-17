@@ -4435,3 +4435,50 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
 @media (max-width: 640px){ .stu-leech-actions .stu-btn{ min-height:40px; } }
 /* grammar-page 👻 reflection marker (shares the header marks slot) */
 .g-hd-gym{ margin-left:.15rem; }
+
+/* ===== R10 — the Mastered gate goes live: gate-mode cards, soft timer, sentence-build ===== */
+/* a Deep-point review is a mastery check: a gold-accented header + a soft ~20s countdown */
+.stu-card-gate{ border-color: color-mix(in srgb, var(--gold, #b8860b) 45%, var(--line)); }
+.stu-gate-head{ display:flex; align-items:center; gap:.5rem; margin:0 0 .8rem; padding:.4rem .7rem;
+  background: color-mix(in srgb, var(--gold, #b8860b) 10%, var(--bg-soft));
+  border:1px solid color-mix(in srgb, var(--gold, #b8860b) 35%, var(--line)); border-radius: var(--r-sm); }
+.stu-gate-ic{ font-size:1rem; }
+.stu-gate-label{ font-size:.82rem; font-weight:700; color: var(--gold-ink, #8a6508); }
+.stu-gate-label b{ font-family: var(--mono); }
+.stu-gate-pips{ display:inline-flex; gap:.3rem; }
+.stu-gate-pip{ width:.55rem; height:.55rem; border-radius:50%; background: transparent;
+  border:1.5px solid color-mix(in srgb, var(--gold, #b8860b) 55%, var(--line)); }
+.stu-gate-pip.is-done{ background: var(--gold, #b8860b); border-color: var(--gold, #b8860b); }
+.stu-gate-timer-slot{ margin-left:auto; display:inline-flex; align-items:center; }
+/* soft countdown ring (motion) / numeric (reduce-motion) — display + mild pressure, never a cutoff */
+.stu-gate-timer{ position:relative; display:inline-flex; width:30px; height:30px; align-items:center; justify-content:center; }
+.stu-gate-timer svg{ width:30px; height:30px; transform: rotate(-90deg); }
+.stu-gt-bg{ fill:none; stroke: color-mix(in srgb, var(--gold, #b8860b) 25%, var(--line)); stroke-width:3; }
+.stu-gt-fg{ fill:none; stroke: var(--gold, #b8860b); stroke-width:3; stroke-linecap:round; }
+.stu-gt-num{ position:absolute; font-family: var(--mono); font-size:.6rem; color: var(--gold-ink, #8a6508); }
+.stu-gate-timer-num{ font-family: var(--mono); font-size:.8rem; color: var(--gold-ink, #8a6508); }
+.stu-gate-timer.is-over .stu-gt-fg{ stroke: var(--bad-ink, #b3261e); }
+.stu-gate-timer.is-over .stu-gt-num,
+.stu-gate-timer-num.is-over{ color: var(--bad-ink, #b3261e); }
+.stu-fb-gate-reset{ color: var(--gold-ink, #8a6508); font-weight:600; }
+/* course-home mastery surfacing (light — full analytics is R15) */
+.stu-gate-count{ margin:-.2rem 0 0; font-size:.82rem; color: var(--gold-ink, #8a6508); text-align:center; font-weight:600; }
+.stu-lvl-mastered{ color: var(--gold-ink, #8a6508); font-weight:700; }
+/* ✍️ Build a sentence — PRACTICE ONLY (never scheduled) */
+.stu-build{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
+.stu-build-prompt{ font-size:1.05rem; margin:.4rem 0 .3rem; text-align:center; }
+.stu-build-mean{ text-align:center; margin:.1rem 0 .8rem; }
+.stu-build-input{ width:100%; font-family: var(--sans); font-size:1.05rem; padding:.65rem .8rem; border:1px solid var(--line);
+  border-radius: var(--r-sm); background: var(--bg); color: var(--ink); resize: vertical; min-height:3.2rem; }
+.stu-build-input:focus-visible{ border-color: var(--indigo); outline: 2px solid color-mix(in srgb, var(--indigo) 40%, transparent); outline-offset:1px; }
+.stu-build-model{ margin:.9rem 0 .3rem; padding:.8rem 1rem; background: color-mix(in srgb, var(--indigo) 5%, var(--bg));
+  border:1px solid color-mix(in srgb, var(--indigo) 25%, var(--line)); border-radius: var(--r-sm); }
+.stu-build-model-h{ font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); margin:0 0 .4rem; }
+.stu-build-model .stu-sentence{ font-size:1.15rem; line-height:1.8; margin:.2rem 0 .5rem; }
+.stu-build-speak{ font-size:.82rem; padding:.35rem .8rem; }
+.stu-build-rate{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin-top:.7rem; }
+.stu-build-rate-q{ font-size:.82rem; color: var(--ink-soft); margin-right:.2rem; }
+.stu-build-rate-b{ font-size:.82rem; padding:.4rem .8rem; }
+.stu-build-ack{ margin:.3rem 0 .5rem; font-size:.9rem; }
+.stu-build-foot{ text-align:center; font-style:italic; }
+@media (max-width: 640px){ .stu-build-rate-b, .stu-build-speak{ min-height:40px; } }

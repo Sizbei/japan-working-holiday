@@ -132,12 +132,38 @@ function applyToggles() {
   const xb = $('#ankEx'); if (xb) { xb.classList.toggle('is-on', !x); xb.setAttribute('aria-pressed', String(!x)); }
 }
 // peek the hidden side on the CURRENT card (transient — paintCard clears it on the next card)
-function revealCard() { $('#ankCard')?.classList.add('ank-revealed'); }
+function revealCard() { $('#ankCard')?.classList.add('ank-revealed'); scheduleAuto(); }
 // flashcard flow: if a field is hidden and not yet shown, the FIRST Space/tap flips to the answer;
 // the next one advances. When nothing is hidden it just advances (fast-refresher behavior).
 function revealOrAdvance() {
   if (root?.classList.contains('ank-has-hidden') && !$('#ankCard')?.classList.contains('ank-revealed')) revealCard();
   else advance(1);
+}
+
+// ---- auto-advance: hands-free drilling. Delay (seconds) cycles off → 4s → 8s. Each tick does one
+// revealOrAdvance (so a hidden card flips, then advances) — the resulting paintCard/revealCard reschedules,
+// which also resets the countdown on any manual step. Stops itself when the deck isn't visible.
+const AUTO_STEPS = ['', '4', '8'];
+let _autoT = null;
+function autoAdvSecs() { const n = parseInt(getRaw(KEYS.ankiAutoAdv, ''), 10); return Number.isFinite(n) && n > 0 ? n : 0; }
+function stopAuto() { if (_autoT) { clearTimeout(_autoT); _autoT = null; } }
+// don't auto-advance when the deck isn't the focus: hidden route, skim view, or the search dropdown is
+// open (the user is reading/choosing a result — cards must not flip under them).
+function autoBlocked() {
+  return !stream || !root || root.offsetParent === null || stream.deck.view === 'skim'
+    || $('#ankSearchRes')?.hidden === false;
+}
+function scheduleAuto() {
+  stopAuto();
+  if (!autoAdvSecs() || autoBlocked()) return;
+  _autoT = setTimeout(() => { if (autoBlocked()) { stopAuto(); return; } revealOrAdvance(); }, autoAdvSecs() * 1000);
+}
+function syncAutoAdv() {
+  const b = $('#ankAutoAdv'); if (!b) return;
+  const s = autoAdvSecs();
+  b.classList.toggle('is-on', !!s);
+  b.setAttribute('aria-pressed', String(!!s));
+  b.textContent = s ? `⏱ Auto ${s}s` : '⏱ Auto-advance';
 }
 
 export function mountAnki() {
@@ -489,6 +515,11 @@ function barHTML(deck) {
         <button type="button" class="ank-mini" id="ankEx" title="Show or hide the example sentence">例 Example</button>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
+        <button type="button" class="ank-mini" id="ankAutoAdv" title="Auto-advance through cards (tap to cycle the delay)">⏱ Auto-advance</button>
+      </div>
+      <div class="ank-search-wrap">
+        <input type="search" id="ankSearch" class="ank-search" placeholder="Search this deck…" aria-label="Search cards in this deck" autocomplete="off">
+        <div class="ank-search-res" id="ankSearchRes" role="listbox" hidden></div>
       </div>
     </div>`;
 }
@@ -724,6 +755,7 @@ function paintCard() {
          ${jump}`;
   }
   announce(`${card.w}${card.r ? ', ' + card.r : ''}${card.m ? ', ' + card.m : ''}${isShaky ? ', flagged shaky' : ''}`);
+  scheduleAuto();   // (re)start the auto-advance countdown for this card (no-op when auto is off)
 }
 
 function persistPos() {
@@ -833,9 +865,52 @@ function wireCommon() {
   $('#ankHira')?.addEventListener('click', flipHira);
   $('#ankEn')?.addEventListener('click', flipEn);
   $('#ankEx')?.addEventListener('click', flipEx);
+  $('#ankAutoAdv')?.addEventListener('click', () => {
+    const cur = getRaw(KEYS.ankiAutoAdv, '');
+    const nextSecs = AUTO_STEPS[(AUTO_STEPS.indexOf(AUTO_STEPS.includes(cur) ? cur : '') + 1) % AUTO_STEPS.length];
+    setRaw(KEYS.ankiAutoAdv, nextSecs);
+    syncAutoAdv(); scheduleAuto();
+  });
+  wireSearch();
   wireDeckChips();
   applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar
+  syncAutoAdv();    // reflect the persisted auto-advance delay on the button
 }
+
+// deck search — jump to any card by word / reading / meaning / sentence (a 2000-card deck needs it).
+function wireSearch() {
+  const input = $('#ankSearch'), res = $('#ankSearchRes');
+  if (!input || !res || !stream) return;
+  const close = () => { res.hidden = true; res.innerHTML = ''; scheduleAuto(); };   // resume auto-advance once search is dismissed
+  const run = () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { close(); return; }
+    const cards = stream.deck.cards;
+    const hits = [];
+    for (let i = 0; i < cards.length && hits.length < 12; i++) {
+      const c = cards[i];
+      if (`${c.w || ''} ${c.r || ''} ${c.m || ''} ${c.s || ''}`.toLowerCase().includes(q)) hits.push({ c, n: i + 1 });
+    }
+    res.innerHTML = hits.length
+      ? hits.map(h => `<button type="button" class="ank-search-hit" role="option" data-n="${h.n}"><span class="ank-sh-w" lang="ja">${esc(h.c.w || '')}</span><span class="ank-sh-m">${esc(h.c.m || '')}</span><span class="ank-sh-n">#${h.n}</span></button>`).join('')
+      : `<div class="ank-search-empty">No match</div>`;
+    res.hidden = false;
+    stopAuto();   // pause auto-advance while the results are open
+  };
+  input.addEventListener('input', run);
+  input.addEventListener('focus', run);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Escape') { input.value = ''; close(); input.blur(); } });
+  res.addEventListener('click', (e) => {
+    const b = e.target.closest('.ank-search-hit'); if (!b) return;
+    jumpToCard(parseInt(b.dataset.n, 10));
+    input.value = ''; close(); input.blur();
+  });
+  if (!_searchDocWired) {   // attach the outside-click close ONCE (wireCommon re-runs every render)
+    _searchDocWired = true;
+    document.addEventListener('click', (e) => { if (!e.target.closest('.ank-search-wrap')) { const r = $('#ankSearchRes'); if (r && !r.hidden) { r.hidden = true; r.innerHTML = ''; scheduleAuto(); } } });
+  }
+}
+let _searchDocWired = false;
 
 // deck library wiring — shared by the deck view and the import view (so you can switch/delete decks even
 // when the active deck's data is missing and you've landed on the import screen). Switch / delete / import.

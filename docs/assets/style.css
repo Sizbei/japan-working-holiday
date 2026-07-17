@@ -3890,6 +3890,18 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-sentaudio:hover{ opacity:1; }
 .ank-deck-add{ font-family: var(--mono); font-size:.72rem; font-weight:700; border:1px dashed var(--line); background:none; color: var(--ink-soft); border-radius: var(--r-sm); padding:.3rem .6rem; cursor:pointer; }
 .ank-deck-add:hover{ border-color: var(--indigo); color: var(--ink); }
+/* deck search — jump to any card by text */
+.ank-search-wrap{ position:relative; margin-top:.5rem; max-width: 22rem; }
+.ank-search{ width:100%; font:inherit; font-size:.82rem; padding:.4rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
+.ank-search:focus{ outline:none; box-shadow: var(--ring); border-color: var(--indigo); }
+.ank-search-res{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 3px); max-height: 15rem; overflow-y:auto; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); }
+.ank-search-hit{ display:flex; align-items:baseline; gap:.5rem; width:100%; text-align:left; border:none; border-bottom:1px solid var(--line); background:none; color: var(--ink); font:inherit; font-size:.82rem; padding:.4rem .6rem; cursor:pointer; }
+.ank-search-hit:last-child{ border-bottom:none; }
+.ank-search-hit:hover, .ank-search-hit:focus{ background: color-mix(in srgb, var(--indigo) 10%, transparent); }
+.ank-sh-w{ font-weight:700; flex:none; }
+.ank-sh-m{ color: var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:0; }
+.ank-sh-n{ font-family: var(--mono); font-size:.68rem; color: var(--ink-faint); flex:none; }
+.ank-search-empty{ padding:.5rem .6rem; font-size:.8rem; color: var(--ink-faint); }
 
 /* --- progress line --- */
 .ank-prog{ display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-top: var(--s3); font-family: var(--mono); font-size:.74rem; color: var(--ink-soft); }

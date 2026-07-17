@@ -4,8 +4,10 @@ Owner: "come up with a 15 round program that takes the best course teaching comp
 create a program for learning all the grammar … i want to be a jlpt master by the end of this.
 also let's add anime reference if possible, it'll make it easier for me to learn. … i want
 this stuff to go in the phrases section in the plan or maybe it's own section. decide what's
-best." REVISED twice under adversarial review (round 1: 4 critics; round 2: 3 critics — log
-at bottom).
+best. … let's make it the best learning style like coursera or any other learning platform
+level with saving progress planned." REVISED twice under adversarial review (round 1: 4
+critics; round 2: 3 critics; round 3: clean sign-off), then AMENDED with the course-platform
+layer (one focused critic pass — log at bottom).
 
 Research base (5 Opus researchers, 2026-07-17): course-pedagogy survey (Bunpro / WaniKani /
 Genki-Tobira / Cure Dolly / Game Gengo / Marugoto / Satori / 新完全マスター), learning-science
@@ -123,6 +125,57 @@ status after a month of use, promoting `HIDDEN`→`ROUTES` is a two-line change.
     (above). Named `flags` (not `reg`) to avoid confusion with the existing prose
     `register` field.
 
+## Course structure & progress persistence (the Coursera layer — owner ask, 2026-07-17)
+
+What actually makes Coursera-class platforms feel like a *course* rather than a deck:
+named modules with visible completion, one obvious "Continue" button, module checkpoint
+quizzes, and progress that survives anything. All four land here:
+
+- **Units (the modules).** Each JLPT level = a course; its points are grouped into named
+  thematic units of ~8–14 points (~35 units total: "N5 · Unit 3 — Particles II",
+  "N3 · Unit 5 — Conditionals & the たら/ば/なら/と war"). Grouping is a new light data
+  file `grammar-units.json` (authored in R3's PR; validator: every point in exactly one
+  unit, ids resolve, unit sizes 6–16). Units are a *navigation and motivation* layer over
+  the same 353 points — the SRS scheduler stays the single source of scheduling truth.
+- **Course home / syllabus.** The `#/study` landing: five course cards (per-level % +
+  ring), expanding to a unit accordion — ✓ lessons-done (✓★ gold once its checkpoint is
+  passed, from R8), ● in-progress, ○ untouched, per-unit progress bar — plus ONE primary **▶ Continue** button that resumes an interrupted
+  session if one exists, else opens today's session (due reviews + next lessons). Zero
+  "what do I do now" decisions, ever.
+- **Unit states, defined once:** ○ untouched → ● in-progress → **✓ = all the unit's
+  lessons done** (attainable from R3 day one) → **✓★ gold = checkpoint passed** (from R8).
+  A unit's lessons-done state unlocks its checkpoint regardless of the order the lessons
+  arrived (the exam-priority lever can fill a unit out of walk order — still unlocks).
+  **Course-% and the certificate key on point mastery (gates), never on checkpoints** —
+  checkpoints decorate and direct, they cannot block 100%.
+- **Unit checkpoints (module quizzes).** Completing a unit's lessons unlocks a 10-question
+  checkpoint (cloze/scramble/MCQ — live from R8, after the 3-example enrichment, so the
+  pool is always ≥18 items even for 6-point units). Pass ≥8/10 → ✓★ + `celebrate()`;
+  below → the missed points queue as reviews/duels and the checkpoint offers a retake
+  after they're cleared (Coursera retake semantics). **Continue routes through them**: an
+  unlocked, unpassed checkpoint is offered as the next Continue action before new lessons
+  — so checkpoints happen in the zero-decision flow, not as an optional side quest.
+  Checkpoints are **formative** — the SRS gate remains the only mastery truth.
+- **Progress saving, bulletproof.** (1) **Per-answer write-through**: every graded answer
+  persists to `jwh-study-v1` immediately — never on session end. (2) **Mid-session
+  resume**: the in-flight session (queue snapshot, position, per-card results) lives in a
+  `session` sub-state of the store; a killed tab / phone reboot reopens to "Continue
+  session — 12/45" at the exact card. **Idempotency invariant**: `session.results` is
+  display-only (summary + resume rendering); restore resumes at `pos` and NEVER re-applies
+  results to D/S — the write-through already committed them. Verified by a control-run
+  test: kill after N answers → resume → finish must yield byte-identical D/S/due to the
+  same session never killed. (3) **Cross-device honesty**: state is device-local
+  by doctrine (~55 KB, no server); moving devices = the existing backup.js export/import,
+  which already round-trips every `jwh-` key. R15's hardening explicitly tests
+  kill-mid-session resume and backup round-trip WITH an in-flight session.
+- **Weekly goal** (R11 dashboard): a small weekly ring (sessions done / goal, default 5) —
+  the Coursera "on track this week" signal — alongside the daily streak. **A session
+  counts when it reaches its summary screen; a resumed session counts once; max one per
+  day.** Goal is a settings dial; missing a week just resets the ring (no punishment
+  mechanics).
+- **Course %** rollups (unit → level → overall) + projected-finish date join the R15
+  pacing tab.
+
 ### Session & grading contract (the arbitration rules, spec'd in R1's lib, unit-tested)
 
 - **Typed correctness decides pass/fail.** Wrong → Again, automatically. Correct → the
@@ -159,14 +212,17 @@ lazy-mount on `jwh:route`). New modules: `lib/study.js` (pure scheduler + queue 
 arbitration, Node-tested), `lib/questions.js` (pure generators: cloze/scramble/MCQ/passage,
 Node-tested), `study.js` (session runner UI), later `study-exam.js` (mock mode, lazy). One
 new store key **`jwh-study-v1`** `{v, points:{[id]:{D,S,last,due,stage,reps,lapses,ghost,
-gate}}, log:[ring], settings:{newPerDay,capReviews,streak,freezes}}` (~55 KB at full corpus —
+gate}}, session:{queue,pos,results}|null, units:{[unitId]:{checkpoint}}, log:[ring],
+settings:{newPerDay,capReviews,streak,freezes,weeklyGoal}}` (~55 KB at full corpus —
 negligible against the 5 MB budget) registered in `KEYS`; backup.js prefix-walk covers it.
 **Shape-growth policy** (owned here, not discovered later): any round that grows the record
 shape bumps the key suffix and ships a migration in the same PR; R1 builds the
 `migrate(vN→vN+1)` scaffold and the ✓/◆ import is its first use. Data extensions live in
 `grammar-n*.json` (new optional fields: `confusable[]`, `distractors[]`, `peg{}`, `flags[]`,
 a third `examples[]` entry — each landing with its validator extension in the round that
-authors it; unknown fields don't break the current validator, verified). Bell/calendar
+authors it; unknown fields don't break the current validator, verified). Two new data
+files: `grammar-units.json` (R3) and `grammar-passages.json` (R12) — each joins SW
+`ASSETS` + the SWR regex in its round. Bell/calendar
 integration uses the existing `buildItems()` / `KEYS.events` seams (verified present).
 Every asset round bumps SW `CACHE` + `ASSETS` (called out per-round for new JS files); new
 *data files* also extend the SWR regex (`sw.js` line ~34). **CLAUDE.md and `i18n.js` frame
@@ -187,8 +243,9 @@ early-value claim does not depend on the assumption.
 ## The 15 rounds
 
 Each round = one PR (branch → PR → squash-merge, per repo prefs), implementation plan
-written at execution time. **R5 and R15 are the two flagged may-land-as-2-stacked-PRs
-rounds** (R5: data sweep N5–N3 / N2–N1; R15: analytics / hardening). R1 is the most likely
+written at execution time. **R3, R5 and R15 are the three flagged may-land-as-2-stacked-PRs
+rounds** (R3: units data + course home / lesson flow; R5: data sweep N5–N3 / N2–N1;
+R15: analytics / hardening). R1 is the most likely
 to overrun — its natural split seam is scheduler+stages vs queue+gate+arbitration.
 **Usable from R2.**
 
@@ -202,7 +259,8 @@ penalty; ghost sub-schedule (10m/1d/3d until 2 clean); leech at 5 lapses, auto-s
 8 with nudge. Queue builder: due-first, cap 45, overflow re-spread (max 2 deferrals per
 card), lapse amnesty, drip 4/day throttling to 0 when due &gt; cap·0.8, confusable/related
 co-scheduling hook, interleave shuffle (no massed same-point repetition — duels are the
-flagged pair-exception), staggered ✓/◆ seed import via the migration scaffold. ~20 unit
+flagged pair-exception), staggered ✓/◆ seed import via the migration scaffold; session sub-state
+(queue/pos/results) with snapshot/restore helpers for mid-session resume. ~20 unit
 tests incl. a simulated 400-day run asserting bounded daily load, no card deferred &gt;2×,
 and worst-case seeding completing by mid-Nov. Also: CLAUDE.md 352→353 fix.
 **Verify:** `node --test` green; simulation fixtures pass.
@@ -214,17 +272,26 @@ input; accepts surface `t` or reading via `readingOf`; kana-fold + NFKC; close-m
 per contract), immediate feedback with full example (ruby via `rubyHTML`, `.gtok` inspect
 layer reused), post-correct grade buttons + keyboard (scoped to container, root in
 `NO_SWIPE`), session summary, mobile bottom bar + tap zones, static-sibling live region.
-Seeds ✓/◆ on first run (staggered). **Plus the exam-anchor bake**: JLPT dates +
+**Per-answer write-through persistence and mid-session resume from day one**: every grade
+saves immediately; reopening after a kill shows "Continue session — 12/45" at the exact
+card. Seeds ✓/◆ on first run (staggered). **Plus the exam-anchor bake**: JLPT dates +
 registration windows into `tips.json` (`timeSensitive` **with `dueBy` on each entry** — the
 bell rides `timeSensitive.dueBy`, not `calendar` — plus `calendar` entries for the calendar
 surface, confidence-flagged) — pure data, ~10 lines, ships in July so the bell nags the
 late-Aug Dec-registration window on time.
 **Verify:** full session desktop+mobile emulation, no console errors; seeded review
-round-trips to a future due date; focus restore across rebuilds; json.tool green;
-registration deadline visible in the bell.
+round-trips to a future due date; kill-the-tab mid-session and resume at the same card (with the D/S/due control-run
+idempotency assertion in lib);
+focus restore across rebuilds; json.tool green; registration deadline visible in the bell.
 
-### R3 — Lessons: 3-beat onboarding + placement sweep + test-out
-"Learn" tab: today's 4 new points (level-ordered N5→N1, `related`-aware prerequisites
+### R3 — Course home + lessons: syllabus, 3-beat onboarding, placement, test-out
+**The Coursera face lands here.** `grammar-units.json` (authored unit map, ~35 named
+units, validator: every point in exactly one unit, ids resolve, sizes 6–16) + the course
+home as the `#/study` landing: five level cards with progress rings → unit accordion
+(✓/●/○ per the unit-state definitions above; ✓★ arrives with R8) → ONE primary
+**▶ Continue** button (in-flight session → resume; un-placed fresh store → the placement
+sweep; else today's session). Flagged may-land-as-2-stacked-PRs (units data + course
+home / lesson flow). Lessons — "Learn" surface: today's 4 new points (level-ordered N5→N1, `related`-aware prerequisites
 first; **exam-priority lever** — when a sitting is registered, that level's unseeded
 points jump the queue, **pulling their unseeded `related` prerequisites along with them**
 — the lever never front-runs a prerequisite). Per point: rule card
@@ -236,8 +303,10 @@ N1/`written-formal` points) on distinct examples (from R8 on, +1 confusable MCQ)
 **Mature with ~2-week due** — hard enough to resist guessing, without re-flooding weekly
 reviews for material the owner demonstrably knows; a false positive fails its ~2-week
 review and demotes normally.
+Lesson ordering follows unit order within a level (units define the syllabus walk).
 **Verify:** drip/throttle honored; test-out and lever-prerequisite closure unit-tested;
-lesson→review handoff under a mocked clock.
+lesson→review handoff under a mocked clock; units validator green; Continue button
+resolves correctly in all four states (in-flight / un-placed / due-only / fresh).
 
 ### R4 — ★ scramble + interleaving on
 `lib/questions.js` scramble: group tokens into 4 natural chunks (pattern span whole,
@@ -288,9 +357,13 @@ MCQ generator (blank pattern, 4 choices = answer + confusables/distractors, same
 fallback, shuffle, no-repeat window). **Nuance duel**: two confusable points, 6 rapid
 "which fits?" sentences — the bounded massed-pair exception, ≤1 per session, launchable
 from any grammar card ("vs. 〜ように" chip). Both formats join the stage mix; test-out
-gains its third item (confusable MCQ) here.
+gains its third item (confusable MCQ) here. **Unit checkpoints go live**: 10-question
+module quiz on unit-lesson completion (≥8/10 → **✓★ gold** + celebrate; below → missed
+points queue as reviews/duels, retake after they clear); Continue offers unlocked,
+unpassed checkpoints before new lessons. Pre-R8, lessons-done units already show plain ✓
+("checkpoint unlocks soon" hint, no degraded quiz).
 **Verify:** generator unit tests (distractor precedence, dedupe); duel from reference page;
-duel-per-session bound asserted.
+duel-per-session bound asserted; checkpoint pass/fail/retake state machine tested.
 
 ### R9 — Hints, ghosts, leeches (struggle UX)
 Hint ladder UI per the contract (peg excluded); hint→grade-cap coupling (lib, tested).
@@ -310,7 +383,9 @@ completion tracks the Jun-2027 projection; sentence-build renders with model com
 
 ### R11 — Habit dashboard
 Dashboard study widget (due count, streak flame = days-shown-up, freezes, per-level
-goal-gradient rings "N4: 61/86 mastered"); bell `reviews due` via the `buildItems()` seam
+goal-gradient rings "N4: 61/86 mastered", weekly-goal ring — sessions done / weekly goal,
+a settings dial defaulting to 5, resets without punishment); bell `reviews due` via the
+`buildItems()` seam
 (one source branch, ids encode `@date`, no double-count with checklist dueBy);
 `celebrate()` on Mature stage-ups, gate passes, and level completions. i18n widget strings.
 **Verify:** bell shows due next morning (lib clock test); widget honors reduce-motion; no
@@ -347,10 +422,13 @@ dodge homograph misreads — is noted as a post-program idea, deliberately out o
 
 ### R15 — Analytics, pacing, hardening, the Master moment (flagged: 2 stacked PRs)
 **Mastery tab**: 353-cell heat grid (stage-colored, tap-through), weakest-cluster rollup,
-leech history, estimated retention, mock trendline, exam-countdown pacing (projected
-all-gates-passed date vs Dec 6 / Jul 4; one-tap re-pace adjusts newPerDay only via explicit
-tap). **Hardening**: a11y (focus order, live regions, stage-color contrast), reduce-motion,
-airplane-mode full session + mock, backup/restore round-trip of the study key, perf (no
+leech history, estimated retention, mock trendline, course-% rollups (unit → level →
+overall, keyed on point mastery — checkpoints can never block 100%) + projected-finish
+date, exam-countdown pacing (projected all-gates-passed date
+vs Dec 6 / Jul 4; one-tap re-pace adjusts newPerDay only via explicit tap). **Hardening**:
+a11y (focus order, live regions, stage-color contrast), reduce-motion, airplane-mode full
+session + mock, kill-mid-session resume, backup/restore round-trip of the study key WITH
+an in-flight session, perf (no
 boot regression), guide chapter, final CLAUDE.md/KEYS/SW/i18n sweep. Then the payoff:
 **JLPT Master certificate** when all 353 gates pass — celebration sequence + a printable,
 identity-free certificate card (stats: days, reviews, accuracy, five level rings at 100%).
@@ -454,3 +532,21 @@ the first PR of its stack. Noted, not acted on: keigo-critical∧written-formal 
 recognition-gate (defensible — written keigo is template-like); "neutral-polite" default
 naming; やがる sits in yakuwarigo column though it's productive vulgar speech (the
 "never reproduce" instruction is safe either way).
+
+**Amendment (2026-07-17, owner: "best learning style like coursera … with saving progress
+planned"; 1 focused Opus critic, 2 passes).** Added the Coursera layer: named units
+(`grammar-units.json`, ~35), course home/syllabus with a single Continue button, unit
+checkpoints, per-answer write-through + mid-session resume, weekly-goal ring, course-%
+rollups. Critic pass 1 found 2 majors, both fixed: [M1] unit-✓ was defined as
+checkpoint-pass, unreachable before R8 and skippable forever after (Continue never routed
+to checkpoints; course-% could never hit 100%) → unit states defined once (✓ =
+lessons-done from R3; ✓★ gold = checkpoint passed from R8; Continue routes through
+unlocked checkpoints; course-% and certificate key on gates, never checkpoints); [M2] no
+resume-idempotency rule — replaying `session.results` on restore would double-apply D/S →
+invariant added (results are display-only; restore never re-applies) + control-run verify
+in R2, with R15 round-tripping an in-flight session. Minors fixed: flagged-rounds list updated to three (R3/R5/R15); "a session"
+defined for the weekly ring (reaches summary, counts once, max 1/day); Continue gains the
+un-placed state (placement sweep first); lever-filled units unlock checkpoints regardless
+of lesson order. Cleared by the critic as non-issues: localStorage write cadence
+(per-answer ≈ every 15–25 s, ~55 KB key — fine), checkpoint pool size (≥18 items even for
+6-point units post-R5). Pass 2: verified fixes, signed off.

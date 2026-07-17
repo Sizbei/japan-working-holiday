@@ -9,6 +9,7 @@ import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { searchPoints, readingOf, shakyRows } from './lib/grammar.js';
+import { pegHTML, flagBadgesHTML, matchesFlag } from './lib/peg.js';
 import { toAnkiTSV } from './lib/anki.js';
 import { lookupWord } from './lang.js';          // shared Jotoba lookup (exported); GLOSSARY is NOT re-exported —
 import { GLOSSARY } from './i18n.js';            // it comes straight from i18n.js (plan, round-2 finding)
@@ -18,7 +19,7 @@ const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'dat
 const CHUNK = 60;                                // cards appended per IntersectionObserver step
 
 const cache = {};                                // level → points, module-cached after first fetch
-const state = { level: 'N5', q: '', shown: CHUNK, sort: '' };
+const state = { level: 'N5', q: '', shown: CHUNK, sort: '', flag: '' };
 let fetchedAll = false;                          // search is global — remaining levels fetch on first search focus
 let io = null;
 let viewList = [];                               // the ordered points snapshotted at each renderList (appendChunk + the IO length-gate read this, not a fresh sort)
@@ -54,11 +55,20 @@ export function mountGrammar() {
         <option value="az">Sort: A→Z</option>
         <option value="unseen">Sort: unseen first</option>
       </select>
+      <select class="g-sort g-flag-f" id="gFlagF" aria-label="Filter by register flag">
+        <option value="">Register: all</option>
+        <option value="anime-common">🎬 anime</option>
+        <option value="casual-spoken">casual</option>
+        <option value="written-formal">written</option>
+        <option value="keigo-critical">keigo ★</option>
+        <option value="recognize-only">recognize-only</option>
+      </select>
     </div>
     <div class="g-prog" id="gProg" hidden>
       <span class="g-prog-t" id="gProgT"></span>
       <span class="g-prog-bar" aria-hidden="true"><span class="g-prog-fill" id="gProgFill"></span></span>
     </div>
+    ${cheatSheetHTML()}
     <div id="gList"></div>
     <div id="gSentinel" aria-hidden="true"></div>`;
   loadProg();
@@ -112,6 +122,7 @@ function currentPoints() {
     const pts = cache[state.level] || [];
     base = state.shakyOnly ? pts.filter(p => prog.shaky.includes(p.id)) : pts;
   }
+  if (state.flag) base = base.filter(p => matchesFlag(p, state.flag));   // composes with search + shaky
   return sortPoints(base);
 }
 
@@ -145,6 +156,14 @@ function wireBar(root) {
     deb = setTimeout(() => { state.q = e.target.value.trim(); state.shown = CHUNK; renderList(); }, 150);
   });
   $('#gSort').addEventListener('change', (e) => { state.sort = e.target.value; state.shown = CHUNK; staggerNext = true; renderList(); });
+  $('#gFlagF').addEventListener('change', (e) => { state.flag = e.target.value; state.shown = CHUNK; staggerNext = true; renderList(); });
+  root.querySelector('.g-cheat-h')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    const body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (body) body.hidden = open;
+  });
   $('#gExport').addEventListener('click', exportShaky);
   $('#gShakyF').addEventListener('click', () => {
     state.shakyOnly = !state.shakyOnly;
@@ -235,9 +254,11 @@ function renderList() {
   if (!pts.length) {
     list.innerHTML = state.q
       ? `<p class="g-empty">No matches for “${esc(state.q)}” — try the pattern's kana, its romaji (maeni), or an English word.</p>`
-      : (FILES[state.level]
-        ? `<p class="g-empty">Nothing here yet.</p>`
-        : `<p class="g-empty">${esc(state.level)} isn't baked yet — N5 is live; the other levels land phase by phase.</p>`);
+      : state.flag
+        ? `<p class="g-empty">No ${esc(state.level)} points carry that register flag — clear the register filter to see them all.</p>`
+        : (FILES[state.level]
+          ? `<p class="g-empty">Nothing here yet.</p>`
+          : `<p class="g-empty">${esc(state.level)} isn't baked yet — N5 is live; the other levels land phase by phase.</p>`);
     announce(state.q ? `No matches for ${state.q}` : `${state.level}: no data yet`);
     updateProgressUI();
     return;
@@ -274,12 +295,14 @@ function cardHTML(p, delay = -1) {
       <p class="g-conn"><b>Connection</b> <span lang="ja">${esc(p.connection)}</span></p>
       ${p.nuance ? `<p class="g-nuance">${esc(p.nuance)}</p>` : ''}
       ${(p.examples || []).map(exampleHTML).join('')}
+      ${pegHTML(p)}
       ${p.caution ? `<p class="g-caution">⚠ ${esc(p.caution)}</p>` : ''}
       ${(p.related || []).length ? `<p class="g-rel">See also ${p.related.map(relChip).join(' ')}</p>` : ''}
       <div class="g-foot">
         <button type="button" class="g-mark g-mark-done" data-mark="done" aria-pressed="${prog.done.includes(p.id)}">✓ Studied</button>
         <button type="button" class="g-mark g-mark-shaky" data-mark="shaky" aria-pressed="${prog.shaky.includes(p.id)}">◆ Shaky</button>
         ${p.register ? `<span class="g-reg">${esc(p.register)}</span>` : ''}
+        ${flagBadgesHTML(p)}
         <span class="badge ${esc(p.confidence)}">${esc(p.confidence)}</span>
       </div>
     </div>
@@ -299,6 +322,40 @@ function exampleHTML(ex) {
 function relChip(id) {
   const pt = LEVELS.flatMap(l => cache[l] || []).find(p => p.id === id);
   return `<button type="button" class="g-rel-chip" data-target="${esc(id)}" lang="ja">${esc(pt ? pt.pattern : id)}</button>`;
+}
+
+// R6 archetype→register cheat-sheet: a static disclosure (built once with the bar). TWO opposite
+// instructions, visually split — the keigo you must PRODUCE vs the yakuwarigo you only RECOGNIZE.
+// Authored English card content (no i18n keys per the card-content doctrine); the JP is literal
+// text in plain lang=ja spans (no .gtok/.jp token layer). Collapsed by default.
+function cheatSheetHTML() {
+  return `
+    <div class="g-cheat">
+      <button type="button" class="g-cheat-h" aria-expanded="false" aria-controls="gCheatBody">
+        <span>🎭 Archetype → register cheat-sheet — who to copy, who to only recognize</span>
+        <span class="c-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="g-cheat-b" id="gCheatBody" hidden>
+        <div class="g-cheat-cols">
+          <section class="g-cheat-half g-cheat-produce">
+            <h4>Master &amp; produce — the Tokyo-workplace prize</h4>
+            <p class="g-cheat-lede">Real keigo. Learn to say it, not just read it — this is the register that gets you hired and keeps the konbini shift smooth.</p>
+            <p class="g-cheat-row"><b lang="ja">お〜になる</b> — respectful (sonkeigo). <span class="g-cheat-note"><span lang="ja">部長はもうお帰りになりました</span> — "the manager has already left." Talking up your boss / a customer.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜いたす / お〜する</b> — humble (kenjougo). <span class="g-cheat-note"><span lang="ja">私がご案内いたします</span> — "I'll show you the way." Lowering yourself in an interview or serving a guest.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜ていただけますか</b> — the polite request you'll live on. <span class="g-cheat-note"><span lang="ja">もう一度ご説明いただけますか</span> (interview) · <span lang="ja">袋にお入れいただけますか</span> (konbini).</span></p>
+          </section>
+          <section class="g-cheat-half g-cheat-recognize">
+            <h4>Recognize, never reproduce — yakuwarigo (役割語)</h4>
+            <p class="g-cheat-lede">Fictional "role language." It tells you instantly who's speaking on screen — and marks you as cosplaying if you say it to a real person.</p>
+            <p class="g-cheat-row"><b lang="ja">〜ですわ / かしら</b> — refined feminine. <span class="g-cheat-note"><span lang="ja">そうですわ、素敵かしら</span> — rich/elegant ojou-sama heroines.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜やがる / てめえ</b> — rough &amp; hostile. <span class="g-cheat-note"><span lang="ja">何しやがる、てめえ</span> — delinquents, brawlers, tough-guy rivals.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜じゃ / わし</b> — old-sage speech. <span class="g-cheat-note"><span lang="ja">わしは知っておるのじゃ</span> — wise old men, masters, ancient spirits.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜でござる</b> — samurai register. <span class="g-cheat-note"><span lang="ja">拙者は侍でござる</span> — samurai, ninja, retro-warrior types.</span></p>
+            <p class="g-cheat-row"><b lang="ja">〜である ＋ 我々</b> — authoritative / military. <span class="g-cheat-note"><span lang="ja">我々は必ず勝利するのである</span> — commanders, narrators, villain monologues.</span></p>
+          </section>
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderLoadError(level) {

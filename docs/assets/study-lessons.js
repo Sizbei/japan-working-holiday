@@ -16,6 +16,7 @@
 
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
+import { pegHTML, flagBadgesHTML } from './lib/peg.js';
 import { clozeFor, checkAnswer, scrambleFor } from './lib/questions.js';
 import { review, effectiveGrade, testOutResult, gateMode } from './lib/study.js';
 import { scrambleCard } from './study-scramble.js';
@@ -182,7 +183,9 @@ export function startLessons(ctx, ids) {
         <div class="stu-lesson-top"><span class="stu-lesson-tag">Learn · ${esc(String(i + 1))}/${esc(String(queue.length))}</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
         <p class="stu-pat" lang="ja">${esc(p.pattern || '')}</p>
         ${p.reading ? `<p class="stu-pat-read" lang="ja">${esc(p.reading)}</p>` : ''}
+        ${flagBadgesHTML(p) ? `<p class="stu-flags">${flagBadgesHTML(p)}</p>` : ''}
         <dl class="stu-rule">${rows}</dl>
+        ${pegHTML(p)}
         <div class="stu-controls"><button type="button" class="stu-btn stu-btn-primary" data-act="beat2">Got it — practise →</button></div>
       </div>`;
     focusIn(root, '.stu-btn-primary');

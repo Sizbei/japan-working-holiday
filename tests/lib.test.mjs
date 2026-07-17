@@ -1953,6 +1953,49 @@ test('study: gate fail resets passes AND demotes below Deep', () => {
   assert.ok(st.points.g.S < 21);
 });
 
+// R10 integration: the gate goes live on real reviews. Drive a fresh point up the ladder with
+// on-schedule passes until it reaches Deep, THEN run its scheduled reviews in gate mode — the
+// end-to-end path R10 wires up (the mechanics are unit-tested above; this asserts the whole climb).
+test('study: R10 gate end-to-end — reviews reach Deep, then 3 distinct passes → Mastered', () => {
+  let st = review(newState(T0), 'e', { pass: true, grade: 4 }, T0);
+  let guard = 0;
+  while (stageOf(st.points.e) !== 'deep' && guard++ < 60) {
+    st = review(st, 'e', { pass: true, grade: 4, exampleIdx: 0, mode: 'review' }, st.points.e.due);
+  }
+  assert.equal(stageOf(st.points.e), 'deep', 'on-schedule passes climb organically to Deep');
+  assert.ok(!st.points.e.gate || !st.points.e.gate.passed, 'not yet mastered at Deep');
+  // now Deep → scheduled reviews are gate-mode; 3 passes on DISTINCT examples complete the gate
+  st = review(st, 'e', { pass: true, grade: 3, exampleIdx: 0, mode: 'gate' }, st.points.e.due);
+  assert.deepEqual(st.points.e.gate.passes, [0]);
+  st = review(st, 'e', { pass: true, grade: 3, exampleIdx: 0, mode: 'gate' }, st.points.e.due);  // REPEAT idx
+  assert.deepEqual(st.points.e.gate.passes, [0], 'a repeated example index does not advance the count');
+  assert.notEqual(stageOf(st.points.e), 'mastered');
+  st = review(st, 'e', { pass: true, grade: 3, exampleIdx: 1, mode: 'gate' }, st.points.e.due);
+  st = review(st, 'e', { pass: true, grade: 3, exampleIdx: 2, mode: 'gate' }, st.points.e.due);
+  assert.equal(stageOf(st.points.e), 'mastered');
+  assert.equal(st.points.e.gate.passed, true);
+});
+
+// A failed gate check halves S and demotes a FRESHLY-Deep point below Deep (S≈22 → ≈11). (The
+// accumulated-passes reset — a fail wiping [0,1] — is the synthetic unit test above; here we assert
+// the halving+demotion on the organic climb, which only holds while S is close to the Deep floor:
+// after several real gate passes S grows well past 42, so halving no longer demotes, by design.)
+test('study: R10 gate end-to-end — a fail at fresh Deep halves S and demotes below Deep', () => {
+  let st = review(newState(T0), 'f', { pass: true, grade: 4 }, T0);
+  let guard = 0;
+  while (stageOf(st.points.f) !== 'deep' && guard++ < 60) {
+    st = review(st, 'f', { pass: true, grade: 4, exampleIdx: 0, mode: 'review' }, st.points.f.due);
+  }
+  assert.equal(stageOf(st.points.f), 'deep');
+  const sBefore = st.points.f.S;
+  assert.ok(sBefore < 42, 'freshly Deep — S below twice the Deep floor');
+  st = review(st, 'f', { pass: false, grade: 1, exampleIdx: 0, mode: 'gate' }, st.points.f.due);
+  assert.deepEqual(st.points.f.gate.passes, [], 'fail leaves no banked passes');
+  assert.ok(st.points.f.S <= sBefore * 0.5 + 1e-9, 'fail at least halves S');
+  assert.notEqual(stageOf(st.points.f), 'deep', 'demoted below Deep — must re-climb before re-gating');
+  assert.notEqual(stageOf(st.points.f), 'mastered');
+});
+
 test('study: ghost ladder — 2 consecutive passes exit, S ≥ 3', () => {
   let st = seedImport(newState(T0), { shaky: ['s'] }, T0);
   assert.ok(st.points.s.ghost);

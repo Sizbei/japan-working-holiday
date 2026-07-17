@@ -26,6 +26,7 @@ import { pegHTML } from './lib/peg.js';
 import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
+import { isGateCard, buildGateCard, gateHeaderHTML, gatePasses, mountGateTimer, gateFeedback } from './study-gate.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -40,6 +41,7 @@ const levelFetched = {};          // level → true once its file is loaded
 let root = null;
 let card = null;                  // { id, exIdx, point, type, ... } for the live card
 let cardCtl = null;               // active ★-scramble sub-controller (study-scramble.js) while a scramble card shows
+let gateTimerCtl = null;          // R10: the soft gate-card countdown controller (torn down on every rebuild)
 let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble'
 let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
 const expandedLevels = new Set(); // course-home accordion: which level cards are open
@@ -86,6 +88,9 @@ export async function mountStudy() {
 }
 
 function save() { set(KEYS.study, state); }
+
+// R10: stop the soft gate countdown (idempotent) — called before every root rebuild + on nav away.
+function teardownGateTimer() { if (gateTimerCtl) { gateTimerCtl.teardown(); gateTimerCtl = null; } }
 
 // ── units (the R3 course/syllabus map — one small file, SWR-cached like the grammar files) ──
 async function loadUnits() {
@@ -147,6 +152,37 @@ function lessonIds() {
 }
 function unitOf(id) { return units.find(u => u.points.includes(id)) || null; }
 
+// R10: light mastery surfacing for the course home — mastered (gate-passed) count per level (the
+// goal-gradient numerator) + how many points are currently IN the gate (at Deep, being gated). The
+// full mastery analytics tab is R15; this is just the two headline counts. Reads state.points only
+// (no corpus needed), so it's correct even when levels are cold.
+function masteryStats() {
+  const perLevel = { N5: 0, N4: 0, N3: 0, N2: 0, N1: 0 };
+  let inGate = 0;
+  for (const [id, p] of Object.entries(state.points)) {
+    const st = stageOf(p);
+    if (st === 'mastered') { const lv = levelOf(id); if (lv && perLevel[lv] != null) perLevel[lv]++; }
+    else if (st === 'deep') inGate++;
+  }
+  return { perLevel, inGate };
+}
+
+// the pool for the optional "Build a sentence" drill: Deep + Mastered points whose corpus data is
+// loaded (so a model example is available). Practice-only — never scheduled.
+function buildPointIds() {
+  const out = [];
+  for (const [id, p] of Object.entries(state.points)) {
+    const st = stageOf(p);
+    if ((st === 'deep' || st === 'mastered') && pointsCache[id]) out.push(id);
+  }
+  return out;
+}
+function pickBuildPoint() {
+  const ids = buildPointIds();
+  if (!ids.length) return null;
+  return pointsCache[ids[Math.floor(Math.random() * ids.length)]];
+}
+
 // The ▶ Continue state machine, in strict priority order.
 function continueState() {
   const now = Date.now();
@@ -190,10 +226,11 @@ function ringHTML(introduced, total) {
     <span class="stu-ring-pct">${esc(String(pct))}%</span></span>`;
 }
 
-function levelCardHTML(level) {
+function levelCardHTML(level, mstats) {
   const lus = units.filter(u => u.level === level);
   let intro = 0, total = 0;
   for (const u of lus) { const pr = unitProgress(u, state.points); intro += pr.introduced; total += pr.total; }
+  const mastered = (mstats && mstats.perLevel[level]) || 0;
   const open = expandedLevels.has(level);
   const rows = open ? lus.map(u => {
     const pr = unitProgress(u, state.points);
@@ -217,7 +254,7 @@ function levelCardHTML(level) {
     <button type="button" class="stu-lvl-head" data-act="expand" data-level="${esc(level)}" aria-expanded="${open ? 'true' : 'false'}">
       ${ringHTML(intro, total)}
       <span class="stu-lvl-name">${esc(level)}</span>
-      <span class="stu-lvl-meta">${esc(String(lus.length))} units · ${esc(String(intro))}/${esc(String(total))} introduced</span>
+      <span class="stu-lvl-meta">${esc(String(lus.length))} units · ${esc(String(intro))}/${esc(String(total))} introduced${mastered ? ` · <span class="stu-lvl-mastered">${esc(String(mastered))}/${esc(String(total))} mastered</span>` : ''}</span>
       <span class="stu-lvl-caret" aria-hidden="true">${open ? '▾' : '▸'}</span>
     </button>
     ${open ? `<div class="stu-unit-list">${rows}</div>` : ''}</div>`;
@@ -275,21 +312,31 @@ function leechPanelHTML() {
 
 function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
+  teardownGateTimer();
   const cs = continueState();
+  const mstats = masteryStats();
   const examVal = state.settings.examLevel || '';
   const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
-  const cards = units.length ? LEVELS.map(levelCardHTML).join('')
+  const cards = units.length ? LEVELS.map(l => levelCardHTML(l, mstats)).join('')
     : `<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p>`;
   const nGhost = ghostCount(state);
   const hauntHTML = nGhost
     ? `<p class="stu-haunt-count">👻 ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
+  // R10: Deep points are the ones actively being gated (their next reviews are mastery checks).
+  const gateHTML = mstats.inGate
+    ? `<p class="stu-gate-count">🎯 ${esc(String(mstats.inGate))} in the gate — mastery ${mstats.inGate === 1 ? 'check' : 'checks'} in progress.</p>` : '';
+  const canBuild = mstats.inGate > 0 || Object.values(mstats.perLevel).some(n => n > 0);
+  const buildBtn = canBuild
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart">✍️ Build a sentence</button>` : '';
   root.innerHTML = `
     <div class="stu-home">
       <div class="stu-cont-wrap">${continueButtonHTML(cs)}</div>
+      ${gateHTML}
       ${hauntHTML}
       <div class="stu-home-cards">${cards}</div>
       ${leechPanelHTML()}
       <div class="stu-home-foot">
+        ${buildBtn}
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
         <label class="stu-exam"><span>Preparing for</span>
           <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
@@ -377,6 +424,29 @@ async function launchPlacement() {
 
 async function ensureAllLevels() {
   await Promise.all(LEVELS.filter(l => !levelFetched[l]).map(loadLevel));
+}
+
+// R10: the optional "Build a sentence" practice drill (study-build.js). Warms every level so any
+// Deep/Mastered point resolves to a model example, then hands a random one to the lazy build flow.
+// Practice ONLY — the flow never calls review()/schedules (asserted by the module's contract).
+async function launchBuild() {
+  if (launching || activeFlow) return;
+  launching = true;
+  try {
+    await ensureAllLevels();
+    const p = pickBuildPoint();
+    if (!p) { renderCourseHome(); return; }
+    const m = await import('./study-build.js');
+    activeFlow = m.startBuild({
+      root, announce,
+      nextPoint: pickBuildPoint,
+      done: () => { activeFlow = null; renderCourseHome('.stu-build-btn'); },
+    }, p);
+  } catch (err) {
+    console.error('build failed to load', err);
+    renderCourseHome();
+    announce('Could not load the practice drill — check your connection and try again.');
+  } finally { launching = false; }
 }
 
 // R8: run a unit's 10-question checkpoint (lazy study-lessons.js flow). Every level must be warm so
@@ -468,6 +538,10 @@ function buildCard() {
   const point = pointsCache[id];
   if (!point || !Array.isArray(point.examples) || !point.examples.length) return null;
   const p = state.points[id];
+  // R10: a point at Deep runs its scheduled review in GATE MODE (production cloze, or recognition
+  // MCQ/scramble per gateMode) — this OVERRIDES the R4/R8 format rotation. Falls through to a normal
+  // review only if the gate card can't render (buildGateCard → null).
+  if (p && isGateCard(p)) { const gc = buildGateCard(id, point, p, pointsCache); if (gc) return gc; }
   const exIdx = (((p && p.reps) || 0) + idHash(id)) % point.examples.length;
   const fmt = pickFormat(id, point, p);
   if (fmt === 'scramble') {
@@ -521,6 +595,7 @@ function renderCard() {
   const s = state.session;
   if (!s || s.pos >= s.queue.length) { renderSummary(); return; }
   cardCtl = null;
+  teardownGateTimer();
   card = buildCard();
   if (!card) {                       // unrenderable — advance without touching the schedule
     state = sessionRecord(state, { id: s.queue[s.pos], skipped: true });
@@ -534,9 +609,10 @@ function renderCard() {
   const sentence = renderSentence(card.blankedTokens, false);
   const total = s.queue.length, n = s.pos + 1;
   root.innerHTML = `
-    <div class="stu-card">
+    <div class="stu-card${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+      ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <p class="stu-sentence" lang="ja">${sentence}</p>
       <div class="stu-hints" id="stuHints" hidden></div>
@@ -546,12 +622,13 @@ function renderCard() {
       </div>
       <p class="stu-cap" id="stuCap" hidden></p>
       <div class="stu-feedback" id="stuFeedback" aria-live="off"></div>
-      <div class="stu-controls" id="stuControls">${controlsFor('input')}</div>
+      <div class="stu-controls" id="stuControls">${controlsFor('input', card.gate)}</div>
       <span class="stu-tap stu-tap-l" id="stuTapL" aria-hidden="true"></span>
       <span class="stu-tap stu-tap-r" id="stuTapR" aria-hidden="true"></span>
     </div>`;
   $('#stuInput')?.focus({ preventScroll: true });
-  announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — type the missing grammar.`);
+  if (card.gate) gateTimerCtl = mountGateTimer($('#stuGateTimer'));
+  announce(`Card ${n} of ${total}. ${card.gate ? 'Mastery check. ' : ''}${card.point.pattern || ''} — type the missing grammar.`);
 }
 
 // ── ★-scramble card (R4) ─────────────────────────────────────────────────────
@@ -563,15 +640,17 @@ function renderScrambleCard() {
   const total = s.queue.length, n = s.pos + 1;
   phase = 'scramble';
   root.innerHTML = `
-    <div class="stu-card stu-card-scramble">
+    <div class="stu-card stu-card-scramble${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+      ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuScramHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuScramHost');
   cardCtl = scrambleCard({ announce }, hostEl, card.point, card.exIdx, { grade: true, onResult: onScrambleResult });
-  announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — arrange the pieces to build the sentence.`);
+  if (card.gate) gateTimerCtl = mountGateTimer($('#stuGateTimer'));
+  announce(`Card ${n} of ${total}. ${card.gate ? 'Mastery check. ' : ''}${card.point.pattern || ''} — arrange the pieces to build the sentence.`);
 }
 
 // ── MCQ card (R8) ────────────────────────────────────────────────────────────
@@ -583,26 +662,30 @@ function renderMcqCard() {
   const total = s.queue.length, n = s.pos + 1;
   phase = 'mcq';
   root.innerHTML = `
-    <div class="stu-card stu-card-mcq">
+    <div class="stu-card stu-card-mcq${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+      ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuMcqHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuMcqHost');
   cardCtl = mcqCard({ announce }, hostEl, card.mcq, { grade: true, point: card.point, onResult: onMcqResult });
-  announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — choose the grammar that fills the blank.`);
+  if (card.gate) gateTimerCtl = mountGateTimer($('#stuGateTimer'));
+  announce(`Card ${n} of ${total}. ${card.gate ? 'Mastery check. ' : ''}${card.point.pattern || ''} — choose the grammar that fills the blank.`);
 }
 
 // Correct pick → the learner's Hard/Good/Easy; wrong pick → Again (typedCorrect:false → grade 1).
 function onMcqResult({ pass, chosen }) {
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
+  const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
-  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
+  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
-  maybeGhostExit(card.id, wasGhost);
+  if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
+  else maybeGhostExit(card.id, wasGhost);
   cardCtl = null;
   renderCard();
 }
@@ -611,11 +694,13 @@ function onMcqResult({ pass, chosen }) {
 function onScrambleResult({ pass, chosen }) {
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
+  const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
-  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
+  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
-  maybeGhostExit(card.id, wasGhost);
+  if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
+  else maybeGhostExit(card.id, wasGhost);
   cardCtl = null;
   renderCard();
 }
@@ -658,9 +743,9 @@ function exampleEN(c) { const ex = c.point.examples[c.exIdx]; return (ex && ex.e
 
 // per-phase control bar. Buttons carry data-act; the delegated click handler + the keyboard
 // map both route through the same handlers.
-function controlsFor(ph) {
+function controlsFor(ph, gate) {
   if (ph === 'input') return `
-    <button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint">💡 Hint</button>
+    ${gate ? '' : '<button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint">💡 Hint</button>'}
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reveal">Don't know</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="check">Check ⏎</button>`;
   if (ph === 'close') return `
@@ -702,7 +787,9 @@ function hintCapLabel() {
   return cap === 2 ? 'Hard' : cap === 3 ? 'Good' : 'Easy';
 }
 function useHint() {
-  if (phase !== 'input' || !card || card.type !== 'cloze') return;
+  // hints are DISABLED in gate mode (a mastery check must be hint-free); the button isn't even
+  // rendered on a gate card, but guard here too so a stray keybinding can't open the ladder.
+  if (phase !== 'input' || !card || card.type !== 'cloze' || card.gate) return;
   const used = card.hintUsed || 0;
   if (used >= HINT_TIERS.length) return;
   const tier = HINT_TIERS[used];
@@ -755,6 +842,7 @@ function submitAnswer() {
 // reveal the full sentence + EN; open either the grade buttons (correct / close-accept) or the
 // Again continue (wrong).
 function reveal(next, opts = {}) {
+  if (card.gate) teardownGateTimer();   // the soft timer's job ends the moment the answer is shown
   const sentEl = root.querySelector('.stu-sentence');
   if (sentEl) sentEl.innerHTML = renderSentence(card.blankedTokens, true);
   root.querySelector('.stu-en')?.removeAttribute('hidden');
@@ -781,7 +869,8 @@ function reveal(next, opts = {}) {
       : 'Correct. Choose Hard, Good or Easy.');
   } else {
     phase = 'wrong';
-    if (fb) fb.innerHTML = `<span class="stu-fb-wrong">Not quite — the answer is <b lang="ja">${esc(card.answers[0])}</b>.</span>` + peg;
+    const gateNote = card.gate ? ' <span class="stu-fb-gate-reset">Mastery gate restarts.</span>' : '';
+    if (fb) fb.innerHTML = `<span class="stu-fb-wrong">Not quite — the answer is <b lang="ja">${esc(card.answers[0])}</b>.</span>${gateNote}` + peg;
     setControls('wrong');
     focusControl('.stu-btn-primary');
     announce(`Not quite. The answer is ${card.answers[0]}.`);
@@ -802,17 +891,20 @@ function grade(g, { typedCorrect = true } = {}) {
   const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, hintTier: card.hintTier, chosen: g });
   const pass = eff > 1;
   const now = Date.now();
+  const gate = !!card.gate;
   const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
-  state = review(state, card.id, { pass, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
+  state = review(state, card.id, { pass, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: typedCorrect });
   save();
-  maybeGhostExit(card.id, wasGhost);
+  if (gate) gateFeedback(card.point, state.points[card.id], pass, announce);
+  else maybeGhostExit(card.id, wasGhost);
   renderCard();
 }
 
 // ── Summary screen ───────────────────────────────────────────────────────────
 function renderSummary() {
   cardCtl = null;
+  teardownGateTimer();
   const results = (state.session && state.session.results) || [];
   const graded = results.filter(r => !r.skipped);
   const n = graded.length;
@@ -903,6 +995,7 @@ function wireRoot() {
   document.addEventListener('jwh:route', (e) => {
     if (e.detail?.route === 'study') { applyFuri(); return; }
     if (activeFlow && activeFlow.teardown) activeFlow.teardown();
+    teardownGateTimer();   // don't leave the soft gate countdown ticking off-screen
   });
 }
 
@@ -913,6 +1006,7 @@ function act(name, btn) {
     case 'learn': launchLessons(); break;
     case 'checkpoint': launchCheckpoint(btn.dataset.unit); break;
     case 'placementStart': launchPlacement(); break;
+    case 'buildStart': launchBuild(); break;
     case 'expand': toggleLevel(btn.dataset.level); break;
     case 'leechStudy': studyLeech(btn.dataset.id); break;
     case 'leechDuel': leechDuel(btn.dataset.id, btn.dataset.other); break;

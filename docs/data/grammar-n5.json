@@ -103,11 +103,64 @@
      "。"
     ],
     "en": "This ramen is famous."
+   },
+   {
+    "ja": [
+     {
+      "t": "これ",
+      "f": [
+       [
+        "これ",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     "は",
+     {
+      "t": "在留カード",
+      "f": [
+       [
+        "在",
+        "ざい"
+       ],
+       [
+        "留",
+        "りゅう"
+       ],
+       [
+        "カード",
+        ""
+       ]
+      ],
+      "g": "residence card"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This is a residence card."
    }
   ],
   "nuance": "The polite copula that ends most textbook sentences; its plain-form equivalent is だ, which you drop entirely in casual speech (学生だ, or often just 学生). Unlike English \"is\", です carries politeness, not extra meaning.",
   "register": "polite",
-  "caution": "です does not conjugate the na-adjective before it — write 静かです, never 静かいです; the \"い-adjective + です\" pattern (高いです) is politeness only, so never say 高いだ."
+  "caution": "です does not conjugate the na-adjective before it — write 静かです, never 静かいです; the \"い-adjective + です\" pattern (高いです) is politeness only, so never say 高いだ.",
+  "peg": {
+   "ja": "僕はドラえもんです。",
+   "romaji": "Boku wa Doraemon desu.",
+   "en": "I am Doraemon.",
+   "source": "ドラえもん (Doraemon) — Doraemon (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ja-arimasen",
@@ -203,10 +256,63 @@
      "。"
     ],
     "en": "I'm not free today."
+   },
+   {
+    "ja": [
+     {
+      "t": "ここ",
+      "f": [
+       [
+        "ここ",
+        ""
+       ]
+      ],
+      "g": "here"
+     },
+     "は",
+     {
+      "t": "喫煙席",
+      "f": [
+       [
+        "喫",
+        "きつ"
+       ],
+       [
+        "煙",
+        "えん"
+       ],
+       [
+        "席",
+        "せき"
+       ]
+      ],
+      "g": "smoking seat"
+     },
+     {
+      "t": "じゃありません",
+      "f": [
+       [
+        "じゃありません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This isn't a smoking seat."
    }
   ],
   "register": "polite",
-  "caution": "Don't attach it to い-adjectives — 高いじゃありません is wrong; the negative of an い-adjective is 高くないです / 高くありません instead."
+  "caution": "Don't attach it to い-adjectives — 高いじゃありません is wrong; the negative of an い-adjective is 高くないです / 高くありません instead.",
+  "peg": {
+   "ja": "別に好きじゃありません。",
+   "romaji": "Betsu ni suki ja arimasen.",
+   "en": "It's not like I like you or anything.",
+   "source": "とらドラ！(Toradora!) — Taiga (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-wa",
@@ -343,10 +449,83 @@
      "。"
     ],
     "en": "I take the train every morning."
+   },
+   {
+    "ja": [
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     {
+      "t": "は",
+      "f": [
+       [
+        "は",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "人",
+      "f": [
+       [
+        "人",
+        "ひと"
+       ]
+      ],
+      "g": "people"
+     },
+     "が",
+     {
+      "t": "多い",
+      "f": [
+       [
+        "多",
+        "おお"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "many"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     "。"
+    ],
+    "en": "Shibuya has a lot of people."
    }
   ],
   "register": "neutral",
-  "caution": "は marks the topic, not the subject — in 象は鼻が長い the は-phrase is what the sentence is *about*, while が marks the real subject; beginners wrongly treat は as an all-purpose subject marker."
+  "caution": "は marks the topic, not the subject — in 象は鼻が長い the は-phrase is what the sentence is *about*, while が marks the real subject; beginners wrongly treat は as an all-purpose subject marker.",
+  "peg": {
+   "ja": "今日はいい天気ですね。",
+   "romaji": "Kyō wa ii tenki desu ne.",
+   "en": "As for today, the weather's nice, isn't it?",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ga-subject",
@@ -495,10 +674,62 @@
      "。"
     ],
     "en": "Which train is faster?"
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     {
+      "t": "が",
+      "f": [
+       [
+        "が",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "来ました",
+      "f": [
+       [
+        "来",
+        "き"
+       ],
+       [
+        "ました",
+        ""
+       ]
+      ],
+      "g": "came (polite)"
+     },
+     "。"
+    ],
+    "en": "The train came."
    }
   ],
   "register": "neutral",
-  "caution": "Question words as subjects take が, not は — ask 誰が来ますか, never 誰は来ますか; and answers to \"who/what did it\" also stay with が."
+  "caution": "Question words as subjects take が, not は — ask 誰が来ますか, never 誰は来ますか; and answers to \"who/what did it\" also stay with が.",
+  "peg": {
+   "ja": "鬼が人を食べる。",
+   "romaji": "Oni ga hito o taberu.",
+   "en": "Demons eat people.",
+   "source": "鬼滅の刃 (Demon Slayer) — Tanjiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-wo",
@@ -640,10 +871,73 @@
      "。"
     ],
     "en": "I study Japanese every night."
+   },
+   {
+    "ja": [
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "で",
+     {
+      "t": "切符",
+      "f": [
+       [
+        "切",
+        "きっ"
+       ],
+       [
+        "符",
+        "ぷ"
+       ]
+      ],
+      "g": "ticket"
+     },
+     {
+      "t": "を",
+      "f": [
+       [
+        "を",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "買います",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "buy (polite)"
+     },
+     "。"
+    ],
+    "en": "I buy a ticket at the station."
    }
   ],
   "register": "neutral",
-  "caution": "Motion verbs use を for the path passed through, not an object — 公園を歩く means \"walk through the park\", so を here is not the thing being acted on."
+  "caution": "Motion verbs use を for the path passed through, not an object — 公園を歩く means \"walk through the park\", so を here is not the thing being acted on.",
+  "peg": {
+   "ja": "心臓を捧げよ！",
+   "romaji": "Shinzō o sasageyo!",
+   "en": "Dedicate your hearts!",
+   "source": "進撃の巨人 (Attack on Titan) — Erwin",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n5-ni-time",
@@ -784,10 +1078,62 @@
      "。"
     ],
     "en": "On Sunday I go to the sento."
+   },
+   {
+    "ja": [
+     {
+      "t": "七時",
+      "f": [
+       [
+        "七",
+        "しち"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "seven o'clock"
+     },
+     {
+      "t": "に",
+      "f": [
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "起きます",
+      "f": [
+       [
+        "起",
+        "お"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "get up (polite)"
+     },
+     "。"
+    ],
+    "en": "I get up at seven."
    }
   ],
   "register": "neutral",
-  "caution": "Only absolute time words take に (3時に, 月曜日に); relative words like 今日・明日・毎日 take NO に — 明日に行きます is wrong."
+  "caution": "Only absolute time words take に (3時に, 月曜日に); relative words like 今日・明日・毎日 take NO に — 明日に行きます is wrong.",
+  "peg": {
+   "ja": "六時に起きます。",
+   "romaji": "Roku-ji ni okimasu.",
+   "en": "I get up at six.",
+   "source": "魔女の宅急便 (Kiki's Delivery Service) — Kiki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-de-place",
@@ -926,10 +1272,58 @@
      "。"
     ],
     "en": "I went to the ward office by bus."
+   },
+   {
+    "ja": [
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     {
+      "t": "で",
+      "f": [
+       [
+        "で",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "働きます",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "work (polite)"
+     },
+     "。"
+    ],
+    "en": "I work at a convenience store."
    }
   ],
   "register": "neutral",
-  "caution": "で is where an action happens; に is where something exists or a destination — 図書館で勉強する (study *at*) vs 図書館にいる (be *at*). Swapping them is the classic beginner slip."
+  "caution": "で is where an action happens; に is where something exists or a destination — 図書館で勉強する (study *at*) vs 図書館にいる (be *at*). Swapping them is the classic beginner slip.",
+  "peg": {
+   "ja": "公園で遊びます。",
+   "romaji": "Kōen de asobimasu.",
+   "en": "I play in the park.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-e",
@@ -1066,10 +1460,66 @@
      "。"
     ],
     "en": "Next week I'll climb Mt. Fuji."
+   },
+   {
+    "ja": [
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     {
+      "t": "へ",
+      "f": [
+       [
+        "へ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "行きます",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "go (polite)"
+     },
+     "。"
+    ],
+    "en": "I go to the ward office."
    }
   ],
   "register": "neutral",
-  "caution": "へ only marks direction toward a place; it cannot mark a point in time or an existence location, so use に (not へ) for arrival-at and for に-time expressions."
+  "caution": "へ only marks direction toward a place; it cannot mark a point in time or an existence location, so use に (not へ) for arrival-at and for に-time expressions.",
+  "peg": {
+   "ja": "新しい島へ行くぞ！",
+   "romaji": "Atarashii shima e iku zo!",
+   "en": "We're headed to a new island!",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-to-and",
@@ -1201,10 +1651,77 @@
      "。"
     ],
     "en": "I drank at an izakaya with a friend."
+   },
+   {
+    "ja": [
+     {
+      "t": "ビール",
+      "f": [
+       [
+        "ビール",
+        ""
+       ]
+      ],
+      "g": "beer"
+     },
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "お茶",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "茶",
+        "ちゃ"
+       ]
+      ],
+      "g": "tea"
+     },
+     "を",
+     {
+      "t": "注文します",
+      "f": [
+       [
+        "注",
+        "ちゅう"
+       ],
+       [
+        "文",
+        "もん"
+       ],
+       [
+        "します",
+        ""
+       ]
+      ],
+      "g": "order (polite)"
+     },
+     "。"
+    ],
+    "en": "I order beer and tea."
    }
   ],
   "register": "neutral",
-  "caution": "と only joins nouns (\"A and B\"); it never joins two sentences or clauses — for \"and then\" between actions use て-form or それから, not と."
+  "caution": "と only joins nouns (\"A and B\"); it never joins two sentences or clauses — for \"and then\" between actions use て-form or それから, not と.",
+  "peg": {
+   "ja": "魚と野菜を買います。",
+   "romaji": "Sakana to yasai o kaimasu.",
+   "en": "I'll buy fish and vegetables.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ya",
@@ -1370,10 +1887,84 @@
      "。"
     ],
     "en": "In Akihabara I looked at manga, games and the like."
+   },
+   {
+    "ja": [
+     {
+      "t": "シェアハウス",
+      "f": [
+       [
+        "シェアハウス",
+        ""
+       ]
+      ],
+      "g": "share-house"
+     },
+     "に",
+     {
+      "t": "インド人",
+      "f": [
+       [
+        "インド",
+        ""
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "Indian people"
+     },
+     {
+      "t": "や",
+      "f": [
+       [
+        "や",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "タイ人",
+      "f": [
+       [
+        "タイ",
+        ""
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "Thai people"
+     },
+     "が",
+     {
+      "t": "います",
+      "f": [
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "there are"
+     },
+     "。"
+    ],
+    "en": "In the share-house there are Indians, Thais, and so on."
    }
   ],
   "register": "neutral",
-  "caution": "や joins nouns only and implies an incomplete list, so it clashes with 全部 or \"exactly these\"; when you mean a closed, exhaustive list use と instead."
+  "caution": "や joins nouns only and implies an incomplete list, so it clashes with 全部 or \"exactly these\"; when you mean a closed, exhaustive list use と instead.",
+  "peg": {
+   "ja": "おもちゃやお菓子が欲しい！",
+   "romaji": "Omocha ya okashi ga hoshii!",
+   "en": "I want toys and snacks and stuff!",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — Shinnosuke (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-no",
@@ -1511,11 +2102,80 @@
      "。"
     ],
     "en": "I bought a Japanese book."
+   },
+   {
+    "ja": [
+     {
+      "t": "これ",
+      "f": [
+       [
+        "これ",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     "は",
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     {
+      "t": "の",
+      "f": [
+       [
+        "の",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     "。"
+    ],
+    "en": "This is my friend's umbrella."
    }
   ],
   "nuance": "Links two nouns as possessor-to-possessed or modifier-to-head (私の本, 日本語の本); the order is opposite to English — the modifier comes first, so 日本語の本 is \"a book *of* Japanese\", i.e. a Japanese book.",
   "register": "neutral",
-  "caution": "Don't insert の between a na-adjective and its noun — it's 静かな部屋 with な, not 静かの部屋; の links nouns, な links na-adjectives."
+  "caution": "Don't insert の between a na-adjective and its noun — it's 静かな部屋 with な, not 静かの部屋; の links nouns, な links na-adjectives.",
+  "peg": {
+   "ja": "君の名は。",
+   "romaji": "Kimi no na wa.",
+   "en": "Your Name.",
+   "source": "君の名は。(Your Name) — film title",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n5-mo",
@@ -1647,10 +2307,81 @@
      "。"
     ],
     "en": "Tomorrow is an early shift too."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "勉強します",
+      "f": [
+       [
+        "勉",
+        "べん"
+       ],
+       [
+        "強",
+        "きょう"
+       ],
+       [
+        "します",
+        ""
+       ]
+      ],
+      "g": "study (polite)"
+     },
+     "。"
+    ],
+    "en": "I study Japanese too."
    }
   ],
   "register": "neutral",
-  "caution": "も replaces は/が/を outright — say 私も行きます, never 私はも or 私もは; but with に/で/へ it stacks on (東京にも)."
+  "caution": "も replaces は/が/を outright — say 私も行きます, never 私はも or 私もは; but with に/で/へ it stacks on (東京にも).",
+  "peg": {
+   "ja": "俺もラーメンが大好きだ！",
+   "romaji": "Ore mo rāmen ga daisuki da!",
+   "en": "I love ramen too!",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ka",
@@ -1783,10 +2514,65 @@
      "。"
     ],
     "en": "Does this train go to Shinjuku?"
+   },
+   {
+    "ja": [
+     {
+      "t": "これ",
+      "f": [
+       [
+        "これ",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     "は",
+     {
+      "t": "いくら",
+      "f": [
+       [
+        "いくら",
+        ""
+       ]
+      ],
+      "g": "how much"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     {
+      "t": "か",
+      "f": [
+       [
+        "か",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "How much is this?"
    }
   ],
   "register": "polite",
-  "caution": "In plain/casual speech か is usually dropped and replaced by rising intonation (行く？); tacking か onto plain form (行くか？) sounds blunt or challenging, not neutral."
+  "caution": "In plain/casual speech か is usually dropped and replaced by rising intonation (行く？); tacking か onto plain form (行くか？) sounds blunt or challenging, not neutral.",
+  "peg": {
+   "ja": "犯人は誰ですか。",
+   "romaji": "Hannin wa dare desu ka.",
+   "en": "Who is the culprit?",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ne",
@@ -1911,10 +2697,89 @@
      "。"
     ],
     "en": "This ramen is delicious, isn't it?"
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya"
+     },
+     "は",
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     {
+      "t": "ね",
+      "f": [
+       [
+        "ね",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This izakaya is cheap, isn't it?"
    }
   ],
   "register": "casual/spoken",
-  "caution": "ね assumes the listener shares or will agree with your view; use it to state something the other person can't know (like new info about yourself), and it sounds like you're fishing for agreement you have no right to expect."
+  "caution": "ね assumes the listener shares or will agree with your view; use it to state something the other person can't know (like new info about yourself), and it sounds like you're fishing for agreement you have no right to expect.",
+  "peg": {
+   "ja": "このケーキ、おいしいですね。",
+   "romaji": "Kono kēki, oishii desu ne.",
+   "en": "This cake is delicious, isn't it?",
+   "source": "けいおん！(K-On!) — Yui (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n5-yo",
@@ -2056,10 +2921,85 @@
      "。"
     ],
     "en": "That izakaya over there is cheap, you know."
+   },
+   {
+    "ja": [
+     {
+      "t": "その",
+      "f": [
+       [
+        "その",
+        ""
+       ]
+      ],
+      "g": "that"
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     {
+      "t": "急行",
+      "f": [
+       [
+        "急",
+        "きゅう"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "express"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     {
+      "t": "よ",
+      "f": [
+       [
+        "よ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "That train is an express, you know."
    }
   ],
   "register": "casual/spoken",
-  "caution": "よ asserts information you assume the listener lacks; using it on something obvious to them can sound pushy or condescending, so don't reflexively end every statement with よ."
+  "caution": "よ asserts information you assume the listener lacks; using it on something obvious to them can sound pushy or condescending, so don't reflexively end every statement with よ.",
+  "peg": {
+   "ja": "月に代わって、お仕置きよ！",
+   "romaji": "Tsuki ni kawatte, oshioki yo!",
+   "en": "In the name of the moon, I'll punish you!",
+   "source": "美少女戦士セーラームーン (Sailor Moon) — Usagi",
+   "kind": "verbatim"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n5-masu",
@@ -2186,11 +3126,65 @@
      "。"
     ],
     "en": "I'll meet a friend tomorrow."
+   },
+   {
+    "ja": [
+     {
+      "t": "毎朝",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "朝",
+        "あさ"
+       ]
+      ],
+      "g": "every morning"
+     },
+     "、",
+     {
+      "t": "山手線",
+      "f": [
+       [
+        "山手線",
+        "やまのてせん"
+       ]
+      ],
+      "g": "Yamanote line"
+     },
+     "に",
+     {
+      "t": "乗ります",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "ります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Every morning I ride the Yamanote line."
    }
   ],
   "nuance": "The polite present/future form — it covers both habitual actions and future plans (毎日飲みます = \"I drink daily\" and 明日行きます = \"I'll go tomorrow\"); Japanese has no separate future tense. Its plain equivalent is the dictionary form.",
   "register": "polite",
-  "caution": "ます attaches to the ます-stem (i-row), not the dictionary form — it's 飲みます from 飲む, never 飲むます; irregulars are します and 来ます (きます)."
+  "caution": "ます attaches to the ます-stem (i-row), not the dictionary form — it's 飲みます from 飲む, never 飲むます; irregulars are します and 来ます (きます).",
+  "peg": {
+   "ja": "毎日ベースを練習します。",
+   "romaji": "Mainichi bēsu o renshū shimasu.",
+   "en": "I practice bass every day.",
+   "source": "けいおん！(K-On!) — Mio (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-masen",
@@ -2308,11 +3302,65 @@
      "。"
     ],
     "en": "I don't eat natto."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     "は",
+     {
+      "t": "お酒",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "酒",
+        "さけ"
+       ]
+      ],
+      "g": "alcohol"
+     },
+     "を",
+     {
+      "t": "飲みません",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "みません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I don't drink alcohol."
    }
   ],
   "nuance": "The polite negative of ます, covering \"don't / won't\" (今日は飲みません). It shares the same ます-stem as the affirmative — you just swap ます for ません; the plain-form counterpart is 〜ない.",
   "register": "polite",
-  "caution": "ません is the negative of ます (present/future); its past is ませんでした, so \"didn't eat\" is 食べませんでした, never 食べませんかった."
+  "caution": "ません is the negative of ます (present/future); its past is ませんでした, so \"didn't eat\" is 食べませんでした, never 食べませんかった.",
+  "peg": {
+   "ja": "宿題はまだしません。",
+   "romaji": "Shukudai wa mada shimasen.",
+   "en": "I won't do my homework yet.",
+   "source": "ちびまる子ちゃん (Chibi Maruko-chan) — Maruko (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mashita",
@@ -2452,11 +3500,80 @@
      "。"
     ],
     "en": "I climbed Mt. Fuji last week."
+   },
+   {
+    "ja": [
+     {
+      "t": "昨日",
+      "f": [
+       [
+        "昨日",
+        "きのう"
+       ]
+      ],
+      "g": "yesterday"
+     },
+     "、",
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     "で",
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "に",
+     {
+      "t": "会いました",
+      "f": [
+       [
+        "会",
+        "あ"
+       ],
+       [
+        "いました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Yesterday I met a friend in Shibuya."
    }
   ],
   "nuance": "The polite past of ます — one form covers both English \"did\" and \"have done\" (食べました = \"ate\" / \"have eaten\"). Context, not the verb, tells them apart. The plain equivalent is the た-form.",
   "register": "polite",
-  "caution": "Its negative is not ましたじゃない — the polite past negative is a separate form, ませんでした (行きませんでした = \"didn't go\")."
+  "caution": "Its negative is not ましたじゃない — the polite past negative is a separate form, ませんでした (行きませんでした = \"didn't go\").",
+  "peg": {
+   "ja": "ルパンを逮捕しました。",
+   "romaji": "Rupan o taiho shimashita.",
+   "en": "I arrested Lupin.",
+   "source": "ルパン三世 (Lupin III) — Zenigata (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-masen-deshita",
@@ -2583,11 +3700,54 @@
      "。"
     ],
     "en": "I didn't make the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "来ませんでした",
+      "f": [
+       [
+        "来",
+        "き"
+       ],
+       [
+        "ませんでした",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The train didn't come."
    }
   ],
   "nuance": "The polite past negative (\"didn't / hasn't\") — built by adding でした after the negative ません, literally \"was not (doing)\". Its plain-form counterpart is 〜なかった.",
   "register": "polite",
-  "caution": "It only negates verbs; for a noun/na-adjective in the polite past negative you need じゃありませんでした (学生じゃありませんでした), not ませんでした."
+  "caution": "It only negates verbs; for a noun/na-adjective in the polite past negative you need じゃありませんでした (学生じゃありませんでした), not ませんでした.",
+  "peg": {
+   "ja": "昨日、勉強しませんでした。",
+   "romaji": "Kinō, benkyō shimasen deshita.",
+   "en": "I didn't study yesterday.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-nai",
@@ -2709,10 +3869,60 @@
      "。"
     ],
     "en": "I don't eat anything in the morning."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "に",
+     {
+      "t": "行かない",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "かない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'm not going to my part-time job today."
    }
   ],
   "register": "casual/spoken",
-  "caution": "Only する→しない and 来る→こない are irregular; for regular u-verbs the final -u becomes -a-nai (飲む→飲まない), and verbs ending in う go to わ (買う→買わない, never 買あない)."
+  "caution": "Only する→しない and 来る→こない are irregular; for regular u-verbs the final -u becomes -a-nai (飲む→飲まない), and verbs ending in う go to わ (買う→買わない, never 買あない).",
+  "peg": {
+   "ja": "俺は絶対に諦めない。",
+   "romaji": "Ore wa zettai ni akiramenai.",
+   "en": "I will never give up.",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-nakatta",
@@ -2822,11 +4032,64 @@
      "。"
     ],
     "en": "I didn't take an umbrella with me."
+   },
+   {
+    "ja": [
+     {
+      "t": "昨日",
+      "f": [
+       [
+        "昨日",
+        "きのう"
+       ]
+      ],
+      "g": "yesterday"
+     },
+     "は",
+     {
+      "t": "全然",
+      "f": [
+       [
+        "全",
+        "ぜん"
+       ],
+       [
+        "然",
+        "ぜん"
+       ]
+      ],
+      "g": "at all"
+     },
+     {
+      "t": "寝なかった",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "なかった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I didn't sleep at all yesterday."
    }
   ],
   "nuance": "The plain past negative — take the 〜ない form and, because ない conjugates like an い-adjective, change ない→なかった (行かない→行かなかった). It's the casual equivalent of ませんでした.",
   "register": "casual/spoken",
-  "caution": "Because ない acts like an い-adjective, the past is なかった (行かなかった), never 行かないでした; ない never takes でした."
+  "caution": "Because ない acts like an い-adjective, the past is なかった (行かなかった), never 行かないでした; ない never takes でした.",
+  "peg": {
+   "ja": "今日は宿題をしなかった。",
+   "romaji": "Kyō wa shukudai o shinakatta.",
+   "en": "I didn't do my homework today.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-te-iru",
@@ -2971,10 +4234,74 @@
      "。"
     ],
     "en": "I'm studying Japanese every night."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "が",
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     "で",
+     {
+      "t": "働い",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "work (te-stem)"
+     },
+     {
+      "t": "ている",
+      "f": [
+       [
+        "ている",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My friend is working at a convenience store."
    }
   ],
   "register": "neutral",
-  "caution": "With change-of-state verbs (行く, 結婚する, 死ぬ) ている marks the resulting *state*, not an action in progress — 行っている means \"has gone / is there now\", not \"is going\"."
+  "caution": "With change-of-state verbs (行く, 結婚する, 死ぬ) ている marks the resulting *state*, not an action in progress — 行っている means \"has gone / is there now\", not \"is going\".",
+  "peg": {
+   "ja": "お前はもう死んでいる。",
+   "romaji": "Omae wa mō shindeiru.",
+   "en": "You are already dead.",
+   "source": "北斗の拳 (Fist of the North Star) — Kenshiro",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n5-te-kudasai",
@@ -3079,11 +4406,85 @@
      "。"
     ],
     "en": "Please say it one more time."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "紙",
+      "f": [
+       [
+        "紙",
+        "かみ"
+       ]
+      ],
+      "g": "form"
+     },
+     "に",
+     {
+      "t": "名前",
+      "f": [
+       [
+        "名",
+        "な"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "name"
+     },
+     "を",
+     {
+      "t": "書い",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "write (te-stem)"
+     },
+     {
+      "t": "てください",
+      "f": [
+       [
+        "てください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please write your name on this form."
    }
   ],
   "nuance": "A polite request or instruction (\"please do…\"), built on the て-form. It's firm and direct — fine for teachers, staff, or signs — but toward superiors soften it with 〜ていただけますか. Its negative is ないでください.",
   "register": "polite",
-  "caution": "It attaches to the て-form, so get the te-form right — 待ってください (待つ), not 待ちてください; irregular te-forms (して, 来て/きて) carry over."
+  "caution": "It attaches to the て-form, so get the te-form right — 待ってください (待つ), not 待ちてください; irregular te-forms (して, 来て/きて) carry over.",
+  "peg": {
+   "ja": "ドラえもん、助けてください！",
+   "romaji": "Doraemon, tasukete kudasai!",
+   "en": "Doraemon, please help me!",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-naide-kudasai",
@@ -3223,11 +4624,60 @@
      "。"
     ],
     "en": "Please don't make phone calls on the train."
+   },
+   {
+    "ja": [
+     {
+      "t": "ドア",
+      "f": [
+       [
+        "ドア",
+        ""
+       ]
+      ],
+      "g": "door"
+     },
+     "を",
+     {
+      "t": "閉め",
+      "f": [
+       [
+        "閉",
+        "し"
+       ],
+       [
+        "め",
+        ""
+       ]
+      ],
+      "g": "close (nai-stem)"
+     },
+     {
+      "t": "ないでください",
+      "f": [
+       [
+        "ないでください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please don't close the door."
    }
   ],
   "nuance": "The negative request — \"please don't do…\" — formed from the plain negative stem plus でください. It's the direct counterpart of てください for prohibitions you're asking of someone.",
   "register": "polite",
-  "caution": "Use the ない-stem + でください (撮らないでください), not the て-form; and don't confuse it with なくてもいい (\"you don't have to\"), which permits rather than forbids."
+  "caution": "Use the ない-stem + でください (撮らないでください), not the て-form; and don't confuse it with なくてもいい (\"you don't have to\"), which permits rather than forbids.",
+  "peg": {
+   "ja": "私を忘れないでください。",
+   "romaji": "Watashi o wasurenaide kudasai.",
+   "en": "Please don't forget me.",
+   "source": "千と千尋の神隠し (Spirited Away) — Chihiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mashou",
@@ -3343,11 +4793,68 @@
      "。"
     ],
     "en": "Let's head home now."
+   },
+   {
+    "ja": [
+     {
+      "t": "一緒に",
+      "f": [
+       [
+        "一",
+        "いっ"
+       ],
+       [
+        "緒",
+        "しょ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "g": "together"
+     },
+     {
+      "t": "花見",
+      "f": [
+       [
+        "花",
+        "はな"
+       ],
+       [
+        "見",
+        "み"
+       ]
+      ],
+      "g": "hanami"
+     },
+     "を",
+     {
+      "t": "しましょう",
+      "f": [
+       [
+        "しましょう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Let's do hanami together."
    }
   ],
   "nuance": "A polite \"let's…\" that proposes a shared action the speaker assumes both parties want (一緒に行きましょう). Because it presumes agreement, ませんか is the gentler way to *invite* someone who hasn't agreed yet.",
   "register": "polite",
-  "caution": "ましょう assumes the other person is already on board; to actually invite (and let them decline) use ませんか — leading with ましょう on an unshared plan can sound presumptuous."
+  "caution": "ましょう assumes the other person is already on board; to actually invite (and let them decline) use ませんか — leading with ましょう on an unshared plan can sound presumptuous.",
+  "peg": {
+   "ja": "一緒にお茶をしましょう。",
+   "romaji": "Issho ni ocha o shimashō.",
+   "en": "Let's have tea together.",
+   "source": "けいおん！(K-On!) — Tsumugi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mashou-ka",
@@ -3447,11 +4954,54 @@
      "。"
     ],
     "en": "Where shall we meet?"
+   },
+   {
+    "ja": [
+     {
+      "t": "荷物",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "luggage"
+     },
+     "を",
+     {
+      "t": "持ちましょうか",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "ちましょうか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Shall I carry your bags?"
    }
   ],
   "nuance": "Adds か to ましょう to *offer* (\"shall I…?\") or *check* a shared plan (\"shall we…?\"). 窓を開けましょうか offers help; どこで会いましょうか asks the group to decide. The subject (I vs we) comes from context.",
   "register": "polite",
-  "caution": "ましょうか offers to do something / checks a joint plan; it is not a yes-no invitation — to invite someone to join *you*, use ませんか instead."
+  "caution": "ましょうか offers to do something / checks a joint plan; it is not a yes-no invitation — to invite someone to join *you*, use ませんか instead.",
+  "peg": {
+   "ja": "窓を開けましょうか。",
+   "romaji": "Mado o akemashō ka.",
+   "en": "Shall I open the window?",
+   "source": "ドラえもん (Doraemon) — Doraemon (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-masen-ka",
@@ -3592,10 +5142,68 @@
      "。"
     ],
     "en": "Would you like to go to a sento this weekend?"
+   },
+   {
+    "ja": [
+     {
+      "t": "今晩",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "晩",
+        "ばん"
+       ]
+      ],
+      "g": "tonight"
+     },
+     "、",
+     {
+      "t": "飲み",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "drink (stem)"
+     },
+     "に",
+     {
+      "t": "行きませんか",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きませんか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Won't you go for a drink tonight?"
    }
   ],
   "register": "polite",
-  "caution": "This is an invitation, not a real negative question — 行きませんか means \"won't you go? (let's)\", so answering はい means \"yes, let's\", not \"yes, I won't\"."
+  "caution": "This is an invitation, not a real negative question — 行きませんか means \"won't you go? (let's)\", so answering はい means \"yes, let's\", not \"yes, I won't\".",
+  "peg": {
+   "ja": "一緒に部活をしませんか。",
+   "romaji": "Issho ni bukatsu o shimasen ka.",
+   "en": "Won't you join the club with me?",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi Suzumiya) — Haruhi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-tari-tari",
@@ -3803,10 +5411,99 @@
      "。"
     ],
     "en": "On weekends I do things like watch anime and read manga."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     "は",
+     {
+      "t": "掃除",
+      "f": [
+       [
+        "掃",
+        "そう"
+       ],
+       [
+        "除",
+        "じ"
+       ]
+      ],
+      "g": "cleaning"
+     },
+     "し",
+     {
+      "t": "たり",
+      "f": [
+       [
+        "たり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "散歩",
+      "f": [
+       [
+        "散",
+        "さん"
+       ],
+       [
+        "歩",
+        "ぽ"
+       ]
+      ],
+      "g": "a walk"
+     },
+     "し",
+     {
+      "t": "たり",
+      "f": [
+       [
+        "たり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "します",
+      "f": [
+       [
+        "します",
+        ""
+       ]
+      ],
+      "g": "do (polite)"
+     },
+     "。"
+    ],
+    "en": "On weekends I do things like cleaning and taking walks."
    }
   ],
   "register": "neutral",
-  "caution": "Don't forget the final する — it's 〜たり〜たりする, and the tense/politeness lives on that する (…したりしました), not on the たり verbs themselves."
+  "caution": "Don't forget the final する — it's 〜たり〜たりする, and the tense/politeness lives on that する (…したりしました), not on the たり verbs themselves.",
+  "peg": {
+   "ja": "休みの日は、読んだり、寝たりします。",
+   "romaji": "Yasumi no hi wa, yondari, netari shimasu.",
+   "en": "On my days off I do things like reading and sleeping.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-nakereba-narimasen",
@@ -3943,10 +5640,63 @@
      "。"
     ],
     "en": "I have to submit documents at the ward office."
+   },
+   {
+    "ja": [
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "を",
+     {
+      "t": "払わ",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "わ",
+        ""
+       ]
+      ],
+      "g": "pay (nai-stem)"
+     },
+     {
+      "t": "なければなりません",
+      "f": [
+       [
+        "なければなりません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I have to pay the rent."
    }
   ],
   "register": "polite",
-  "caution": "It literally means \"if you don't, it won't do\", so the two negatives cancel to a positive obligation (\"must do\") — don't read the ない as making it negative."
+  "caution": "It literally means \"if you don't, it won't do\", so the two negatives cancel to a positive obligation (\"must do\") — don't read the ない as making it negative.",
+  "peg": {
+   "ja": "戦わなければならない。",
+   "romaji": "Tatakawanakereba naranai.",
+   "en": "We have to fight.",
+   "source": "進撃の巨人 (Attack on Titan) — Eren (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-nakute-mo-ii",
@@ -4081,10 +5831,69 @@
      "。"
     ],
     "en": "You don't have to take off your shoes."
+   },
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "働か",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "か",
+        ""
+       ]
+      ],
+      "g": "work (nai-stem)"
+     },
+     {
+      "t": "なくてもいい",
+      "f": [
+       [
+        "なくてもいい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "I don't have to work tomorrow."
    }
   ],
   "register": "neutral",
-  "caution": "This is \"don't have to\", the opposite of \"must not\" — contrast it with てはいけません (forbidden); 食べなくてもいい means eating is optional, not banned."
+  "caution": "This is \"don't have to\", the opposite of \"must not\" — contrast it with てはいけません (forbidden); 食べなくてもいい means eating is optional, not banned.",
+  "peg": {
+   "ja": "泣かなくてもいいよ。",
+   "romaji": "Nakanakute mo ii yo.",
+   "en": "You don't have to cry.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-koto-ga-dekimasu",
@@ -4215,11 +6024,79 @@
      "。"
     ],
     "en": "You can withdraw money at the konbini."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     "は",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "話す",
+      "f": [
+       [
+        "話",
+        "はな"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "speak (dict)"
+     },
+     {
+      "t": "ことができます",
+      "f": [
+       [
+        "ことができます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I can speak Japanese."
    }
   ],
   "nuance": "Expresses ability or permission by nominalizing a dictionary-form verb with こと (\"the thing of doing X is possible\"). It's the analytic alternative to the potential form (泳げます) and is often felt as slightly more formal or explicit.",
   "register": "polite",
-  "caution": "It attaches to the dictionary form, not the ます-stem — 泳ぐことができます, never 泳ぎことができます or 泳げることができます."
+  "caution": "It attaches to the dictionary form, not the ます-stem — 泳ぐことができます, never 泳ぎことができます or 泳げることができます.",
+  "peg": {
+   "ja": "私は空を飛ぶことができます。",
+   "romaji": "Watashi wa sora o tobu koto ga dekimasu.",
+   "en": "I can fly through the sky.",
+   "source": "魔女の宅急便 (Kiki's Delivery Service) — Kiki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-no-ga-suki",
@@ -4375,10 +6252,93 @@
      "。"
     ],
     "en": "I like reading books on the train."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     "は",
+     {
+      "t": "写真",
+      "f": [
+       [
+        "写",
+        "しゃ"
+       ],
+       [
+        "真",
+        "しん"
+       ]
+      ],
+      "g": "photos"
+     },
+     "を",
+     {
+      "t": "撮る",
+      "f": [
+       [
+        "撮",
+        "と"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "take (dict)"
+     },
+     {
+      "t": "のが好き",
+      "f": [
+       [
+        "のが",
+        ""
+       ],
+       [
+        "好",
+        "す"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "like doing"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "I like taking photos."
    }
   ],
   "register": "neutral",
-  "caution": "What you like is marked by が, not を — it's 読むのが好き, never 読むのを好き, because 好き is an adjective describing that the reading \"is likeable\"."
+  "caution": "What you like is marked by が, not を — it's 読むのが好き, never 読むのを好き, because 好き is an adjective describing that the reading \"is likeable\".",
+  "peg": {
+   "ja": "漫画を読むのが好きです。",
+   "romaji": "Manga o yomu no ga suki desu.",
+   "en": "I like reading manga.",
+   "source": "ちびまる子ちゃん (Chibi Maruko-chan) — Maruko (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-no-ga-jouzu",
@@ -4549,10 +6509,101 @@
      "。"
     ],
     "en": "My roommate is good at speaking Japanese."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "は",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "話す",
+      "f": [
+       [
+        "話",
+        "はな"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "speak (dict)"
+     },
+     {
+      "t": "のが上手",
+      "f": [
+       [
+        "のが",
+        ""
+       ],
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "手",
+        "ず"
+       ]
+      ],
+      "p": 1,
+      "g": "good at doing"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "My friend is good at speaking Japanese."
    }
   ],
   "register": "neutral",
-  "caution": "Avoid saying 私は〜のが上手です about yourself — claiming 上手 sounds boastful; describe your own skill with できます or 得意 (still cautiously), and reserve 上手 for praising others."
+  "caution": "Avoid saying 私は〜のが上手です about yourself — claiming 上手 sounds boastful; describe your own skill with できます or 得意 (still cautiously), and reserve 上手 for praising others.",
+  "peg": {
+   "ja": "私は料理を作るのが上手です。",
+   "romaji": "Watashi wa ryōri o tsukuru no ga jōzu desu.",
+   "en": "I'm good at cooking.",
+   "source": "ドラえもん (Doraemon) — Shizuka (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ga-hoshii",
@@ -4707,10 +6758,78 @@
      "。"
     ],
     "en": "In winter I want a warm coat."
+   },
+   {
+    "ja": [
+     {
+      "t": "自分",
+      "f": [
+       [
+        "自",
+        "じ"
+       ],
+       [
+        "分",
+        "ぶん"
+       ]
+      ],
+      "g": "one's own"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部屋",
+        "へや"
+       ]
+      ],
+      "g": "room"
+     },
+     {
+      "t": "が欲しい",
+      "f": [
+       [
+        "が",
+        ""
+       ],
+       [
+        "欲",
+        "ほ"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "want"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "I want my own room."
    }
   ],
   "register": "neutral",
-  "caution": "欲しい describes the speaker's own desire — don't use it flatly for a third person (\"he wants…\"); for others you need 欲しがっている."
+  "caution": "欲しい describes the speaker's own desire — don't use it flatly for a third person (\"he wants…\"); for others you need 欲しがっている.",
+  "peg": {
+   "ja": "おれは仲間が欲しい！",
+   "romaji": "Ore wa nakama ga hoshii!",
+   "en": "I want comrades!",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-sugimasu",
@@ -4831,10 +6950,80 @@
      "。"
     ],
     "en": "I drank too much at the izakaya yesterday."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部屋",
+        "へや"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "が",
+     {
+      "t": "高",
+      "f": [
+       [
+        "高",
+        "たか"
+       ]
+      ],
+      "g": "high (stem)"
+     },
+     {
+      "t": "すぎます",
+      "f": [
+       [
+        "すぎます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This room's rent is too high."
    }
   ],
   "register": "neutral",
-  "caution": "すぎる is always negative/excessive (\"too much\", a problem) — it is not an intensifier like とても; 高すぎる means \"too expensive (bad)\", not just \"very expensive\"."
+  "caution": "すぎる is always negative/excessive (\"too much\", a problem) — it is not an intensifier like とても; 高すぎる means \"too expensive (bad)\", not just \"very expensive\".",
+  "peg": {
+   "ja": "このカレー、辛すぎます！",
+   "romaji": "Kono karē, karasugimasu!",
+   "en": "This curry is too spicy!",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — Shinnosuke (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-n-desu",
@@ -4935,10 +7124,63 @@
      "。"
     ],
     "en": "The thing is, I missed the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "遅れた",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "was delayed (plain past)"
+     },
+     {
+      "t": "んです",
+      "f": [
+       [
+        "んです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "(It's that) the train was delayed."
    }
   ],
   "register": "polite",
-  "caution": "Nouns and na-adjectives need な before んです (学生なんです, 静かなんです), not だ — 学生だんです is wrong; only verbs and い-adjectives attach んです directly."
+  "caution": "Nouns and na-adjectives need な before んです (学生なんです, 静かなんです), not だ — 学生だんです is wrong; only verbs and い-adjectives attach んです directly.",
+  "peg": {
+   "ja": "これは事故じゃないんです。",
+   "romaji": "Kore wa jiko ja nai n desu.",
+   "en": "The thing is, this isn't an accident.",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-to-omoimasu",
@@ -5066,10 +7308,73 @@
      "。"
     ],
     "en": "I think this shop is cheap."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "は",
+     {
+      "t": "便利",
+      "f": [
+       [
+        "便",
+        "べん"
+       ],
+       [
+        "利",
+        "り"
+       ]
+      ],
+      "g": "convenient"
+     },
+     "だ",
+     {
+      "t": "と思います",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "I think"
+     },
+     "。"
+    ],
+    "en": "I think Tokyo is convenient."
    }
   ],
   "register": "polite",
-  "caution": "The と-clause stays in plain form even in polite speech — 行くと思います, never 行きますと思います; and と思います states the speaker's own opinion, not a general fact."
+  "caution": "The と-clause stays in plain form even in polite speech — 行くと思います, never 行きますと思います; and と思います states the speaker's own opinion, not a general fact.",
+  "peg": {
+   "ja": "明日も来ると思います。",
+   "romaji": "Ashita mo kuru to omoimasu.",
+   "en": "I think she'll come tomorrow too.",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi Suzumiya) — Kyon (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-deshou",
@@ -5172,10 +7477,63 @@
      "。"
     ],
     "en": "Hokkaido is probably cold."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     "は",
+     {
+      "t": "混む",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "be crowded (dict)"
+     },
+     {
+      "t": "でしょう",
+      "f": [
+       [
+        "でしょう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It'll probably be crowded this weekend."
    }
   ],
   "register": "polite",
-  "caution": "Don't stack it on です — it's 高いでしょう / 学生でしょう, never 高いですでしょう; でしょう already carries the polite copula."
+  "caution": "Don't stack it on です — it's 高いでしょう / 学生でしょう, never 高いですでしょう; でしょう already carries the polite copula.",
+  "peg": {
+   "ja": "もうすぐ来るでしょう。",
+   "romaji": "Mō sugu kuru deshō.",
+   "en": "He'll probably come soon.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mada",
@@ -5308,10 +7666,77 @@
      "。"
     ],
     "en": "I haven't gotten my residence card yet."
+   },
+   {
+    "ja": [
+     {
+      "t": "まだ",
+      "f": [
+       [
+        "まだ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "に",
+     {
+      "t": "行っ",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "go (te-stem)"
+     },
+     {
+      "t": "ていません",
+      "f": [
+       [
+        "ていません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I haven't gone to the ward office yet."
    }
   ],
   "register": "polite",
-  "caution": "まだ (\"not yet\") takes ていません, not the plain past negative — まだ食べていません, not まだ食べませんでした; the latter wrongly says \"still didn't eat\"."
+  "caution": "まだ (\"not yet\") takes ていません, not the plain past negative — まだ食べていません, not まだ食べませんでした; the latter wrongly says \"still didn't eat\".",
+  "peg": {
+   "ja": "まだ宿題をやっていません。",
+   "romaji": "Mada shukudai o yatte imasen.",
+   "en": "I haven't done my homework yet.",
+   "source": "ちびまる子ちゃん (Chibi Maruko-chan) — Maruko (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mou",
@@ -5458,10 +7883,73 @@
      "。"
     ],
     "en": "I've already opened a bank account."
+   },
+   {
+    "ja": [
+     {
+      "t": "もう",
+      "f": [
+       [
+        "もう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "を",
+     {
+      "t": "払い",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "pay (stem)"
+     },
+     {
+      "t": "ました",
+      "f": [
+       [
+        "ました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I already paid the rent."
    }
   ],
   "register": "polite",
-  "caution": "This もう means \"already\" with an affirmative past (もう食べました); a different もう + negative means \"no longer\" (もう食べません), so watch the polarity."
+  "caution": "This もう means \"already\" with an affirmative past (もう食べました); a different もう + negative means \"no longer\" (もう食べません), so watch the polarity.",
+  "peg": {
+   "ja": "もう三時だよ。",
+   "romaji": "Mō san-ji da yo.",
+   "en": "It's already three o'clock!",
+   "source": "ドラえもん (Doraemon) — Doraemon (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-gurai",
@@ -5601,11 +8089,67 @@
      "。"
     ],
     "en": "I save about 30,000 yen every month."
+   },
+   {
+    "ja": [
+     {
+      "t": "三時間",
+      "f": [
+       [
+        "三",
+        "さん"
+       ],
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "three hours"
+     },
+     {
+      "t": "ぐらい",
+      "f": [
+       [
+        "ぐらい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "待ちました",
+      "f": [
+       [
+        "待",
+        "ま"
+       ],
+       [
+        "ちました",
+        ""
+       ]
+      ],
+      "g": "waited (polite)"
+     },
+     "。"
+    ],
+    "en": "I waited about three hours."
    }
   ],
   "nuance": "Marks an approximate quantity, duration, or degree (\"about\", 三十分ぐらい, 千円ぐらい). Interchangeable with ごろ only in feel, not use: ぐらい is for amounts/spans, ごろ for a single clock point. ぐらい and くらい are the same word.",
   "register": "neutral",
-  "caution": "Use ぐらい for amounts and durations (10分ぐらい); for an approximate *point* in time use ごろ — 3時ぐらい is loose, 3時ごろ is the natural choice."
+  "caution": "Use ぐらい for amounts and durations (10分ぐらい); for an approximate *point* in time use ごろ — 3時ぐらい is loose, 3時ごろ is the natural choice.",
+  "peg": {
+   "ja": "駅まで十分ぐらいです。",
+   "romaji": "Eki made juppun gurai desu.",
+   "en": "It's about ten minutes to the station.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-goro",
@@ -5743,10 +8287,77 @@
      "。"
     ],
     "en": "The train comes around eight thirty."
+   },
+   {
+    "ja": [
+     {
+      "t": "三時",
+      "f": [
+       [
+        "三",
+        "さん"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "three o'clock"
+     },
+     {
+      "t": "ごろ",
+      "f": [
+       [
+        "ごろ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     "で",
+     {
+      "t": "会いましょう",
+      "f": [
+       [
+        "会",
+        "あ"
+       ],
+       [
+        "いましょう",
+        ""
+       ]
+      ],
+      "g": "let's meet"
+     },
+     "。"
+    ],
+    "en": "Let's meet around three in Shibuya."
    }
   ],
   "register": "neutral",
-  "caution": "ごろ attaches only to a point in time, so don't say 10分ごろ for a duration — a length of time takes ぐらい (10分ぐらい)."
+  "caution": "ごろ attaches only to a point in time, so don't say 10分ごろ for a duration — a length of time takes ぐらい (10分ぐらい).",
+  "peg": {
+   "ja": "八時ごろ起きました。",
+   "romaji": "Hachi-ji goro okimashita.",
+   "en": "I woke up around eight.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-dake",
@@ -5854,11 +8465,74 @@
      "。"
     ],
     "en": "I can only read hiragana."
+   },
+   {
+    "ja": [
+     {
+      "t": "財布",
+      "f": [
+       [
+        "財",
+        "さい"
+       ],
+       [
+        "布",
+        "ふ"
+       ]
+      ],
+      "g": "wallet"
+     },
+     "に",
+     {
+      "t": "千円",
+      "f": [
+       [
+        "千",
+        "せん"
+       ],
+       [
+        "円",
+        "えん"
+       ]
+      ],
+      "g": "1000 yen"
+     },
+     {
+      "t": "だけ",
+      "f": [
+       [
+        "だけ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "あります",
+      "f": [
+       [
+        "あります",
+        ""
+       ]
+      ],
+      "g": "there is"
+     },
+     "。"
+    ],
+    "en": "I only have 1000 yen in my wallet."
    }
   ],
   "nuance": "Limits to \"only / just\" and, unlike しか, pairs with an affirmative verb (一人だけ来た). It carries a neutral or even positive \"that's enough\" feel, whereas しか〜ない stresses the shortfall (\"only, and that's too few\").",
   "register": "neutral",
-  "caution": "だけ takes a positive verb (一人だけ来た); if you switch to the しか construction you must make the verb negative — the two are not interchangeable word-for-word."
+  "caution": "だけ takes a positive verb (一人だけ来た); if you switch to the しか construction you must make the verb negative — the two are not interchangeable word-for-word.",
+  "peg": {
+   "ja": "少しだけ食べます。",
+   "romaji": "Sukoshi dake tabemasu.",
+   "en": "I'll eat just a little.",
+   "source": "けいおん！(K-On!) — Tsumugi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-shika-nai",
@@ -5981,10 +8655,69 @@
      "。"
     ],
     "en": "I can only take Sundays off."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "千円",
+      "f": [
+       [
+        "千",
+        "せん"
+       ],
+       [
+        "円",
+        "えん"
+       ]
+      ],
+      "g": "1000 yen"
+     },
+     {
+      "t": "しか",
+      "f": [
+       [
+        "しか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "ありません",
+      "f": [
+       [
+        "ありません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Today I only have 1000 yen."
    }
   ],
   "register": "neutral",
-  "caution": "しか obligatorily requires a negative verb even though the meaning is \"only\" — 千円しかない = \"have only 1000 yen\"; 千円しかある is ungrammatical."
+  "caution": "しか obligatorily requires a negative verb even though the meaning is \"only\" — 千円しかない = \"have only 1000 yen\"; 千円しかある is ungrammatical.",
+  "peg": {
+   "ja": "前に進むしかない！",
+   "romaji": "Mae ni susumu shika nai!",
+   "en": "We have no choice but to move forward!",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-yori-hou-ga",
@@ -6154,11 +8887,93 @@
      "。"
     ],
     "en": "I like winter more than summer."
+   },
+   {
+    "ja": [
+     {
+      "t": "バス",
+      "f": [
+       [
+        "バス",
+        ""
+       ]
+      ],
+      "g": "bus"
+     },
+     {
+      "t": "より",
+      "f": [
+       [
+        "より",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     {
+      "t": "のほうが",
+      "f": [
+       [
+        "のほうが",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "速い",
+      "f": [
+       [
+        "速",
+        "はや"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "fast"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "The train is faster than the bus."
    }
   ],
   "nuance": "The standard comparison frame: より marks the losing/standard item and (の)ほうが marks the one that wins on the quality (電車より車のほうが速い). Word order is flexible, but ほうが always sits with the item that \"has more\" of the trait.",
   "register": "neutral",
-  "caution": "より marks the thing being surpassed (the standard), so AよりBのほうが means B > A — beginners often flip it and mark the winner with より by mistake."
+  "caution": "より marks the thing being surpassed (the standard), so AよりBのほうが means B > A — beginners often flip it and mark the winner with より by mistake.",
+  "peg": {
+   "ja": "勉強より昼寝のほうがいい。",
+   "romaji": "Benkyō yori hirune no hō ga ii.",
+   "en": "A nap is better than studying.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-de-ichiban",
@@ -6359,11 +9174,116 @@
      "。"
     ],
     "en": "At this restaurant, the ramen is the cheapest."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "の",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "stations"
+     },
+     {
+      "t": "の中で",
+      "f": [
+       [
+        "の",
+        ""
+       ],
+       [
+        "中",
+        "なか"
+       ],
+       [
+        "で",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     {
+      "t": "がいちばん",
+      "f": [
+       [
+        "がいちばん",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "大きい",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "きい",
+        ""
+       ]
+      ],
+      "g": "big"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "Among Tokyo's stations, Shinjuku is the biggest."
    }
   ],
   "nuance": "The superlative: 〜の中で names the group, がいちばん marks the top member (クラスの中で田中さんがいちばん背が高い). いちばん is just the adverb \"most/number one\" placed before the adjective — no -est ending exists.",
   "register": "neutral",
-  "caution": "Use の中で (not で alone) to frame the group, and remember いちばん is an adverb before the adjective — 高いちばん is wrong, it's いちばん高い."
+  "caution": "Use の中で (not で alone) to frame the group, and remember いちばん is an adverb before the adjective — 高いちばん is wrong, it's いちばん高い.",
+  "peg": {
+   "ja": "クラスでオラがいちばん元気だ！",
+   "romaji": "Kurasu de ora ga ichiban genki da!",
+   "en": "I'm the most energetic in class!",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — Shinnosuke (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-toki",
@@ -6514,11 +9434,79 @@
      "。"
     ],
     "en": "When I came to Japan, I went to the ward office."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "混む",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "be crowded (dict)"
+     },
+     {
+      "t": "とき",
+      "f": [
+       [
+        "とき",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "歩きます",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "walk (polite)"
+     },
+     "。"
+    ],
+    "en": "When the trains are crowded, I walk."
    }
   ],
   "nuance": "Marks \"when / at the time of\" and the tense of the verb before とき matters: 行くとき (dict) = \"when about to/on the way to go\", 行ったとき (past) = \"when I had gone/arrived\". Nouns link with の (子供のとき).",
   "register": "neutral",
-  "caution": "The tense on the verb before とき is relative to the main clause, not the sentence — 行くとき写真を撮った means \"took a photo *on the way* there\", while 行ったとき means \"*after* arriving\"."
+  "caution": "The tense on the verb before とき is relative to the main clause, not the sentence — 行くとき写真を撮った means \"took a photo *on the way* there\", while 行ったとき means \"*after* arriving\".",
+  "peg": {
+   "ja": "小さいとき、トトロに会った。",
+   "romaji": "Chiisai toki, Totoro ni atta.",
+   "en": "When I was little, I met Totoro.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ta-ato-de",
@@ -6686,10 +9674,104 @@
      "。"
     ],
     "en": "After eating, I wash the dishes."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "を",
+     {
+      "t": "降りた",
+      "f": [
+       [
+        "降",
+        "お"
+       ],
+       [
+        "りた",
+        ""
+       ]
+      ],
+      "g": "got off (plain past)"
+     },
+     {
+      "t": "あとで",
+      "f": [
+       [
+        "あとで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "で",
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "に",
+     {
+      "t": "会います",
+      "f": [
+       [
+        "会",
+        "あ"
+       ],
+       [
+        "います",
+        ""
+       ]
+      ],
+      "g": "meet (polite)"
+     },
+     "。"
+    ],
+    "en": "After getting off the train, I meet a friend at the station."
    }
   ],
   "register": "neutral",
-  "caution": "あとで pins strict sequence and takes the past た-form regardless of sentence tense; don't confuse it with てから, which more strongly stresses that X finishes before Y begins."
+  "caution": "あとで pins strict sequence and takes the past た-form regardless of sentence tense; don't confuse it with てから, which more strongly stresses that X finishes before Y begins.",
+  "peg": {
+   "ja": "ご飯を食べたあとで、散歩します。",
+   "romaji": "Gohan o tabeta ato de, sanpo shimasu.",
+   "en": "After eating, I take a walk.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-kata",
@@ -6829,11 +9911,88 @@
      "。"
     ],
     "en": "The way to write kanji is difficult."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "券売機",
+      "f": [
+       [
+        "券",
+        "けん"
+       ],
+       [
+        "売",
+        "ばい"
+       ],
+       [
+        "機",
+        "き"
+       ]
+      ],
+      "g": "ticket machine"
+     },
+     "の",
+     {
+      "t": "使い方",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "い",
+        ""
+       ],
+       [
+        "方",
+        "かた"
+       ]
+      ],
+      "p": 1,
+      "g": "how to use"
+     },
+     "が",
+     {
+      "t": "分かりません",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かりません",
+        ""
+       ]
+      ],
+      "g": "don't understand"
+     },
+     "。"
+    ],
+    "en": "I don't understand how to use this ticket machine."
    }
   ],
   "nuance": "Attaches to the ます-stem to mean \"the way of / how to do\" (作り方 = \"how to make\"), turning the verb into a noun. The following object often switches its を to の: 漢字の書き方 (\"the way of writing kanji\").",
   "register": "neutral",
-  "caution": "Attach 方 to the ます-stem, not the dictionary form — 使い方 (from 使います), never 使う方; and the object particle typically becomes の (この漢字の書き方)."
+  "caution": "Attach 方 to the ます-stem, not the dictionary form — 使い方 (from 使います), never 使う方; and the object particle typically becomes の (この漢字の書き方).",
+  "peg": {
+   "ja": "この道具の使い方が分からない。",
+   "romaji": "Kono dōgu no tsukaikata ga wakaranai.",
+   "en": "I don't get how to use this gadget.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ni-ikimasu",
@@ -6979,11 +10138,87 @@
      "。"
     ],
     "en": "I'm going to Hokkaido to ski."
+   },
+   {
+    "ja": [
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "convenience store"
+     },
+     "に",
+     {
+      "t": "昼ご飯",
+      "f": [
+       [
+        "昼",
+        "ひる"
+       ],
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "lunch"
+     },
+     "を",
+     {
+      "t": "買い",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "buy (stem)"
+     },
+     {
+      "t": "に行きます",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'm going to the convenience store to buy lunch."
    }
   ],
   "nuance": "Expresses purpose of movement: ます-stem + に + a motion verb (映画を見に行きます = \"go to see a movie\"). The に here means \"in order to\", and only motion verbs (行く/来る/帰る) complete it.",
   "register": "polite",
-  "caution": "Use the ます-stem before に, not the dictionary form — 買いに行く, never 買うに行く; with a する-noun, the noun alone precedes に (勉強しに → 勉強に行く)."
+  "caution": "Use the ます-stem before に, not the dictionary form — 買いに行く, never 買うに行く; with a する-noun, the noun alone precedes に (勉強しに → 勉強に行く).",
+  "peg": {
+   "ja": "ポケモンを捕まえに行きます。",
+   "romaji": "Pokémon o tsukamae ni ikimasu.",
+   "en": "I'm going to catch Pokémon.",
+   "source": "ポケットモンスター (Pokémon) — Satoshi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-amari-nai",
@@ -7100,11 +10335,71 @@
      "。"
     ],
     "en": "I don't eat natto very much."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "は",
+     {
+      "t": "あまり",
+      "f": [
+       [
+        "あまり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "高くない",
+      "f": [
+       [
+        "高",
+        "たか"
+       ],
+       [
+        "くない",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "not expensive"
+     },
+     "。"
+    ],
+    "en": "This shop isn't very expensive."
    }
   ],
   "nuance": "あまり pairs with a negative to mean \"not very / not much\" (あまり高くない). Without the negative, あまり(に) instead means \"excessively\", so the negative verb is what fixes the \"not very\" reading.",
   "register": "neutral",
-  "caution": "あまり demands a negative predicate for the \"not much\" sense — あまり高い alone doesn't mean \"not very expensive\"; you must say あまり高くない."
+  "caution": "あまり demands a negative predicate for the \"not much\" sense — あまり高い alone doesn't mean \"not very expensive\"; you must say あまり高くない.",
+  "peg": {
+   "ja": "私はあまり話さない。",
+   "romaji": "Watashi wa amari hanasanai.",
+   "en": "I don't talk much.",
+   "source": "エヴァンゲリオン (Evangelion) — Rei (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-zenzen-nai",
@@ -7220,11 +10515,69 @@
      "。"
     ],
     "en": "I couldn't sleep at all last night."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "が",
+     {
+      "t": "ぜんぜん",
+      "f": [
+       [
+        "ぜんぜん",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "分からない",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "からない",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "don't understand"
+     },
+     "。"
+    ],
+    "en": "I don't understand Japanese at all."
    }
   ],
   "nuance": "ぜんぜん emphasizes a total negative — \"not at all\" (ぜんぜん分からない). In casual modern speech it also appears with positives to mean \"totally fine\" (ぜんぜん大丈夫), but for N5 keep it strictly with negatives.",
   "register": "neutral",
-  "caution": "In careful/standard usage ぜんぜん needs a negative — ぜんぜん + affirmative (ぜんぜんいい) is colloquial and best avoided in polite writing or on tests."
+  "caution": "In careful/standard usage ぜんぜん needs a negative — ぜんぜん + affirmative (ぜんぜんいい) is colloquial and best avoided in polite writing or on tests.",
+  "peg": {
+   "ja": "そんなの全然面白くない。",
+   "romaji": "Sonna no zenzen omoshirokunai.",
+   "en": "That's not interesting at all.",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi Suzumiya) — Kyon (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-wa-dou-desu-ka",
@@ -7310,11 +10663,56 @@
      "。"
     ],
     "en": "How about a coffee?"
+   },
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "の",
+     {
+      "t": "夜",
+      "f": [
+       [
+        "夜",
+        "よる"
+       ]
+      ],
+      "g": "evening"
+     },
+     {
+      "t": "はどうですか",
+      "f": [
+       [
+        "はどうですか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "How about tomorrow evening?"
    }
   ],
   "nuance": "Asks for an opinion or offers a suggestion (\"How about…? / What do you think of…?\"), e.g. コーヒーはどうですか offers coffee. いかがですか is the more polite version used with customers or superiors.",
   "register": "polite",
-  "caution": "This asks \"how about it / your opinion\", not \"how (by what means)\" — for method use どうやって; and don't swap in どうですか to ask literal \"how are you doing X\"."
+  "caution": "This asks \"how about it / your opinion\", not \"how (by what means)\" — for method use どうやって; and don't swap in どうですか to ask literal \"how are you doing X\".",
+  "peg": {
+   "ja": "みんな、ケーキはどうですか。",
+   "romaji": "Minna, kēki wa dō desu ka.",
+   "en": "Everyone, how about some cake?",
+   "source": "けいおん！(K-On!) — Tsumugi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-wo-kudasai",
@@ -7408,11 +10806,49 @@
      "。"
     ],
     "en": "Two draft beers, please."
+   },
+   {
+    "ja": [
+     {
+      "t": "レジ袋",
+      "f": [
+       [
+        "レジ",
+        ""
+       ],
+       [
+        "袋",
+        "ぶくろ"
+       ]
+      ],
+      "g": "plastic bag"
+     },
+     {
+      "t": "をください",
+      "f": [
+       [
+        "をください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "A plastic bag, please."
    }
   ],
   "nuance": "Requests a thing/object (\"please give me…\", これをください). It asks for a noun; to request an *action*, you need the てください form instead (待ってください).",
   "register": "polite",
-  "caution": "をください requests a *thing*; to request an *action* use the verb's て-form + ください — 待ってください, not 待つをください."
+  "caution": "をください requests a *thing*; to request an *action* use the verb's て-form + ください — 待ってください, not 待つをください.",
+  "peg": {
+   "ja": "お水をください。",
+   "romaji": "Omizu o kudasai.",
+   "en": "Water, please.",
+   "source": "千と千尋の神隠し (Spirited Away) — Chihiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ku-narimasu",
@@ -7536,11 +10972,64 @@
      "。"
     ],
     "en": "Japanese has gradually become fun."
+   },
+   {
+    "ja": [
+     {
+      "t": "荷物",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "luggage"
+     },
+     "が",
+     {
+      "t": "重く",
+      "f": [
+       [
+        "重",
+        "おも"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "heavy (stem)"
+     },
+     {
+      "t": "なりました",
+      "f": [
+       [
+        "なりました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My luggage got heavy."
    }
   ],
   "nuance": "Expresses \"become\" for い-adjectives: drop い and add くなります (寒い→寒くなります). It describes a natural change of state; for a deliberate change *you* cause, use くします instead.",
   "register": "polite",
-  "caution": "Use the く form, not に — it's 大きくなる for い-adjectives; only nouns and na-adjectives take になる (mixing them up, e.g. 寒いになる, is the classic error)."
+  "caution": "Use the く form, not に — it's 大きくなる for い-adjectives; only nouns and na-adjectives take になる (mixing them up, e.g. 寒いになる, is the classic error).",
+  "peg": {
+   "ja": "もうすぐ暗くなります。",
+   "romaji": "Mō sugu kuraku narimasu.",
+   "en": "It'll get dark soon.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ni-narimasu",
@@ -7676,11 +11165,72 @@
      "。"
     ],
     "en": "I practiced every day and got good at it."
+   },
+   {
+    "ja": [
+     {
+      "t": "来週",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "週",
+        "しゅう"
+       ]
+      ],
+      "g": "next week"
+     },
+     "で",
+     {
+      "t": "二十一歳",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "十",
+        "じゅう"
+       ],
+       [
+        "一",
+        "いっ"
+       ],
+       [
+        "歳",
+        "さい"
+       ]
+      ],
+      "g": "21 years old"
+     },
+     {
+      "t": "になります",
+      "f": [
+       [
+        "になります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Next week I turn 21."
    }
   ],
   "nuance": "The \"become\" pattern for nouns and na-adjectives, which link with に (医者になる, 静かになる). Parallel to くなります for い-adjectives; the choice of に vs く depends purely on the word class.",
   "register": "polite",
-  "caution": "Nouns and na-adjectives take に (元気になる); don't apply this to an い-adjective — 高いになる is wrong, it must be 高くなる."
+  "caution": "Nouns and na-adjectives take に (元気になる); don't apply this to an い-adjective — 高いになる is wrong, it must be 高くなる.",
+  "peg": {
+   "ja": "海賊王に俺はなる！",
+   "romaji": "Kaizoku-ō ni ore wa naru!",
+   "en": "I'm going to be King of the Pirates!",
+   "source": "ONE PIECE — Luffy",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n5-no-nominalizer",
@@ -7855,10 +11405,80 @@
      "。"
     ],
     "en": "Getting up early in the morning is tough."
+   },
+   {
+    "ja": [
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "を",
+     {
+      "t": "する",
+      "f": [
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "do (dict)"
+     },
+     {
+      "t": "の",
+      "f": [
+       [
+        "の",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "は",
+     {
+      "t": "大変",
+      "f": [
+       [
+        "大",
+        "たい"
+       ],
+       [
+        "変",
+        "へん"
+       ]
+      ],
+      "g": "tough"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "Working a part-time job is tough."
    }
   ],
   "register": "neutral",
-  "caution": "This の makes a verb into a noun; don't confuse it with こと — の is preferred for concrete, perceived acts (泳ぐのを見る), while abstract facts often take こと."
+  "caution": "This の makes a verb into a noun; don't confuse it with こと — の is preferred for concrete, perceived acts (泳ぐのを見る), while abstract facts often take こと.",
+  "peg": {
+   "ja": "歌うのが楽しい！",
+   "romaji": "Utau no ga tanoshii!",
+   "en": "Singing is fun!",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi Suzumiya) — Haruhi (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-kute",
@@ -8010,11 +11630,94 @@
      "。"
     ],
     "en": "The share house is spacious and bright."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部屋",
+        "へや"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "狭く",
+      "f": [
+       [
+        "狭",
+        "せま"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "narrow (stem)"
+     },
+     {
+      "t": "て",
+      "f": [
+       [
+        "て",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "古い",
+      "f": [
+       [
+        "古",
+        "ふる"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "old"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "is (polite)"
+     },
+     "。"
+    ],
+    "en": "This room is small and old."
    }
   ],
   "nuance": "Links an い-adjective to what follows by changing い→くて (高くて広い = \"expensive and spacious\"). It joins clauses and often implies a cause/reason (\"being X, so…\"); the tense is carried by the final predicate only.",
   "register": "neutral",
-  "caution": "Only い-adjectives use くて; nouns and na-adjectives link with で (静かで, 学生で), not くて — and いい becomes よくて, never いくて."
+  "caution": "Only い-adjectives use くて; nouns and na-adjectives link with で (静かで, 学生で), not くて — and いい becomes よくて, never いくて.",
+  "peg": {
+   "ja": "トトロは大きくて優しい。",
+   "romaji": "Totoro wa ōkikute yasashii.",
+   "en": "Totoro is big and kind.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ni-shimasu",
@@ -8125,11 +11828,56 @@
      "。"
     ],
     "en": "For a drink, I'll have tea."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "I"
+     },
+     "は",
+     {
+      "t": "コーヒー",
+      "f": [
+       [
+        "コーヒー",
+        ""
+       ]
+      ],
+      "g": "coffee"
+     },
+     {
+      "t": "にします",
+      "f": [
+       [
+        "にします",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll have coffee."
    }
   ],
   "nuance": "States a decision or choice, most often an order — コーヒーにします = \"I'll have the coffee\". The に marks the option settled on; contrast にする (you decide) with になる (it becomes so on its own).",
   "register": "polite",
-  "caution": "にします is \"I decide on / I'll choose\" (volitional); don't confuse it with になります (\"becomes\", a natural change) — one is a choice, the other happens by itself."
+  "caution": "にします is \"I decide on / I'll choose\" (volitional); don't confuse it with になります (\"becomes\", a natural change) — one is a choice, the other happens by itself.",
+  "peg": {
+   "ja": "私はイチゴのケーキにします。",
+   "romaji": "Watashi wa ichigo no kēki ni shimasu.",
+   "en": "I'll have the strawberry cake.",
+   "source": "けいおん！(K-On!) — Yui (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-deshou-ka",
@@ -8251,11 +11999,89 @@
      "。"
     ],
     "en": "I wonder if this train stops at Shibuya."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     "に",
+     {
+      "t": "止まる",
+      "f": [
+       [
+        "止",
+        "と"
+       ],
+       [
+        "まる",
+        ""
+       ]
+      ],
+      "g": "stop (dict)"
+     },
+     {
+      "t": "でしょうか",
+      "f": [
+       [
+        "でしょうか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I wonder if this train stops at Shinjuku."
    }
   ],
   "nuance": "A softened, polite question expressing wondering or a tentative guess (\"I wonder if…\", 雨でしょうか). It hedges more than plain ですか, so it sounds gentler and less demanding when asking or confirming.",
   "register": "polite",
-  "caution": "でしょうか softens a question; it isn't a plain yes/no ですか — using it doesn't make the sentence more certain, it makes it more tentative and polite."
+  "caution": "でしょうか softens a question; it isn't a plain yes/no ですか — using it doesn't make the sentence more certain, it makes it more tentative and polite.",
+  "peg": {
+   "ja": "犯人は誰でしょうか。",
+   "romaji": "Hannin wa dare deshō ka.",
+   "en": "I wonder who the culprit is.",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-naide",
@@ -8402,10 +12228,96 @@
      "。"
     ],
     "en": "I went out without taking an umbrella."
+   },
+   {
+    "ja": [
+     {
+      "t": "朝ご飯",
+      "f": [
+       [
+        "朝",
+        "あさ"
+       ],
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "breakfast"
+     },
+     "を",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (nai-stem)"
+     },
+     {
+      "t": "ないで",
+      "f": [
+       [
+        "ないで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "会社",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "company"
+     },
+     "に",
+     {
+      "t": "行きます",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "go (polite)"
+     },
+     "。"
+    ],
+    "en": "I go to work without eating breakfast."
    }
   ],
   "register": "neutral",
-  "caution": "ないで means \"without doing\" as an accompanying manner; for \"because not / instead of\" contrast, and for linking negative reasons, なくて is used — 食べないで出た (\"left without eating\") vs 食べなくて… (reason)."
+  "caution": "ないで means \"without doing\" as an accompanying manner; for \"because not / instead of\" contrast, and for linking negative reasons, なくて is used — 食べないで出た (\"left without eating\") vs 食べなくて… (reason).",
+  "peg": {
+   "ja": "朝ご飯を食べないで学校へ行った。",
+   "romaji": "Asagohan o tabenaide gakkō e itta.",
+   "en": "I went to school without eating breakfast.",
+   "source": "ちびまる子ちゃん (Chibi Maruko-chan) — Maruko (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-kedo",
@@ -8545,10 +12457,87 @@
      "。"
     ],
     "en": "I want to go, but I don't have time."
+   },
+   {
+    "ja": [
+     {
+      "t": "この",
+      "f": [
+       [
+        "この",
+        ""
+       ]
+      ],
+      "g": "this"
+     },
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "は",
+     {
+      "t": "大変",
+      "f": [
+       [
+        "大",
+        "たい"
+       ],
+       [
+        "変",
+        "へん"
+       ]
+      ],
+      "g": "tough"
+     },
+     "だ",
+     {
+      "t": "けど",
+      "f": [
+       [
+        "けど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "楽しい",
+      "f": [
+       [
+        "楽",
+        "たの"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "fun"
+     },
+     "。"
+    ],
+    "en": "This job is tough, but fun."
    }
   ],
   "register": "casual/spoken",
-  "caution": "けど is casual — in polite/written contexts use が or けれども; also けど often just softens a lead-in (\"um, about that…\"), not always a real \"but\"."
+  "caution": "けど is casual — in polite/written contexts use が or けれども; also けど often just softens a lead-in (\"um, about that…\"), not always a real \"but\".",
+  "peg": {
+   "ja": "行きたいけど、お金がない。",
+   "romaji": "Ikitai kedo, okane ga nai.",
+   "en": "I want to go, but I have no money.",
+   "source": "ちびまる子ちゃん (Chibi Maruko-chan) — Maruko (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n5-ga-but",
@@ -8705,10 +12694,72 @@
      "。"
     ],
     "en": "Excuse me, but where is the station?"
+   },
+   {
+    "ja": [
+     {
+      "t": "すみません",
+      "f": [
+       [
+        "すみません",
+        ""
+       ]
+      ],
+      "g": "excuse me"
+     },
+     {
+      "t": "が",
+      "f": [
+       [
+        "が",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "the way"
+     },
+     "が",
+     {
+      "t": "分かりません",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かりません",
+        ""
+       ]
+      ],
+      "g": "don't know"
+     },
+     "。"
+    ],
+    "en": "Excuse me, but I don't know the way."
    }
   ],
   "register": "formal/written",
-  "caution": "This conjunctive が means \"but\" and comes mid-sentence after a full clause — don't confuse it with the subject-marker が, and don't start a new sentence with it the way English does with \"But\"."
+  "caution": "This conjunctive が means \"but\" and comes mid-sentence after a full clause — don't confuse it with the subject-marker が, and don't start a new sentence with it the way English does with \"But\".",
+  "peg": {
+   "ja": "失礼ですが、あなたは誰ですか。",
+   "romaji": "Shitsurei desu ga, anata wa dare desu ka.",
+   "en": "Excuse me, but who are you?",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n5-demo",
@@ -8819,11 +12870,86 @@
      "。"
     ],
     "en": "But it's raining, so I won't go."
+   },
+   {
+    "ja": [
+     {
+      "t": "疲れた",
+      "f": [
+       [
+        "疲",
+        "つか"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "tired"
+     },
+     "。",
+     {
+      "t": "でも",
+      "f": [
+       [
+        "でも",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "まだ",
+      "f": [
+       [
+        "まだ",
+        ""
+       ]
+      ],
+      "g": "still"
+     },
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "work"
+     },
+     "が",
+     {
+      "t": "あります",
+      "f": [
+       [
+        "あります",
+        ""
+       ]
+      ],
+      "g": "there is"
+     },
+     "。"
+    ],
+    "en": "I'm tired. But I still have work."
    }
   ],
   "nuance": "A sentence-initial \"but / however\" that pushes back on what was just said (雨だ。でも行く). It's softer and more conversational than しかし; note the same でも after a noun instead means \"even\" (子供でも).",
   "register": "neutral",
-  "caution": "Sentence-starting でも (\"but\") is different from the particle でも meaning \"even / or something\" (コーヒーでも) — same shape, opposite job; judge by position."
+  "caution": "Sentence-starting でも (\"but\") is different from the particle でも meaning \"even / or something\" (コーヒーでも) — same shape, opposite job; judge by position.",
+  "peg": {
+   "ja": "弱いよ。でも、諦めない。",
+   "romaji": "Yowai yo. Demo, akiramenai.",
+   "en": "I'm weak. But I won't give up.",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-soshite",
@@ -8993,11 +13119,76 @@
      "。"
     ],
     "en": "I cleaned. And then I did laundry too."
+   },
+   {
+    "ja": [
+     {
+      "t": "シャワー",
+      "f": [
+       [
+        "シャワー",
+        ""
+       ]
+      ],
+      "g": "shower"
+     },
+     "を",
+     {
+      "t": "浴びました",
+      "f": [
+       [
+        "浴",
+        "あ"
+       ],
+       [
+        "びました",
+        ""
+       ]
+      ],
+      "g": "took (polite)"
+     },
+     "。",
+     {
+      "t": "そして",
+      "f": [
+       [
+        "そして",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "寝ました",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "ました",
+        ""
+       ]
+      ],
+      "g": "slept (polite)"
+     },
+     "。"
+    ],
+    "en": "I took a shower. And then I went to sleep."
    }
   ],
   "nuance": "Joins two sentences as \"and (then)\", adding a further point or the next event (ご飯を食べた。そして寝た). It links *sentences*; to link nouns within one sentence you still need と or や, not そして.",
   "register": "neutral",
-  "caution": "そして connects whole sentences, not nouns — for \"A and B\" between two nouns use と/や; そして本 is wrong."
+  "caution": "そして connects whole sentences, not nouns — for \"A and B\" between two nouns use と/や; そして本 is wrong.",
+  "peg": {
+   "ja": "買い物をした。そして、料理をした。",
+   "romaji": "Kaimono o shita. Soshite, ryōri o shita.",
+   "en": "I shopped. And then I cooked.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-sorekara",
@@ -9162,11 +13353,95 @@
      "。"
     ],
     "en": "I bought bread. And also I bought eggs."
+   },
+   {
+    "ja": [
+     {
+      "t": "銀行",
+      "f": [
+       [
+        "銀",
+        "ぎん"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "bank"
+     },
+     "に",
+     {
+      "t": "行きました",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "きました",
+        ""
+       ]
+      ],
+      "g": "went (polite)"
+     },
+     "。",
+     {
+      "t": "それから",
+      "f": [
+       [
+        "それから",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "買い物",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "い",
+        ""
+       ],
+       [
+        "物",
+        "もの"
+       ]
+      ],
+      "g": "shopping"
+     },
+     "を",
+     {
+      "t": "しました",
+      "f": [
+       [
+        "しました",
+        ""
+       ]
+      ],
+      "g": "did (polite)"
+     },
+     "。"
+    ],
+    "en": "I went to the bank. After that, I did some shopping."
    }
   ],
   "nuance": "Sequences events as \"after that / and then\" and can also add another item (\"and also\"). Compared with そして, それから more clearly stresses temporal order — one thing, then the next.",
   "register": "neutral",
-  "caution": "それから emphasizes sequence (\"and after that\"); それで, which looks similar, means \"and so / therefore\" (a result) — don't swap them."
+  "caution": "それから emphasizes sequence (\"and after that\"); それで, which looks similar, means \"and so / therefore\" (a result) — don't swap them.",
+  "peg": {
+   "ja": "宿題をした。それから、遊んだ。",
+   "romaji": "Shukudai o shita. Sorekara, asonda.",
+   "en": "I did homework. After that, I played.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-dakara",
@@ -9357,11 +13632,94 @@
      "。"
     ],
     "en": "It's cold outside. So I'll wear a coat."
+   },
+   {
+    "ja": [
+     {
+      "t": "今日",
+      "f": [
+       [
+        "今日",
+        "きょう"
+       ]
+      ],
+      "g": "today"
+     },
+     "は",
+     {
+      "t": "日曜日",
+      "f": [
+       [
+        "日",
+        "にち"
+       ],
+       [
+        "曜",
+        "よう"
+       ],
+       [
+        "日",
+        "び"
+       ]
+      ],
+      "g": "Sunday"
+     },
+     "だ",
+     "。",
+     {
+      "t": "だから",
+      "f": [
+       [
+        "だから",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shops"
+     },
+     "が",
+     {
+      "t": "混んでいる",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "んでいる",
+        ""
+       ]
+      ],
+      "g": "are crowded"
+     },
+     "。"
+    ],
+    "en": "Today's Sunday. So the shops are crowded."
    }
   ],
   "nuance": "A sentence-initial \"so / that's why\" that draws a consequence from the previous statement (雨だ。だから行かない). It's the standalone cousin of clause-final から; ですから is its polite form.",
   "register": "casual/spoken",
-  "caution": "だから is casual/assertive and can sound blunt or accusatory toward superiors; in polite speech soften to ですから or それで."
+  "caution": "だから is casual/assertive and can sound blunt or accusatory toward superiors; in polite speech soften to ですから or それで.",
+  "peg": {
+   "ja": "子供だから、分からないゾ。",
+   "romaji": "Kodomo da kara, wakaranai zo.",
+   "en": "I'm a kid, so I don't get it.",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — Shinnosuke (styled)",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n5-to-issho-ni",
@@ -9513,11 +13871,90 @@
      "。"
     ],
     "en": "I'll climb Mt. Fuji together with my roommate."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     {
+      "t": "と一緒に",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "一",
+        "いっ"
+       ],
+       [
+        "緒",
+        "しょ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "花火",
+      "f": [
+       [
+        "花",
+        "はな"
+       ],
+       [
+        "火",
+        "び"
+       ]
+      ],
+      "g": "fireworks"
+     },
+     "を",
+     {
+      "t": "見ました",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "ました",
+        ""
+       ]
+      ],
+      "g": "watched (polite)"
+     },
+     "。"
+    ],
+    "en": "I watched fireworks with my friend."
    }
   ],
   "nuance": "Means \"together with (a person)\", where と marks the companion and 一緒に adds \"together\" (友達と一緒に行く). The と alone already implies togetherness, so 一緒に just makes it explicit and warmer.",
   "register": "neutral",
-  "caution": "The companion is marked by と, not は — it's 友達と一緒に, never 友達は一緒に; 一緒に by itself just means \"together\" without naming who."
+  "caution": "The companion is marked by と, not は — it's 友達と一緒に, never 友達は一緒に; 一緒に by itself just means \"together\" without naming who.",
+  "peg": {
+   "ja": "お姉ちゃんと一緒に行く！",
+   "romaji": "Onēchan to issho ni iku!",
+   "en": "I'm going with big sis!",
+   "source": "となりのトトロ (My Neighbor Totoro) — Mei (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-te-linking",
@@ -9649,11 +14086,105 @@
      "。"
     ],
     "en": "In the morning I get up and wash my face."
+   },
+   {
+    "ja": [
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "で",
+     {
+      "t": "切符",
+      "f": [
+       [
+        "切",
+        "きっ"
+       ],
+       [
+        "符",
+        "ぷ"
+       ]
+      ],
+      "g": "ticket"
+     },
+     "を",
+     {
+      "t": "買っ",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "buy (te-stem)"
+     },
+     {
+      "t": "て",
+      "f": [
+       [
+        "て",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "に",
+     {
+      "t": "乗ります",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "ります",
+        ""
+       ]
+      ],
+      "g": "board (polite)"
+     },
+     "。"
+    ],
+    "en": "I buy a ticket at the station and board the train."
    }
   ],
   "nuance": "The て-form chains actions or clauses (\"do X and (then) Y\", 起きて、顔を洗って…). Only the FINAL verb shows tense and politeness; the て-verbs stay neutral, and sequence/means/cause is read from context.",
   "register": "neutral",
-  "caution": "Tense sits only on the last verb — 起きて食べました makes the whole chain past; don't try to mark tense on each て-form (起きましたて… is wrong)."
+  "caution": "Tense sits only on the last verb — 起きて食べました makes the whole chain past; don't try to mark tense on each て-form (起きましたて… is wrong).",
+  "peg": {
+   "ja": "朝起きて、顔を洗う。",
+   "romaji": "Asa okite, kao o arau.",
+   "en": "I get up in the morning and wash my face.",
+   "source": "サザエさん (Sazae-san) — Sazae (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-donna",
@@ -9787,11 +14318,66 @@
      "。"
     ],
     "en": "What kind of room are you looking for?"
+   },
+   {
+    "ja": [
+     {
+      "t": "どんな",
+      "f": [
+       [
+        "どんな",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部屋",
+        "へや"
+       ]
+      ],
+      "g": "room"
+     },
+     "が",
+     {
+      "t": "いい",
+      "f": [
+       [
+        "いい",
+        ""
+       ]
+      ],
+      "g": "good"
+     },
+     {
+      "t": "ですか",
+      "f": [
+       [
+        "ですか",
+        ""
+       ]
+      ],
+      "g": "(polite question)"
+     },
+     "。"
+    ],
+    "en": "What kind of room would be good?"
    }
   ],
   "nuance": "Asks \"what kind of…?\" and always attaches directly to a noun (どんな音楽 = \"what kind of music\"). Contrast どの (\"which of a set\") and どう (\"how\"); どんな probes the type or character of a thing.",
   "register": "neutral",
-  "caution": "どんな must be followed by a noun (どんな人?), and it asks about *kind/type* — not \"which one\" (that's どの) and not \"how\" (that's どう)."
+  "caution": "どんな must be followed by a noun (どんな人?), and it asks about *kind/type* — not \"which one\" (that's どの) and not \"how\" (that's どう).",
+  "peg": {
+   "ja": "どんな証拠がありますか。",
+   "romaji": "Donna shōko ga arimasu ka.",
+   "en": "What kind of evidence is there?",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-te-kara",
@@ -9985,11 +14571,90 @@
      "。"
     ],
     "en": "After arriving in Japan, I went to the ward office first."
+   },
+   {
+    "ja": [
+     {
+      "t": "手",
+      "f": [
+       [
+        "手",
+        "て"
+       ]
+      ],
+      "g": "hands"
+     },
+     "を",
+     {
+      "t": "洗っ",
+      "f": [
+       [
+        "洗",
+        "あら"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "wash (te-stem)"
+     },
+     {
+      "t": "てから",
+      "f": [
+       [
+        "てから",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "ご飯",
+      "f": [
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "meal"
+     },
+     "を",
+     {
+      "t": "食べます",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べます",
+        ""
+       ]
+      ],
+      "g": "eat (polite)"
+     },
+     "。"
+    ],
+    "en": "After washing my hands, I eat."
    }
   ],
   "nuance": "Sequences two actions as \"after doing X, (then) Y\", built on the て-form + から. Compared with たあとで, てから stresses that X must be finished first before Y — the completion is the point, not just the order.",
   "register": "neutral",
-  "caution": "Don't confuse this with the reason から — てから attaches to the て-form and orders events (\"after doing X, then Y\"), it does not mean \"because\"."
+  "caution": "Don't confuse this with the reason から — てから attaches to the て-form and orders events (\"after doing X, then Y\"), it does not mean \"because\".",
+  "peg": {
+   "ja": "宿題をしてから、遊びます。",
+   "romaji": "Shukudai o shite kara, asobimasu.",
+   "en": "After I do my homework, I'll play.",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mae-ni",
@@ -10160,10 +14825,78 @@
      "。"
     ],
     "en": "Before going to bed, I check tomorrow's weather."
+   },
+   {
+    "ja": [
+     {
+      "t": "寝る",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "sleep (dict)"
+     },
+     {
+      "t": "前に",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "before"
+     },
+     {
+      "t": "歯",
+      "f": [
+       [
+        "歯",
+        "は"
+       ]
+      ],
+      "g": "teeth"
+     },
+     "を",
+     {
+      "t": "磨きます",
+      "f": [
+       [
+        "磨",
+        "みが"
+       ],
+       [
+        "きます",
+        ""
+       ]
+      ],
+      "g": "brush (polite)"
+     },
+     "。"
+    ],
+    "en": "Before sleeping, I brush my teeth."
    }
   ],
   "register": "neutral",
-  "caution": "The verb before 前に is ALWAYS dictionary form even for past events (食べる前に, never 食べた前に); with a noun you need の (食事の前に)."
+  "caution": "The verb before 前に is ALWAYS dictionary form even for past events (食べる前に, never 食べた前に); with a noun you need の (食事の前に).",
+  "peg": {
+   "ja": "寝る前に、本を読みます。",
+   "romaji": "Neru mae ni, hon o yomimasu.",
+   "en": "Before bed, I read a book.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Satsuki (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-mo-mo",
@@ -10336,10 +15069,107 @@
      "。"
     ],
     "en": "I study both kanji and katakana every day."
+   },
+   {
+    "ja": [
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "人",
+      "f": [
+       [
+        "人",
+        "ひと"
+       ]
+      ],
+      "g": "people"
+     },
+     "が",
+     {
+      "t": "多い",
+      "f": [
+       [
+        "多",
+        "おお"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "many"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "Both Shinjuku and Shibuya are crowded."
    }
   ],
   "register": "neutral",
-  "caution": "Both も slots replace は/が/を, and with a negative verb the whole thing flips to \"neither…nor\" (肉も魚も食べない = \"eat neither meat nor fish\") — watch the verb's polarity."
+  "caution": "Both も slots replace は/が/を, and with a negative verb the whole thing flips to \"neither…nor\" (肉も魚も食べない = \"eat neither meat nor fish\") — watch the verb's polarity.",
+  "peg": {
+   "ja": "肉も魚も大好きだ！",
+   "romaji": "Niku mo sakana mo daisuki da!",
+   "en": "I love both meat and fish!",
+   "source": "ONE PIECE — Luffy (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-tai",
@@ -10498,10 +15328,73 @@
      "。"
     ],
     "en": "I want to get good at Japanese."
+   },
+   {
+    "ja": [
+     {
+      "t": "温泉",
+      "f": [
+       [
+        "温",
+        "おん"
+       ],
+       [
+        "泉",
+        "せん"
+       ]
+      ],
+      "g": "hot spring"
+     },
+     "に",
+     {
+      "t": "行き",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "き",
+        ""
+       ]
+      ],
+      "g": "go (stem)"
+     },
+     {
+      "t": "たい",
+      "f": [
+       [
+        "たい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "I want to go to an onsen."
    }
   ],
   "register": "neutral",
-  "caution": "たい states the speaker's own desire; don't use it to report a third person's wish — for \"he wants to…\" use たがっている instead of 〜たい."
+  "caution": "たい states the speaker's own desire; don't use it to report a third person's wish — for \"he wants to…\" use たがっている instead of 〜たい.",
+  "peg": {
+   "ja": "家に帰りたい。",
+   "romaji": "Uchi ni kaeritai.",
+   "en": "I want to go home.",
+   "source": "千と千尋の神隠し (Spirited Away) — Chihiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ga-arimasu",
@@ -10609,10 +15502,69 @@
      "。"
     ],
     "en": "There is a cat in the share house."
+   },
+   {
+    "ja": [
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部屋",
+        "へや"
+       ]
+      ],
+      "g": "room"
+     },
+     "に",
+     {
+      "t": "大きい",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "きい",
+        ""
+       ]
+      ],
+      "g": "big"
+     },
+     {
+      "t": "窓",
+      "f": [
+       [
+        "窓",
+        "まど"
+       ]
+      ],
+      "g": "window"
+     },
+     {
+      "t": "があります",
+      "f": [
+       [
+        "があります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "There's a big window in the room."
    }
   ],
   "register": "polite",
-  "caution": "Choose the verb by animacy, not politeness — living things (people, animals) take います, inanimate things take あります; 犬があります is the classic error."
+  "caution": "Choose the verb by animacy, not politeness — living things (people, animals) take います, inanimate things take あります; 犬があります is the classic error.",
+  "peg": {
+   "ja": "森に大きな木があります。",
+   "romaji": "Mori ni ōkina ki ga arimasu.",
+   "en": "There's a big tree in the forest.",
+   "source": "となりのトトロ (My Neighbor Totoro) — Mei (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-temo-ii",
@@ -10747,11 +15699,70 @@
      "。"
     ],
     "en": "Is it OK to use the kitchen?"
+   },
+   {
+    "ja": [
+     {
+      "t": "ここ",
+      "f": [
+       [
+        "ここ",
+        ""
+       ]
+      ],
+      "g": "here"
+     },
+     "に",
+     {
+      "t": "座っ",
+      "f": [
+       [
+        "座",
+        "すわ"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "sit (te-stem)"
+     },
+     {
+      "t": "てもいい",
+      "f": [
+       [
+        "てもいい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "ですか",
+      "f": [
+       [
+        "ですか",
+        ""
+       ]
+      ],
+      "g": "(polite question)"
+     },
+     "。"
+    ],
+    "en": "May I sit here?"
    }
   ],
   "nuance": "Grants permission — \"you may / it's OK to…\" (帰ってもいいです). Built on the て-form; its negative-permission partner is なくてもいい (\"don't have to\"), and its prohibition opposite is てはいけません.",
   "register": "neutral",
-  "caution": "This grants permission (\"may\"), so don't confuse it with its opposite てはいけません (\"must not\"); also its negative form なくてもいい means \"don't have to\", not \"may not\"."
+  "caution": "This grants permission (\"may\"), so don't confuse it with its opposite てはいけません (\"must not\"); also its negative form なくてもいい means \"don't have to\", not \"may not\".",
+  "peg": {
+   "ja": "これを借りてもいい？",
+   "romaji": "Kore o karite mo ii?",
+   "en": "Can I borrow this?",
+   "source": "ドラえもん (Doraemon) — Nobita (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-te-wa-ikemasen",
@@ -10894,11 +15905,75 @@
      "。"
     ],
     "en": "You must not park bicycles here."
+   },
+   {
+    "ja": [
+     {
+      "t": "ここ",
+      "f": [
+       [
+        "ここ",
+        ""
+       ]
+      ],
+      "g": "here"
+     },
+     "で",
+     {
+      "t": "写真",
+      "f": [
+       [
+        "写",
+        "しゃ"
+       ],
+       [
+        "真",
+        "しん"
+       ]
+      ],
+      "g": "photo"
+     },
+     "を",
+     {
+      "t": "撮っ",
+      "f": [
+       [
+        "撮",
+        "と"
+       ],
+       [
+        "っ",
+        ""
+       ]
+      ],
+      "g": "take (te-stem)"
+     },
+     {
+      "t": "てはいけません",
+      "f": [
+       [
+        "てはいけません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You must not take photos here."
    }
   ],
   "nuance": "A firm prohibition — \"must not / may not\" (ここでタバコを吸ってはいけません). Built on the て-form + は; in casual speech ては often contracts to ちゃ (吸っちゃだめ). It bans, whereas なければなりません compels.",
   "register": "polite",
-  "caution": "This forbids an action (\"must not\"); it is not the opposite of \"must\" — the opposite of なければなりません (\"must do\") is なくてもいい (\"don't have to\"), not this."
+  "caution": "This forbids an action (\"must not\"); it is not the opposite of \"must\" — the opposite of なければなりません (\"must do\") is なくてもいい (\"don't have to\"), not this.",
+  "peg": {
+   "ja": "逃げちゃダメだ。",
+   "romaji": "Nigecha dame da.",
+   "en": "I mustn't run away.",
+   "source": "エヴァンゲリオン (Evangelion) — Shinji",
+   "kind": "verbatim"
+  },
+  "flags": []
  },
  {
   "id": "n5-nagara",
@@ -11072,10 +16147,89 @@
      "。"
     ],
     "en": "I study Japanese while watching anime."
+   },
+   {
+    "ja": [
+     {
+      "t": "テレビ",
+      "f": [
+       [
+        "テレビ",
+        ""
+       ]
+      ],
+      "g": "TV"
+     },
+     "を",
+     {
+      "t": "見",
+      "f": [
+       [
+        "見",
+        "み"
+       ]
+      ],
+      "g": "watch (stem)"
+     },
+     {
+      "t": "ながら",
+      "f": [
+       [
+        "ながら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "晩ご飯",
+      "f": [
+       [
+        "晩",
+        "ばん"
+       ],
+       [
+        "ご",
+        ""
+       ],
+       [
+        "飯",
+        "はん"
+       ]
+      ],
+      "g": "dinner"
+     },
+     "を",
+     {
+      "t": "食べます",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べます",
+        ""
+       ]
+      ],
+      "g": "eat (polite)"
+     },
+     "。"
+    ],
+    "en": "I eat dinner while watching TV."
    }
   ],
   "register": "neutral",
-  "caution": "Both actions must have the SAME subject and run at once — you can't use ながら when two different people act, and it attaches to the ます-stem (見ながら, not 見るながら)."
+  "caution": "Both actions must have the SAME subject and run at once — you can't use ながら when two different people act, and it attaches to the ます-stem (見ながら, not 見るながら).",
+  "peg": {
+   "ja": "歌いながら、ギターを弾く。",
+   "romaji": "Utainagara, gitā o hiku.",
+   "en": "I play guitar while singing.",
+   "source": "けいおん！(K-On!) — Yui (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ta-koto-ga-arimasu",
@@ -11200,11 +16354,79 @@
      "。"
     ],
     "en": "I have been in the hot springs at Asahidake."
+   },
+   {
+    "ja": [
+     {
+      "t": "一度",
+      "f": [
+       [
+        "一",
+        "いち"
+       ],
+       [
+        "度",
+        "ど"
+       ]
+      ],
+      "g": "once"
+     },
+     "、",
+     {
+      "t": "寿司",
+      "f": [
+       [
+        "寿",
+        "す"
+       ],
+       [
+        "司",
+        "し"
+       ]
+      ],
+      "g": "sushi"
+     },
+     "を",
+     {
+      "t": "食べた",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べた",
+        ""
+       ]
+      ],
+      "g": "ate (plain past)"
+     },
+     {
+      "t": "ことがあります",
+      "f": [
+       [
+        "ことがあります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've eaten sushi once before."
    }
   ],
   "nuance": "States life experience — \"have (ever) done X before\" (日本に行ったことがあります). It needs the past た-form and implies a notable, countable past occasion, so it fits unusual experiences, not everyday routine.",
   "register": "polite",
-  "caution": "Reserve it for genuine past experience, not recent/normal actions — 昨日食べたことがあります is odd; and it takes the た-form (食べたことがある), never the dictionary form."
+  "caution": "Reserve it for genuine past experience, not recent/normal actions — 昨日食べたことがあります is odd; and it takes the た-form (食べたことがある), never the dictionary form.",
+  "peg": {
+   "ja": "この川に来たことがあります。",
+   "romaji": "Kono kawa ni kita koto ga arimasu.",
+   "en": "I've been to this river before.",
+   "source": "千と千尋の神隠し (Spirited Away) — Chihiro (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-ta-hou-ga-ii",
@@ -11340,10 +16562,72 @@
      "。"
     ],
     "en": "You'd better go to bed early."
+   },
+   {
+    "ja": [
+     {
+      "t": "早く",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "帰った",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "go home (plain past)"
+     },
+     {
+      "t": "ほうがいい",
+      "f": [
+       [
+        "ほうがいい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "You'd better go home early."
    }
   ],
   "register": "neutral",
-  "caution": "Affirmative advice uses the PAST た-form (寝たほうがいい), which feels counter-intuitive; negative advice uses ない (寝ないほうがいい) — using 寝るほうがいい for advice is the classic slip."
+  "caution": "Affirmative advice uses the PAST た-form (寝たほうがいい), which feels counter-intuitive; negative advice uses ない (寝ないほうがいい) — using 寝るほうがいい for advice is the classic slip.",
+  "peg": {
+   "ja": "警察を呼んだほうがいい。",
+   "romaji": "Keisatsu o yonda hō ga ii.",
+   "en": "You'd better call the police.",
+   "source": "名探偵コナン (Detective Conan) — Conan (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-kara",
@@ -11494,10 +16778,85 @@
      "。"
     ],
     "en": "Tomorrow is an early start, so I'm going to bed now."
+   },
+   {
+    "ja": [
+     {
+      "t": "雨",
+      "f": [
+       [
+        "雨",
+        "あめ"
+       ]
+      ],
+      "g": "rain"
+     },
+     "が",
+     {
+      "t": "降っている",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "っている",
+        ""
+       ]
+      ],
+      "g": "is falling"
+     },
+     {
+      "t": "から",
+      "f": [
+       [
+        "から",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     "を",
+     {
+      "t": "持ちます",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "ちます",
+        ""
+       ]
+      ],
+      "g": "take (polite)"
+     },
+     "。"
+    ],
+    "en": "Because it's raining, I'll take an umbrella."
    }
   ],
   "register": "neutral",
-  "caution": "This から means \"because\" and attaches to a full clause; don't confuse it with てから (\"after doing\") or the から that marks \"from\" a starting point/place."
+  "caution": "This から means \"because\" and attaches to a full clause; don't confuse it with てから (\"after doing\") or the から that marks \"from\" a starting point/place.",
+  "peg": {
+   "ja": "眠いから、寝るゾ。",
+   "romaji": "Nemui kara, neru zo.",
+   "en": "I'm sleepy, so I'm going to sleep.",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — Shinnosuke (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n5-tsumori",
@@ -11669,10 +17028,85 @@
      "。"
     ],
     "en": "I intend to still be in Japan next year."
+   },
+   {
+    "ja": [
+     {
+      "t": "来年",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "next year"
+     },
+     "、",
+     {
+      "t": "国",
+      "f": [
+       [
+        "国",
+        "くに"
+       ]
+      ],
+      "g": "home country"
+     },
+     "に",
+     {
+      "t": "帰る",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "return (dict)"
+     },
+     {
+      "t": "つもり",
+      "f": [
+       [
+        "つもり",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "intention"
+     },
+     {
+      "t": "です",
+      "f": [
+       [
+        "です",
+        ""
+       ]
+      ],
+      "g": "(polite)"
+     },
+     "。"
+    ],
+    "en": "I intend to go back to my home country next year."
    }
   ],
   "nuance": "States a firm intention or plan the speaker has already settled on (来年帰るつもりです). It attaches to the dictionary form; the negative 〜ないつもり means \"intend not to\", distinct from 〜つもりはない (\"have no intention\").",
   "register": "polite",
-  "caution": "Use the dictionary form (行くつもり), not the ます-stem or past; and つもり expresses the speaker's own resolve — it's awkward for stating a third person's plans as fact."
+  "caution": "Use the dictionary form (行くつもり), not the ます-stem or past; and つもり expresses the speaker's own resolve — it's awkward for stating a third person's plans as fact.",
+  "peg": {
+   "ja": "火影になるつもりだ！",
+   "romaji": "Hokage ni naru tsumori da!",
+   "en": "I intend to become Hokage!",
+   "source": "NARUTO — Naruto (styled)",
+   "kind": "styled"
+  },
+  "flags": []
  }
 ]

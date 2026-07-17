@@ -1249,16 +1249,67 @@ test('all grammar-*.json files pass the validator (the data gate for every bake 
   assert.ok(maeni.examples[0].ja.find(tk => tk.p && tk.g));
 });
 
+// A valid single example (≥1 p token; non-p tokens glossed; f-concat === t).
+const okEx = () => ({ en: 'I eat.', ja: [
+  { t: '私', f: [['私', 'わたし']], g: 'I' },
+  { t: 'は', f: [['は', '']], g: 'topic' },
+  { t: '食べる', f: [['食', 'た'], ['べる', '']], p: 1 },
+] });
+// A fully-enriched valid point (verbatim peg + attribution, flag subset, exactly 3 examples).
+const okPoint = (over = {}) => ({
+  id: 'n5-ok', level: 'N5', pattern: '〜てから', reading: 'てから', meaning: 'x', connection: 'x',
+  nuance: 'x', register: 'neutral', caution: 'x', confidence: 'high', tags: [], related: [],
+  peg: { ja: '海賊王におれはなる', romaji: 'kaizokuou ni ore wa naru', en: "I'll be King of the Pirates", source: 'One Piece — Luffy', kind: 'verbatim' },
+  flags: ['anime-common', 'casual-spoken'],
+  examples: [okEx(), okEx(), okEx()],
+  ...over,
+});
+
 test('validator rejects malformed tokens', () => {
   const bad = [{
     id: 'n5-bad', level: 'N5', pattern: '〜てから', reading: 'てから', meaning: 'x', connection: 'x',
     confidence: 'high', tags: [], related: ['n5-nope'],
-    examples: [{ en: 'x', ja: [{ t: '食べて', f: [['食', 'た'], ['べ', '']], g: 'eat' }] }],   // f ≠ t, no p token
+    // 3 examples (exactly-3 rule) — the FIRST is malformed: f ≠ t, no p token
+    examples: [
+      { en: 'x', ja: [{ t: '食べて', f: [['食', 'た'], ['べ', '']], g: 'eat' }] },
+      okEx(), okEx(),
+    ],
   }];
   const errs = validatePoints(bad, 'N5', new Set(['n5-bad']));
   assert.ok(errs.some(e => e.includes('≠ t')));            // segment concat mismatch
   assert.ok(errs.some(e => e.includes('no p (pattern)'))); // missing p token
   assert.ok(errs.some(e => e.includes('unknown id')));     // dangling related ref
+});
+
+test('validator accepts an enriched point (verbatim peg, flags subset, 3 examples)', () => {
+  assert.deepEqual(validatePoints([okPoint()], 'N5', new Set(['n5-ok'])), []);
+});
+
+test('validator accepts a styled peg (no attribution dash required)', () => {
+  const styled = okPoint({ peg: { ja: 'いっちょやってみっか', romaji: 'iccho yatte mikka', en: "let's give it a shot", source: 'shounen-hero voice', kind: 'styled' } });
+  assert.deepEqual(validatePoints([styled], 'N5', new Set(['n5-ok'])), []);
+});
+
+test('validator accepts empty flags (absence = neutral-polite)', () => {
+  assert.deepEqual(validatePoints([okPoint({ flags: [] })], 'N5', new Set(['n5-ok'])), []);
+});
+
+test('validator rejects R5 enrichment violations (peg / flags / example-count)', () => {
+  const S = new Set(['n5-ok']);
+  const only = (over) => validatePoints([okPoint(over)], 'N5', S);
+  // peg missing entirely
+  assert.ok(only({ peg: undefined }).some(e => /missing peg/.test(e)));
+  // verbatim peg over the 40 code-point cap
+  const long = '海'.repeat(41);
+  assert.ok(only({ peg: { ja: long, romaji: 'x', en: 'x', source: 'One Piece — Luffy', kind: 'verbatim' } }).some(e => /> 40 code points/.test(e)));
+  // verbatim peg without an attribution dash
+  assert.ok(only({ peg: { ja: 'よし', romaji: 'yoshi', en: 'ok', source: 'One Piece', kind: 'verbatim' } }).some(e => /needs attribution/.test(e)));
+  // unknown flag value
+  assert.ok(only({ flags: ['made-up-flag'] }).some(e => /unknown flag/.test(e)));
+  // duplicate flag
+  assert.ok(only({ flags: ['anime-common', 'anime-common'] }).some(e => /duplicate flag/.test(e)));
+  // exactly-3 examples enforced (2 is now too few)
+  assert.ok(only({ examples: [okEx(), okEx()] }).some(e => /exactly 3/.test(e)));
 });
 
 
@@ -2317,10 +2368,12 @@ test('questions: scrambleFor — corpus-wide validity ≥97%, exact reassembly +
   assert.ok(valid / total >= 0.97, `scramble coverage ${(valid / total * 100).toFixed(1)}% ≥ 97%`);
 });
 
-test('questions: scramblable — the 3 known scramble-less points degrade', () => {
+test('questions: scramblable — the known scramble-less points degrade', () => {
+  // R5's third examples rescued n5-wa-dou-desu-ka AND n4-nakya (their new examples are long
+  // enough to chunk) — n4-te-sumimasen is the one point whose every example stays under 4 units.
   const pool = ['n5', 'n4'].flatMap(l =>
     JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8')));
-  for (const id of ['n5-wa-dou-desu-ka', 'n4-te-sumimasen', 'n4-nakya']) {
+  for (const id of ['n4-te-sumimasen']) {
     const p = pool.find(x => x.id === id);
     assert.ok(p, `${id} present`);
     assert.equal(scramblable(p), false, `${id} is not scramble-able`);

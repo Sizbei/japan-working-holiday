@@ -142,6 +142,88 @@
      "。"
     ],
     "en": "If I have time, I want to go to Hokkaido."
+   },
+   {
+    "ja": [
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time shift"
+     },
+     "が",
+     {
+      "t": "終わっ",
+      "f": [
+       [
+        "終",
+        "お"
+       ],
+       [
+        "わっ",
+        ""
+       ]
+      ],
+      "g": "end (ta-stem)"
+     },
+     {
+      "t": "たら",
+      "f": [
+       [
+        "たら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "渋谷",
+      "f": [
+       [
+        "渋",
+        "しぶ"
+       ],
+       [
+        "谷",
+        "や"
+       ]
+      ],
+      "g": "Shibuya"
+     },
+     "で",
+     {
+      "t": "ラーメン",
+      "f": [
+       [
+        "ラーメン",
+        ""
+       ]
+      ],
+      "g": "ramen"
+     },
+     "を",
+     {
+      "t": "食べよう",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べよう",
+        ""
+       ]
+      ],
+      "g": "let's eat"
+     },
+     "。"
+    ],
+    "en": "When my shift ends, let's go eat ramen in Shibuya."
    }
   ],
   "level": "N4",
@@ -152,7 +234,15 @@
    "n3-to-shitara"
   ],
   "register": "neutral",
-  "caution": "The main clause can't be a stative fact tied to the general present; use と or ば for \"whenever X, Y always happens,\" and keep た-form (着いたら, not 着くたら)."
+  "caution": "The main clause can't be a stative fact tied to the general present; use と or ば for \"whenever X, Y always happens,\" and keep た-form (着いたら, not 着くたら).",
+  "flags": [],
+  "peg": {
+   "ja": "諦めたらそこで試合終了だよ",
+   "romaji": "Akirametara soko de shiai shūryō da yo",
+   "en": "The moment you give up, that's when the game's over.",
+   "source": "スラムダンク (Slam Dunk) — 安西先生",
+   "kind": "verbatim"
+  }
  },
  {
   "id": "n4-ba",
@@ -307,12 +397,95 @@
      "。"
     ],
     "en": "If you practice every day, your Japanese will get better."
+   },
+   {
+    "ja": [
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "が",
+     {
+      "t": "安けれ",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "けれ",
+        ""
+       ]
+      ],
+      "g": "cheap (ba-stem)"
+     },
+     {
+      "t": "ば",
+      "f": [
+       [
+        "ば",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "都心",
+      "f": [
+       [
+        "都",
+        "と"
+       ],
+       [
+        "心",
+        "しん"
+       ]
+      ],
+      "g": "city center"
+     },
+     "に",
+     {
+      "t": "住める",
+      "f": [
+       [
+        "住",
+        "す"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "can live"
+     },
+     "。"
+    ],
+    "en": "If the rent is cheap, I can live in the city center."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Avoid ば when the main clause is a command, request, or invitation (×勉強すれば、遊びに行きましょう) — use たら there instead."
+  "caution": "Avoid ば when the main clause is a command, request, or invitation (×勉強すれば、遊びに行きましょう) — use たら there instead.",
+  "flags": [],
+  "peg": {
+   "ja": "努力すれば、夢は必ず叶う",
+   "romaji": "Doryoku sureba, yume wa kanarazu kanau",
+   "en": "If you put in the effort, your dream will surely come true.",
+   "source": "NARUTO — ロック・リー (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nara",
@@ -463,12 +636,100 @@
      "。"
     ],
     "en": "If you're looking for a cheap room, a share house is good."
+   },
+   {
+    "ja": [
+     {
+      "t": "区役所",
+      "f": [
+       [
+        "区",
+        "く"
+       ],
+       [
+        "役",
+        "やく"
+       ],
+       [
+        "所",
+        "しょ"
+       ]
+      ],
+      "g": "ward office"
+     },
+     "に",
+     {
+      "t": "行く",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "go"
+     },
+     {
+      "t": "なら",
+      "f": [
+       [
+        "なら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "午前中",
+      "f": [
+       [
+        "午",
+        "ご"
+       ],
+       [
+        "前",
+        "ぜん"
+       ],
+       [
+        "中",
+        "ちゅう"
+       ]
+      ],
+      "g": "morning"
+     },
+     "が",
+     {
+      "t": "すいている",
+      "f": [
+       [
+        "すいている",
+        ""
+       ]
+      ],
+      "g": "is uncrowded"
+     },
+     "よ",
+     "。"
+    ],
+    "en": "If you're going to the ward office, the morning is less crowded."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "なら attaches to the plain form WITHOUT past た for a present topic (日本へ行くなら), so don't confuse it with the identical-looking だ→なら of the copula."
+  "caution": "なら attaches to the plain form WITHOUT past た for a present topic (日本へ行くなら), so don't confuse it with the identical-looking だ→なら of the copula.",
+  "flags": [],
+  "peg": {
+   "ja": "勝ちたいなら、俺の背中を見てろ",
+   "romaji": "Kachitai nara, ore no senaka o mitero",
+   "en": "If you want to win, watch my back.",
+   "source": "ハイキュー!! (Haikyu!!) — 澤村大地 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-to-conditional",
@@ -606,12 +867,100 @@
      "。"
     ],
     "en": "When spring comes, the cherry blossoms bloom."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "改札",
+      "f": [
+       [
+        "改",
+        "かい"
+       ],
+       [
+        "札",
+        "さつ"
+       ]
+      ],
+      "g": "ticket gate"
+     },
+     "を",
+     {
+      "t": "出る",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "exit"
+     },
+     {
+      "t": "と",
+      "f": [
+       [
+        "と",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "すぐ",
+     {
+      "t": "左",
+      "f": [
+       [
+        "左",
+        "ひだり"
+       ]
+      ],
+      "g": "left"
+     },
+     "に",
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "konbini"
+     },
+     "が",
+     {
+      "t": "ある",
+      "f": [
+       [
+        "ある",
+        ""
+       ]
+      ],
+      "g": "there is"
+     },
+     "。"
+    ],
+    "en": "Exit this ticket gate and there's a konbini right on the left."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "と cannot be followed by a request, command, permission, or volition in the result clause (×このボタンを押すと、待ってください) — that's the single most common と mistake."
+  "caution": "と cannot be followed by a request, command, permission, or volition in the result clause (×このボタンを押すと、待ってください) — that's the single most common と mistake.",
+  "flags": [],
+  "peg": {
+   "ja": "このスイッチを押すと、世界が変わる",
+   "romaji": "Kono suicchi o osu to, sekai ga kawaru",
+   "en": "Press this switch, and the world changes.",
+   "source": "STEINS;GATE — 岡部倫太郎 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-temo",
@@ -750,6 +1099,80 @@
      "。"
     ],
     "en": "Even if it's expensive, I'll buy these shoes."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "を",
+     {
+      "t": "逃し",
+      "f": [
+       [
+        "逃",
+        "のが"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "miss (te-stem)"
+     },
+     {
+      "t": "ても",
+      "f": [
+       [
+        "ても",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "歩いて",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "いて",
+        ""
+       ]
+      ],
+      "g": "walk (te-form)"
+     },
+     {
+      "t": "帰る",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "go home"
+     },
+     "。"
+    ],
+    "en": "Even if I miss the last train, I'll walk home."
    }
   ],
   "level": "N4",
@@ -760,7 +1183,15 @@
   ],
   "nuance": "Concedes a condition that fails to change the outcome — \"X, yet Y anyway.\" With a question word (誰でも, いくら…ても) it becomes \"no matter who/how much.\"",
   "register": "neutral",
-  "caution": "Don't swap it for the permission 〜てもいい (\"may I…\"): ても alone means \"even if,\" and needs a following clause, not いい."
+  "caution": "Don't swap it for the permission 〜てもいい (\"may I…\"): ても alone means \"even if,\" and needs a following clause, not いい.",
+  "flags": [],
+  "peg": {
+   "ja": "何度倒れても、俺は立ち上がる",
+   "romaji": "Nando taorete mo, ore wa tachiagaru",
+   "en": "No matter how many times I fall, I'll stand back up.",
+   "source": "NARUTO — うずまきナルト (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-you-ni-naru",
@@ -880,13 +1311,96 @@
      "。"
     ],
     "en": "I've started running every morning (as a habit)."
+   },
+   {
+    "ja": [
+     {
+      "t": "半年",
+      "f": [
+       [
+        "半年",
+        "はんとし"
+       ]
+      ],
+      "g": "half a year"
+     },
+     "で",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "の",
+     {
+      "t": "案内",
+      "f": [
+       [
+        "案",
+        "あん"
+       ],
+       [
+        "内",
+        "ない"
+       ]
+      ],
+      "g": "announcement"
+     },
+     "が",
+     {
+      "t": "聞き取れる",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "き",
+        ""
+       ],
+       [
+        "取",
+        "と"
+       ],
+       [
+        "れる",
+        ""
+       ]
+      ],
+      "g": "can catch"
+     },
+     {
+      "t": "ようになった",
+      "f": [
+       [
+        "ようになった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "After half a year, I got to where I could catch the station announcements."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "related": [],
   "register": "neutral",
-  "caution": "Built on the potential/plain verb, not the ます-stem (読めるようになる, ×読みようになる); with a negative use 〜なくなる rather than ×ないようになる in speech."
+  "caution": "Built on the potential/plain verb, not the ます-stem (読めるようになる, ×読みようになる); with a negative use 〜なくなる rather than ×ないようになる in speech.",
+  "flags": [],
+  "peg": {
+   "ja": "特訓して、少しずつ力を出せるようになった",
+   "romaji": "Tokkun shite, sukoshi zutsu chikara o daseru yō ni natta",
+   "en": "Through hard training, I gradually became able to use my power.",
+   "source": "僕のヒーローアカデミア (My Hero Academia) — 緑谷出久 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-you-ni-suru",
@@ -1004,13 +1518,81 @@
      "。"
     ],
     "en": "Please see to it that you're not late for the meeting."
+   },
+   {
+    "ja": [
+     {
+      "t": "ゴミ",
+      "f": [
+       [
+        "ゴミ",
+        ""
+       ]
+      ],
+      "g": "trash"
+     },
+     "の",
+     {
+      "t": "分別",
+      "f": [
+       [
+        "分",
+        "ぶん"
+       ],
+       [
+        "別",
+        "べつ"
+       ]
+      ],
+      "g": "sorting"
+     },
+     "を",
+     {
+      "t": "間違えない",
+      "f": [
+       [
+        "間",
+        "ま"
+       ],
+       [
+        "違",
+        "ちが"
+       ],
+       [
+        "えない",
+        ""
+       ]
+      ],
+      "g": "not make a mistake"
+     },
+     {
+      "t": "ようにしている",
+      "f": [
+       [
+        "ようにしている",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I make sure not to sort the trash the wrong way."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "nuance": "A deliberate effort or policy to bring about a state — you steer your own behaviour. Contrast ようになる, where the change happens to you on its own.",
   "register": "neutral",
-  "caution": "Don't confuse it with ようになる: ようにする is a conscious effort you make, ようになる is a change that simply comes about."
+  "caution": "Don't confuse it with ようになる: ようにする is a conscious effort you make, ようになる is a change that simply comes about.",
+  "flags": [],
+  "peg": {
+   "ja": "毎日休まず、必ず稽古するようにしている",
+   "romaji": "Mainichi yasumazu, kanarazu keiko suru yō ni shite iru",
+   "en": "Every day without rest, I make sure to always train.",
+   "source": "鬼滅の刃 (Demon Slayer) — 竈門炭治郎 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-you-to-omou",
@@ -1165,12 +1747,121 @@
      "。"
     ],
     "en": "I'm thinking of buying a car next year."
+   },
+   {
+    "ja": [
+     {
+      "t": "給料",
+      "f": [
+       [
+        "給",
+        "きゅう"
+       ],
+       [
+        "料",
+        "りょう"
+       ]
+      ],
+      "g": "pay"
+     },
+     "が",
+     {
+      "t": "出たら",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "たら",
+        ""
+       ]
+      ],
+      "g": "when it comes"
+     },
+     "、",
+     {
+      "t": "新しい",
+      "f": [
+       [
+        "新",
+        "あたら"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "new"
+     },
+     {
+      "t": "自転車",
+      "f": [
+       [
+        "自",
+        "じ"
+       ],
+       [
+        "転",
+        "てん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "bicycle"
+     },
+     "を",
+     {
+      "t": "買おう",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "おう",
+        ""
+       ]
+      ],
+      "g": "buy (volitional)"
+     },
+     {
+      "t": "と思う",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "う",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "When I get paid, I think I'll buy a new bike."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "It must attach to the volitional form (行こうと思う), not the dictionary form (×行くと思う, which just means \"I think he goes\")."
+  "caution": "It must attach to the volitional form (行こうと思う), not the dictionary form (×行くと思う, which just means \"I think he goes\").",
+  "flags": [],
+  "peg": {
+   "ja": "今日こそ、あいつに告白しようと思う",
+   "romaji": "Kyō koso, aitsu ni kokuhaku shiyō to omou",
+   "en": "Today for sure, I think I'll confess to them.",
+   "source": "君の名は。(Your Name) — 立花瀧 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-volitional",
@@ -1277,12 +1968,80 @@
      "。"
     ],
     "en": "I'm tired, so let's head home soon."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "に",
+     {
+      "t": "コーヒー",
+      "f": [
+       [
+        "コーヒー",
+        ""
+       ]
+      ],
+      "g": "coffee"
+     },
+     "でも",
+     {
+      "t": "飲もう",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "もう",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "let's drink"
+     },
+     "。"
+    ],
+    "en": "Before the interview, let's grab a coffee or something."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "casual",
-  "caution": "Plain 〜(よ)う is informal \"let's/I'll\" — use ましょう with strangers or superiors; don't attach と思う unless expressing your own intention."
+  "caution": "Plain 〜(よ)う is informal \"let's/I'll\" — use ましょう with strangers or superiors; don't attach と思う unless expressing your own intention.",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "みんなで最高のチームを作ろう！",
+   "romaji": "Minna de saikō no chīmu o tsukurō!",
+   "en": "Let's build the best team together!",
+   "source": "ハイキュー!! (Haikyu!!) — 日向翔陽 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-yotei",
@@ -1408,6 +2167,99 @@
      "。"
     ],
     "en": "The meeting is scheduled from three o'clock."
+   },
+   {
+    "ja": [
+     {
+      "t": "来月",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "next month"
+     },
+     "、",
+     {
+      "t": "在留",
+      "f": [
+       [
+        "在",
+        "ざい"
+       ],
+       [
+        "留",
+        "りゅう"
+       ]
+      ],
+      "g": "residence"
+     },
+     {
+      "t": "カード",
+      "f": [
+       [
+        "カード",
+        ""
+       ]
+      ],
+      "g": "card"
+     },
+     "の",
+     {
+      "t": "更新",
+      "f": [
+       [
+        "更",
+        "こう"
+       ],
+       [
+        "新",
+        "しん"
+       ]
+      ],
+      "g": "renewal"
+     },
+     "に",
+     {
+      "t": "行く",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "go"
+     },
+     {
+      "t": "予定です",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "です",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Next month I'm scheduled to go renew my residence card."
    }
   ],
   "level": "N4",
@@ -1417,7 +2269,15 @@
   ],
   "nuance": "States a fixed, already-arranged schedule — a plan on the calendar, not just a personal wish. Firmer and more objective than つもり.",
   "register": "neutral",
-  "caution": "Nouns take の before 予定 (会議の予定), not だ (×会議だ予定); use it for arranged schedules, not spur-of-the-moment intentions (that's つもり/volitional)."
+  "caution": "Nouns take の before 予定 (会議の予定), not だ (×会議だ予定); use it for arranged schedules, not spur-of-the-moment intentions (that's つもり/volitional).",
+  "flags": [],
+  "peg": {
+   "ja": "来週、文化祭を開催する予定です",
+   "romaji": "Raishū, bunkasai o kaisai suru yotei desu",
+   "en": "Next week, we're scheduled to hold the culture festival.",
+   "source": "かぐや様は告らせたい (Kaguya-sama) — 白銀御行 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-kamoshiremasen",
@@ -1528,13 +2388,86 @@
      "。"
     ],
     "en": "The store manager might have already gone home."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "時間",
+      "f": [
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "hour"
+     },
+     "の",
+     {
+      "t": "山手線",
+      "f": [
+       [
+        "山",
+        "やま"
+       ],
+       [
+        "手",
+        "の"
+       ],
+       [
+        "線",
+        "せん"
+       ]
+      ],
+      "g": "Yamanote Line"
+     },
+     "は",
+     {
+      "t": "混んでいる",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "んでいる",
+        ""
+       ]
+      ],
+      "g": "is crowded"
+     },
+     {
+      "t": "かもしれません",
+      "f": [
+       [
+        "かもしれません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The Yamanote Line at this hour might be crowded."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "nuance": "Raises a real possibility the speaker isn't sure of — weaker and less evidence-based than はず or でしょう. Casual form: 〜かも.",
   "register": "polite",
-  "caution": "Attach it to the plain form; a na-adjective/noun drops だ (静かかもしれない, 雨かもしれない — ×雨だかもしれない)."
+  "caution": "Attach it to the plain form; a na-adjective/noun drops だ (静かかもしれない, 雨かもしれない — ×雨だかもしれない).",
+  "flags": [],
+  "peg": {
+   "ja": "これは、罠かもしれない",
+   "romaji": "Kore wa, wana kamoshirenai",
+   "en": "This might be a trap.",
+   "source": "進撃の巨人 (Attack on Titan) — アルミン・アルレルト (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-hazu",
@@ -1670,12 +2603,85 @@
      "。"
     ],
     "en": "This train should stop at Shinjuku."
+   },
+   {
+    "ja": [
+     {
+      "t": "予約した",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "made a reservation"
+     },
+     "から",
+     "、",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "空いている",
+      "f": [
+       [
+        "空",
+        "あ"
+       ],
+       [
+        "いている",
+        ""
+       ]
+      ],
+      "g": "is vacant"
+     },
+     {
+      "t": "はずです",
+      "f": [
+       [
+        "はずです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I made a reservation, so the room should be free."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "はず is your logical expectation, NOT obligation — don't use it for \"should\" as advice/duty (that's 〜べき or 〜たほうがいい)."
+  "caution": "はず is your logical expectation, NOT obligation — don't use it for \"should\" as advice/duty (that's 〜べき or 〜たほうがいい).",
+  "flags": [],
+  "peg": {
+   "ja": "計算通りなら、勝てるはずだ",
+   "romaji": "Keisan-dōri nara, kateru hazu da",
+   "en": "If it goes as calculated, we should be able to win.",
+   "source": "コードギアス (Code Geass) — ルルーシュ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-sou-hearsay",
@@ -1799,12 +2805,101 @@
      "。"
     ],
     "en": "I heard that ramen shop is delicious."
+   },
+   {
+    "ja": [
+     {
+      "t": "駅前",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "in front of the station"
+     },
+     "の",
+     {
+      "t": "ビル",
+      "f": [
+       [
+        "ビル",
+        ""
+       ]
+      ],
+      "g": "building"
+     },
+     "に",
+     {
+      "t": "新しい",
+      "f": [
+       [
+        "新",
+        "あたら"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "new"
+     },
+     {
+      "t": "バイト先",
+      "f": [
+       [
+        "バイト",
+        ""
+       ],
+       [
+        "先",
+        "さき"
+       ]
+      ],
+      "g": "part-time workplace"
+     },
+     "が",
+     {
+      "t": "できる",
+      "f": [
+       [
+        "できる",
+        ""
+       ]
+      ],
+      "g": "come to be"
+     },
+     {
+      "t": "そうです",
+      "f": [
+       [
+        "そうです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I hear a new part-time workplace is opening in the building by the station."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Hearsay そう attaches to the full plain form (雨が降るそうだ, おいしいそうだ) — if you drop the い/る you switch to the \"looks like\" appearance そう and change the meaning."
+  "caution": "Hearsay そう attaches to the full plain form (雨が降るそうだ, おいしいそうだ) — if you drop the い/る you switch to the \"looks like\" appearance そう and change the meaning.",
+  "flags": [],
+  "peg": {
+   "ja": "隣のクラスに、転校生が来るそうだ",
+   "romaji": "Tonari no kurasu ni, tenkōsei ga kuru sō da",
+   "en": "I hear a transfer student is coming to the class next door.",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi) — キョン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-sou-looks",
@@ -1911,12 +3006,87 @@
      "。"
     ],
     "en": "It looks like it's about to rain any moment."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "求人",
+      "f": [
+       [
+        "求",
+        "きゅう"
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "job listing"
+     },
+     "、",
+     {
+      "t": "時給",
+      "f": [
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "給",
+        "きゅう"
+       ]
+      ],
+      "g": "hourly wage"
+     },
+     "が",
+     {
+      "t": "高くて",
+      "f": [
+       [
+        "高",
+        "たか"
+       ],
+       [
+        "くて",
+        ""
+       ]
+      ],
+      "g": "high (te-form)"
+     },
+     {
+      "t": "良さそう",
+      "f": [
+       [
+        "良",
+        "よ"
+       ],
+       [
+        "さそう",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "looks good"
+     },
+     "だ",
+     "。"
+    ],
+    "en": "This job listing looks good — the hourly pay is high."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Appearance そう attaches to the stem (おいしそう, 降りそう); いい and ない become よさそう and なさそう, and it sounds odd describing things you plainly see are true (×髪が長そう for someone visibly long-haired)."
+  "caution": "Appearance そう attaches to the stem (おいしそう, 降りそう); いい and ない become よさそう and なさそう, and it sounds odd describing things you plainly see are true (×髪が長そう for someone visibly long-haired).",
+  "flags": [],
+  "peg": {
+   "ja": "このお肉、すごく美味しそう！",
+   "romaji": "Kono oniku, sugoku oishisō!",
+   "en": "This meat looks incredibly delicious!",
+   "source": "食戟のソーマ (Food Wars) — 幸平創真 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-you-desu",
@@ -2069,12 +3239,67 @@
      "。"
     ],
     "en": "It seems the person next door isn't home."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     "、",
+     {
+      "t": "遅れている",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れている",
+        ""
+       ]
+      ],
+      "g": "is delayed"
+     },
+     {
+      "t": "ようです",
+      "f": [
+       [
+        "ようです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It seems this train is delayed."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "formal",
-  "caution": "Nouns connect with の (病気のようだ), and na-adjectives with な (元気なようだ) — a bare だ (×病気だようだ) is wrong."
+  "caution": "Nouns connect with の (病気のようだ), and na-adjectives with な (元気なようだ) — a bare だ (×病気だようだ) is wrong.",
+  "flags": [],
+  "peg": {
+   "ja": "犯人は、この部屋から逃げたようだ",
+   "romaji": "Hannin wa, kono heya kara nigeta yō da",
+   "en": "It seems the culprit escaped from this room.",
+   "source": "名探偵コナン (Detective Conan) — 江戸川コナン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-mitai",
@@ -2212,12 +3437,80 @@
      "。"
     ],
     "en": "This room is cold like a fridge."
+   },
+   {
+    "ja": [
+     {
+      "t": "満員",
+      "f": [
+       [
+        "満",
+        "まん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "packed"
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     "、",
+     "まるで",
+     {
+      "t": "サウナ",
+      "f": [
+       [
+        "サウナ",
+        ""
+       ]
+      ],
+      "g": "sauna"
+     },
+     {
+      "t": "みたい",
+      "f": [
+       [
+        "みたい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "だ",
+     "。"
+    ],
+    "en": "The packed rush-hour train is just like a sauna."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "casual/spoken",
-  "caution": "Nouns and na-adjectives attach directly with NO な/の (子供みたい, 元気みたい — ×子供なみたい); it's casual, so use ようです in polite or written contexts."
+  "caution": "Nouns and na-adjectives attach directly with NO な/の (子供みたい, 元気みたい — ×子供なみたい); it's casual, so use ようです in polite or written contexts.",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "あの人、まるでアイドルみたい！",
+   "romaji": "Ano hito, marude aidoru mitai!",
+   "en": "That person is just like an idol!",
+   "source": "けいおん! (K-On!) — 平沢唯 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-rashii",
@@ -2365,12 +3658,91 @@
      "。"
     ],
     "en": "Today is a warm, spring-like day."
+   },
+   {
+    "ja": [
+     {
+      "t": "台風",
+      "f": [
+       [
+        "台",
+        "たい"
+       ],
+       [
+        "風",
+        "ふう"
+       ]
+      ],
+      "g": "typhoon"
+     },
+     "で",
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "は",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "止まる",
+      "f": [
+       [
+        "止",
+        "と"
+       ],
+       [
+        "まる",
+        ""
+       ]
+      ],
+      "g": "stop"
+     },
+     {
+      "t": "らしい",
+      "f": [
+       [
+        "らしい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Apparently the trains will stop tomorrow because of the typhoon."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Don't confuse the two らしい: after a plain sentence it's hearsay (\"apparently\"), but 男らしい / 学生らしい means \"befitting a typical man/student\" — very different meanings."
+  "caution": "Don't confuse the two らしい: after a plain sentence it's hearsay (\"apparently\"), but 男らしい / 学生らしい means \"befitting a typical man/student\" — very different meanings.",
+  "flags": [],
+  "peg": {
+   "ja": "新しいカフェが、駅前にできたらしいよ",
+   "romaji": "Atarashii kafe ga, ekimae ni dekita rashii yo",
+   "en": "Apparently a new café opened by the station.",
+   "source": "けいおん! (K-On!) — 田井中律 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-passive",
@@ -2486,12 +3858,82 @@
      "。"
     ],
     "en": "I was asked my name by the store manager."
+   },
+   {
+    "ja": [
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     {
+      "t": "中",
+      "f": [
+       [
+        "中",
+        "ちゅう"
+       ]
+      ],
+      "g": "during"
+     },
+     "に",
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "manager"
+     },
+     "に",
+     {
+      "t": "注意され",
+      "f": [
+       [
+        "注",
+        "ちゅう"
+       ],
+       [
+        "意",
+        "い"
+       ],
+       [
+        "され",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "be warned (passive)"
+     },
+     "た",
+     "。"
+    ],
+    "en": "During my shift, I got a talking-to from the manager."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "For godan verbs the passive (書かれる) and potential (書ける) differ, but for ichidan verbs they're identical (食べられる = both \"is eaten\" and \"can eat\") — rely on context and particles (に vs が) to tell them apart."
+  "caution": "For godan verbs the passive (書かれる) and potential (書ける) differ, but for ichidan verbs they're identical (食べられる = both \"is eaten\" and \"can eat\") — rely on context and particles (に vs が) to tell them apart.",
+  "flags": [],
+  "peg": {
+   "ja": "また先生に怒られた",
+   "romaji": "Mata sensei ni okorareta",
+   "en": "I got scolded by the teacher again.",
+   "source": "銀魂 (Gintama) — 坂田銀時 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-potential",
@@ -2615,12 +4057,77 @@
      "。"
     ],
     "en": "With this app you can buy tickets."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "定期券",
+      "f": [
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "期",
+        "き"
+       ],
+       [
+        "券",
+        "けん"
+       ]
+      ],
+      "g": "commuter pass"
+     },
+     "で",
+     {
+      "t": "都内",
+      "f": [
+       [
+        "都",
+        "と"
+       ],
+       [
+        "内",
+        "ない"
+       ]
+      ],
+      "g": "within Tokyo"
+     },
+     "は",
+     "どこでも",
+     {
+      "t": "行ける",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "ける",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "can go"
+     },
+     "。"
+    ],
+    "en": "With this commuter pass, I can go anywhere in Tokyo."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "The potential object takes が, not を (刺身が食べられる); ら-drop (食べれる, 見れる) is common in speech but marked wrong in formal writing."
+  "caution": "The potential object takes が, not を (刺身が食べられる); ら-drop (食べれる, 見れる) is common in speech but marked wrong in formal writing.",
+  "flags": [],
+  "peg": {
+   "ja": "君はヒーローになれる",
+   "romaji": "Kimi wa hīrō ni nareru",
+   "en": "You can become a hero.",
+   "source": "僕のヒーローアカデミア (My Hero Academia) — オールマイト",
+   "kind": "verbatim"
+  }
  },
  {
   "id": "n4-causative",
@@ -2753,12 +4260,82 @@
      "。"
     ],
     "en": "I let the child play in the park."
+   },
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "manager"
+     },
+     "は",
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "me"
+     },
+     "に",
+     {
+      "t": "新人",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "new hire"
+     },
+     "を",
+     {
+      "t": "教えさせた",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えさせた",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "made me teach"
+     },
+     "。"
+    ],
+    "en": "The manager had me train the new hire."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "For \"let/make,\" an intransitive verb marks the person with を (子供を遊ばせる), but with an を-taking transitive verb the person switches to に (子供に野菜を食べさせる) — mixing them up is the classic error."
+  "caution": "For \"let/make,\" an intransitive verb marks the person with を (子供を遊ばせる), but with an を-taking transitive verb the person switches to に (子供に野菜を食べさせる) — mixing them up is the classic error.",
+  "flags": [],
+  "peg": {
+   "ja": "生殺与奪の権を他人に握らせるな！",
+   "romaji": "Seisatsu yodatsu no ken o tanin ni nigiraseru na!",
+   "en": "Don't hand the power over your life and death to someone else!",
+   "source": "鬼滅の刃 (Demon Slayer) — 冨岡義勇",
+   "kind": "verbatim"
+  }
  },
  {
   "id": "n4-causative-passive",
@@ -2892,12 +4469,79 @@
      "。"
     ],
     "en": "I was forced to do homework every day."
+   },
+   {
+    "ja": [
+     {
+      "t": "歓迎会",
+      "f": [
+       [
+        "歓",
+        "かん"
+       ],
+       [
+        "迎",
+        "げい"
+       ],
+       [
+        "会",
+        "かい"
+       ]
+      ],
+      "g": "welcome party"
+     },
+     "で",
+     {
+      "t": "一気飲み",
+      "f": [
+       [
+        "一",
+        "いっ"
+       ],
+       [
+        "気",
+        "き"
+       ],
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "chugging"
+     },
+     "を",
+     {
+      "t": "させられた",
+      "f": [
+       [
+        "させられた",
+        ""
+       ]
+      ],
+      "p": 1,
+      "g": "was made to do"
+     },
+     "。"
+    ],
+    "en": "At the welcome party, I was made to chug my drink."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Godan verbs contract 〜させられる→〜される (待たせられる→待たされる), but ichidan and する verbs never contract (食べさせられる, ×食べされる)."
+  "caution": "Godan verbs contract 〜させられる→〜される (待たせられる→待たされる), but ichidan and する verbs never contract (食べさせられる, ×食べされる).",
+  "flags": [],
+  "peg": {
+   "ja": "毎日、上司に残業させられる",
+   "romaji": "Mainichi, jōshi ni zangyō saserareru",
+   "en": "Every day I'm made to work overtime by my boss.",
+   "source": "アグレッシブ烈子 (Aggretsuko) — 烈子 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nasai",
@@ -2981,6 +4625,64 @@
      "。"
     ],
     "en": "Eat your vegetables too."
+   },
+   {
+    "ja": [
+     {
+      "t": "レジ",
+      "f": [
+       [
+        "レジ",
+        ""
+       ]
+      ],
+      "g": "checkout"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "front"
+     },
+     "を",
+     "、",
+     "きれいに",
+     {
+      "t": "片付け",
+      "f": [
+       [
+        "片",
+        "かた"
+       ],
+       [
+        "付",
+        "づ"
+       ],
+       [
+        "け",
+        ""
+       ]
+      ],
+      "g": "tidy up (masu-stem)"
+     },
+     {
+      "t": "なさい",
+      "f": [
+       [
+        "なさい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Tidy up the area in front of the register."
    }
   ],
   "level": "N4",
@@ -2989,7 +4691,15 @@
    "n4-na-prohibition"
   ],
   "register": "polite",
-  "caution": "It sounds down-talking, so use it only from a superior to a subordinate (parent→child, teacher→student); never say なさい to a boss, customer, or peer."
+  "caution": "It sounds down-talking, so use it only from a superior to a subordinate (parent→child, teacher→student); never say なさい to a boss, customer, or peer.",
+  "flags": [],
+  "peg": {
+   "ja": "早く宿題をやりなさい",
+   "romaji": "Hayaku shukudai o yarinasai",
+   "en": "Do your homework, now.",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — みさえ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-na-prohibition",
@@ -3099,12 +4809,95 @@
      "。"
     ],
     "en": "It's dangerous, so don't run on the platform."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "の",
+     {
+      "t": "中",
+      "f": [
+       [
+        "中",
+        "なか"
+       ]
+      ],
+      "g": "inside"
+     },
+     "で",
+     "、",
+     {
+      "t": "大声",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "声",
+        "ごえ"
+       ]
+      ],
+      "g": "loud voice"
+     },
+     "で",
+     {
+      "t": "話す",
+      "f": [
+       [
+        "話",
+        "はな"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "talk"
+     },
+     {
+      "t": "な",
+      "f": [
+       [
+        "な",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Don't talk loudly on the train."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "casual",
-  "caution": "Prohibition な attaches to the DICTIONARY form (見るな = don't look); the ます-stem + な (見な) is the opposite — a clipped, friendly command to DO it."
+  "caution": "Prohibition な attaches to the DICTIONARY form (見るな = don't look); the ます-stem + な (見な) is the opposite — a clipped, friendly command to DO it.",
+  "flags": [
+   "anime-common",
+   "rude-in-life"
+  ],
+  "peg": {
+   "ja": "俺の邪魔をするな",
+   "romaji": "Ore no jama o suru na",
+   "en": "Don't get in my way.",
+   "source": "BLEACH — 黒崎一護 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-shimau",
@@ -3203,13 +4996,70 @@
      "。"
     ],
     "en": "I ended up eating the whole cake."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "を",
+     {
+      "t": "寝過ごし",
+      "f": [
+       [
+        "寝",
+        "ね"
+       ],
+       [
+        "過",
+        "す"
+       ],
+       [
+        "ごし",
+        ""
+       ]
+      ],
+      "g": "oversleep (te-stem)"
+     },
+     {
+      "t": "てしまった",
+      "f": [
+       [
+        "てしまった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I ended up oversleeping and missing the last train."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "related": [],
   "register": "neutral",
-  "caution": "The casual contraction depends on the te-form: 〜てしまう→〜ちゃう but 〜でしまう→〜じゃう (読んでしまう→読んじゃう, not ×読んちゃう)."
+  "caution": "The casual contraction depends on the te-form: 〜てしまう→〜ちゃう but 〜でしまう→〜じゃう (読んでしまう→読んじゃう, not ×読んちゃう).",
+  "flags": [],
+  "peg": {
+   "ja": "大事なチケットを、落としてしまった",
+   "romaji": "Daiji na chiketto o, otoshite shimatta",
+   "en": "I went and dropped the important ticket.",
+   "source": "けいおん! (K-On!) — 平沢唯 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-oku",
@@ -3337,12 +5187,91 @@
      "。"
     ],
     "en": "Please leave the window open."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "の",
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "に",
+     {
+      "t": "会社",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "company"
+     },
+     "を",
+     {
+      "t": "調べ",
+      "f": [
+       [
+        "調",
+        "しら"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "look up (te-stem)"
+     },
+     {
+      "t": "ておいた",
+      "f": [
+       [
+        "ておいた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I looked up the company beforehand for the interview."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Don't confuse it with 〜てある: ておく is doing something in advance on purpose, てある describes the resulting state that's been left in place."
+  "caution": "Don't confuse it with 〜てある: ておく is doing something in advance on purpose, てある describes the resulting state that's been left in place.",
+  "flags": [],
+  "peg": {
+   "ja": "戦いの前に、体を休めておこう",
+   "romaji": "Tatakai no mae ni, karada o yasumete okō",
+   "en": "Before the fight, let's rest up in advance.",
+   "source": "ドラゴンボール (Dragon Ball) — 孫悟空 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-miru",
@@ -3463,12 +5392,97 @@
      "。"
     ],
     "en": "I tried calling the ward office."
+   },
+   {
+    "ja": [
+     {
+      "t": "気になっていた",
+      "f": [
+       [
+        "気",
+        "き"
+       ],
+       [
+        "になっていた",
+        ""
+       ]
+      ],
+      "g": "had been curious about"
+     },
+     {
+      "t": "立ち食い",
+      "f": [
+       [
+        "立",
+        "た"
+       ],
+       [
+        "ち",
+        ""
+       ],
+       [
+        "食",
+        "ぐ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "standing-style"
+     },
+     {
+      "t": "蕎麦",
+      "f": [
+       [
+        "蕎麦",
+        "そば"
+       ]
+      ],
+      "g": "soba"
+     },
+     "を",
+     {
+      "t": "食べ",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ]
+      ],
+      "g": "eat (te-stem)"
+     },
+     {
+      "t": "てみた",
+      "f": [
+       [
+        "てみた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I tried out the standing soba shop I'd been curious about."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "The みる here is auxiliary and written in kana (食べてみる), never in kanji (×食べて見る, which would mean \"eat and look\")."
+  "caution": "The みる here is auxiliary and written in kana (食べてみる), never in kanji (×食べて見る, which would mean \"eat and look\").",
+  "flags": [],
+  "peg": {
+   "ja": "とりあえず、やってみよう！",
+   "romaji": "Toriaezu, yatte miyō!",
+   "en": "For now, let's just give it a try!",
+   "source": "天元突破グレンラガン (Gurren Lagann) — シモン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-ageru",
@@ -3600,12 +5614,113 @@
      "。"
     ],
     "en": "I carried her luggage for her."
+   },
+   {
+    "ja": [
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "road"
+     },
+     "に",
+     {
+      "t": "迷った",
+      "f": [
+       [
+        "迷",
+        "まよ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "got lost"
+     },
+     {
+      "t": "観光客",
+      "f": [
+       [
+        "観",
+        "かん"
+       ],
+       [
+        "光",
+        "こう"
+       ],
+       [
+        "客",
+        "きゃく"
+       ]
+      ],
+      "g": "tourist"
+     },
+     "に",
+     {
+      "t": "行き方",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "き",
+        ""
+       ],
+       [
+        "方",
+        "かた"
+       ]
+      ],
+      "g": "the way"
+     },
+     "を",
+     {
+      "t": "教えて",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えて",
+        ""
+       ]
+      ],
+      "g": "tell (te-form)"
+     },
+     {
+      "t": "あげた",
+      "f": [
+       [
+        "あげた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I showed a lost tourist which way to go."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Never use てあげる about doing a favour for the listener (×荷物を持ってあげます to a boss) — it sounds patronising; use お〜しましょうか or humble 〜させていただく instead."
+  "caution": "Never use てあげる about doing a favour for the listener (×荷物を持ってあげます to a boss) — it sounds patronising; use お〜しましょうか or humble 〜させていただく instead.",
+  "flags": [],
+  "peg": {
+   "ja": "困っているなら、手伝ってあげる",
+   "romaji": "Komatte iru nara, tetsudatte ageru",
+   "en": "If you're in trouble, I'll help you out.",
+   "source": "ドラえもん (Doraemon) — ドラえもん (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-kureru",
@@ -3733,12 +5848,95 @@
      "。"
     ],
     "en": "My friend came all the way to the airport for me."
+   },
+   {
+    "ja": [
+     {
+      "t": "隣人",
+      "f": [
+       [
+        "隣",
+        "りん"
+       ],
+       [
+        "人",
+        "じん"
+       ]
+      ],
+      "g": "neighbor"
+     },
+     "が",
+     {
+      "t": "ゴミ出し",
+      "f": [
+       [
+        "ゴミ",
+        ""
+       ],
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "taking out trash"
+     },
+     "の",
+     {
+      "t": "ルール",
+      "f": [
+       [
+        "ルール",
+        ""
+       ]
+      ],
+      "g": "rules"
+     },
+     "を",
+     {
+      "t": "教えて",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えて",
+        ""
+       ]
+      ],
+      "g": "teach (te-form)"
+     },
+     {
+      "t": "くれた",
+      "f": [
+       [
+        "くれた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My neighbor kindly taught me the trash-day rules."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Direction is fixed: くれる is a favour coming TO you/your in-group, so the giver is the subject (友達が手伝ってくれた) — reversing it with あげる/もらう is the classic direction error."
+  "caution": "Direction is fixed: くれる is a favour coming TO you/your in-group, so the giver is the subject (友達が手伝ってくれた) — reversing it with あげる/もらう is the classic direction error.",
+  "flags": [],
+  "peg": {
+   "ja": "君が、僕を助けてくれた",
+   "romaji": "Kimi ga, boku o tasukete kureta",
+   "en": "You saved me.",
+   "source": "ソードアート・オンライン (SAO) — キリト (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-morau",
@@ -3887,12 +6085,108 @@
      "。"
     ],
     "en": "I had my teacher correct my essay."
+   },
+   {
+    "ja": [
+     {
+      "t": "不動産屋",
+      "f": [
+       [
+        "不",
+        "ふ"
+       ],
+       [
+        "動",
+        "どう"
+       ],
+       [
+        "産",
+        "さん"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "realtor"
+     },
+     "に",
+     {
+      "t": "保証人",
+      "f": [
+       [
+        "保",
+        "ほ"
+       ],
+       [
+        "証",
+        "しょう"
+       ],
+       [
+        "人",
+        "にん"
+       ]
+      ],
+      "g": "guarantor"
+     },
+     "なし",
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "を",
+     {
+      "t": "探して",
+      "f": [
+       [
+        "探",
+        "さが"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "g": "look for (te-form)"
+     },
+     {
+      "t": "もらった",
+      "f": [
+       [
+        "もらった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I had the realtor find me a place with no guarantor needed."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "With てもらう the receiver is the subject and the doer takes に (友達に手伝ってもらった); confusing that に with the が of てくれる is the usual slip."
+  "caution": "With てもらう the receiver is the subject and the doer takes に (友達に手伝ってもらった); confusing that に with the が of てくれる is the usual slip.",
+  "flags": [],
+  "peg": {
+   "ja": "コーチに、フォームを直してもらった",
+   "romaji": "Kōchi ni, fōmu o naoshite moratta",
+   "en": "I had the coach fix my form.",
+   "source": "ハイキュー!! (Haikyu!!) — 日向翔陽 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-iku",
@@ -4036,12 +6330,95 @@
      "。"
     ],
     "en": "In the morning I'll buy tea at the konbini and head off."
+   },
+   {
+    "ja": [
+     {
+      "t": "東京",
+      "f": [
+       [
+        "東",
+        "とう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "Tokyo"
+     },
+     "の",
+     {
+      "t": "生活",
+      "f": [
+       [
+        "生",
+        "せい"
+       ],
+       [
+        "活",
+        "かつ"
+       ]
+      ],
+      "g": "life"
+     },
+     "に",
+     "、",
+     {
+      "t": "少しずつ",
+      "f": [
+       [
+        "少",
+        "すこ"
+       ],
+       [
+        "しずつ",
+        ""
+       ]
+      ],
+      "g": "little by little"
+     },
+     {
+      "t": "慣れて",
+      "f": [
+       [
+        "慣",
+        "な"
+       ],
+       [
+        "れて",
+        ""
+       ]
+      ],
+      "g": "get used to (te-form)"
+     },
+     {
+      "t": "いく",
+      "f": [
+       [
+        "いく",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Little by little, I'll grow used to life in Tokyo."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "For directional/aspectual meaning keep いく in kana (増えていく); pair it with 〜てくる by axis — くる = up to now, いく = from now on."
+  "caution": "For directional/aspectual meaning keep いく in kana (増えていく); pair it with 〜てくる by axis — くる = up to now, いく = from now on.",
+  "flags": [],
+  "peg": {
+   "ja": "これからも、強くなっていく",
+   "romaji": "Kore kara mo, tsuyoku natte iku",
+   "en": "From here on too, I'll keep getting stronger.",
+   "source": "ONE PIECE — モンキー・D・ルフィ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-kuru",
@@ -4153,12 +6530,85 @@
      "。"
     ],
     "en": "I'll go buy a bento at the konbini (and come back)."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "の",
+     {
+      "t": "会話",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "話",
+        "わ"
+       ]
+      ],
+      "g": "conversation"
+     },
+     "に",
+     {
+      "t": "自信",
+      "f": [
+       [
+        "自",
+        "じ"
+       ],
+       [
+        "信",
+        "しん"
+       ]
+      ],
+      "g": "confidence"
+     },
+     "が",
+     {
+      "t": "ついてきた",
+      "f": [
+       [
+        "ついてきた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I've started to build confidence in Japanese conversation."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Direction of change matters: 〜てくる develops up to now, 〜ていく from now on — 増えてきた (has increased) vs 増えていく (will keep increasing)."
+  "caution": "Direction of change matters: 〜てくる develops up to now, 〜ていく from now on — 増えてきた (has increased) vs 増えていく (will keep increasing).",
+  "flags": [],
+  "peg": {
+   "ja": "修行のおかげで、力がついてきた",
+   "romaji": "Shugyō no okage de, chikara ga tsuite kita",
+   "en": "Thanks to the training, I've been gaining power.",
+   "source": "ドラゴンボール (Dragon Ball) — ベジータ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-aru",
@@ -4289,12 +6739,85 @@
      "。"
     ],
     "en": "Beer has been chilled in the fridge."
+   },
+   {
+    "ja": [
+     {
+      "t": "冷蔵庫",
+      "f": [
+       [
+        "冷",
+        "れい"
+       ],
+       [
+        "蔵",
+        "ぞう"
+       ],
+       [
+        "庫",
+        "こ"
+       ]
+      ],
+      "g": "refrigerator"
+     },
+     "に",
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "my"
+     },
+     "の",
+     {
+      "t": "名前",
+      "f": [
+       [
+        "名",
+        "な"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "name"
+     },
+     "が",
+     {
+      "t": "書いてある",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "いてある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My name is written on my things in the share-house fridge."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "てある uses a TRANSITIVE verb with が for a deliberately-left result (窓が開けてある); don't confuse it with ている on an intransitive verb (窓が開いている), which is just a natural state."
+  "caution": "てある uses a TRANSITIVE verb with が for a deliberately-left result (窓が開けてある); don't confuse it with ている on an intransitive verb (窓が開いている), which is just a natural state.",
+  "flags": [],
+  "peg": {
+   "ja": "ドアに、貼り紙がしてある",
+   "romaji": "Doa ni, harigami ga shite aru",
+   "en": "There's a notice put up on the door.",
+   "source": "ドラえもん (Doraemon) — 野比のび太 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-hajimeru",
@@ -4423,13 +6946,104 @@
      "。"
     ],
     "en": "The cherry blossoms have started to bloom."
+   },
+   {
+    "ja": [
+     {
+      "t": "四月",
+      "f": [
+       [
+        "四",
+        "し"
+       ],
+       [
+        "月",
+        "がつ"
+       ]
+      ],
+      "g": "April"
+     },
+     "から",
+     "、",
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     {
+      "t": "学校",
+      "f": [
+       [
+        "学",
+        "がっ"
+       ],
+       [
+        "校",
+        "こう"
+       ]
+      ],
+      "g": "school"
+     },
+     "に",
+     {
+      "t": "通い",
+      "f": [
+       [
+        "通",
+        "かよ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "attend (masu-stem)"
+     },
+     {
+      "t": "始めた",
+      "f": [
+       [
+        "始",
+        "はじ"
+       ],
+       [
+        "めた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "From April, I started attending a Japanese language school."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "nuance": "Marks the onset of an action — you begin the verb itself. 始める is transitive/deliberate; the intransitive 始まる is for events that start on their own (映画が始まる).",
   "register": "neutral",
-  "caution": "Attach to the ます-stem (降り始める, ×降る始める); use 〜始める (you start an action), not 始まる, which is for things that begin by themselves."
+  "caution": "Attach to the ます-stem (降り始める, ×降る始める); use 〜始める (you start an action), not 始まる, which is for things that begin by themselves.",
+  "flags": [],
+  "peg": {
+   "ja": "強くなるため、今日から鍛え始める",
+   "romaji": "Tsuyoku naru tame, kyō kara kitae hajimeru",
+   "en": "To get stronger, I'll start training from today.",
+   "source": "ドラゴンボール (Dragon Ball) — 孫悟空 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-owaru",
@@ -4549,13 +7163,97 @@
      "。"
     ],
     "en": "Once I finish the homework, I'll sleep."
+   },
+   {
+    "ja": [
+     {
+      "t": "新しい",
+      "f": [
+       [
+        "新",
+        "あたら"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "new"
+     },
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "の",
+     {
+      "t": "荷ほどき",
+      "f": [
+       [
+        "荷",
+        "に"
+       ],
+       [
+        "ほどき",
+        ""
+       ]
+      ],
+      "g": "unpacking"
+     },
+     "を",
+     "、",
+     "やっと",
+     {
+      "t": "し",
+      "f": [
+       [
+        "し",
+        ""
+       ]
+      ],
+      "g": "do (masu-stem)"
+     },
+     {
+      "t": "終わった",
+      "f": [
+       [
+        "終",
+        "お"
+       ],
+       [
+        "わった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I finally finished unpacking my new room."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "nuance": "Marks finishing an action through to its end — \"finish doing.\" Pairs naturally with 〜始める as the bookend of an activity.",
   "register": "neutral",
-  "caution": "Attach to the ます-stem (食べ終わる, ×食べる終わる); it means you finish AN ACTION, so it doesn't fit sudden-end events the way 終わる-as-main-verb does."
+  "caution": "Attach to the ます-stem (食べ終わる, ×食べる終わる); it means you finish AN ACTION, so it doesn't fit sudden-end events the way 終わる-as-main-verb does.",
+  "flags": [],
+  "peg": {
+   "ja": "やっと、宿題を書き終わった",
+   "romaji": "Yatto, shukudai o kaki owatta",
+   "en": "I finally finished writing my homework.",
+   "source": "ちびまる子ちゃん — さくらももこ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-yasui",
@@ -4670,12 +7368,75 @@
      "。"
     ],
     "en": "Shinjuku station is easy to get lost in."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "は",
+     {
+      "t": "乗り換え",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "り",
+        ""
+       ],
+       [
+        "換",
+        "か"
+       ],
+       [
+        "え",
+        ""
+       ]
+      ],
+      "g": "transfer"
+     },
+     "が",
+     {
+      "t": "分かりやすい",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "かりやすい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This station is easy to make transfers at."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Attach to the ます-stem (使いやすい, ×使るやすい); it describes an inherent easiness, not \"I am able to\" — that's the potential form."
+  "caution": "Attach to the ます-stem (使いやすい, ×使るやすい); it describes an inherent easiness, not \"I am able to\" — that's the potential form.",
+  "flags": [],
+  "peg": {
+   "ja": "この技は、覚えやすいよ",
+   "romaji": "Kono waza wa, oboe yasui yo",
+   "en": "This move is easy to learn.",
+   "source": "ポケットモンスター (Pokémon) — サトシ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nikui",
@@ -4794,12 +7555,81 @@
      "。"
     ],
     "en": "The streets in front of the station are hard to figure out."
+   },
+   {
+    "ja": [
+     {
+      "t": "満員",
+      "f": [
+       [
+        "満",
+        "まん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "packed"
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     "、",
+     {
+      "t": "スマホ",
+      "f": [
+       [
+        "スマホ",
+        ""
+       ]
+      ],
+      "g": "smartphone"
+     },
+     "が",
+     {
+      "t": "見にくい",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "にくい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "On a packed train it's hard to look at your phone."
    }
   ],
   "level": "N4",
   "confidence": "high",
   "register": "neutral",
-  "caution": "Attach to the ます-stem (読みにくい); for physical/inherent difficulty use にくい, but for difficulty from external circumstances Japanese often prefers 〜づらい or 〜がたい."
+  "caution": "Attach to the ます-stem (読みにくい); for physical/inherent difficulty use にくい, but for difficulty from external circumstances Japanese often prefers 〜づらい or 〜がたい.",
+  "flags": [],
+  "peg": {
+   "ja": "この道は、暗くて歩きにくい",
+   "romaji": "Kono michi wa, kurakute aruki nikui",
+   "en": "This road is dark and hard to walk on.",
+   "source": "となりのトトロ (My Neighbor Totoro) — 草壁サツキ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-koto-ga-aru",
@@ -4926,10 +7756,75 @@
      "。"
     ],
     "en": "Because of overtime, it sometimes gets late at night."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekend"
+     },
+     "は",
+     "、",
+     {
+      "t": "朝",
+      "f": [
+       [
+        "朝",
+        "あさ"
+       ]
+      ],
+      "g": "morning"
+     },
+     "まで",
+     {
+      "t": "飲む",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "drink"
+     },
+     {
+      "t": "ことがある",
+      "f": [
+       [
+        "ことがある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "On weekends, there are times I drink until morning."
    }
   ],
   "register": "neutral",
-  "caution": "Tense on the verb changes the meaning: dictionary form + ことがある = \"sometimes happens,\" but past た + ことがある = \"have done before (experience)\" — don't mix them."
+  "caution": "Tense on the verb changes the meaning: dictionary form + ことがある = \"sometimes happens,\" but past た + ことがある = \"have done before (experience)\" — don't mix them.",
+  "flags": [],
+  "peg": {
+   "ja": "たまに、家が恋しくなることがある",
+   "romaji": "Tama ni, ie ga koishiku naru koto ga aru",
+   "en": "Sometimes I get homesick.",
+   "source": "ヴァイオレット・エヴァーガーデン (Violet Evergarden) — ヴァイオレット (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-koto-ni-suru",
@@ -5067,10 +7962,65 @@
      "。"
     ],
     "en": "I've decided not to eat out this month."
+   },
+   {
+    "ja": [
+     {
+      "t": "節約",
+      "f": [
+       [
+        "節",
+        "せつ"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "saving money"
+     },
+     "の",
+     "ため",
+     "、",
+     {
+      "t": "自炊",
+      "f": [
+       [
+        "自",
+        "じ"
+       ],
+       [
+        "炊",
+        "すい"
+       ]
+      ],
+      "g": "cooking for oneself"
+     },
+     {
+      "t": "することにした",
+      "f": [
+       [
+        "することにした",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "To save money, I've decided to cook for myself."
    }
   ],
   "register": "neutral",
-  "caution": "ことにする is YOUR own decision; ことになる is a decision made by circumstances/others — swapping them reverses who chose."
+  "caution": "ことにする is YOUR own decision; ことになる is a decision made by circumstances/others — swapping them reverses who chose.",
+  "flags": [],
+  "peg": {
+   "ja": "俺は、逃げないことにした",
+   "romaji": "Ore wa, nigenai koto ni shita",
+   "en": "I've decided not to run away.",
+   "source": "進撃の巨人 (Attack on Titan) — エレン・イェーガー (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-koto-ni-naru",
@@ -5207,10 +8157,89 @@
      "。"
     ],
     "en": "It's been decided that the meeting will be next week."
+   },
+   {
+    "ja": [
+     {
+      "t": "来週",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "週",
+        "しゅう"
+       ]
+      ],
+      "g": "next week"
+     },
+     "から",
+     "、",
+     {
+      "t": "新宿",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "宿",
+        "じゅく"
+       ]
+      ],
+      "g": "Shinjuku"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "てん"
+       ]
+      ],
+      "g": "store"
+     },
+     "で",
+     {
+      "t": "働く",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "work"
+     },
+     {
+      "t": "ことになった",
+      "f": [
+       [
+        "ことになった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Starting next week, it's been arranged that I'll work at the Shinjuku store."
    }
   ],
   "register": "neutral",
-  "caution": "ことになる signals the decision came from outside you, so don't use it for your own free choice (that's ことにする), even when you're the one affected."
+  "caution": "ことになる signals the decision came from outside you, so don't use it for your own free choice (that's ことにする), even when you're the one affected.",
+  "flags": [],
+  "peg": {
+   "ja": "俺たち、一緒に旅をすることになった",
+   "romaji": "Oretachi, issho ni tabi o suru koto ni natta",
+   "en": "It's been decided that we'll travel together.",
+   "source": "鋼の錬金術師 (Fullmetal Alchemist) — エドワード・エルリック (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-to-iu",
@@ -5351,11 +8380,93 @@
      "。"
     ],
     "en": "I heard the word \"share house\" for the first time."
+   },
+   {
+    "ja": [
+     {
+      "t": "もんじゃ",
+      "f": [
+       [
+        "もんじゃ",
+        ""
+       ]
+      ],
+      "g": "monja"
+     },
+     {
+      "t": "という",
+      "f": [
+       [
+        "という",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "食べ物",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べ",
+        ""
+       ],
+       [
+        "物",
+        "もの"
+       ]
+      ],
+      "g": "food"
+     },
+     "を",
+     "、",
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "g": "for the first time"
+     },
+     {
+      "t": "食べた",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べた",
+        ""
+       ]
+      ],
+      "g": "ate"
+     },
+     "。"
+    ],
+    "en": "I ate a food called monja for the first time."
    }
   ],
   "nuance": "Introduces a name or label, quoting what something is called (田中という人 = a person called Tanaka). Also bundles a preceding clause into a noun-like idea.",
   "register": "neutral",
-  "caution": "The naming という takes a plain quote before it (「みどり」という店); don't drop the と (×みどりいう) and don't confuse it with こと (the nominaliser)."
+  "caution": "The naming という takes a plain quote before it (「みどり」という店); don't drop the と (×みどりいう) and don't confuse it with こと (the nominaliser).",
+  "flags": [],
+  "peg": {
+   "ja": "エマという名前だ。よろしく",
+   "romaji": "Ema to iu namae da. Yoroshiku",
+   "en": "My name is Emma. Nice to meet you.",
+   "source": "約束のネバーランド (The Promised Neverland) — エマ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-toka",
@@ -5518,10 +8629,110 @@
      "。"
     ],
     "en": "On weekends I spend the time doing things like taking a walk."
+   },
+   {
+    "ja": [
+     {
+      "t": "休み",
+      "f": [
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "day off"
+     },
+     "の",
+     {
+      "t": "日",
+      "f": [
+       [
+        "日",
+        "ひ"
+       ]
+      ],
+      "g": "day"
+     },
+     "は",
+     "、",
+     {
+      "t": "上野",
+      "f": [
+       [
+        "上",
+        "うえ"
+       ],
+       [
+        "野",
+        "の"
+       ]
+      ],
+      "g": "Ueno"
+     },
+     {
+      "t": "とか",
+      "f": [
+       [
+        "とか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "浅草",
+      "f": [
+       [
+        "浅",
+        "あさ"
+       ],
+       [
+        "草",
+        "くさ"
+       ]
+      ],
+      "g": "Asakusa"
+     },
+     "を",
+     {
+      "t": "散歩する",
+      "f": [
+       [
+        "散",
+        "さん"
+       ],
+       [
+        "歩",
+        "ぽ"
+       ],
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "take a walk"
+     },
+     "。"
+    ],
+    "en": "On days off, I stroll around Ueno and Asakusa and places like that."
    }
   ],
   "register": "casual",
-  "caution": "とか is casual and implies an unfinished list (\"things like…\"), so don't use it in formal writing (use など) and don't treat it as an exact enumeration."
+  "caution": "とか is casual and implies an unfinished list (\"things like…\"), so don't use it in formal writing (use など) and don't treat it as an exact enumeration.",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "カラオケとか、行かない？",
+   "romaji": "Karaoke toka, ikanai?",
+   "en": "Wanna go do karaoke or something?",
+   "source": "らき☆すた (Lucky Star) — 泉こなた (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nado",
@@ -5661,11 +8872,97 @@
      "。"
     ],
     "en": "There are things like books on the desk."
+   },
+   {
+    "ja": [
+     {
+      "t": "百円",
+      "f": [
+       [
+        "百",
+        "ひゃく"
+       ],
+       [
+        "円",
+        "えん"
+       ]
+      ],
+      "g": "100 yen"
+     },
+     {
+      "t": "ショップ",
+      "f": [
+       [
+        "ショップ",
+        ""
+       ]
+      ],
+      "g": "shop"
+     },
+     "で",
+     "、",
+     {
+      "t": "皿",
+      "f": [
+       [
+        "皿",
+        "さら"
+       ]
+      ],
+      "g": "plates"
+     },
+     "や",
+     {
+      "t": "箸",
+      "f": [
+       [
+        "箸",
+        "はし"
+       ]
+      ],
+      "g": "chopsticks"
+     },
+     {
+      "t": "など",
+      "f": [
+       [
+        "など",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "を",
+     {
+      "t": "買った",
+      "f": [
+       [
+        "買",
+        "か"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "bought"
+     },
+     "。"
+    ],
+    "en": "At the 100-yen shop I bought plates, chopsticks, and so on."
    }
   ],
   "nuance": "Signals a non-exhaustive list — \"…and the like.\" The more formal, written counterpart of casual とか.",
   "register": "neutral",
-  "caution": "など follows the noun it lists (本や雑誌など), and reads なんか in casual speech — don't mistake it for the standalone 何 (なに)."
+  "caution": "など follows the noun it lists (本や雑誌など), and reads なんか in casual speech — don't mistake it for the standalone 何 (なに).",
+  "flags": [],
+  "peg": {
+   "ja": "回復薬など、必要な物は揃えた",
+   "romaji": "Kaifukuyaku nado, hitsuyō na mono wa soroeta",
+   "en": "I've gathered what's needed, like healing potions and such.",
+   "source": "ソードアート・オンライン (SAO) — アスナ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-shi",
@@ -5811,10 +9108,105 @@
      "。"
     ],
     "en": "It's raining today, so (and what's more) I'll stay home."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "は",
+     {
+      "t": "駅",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ]
+      ],
+      "g": "station"
+     },
+     "も",
+     {
+      "t": "近い",
+      "f": [
+       [
+        "近",
+        "ちか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "close"
+     },
+     {
+      "t": "し",
+      "f": [
+       [
+        "し",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "も",
+     {
+      "t": "安い",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "cheap"
+     },
+     "。"
+    ],
+    "en": "This room is close to the station, and the rent is cheap too."
    }
   ],
   "register": "neutral",
-  "caution": "し attaches to the plain form (安いし、近いし) and implies \"and, among other reasons,\" so listing just one し-clause still hints there are more."
+  "caution": "し attaches to the plain form (安いし、近いし) and implies \"and, among other reasons,\" so listing just one し-clause still hints there are more.",
+  "flags": [],
+  "peg": {
+   "ja": "安いし、美味しいし、最高だ！",
+   "romaji": "Yasui shi, oishii shi, saikō da!",
+   "en": "It's cheap, and it's delicious — the best!",
+   "source": "孤独のグルメ (Kodoku no Gurume) — 井之頭五郎 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-noni",
@@ -5953,10 +9345,78 @@
      "。"
     ],
     "en": "Even though it's Sunday, the train is crowded."
+   },
+   {
+    "ja": [
+     {
+      "t": "予約した",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "made a reservation"
+     },
+     {
+      "t": "のに",
+      "f": [
+       [
+        "のに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "は",
+     {
+      "t": "閉まっていた",
+      "f": [
+       [
+        "閉",
+        "し"
+       ],
+       [
+        "まっていた",
+        ""
+       ]
+      ],
+      "g": "was closed"
+     },
+     "。"
+    ],
+    "en": "Even though I'd made a reservation, the shop was closed."
    }
   ],
   "register": "neutral",
-  "caution": "のに carries reproach or surprise, so don't use it for a neutral contrast (that's が/けど); after a noun/na-adjective it needs な (元気なのに, ×元気のに)."
+  "caution": "のに carries reproach or surprise, so don't use it for a neutral contrast (that's が/けど); after a noun/na-adjective it needs な (元気なのに, ×元気のに).",
+  "flags": [],
+  "peg": {
+   "ja": "あんなに頑張ったのに、負けた",
+   "romaji": "Anna ni ganbatta noni, maketa",
+   "en": "Even though I tried so hard, I lost.",
+   "source": "ハイキュー!! (Haikyu!!) — 月島蛍 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-node",
@@ -6121,10 +9581,107 @@
      "。"
     ],
     "en": "Because it's my first time, I don't know where the ward office is."
+   },
+   {
+    "ja": [
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "g": "first-time"
+     },
+     "の",
+     {
+      "t": "土地",
+      "f": [
+       [
+        "土",
+        "と"
+       ],
+       [
+        "地",
+        "ち"
+       ]
+      ],
+      "g": "area"
+     },
+     {
+      "t": "なので",
+      "f": [
+       [
+        "なので",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "地図",
+      "f": [
+       [
+        "地",
+        "ち"
+       ],
+       [
+        "図",
+        "ず"
+       ]
+      ],
+      "g": "map"
+     },
+     "を",
+     {
+      "t": "見ながら",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "ながら",
+        ""
+       ]
+      ],
+      "g": "while looking"
+     },
+     {
+      "t": "歩いた",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "walked"
+     },
+     "。"
+    ],
+    "en": "Since it's an unfamiliar area, I walked while checking a map."
    }
   ],
   "register": "polite",
-  "caution": "After a noun/na-adjective ので needs な (病気なので, ×病気だので); it presents the reason as objective fact, so it's odd before a direct command or invitation."
+  "caution": "After a noun/na-adjective ので needs な (病気なので, ×病気だので); it presents the reason as objective fact, so it's odd before a direct command or invitation.",
+  "flags": [],
+  "peg": {
+   "ja": "体調が悪いので、早退させてください",
+   "romaji": "Taichō ga warui node, sōtai sasete kudasai",
+   "en": "Because I'm not feeling well, please let me leave early.",
+   "source": "呪術廻戦 (Jujutsu Kaisen) — 虎杖悠仁 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-keredomo",
@@ -6288,10 +9845,90 @@
      "。"
     ],
     "en": "I went to the izakaya in front of the station, but it was full."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "を",
+     {
+      "t": "受けました",
+      "f": [
+       [
+        "受",
+        "う"
+       ],
+       [
+        "けました",
+        ""
+       ]
+      ],
+      "g": "took (polite)"
+     },
+     {
+      "t": "けれども",
+      "f": [
+       [
+        "けれども",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "まだ",
+     {
+      "t": "返事",
+      "f": [
+       [
+        "返",
+        "へん"
+       ],
+       [
+        "事",
+        "じ"
+       ]
+      ],
+      "g": "reply"
+     },
+     "が",
+     {
+      "t": "ありません",
+      "f": [
+       [
+        "ありません",
+        ""
+       ]
+      ],
+      "g": "there isn't"
+     },
+     "。"
+    ],
+    "en": "I took the interview, but I still haven't heard back."
    }
   ],
   "register": "formal",
-  "caution": "けれども/けれど/けど form a politeness scale (formal→casual), so match the register — plain けど sounds too casual in a business email."
+  "caution": "けれども/けれど/けど form a politeness scale (formal→casual), so match the register — plain けど sounds too casual in a business email.",
+  "flags": [],
+  "peg": {
+   "ja": "努力はしましたけれども、及びませんでした",
+   "romaji": "Doryoku wa shimashita keredomo, oyobimasen deshita",
+   "en": "I did make the effort, but it wasn't enough.",
+   "source": "進撃の巨人 (Attack on Titan) — エルヴィン・スミス (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ga-suru",
@@ -6427,10 +10064,89 @@
      "。"
     ],
     "en": "There's a strange sound coming from the room next door."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "居酒屋",
+      "f": [
+       [
+        "居",
+        "い"
+       ],
+       [
+        "酒",
+        "ざか"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "izakaya"
+     },
+     "から",
+     "は",
+     {
+      "t": "焼き鳥",
+      "f": [
+       [
+        "焼",
+        "や"
+       ],
+       [
+        "き",
+        ""
+       ],
+       [
+        "鳥",
+        "とり"
+       ]
+      ],
+      "g": "yakitori"
+     },
+     "の",
+     "いい",
+     {
+      "t": "匂い",
+      "f": [
+       [
+        "匂",
+        "にお"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "smell"
+     },
+     {
+      "t": "がする",
+      "f": [
+       [
+        "がする",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "A great yakitori smell drifts out of this izakaya."
    }
   ],
   "register": "neutral",
-  "caution": "It's built with が, not を (においがする, ×においをする), and only works with perception nouns (音・味・におい・気・感じ), not general nouns."
+  "caution": "It's built with が, not を (においがする, ×においをする), and only works with perception nouns (音・味・におい・気・感じ), not general nouns.",
+  "flags": [],
+  "peg": {
+   "ja": "何か、いい匂いがする",
+   "romaji": "Nanika, ii nioi ga suru",
+   "en": "Something smells good.",
+   "source": "千と千尋の神隠し (Spirited Away) — 荻野千尋 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-aida-ni",
@@ -6578,10 +10294,87 @@
      "。"
     ],
     "en": "During the summer break, I went to Hokkaido."
+   },
+   {
+    "ja": [
+     {
+      "t": "留守",
+      "f": [
+       [
+        "留",
+        "る"
+       ],
+       [
+        "守",
+        "す"
+       ]
+      ],
+      "g": "being out"
+     },
+     "の",
+     {
+      "t": "間に",
+      "f": [
+       [
+        "間",
+        "あいだ"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "宅配便",
+      "f": [
+       [
+        "宅",
+        "たく"
+       ],
+       [
+        "配",
+        "はい"
+       ],
+       [
+        "便",
+        "びん"
+       ]
+      ],
+      "g": "delivery"
+     },
+     "が",
+     {
+      "t": "届いていた",
+      "f": [
+       [
+        "届",
+        "とど"
+       ],
+       [
+        "いていた",
+        ""
+       ]
+      ],
+      "g": "had arrived"
+     },
+     "。"
+    ],
+    "en": "While I was out, a delivery had arrived."
    }
   ],
   "register": "neutral",
-  "caution": "間に marks a moment inside the span when a one-time event happens (留守の間に電話が来た); plain 間 marks an action lasting the WHOLE span — dropping the に changes the meaning."
+  "caution": "間に marks a moment inside the span when a one-time event happens (留守の間に電話が来た); plain 間 marks an action lasting the WHOLE span — dropping the に changes the meaning.",
+  "flags": [],
+  "peg": {
+   "ja": "敵が寝ている間に、逃げよう",
+   "romaji": "Teki ga nete iru aida ni, nigeyō",
+   "en": "While the enemy is asleep, let's escape.",
+   "source": "ドラゴンボール (Dragon Ball) — クリリン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-made",
@@ -6718,10 +10511,90 @@
      "。"
     ],
     "en": "I'll go to Shinjuku by train."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "が",
+     {
+      "t": "出る",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "leave"
+     },
+     {
+      "t": "まで",
+      "f": [
+       [
+        "まで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     "この",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "place"
+     },
+     "で",
+     {
+      "t": "飲んでいた",
+      "f": [
+       [
+        "飲",
+        "の"
+       ],
+       [
+        "んでいた",
+        ""
+       ]
+      ],
+      "g": "was drinking"
+     },
+     "。"
+    ],
+    "en": "I stayed drinking at this place until the last train left."
    }
   ],
   "register": "neutral",
-  "caution": "まで is continuous action up TO an endpoint (5時まで働く); it needs a durative verb, unlike までに, which pairs with a one-time completion."
+  "caution": "まで is continuous action up TO an endpoint (5時まで働く); it needs a durative verb, unlike までに, which pairs with a one-time completion.",
+  "flags": [],
+  "peg": {
+   "ja": "終わるまで、絶対に諦めない",
+   "romaji": "Owaru made, zettai ni akiramenai",
+   "en": "Until it's over, I'll never give up.",
+   "source": "ONE PIECE — ロロノア・ゾロ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-made-ni",
@@ -6857,10 +10730,88 @@
      "。"
     ],
     "en": "I want to get to the station by the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "今月",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "月",
+        "げつ"
+       ]
+      ],
+      "g": "this month"
+     },
+     {
+      "t": "末",
+      "f": [
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "end"
+     },
+     {
+      "t": "までに",
+      "f": [
+       [
+        "までに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "家賃",
+      "f": [
+       [
+        "家",
+        "や"
+       ],
+       [
+        "賃",
+        "ちん"
+       ]
+      ],
+      "g": "rent"
+     },
+     "を",
+     {
+      "t": "払わなければならない",
+      "f": [
+       [
+        "払",
+        "はら"
+       ],
+       [
+        "わなければならない",
+        ""
+       ]
+      ],
+      "g": "must pay"
+     },
+     "。"
+    ],
+    "en": "I have to pay the rent by the end of this month."
    }
   ],
   "register": "neutral",
-  "caution": "までに is a deadline for a one-time action (5時までに終わる), while まで is continuous action up to that time — using まで for a deadline (×5時まで終わる) is the classic error."
+  "caution": "までに is a deadline for a one-time action (5時までに終わる), while まで is continuous action up to that time — using まで for a deadline (×5時まで終わる) is the classic error.",
+  "flags": [],
+  "peg": {
+   "ja": "夜明けまでに、片を付ける",
+   "romaji": "Yoake made ni, kata o tsukeru",
+   "en": "I'll settle this by dawn.",
+   "source": "呪術廻戦 (Jujutsu Kaisen) — 五条悟 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-bakari",
@@ -6981,10 +10932,87 @@
      "。"
     ],
     "en": "My little brother does nothing but play games."
+   },
+   {
+    "ja": [
+     {
+      "t": "最近",
+      "f": [
+       [
+        "最",
+        "さい"
+       ],
+       [
+        "近",
+        "きん"
+       ]
+      ],
+      "g": "lately"
+     },
+     "、",
+     {
+      "t": "コンビニ",
+      "f": [
+       [
+        "コンビニ",
+        ""
+       ]
+      ],
+      "g": "konbini"
+     },
+     {
+      "t": "弁当",
+      "f": [
+       [
+        "弁",
+        "べん"
+       ],
+       [
+        "当",
+        "とう"
+       ]
+      ],
+      "g": "bento"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "食べている",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べている",
+        ""
+       ]
+      ],
+      "g": "am eating"
+     },
+     "。"
+    ],
+    "en": "Lately I've been eating nothing but konbini bento."
    }
   ],
   "register": "neutral",
-  "caution": "Don't confuse noun+ばかり (\"nothing but,\" often critical) with past た+ばかり (\"just did\") — same word, different structure and meaning."
+  "caution": "Don't confuse noun+ばかり (\"nothing but,\" often critical) with past た+ばかり (\"just did\") — same word, different structure and meaning.",
+  "flags": [],
+  "peg": {
+   "ja": "こいつは、文句ばかり言う",
+   "romaji": "Koitsu wa, monku bakari iu",
+   "en": "This guy does nothing but complain.",
+   "source": "銀魂 (Gintama) — 志村新八 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ta-bakari",
@@ -7126,10 +11154,101 @@
      "。"
     ],
     "en": "I just bought this smartphone."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "Japan"
+     },
+     "に",
+     {
+      "t": "着いた",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "arrived"
+     },
+     {
+      "t": "ばかり",
+      "f": [
+       [
+        "ばかり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "で",
+     "、",
+     {
+      "t": "右も左も",
+      "f": [
+       [
+        "右",
+        "みぎ"
+       ],
+       [
+        "も",
+        ""
+       ],
+       [
+        "左",
+        "ひだり"
+       ],
+       [
+        "も",
+        ""
+       ]
+      ],
+      "g": "right or left"
+     },
+     {
+      "t": "分からない",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "からない",
+        ""
+       ]
+      ],
+      "g": "don't understand"
+     },
+     "。"
+    ],
+    "en": "I've only just arrived in Japan, so I don't know up from down."
    }
   ],
   "register": "neutral",
-  "caution": "たばかり is subjective (\"it feels like it just happened,\" even hours ago), whereas たところ is objective (\"literally just now\") — don't treat them as identical."
+  "caution": "たばかり is subjective (\"it feels like it just happened,\" even hours ago), whereas たところ is objective (\"literally just now\") — don't treat them as identical.",
+  "flags": [],
+  "peg": {
+   "ja": "この街に、来たばかりなんだ",
+   "romaji": "Kono machi ni, kita bakari nanda",
+   "en": "I only just came to this town.",
+   "source": "君の名は。(Your Name) — 宮水三葉 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-tokoro",
@@ -7260,10 +11379,69 @@
      "。"
     ],
     "en": "I've just finished eating lunch."
+   },
+   {
+    "ja": [
+     "ちょうど",
+     "、",
+     {
+      "t": "履歴書",
+      "f": [
+       [
+        "履",
+        "り"
+       ],
+       [
+        "歴",
+        "れき"
+       ],
+       [
+        "書",
+        "しょ"
+       ]
+      ],
+      "g": "resume"
+     },
+     "を",
+     {
+      "t": "書いている",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "いている",
+        ""
+       ]
+      ],
+      "g": "writing"
+     },
+     {
+      "t": "ところです",
+      "f": [
+       [
+        "ところです",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'm right in the middle of writing my resume."
    }
   ],
   "register": "neutral",
-  "caution": "The verb form sets the timing: 食べるところ (about to), 食べているところ (in the middle of), 食べたところ (just finished) — using the wrong tense shifts the whole meaning."
+  "caution": "The verb form sets the timing: 食べるところ (about to), 食べているところ (in the middle of), 食べたところ (just finished) — using the wrong tense shifts the whole meaning.",
+  "flags": [],
+  "peg": {
+   "ja": "ちょうど今、出かけるところだ",
+   "romaji": "Chōdo ima, dekakeru tokoro da",
+   "en": "I'm just about to head out right now.",
+   "source": "名探偵コナン (Detective Conan) — 服部平次 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ta-mama",
@@ -7390,10 +11568,85 @@
      "。"
     ],
     "en": "I went out leaving the window open."
+   },
+   {
+    "ja": [
+     {
+      "t": "窓",
+      "f": [
+       [
+        "窓",
+        "まど"
+       ]
+      ],
+      "g": "window"
+     },
+     "を",
+     {
+      "t": "開けた",
+      "f": [
+       [
+        "開",
+        "あ"
+       ],
+       [
+        "けた",
+        ""
+       ]
+      ],
+      "g": "opened"
+     },
+     {
+      "t": "まま",
+      "f": [
+       [
+        "まま",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "バイト",
+      "f": [
+       [
+        "バイト",
+        ""
+       ]
+      ],
+      "g": "part-time job"
+     },
+     "に",
+     {
+      "t": "行ってしまった",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "ってしまった",
+        ""
+       ]
+      ],
+      "g": "went (and regret)"
+     },
+     "。"
+    ],
+    "en": "I left the window open and went off to work."
    }
   ],
   "register": "neutral",
-  "caution": "まま needs past た for a verb (つけたまま, ×つけるまま); it means a state was left unchanged, so it doesn't fit an ongoing action (that's ながら)."
+  "caution": "まま needs past た for a verb (つけたまま, ×つけるまま); it means a state was left unchanged, so it doesn't fit an ongoing action (that's ながら).",
+  "flags": [],
+  "peg": {
+   "ja": "電気を、つけたまま寝てしまった",
+   "romaji": "Denki o, tsuketa mama nete shimatta",
+   "en": "I fell asleep with the light still on.",
+   "source": "サザエさん — 磯野カツオ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nakute",
@@ -7511,10 +11764,83 @@
      "。"
     ],
     "en": "The train didn't come and so I was late."
+   },
+   {
+    "ja": [
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "が",
+     {
+      "t": "読めなくて",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "めなくて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "documents"
+     },
+     "が",
+     {
+      "t": "書けなかった",
+      "f": [
+       [
+        "書",
+        "か"
+       ],
+       [
+        "けなかった",
+        ""
+       ]
+      ],
+      "g": "couldn't write"
+     },
+     "。"
+    ],
+    "en": "I couldn't read the kanji, so I couldn't fill out the form."
    }
   ],
   "register": "neutral",
-  "caution": "なくて links a negative cause/state (お金がなくて困った), but you can't make a negative REQUEST with it — \"please don't…\" needs 〜ないでください, not ×〜なくてください."
+  "caution": "なくて links a negative cause/state (お金がなくて困った), but you can't make a negative REQUEST with it — \"please don't…\" needs 〜ないでください, not ×〜なくてください.",
+  "flags": [],
+  "peg": {
+   "ja": "君に会えなくて、寂しかった",
+   "romaji": "Kimi ni aenakute, samishikatta",
+   "en": "I couldn't meet you, and it was lonely.",
+   "source": "君の名は。(Your Name) — 立花瀧 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ka-dou-ka",
@@ -7654,11 +11980,87 @@
      "。"
     ],
     "en": "I'll check whether or not this shop is open."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "が",
+     {
+      "t": "カード",
+      "f": [
+       [
+        "カード",
+        ""
+       ]
+      ],
+      "g": "card"
+     },
+     "を",
+     {
+      "t": "使える",
+      "f": [
+       [
+        "使",
+        "つか"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "g": "can use"
+     },
+     {
+      "t": "かどうか",
+      "f": [
+       [
+        "かどうか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "聞いてみた",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いてみた",
+        ""
+       ]
+      ],
+      "g": "asked to find out"
+     },
+     "。"
+    ],
+    "en": "I asked whether or not this shop takes cards."
    }
   ],
   "nuance": "Embeds a yes/no question (\"whether or not…\") inside a larger sentence. Use it when the buried question has no question word; use 疑問詞+か when it does.",
   "register": "neutral",
-  "caution": "Use かどうか only for yes/no questions; when the embedded question already has a question word (どこ, 誰…), use just か, not ×どこかどうか."
+  "caution": "Use かどうか only for yes/no questions; when the embedded question already has a question word (どこ, 誰…), use just か, not ×どこかどうか.",
+  "flags": [],
+  "peg": {
+   "ja": "間に合うかどうか、賭けてみよう",
+   "romaji": "Maniau ka dō ka, kakete miyō",
+   "en": "Let's gamble on whether we'll make it in time.",
+   "source": "デスノート (Death Note) — 夜神月 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-embedded-q",
@@ -7791,10 +12193,96 @@
      "。"
     ],
     "en": "I asked how much the rent is."
+   },
+   {
+    "ja": [
+     "どの",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "に",
+     {
+      "t": "乗れ",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "れ",
+        ""
+       ]
+      ],
+      "g": "ride (ba-stem)"
+     },
+     "ば",
+     "いい",
+     {
+      "t": "か",
+      "f": [
+       [
+        "か",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "駅員",
+      "f": [
+       [
+        "駅",
+        "えき"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "station attendant"
+     },
+     "に",
+     {
+      "t": "聞いた",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いた",
+        ""
+       ]
+      ],
+      "g": "asked"
+     },
+     "。"
+    ],
+    "en": "I asked the station attendant which train I should take."
    }
   ],
   "register": "neutral",
-  "caution": "The embedded question keeps plain form and ends in か before the main verb (どこに行くか分からない); don't add です inside it (×どこに行きますか分からない)."
+  "caution": "The embedded question keeps plain form and ends in か before the main verb (どこに行くか分からない); don't add です inside it (×どこに行きますか分からない).",
+  "flags": [],
+  "peg": {
+   "ja": "何が起きたのか、誰も知らない",
+   "romaji": "Nani ga okita no ka, dare mo shiranai",
+   "en": "No one knows what happened.",
+   "source": "東京喰種 (Tokyo Ghoul) — 金木研 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-to-itte-imashita",
@@ -7945,10 +12433,105 @@
      "。"
     ],
     "en": "My friend said that Hokkaido is cold."
+   },
+   {
+    "ja": [
+     {
+      "t": "大家さん",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "家",
+        "や"
+       ],
+       [
+        "さん",
+        ""
+       ]
+      ],
+      "g": "landlord"
+     },
+     "が",
+     "、",
+     {
+      "t": "来週",
+      "f": [
+       [
+        "来",
+        "らい"
+       ],
+       [
+        "週",
+        "しゅう"
+       ]
+      ],
+      "g": "next week"
+     },
+     {
+      "t": "点検",
+      "f": [
+       [
+        "点",
+        "てん"
+       ],
+       [
+        "検",
+        "けん"
+       ]
+      ],
+      "g": "inspection"
+     },
+     "に",
+     {
+      "t": "来る",
+      "f": [
+       [
+        "来",
+        "く"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "come"
+     },
+     {
+      "t": "と言っていました",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "言",
+        "い"
+       ],
+       [
+        "っていました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The landlord said they'll come for an inspection next week."
    }
   ],
   "register": "polite",
-  "caution": "と言っていました reports someone's ongoing/general remark; と言いました reports a single past utterance — and the quote before と stays in plain form."
+  "caution": "と言っていました reports someone's ongoing/general remark; と言いました reports a single past utterance — and the quote before と stays in plain form.",
+  "flags": [],
+  "peg": {
+   "ja": "先生が、明日は休みだと言っていました",
+   "romaji": "Sensei ga, ashita wa yasumi da to itte imashita",
+   "en": "The teacher said that tomorrow is a day off.",
+   "source": "けいおん! (K-On!) — 秋山澪 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-tame-ni",
@@ -8096,10 +12679,93 @@
      "。"
     ],
     "en": "In order to get a visa, I gather the documents."
+   },
+   {
+    "ja": [
+     {
+      "t": "ビザ",
+      "f": [
+       [
+        "ビザ",
+        ""
+       ]
+      ],
+      "g": "visa"
+     },
+     "を",
+     {
+      "t": "更新する",
+      "f": [
+       [
+        "更",
+        "こう"
+       ],
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "する",
+        ""
+       ]
+      ],
+      "g": "renew"
+     },
+     {
+      "t": "ために",
+      "f": [
+       [
+        "ために",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "入管",
+      "f": [
+       [
+        "入",
+        "にゅう"
+       ],
+       [
+        "管",
+        "かん"
+       ]
+      ],
+      "g": "immigration office"
+     },
+     "に",
+     {
+      "t": "行った",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "went"
+     },
+     "。"
+    ],
+    "en": "I went to the immigration office in order to renew my visa."
    }
   ],
   "register": "neutral",
-  "caution": "ために takes a VOLITIONAL, same-subject verb for purpose (合格するために勉強する); for a potential/negative or different-subject goal use ように instead."
+  "caution": "ために takes a VOLITIONAL, same-subject verb for purpose (合格するために勉強する); for a potential/negative or different-subject goal use ように instead.",
+  "flags": [],
+  "peg": {
+   "ja": "夢を叶えるために、上京してきた",
+   "romaji": "Yume o kanaeru tame ni, jōkyō shite kita",
+   "en": "I came to Tokyo in order to make my dream come true.",
+   "source": "NANA — 小松奈々 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-you-ni-purpose",
@@ -8267,10 +12933,111 @@
      "。"
     ],
     "en": "I leave early so that I don't miss the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "に",
+     {
+      "t": "乗り遅れない",
+      "f": [
+       [
+        "乗",
+        "の"
+       ],
+       [
+        "り",
+        ""
+       ],
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れない",
+        ""
+       ]
+      ],
+      "g": "not miss"
+     },
+     {
+      "t": "ように",
+      "f": [
+       [
+        "ように",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "早めに",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "めに",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "を",
+     {
+      "t": "出た",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "た",
+        ""
+       ]
+      ],
+      "g": "left"
+     },
+     "。"
+    ],
+    "en": "So I wouldn't miss the last train, I left the shop early."
    }
   ],
   "register": "neutral",
-  "caution": "Purpose ように pairs with a non-volitional verb — potential or negative (見えるように, 忘れないように); swapping it with ために (volitional) is the classic ように-vs-ために mistake."
+  "caution": "Purpose ように pairs with a non-volitional verb — potential or negative (見えるように, 忘れないように); swapping it with ために (volitional) is the classic ように-vs-ために mistake.",
+  "flags": [],
+  "peg": {
+   "ja": "みんなが幸せになれるように、祈っている",
+   "romaji": "Minna ga shiawase ni nareru yō ni, inotte iru",
+   "en": "I'm praying so that everyone can be happy.",
+   "source": "美少女戦士セーラームーン (Sailor Moon) — 月野うさぎ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ba-yokatta",
@@ -8394,10 +13161,88 @@
      "。"
     ],
     "en": "I should have made a reservation sooner."
+   },
+   {
+    "ja": [
+     {
+      "t": "傘",
+      "f": [
+       [
+        "傘",
+        "かさ"
+       ]
+      ],
+      "g": "umbrella"
+     },
+     "を",
+     {
+      "t": "持ってくれ",
+      "f": [
+       [
+        "持",
+        "も"
+       ],
+       [
+        "ってくれ",
+        ""
+       ]
+      ],
+      "g": "bring (ba-stem)"
+     },
+     {
+      "t": "ばよかった",
+      "f": [
+       [
+        "ばよかった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。",
+     {
+      "t": "急に",
+      "f": [
+       [
+        "急",
+        "きゅう"
+       ],
+       [
+        "に",
+        ""
+       ]
+      ],
+      "g": "suddenly"
+     },
+     {
+      "t": "降ってきた",
+      "f": [
+       [
+        "降",
+        "ふ"
+       ],
+       [
+        "ってきた",
+        ""
+       ]
+      ],
+      "g": "started raining"
+     },
+     "。"
+    ],
+    "en": "I should have brought an umbrella — it suddenly started raining."
    }
   ],
   "register": "neutral",
-  "caution": "It expresses regret about the PAST, so keep よかった in the past tense (行けばよかった, ×行けばいい, which is present advice \"you should go\")."
+  "caution": "It expresses regret about the PAST, so keep よかった in the past tense (行けばよかった, ×行けばいい, which is present advice \"you should go\").",
+  "flags": [],
+  "peg": {
+   "ja": "もっと早く、言えばよかった",
+   "romaji": "Motto hayaku, ieba yokatta",
+   "en": "I should have said it sooner.",
+   "source": "四月は君の嘘 (Your Lie in April) — 有馬公生 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-tara-dou",
@@ -8518,10 +13363,69 @@
      "。"
     ],
     "en": "How about trying to ask the station staff?"
+   },
+   {
+    "ja": [
+     {
+      "t": "分からない",
+      "f": [
+       [
+        "分",
+        "わ"
+       ],
+       [
+        "からない",
+        ""
+       ]
+      ],
+      "g": "don't understand"
+     },
+     "こと",
+     "は",
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "manager"
+     },
+     "に",
+     {
+      "t": "聞いたらどうですか",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いたらどうですか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Why don't you ask the manager about things you don't understand?"
    }
   ],
   "register": "casual",
-  "caution": "It's advice aimed at the listener, so it can sound bossy toward a superior; the たら here is fixed and can't be replaced by ば/と in this suggestion frame."
+  "caution": "It's advice aimed at the listener, so it can sound bossy toward a superior; the たら here is fixed and can't be replaced by ば/と in this suggestion frame.",
+  "flags": [],
+  "peg": {
+   "ja": "少し、休んだらどう？",
+   "romaji": "Sukoshi, yasundara dō?",
+   "en": "How about resting a little?",
+   "source": "ドラえもん (Doraemon) — 源静香 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-sonna-ni",
@@ -8628,10 +13532,68 @@
      "。"
     ],
     "en": "This izakaya isn't that expensive."
+   },
+   {
+    "ja": [
+     {
+      "t": "初任給",
+      "f": [
+       [
+        "初",
+        "しょ"
+       ],
+       [
+        "任",
+        "にん"
+       ],
+       [
+        "給",
+        "きゅう"
+       ]
+      ],
+      "g": "first paycheck"
+     },
+     "は",
+     "、",
+     {
+      "t": "そんなに",
+      "f": [
+       [
+        "そんなに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "多くなかった",
+      "f": [
+       [
+        "多",
+        "おお"
+       ],
+       [
+        "くなかった",
+        ""
+       ]
+      ],
+      "g": "was not much"
+     },
+     "。"
+    ],
+    "en": "My first paycheck wasn't all that much."
    }
   ],
   "register": "neutral",
-  "caution": "そんなに must pair with a NEGATIVE (そんなに高くない = \"not that expensive\"); with an affirmative it flips to \"that much / so very,\" a different meaning."
+  "caution": "そんなに must pair with a NEGATIVE (そんなに高くない = \"not that expensive\"); with an affirmative it flips to \"that much / so very,\" a different meaning.",
+  "flags": [],
+  "peg": {
+   "ja": "そんなに、怖くないよ",
+   "romaji": "Sonna ni, kowaku nai yo",
+   "en": "It's not that scary.",
+   "source": "となりのトトロ (My Neighbor Totoro) — 草壁メイ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-kana",
@@ -8733,10 +13695,68 @@
      "。"
     ],
     "en": "I wonder if this is the right train."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "、",
+     "なんて",
+     {
+      "t": "読む",
+      "f": [
+       [
+        "読",
+        "よ"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "read"
+     },
+     "の",
+     {
+      "t": "かな",
+      "f": [
+       [
+        "かな",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I wonder how you read this kanji."
    }
   ],
   "register": "casual",
-  "caution": "かな is casual self-talk, not a polite question to someone else; the male-leaning かなあ/かね differ in tone, and it takes plain form (行くかな, ×行きますかな)."
+  "caution": "かな is casual self-talk, not a polite question to someone else; the male-leaning かなあ/かね differ in tone, and it takes plain form (行くかな, ×行きますかな).",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "明日は、晴れるかな",
+   "romaji": "Ashita wa, hareru kana",
+   "en": "I wonder if it'll be sunny tomorrow.",
+   "source": "からかい上手の高木さん — 西片 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-darou",
@@ -8841,10 +13861,79 @@
      "。"
     ],
     "en": "He's probably already gone home."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "時間",
+      "f": [
+       [
+        "時",
+        "じ"
+       ],
+       [
+        "間",
+        "かん"
+       ]
+      ],
+      "g": "hour"
+     },
+     "なら",
+     "、",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     "は",
+     "もう",
+     {
+      "t": "混んでいる",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "んでいる",
+        ""
+       ]
+      ],
+      "g": "is crowded"
+     },
+     {
+      "t": "だろう",
+      "f": [
+       [
+        "だろう",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "At this hour, the shop is probably already crowded."
    }
   ],
   "register": "casual",
-  "caution": "Plain だろう is informal (でしょう is its polite form); a na-adjective/noun drops だ (静かだろう, 雨だろう — ×雨だだろう). Rising-intonation だろう？ seeks agreement."
+  "caution": "Plain だろう is informal (でしょう is its polite form); a na-adjective/noun drops だ (静かだろう, 雨だろう — ×雨だだろう). Rising-intonation だろう？ seeks agreement.",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "この勝負、俺が勝つだろう",
+   "romaji": "Kono shōbu, ore ga katsu darō",
+   "en": "This match — I'll probably win it.",
+   "source": "遊☆戯☆王 (Yu-Gi-Oh!) — 海馬瀬人 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-zutsu",
@@ -8997,10 +14086,92 @@
      "。"
     ],
     "en": "Each person got two rice balls each."
+   },
+   {
+    "ja": [
+     {
+      "t": "毎日",
+      "f": [
+       [
+        "毎",
+        "まい"
+       ],
+       [
+        "日",
+        "にち"
+       ]
+      ],
+      "g": "every day"
+     },
+     "、",
+     {
+      "t": "単語",
+      "f": [
+       [
+        "単",
+        "たん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "vocabulary word"
+     },
+     "を",
+     {
+      "t": "十個",
+      "f": [
+       [
+        "十",
+        "じゅっ"
+       ],
+       [
+        "個",
+        "こ"
+       ]
+      ],
+      "g": "ten items"
+     },
+     {
+      "t": "ずつ",
+      "f": [
+       [
+        "ずつ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "覚えている",
+      "f": [
+       [
+        "覚",
+        "おぼ"
+       ],
+       [
+        "えている",
+        ""
+       ]
+      ],
+      "g": "am memorizing"
+     },
+     "。"
+    ],
+    "en": "Every day I memorize ten vocabulary words at a time."
    }
   ],
   "register": "neutral",
-  "caution": "ずつ attaches to a quantity, not a bare noun (一つずつ, 少しずつ — ×りんごずつ), and means equal portions, so don't use it for a simple total."
+  "caution": "ずつ attaches to a quantity, not a bare noun (一つずつ, 少しずつ — ×りんごずつ), and means equal portions, so don't use it for a simple total.",
+  "flags": [],
+  "peg": {
+   "ja": "少しずつ、強くなればいい",
+   "romaji": "Sukoshi zutsu, tsuyoku nareba ii",
+   "en": "It's fine to get stronger little by little.",
+   "source": "呪術廻戦 (Jujutsu Kaisen) — 伏黒恵 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-o-ni-naru",
@@ -9159,10 +14330,74 @@
      "。"
     ],
     "en": "Will the president read this book?"
+   },
+   {
+    "ja": [
+     {
+      "t": "店長",
+      "f": [
+       [
+        "店",
+        "てん"
+       ],
+       [
+        "長",
+        "ちょう"
+       ]
+      ],
+      "g": "manager"
+     },
+     "は",
+     {
+      "t": "何時",
+      "f": [
+       [
+        "何",
+        "なん"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "what time"
+     },
+     "に",
+     {
+      "t": "お戻りになりますか",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "戻",
+        "もど"
+       ],
+       [
+        "りになりますか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "What time will the store manager be back?"
    }
   ],
   "register": "formal",
-  "caution": "お〜になる RAISES someone else's action (respect); never apply it to yourself — for your own action use the humble お〜する. Swapping the two is the classic keigo error."
+  "caution": "お〜になる RAISES someone else's action (respect); never apply it to yourself — for your own action use the humble お〜する. Swapping the two is the classic keigo error.",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "社長は、もうお帰りになりました",
+   "romaji": "Shachō wa, mō okaeri ni narimashita",
+   "en": "The president has already gone home.",
+   "source": "黒執事 (Black Butler) — セバスチャン・ミカエリス (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-o-suru",
@@ -9287,10 +14522,76 @@
      "。"
     ],
     "en": "I'll wait for you in the lobby."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "interview"
+     },
+     "の",
+     {
+      "t": "後",
+      "f": [
+       [
+        "後",
+        "あと"
+       ]
+      ],
+      "g": "after"
+     },
+     "、",
+     "こちら",
+     "から",
+     {
+      "t": "お電話します",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ],
+       [
+        "します",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "After the interview, we'll call you from our end."
    }
   ],
   "register": "formal",
-  "caution": "お〜する LOWERS your own action toward someone you respect; never use it for the other person's action (that's お〜になる) — reversing them is the classic keigo mistake."
+  "caution": "お〜する LOWERS your own action toward someone you respect; never use it for the other person's action (that's お〜になる) — reversing them is the classic keigo mistake.",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "お荷物、私がお持ちします",
+   "romaji": "Onimotsu, watashi ga omochi shimasu",
+   "en": "I'll carry your bags.",
+   "source": "サザエさん — 磯野フネ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-sonkeigo-verbs",
@@ -9419,10 +14720,70 @@
      "。"
     ],
     "en": "The teacher will come here tomorrow."
+   },
+   {
+    "ja": [
+     {
+      "t": "お客様",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "客",
+        "きゃく"
+       ],
+       [
+        "様",
+        "さま"
+       ]
+      ],
+      "g": "guests"
+     },
+     "が",
+     "、",
+     {
+      "t": "二名",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "名",
+        "めい"
+       ]
+      ],
+      "g": "two people"
+     },
+     {
+      "t": "いらっしゃいました",
+      "f": [
+       [
+        "いらっしゃいました",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Two guests have arrived at the restaurant."
    }
   ],
   "register": "formal",
-  "caution": "These special honorifics are for OTHERS' actions only; pairing them with yourself, or double-marking (×お召し上がりになる done wrong), is the usual trap. Their humble counterparts (参る, いただく) are separate words."
+  "caution": "These special honorifics are for OTHERS' actions only; pairing them with yourself, or double-marking (×お召し上がりになる done wrong), is the usual trap. Their humble counterparts (参る, いただく) are separate words.",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "先生は、もういらっしゃいました",
+   "romaji": "Sensei wa, mō irasshaimashita",
+   "en": "The teacher has already arrived.",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi) — 朝比奈みくる (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-kenjougo-verbs",
@@ -9525,10 +14886,81 @@
      "。"
     ],
     "en": "I will come to the office at ten o'clock."
+   },
+   {
+    "ja": [
+     {
+      "t": "明日",
+      "f": [
+       [
+        "明日",
+        "あした"
+       ]
+      ],
+      "g": "tomorrow"
+     },
+     "、",
+     {
+      "t": "九時",
+      "f": [
+       [
+        "九",
+        "く"
+       ],
+       [
+        "時",
+        "じ"
+       ]
+      ],
+      "g": "nine o'clock"
+     },
+     "に",
+     {
+      "t": "御社",
+      "f": [
+       [
+        "御",
+        "おん"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "your company"
+     },
+     "へ",
+     {
+      "t": "参ります",
+      "f": [
+       [
+        "参",
+        "まい"
+       ],
+       [
+        "ります",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I'll come to your company at nine o'clock tomorrow."
    }
   ],
   "register": "formal",
-  "caution": "These humble verbs lower YOUR OWN action, so never use them for the listener (×先生が申しました); use the honorific set (おっしゃる, いらっしゃる) for others."
+  "caution": "These humble verbs lower YOUR OWN action, so never use them for the listener (×先生が申しました); use the honorific set (おっしゃる, いらっしゃる) for others.",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "初めまして、田中と申します",
+   "romaji": "Hajimemashite, Tanaka to mōshimasu",
+   "en": "Nice to meet you; my name is Tanaka.",
+   "source": "スパイファミリー (Spy x Family) — ロイド・フォージャー (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-o-kudasai",
@@ -9651,10 +15083,81 @@
      "。"
     ],
     "en": "Please have a seat here."
+   },
+   {
+    "ja": [
+     "こちら",
+     "の",
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "form"
+     },
+     "に",
+     "、",
+     {
+      "t": "お名前",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "名",
+        "な"
+       ],
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "your name"
+     },
+     "を",
+     {
+      "t": "お書きください",
+      "f": [
+       [
+        "お",
+        ""
+       ],
+       [
+        "書",
+        "か"
+       ],
+       [
+        "きください",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Please write your name on this form."
    }
   ],
   "register": "formal",
-  "caution": "お〜ください uses the ます-stem (お待ちください, ×お待ってください) and is respectful; for irregular honorific verbs some use ご (ご覧ください), and する-verbs take ご (ご注意ください)."
+  "caution": "お〜ください uses the ます-stem (お待ちください, ×お待ってください) and is respectful; for irregular honorific verbs some use ご (ご覧ください), and する-verbs take ご (ご注意ください).",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "少々、お待ちください",
+   "romaji": "Shōshō, omachi kudasai",
+   "en": "Please wait a moment.",
+   "source": "ご注文はうさぎですか? — 香風智乃 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-de-gozaimasu",
@@ -9760,10 +15263,66 @@
      "。"
     ],
     "en": "Reception is on the second floor."
+   },
+   {
+    "ja": [
+     {
+      "t": "受付",
+      "f": [
+       [
+        "受",
+        "うけ"
+       ],
+       [
+        "付",
+        "つけ"
+       ]
+      ],
+      "g": "reception"
+     },
+     "は",
+     "、",
+     {
+      "t": "二階",
+      "f": [
+       [
+        "二",
+        "に"
+       ],
+       [
+        "階",
+        "かい"
+       ]
+      ],
+      "g": "second floor"
+     },
+     {
+      "t": "でございます",
+      "f": [
+       [
+        "でございます",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "The reception desk is on the second floor."
    }
   ],
   "register": "formal",
-  "caution": "でございます is a polite copula (\"is\") replacing です; don't confuse it with plain ございます (replacing あります, \"there is\") — they're not interchangeable."
+  "caution": "でございます is a polite copula (\"is\") replacing です; don't confuse it with plain ございます (replacing あります, \"there is\") — they're not interchangeable.",
+  "flags": [
+   "keigo-critical"
+  ],
+  "peg": {
+   "ja": "こちらが、当店の名物でございます",
+   "romaji": "Kochira ga, tōten no meibutsu de gozaimasu",
+   "en": "This is our shop's specialty.",
+   "source": "かぐや様は告らせたい (Kaguya-sama) — 早坂愛 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-to-onaji",
@@ -9958,11 +15517,96 @@
      "。"
     ],
     "en": "My room is the same size as his."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "定食",
+      "f": [
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "食",
+        "しょく"
+       ]
+      ],
+      "g": "set meal"
+     },
+     "は",
+     {
+      "t": "地元",
+      "f": [
+       [
+        "地",
+        "じ"
+       ],
+       [
+        "元",
+        "もと"
+       ]
+      ],
+      "g": "local"
+     },
+     "の",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     {
+      "t": "と同じ",
+      "f": [
+       [
+        "と",
+        ""
+       ],
+       [
+        "同",
+        "おな"
+       ],
+       [
+        "じ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "味",
+      "f": [
+       [
+        "味",
+        "あじ"
+       ]
+      ],
+      "g": "taste"
+     },
+     "が",
+     "する",
+     "。"
+    ],
+    "en": "This set meal tastes the same as the shop back home."
    }
   ],
   "nuance": "States that two things are the same, marking the compared item with と (A と同じ). Follow it with a noun using 同じ〜 (同じ色) — no な.",
   "register": "neutral",
-  "caution": "Compare with と, not に (私のと同じ, ×私のに同じ); 同じ modifies a noun directly with NO な (同じ本, ×同じな本)."
+  "caution": "Compare with と, not に (私のと同じ, ×私のに同じ); 同じ modifies a noun directly with NO な (同じ本, ×同じな本).",
+  "flags": [],
+  "peg": {
+   "ja": "私も、あなたと同じ気持ちです",
+   "romaji": "Watashi mo, anata to onaji kimochi desu",
+   "en": "I feel the same as you.",
+   "source": "四月は君の嘘 (Your Lie in April) — 宮園かをり (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-garu",
@@ -10088,10 +15732,80 @@
      "。"
     ],
     "en": "The child is afraid of the dog."
+   },
+   {
+    "ja": [
+     {
+      "t": "同僚",
+      "f": [
+       [
+        "同",
+        "どう"
+       ],
+       [
+        "僚",
+        "りょう"
+       ]
+      ],
+      "g": "coworker"
+     },
+     "は",
+     "いつも",
+     {
+      "t": "国",
+      "f": [
+       [
+        "国",
+        "くに"
+       ]
+      ],
+      "g": "home country"
+     },
+     "の",
+     {
+      "t": "料理",
+      "f": [
+       [
+        "料",
+        "りょう"
+       ],
+       [
+        "理",
+        "り"
+       ]
+      ],
+      "g": "cuisine"
+     },
+     "を",
+     {
+      "t": "恋しがっている",
+      "f": [
+       [
+        "恋",
+        "こい"
+       ],
+       [
+        "しがっている",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My coworker is always missing the food from back home."
    }
   ],
   "register": "neutral",
-  "caution": "Use がる for a THIRD person's outward feelings (弟は寒がる), not your own (say 寒い for yourself); it drops the final い/な (寂しい→寂しがる) and makes the feeling into a verb."
+  "caution": "Use がる for a THIRD person's outward feelings (弟は寒がる), not your own (say 寒い for yourself); it drops the final い/な (寂しい→寂しがる) and makes the feeling into a verb.",
+  "flags": [],
+  "peg": {
+   "ja": "妹が、新しい靴を欲しがっている",
+   "romaji": "Imōto ga, atarashii kutsu o hoshigatte iru",
+   "en": "My little sister wants new shoes.",
+   "source": "サザエさん — 磯野ワカメ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-tagaru",
@@ -10240,10 +15954,84 @@
      "。"
     ],
     "en": "My friend wanted to see the photos of the izakaya."
+   },
+   {
+    "ja": [
+     {
+      "t": "友達",
+      "f": [
+       [
+        "友",
+        "とも"
+       ],
+       [
+        "達",
+        "だち"
+       ]
+      ],
+      "g": "friend"
+     },
+     "が",
+     "、",
+     {
+      "t": "築地",
+      "f": [
+       [
+        "築",
+        "つき"
+       ],
+       [
+        "地",
+        "じ"
+       ]
+      ],
+      "g": "Tsukiji"
+     },
+     "で",
+     {
+      "t": "寿司",
+      "f": [
+       [
+        "寿",
+        "す"
+       ],
+       [
+        "司",
+        "し"
+       ]
+      ],
+      "g": "sushi"
+     },
+     "を",
+     {
+      "t": "食べたがっている",
+      "f": [
+       [
+        "食",
+        "た"
+       ],
+       [
+        "べたがっている",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "My friend wants to eat sushi at Tsukiji."
    }
   ],
   "register": "neutral",
-  "caution": "たがる is for other people's desires (子供が行きたがる); use たい for yourself, and note the object often takes を where たい allows が (水を飲みたがる)."
+  "caution": "たがる is for other people's desires (子供が行きたがる); use たい for yourself, and note the object often takes を where たい allows が (水を飲みたがる).",
+  "flags": [],
+  "peg": {
+   "ja": "子供が、外で遊びたがる",
+   "romaji": "Kodomo ga, soto de asobitagaru",
+   "en": "The kid wants to play outside.",
+   "source": "クレヨンしんちゃん (Crayon Shin-chan) — 野原しんのすけ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-sumimasen",
@@ -10343,11 +16131,68 @@
      "。"
     ],
     "en": "I'm sorry for calling so many times."
+   },
+   {
+    "ja": [
+     {
+      "t": "何度も",
+      "f": [
+       [
+        "何",
+        "なん"
+       ],
+       [
+        "度",
+        "ど"
+       ],
+       [
+        "も",
+        ""
+       ]
+      ],
+      "g": "many times"
+     },
+     {
+      "t": "聞いて",
+      "f": [
+       [
+        "聞",
+        "き"
+       ],
+       [
+        "いて",
+        ""
+       ]
+      ],
+      "g": "ask (te-form)"
+     },
+     "、",
+     {
+      "t": "すみません",
+      "f": [
+       [
+        "すみません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Sorry for asking so many times."
    }
   ],
   "nuance": "Apologises for the action just named — \"sorry for (doing) X.\" The heavier 〜て申し訳ありません is its polite/formal upgrade.",
   "register": "polite",
-  "caution": "For apologising in advance about a request, use 〜てすみませんが or 恐れ入りますが; don't swap in 〜てありがとう, which thanks rather than apologises."
+  "caution": "For apologising in advance about a request, use 〜てすみませんが or 恐れ入りますが; don't swap in 〜てありがとう, which thanks rather than apologises.",
+  "flags": [],
+  "peg": {
+   "ja": "遅れて、すみません",
+   "romaji": "Okurete, sumimasen",
+   "en": "Sorry for being late.",
+   "source": "ハイキュー!! (Haikyu!!) — 山口忠 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-yokatta",
@@ -10469,10 +16314,83 @@
      "。"
     ],
     "en": "I'm glad I moved into this share house."
+   },
+   {
+    "ja": [
+     {
+      "t": "日本",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ]
+      ],
+      "g": "Japan"
+     },
+     "に",
+     "、",
+     {
+      "t": "来てよかった",
+      "f": [
+       [
+        "来",
+        "き"
+       ],
+       [
+        "てよかった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "と",
+     {
+      "t": "心から",
+      "f": [
+       [
+        "心",
+        "こころ"
+       ],
+       [
+        "から",
+        ""
+       ]
+      ],
+      "g": "from the heart"
+     },
+     {
+      "t": "思う",
+      "f": [
+       [
+        "思",
+        "おも"
+       ],
+       [
+        "う",
+        ""
+       ]
+      ],
+      "g": "think"
+     },
+     "。"
+    ],
+    "en": "I truly feel glad I came to Japan."
    }
   ],
   "register": "neutral",
-  "caution": "It expresses relief about something that DID happen, so keep よかった past; the negative is 〜なくてよかった (\"glad I didn't\"), not ×〜ないでよかった as a rule."
+  "caution": "It expresses relief about something that DID happen, so keep よかった past; the negative is 〜なくてよかった (\"glad I didn't\"), not ×〜ないでよかった as a rule.",
+  "flags": [],
+  "peg": {
+   "ja": "君に、会えてよかった",
+   "romaji": "Kimi ni, aete yokatta",
+   "en": "I'm glad I got to meet you.",
+   "source": "君の名は。(Your Name) — 宮水三葉 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-te-hoshii",
@@ -10609,10 +16527,69 @@
      "。"
     ],
     "en": "I want the landlord to fix the air conditioner."
+   },
+   {
+    "ja": [
+     {
+      "t": "大家さん",
+      "f": [
+       [
+        "大",
+        "おお"
+       ],
+       [
+        "家",
+        "や"
+       ],
+       [
+        "さん",
+        ""
+       ]
+      ],
+      "g": "landlord"
+     },
+     "に",
+     "、",
+     {
+      "t": "エアコン",
+      "f": [
+       [
+        "エアコン",
+        ""
+       ]
+      ],
+      "g": "air conditioner"
+     },
+     "を",
+     {
+      "t": "直してほしい",
+      "f": [
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "してほしい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I want the landlord to fix the air conditioner."
    }
   ],
   "register": "neutral",
-  "caution": "The person you want to act takes に (君に来てほしい); don't confuse it with 〜たい (you want to do it yourself) — subject and marking differ."
+  "caution": "The person you want to act takes に (君に来てほしい); don't confuse it with 〜たい (you want to do it yourself) — subject and marking differ.",
+  "flags": [],
+  "peg": {
+   "ja": "俺のことを、忘れないでほしい",
+   "romaji": "Ore no koto o, wasurenaide hoshii",
+   "en": "I want you not to forget about me.",
+   "source": "進撃の巨人 (Attack on Titan) — エレン・イェーガー (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-hitsuyou-ga-aru",
@@ -10788,10 +16765,85 @@
      "。"
     ],
     "en": "You need to write a résumé before the interview."
+   },
+   {
+    "ja": [
+     {
+      "t": "銀行",
+      "f": [
+       [
+        "銀",
+        "ぎん"
+       ],
+       [
+        "行",
+        "こう"
+       ]
+      ],
+      "g": "bank"
+     },
+     {
+      "t": "口座",
+      "f": [
+       [
+        "口",
+        "こう"
+       ],
+       [
+        "座",
+        "ざ"
+       ]
+      ],
+      "g": "account"
+     },
+     "を",
+     {
+      "t": "作る",
+      "f": [
+       [
+        "作",
+        "つく"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "open"
+     },
+     {
+      "t": "必要がある",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ],
+       [
+        "がある",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I need to open a bank account."
    }
   ],
   "register": "neutral",
-  "caution": "Necessity 必要がある takes a dictionary verb (行く必要がある); the negative is 必要はない (\"don't need to\"), and 必要 is a noun, so a verb links directly, not with こと."
+  "caution": "Necessity 必要がある takes a dictionary verb (行く必要がある); the negative is 必要はない (\"don't need to\"), and 必要 is a noun, so a verb links directly, not with こと.",
+  "flags": [],
+  "peg": {
+   "ja": "真実を、知る必要がある",
+   "romaji": "Shinjitsu o, shiru hitsuyō ga aru",
+   "en": "There's a need to know the truth.",
+   "source": "PSYCHO-PASS サイコパス — 常守朱 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-mieru-kikoeru",
@@ -10932,10 +16984,76 @@
      "。"
     ],
     "en": "I can hear music from the room next door."
+   },
+   {
+    "ja": [
+     {
+      "t": "私",
+      "f": [
+       [
+        "私",
+        "わたし"
+       ]
+      ],
+      "g": "my"
+     },
+     "の",
+     {
+      "t": "部屋",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ]
+      ],
+      "g": "room"
+     },
+     "から",
+     "は",
+     {
+      "t": "スカイツリー",
+      "f": [
+       [
+        "スカイツリー",
+        ""
+       ]
+      ],
+      "g": "Skytree"
+     },
+     "が",
+     {
+      "t": "見える",
+      "f": [
+       [
+        "見",
+        "み"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "From my room you can see the Tokyo Skytree."
    }
   ],
   "register": "neutral",
-  "caution": "見える/聞こえる = something naturally enters your sight/hearing; 見られる/聞ける = you have the ability/opportunity —富士山が見える (visible) vs 映画が見られる (able to watch) are not interchangeable."
+  "caution": "見える/聞こえる = something naturally enters your sight/hearing; 見られる/聞ける = you have the ability/opportunity —富士山が見える (visible) vs 映画が見られる (able to watch) are not interchangeable.",
+  "flags": [],
+  "peg": {
+   "ja": "屋上から、富士山が見える",
+   "romaji": "Okujō kara, Fujisan ga mieru",
+   "en": "You can see Mt. Fuji from the rooftop.",
+   "source": "ゆるキャン△ (Laid-Back Camp) — 志摩リン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-ndesu-ga",
@@ -11095,10 +17213,93 @@
      "。"
     ],
     "en": "I'd like to make a reservation — are you open tonight?"
+   },
+   {
+    "ja": [
+     {
+      "t": "口座",
+      "f": [
+       [
+        "口",
+        "こう"
+       ],
+       [
+        "座",
+        "ざ"
+       ]
+      ],
+      "g": "account"
+     },
+     "を",
+     {
+      "t": "開きたい",
+      "f": [
+       [
+        "開",
+        "ひら"
+       ],
+       [
+        "きたい",
+        ""
+       ]
+      ],
+      "g": "want to open"
+     },
+     {
+      "t": "んですが",
+      "f": [
+       [
+        "んですが",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "何",
+      "f": [
+       [
+        "何",
+        "なに"
+       ]
+      ],
+      "g": "what"
+     },
+     "が",
+     {
+      "t": "必要ですか",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ],
+       [
+        "ですか",
+        ""
+       ]
+      ],
+      "g": "is necessary?"
+     },
+     "。"
+    ],
+    "en": "I'd like to open an account — what do I need?"
    }
   ],
   "register": "polite",
-  "caution": "The trailing が softens and invites help; don't read it as the contrastive \"but,\" and use のですが in polite/formal speech rather than the casual んだけど."
+  "caution": "The trailing が softens and invites help; don't read it as the contrastive \"but,\" and use のですが in polite/formal speech rather than the casual んだけど.",
+  "flags": [],
+  "peg": {
+   "ja": "すみません、道に迷ったんですが…",
+   "romaji": "Sumimasen, michi ni mayotta ndesu ga…",
+   "en": "Excuse me, I've gotten lost, you see…",
+   "source": "涼宮ハルヒの憂鬱 (Haruhi) — キョン (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-mo-emphasis",
@@ -11237,10 +17438,104 @@
      "。"
     ],
     "en": "This coat cost a whole 30,000 yen."
+   },
+   {
+    "ja": [
+     {
+      "t": "初任給",
+      "f": [
+       [
+        "初",
+        "しょ"
+       ],
+       [
+        "任",
+        "にん"
+       ],
+       [
+        "給",
+        "きゅう"
+       ]
+      ],
+      "g": "first paycheck"
+     },
+     "が",
+     {
+      "t": "出て",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "て",
+        ""
+       ]
+      ],
+      "g": "came out"
+     },
+     "、",
+     {
+      "t": "五万円",
+      "f": [
+       [
+        "五",
+        "ご"
+       ],
+       [
+        "万",
+        "まん"
+       ],
+       [
+        "円",
+        "えん"
+       ]
+      ],
+      "g": "50,000 yen"
+     },
+     {
+      "t": "も",
+      "f": [
+       [
+        "も",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "貯金できた",
+      "f": [
+       [
+        "貯",
+        "ちょ"
+       ],
+       [
+        "金",
+        "きん"
+       ],
+       [
+        "できた",
+        ""
+       ]
+      ],
+      "g": "was able to save"
+     },
+     "。"
+    ],
+    "en": "After my first paycheck, I managed to save as much as 50,000 yen."
    }
   ],
   "register": "neutral",
-  "caution": "Emphatic も follows a number to stress \"as much as\" (三時間も待った); its opposite is しか…ない (\"only\"), so don't mix the two when stressing amount."
+  "caution": "Emphatic も follows a number to stress \"as much as\" (三時間も待った); its opposite is しか…ない (\"only\"), so don't mix the two when stressing amount.",
+  "flags": [],
+  "peg": {
+   "ja": "あいつは、ケーキを五個も食べた",
+   "romaji": "Aitsu wa, kēki o goko mo tabeta",
+   "en": "That guy ate as many as five cakes.",
+   "source": "ドラえもん (Doraemon) — 剛田武 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nakute-wa-ikemasen",
@@ -11334,10 +17629,75 @@
      "。"
     ],
     "en": "You have to separate the trash."
+   },
+   {
+    "ja": [
+     {
+      "t": "ゴミ",
+      "f": [
+       [
+        "ゴミ",
+        ""
+       ]
+      ],
+      "g": "trash"
+     },
+     "は",
+     "、",
+     {
+      "t": "決まった",
+      "f": [
+       [
+        "決",
+        "き"
+       ],
+       [
+        "まった",
+        ""
+       ]
+      ],
+      "g": "designated"
+     },
+     {
+      "t": "日",
+      "f": [
+       [
+        "日",
+        "ひ"
+       ]
+      ],
+      "g": "day"
+     },
+     "に",
+     {
+      "t": "出さなくてはいけません",
+      "f": [
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "さなくてはいけません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "You must put the trash out on the designated day."
    }
   ],
   "register": "polite",
-  "caution": "It's a double negative meaning \"must,\" so don't read the ない as literal negation; keep the base verb's ない-stem (行かなくては…, ×行くなくては…)."
+  "caution": "It's a double negative meaning \"must,\" so don't read the ない as literal negation; keep the base verb's ない-stem (行かなくては…, ×行くなくては…).",
+  "flags": [],
+  "peg": {
+   "ja": "約束は、守らなくてはいけません",
+   "romaji": "Yakusoku wa, mamoranakute wa ikemasen",
+   "en": "You must keep your promises.",
+   "source": "ONE PIECE — ナミ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-nakya",
@@ -11420,10 +17780,57 @@
      "。"
     ],
     "en": "I've gotta pay the rent."
+   },
+   {
+    "ja": [
+     {
+      "t": "終電",
+      "f": [
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "電",
+        "でん"
+       ]
+      ],
+      "g": "last train"
+     },
+     "だ",
+     "、",
+     "もう",
+     {
+      "t": "帰らなきゃ",
+      "f": [
+       [
+        "帰",
+        "かえ"
+       ],
+       [
+        "らなきゃ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's the last train — I've gotta get home!"
    }
   ],
   "register": "casual/spoken",
-  "caution": "These are spoken contractions of なければ/なくては with the いけない/ならない dropped — fine in casual talk, but write out the full form in formal or written Japanese."
+  "caution": "These are spoken contractions of なければ/なくては with the いけない/ならない dropped — fine in casual talk, but write out the full form in formal or written Japanese.",
+  "flags": [
+   "casual-spoken"
+  ],
+  "peg": {
+   "ja": "早く、宿題やらなくちゃ",
+   "romaji": "Hayaku, shukudai yaranakucha",
+   "en": "I gotta do my homework, quick.",
+   "source": "ちびまる子ちゃん — さくらももこ (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-baai",
@@ -11585,10 +17992,111 @@
      "。"
     ],
     "en": "If you're going to be late, please call the shop."
+   },
+   {
+    "ja": [
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "が",
+     {
+      "t": "遅れた",
+      "f": [
+       [
+        "遅",
+        "おく"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "was delayed"
+     },
+     {
+      "t": "場合は",
+      "f": [
+       [
+        "場",
+        "ば"
+       ],
+       [
+        "合",
+        "あい"
+       ],
+       [
+        "は",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "、",
+     {
+      "t": "遅延証明書",
+      "f": [
+       [
+        "遅",
+        "ち"
+       ],
+       [
+        "延",
+        "えん"
+       ],
+       [
+        "証",
+        "しょう"
+       ],
+       [
+        "明",
+        "めい"
+       ],
+       [
+        "書",
+        "しょ"
+       ]
+      ],
+      "g": "delay certificate"
+     },
+     "を",
+     {
+      "t": "もらう",
+      "f": [
+       [
+        "もらう",
+        ""
+       ]
+      ],
+      "g": "get"
+     },
+     "。"
+    ],
+    "en": "If the train is delayed, get a delay certificate."
    }
   ],
   "register": "formal/written",
-  "caution": "Nouns take の before 場合 (地震の場合), na-adjectives take な, and plain verbs attach directly (遅れる場合は); a bare だ (×地震だ場合) is wrong."
+  "caution": "Nouns take の before 場合 (地震の場合), na-adjectives take な, and plain verbs attach directly (遅れる場合は); a bare だ (×地震だ場合) is wrong.",
+  "flags": [
+   "written-formal"
+  ],
+  "peg": {
+   "ja": "地震の場合は、まず身を守れ",
+   "romaji": "Jishin no baai wa, mazu mi o mamore",
+   "en": "In the event of an earthquake, protect yourself first.",
+   "source": "PSYCHO-PASS サイコパス — 宜野座伸元 (styled)",
+   "kind": "styled"
+  }
  },
  {
   "id": "n4-hodo",
@@ -11713,9 +18221,88 @@
      "。"
     ],
     "en": "My legs were so tired I could hardly stand."
+   },
+   {
+    "ja": [
+     {
+      "t": "今朝",
+      "f": [
+       [
+        "今朝",
+        "けさ"
+       ]
+      ],
+      "g": "this morning"
+     },
+     "の",
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "train"
+     },
+     "は",
+     "、",
+     {
+      "t": "動けない",
+      "f": [
+       [
+        "動",
+        "うご"
+       ],
+       [
+        "けない",
+        ""
+       ]
+      ],
+      "g": "cannot move"
+     },
+     {
+      "t": "ほど",
+      "f": [
+       [
+        "ほど",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "混んでいた",
+      "f": [
+       [
+        "混",
+        "こ"
+       ],
+       [
+        "んでいた",
+        ""
+       ]
+      ],
+      "g": "was crowded"
+     },
+     "。"
+    ],
+    "en": "This morning's train was so crowded I couldn't move."
    }
   ],
   "register": "neutral",
-  "caution": "Don't confuse ほど's two jobs: after a quantity it's \"about\" (三日ほど), but in ば〜ほど or 〜ほど…ない it marks degree/comparison, not approximation."
+  "caution": "Don't confuse ほど's two jobs: after a quantity it's \"about\" (三日ほど), but in ば〜ほど or 〜ほど…ない it marks degree/comparison, not approximation.",
+  "flags": [],
+  "peg": {
+   "ja": "泣きたいほど、悔しい",
+   "romaji": "Nakitai hodo, kuyashii",
+   "en": "I'm frustrated to the point of wanting to cry.",
+   "source": "ハイキュー!! (Haikyu!!) — 影山飛雄 (styled)",
+   "kind": "styled"
+  }
  }
 ]

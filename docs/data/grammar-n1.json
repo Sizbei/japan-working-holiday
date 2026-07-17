@@ -186,10 +186,95 @@
      "。"
     ],
     "en": "The contract was extended; nevertheless, my visa's expiry date doesn't change."
+   },
+   {
+    "ja": [
+     {
+      "t": "慣れた",
+      "f": [
+       [
+        "慣",
+        "な"
+       ],
+       [
+        "れた",
+        ""
+       ]
+      ],
+      "g": "got used to it"
+     },
+     {
+      "t": "とはいえ",
+      "f": [
+       [
+        "とはいえ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "満員",
+      "f": [
+       [
+        "満",
+        "まん"
+       ],
+       [
+        "員",
+        "いん"
+       ]
+      ],
+      "g": "packed"
+     },
+     {
+      "t": "電車",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "trains"
+     },
+     "は",
+     "いまだに",
+     {
+      "t": "苦手",
+      "f": [
+       [
+        "苦",
+        "にが"
+       ],
+       [
+        "手",
+        "て"
+       ]
+      ],
+      "g": "can't stand"
+     },
+     "だ",
+     "。"
+    ],
+    "en": "Used to it as I am, I still can't stand packed trains."
    }
   ],
   "register": "formal/written",
-  "caution": "Don't confuse it with とはいうものの (same meaning, more spoken): とはいえ can also open a sentence as a connector, whereas ものの cannot stand alone."
+  "caution": "Don't confuse it with とはいうものの (same meaning, more spoken): とはいえ can also open a sentence as a connector, whereas ものの cannot stand alone.",
+  "peg": {
+   "ja": "旅は終わったとはいえ、思い出は消えない。",
+   "romaji": "Tabi wa owatta to wa ie, omoide wa kienai.",
+   "en": "The journey may be over — that said, the memories won't fade.",
+   "source": "葬送のフリーレン — フリーレン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-to-iedomo",
@@ -370,10 +455,76 @@
      "。"
     ],
     "en": "Even a single person is not permitted to disturb the harmony of the workplace."
+   },
+   {
+    "ja": [
+     {
+      "t": "ベテラン",
+      "f": [
+       [
+        "ベテラン",
+        ""
+       ]
+      ],
+      "g": "a veteran"
+     },
+     {
+      "t": "といえども",
+      "f": [
+       [
+        "といえども",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "油断",
+      "f": [
+       [
+        "油",
+        "ゆ"
+       ],
+       [
+        "断",
+        "だん"
+       ]
+      ],
+      "g": "letting one's guard down"
+     },
+     "は",
+     {
+      "t": "禁物",
+      "f": [
+       [
+        "禁",
+        "きん"
+       ],
+       [
+        "物",
+        "もつ"
+       ]
+      ],
+      "g": "a taboo / must be avoided"
+     },
+     "だ",
+     "。"
+    ],
+    "en": "Even a veteran must not let their guard down."
    }
   ],
   "register": "written",
-  "caution": "It's archaic — reserve it for formal writing and proverbs; using it in everyday conversation sounds stiff and theatrical where とはいえ or ても would be natural."
+  "caution": "It's archaic — reserve it for formal writing and proverbs; using it in everyday conversation sounds stiff and theatrical where とはいえ or ても would be natural.",
+  "peg": {
+   "ja": "英雄といえども、時には迷う。",
+   "romaji": "Eiyū to iedomo, toki ni wa mayou.",
+   "en": "Even a hero, at times, wavers.",
+   "source": "鬼滅の刃 — 産屋敷耀哉",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-dokoroka",
@@ -524,10 +675,90 @@
      "。"
     ],
     "en": "Let alone a break — I didn't even have time to eat lunch."
+   },
+   {
+    "ja": [
+     {
+      "t": "楽",
+      "f": [
+       [
+        "楽",
+        "らく"
+       ]
+      ],
+      "g": "easy"
+     },
+     "に",
+     "なる",
+     {
+      "t": "どころか",
+      "f": [
+       [
+        "どころか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "work"
+     },
+     "は",
+     {
+      "t": "増える",
+      "f": [
+       [
+        "増",
+        "ふ"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "g": "increases"
+     },
+     {
+      "t": "一方",
+      "f": [
+       [
+        "一",
+        "いっ"
+       ],
+       [
+        "方",
+        "ぽう"
+       ]
+      ],
+      "g": "only keeps"
+     },
+     "だ",
+     "。"
+    ],
+    "en": "Far from getting easier, the work just keeps increasing."
    }
   ],
   "register": "neutral",
-  "caution": "The second clause must be stronger or opposite to the first — pairing どころか with a merely similar or weaker statement is wrong; that's what makes it 'far from', not plain 'and also'."
+  "caution": "The second clause must be stronger or opposite to the first — pairing どころか with a merely similar or weaker statement is wrong; that's what makes it 'far from', not plain 'and also'.",
+  "peg": {
+   "ja": "許すどころか、俺はお前を倒す。",
+   "romaji": "Yurusu dokoro ka, ore wa omae o taosu.",
+   "en": "Far from forgiving you, I'll destroy you.",
+   "source": "ドラゴンボール — 孫悟空",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n1-dokoro-de-wa-nai",
@@ -670,10 +901,85 @@
      "。"
     ],
     "en": "I had a fever, so it was no time for going to see the cherry blossoms."
+   },
+   {
+    "ja": [
+     {
+      "t": "締め切り",
+      "f": [
+       [
+        "締",
+        "し"
+       ],
+       [
+        "め",
+        ""
+       ],
+       [
+        "切",
+        "き"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "deadline"
+     },
+     {
+      "t": "前",
+      "f": [
+       [
+        "前",
+        "まえ"
+       ]
+      ],
+      "g": "before"
+     },
+     "で",
+     {
+      "t": "昼休み",
+      "f": [
+       [
+        "昼",
+        "ひる"
+       ],
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "lunch break"
+     },
+     {
+      "t": "どころではない",
+      "f": [
+       [
+        "どころではない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Before the deadline, this is no time for a lunch break."
    }
   ],
   "register": "neutral",
-  "caution": "Don't mix it up with どころか: どころではない says circumstances rule the action out ('no time for it'), while どころか corrects a factual expectation ('far from')."
+  "caution": "Don't mix it up with どころか: どころではない says circumstances rule the action out ('no time for it'), while どころか corrects a factual expectation ('far from').",
+  "peg": {
+   "ja": "休んでいるどころではない。",
+   "romaji": "Yasunde iru dokoro de wa nai.",
+   "en": "This is no time to be resting.",
+   "source": "進撃の巨人 — エレン",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n1-ga-hayai-ka",
@@ -922,10 +1228,106 @@
      "。"
     ],
     "en": "The instant my boss sat down, he started replying to emails."
+   },
+   {
+    "ja": [
+     {
+      "t": "改札",
+      "f": [
+       [
+        "改",
+        "かい"
+       ],
+       [
+        "札",
+        "さつ"
+       ]
+      ],
+      "g": "the ticket gate"
+     },
+     "を",
+     {
+      "t": "出る",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "leave"
+     },
+     {
+      "t": "が早いか",
+      "f": [
+       [
+        "が",
+        ""
+       ],
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "いか",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     {
+      "t": "駆け出した",
+      "f": [
+       [
+        "駆",
+        "か"
+       ],
+       [
+        "け",
+        ""
+       ],
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "broke into a run"
+     },
+     "。"
+    ],
+    "en": "The instant he left the ticket gate, he broke into a run."
    }
   ],
   "register": "written",
-  "caution": "The main clause must be past tense and describe an actual observed event — you can't use が早いか for a command, intention, or future/habitual statement."
+  "caution": "The main clause must be past tense and describe an actual observed event — you can't use が早いか for a command, intention, or future/habitual statement.",
+  "peg": {
+   "ja": "刀を抜くが早いか、鬼の首は落ちていた。",
+   "romaji": "Katana o nuku ga hayai ka, oni no kubi wa ochite ita.",
+   "en": "The instant he drew his sword, the demon's head had fallen.",
+   "source": "鬼滅の刃 — 冨岡義勇",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ya-ina-ya",
@@ -1121,10 +1523,121 @@
      "。"
     ],
     "en": "No sooner had I sent the email than a reply came back."
+   },
+   {
+    "ja": [
+     {
+      "t": "ベル",
+      "f": [
+       [
+        "ベル",
+        ""
+       ]
+      ],
+      "g": "the bell"
+     },
+     "が",
+     {
+      "t": "鳴る",
+      "f": [
+       [
+        "鳴",
+        "な"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "ring"
+     },
+     {
+      "t": "や否や",
+      "f": [
+       [
+        "や",
+        ""
+       ],
+       [
+        "否",
+        "いな"
+       ],
+       [
+        "や",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "生徒",
+      "f": [
+       [
+        "生",
+        "せい"
+       ],
+       [
+        "徒",
+        "と"
+       ]
+      ],
+      "g": "the students"
+     },
+     "は",
+     {
+      "t": "教室",
+      "f": [
+       [
+        "教",
+        "きょう"
+       ],
+       [
+        "室",
+        "しつ"
+       ]
+      ],
+      "g": "the classroom"
+     },
+     "を",
+     {
+      "t": "飛び出した",
+      "f": [
+       [
+        "飛",
+        "と"
+       ],
+       [
+        "び",
+        ""
+       ],
+       [
+        "出",
+        "だ"
+       ],
+       [
+        "した",
+        ""
+       ]
+      ],
+      "g": "dashed out of"
+     },
+     "。"
+    ],
+    "en": "No sooner had the bell rung than the students dashed out of the classroom."
    }
   ],
   "register": "written",
-  "caution": "Like が早いか, the second clause states something that actually happened (past tense) — や否や can't take a volitional, request, or negative main clause."
+  "caution": "Like が早いか, the second clause states something that actually happened (past tense) — や否や can't take a volitional, request, or negative main clause.",
+  "peg": {
+   "ja": "合図が出るや否や、全隊が動いた。",
+   "romaji": "Aizu ga deru ya ina ya, zentai ga ugoita.",
+   "en": "No sooner was the signal given than the whole corps moved.",
+   "source": "進撃の巨人 — エルヴィン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-nari",
@@ -1323,10 +1836,109 @@
      "。"
     ],
     "en": "The child saw the souvenir and instantly let out a cheer."
+   },
+   {
+    "ja": [
+     {
+      "t": "上司",
+      "f": [
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "司",
+        "し"
+       ]
+      ],
+      "g": "my boss"
+     },
+     "は",
+     {
+      "t": "席",
+      "f": [
+       [
+        "席",
+        "せき"
+       ]
+      ],
+      "g": "his seat"
+     },
+     "に",
+     {
+      "t": "着く",
+      "f": [
+       [
+        "着",
+        "つ"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "take"
+     },
+     {
+      "t": "なり",
+      "f": [
+       [
+        "なり",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "電話",
+      "f": [
+       [
+        "電",
+        "でん"
+       ],
+       [
+        "話",
+        "わ"
+       ]
+      ],
+      "g": "phone calls"
+     },
+     "を",
+     {
+      "t": "かけ始めた",
+      "f": [
+       [
+        "かけ",
+        ""
+       ],
+       [
+        "始",
+        "はじ"
+       ],
+       [
+        "めた",
+        ""
+       ]
+      ],
+      "g": "began making"
+     },
+     "。"
+    ],
+    "en": "The moment my boss took his seat, he began making phone calls."
    }
   ],
   "register": "written",
-  "caution": "Unlike が早いか and や否や, なり requires the SAME subject for both actions and a past-tense main clause; using it with two different subjects is the classic error."
+  "caution": "Unlike が早いか and や否や, なり requires the SAME subject for both actions and a past-tense main clause; using it with two different subjects is the classic error.",
+  "peg": {
+   "ja": "彼は剣を取るなり、闇へと駆けた。",
+   "romaji": "Kare wa ken o toru nari, yami e to kaketa.",
+   "en": "He seized his sword and, the moment he did, dashed into the dark.",
+   "source": "鬼滅の刃 — 煉獄杏寿郎",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-katawara",
@@ -1536,10 +2148,99 @@
      "。"
     ],
     "en": "On top of her office job, she teaches pottery on weekends."
+   },
+   {
+    "ja": [
+     {
+      "t": "会社",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "a company"
+     },
+     "に",
+     {
+      "t": "勤める",
+      "f": [
+       [
+        "勤",
+        "つと"
+       ],
+       [
+        "める",
+        ""
+       ]
+      ],
+      "g": "work at"
+     },
+     {
+      "t": "かたわら",
+      "f": [
+       [
+        "かたわら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "日本語",
+      "f": [
+       [
+        "日",
+        "に"
+       ],
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "語",
+        "ご"
+       ]
+      ],
+      "g": "Japanese"
+     },
+     "を",
+     {
+      "t": "教えて",
+      "f": [
+       [
+        "教",
+        "おし"
+       ],
+       [
+        "えて",
+        ""
+       ]
+      ],
+      "g": "teach (te-form)"
+     },
+     "いる",
+     "。"
+    ],
+    "en": "Alongside working at a company, I teach Japanese."
    }
   ],
   "register": "formal/written",
-  "caution": "It's for a sustained long-term second pursuit alongside a main one — don't use かたわら for a one-off dual-purpose errand; that's がてら's job."
+  "caution": "It's for a sustained long-term second pursuit alongside a main one — don't use かたわら for a one-off dual-purpose errand; that's がてら's job.",
+  "peg": {
+   "ja": "戦いのかたわら、彼は仲間を守り続けた。",
+   "romaji": "Tatakai no katawara, kare wa nakama o mamoritsuzuketa.",
+   "en": "Alongside fighting, he kept protecting his comrades.",
+   "source": "鋼の錬金術師 — ロイ・マスタング",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-gatera",
@@ -1715,10 +2416,92 @@
      "。"
     ],
     "en": "While out shopping, I dropped off some paperwork at the ward office too."
+   },
+   {
+    "ja": [
+     {
+      "t": "散歩",
+      "f": [
+       [
+        "散",
+        "さん"
+       ],
+       [
+        "歩",
+        "ぽ"
+       ]
+      ],
+      "g": "a walk"
+     },
+     {
+      "t": "がてら",
+      "f": [
+       [
+        "がてら",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "近所",
+      "f": [
+       [
+        "近",
+        "きん"
+       ],
+       [
+        "所",
+        "じょ"
+       ]
+      ],
+      "g": "local"
+     },
+     "の",
+     {
+      "t": "銭湯",
+      "f": [
+       [
+        "銭",
+        "せん"
+       ],
+       [
+        "湯",
+        "とう"
+       ]
+      ],
+      "g": "bathhouse"
+     },
+     "に",
+     {
+      "t": "寄った",
+      "f": [
+       [
+        "寄",
+        "よ"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "dropped by"
+     },
+     "。"
+    ],
+    "en": "On a walk, I dropped by the local bathhouse while I was at it."
    }
   ],
   "register": "neutral",
-  "caution": "がてら is a single occasion combining two purposes on the same outing — don't stretch it to a long-running side occupation (use かたわら), and it attaches to motion-related nouns/stems."
+  "caution": "がてら is a single occasion combining two purposes on the same outing — don't stretch it to a long-running side occupation (use かたわら), and it attaches to motion-related nouns/stems.",
+  "peg": {
+   "ja": "散歩がてら、様子を見てきた。",
+   "romaji": "Sanpo gatera, yōsu o mite kita.",
+   "en": "On a walk, I checked things out while I was at it.",
+   "source": "銀魂 — 坂田銀時",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n1-ni-shiro-ni-seyo",
@@ -1903,10 +2686,104 @@
      "。"
     ],
     "en": "Whether full-time or part-time work, you pay taxes either way."
+   },
+   {
+    "ja": [
+     {
+      "t": "行く",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "go"
+     },
+     {
+      "t": "にしろ",
+      "f": [
+       [
+        "にしろ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "行かない",
+      "f": [
+       [
+        "行",
+        "い"
+       ],
+       [
+        "かない",
+        ""
+       ]
+      ],
+      "g": "not go"
+     },
+     {
+      "t": "にせよ",
+      "f": [
+       [
+        "にせよ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "早めに",
+      "f": [
+       [
+        "早",
+        "はや"
+       ],
+       [
+        "めに",
+        ""
+       ]
+      ],
+      "g": "early"
+     },
+     {
+      "t": "連絡",
+      "f": [
+       [
+        "連",
+        "れん"
+       ],
+       [
+        "絡",
+        "らく"
+       ]
+      ],
+      "g": "let me know"
+     },
+     "して",
+     "ほしい",
+     "。"
+    ],
+    "en": "Whether you go or not, please let me know early."
    }
   ],
   "register": "formal/written",
-  "caution": "The paired items should be genuine alternatives (often opposites); don't attach な before a noun — it's N + にしろ directly, e.g. 学生にしろ, not 学生なにしろ."
+  "caution": "The paired items should be genuine alternatives (often opposites); don't attach な before a noun — it's N + にしろ directly, e.g. 学生にしろ, not 学生なにしろ.",
+  "peg": {
+   "ja": "進むにしろ退くにせよ、覚悟を決めろ。",
+   "romaji": "Susumu ni shiro shirizoku ni seyo, kakugo o kimero.",
+   "en": "Whether you advance or retreat, steel yourself.",
+   "source": "進撃の巨人 — リヴァイ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-de-are",
@@ -2085,10 +2962,88 @@
      "。"
     ],
     "en": "Be it any foreigner, you must always carry your residence card."
+   },
+   {
+    "ja": [
+     "どんな",
+     {
+      "t": "仕事",
+      "f": [
+       [
+        "仕",
+        "し"
+       ],
+       [
+        "事",
+        "ごと"
+       ]
+      ],
+      "g": "job"
+     },
+     {
+      "t": "であれ",
+      "f": [
+       [
+        "であれ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "全力",
+      "f": [
+       [
+        "全",
+        "ぜん"
+       ],
+       [
+        "力",
+        "りょく"
+       ]
+      ],
+      "g": "one's all"
+     },
+     "で",
+     {
+      "t": "取り組む",
+      "f": [
+       [
+        "取",
+        "と"
+       ],
+       [
+        "り",
+        ""
+       ],
+       [
+        "組",
+        "く"
+       ],
+       [
+        "む",
+        ""
+       ]
+      ],
+      "g": "tackle"
+     },
+     "。"
+    ],
+    "en": "Be it any job, I give it my all."
    }
   ],
   "register": "formal/written",
-  "caution": "Attach であれ directly to a noun (誰であれ), not to a な-adjective's な form — and remember it needs a following clause that holds unconditionally, not a simple 'even if' aside."
+  "caution": "Attach であれ directly to a noun (誰であれ), not to a な-adjective's な form — and remember it needs a following clause that holds unconditionally, not a simple 'even if' aside.",
+  "peg": {
+   "ja": "何者であれ、我が前に立つ者は退ける。",
+   "romaji": "Nanimono de are, waga mae ni tatsu mono wa shirizokeru.",
+   "en": "Be it anyone, whoever stands before me I cast aside.",
+   "source": "コードギアス — ルルーシュ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-to-ii-to-ii",
@@ -2289,10 +3244,102 @@
      "。"
     ],
     "en": "What with the autumn leaves and with the air, Kyoto in fall is exceptional."
+   },
+   {
+    "ja": [
+     {
+      "t": "味",
+      "f": [
+       [
+        "味",
+        "あじ"
+       ]
+      ],
+      "g": "taste"
+     },
+     {
+      "t": "といい",
+      "f": [
+       [
+        "といい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "値段",
+      "f": [
+       [
+        "値",
+        "ね"
+       ],
+       [
+        "段",
+        "だん"
+       ]
+      ],
+      "g": "price"
+     },
+     {
+      "t": "といい",
+      "f": [
+       [
+        "といい",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "この",
+     {
+      "t": "定食",
+      "f": [
+       [
+        "定",
+        "てい"
+       ],
+       [
+        "食",
+        "しょく"
+       ]
+      ],
+      "g": "set meal"
+     },
+     "は",
+     {
+      "t": "文句",
+      "f": [
+       [
+        "文",
+        "もん"
+       ],
+       [
+        "句",
+        "く"
+       ]
+      ],
+      "g": "complaint"
+     },
+     "なし",
+     "だ",
+     "。"
+    ],
+    "en": "What with the taste and the price, this set meal is beyond complaint."
    }
   ],
   "register": "formal/written",
-  "caution": "Both slots take plain nouns (N といい N といい) and lead to an overall evaluation — don't use it for a neutral list; if you're not passing judgment, use も…も instead."
+  "caution": "Both slots take plain nouns (N といい N といい) and lead to an overall evaluation — don't use it for a neutral list; if you're not passing judgment, use も…も instead.",
+  "peg": {
+   "ja": "剣といい心といい、あの男は本物だ。",
+   "romaji": "Ken to ii kokoro to ii, ano otoko wa honmono da.",
+   "en": "What with his blade and his heart, that man is the real thing.",
+   "source": "鬼滅の刃 — 煉獄杏寿郎",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-to-iwazu",
@@ -2473,10 +3520,87 @@
      "。"
     ],
     "en": "Weekday or weekend, no exceptions — Shibuya is always packed."
+   },
+   {
+    "ja": [
+     {
+      "t": "壁",
+      "f": [
+       [
+        "壁",
+        "かべ"
+       ]
+      ],
+      "g": "walls"
+     },
+     {
+      "t": "といわず",
+      "f": [
+       [
+        "といわず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "床",
+      "f": [
+       [
+        "床",
+        "ゆか"
+       ]
+      ],
+      "g": "floor"
+     },
+     {
+      "t": "といわず",
+      "f": [
+       [
+        "といわず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "部屋中",
+      "f": [
+       [
+        "部",
+        "へ"
+       ],
+       [
+        "屋",
+        "や"
+       ],
+       [
+        "中",
+        "じゅう"
+       ]
+      ],
+      "g": "the whole room"
+     },
+     "ほこり",
+     "だらけ",
+     "だった",
+     "。"
+    ],
+    "en": "Walls, floor, no exception — the whole room was covered in dust."
    }
   ],
   "register": "written",
-  "caution": "The two nouns are just examples standing for the whole ('all over'), so don't read といわず as literal negation ('not saying') — and it takes nouns, not verbs."
+  "caution": "The two nouns are just examples standing for the whole ('all over'), so don't read といわず as literal negation ('not saying') — and it takes nouns, not verbs.",
+  "peg": {
+   "ja": "昼といわず夜といわず、奴は現れる。",
+   "romaji": "Hiru to iwazu yoru to iwazu, yatsu wa arawareru.",
+   "en": "Day or night, no exception — he appears.",
+   "source": "東京喰種 — 亜門鋼太朗",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wa-motoyori",
@@ -2644,10 +3768,82 @@
      "。"
     ],
     "en": "Tokyo goes without saying — I'd also like to tour the festivals out in the regions."
+   },
+   {
+    "ja": [
+     {
+      "t": "週末",
+      "f": [
+       [
+        "週",
+        "しゅう"
+       ],
+       [
+        "末",
+        "まつ"
+       ]
+      ],
+      "g": "weekends"
+     },
+     {
+      "t": "はもとより",
+      "f": [
+       [
+        "はもとより",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "平日",
+      "f": [
+       [
+        "平",
+        "へい"
+       ],
+       [
+        "日",
+        "じつ"
+       ]
+      ],
+      "g": "weekdays"
+     },
+     "も",
+     {
+      "t": "予約",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "reservations"
+     },
+     "で",
+     "いっぱい",
+     "だ",
+     "。"
+    ],
+    "en": "Weekends go without saying — weekdays too are fully booked."
    }
   ],
   "register": "formal/written",
-  "caution": "It only adds a further item ('not to mention'); don't use はもとより to mean 'from the start / originally' — that sense is the separate adverb もともと."
+  "caution": "It only adds a further item ('not to mention'); don't use はもとより to mean 'from the start / originally' — that sense is the separate adverb もともと.",
+  "peg": {
+   "ja": "剣術はもとより、兵法にも通じている。",
+   "romaji": "Kenjutsu wa motoyori, heihō ni mo tsūjite iru.",
+   "en": "Swordsmanship goes without saying — he's versed in strategy too.",
+   "source": "るろうに剣心 — 比古清十郎",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-naradewa",
@@ -2799,10 +3995,76 @@
      "。"
     ],
     "en": "The snowy scenery you can only get in winter Hokkaido is unforgettable."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "店",
+      "f": [
+       [
+        "店",
+        "みせ"
+       ]
+      ],
+      "g": "shop"
+     },
+     {
+      "t": "ならでは",
+      "f": [
+       [
+        "ならでは",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "の",
+     {
+      "t": "味",
+      "f": [
+       [
+        "味",
+        "あじ"
+       ]
+      ],
+      "g": "flavor"
+     },
+     "に",
+     "すっかり",
+     {
+      "t": "夢中",
+      "f": [
+       [
+        "夢",
+        "む"
+       ],
+       [
+        "中",
+        "ちゅう"
+       ]
+      ],
+      "g": "hooked"
+     },
+     "に",
+     "なった",
+     "。"
+    ],
+    "en": "I'm completely hooked on the flavor unique to this shop."
    }
   ],
   "register": "formal/written",
-  "caution": "When a noun follows, you must insert の — ならではの + noun (下町ならではの人情); dropping the の (下町ならでは人情) is the classic mistake, and it stays positive."
+  "caution": "When a noun follows, you must insert の — ならではの + noun (下町ならではの人情); dropping the の (下町ならでは人情) is the classic mistake, and it stays positive.",
+  "peg": {
+   "ja": "彼ならではの一撃だった。",
+   "romaji": "Kare naradewa no ichigeki datta.",
+   "en": "It was a strike only he could deliver.",
+   "source": "ハイキュー!! — 及川徹",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-yoso-ni",
@@ -2981,10 +4243,94 @@
      "。"
     ],
     "en": "Indifferent to my family's worry, I stayed abroad on my own."
+   },
+   {
+    "ja": [
+     {
+      "t": "渋滞",
+      "f": [
+       [
+        "渋",
+        "じゅう"
+       ],
+       [
+        "滞",
+        "たい"
+       ]
+      ],
+      "g": "the traffic jam"
+     },
+     {
+      "t": "をよそに",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "よそに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     "のんびり",
+     {
+      "t": "歩いて",
+      "f": [
+       [
+        "歩",
+        "ある"
+       ],
+       [
+        "いて",
+        ""
+       ]
+      ],
+      "g": "strolled (te-form)"
+     },
+     {
+      "t": "向かった",
+      "f": [
+       [
+        "向",
+        "む"
+       ],
+       [
+        "かった",
+        ""
+       ]
+      ],
+      "g": "headed there"
+     },
+     "。"
+    ],
+    "en": "Ignoring the traffic jam, he strolled there leisurely."
    }
   ],
   "register": "written",
-  "caution": "Unlike neutral にもかかわらず, をよそに carries a critical nuance of willfully disregarding someone's concern or a warning — don't use it for a neutral 'despite'."
+  "caution": "Unlike neutral にもかかわらず, をよそに carries a critical nuance of willfully disregarding someone's concern or a warning — don't use it for a neutral 'despite'.",
+  "peg": {
+   "ja": "周囲の制止をよそに、彼は前へ出た。",
+   "romaji": "Shūi no seishi o yoso ni, kare wa mae e deta.",
+   "en": "Ignoring everyone's restraint, he stepped forward.",
+   "source": "鬼滅の刃 — 竈門炭治郎",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-motte",
@@ -3155,6 +4501,70 @@
      "。"
     ],
     "en": "Identity is confirmed by means of an ID document."
+   },
+   {
+    "ja": [
+     {
+      "t": "本日",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "日",
+        "じつ"
+       ]
+      ],
+      "g": "today"
+     },
+     {
+      "t": "をもって",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "もって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "当店",
+      "f": [
+       [
+        "当",
+        "とう"
+       ],
+       [
+        "店",
+        "てん"
+       ]
+      ],
+      "g": "our store"
+     },
+     "は",
+     {
+      "t": "閉店",
+      "f": [
+       [
+        "閉",
+        "へい"
+       ],
+       [
+        "店",
+        "てん"
+       ]
+      ],
+      "g": "close"
+     },
+     "いたします",
+     "。"
+    ],
+    "en": "As of today, our store will close."
    }
   ],
   "level": "N1",
@@ -3163,7 +4573,17 @@
    "n2-ni-oite"
   ],
   "register": "formal/written",
-  "caution": "The 'as of (a date/time)' boundary sense and the 'by means of' instrument sense are different — for a concrete physical tool prefer で; をもって is for ceremonial dates or abstract means."
+  "caution": "The 'as of (a date/time)' boundary sense and the 'by means of' instrument sense are different — for a concrete physical tool prefer で; をもって is for ceremonial dates or abstract means.",
+  "peg": {
+   "ja": "我が全霊をもって、これを断つ。",
+   "romaji": "Waga zenrei o motte, kore o tatsu.",
+   "en": "With my whole soul, I sever this.",
+   "source": "ジョジョの奇妙な冒険 — DIO",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-itatte",
@@ -3389,6 +4809,117 @@
      "。"
     ],
     "en": "Only when my savings had run dry did I finally become conscious of frugality."
+   },
+   {
+    "ja": [
+     {
+      "t": "退去",
+      "f": [
+       [
+        "退",
+        "たい"
+       ],
+       [
+        "去",
+        "きょ"
+       ]
+      ],
+      "g": "move-out"
+     },
+     "の",
+     {
+      "t": "日",
+      "f": [
+       [
+        "日",
+        "ひ"
+       ]
+      ],
+      "g": "day"
+     },
+     {
+      "t": "に至って",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "至",
+        "いた"
+       ],
+       [
+        "って",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "初めて",
+      "f": [
+       [
+        "初",
+        "はじ"
+       ],
+       [
+        "めて",
+        ""
+       ]
+      ],
+      "g": "for the first time"
+     },
+     {
+      "t": "掃除",
+      "f": [
+       [
+        "掃",
+        "そう"
+       ],
+       [
+        "除",
+        "じ"
+       ]
+      ],
+      "g": "cleaning"
+     },
+     "の",
+     {
+      "t": "大変さ",
+      "f": [
+       [
+        "大",
+        "たい"
+       ],
+       [
+        "変",
+        "へん"
+       ],
+       [
+        "さ",
+        ""
+       ]
+      ],
+      "g": "how hard it is"
+     },
+     "に",
+     {
+      "t": "気づいた",
+      "f": [
+       [
+        "気",
+        "き"
+       ],
+       [
+        "づいた",
+        ""
+       ]
+      ],
+      "g": "realized"
+     },
+     "。"
+    ],
+    "en": "Only when moving-out day came did I realize how hard the cleaning would be."
    }
   ],
   "level": "N1",
@@ -3397,7 +4928,17 @@
    "n1-ni-itaru-made"
   ],
   "register": "written",
-  "caution": "Don't confuse に至って (finally reaching an extreme stage before acting) with に至るまで (spanning a range down to even the smallest item) — they are different patterns."
+  "caution": "Don't confuse に至って (finally reaching an extreme stage before acting) with に至るまで (spanning a range down to even the smallest item) — they are different patterns.",
+  "peg": {
+   "ja": "破滅に至って、彼はようやく悟った。",
+   "romaji": "Hametsu ni itatte, kare wa yōyaku satotta.",
+   "en": "Only when it came to ruin did he finally understand.",
+   "source": "コードギアス — ルルーシュ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-itaru-made",
@@ -3635,6 +5176,108 @@
      "。"
     ],
     "en": "In the share house, rules are set in detail for everything from shared facilities down to the seasonings."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "the interview"
+     },
+     "で",
+     "は",
+     {
+      "t": "服装",
+      "f": [
+       [
+        "服",
+        "ふく"
+       ],
+       [
+        "装",
+        "そう"
+       ]
+      ],
+      "g": "clothing"
+     },
+     "から",
+     {
+      "t": "言葉遣い",
+      "f": [
+       [
+        "言",
+        "こと"
+       ],
+       [
+        "葉",
+        "ば"
+       ],
+       [
+        "遣",
+        "づか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "word choice"
+     },
+     {
+      "t": "に至るまで",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "至",
+        "いた"
+       ],
+       [
+        "るまで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "気",
+      "f": [
+       [
+        "気",
+        "き"
+       ]
+      ],
+      "g": "attention"
+     },
+     "を",
+     {
+      "t": "配った",
+      "f": [
+       [
+        "配",
+        "くば"
+       ],
+       [
+        "った",
+        ""
+       ]
+      ],
+      "g": "paid"
+     },
+     "。"
+    ],
+    "en": "In the interview, I paid attention to everything from clothing down to word choice."
    }
   ],
   "level": "N1",
@@ -3643,7 +5286,17 @@
    "n1-ni-itatte"
   ],
   "register": "written",
-  "caution": "It marks the extreme endpoint of an exhaustive range ('down to even'), not a time deadline — for 'up until (a time)' use plain まで, not に至るまで."
+  "caution": "It marks the extreme endpoint of an exhaustive range ('down to even'), not a time deadline — for 'up until (a time)' use plain まで, not に至るまで.",
+  "peg": {
+   "ja": "髪の一本に至るまで、俺は見逃さない。",
+   "romaji": "Kami no ippon ni itaru made, ore wa minogasanai.",
+   "en": "Down to a single strand of hair, I miss nothing.",
+   "source": "デスノート — L",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-kawakiri-ni",
@@ -3861,6 +5514,110 @@
      "。"
     ],
     "en": "Starting with Sapporo's Snow Festival, winter events continue in various places."
+   },
+   {
+    "ja": [
+     {
+      "t": "面接",
+      "f": [
+       [
+        "面",
+        "めん"
+       ],
+       [
+        "接",
+        "せつ"
+       ]
+      ],
+      "g": "the interview"
+     },
+     {
+      "t": "を皮切りに",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "皮",
+        "かわ"
+       ],
+       [
+        "切",
+        "き"
+       ],
+       [
+        "りに",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "就職",
+      "f": [
+       [
+        "就",
+        "しゅう"
+       ],
+       [
+        "職",
+        "しょく"
+       ]
+      ],
+      "g": "job"
+     },
+     {
+      "t": "活動",
+      "f": [
+       [
+        "活",
+        "かつ"
+       ],
+       [
+        "動",
+        "どう"
+       ]
+      ],
+      "g": "hunt"
+     },
+     "が",
+     {
+      "t": "本格的",
+      "f": [
+       [
+        "本",
+        "ほん"
+       ],
+       [
+        "格",
+        "かく"
+       ],
+       [
+        "的",
+        "てき"
+       ]
+      ],
+      "g": "in earnest"
+     },
+     "に",
+     {
+      "t": "始まった",
+      "f": [
+       [
+        "始",
+        "はじ"
+       ],
+       [
+        "まった",
+        ""
+       ]
+      ],
+      "g": "began"
+     },
+     "。"
+    ],
+    "en": "Starting with the interview, my job hunt began in earnest."
    }
   ],
   "level": "N1",
@@ -3869,7 +5626,17 @@
    "n2-wo-hajime"
   ],
   "register": "formal/written",
-  "caution": "The starting event must launch an expanding, ongoing series (a tour, a chain of openings) — don't use を皮切りに for a one-off first step that leads nowhere further."
+  "caution": "The starting event must launch an expanding, ongoing series (a tour, a chain of openings) — don't use を皮切りに for a one-off first step that leads nowhere further.",
+  "peg": {
+   "ja": "その一撃を皮切りに、反撃が始まった。",
+   "romaji": "Sono ichigeki o kawakiri ni, hangeki ga hajimatta.",
+   "en": "Starting with that one blow, the counterattack began.",
+   "source": "進撃の巨人 — アルミン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-saishite",
@@ -4062,6 +5829,84 @@
      "。"
     ],
     "en": "On the occasion of renewing the contract, a handling fee is paid."
+   },
+   {
+    "ja": [
+     {
+      "t": "入国",
+      "f": [
+       [
+        "入",
+        "にゅう"
+       ],
+       [
+        "国",
+        "こく"
+       ]
+      ],
+      "g": "entry into the country"
+     },
+     {
+      "t": "に際して",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "際",
+        "さい"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "在留",
+      "f": [
+       [
+        "在",
+        "ざい"
+       ],
+       [
+        "留",
+        "りゅう"
+       ]
+      ],
+      "g": "residence"
+     },
+     {
+      "t": "カード",
+      "f": [
+       [
+        "カード",
+        ""
+       ]
+      ],
+      "g": "card"
+     },
+     "が",
+     {
+      "t": "交付",
+      "f": [
+       [
+        "交",
+        "こう"
+       ],
+       [
+        "付",
+        "ふ"
+       ]
+      ],
+      "g": "issue"
+     },
+     "された",
+     "。"
+    ],
+    "en": "On the occasion of entry, a residence card was issued."
    }
   ],
   "level": "N1",
@@ -4070,7 +5915,17 @@
    "n1-ni-atatte"
   ],
   "register": "formal/written",
-  "caution": "に際して is for a specific one-time occasion or event, not an ongoing condition — and it's more solemn than plain とき; don't use it for everyday situations."
+  "caution": "に際して is for a specific one-time occasion or event, not an ongoing condition — and it's more solemn than plain とき; don't use it for everyday situations.",
+  "peg": {
+   "ja": "出撃に際して、一つだけ言っておく。",
+   "romaji": "Shutsugeki ni saishite, hitotsu dake itte oku.",
+   "en": "On the occasion of this sortie, I'll say one thing.",
+   "source": "進撃の巨人 — エルヴィン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-atatte",
@@ -4258,6 +6113,94 @@
      "。"
     ],
     "en": "At the important time of starting a new life, I set my goals."
+   },
+   {
+    "ja": [
+     {
+      "t": "契約",
+      "f": [
+       [
+        "契",
+        "けい"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "contract"
+     },
+     {
+      "t": "更新",
+      "f": [
+       [
+        "更",
+        "こう"
+       ],
+       [
+        "新",
+        "しん"
+       ]
+      ],
+      "g": "renewal"
+     },
+     {
+      "t": "にあたって",
+      "f": [
+       [
+        "にあたって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "必要",
+      "f": [
+       [
+        "必",
+        "ひつ"
+       ],
+       [
+        "要",
+        "よう"
+       ]
+      ],
+      "g": "required"
+     },
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "documents"
+     },
+     "を",
+     {
+      "t": "確認",
+      "f": [
+       [
+        "確",
+        "かく"
+       ],
+       [
+        "認",
+        "にん"
+       ]
+      ],
+      "g": "checked"
+     },
+     "した",
+     "。"
+    ],
+    "en": "At the time of renewing the contract, I checked the required documents."
    }
   ],
   "level": "N1",
@@ -4267,7 +6210,17 @@
    "n1-ni-sakidatte"
   ],
   "register": "formal/written",
-  "caution": "Reserve にあたって for a positive, significant undertaking one is about to begin — using it for a trivial or negative event sounds off; and it points forward, not backward."
+  "caution": "Reserve にあたって for a positive, significant undertaking one is about to begin — using it for a trivial or negative event sounds off; and it points forward, not backward.",
+  "peg": {
+   "ja": "旅立ちにあたって、師は一言だけ残した。",
+   "romaji": "Tabidachi ni atatte, shi wa hitokoto dake nokoshita.",
+   "en": "At the moment of departure, the master left just one word.",
+   "source": "NARUTO -ナルト- — 自来也",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-sakidatte",
@@ -4435,6 +6388,97 @@
      "。"
     ],
     "en": "Prior to the interview, I submit my résumé in advance."
+   },
+   {
+    "ja": [
+     {
+      "t": "工事",
+      "f": [
+       [
+        "工",
+        "こう"
+       ],
+       [
+        "事",
+        "じ"
+       ]
+      ],
+      "g": "construction"
+     },
+     {
+      "t": "に先立って",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "先",
+        "さき"
+       ],
+       [
+        "立",
+        "だ"
+       ],
+       [
+        "って",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "住民",
+      "f": [
+       [
+        "住",
+        "じゅう"
+       ],
+       [
+        "民",
+        "みん"
+       ]
+      ],
+      "g": "residents"
+     },
+     "へ",
+     "の",
+     {
+      "t": "説明会",
+      "f": [
+       [
+        "説",
+        "せつ"
+       ],
+       [
+        "明",
+        "めい"
+       ],
+       [
+        "会",
+        "かい"
+       ]
+      ],
+      "g": "briefing"
+     },
+     "が",
+     {
+      "t": "開かれた",
+      "f": [
+       [
+        "開",
+        "ひら"
+       ],
+       [
+        "かれた",
+        ""
+       ]
+      ],
+      "g": "was held"
+     },
+     "。"
+    ],
+    "en": "Prior to construction, a briefing for residents was held."
    }
   ],
   "level": "N1",
@@ -4443,7 +6487,17 @@
    "n1-ni-atatte"
   ],
   "register": "formal/written",
-  "caution": "に先立って means preparation done in advance of a big event, so the two clauses share a topic — don't use it for two unrelated sequential actions where 前に would do."
+  "caution": "に先立って means preparation done in advance of a big event, so the two clauses share a topic — don't use it for two unrelated sequential actions where 前に would do.",
+  "peg": {
+   "ja": "決戦に先立って、彼らは誓いを立てた。",
+   "romaji": "Kessen ni sakidatte, karera wa chikai o tateta.",
+   "en": "Prior to the final battle, they swore an oath.",
+   "source": "鬼滅の刃 — 産屋敷耀哉",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-fumaete",
@@ -4621,6 +6675,99 @@
      "。"
     ],
     "en": "Taking the local cost of living into account, I revised my budget."
+   },
+   {
+    "ja": [
+     {
+      "t": "昨年",
+      "f": [
+       [
+        "昨",
+        "さく"
+       ],
+       [
+        "年",
+        "ねん"
+       ]
+      ],
+      "g": "last year"
+     },
+     "の",
+     {
+      "t": "反省",
+      "f": [
+       [
+        "反",
+        "はん"
+       ],
+       [
+        "省",
+        "せい"
+       ]
+      ],
+      "g": "reflection"
+     },
+     {
+      "t": "を踏まえて",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "踏",
+        "ふ"
+       ],
+       [
+        "まえて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "今年",
+      "f": [
+       [
+        "今年",
+        "ことし"
+       ]
+      ],
+      "g": "this year"
+     },
+     "の",
+     {
+      "t": "計画",
+      "f": [
+       [
+        "計",
+        "けい"
+       ],
+       [
+        "画",
+        "かく"
+       ]
+      ],
+      "g": "plan"
+     },
+     "を",
+     {
+      "t": "立てた",
+      "f": [
+       [
+        "立",
+        "た"
+       ],
+       [
+        "てた",
+        ""
+       ]
+      ],
+      "g": "made"
+     },
+     "。"
+    ],
+    "en": "Building on last year's reflection, I made this year's plan."
    }
   ],
   "level": "N1",
@@ -4629,7 +6776,17 @@
    "n2-ni-motozuite"
   ],
   "register": "formal/written",
-  "caution": "を踏まえて takes established facts/results as a basis for what follows — don't confuse it with を込めて ('putting feeling into'); the noun before it must be information, not emotion."
+  "caution": "を踏まえて takes established facts/results as a basis for what follows — don't confuse it with を込めて ('putting feeling into'); the noun before it must be information, not emotion.",
+  "peg": {
+   "ja": "これまでの情報を踏まえて、次の一手を打つ。",
+   "romaji": "Kore made no jōhō o fumaete, tsugi no itte o utsu.",
+   "en": "Building on the intel so far, I make the next move.",
+   "source": "デスノート — 夜神月",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-sokushite",
@@ -4814,6 +6971,89 @@
      "。"
     ],
     "en": "You should draw up the plan in accordance with your actual income."
+   },
+   {
+    "ja": [
+     {
+      "t": "会社",
+      "f": [
+       [
+        "会",
+        "かい"
+       ],
+       [
+        "社",
+        "しゃ"
+       ]
+      ],
+      "g": "the company"
+     },
+     "の",
+     {
+      "t": "規定",
+      "f": [
+       [
+        "規",
+        "き"
+       ],
+       [
+        "定",
+        "てい"
+       ]
+      ],
+      "g": "regulations"
+     },
+     {
+      "t": "に即して",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "即",
+        "そく"
+       ],
+       [
+        "して",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "経費",
+      "f": [
+       [
+        "経",
+        "けい"
+       ],
+       [
+        "費",
+        "ひ"
+       ]
+      ],
+      "g": "expenses"
+     },
+     "を",
+     {
+      "t": "申請",
+      "f": [
+       [
+        "申",
+        "しん"
+       ],
+       [
+        "請",
+        "せい"
+       ]
+      ],
+      "g": "file"
+     },
+     "する",
+     "。"
+    ],
+    "en": "In accordance with company regulations, I file the expenses."
    }
   ],
   "level": "N1",
@@ -4822,7 +7062,17 @@
    "n2-ni-sotte"
   ],
   "register": "formal/written",
-  "caution": "に即して conforms to concrete facts, rules, or reality — don't swap it for に沿って, which follows an abstract line/policy/wish; 即して needs a factual, rule-like standard."
+  "caution": "に即して conforms to concrete facts, rules, or reality — don't swap it for に沿って, which follows an abstract line/policy/wish; 即して needs a factual, rule-like standard.",
+  "peg": {
+   "ja": "掟に即して、裁きを下す。",
+   "romaji": "Okite ni sokushite, sabaki o kudasu.",
+   "en": "In accordance with the code, I pass judgment.",
+   "source": "PSYCHO-PASS — 狡噛慎也",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-no-moto-de",
@@ -4996,13 +7246,98 @@
      "。"
     ],
     "en": "Under the conditions of a limited budget, I plan the trip."
+   },
+   {
+    "ja": [
+     {
+      "t": "厳しい",
+      "f": [
+       [
+        "厳",
+        "きび"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "strict"
+     },
+     {
+      "t": "上司",
+      "f": [
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "司",
+        "し"
+       ]
+      ],
+      "g": "boss"
+     },
+     {
+      "t": "のもとで",
+      "f": [
+       [
+        "のもとで",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "多く",
+      "f": [
+       [
+        "多",
+        "おお"
+       ],
+       [
+        "く",
+        ""
+       ]
+      ],
+      "g": "a great deal"
+     },
+     "の",
+     "こと",
+     "を",
+     {
+      "t": "学んだ",
+      "f": [
+       [
+        "学",
+        "まな"
+       ],
+       [
+        "んだ",
+        ""
+       ]
+      ],
+      "g": "learned"
+     },
+     "。"
+    ],
+    "en": "Under a strict boss, I learned a great deal."
    }
   ],
   "level": "N1",
   "confidence": "high",
   "related": [],
   "register": "formal/written",
-  "caution": "のもとで marks the conditions/supervision under which something happens; don't confuse it with のもとに, which more often frames a premise or principle ('on the basis of')."
+  "caution": "のもとで marks the conditions/supervision under which something happens; don't confuse it with のもとに, which more often frames a premise or principle ('on the basis of').",
+  "peg": {
+   "ja": "あの人のもとで、俺は強くなった。",
+   "romaji": "Ano hito no moto de, ore wa tsuyoku natta.",
+   "en": "Under that person, I grew strong.",
+   "source": "鋼の錬金術師 — エドワード",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-towazu",
@@ -5176,6 +7511,98 @@
      "。"
     ],
     "en": "Regardless of nationality or age, anyone can take part."
+   },
+   {
+    "ja": [
+     {
+      "t": "経験",
+      "f": [
+       [
+        "経",
+        "けい"
+       ],
+       [
+        "験",
+        "けん"
+       ]
+      ],
+      "g": "experience"
+     },
+     "の",
+     {
+      "t": "有無",
+      "f": [
+       [
+        "有",
+        "う"
+       ],
+       [
+        "無",
+        "む"
+       ]
+      ],
+      "g": "whether or not you have"
+     },
+     {
+      "t": "を問わず",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "問",
+        "と"
+       ],
+       [
+        "わず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "やる",
+     {
+      "t": "気",
+      "f": [
+       [
+        "気",
+        "き"
+       ]
+      ],
+      "g": "motivation"
+     },
+     "の",
+     "ある",
+     {
+      "t": "方",
+      "f": [
+       [
+        "方",
+        "かた"
+       ]
+      ],
+      "g": "person"
+     },
+     "を",
+     {
+      "t": "歓迎",
+      "f": [
+       [
+        "歓",
+        "かん"
+       ],
+       [
+        "迎",
+        "げい"
+       ]
+      ],
+      "g": "welcome"
+     },
+     "します",
+     "。"
+    ],
+    "en": "Regardless of experience, we welcome motivated applicants."
    }
   ],
   "level": "N1",
@@ -5184,7 +7611,17 @@
    "n1-ni-kakawarazu"
   ],
   "register": "formal/written",
-  "caution": "It pairs with a noun naming a category of variation (年齢を問わず, 経験を問わず) — don't attach を問わず to a full yes/no clause; for that use かどうかにかかわらず."
+  "caution": "It pairs with a noun naming a category of variation (年齢を問わず, 経験を問わず) — don't attach を問わず to a full yes/no clause; for that use かどうかにかかわらず.",
+  "peg": {
+   "ja": "才能の有無を問わず、道は開ける。",
+   "romaji": "Sainō no umu o towazu, michi wa hirakeru.",
+   "en": "Regardless of talent, the path can open.",
+   "source": "ブラッククローバー — アスタ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-kakawarazu",
@@ -5362,6 +7799,85 @@
      "。"
     ],
     "en": "Whether or not you attend, please send a reply."
+   },
+   {
+    "ja": [
+     {
+      "t": "金額",
+      "f": [
+       [
+        "金",
+        "きん"
+       ],
+       [
+        "額",
+        "がく"
+       ]
+      ],
+      "g": "amount"
+     },
+     "の",
+     {
+      "t": "大小",
+      "f": [
+       [
+        "大",
+        "だい"
+       ],
+       [
+        "小",
+        "しょう"
+       ]
+      ],
+      "g": "size"
+     },
+     {
+      "t": "にかかわらず",
+      "f": [
+       [
+        "にかかわらず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "領収書",
+      "f": [
+       [
+        "領",
+        "りょう"
+       ],
+       [
+        "収",
+        "しゅう"
+       ],
+       [
+        "書",
+        "しょ"
+       ]
+      ],
+      "g": "receipts"
+     },
+     "は",
+     {
+      "t": "保管",
+      "f": [
+       [
+        "保",
+        "ほ"
+       ],
+       [
+        "管",
+        "かん"
+       ]
+      ],
+      "g": "keep"
+     },
+     "する",
+     "。"
+    ],
+    "en": "Regardless of the amount, I keep every receipt."
    }
   ],
   "level": "N1",
@@ -5372,7 +7888,17 @@
    "n2-nimo-kakawarazu"
   ],
   "register": "formal/written",
-  "caution": "Don't confuse にかかわらず ('regardless of') with にもかかわらず ('despite the fact that') — the も version concedes a surprising contrast, the plain version dismisses a variable."
+  "caution": "Don't confuse にかかわらず ('regardless of') with にもかかわらず ('despite the fact that') — the も version concedes a surprising contrast, the plain version dismisses a variable.",
+  "peg": {
+   "ja": "勝敗にかかわらず、全力を尽くせ。",
+   "romaji": "Shōhai ni kakawarazu, zenryoku o tsukuse.",
+   "en": "Regardless of victory or defeat, give it your all.",
+   "source": "ハイキュー!! — 烏養繋心",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ikan",
@@ -5508,6 +8034,67 @@
      "。"
     ],
     "en": "Whether the visa can be extended depends on the person's own effort."
+   },
+   {
+    "ja": [
+     {
+      "t": "契約",
+      "f": [
+       [
+        "契",
+        "けい"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "contract"
+     },
+     {
+      "t": "更新",
+      "f": [
+       [
+        "更",
+        "こう"
+       ],
+       [
+        "新",
+        "しん"
+       ]
+      ],
+      "g": "renewal"
+     },
+     "は",
+     "あなた",
+     "の",
+     {
+      "t": "働きぶり",
+      "f": [
+       [
+        "働",
+        "はたら"
+       ],
+       [
+        "きぶり",
+        ""
+       ]
+      ],
+      "g": "performance"
+     },
+     {
+      "t": "いかんだ",
+      "f": [
+       [
+        "いかんだ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Whether the contract is renewed depends on your performance."
    }
   ],
   "level": "N1",
@@ -5516,7 +8103,17 @@
    "n2-shidai-de"
   ],
   "register": "formal/written",
-  "caution": "いかんによっては/いかんで means 'depending on X', but いかんによらず/いかんにかかわらず flips to 'regardless of X' — mixing the two up reverses the meaning entirely."
+  "caution": "いかんによっては/いかんで means 'depending on X', but いかんによらず/いかんにかかわらず flips to 'regardless of X' — mixing the two up reverses the meaning entirely.",
+  "peg": {
+   "ja": "作戦の成否は、お前の判断いかんだ。",
+   "romaji": "Sakusen no seihi wa, omae no handan ikan da.",
+   "en": "The operation's success hinges on your judgment.",
+   "source": "進撃の巨人 — エルヴィン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-mamire",
@@ -5661,6 +8258,78 @@
      "。"
     ],
     "en": "Don't end up buried in debt from reckless spending."
+   },
+   {
+    "ja": [
+     {
+      "t": "自転車",
+      "f": [
+       [
+        "自",
+        "じ"
+       ],
+       [
+        "転",
+        "てん"
+       ],
+       [
+        "車",
+        "しゃ"
+       ]
+      ],
+      "g": "my bike"
+     },
+     "で",
+     {
+      "t": "転んで",
+      "f": [
+       [
+        "転",
+        "ころ"
+       ],
+       [
+        "んで",
+        ""
+       ]
+      ],
+      "g": "fell off"
+     },
+     {
+      "t": "手",
+      "f": [
+       [
+        "手",
+        "て"
+       ]
+      ],
+      "g": "hands"
+     },
+     "が",
+     {
+      "t": "泥",
+      "f": [
+       [
+        "泥",
+        "どろ"
+       ]
+      ],
+      "g": "mud"
+     },
+     {
+      "t": "まみれ",
+      "f": [
+       [
+        "まみれ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "に",
+     "なった",
+     "。"
+    ],
+    "en": "I fell off my bike and my hands got covered in mud."
    }
   ],
   "level": "N1",
@@ -5670,7 +8339,15 @@
    "n1-zukume"
   ],
   "register": "neutral",
-  "caution": "まみれ only attaches to a clinging physical substance (泥, 汗, 血, 借金) — don't use it for abstract states or a mere abundance of good things; that's ずくめ or だらけ territory."
+  "caution": "まみれ only attaches to a clinging physical substance (泥, 汗, 血, 借金) — don't use it for abstract states or a mere abundance of good things; that's ずくめ or だらけ territory.",
+  "peg": {
+   "ja": "血まみれになっても、彼は刃を離さなかった。",
+   "romaji": "Chi mamire ni natte mo, kare wa yaiba o hanasanakatta.",
+   "en": "Even covered in blood, he never let go of his blade.",
+   "source": "鬼滅の刃 — 竈門炭治郎",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n1-zukume",
@@ -5818,6 +8495,54 @@
      "。"
     ],
     "en": "The ceremony's attendees were dressed in nothing but black."
+   },
+   {
+    "ja": [
+     {
+      "t": "今週",
+      "f": [
+       [
+        "今",
+        "こん"
+       ],
+       [
+        "週",
+        "しゅう"
+       ]
+      ],
+      "g": "this week"
+     },
+     "は",
+     {
+      "t": "残業",
+      "f": [
+       [
+        "残",
+        "ざん"
+       ],
+       [
+        "業",
+        "ぎょう"
+       ]
+      ],
+      "g": "overtime"
+     },
+     {
+      "t": "ずくめ",
+      "f": [
+       [
+        "ずくめ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "で",
+     "へとへと",
+     "だ",
+     "。"
+    ],
+    "en": "This week was nothing but overtime, and I'm exhausted."
    }
   ],
   "level": "N1",
@@ -5826,7 +8551,15 @@
    "n1-mamire"
   ],
   "register": "neutral",
-  "caution": "ずくめ is 'entirely composed of' one thing (often positive: いいことずくめ), while だらけ is 'full of' scattered unwanted things (間違いだらけ) — don't treat them as synonyms."
+  "caution": "ずくめ is 'entirely composed of' one thing (often positive: いいことずくめ), while だらけ is 'full of' scattered unwanted things (間違いだらけ) — don't treat them as synonyms.",
+  "peg": {
+   "ja": "今日は悪いことずくめだ。",
+   "romaji": "Kyō wa warui koto zukume da.",
+   "en": "Today has been nothing but bad news.",
+   "source": "名探偵コナン — 江戸川コナン",
+   "kind": "styled"
+  },
+  "flags": []
  },
  {
   "id": "n1-meku",
@@ -5969,6 +8702,74 @@
      "。"
     ],
     "en": "I got irritated at his sarcasm-tinged way of speaking."
+   },
+   {
+    "ja": [
+     {
+      "t": "十月",
+      "f": [
+       [
+        "十",
+        "じゅう"
+       ],
+       [
+        "月",
+        "がつ"
+       ]
+      ],
+      "g": "October"
+     },
+     "に",
+     {
+      "t": "入り",
+      "f": [
+       [
+        "入",
+        "はい"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "entering (masu-stem)"
+     },
+     {
+      "t": "街",
+      "f": [
+       [
+        "街",
+        "まち"
+       ]
+      ],
+      "g": "the town"
+     },
+     "も",
+     "すっかり",
+     {
+      "t": "秋",
+      "f": [
+       [
+        "秋",
+        "あき"
+       ]
+      ],
+      "g": "autumn"
+     },
+     {
+      "t": "めいて",
+      "f": [
+       [
+        "めいて",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "きた",
+     "。"
+    ],
+    "en": "October came, and the town has taken on an autumn air."
    }
   ],
   "level": "N1",
@@ -5977,7 +8778,17 @@
    "n3-ppoi"
   ],
   "register": "written",
-  "caution": "めく is a verb suffix, so conjugate it (春めく→春めいた, 謎めいている) — treating it as a noun or na-adjective is wrong; and it means 'take on the air of', not literal becoming."
+  "caution": "めく is a verb suffix, so conjugate it (春めく→春めいた, 謎めいている) — treating it as a noun or na-adjective is wrong; and it means 'take on the air of', not literal becoming.",
+  "peg": {
+   "ja": "春めく風の中で、彼女は静かに笑った。",
+   "romaji": "Harumeku kaze no naka de, kanojo wa shizuka ni waratta.",
+   "en": "In the spring-like breeze, she smiled quietly.",
+   "source": "葬送のフリーレン — フリーレン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-te-yamanai",
@@ -6130,10 +8941,91 @@
      "。"
     ],
     "en": "I pray with all my heart for the success of my new life here."
+   },
+   {
+    "ja": [
+     {
+      "t": "故郷",
+      "f": [
+       [
+        "故",
+        "こ"
+       ],
+       [
+        "郷",
+        "きょう"
+       ]
+      ],
+      "g": "hometown"
+     },
+     "の",
+     {
+      "t": "友",
+      "f": [
+       [
+        "友",
+        "とも"
+       ]
+      ],
+      "g": "friends"
+     },
+     "の",
+     {
+      "t": "幸せ",
+      "f": [
+       [
+        "幸",
+        "しあわ"
+       ],
+       [
+        "せ",
+        ""
+       ]
+      ],
+      "g": "happiness"
+     },
+     "を",
+     {
+      "t": "願って",
+      "f": [
+       [
+        "願",
+        "ねが"
+       ],
+       [
+        "って",
+        ""
+       ]
+      ],
+      "g": "wish (te-form)"
+     },
+     {
+      "t": "やまない",
+      "f": [
+       [
+        "やまない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I wish for my hometown friends' happiness with all my heart."
    }
   ],
   "register": "written",
-  "caution": "It only attaches to a small set of emotion verbs of hope/love/respect (願う, 愛する, 尊敬する) — don't use てやまない with ordinary action verbs."
+  "caution": "It only attaches to a small set of emotion verbs of hope/love/respect (願う, 愛する, 尊敬する) — don't use てやまない with ordinary action verbs.",
+  "peg": {
+   "ja": "君の無事を、願ってやまない。",
+   "romaji": "Kimi no buji o, negatte yamanai.",
+   "en": "I wish for your safety from the bottom of my heart.",
+   "source": "鋼の錬金術師 — ロイ・マスタング",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-taenai",
@@ -6281,10 +9173,93 @@
      "。"
     ],
     "en": "I am overwhelmed with gratitude for everyone's support."
+   },
+   {
+    "ja": [
+     {
+      "t": "皆様",
+      "f": [
+       [
+        "皆",
+        "みな"
+       ],
+       [
+        "様",
+        "さま"
+       ]
+      ],
+      "g": "everyone"
+     },
+     "の",
+     {
+      "t": "ご厚意",
+      "f": [
+       [
+        "ご",
+        ""
+       ],
+       [
+        "厚",
+        "こう"
+       ],
+       [
+        "意",
+        "い"
+       ]
+      ],
+      "g": "kindness"
+     },
+     "に",
+     "は",
+     {
+      "t": "感謝",
+      "f": [
+       [
+        "感",
+        "かん"
+       ],
+       [
+        "謝",
+        "しゃ"
+       ]
+      ],
+      "g": "gratitude"
+     },
+     {
+      "t": "に堪えません",
+      "f": [
+       [
+        "に",
+        ""
+       ],
+       [
+        "堪",
+        "た"
+       ],
+       [
+        "えません",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I cannot express enough gratitude for everyone's kindness."
    }
   ],
   "register": "formal/written",
-  "caution": "Keep the two senses apart: with a perception verb it's 'cannot bear to' (見るに堪えない), but with an emotion noun it's 'overflowing with' (感謝に堪えない) — the noun/verb choice flips the meaning."
+  "caution": "Keep the two senses apart: with a perception verb it's 'cannot bear to' (見るに堪えない), but with an emotion noun it's 'overflowing with' (感謝に堪えない) — the noun/verb choice flips the meaning.",
+  "peg": {
+   "ja": "その光景は、見るに堪えなかった。",
+   "romaji": "Sono kōkei wa, miru ni taenakatta.",
+   "en": "That sight was too painful to look at.",
+   "source": "進撃の巨人 — アルミン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-kagiri-da",
@@ -6441,10 +9416,85 @@
      "。"
     ],
     "en": "My visa came through without a hitch — I couldn't be happier."
+   },
+   {
+    "ja": [
+     {
+      "t": "念願",
+      "f": [
+       [
+        "念",
+        "ねん"
+       ],
+       [
+        "願",
+        "がん"
+       ]
+      ],
+      "g": "long-wished-for"
+     },
+     "の",
+     {
+      "t": "内定",
+      "f": [
+       [
+        "内",
+        "ない"
+       ],
+       [
+        "定",
+        "てい"
+       ]
+      ],
+      "g": "job offer"
+     },
+     "が",
+     {
+      "t": "出て",
+      "f": [
+       [
+        "出",
+        "で"
+       ],
+       [
+        "て",
+        ""
+       ]
+      ],
+      "g": "came (te-form)"
+     },
+     "うれしい",
+     {
+      "t": "限りだ",
+      "f": [
+       [
+        "限",
+        "かぎ"
+       ],
+       [
+        "りだ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I got the job offer I'd longed for — I couldn't be happier."
    }
   ],
   "register": "written",
-  "caution": "限りだ only follows an emotion adjective describing the speaker's own feeling (嬉しい限りだ, 心細い限りだ) — don't use it with a plain noun or for a third party's emotion."
+  "caution": "限りだ only follows an emotion adjective describing the speaker's own feeling (嬉しい限りだ, 心細い限りだ) — don't use it with a plain noun or for a third party's emotion.",
+  "peg": {
+   "ja": "一人残されて、心細い限りだ。",
+   "romaji": "Hitori nokosarete, kokorobosoi kagiri da.",
+   "en": "Left all alone, I'm lonely beyond words.",
+   "source": "鋼の錬金術師 — アルフォンス",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-shimatsu-da",
@@ -6646,10 +9696,116 @@
      "。"
     ],
     "en": "I got lost, and in the end I had no choice but to cancel the reservation."
+   },
+   {
+    "ja": [
+     {
+      "t": "何度も",
+      "f": [
+       [
+        "何",
+        "なん"
+       ],
+       [
+        "度",
+        "ど"
+       ],
+       [
+        "も",
+        ""
+       ]
+      ],
+      "g": "repeatedly"
+     },
+     {
+      "t": "道",
+      "f": [
+       [
+        "道",
+        "みち"
+       ]
+      ],
+      "g": "the way"
+     },
+     "に",
+     {
+      "t": "迷い",
+      "f": [
+       [
+        "迷",
+        "まよ"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "got lost (masu-stem)"
+     },
+     {
+      "t": "結局",
+      "f": [
+       [
+        "結",
+        "けっ"
+       ],
+       [
+        "局",
+        "きょく"
+       ]
+      ],
+      "g": "in the end"
+     },
+     {
+      "t": "遅刻",
+      "f": [
+       [
+        "遅",
+        "ち"
+       ],
+       [
+        "刻",
+        "こく"
+       ]
+      ],
+      "g": "be late"
+     },
+     "する",
+     {
+      "t": "始末だ",
+      "f": [
+       [
+        "始",
+        "し"
+       ],
+       [
+        "末",
+        "まつ"
+       ],
+       [
+        "だ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "I got lost repeatedly and ended up being late after all."
    }
   ],
   "register": "written",
-  "caution": "始末だ always caps a deteriorating process with a deplorable outcome — don't use it for a neutral or good result; the whole build-up must be negative."
+  "caution": "始末だ always caps a deteriorating process with a deplorable outcome — don't use it for a neutral or good result; the whole build-up must be negative.",
+  "peg": {
+   "ja": "慢心した挙げ句、敗れる始末だ。",
+   "romaji": "Manshin shita ageku, yabureru shimatsu da.",
+   "en": "Grown overconfident, he ended up defeated.",
+   "source": "ハンター×ハンター — ネテロ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-made-da",
@@ -6808,10 +9964,70 @@
      "。"
     ],
     "en": "I merely told you how I honestly feel — nothing more."
+   },
+   {
+    "ja": [
+     {
+      "t": "失敗",
+      "f": [
+       [
+        "失",
+        "しっ"
+       ],
+       [
+        "敗",
+        "ぱい"
+       ]
+      ],
+      "g": "fail"
+     },
+     "しても",
+     {
+      "t": "やり直す",
+      "f": [
+       [
+        "やり",
+        ""
+       ],
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "す",
+        ""
+       ]
+      ],
+      "g": "do it over"
+     },
+     {
+      "t": "までだ",
+      "f": [
+       [
+        "までだ",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Even if I fail, I'll just do it over, that's all."
    }
   ],
   "register": "written",
-  "caution": "Watch the tense: V-dict + までだ is resolve ('I'll just do X if it comes to it'), but V-た + までだ is 'I merely did X (no more was meant)' — the plain/past form changes the meaning."
+  "caution": "Watch the tense: V-dict + までだ is resolve ('I'll just do X if it comes to it'), but V-た + までだ is 'I merely did X (no more was meant)' — the plain/past form changes the meaning.",
+  "peg": {
+   "ja": "やられたら、やり返すまでだ。",
+   "romaji": "Yararetara, yarikaesu made da.",
+   "en": "If I'm struck, I simply strike back, that's all.",
+   "source": "コードギアス — ルルーシュ",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal",
+   "anime-common"
+  ]
  },
  {
   "id": "n1-made-mo-nai",
@@ -6974,10 +10190,76 @@
      "。"
     ],
     "en": "It goes without saying, but always carry your residence card on you."
+   },
+   {
+    "ja": [
+     {
+      "t": "近い",
+      "f": [
+       [
+        "近",
+        "ちか"
+       ],
+       [
+        "い",
+        ""
+       ]
+      ],
+      "g": "close"
+     },
+     "から",
+     {
+      "t": "タクシー",
+      "f": [
+       [
+        "タクシー",
+        ""
+       ]
+      ],
+      "g": "a taxi"
+     },
+     "を",
+     {
+      "t": "呼ぶ",
+      "f": [
+       [
+        "呼",
+        "よ"
+       ],
+       [
+        "ぶ",
+        ""
+       ]
+      ],
+      "g": "call"
+     },
+     {
+      "t": "までもない",
+      "f": [
+       [
+        "までもない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "It's close, so there's no need to go so far as to call a taxi."
    }
   ],
   "register": "formal/written",
-  "caution": "It attaches to the dictionary form of a verb (言うまでもない), not the ます-stem or a noun — and it means 'no need to bother', not 'not allowed to'."
+  "caution": "It attaches to the dictionary form of a verb (言うまでもない), not the ます-stem or a noun — and it means 'no need to bother', not 'not allowed to'.",
+  "peg": {
+   "ja": "言うまでもない。俺が勝つ。",
+   "romaji": "Iu made mo nai. Ore ga katsu.",
+   "en": "It goes without saying — I win.",
+   "source": "ジョジョの奇妙な冒険 — 空条承太郎",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-bekarazu",
@@ -7100,10 +10382,65 @@
      "。"
     ],
     "en": "No entry without permission. (sign)"
+   },
+   {
+    "ja": [
+     {
+      "t": "芝生",
+      "f": [
+       [
+        "芝",
+        "しば"
+       ],
+       [
+        "生",
+        "ふ"
+       ]
+      ],
+      "g": "the grass"
+     },
+     "に",
+     {
+      "t": "入る",
+      "f": [
+       [
+        "入",
+        "はい"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "enter"
+     },
+     {
+      "t": "べからず",
+      "f": [
+       [
+        "べからず",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Keep off the grass. (sign)"
    }
   ],
   "register": "written",
-  "caution": "べからず is signs-and-notices only (立入るべからず) and blunt/impersonal — never use it as a spoken prohibition to a person; and する becomes すべからず (or classical せ), not するべからず in set phrases."
+  "caution": "べからず is signs-and-notices only (立入るべからず) and blunt/impersonal — never use it as a spoken prohibition to a person; and する becomes すべからず (or classical せ), not するべからず in set phrases.",
+  "peg": {
+   "ja": "この地に、何人も立ち入るべからず。",
+   "romaji": "Kono chi ni, nanpito mo tachiiru bekarazu.",
+   "en": "Into this land, no one shall set foot.",
+   "source": "犬夜叉 — 奈落",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-beku",
@@ -7280,10 +10617,87 @@
      "。"
     ],
     "en": "In order to prepare for the typhoon, I stocked up on food supplies."
+   },
+   {
+    "ja": [
+     {
+      "t": "夢",
+      "f": [
+       [
+        "夢",
+        "ゆめ"
+       ]
+      ],
+      "g": "his dream"
+     },
+     "を",
+     {
+      "t": "叶える",
+      "f": [
+       [
+        "叶",
+        "かな"
+       ],
+       [
+        "える",
+        ""
+       ]
+      ],
+      "g": "fulfill"
+     },
+     {
+      "t": "べく",
+      "f": [
+       [
+        "べく",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "彼",
+      "f": [
+       [
+        "彼",
+        "かれ"
+       ]
+      ],
+      "g": "he"
+     },
+     "は",
+     {
+      "t": "上京",
+      "f": [
+       [
+        "上",
+        "じょう"
+       ],
+       [
+        "京",
+        "きょう"
+       ]
+      ],
+      "g": "moved to Tokyo"
+     },
+     "した",
+     "。"
+    ],
+    "en": "In order to fulfill his dream, he moved to Tokyo."
    }
   ],
   "register": "written",
-  "caution": "べく cannot be followed by ください or any request/command — it's a literary 'in order to' that leads into a statement; and する contracts to すべく."
+  "caution": "べく cannot be followed by ください or any request/command — it's a literary 'in order to' that leads into a statement; and する contracts to すべく.",
+  "peg": {
+   "ja": "真実を暴くべく、俺はここに来た。",
+   "romaji": "Shinjitsu o abaku beku, ore wa koko ni kita.",
+   "en": "In order to uncover the truth, I came here.",
+   "source": "PSYCHO-PASS — 狡噛慎也",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-kkonai",
@@ -7451,10 +10865,80 @@
      "。"
     ],
     "en": "Even if we leave now, there's no way we'll make the last train."
+   },
+   {
+    "ja": [
+     {
+      "t": "一晩",
+      "f": [
+       [
+        "一",
+        "ひと"
+       ],
+       [
+        "晩",
+        "ばん"
+       ]
+      ],
+      "g": "one night"
+     },
+     "で",
+     {
+      "t": "漢字",
+      "f": [
+       [
+        "漢",
+        "かん"
+       ],
+       [
+        "字",
+        "じ"
+       ]
+      ],
+      "g": "kanji"
+     },
+     "が",
+     {
+      "t": "覚えられ",
+      "f": [
+       [
+        "覚",
+        "おぼ"
+       ],
+       [
+        "えられ",
+        ""
+       ]
+      ],
+      "g": "memorize (potential-stem)"
+     },
+     {
+      "t": "っこない",
+      "f": [
+       [
+        "っこない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "There's no way I can memorize kanji in one night."
    }
   ],
   "register": "casual/spoken",
-  "caution": "っこない attaches to the ます-stem (できっこない, 分かりっこない), never the dictionary form — and it's strictly casual, so avoid it in formal or written contexts."
+  "caution": "っこない attaches to the ます-stem (できっこない, 分かりっこない), never the dictionary form — and it's strictly casual, so avoid it in formal or written contexts.",
+  "peg": {
+   "ja": "諦めるなんて、できっこない。",
+   "romaji": "Akirameru nante, dekikko nai.",
+   "en": "Giving up? No way I could.",
+   "source": "僕のヒーローアカデミア — 緑谷出久",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  },
  {
   "id": "n1-naide-wa-sumanai",
@@ -7634,10 +11118,107 @@
      "。"
     ],
     "en": "On the noise issue, I won't get away without apologizing to the neighbor."
+   },
+   {
+    "ja": [
+     {
+      "t": "書類",
+      "f": [
+       [
+        "書",
+        "しょ"
+       ],
+       [
+        "類",
+        "るい"
+       ]
+      ],
+      "g": "the documents"
+     },
+     "に",
+     {
+      "t": "不備",
+      "f": [
+       [
+        "不",
+        "ふ"
+       ],
+       [
+        "備",
+        "び"
+       ]
+      ],
+      "g": "errors"
+     },
+     "が",
+     "あった",
+     {
+      "t": "以上",
+      "f": [
+       [
+        "以",
+        "い"
+       ],
+       [
+        "上",
+        "じょう"
+       ]
+      ],
+      "g": "since"
+     },
+     {
+      "t": "やり直さ",
+      "f": [
+       [
+        "やり",
+        ""
+       ],
+       [
+        "直",
+        "なお"
+       ],
+       [
+        "さ",
+        ""
+       ]
+      ],
+      "g": "redo (neg-stem)"
+     },
+     {
+      "t": "ないでは済まない",
+      "f": [
+       [
+        "ないでは",
+        ""
+       ],
+       [
+        "済",
+        "す"
+       ],
+       [
+        "まない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Since the documents had errors, I won't get away without redoing them."
    }
   ],
   "register": "formal/written",
-  "caution": "It means social/situational pressure makes X unavoidable ('won't be let off without'), not personal inability — don't confuse it with なければならない, a plain obligation."
+  "caution": "It means social/situational pressure makes X unavoidable ('won't be let off without'), not personal inability — don't confuse it with なければならない, a plain obligation.",
+  "peg": {
+   "ja": "この落とし前、つけないでは済まない。",
+   "romaji": "Kono otoshimae, tsukenaide wa sumanai.",
+   "en": "This score won't get settled without payback.",
+   "source": "ワンピース — トラファルガー・ロー",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-wo-yoginaku-sareru",
@@ -7810,10 +11391,106 @@
      "。"
     ],
     "en": "Some people are forced to return home over visa problems."
+   },
+   {
+    "ja": [
+     {
+      "t": "予算",
+      "f": [
+       [
+        "予",
+        "よ"
+       ],
+       [
+        "算",
+        "さん"
+       ]
+      ],
+      "g": "budget"
+     },
+     {
+      "t": "不足",
+      "f": [
+       [
+        "不",
+        "ぶ"
+       ],
+       [
+        "足",
+        "そく"
+       ]
+      ],
+      "g": "shortfall"
+     },
+     "で",
+     {
+      "t": "計画",
+      "f": [
+       [
+        "計",
+        "けい"
+       ],
+       [
+        "画",
+        "かく"
+       ]
+      ],
+      "g": "the plan"
+     },
+     "の",
+     {
+      "t": "縮小",
+      "f": [
+       [
+        "縮",
+        "しゅく"
+       ],
+       [
+        "小",
+        "しょう"
+       ]
+      ],
+      "g": "scaling back"
+     },
+     {
+      "t": "を余儀なくされた",
+      "f": [
+       [
+        "を",
+        ""
+       ],
+       [
+        "余",
+        "よ"
+       ],
+       [
+        "儀",
+        "ぎ"
+       ],
+       [
+        "なくされた",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "A budget shortfall forced us to scale back the plan."
    }
   ],
   "register": "formal/written",
-  "caution": "The passive を余儀なくされる has the subject forced by circumstances into X; don't mix it with the active を余儀なくさせる, where circumstances force it upon someone else."
+  "caution": "The passive を余儀なくされる has the subject forced by circumstances into X; don't mix it with the active を余儀なくさせる, where circumstances force it upon someone else.",
+  "peg": {
+   "ja": "全軍は、撤退を余儀なくされた。",
+   "romaji": "Zengun wa, tettai o yoginaku sareta.",
+   "en": "The entire army was forced to retreat.",
+   "source": "進撃の巨人 — エルヴィン",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-ni-hokanaranai",
@@ -8001,10 +11678,100 @@
      "。"
     ],
     "en": "The daily overtime is nothing other than the fault of the staff shortage."
+   },
+   {
+    "ja": [
+     "この",
+     {
+      "t": "結果",
+      "f": [
+       [
+        "結",
+        "けっ"
+       ],
+       [
+        "果",
+        "か"
+       ]
+      ],
+      "g": "result"
+     },
+     "は",
+     {
+      "t": "日々",
+      "f": [
+       [
+        "日々",
+        "ひび"
+       ]
+      ],
+      "g": "daily"
+     },
+     "の",
+     {
+      "t": "努力",
+      "f": [
+       [
+        "努",
+        "ど"
+       ],
+       [
+        "力",
+        "りょく"
+       ]
+      ],
+      "g": "effort"
+     },
+     "の",
+     {
+      "t": "積み重ね",
+      "f": [
+       [
+        "積",
+        "つ"
+       ],
+       [
+        "み",
+        ""
+       ],
+       [
+        "重",
+        "かさ"
+       ],
+       [
+        "ね",
+        ""
+       ]
+      ],
+      "g": "accumulation"
+     },
+     {
+      "t": "にほかならない",
+      "f": [
+       [
+        "にほかならない",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "This result is nothing other than the accumulation of daily effort."
    }
   ],
   "register": "formal/written",
-  "caution": "It asserts 'is precisely X and nothing else', so the X should be the true cause/essence — don't weaken it to a mere 'is X'; the emphatic identity is the whole point."
+  "caution": "It asserts 'is precisely X and nothing else', so the X should be the true cause/essence — don't weaken it to a mere 'is X'; the emphatic identity is the whole point.",
+  "peg": {
+   "ja": "この勝利は、計算の結果にほかならない。",
+   "romaji": "Kono shōri wa, keisan no kekka ni hokanaranai.",
+   "en": "This victory is nothing other than the result of calculation.",
+   "source": "デスノート — 夜神月",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-to-atte",
@@ -8195,10 +11962,117 @@
      "。"
     ],
     "en": "Given that it's my first time living abroad, I'm a little nervous."
+   },
+   {
+    "ja": [
+     {
+      "t": "連休",
+      "f": [
+       [
+        "連",
+        "れん"
+       ],
+       [
+        "休",
+        "きゅう"
+       ]
+      ],
+      "g": "long weekend"
+     },
+     {
+      "t": "最終日",
+      "f": [
+       [
+        "最",
+        "さい"
+       ],
+       [
+        "終",
+        "しゅう"
+       ],
+       [
+        "日",
+        "び"
+       ]
+      ],
+      "g": "the last day"
+     },
+     {
+      "t": "とあって",
+      "f": [
+       [
+        "とあって",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "上り",
+      "f": [
+       [
+        "上",
+        "のぼ"
+       ],
+       [
+        "り",
+        ""
+       ]
+      ],
+      "g": "up-bound"
+     },
+     "の",
+     {
+      "t": "新幹線",
+      "f": [
+       [
+        "新",
+        "しん"
+       ],
+       [
+        "幹",
+        "かん"
+       ],
+       [
+        "線",
+        "せん"
+       ]
+      ],
+      "g": "bullet trains"
+     },
+     "は",
+     {
+      "t": "満席",
+      "f": [
+       [
+        "満",
+        "まん"
+       ],
+       [
+        "席",
+        "せき"
+       ]
+      ],
+      "g": "full"
+     },
+     "だった",
+     "。"
+    ],
+    "en": "Given that it was the last day of the long weekend, the up-bound bullet trains were full."
    }
   ],
   "register": "written",
-  "caution": "Don't confuse とあって with だけあって: とあって is reportorial ('given this special situation, naturally...'), used for out-of-the-ordinary circumstances, while だけあって praises a result as fitting a cause."
+  "caution": "Don't confuse とあって with だけあって: とあって is reportorial ('given this special situation, naturally...'), used for out-of-the-ordinary circumstances, while だけあって praises a result as fitting a cause.",
+  "peg": {
+   "ja": "決勝戦とあって、会場は満員だった。",
+   "romaji": "Kesshōsen to atte, kaijō wa man'in datta.",
+   "en": "Given that it was the final, the arena was packed.",
+   "source": "ハイキュー!! — 烏養繋心",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-tomo-naru-to",
@@ -8366,10 +12240,99 @@
      "。"
     ],
     "en": "When it comes to rent in the city center, it's not something you can pay easily."
+   },
+   {
+    "ja": [
+     {
+      "t": "繁忙期",
+      "f": [
+       [
+        "繁",
+        "はん"
+       ],
+       [
+        "忙",
+        "ぼう"
+       ],
+       [
+        "期",
+        "き"
+       ]
+      ],
+      "g": "the busy season"
+     },
+     {
+      "t": "ともなると",
+      "f": [
+       [
+        "ともなると",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     {
+      "t": "休み",
+      "f": [
+       [
+        "休",
+        "やす"
+       ],
+       [
+        "み",
+        ""
+       ]
+      ],
+      "g": "a day off"
+     },
+     "を",
+     {
+      "t": "取る",
+      "f": [
+       [
+        "取",
+        "と"
+       ],
+       [
+        "る",
+        ""
+       ]
+      ],
+      "g": "take"
+     },
+     "の",
+     "も",
+     {
+      "t": "難しい",
+      "f": [
+       [
+        "難",
+        "むずか"
+       ],
+       [
+        "しい",
+        ""
+       ]
+      ],
+      "g": "hard"
+     },
+     "。"
+    ],
+    "en": "When it comes to the busy season, even taking a day off is hard."
    }
   ],
   "register": "formal/written",
-  "caution": "ともなると needs the noun to mark a genuinely high level or stage (プロともなると) — don't use it for an ordinary, low-threshold situation where になると alone suffices."
+  "caution": "ともなると needs the noun to mark a genuinely high level or stage (プロともなると) — don't use it for an ordinary, low-threshold situation where になると alone suffices.",
+  "peg": {
+   "ja": "頂点ともなると、見える景色が違う。",
+   "romaji": "Chōten to mo naru to, mieru keshiki ga chigau.",
+   "en": "When it comes to the summit, the view is different.",
+   "source": "ハイキュー!! — 及川徹",
+   "kind": "styled"
+  },
+  "flags": [
+   "written-formal"
+  ]
  },
  {
   "id": "n1-hame-ni-naru",
@@ -8555,9 +12518,81 @@
      "。"
     ],
     "en": "My documents were incomplete, so I ended up having to go to the ward office twice."
+   },
+   {
+    "ja": [
+     {
+      "t": "安さ",
+      "f": [
+       [
+        "安",
+        "やす"
+       ],
+       [
+        "さ",
+        ""
+       ]
+      ],
+      "g": "the low price"
+     },
+     "に",
+     "つられて",
+     {
+      "t": "契約",
+      "f": [
+       [
+        "契",
+        "けい"
+       ],
+       [
+        "約",
+        "やく"
+       ]
+      ],
+      "g": "signed"
+     },
+     "し",
+     {
+      "t": "後悔",
+      "f": [
+       [
+        "後",
+        "こう"
+       ],
+       [
+        "悔",
+        "かい"
+       ]
+      ],
+      "g": "regret"
+     },
+     "する",
+     {
+      "t": "はめになった",
+      "f": [
+       [
+        "はめになった",
+        ""
+       ]
+      ],
+      "p": 1
+     },
+     "。"
+    ],
+    "en": "Lured by the low price, I signed and ended up regretting it."
    }
   ],
   "register": "casual",
-  "caution": "はめになる always ends in an unwelcome, sorry outcome you got stuck with — don't use it for a good or neutral result, or as a plain 'became' (ことになる)."
+  "caution": "はめになる always ends in an unwelcome, sorry outcome you got stuck with — don't use it for a good or neutral result, or as a plain 'became' (ことになる).",
+  "peg": {
+   "ja": "油断した結果、逃げ回るはめになった。",
+   "romaji": "Yudan shita kekka, nigemawaru hame ni natta.",
+   "en": "Off my guard, I ended up running for my life.",
+   "source": "銀魂 — 坂田銀時",
+   "kind": "styled"
+  },
+  "flags": [
+   "casual-spoken"
+  ]
  }
 ]

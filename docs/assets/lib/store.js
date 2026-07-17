@@ -60,7 +60,8 @@ export const KEYS = {
   phraseFavView: 'jwh-phrase-favview-v1',
   userPhrases: 'jwh-phrases-user-v1',
   ankiDeck: 'jwh-anki-deck-v1',
-  anki: 'jwh-anki-v1',               // Core-2000 rapid refresher: { v, cards, pos, shaky, shuffle, seed }
+  anki: 'jwh-anki-v1',               // Core-2000 rapid refresher: LEGACY single deck (migrated into ankiLib on first load)
+  ankiLib: 'jwh-anki-lib-v1',        // deck library INDEX: { v, active, decks:[{id,name,cardCount,importedAt}] }; each deck's data lives under jwh-anki-d-<id>
   ankiHira: 'jwh-anki-hira-v1',      // refresher: hide the reading (hiragana) on cards — 'off' = hidden, '' = shown (default shown)
   ankiEn: 'jwh-anki-en-v1',          // refresher: hide the English meaning on cards — 'off' = hidden (DEFAULT), '' = shown
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)

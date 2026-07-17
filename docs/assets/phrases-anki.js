@@ -10,13 +10,14 @@
 // (cleanField in lib/anki.js is for display cleanliness, esc() is the XSS boundary).
 
 import { $, esc } from './lib/dom.js';
-import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
+import { KEYS, get, set, del, getRaw, setRaw } from './lib/store.js';
+import { confirmModal } from './lib/modal.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
 import { listZip, readZipEntry } from './lib/zip.js';
 import { openSqlite, sqliteTables, sqliteRows } from './lib/sqlite.js';
-import { parseMediaManifest, soundRef, imgRef, mediaPut, mediaGet, mediaClear } from './lib/ankimedia.js';
+import { parseMediaManifest, soundRef, imgRef, mediaPut, mediaGet, mediaClear, mediaDeletePrefix } from './lib/ankimedia.js';
 
 const CHUNK = 100;
 const FIELDS = ['expression', 'reading', 'meaning', 'sentence', 'sentenceMeaning'];
@@ -25,21 +26,80 @@ const FIELD_LABEL = { expression: 'word', reading: 'reading', meaning: 'meaning'
 let DATA = null;         // last parse result held for the preview → save step: { cards, cols, delim, raw }
 let root = null;
 
+// ---- deck LIBRARY: several saved decks + history. The INDEX (KEYS.ankiLib) holds only lightweight
+// metadata; each deck's full data (cards + resume state) lives under its own key jwh-anki-d-<id>, so
+// advancing a card rewrites ONE deck, not the whole library. Media is deck-scoped (<id>/<filename>).
+const deckKey = id => 'jwh-anki-d-' + id;
+function genId() { return 'd' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36); }
+function deckBody(d) { return { cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay }; }
+
+function loadLib() {
+  const raw = get(KEYS.ankiLib, null);
+  let lib = (raw && typeof raw === 'object' && Array.isArray(raw.decks))
+    ? { active: raw.active || null, decks: raw.decks.filter(m => m && m.id).map(m => ({ id: m.id, name: String(m.name || 'Deck').slice(0, 60), cardCount: m.cardCount | 0, importedAt: m.importedAt | 0 })) }
+    : { active: null, decks: [] };
+  // one-time migration: fold the legacy single deck (KEYS.anki) into the library
+  if (!lib.decks.length) {
+    const old = get(KEYS.anki, null);
+    if (old && typeof old === 'object' && Array.isArray(old.cards) && old.cards.length) {
+      const id = genId();
+      set(deckKey(id), deckBody({ cards: old.cards, pos: old.pos, shaky: old.shaky, shuffle: old.shuffle, seed: old.seed, view: old.view, autoplay: old.autoplay }));
+      lib = { active: id, decks: [{ id, name: 'My deck', cardCount: old.cards.length, importedAt: 0 }] };
+      set(KEYS.ankiLib, lib);
+      del(KEYS.anki);   // migrated — drop the legacy blob so it can't resurrect on a later empty lib
+    }
+  }
+  if (lib.decks.length && !lib.decks.some(d => d.id === lib.active)) lib.active = lib.decks[0].id;
+  return lib;
+}
+function saveLib(lib) { set(KEYS.ankiLib, { active: lib.active, decks: lib.decks }); }
+function deckMeta() { return loadLib().decks; }
+
 function loadDeck() {
-  const d = get(KEYS.anki, null);
+  const lib = loadLib();
+  if (!lib.active) return null;
+  const d = get(deckKey(lib.active), null);
   if (!d || typeof d !== 'object' || !Array.isArray(d.cards) || !d.cards.length) return null;
   return {
-    v: 1,
+    id: lib.active,
+    name: lib.decks.find(m => m.id === lib.active)?.name || 'Deck',
     cards: d.cards,
     pos: (d.pos && typeof d.pos === 'object' && !Array.isArray(d.pos)) ? d.pos : {},
     shaky: Array.isArray(d.shaky) ? d.shaky : [],
     shuffle: !!d.shuffle,
     seed: Number.isFinite(d.seed) ? d.seed : 1,
-    view: d.view === 'skim' ? 'skim' : 'stream',   // stage 3: threaded through BOTH fns (they allow-list keys)
-    autoplay: !!d.autoplay,                        // auto-play each card's audio
+    view: d.view === 'skim' ? 'skim' : 'stream',
+    autoplay: !!d.autoplay,
   };
 }
-function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay }); }
+// persist the ACTIVE deck's data (one key — never touches other decks). set() returns false on a full
+// quota (it never throws — it also fires the global jwh:storage-full modal); returned for callers who care.
+function saveDeck(d) { if (!d || !d.id) return true; return set(deckKey(d.id), deckBody(d)); }
+
+// add a freshly-imported deck to the library and make it active. Returns false if the data write hit
+// the quota (set() returns false, doesn't throw) so the Save handler can roll back + warn.
+function addDeck(id, name, body) {
+  if (!set(deckKey(id), deckBody(body))) return false;
+  const lib = loadLib();
+  lib.decks = [{ id, name: String(name || 'Deck').slice(0, 60), cardCount: body.cards.length, importedAt: Date.now() }, ...lib.decks.filter(d => d.id !== id)];
+  lib.active = id;
+  saveLib(lib);
+  return true;
+}
+function switchDeck(id) {
+  const lib = loadLib();
+  if (!lib.decks.some(d => d.id === id) || id === lib.active) return;
+  lib.active = id; saveLib(lib);
+  stream = null; DATA = null; render();
+}
+function deleteDeck(id) {
+  del(deckKey(id));
+  mediaDeletePrefix(id + '/').catch(() => {});
+  const lib = loadLib();
+  lib.decks = lib.decks.filter(d => d.id !== id);
+  if (lib.active === id) lib.active = lib.decks[0]?.id || null;
+  saveLib(lib);
+}
 
 // Study toggles — hide the reading (hiragana) or the English meaning on cards to self-quiz. Persisted
 // sentinels (own keys, independent of the site-wide furigana). English is HIDDEN by default (owner).
@@ -101,6 +161,7 @@ function renderImport(preview) {
       <h3 class="ank-h">Core deck — rapid refresher</h3>
       <p class="ank-sub">Blast through your Anki cards with the answer already showing — a fast refresher, not a review session. Your export stays on this device.</p>
     </div>
+    ${deckBarHTML()}
     <div class="ank-drop" id="ankDrop" tabindex="0" role="button" aria-label="Drop an Anki .apkg export file, or choose a file">
       <span class="ank-drop-ic" aria-hidden="true">⬇</span>
       <span class="ank-drop-t">Drop your Anki <b>.apkg</b> export (full deck — keeps audio/images). When exporting, tick <b>“Support older Anki versions”</b>.</span>
@@ -111,6 +172,7 @@ function renderImport(preview) {
     <div class="ank-err" id="ankErr" role="alert" hidden></div>
     <div class="ank-preview" id="ankPreview" hidden></div>`;
   wireImport();
+  wireDeckChips();   // the deck bar shows here too when the library isn't empty — keep switch/delete working
   if (preview) showPreview(preview);
 }
 
@@ -178,13 +240,15 @@ async function importApkg(f) {
       try { manifest = parseMediaManifest(await readZipEntry(u8, byName.get('media'))); } catch { manifest = null; }
     }
     const res = cardsFromRows(rows);
-    DATA = { ...res, apkg: { u8, byName, manifest, rows }, nCols: Math.max(...rows.slice(0, 50).map(r => r.length)) };
+    DATA = { ...res, apkg: { u8, byName, manifest, rows }, nCols: Math.max(...rows.slice(0, 50).map(r => r.length)), fileName: String(f.name || '').replace(/\.apkg$/i, '').trim() };
     renderImport(DATA);
   } catch (err) { showErr(friendlyErr(err)); }
 }
 
-// extract only the media the kept cards actually reference; attach a/img refs to the cards
-async function attachMedia(cards, apkg, onProgress) {
+// extract only the media the kept cards actually reference; attach a/img refs to the cards. Media is
+// stored under DECK-SCOPED keys (`<deckId>/<filename>`) so decks in the library don't collide and a
+// delete only drops that deck's blobs — NOT mediaClear() (which would wipe every other deck's media).
+async function attachMedia(cards, apkg, deckId, onProgress) {
   const { u8, byName, manifest, rows } = apkg;
   if (!manifest) return cards.map(({ srcIdx, ...c }) => c);
   const out = cards.map(c => {
@@ -195,7 +259,6 @@ async function attachMedia(cards, apkg, onProgress) {
     return { ...rest, ...(a && manifest.has(a) ? { a } : {}), ...(img && manifest.has(img) ? { img } : {}) };
   });
   const refs = [...new Set(out.flatMap(c => [c.a, c.img].filter(Boolean)))];
-  await mediaClear();
   let total = 0;
   const MIME = { mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', m4a: 'audio/mp4', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml' };
   for (let i = 0; i < refs.length; i++) {
@@ -206,7 +269,7 @@ async function attachMedia(cards, apkg, onProgress) {
     total += bytes.length;
     if (total > MEDIA_CAP) { if (onProgress) onProgress(refs.length, refs.length); break; }   // quota guard — deck still saves with the media loaded so far
     const ext = (name.split('.').pop() || '').toLowerCase();
-    await mediaPut(name, new Blob([bytes], { type: MIME[ext] || 'application/octet-stream' }));
+    await mediaPut(deckId + '/' + name, new Blob([bytes], { type: MIME[ext] || 'application/octet-stream' }));
     if (onProgress && i % 20 === 0) onProgress(i + 1, refs.length);
   }
   return out;
@@ -262,21 +325,29 @@ function showPreview(res) {
 
   $('#ankSave')?.addEventListener('click', async () => {
     const btn = $('#ankSave');
+    const id = genId();
+    const name = (DATA?.fileName || '').slice(0, 60) || `Deck ${deckMeta().length + 1}`;
     let cards = res.cards;
     if (DATA?.apkg) {
       try {
         if (btn) { btn.disabled = true; btn.textContent = 'Importing media…'; }
-        cards = await attachMedia(res.cards, DATA.apkg, (n, t) => { if (btn) btn.textContent = `Importing media… ${n}/${t}`; });
+        cards = await attachMedia(res.cards, DATA.apkg, id, (n, t) => { if (btn) btn.textContent = `Importing media… ${n}/${t}`; });
       } catch (err) {
         console.error('[anki] media import', err);
         showErr('Media import failed (' + (err?.message || err) + ') — the deck was saved without audio/images.');
         cards = res.cards.map(({ srcIdx, ...c }) => c);
       }
     } else cards = res.cards.map(({ srcIdx, ...c }) => c);   // srcIdx is import plumbing — never persisted
-    saveDeck({ cards, pos: {}, shaky: [], shuffle: false, seed: 1 });
+    if (!addDeck(id, name, { cards, pos: {}, shaky: [], shuffle: false, seed: 1, view: 'stream', autoplay: false })) {
+      // localStorage full — roll back this deck's data + media so nothing is orphaned, and tell the owner to prune
+      del(deckKey(id));
+      mediaDeletePrefix(id + '/').catch(() => {});
+      if (btn) { btn.disabled = false; btn.textContent = `Save deck — ${res.cards.length} cards`; }
+      showErr('Not enough storage to save this deck. Remove an old deck from “Your decks” below and try again.');
+      return;
+    }
     DATA = null;
     render();
-    $('#ankCard')?.focus({ preventScroll: true });   // hand focus to the card so Space/→/S work immediately (keys are section-scoped by design)
   });
   $('#ankCancel')?.addEventListener('click', () => { DATA = null; renderImport(); });
   box.querySelectorAll('select[data-field]').forEach(sel => sel.addEventListener('change', () => {
@@ -286,6 +357,39 @@ function showPreview(res) {
     try { const r2 = cardsFromRows(DATA.apkg.rows, mapping); DATA = { ...DATA, ...r2 }; renderImport(DATA); }
     catch (err) { showErr(friendlyErr(err)); }
   }));
+}
+
+// ───────────────────────────── deck library / history ─────────────────────────────
+
+// the "Your decks" row — every saved deck as a switch chip (active highlighted) + a ✕ to delete, plus
+// an Import affordance. Shown above the card so switching decks / seeing history is one tap away.
+function deckBarHTML() {
+  const { active, decks } = loadLib();
+  if (!decks.length) return '';
+  const chips = decks.map(d => {
+    const on = d.id === active;
+    return `<span class="ank-deck${on ? ' is-active' : ''}">
+      <button type="button" class="ank-deck-pick" data-deck="${esc(d.id)}"${on ? ' aria-current="true"' : ''} title="${esc(d.name)} — ${esc(String(d.cardCount))} cards">
+        <span class="ank-deck-n">${esc(d.name)}</span><span class="ank-deck-c">${esc(String(d.cardCount))}</span>
+      </button>
+      <button type="button" class="ank-deck-x" data-del-deck="${esc(d.id)}" aria-label="Delete deck ${esc(d.name)}" title="Delete deck">✕</button>
+    </span>`;
+  }).join('');
+  return `<div class="ank-decks" role="group" aria-label="Your decks">
+      <span class="ank-decks-lbl">Your decks</span>${chips}
+      <button type="button" class="ank-deck-add" id="ankAddDeck" aria-label="Import another deck">＋ Import</button>
+    </div>`;
+}
+
+// switch to the import view with a way back to the current deck (used by both "Import deck" and the
+// deck-row "＋ Import"). On the first-ever import render() shows this without a Back button.
+function enterImport() {
+  DATA = null; stream = null;
+  renderImport();
+  root.insertAdjacentHTML('afterbegin', `<button type="button" class="ank-mini ank-back" id="ankBack">← Back to deck</button>
+    <button type="button" class="ank-mini ank-back" id="ankClearFlags">Clear all flags</button>`);
+  $('#ankBack')?.addEventListener('click', () => { render(); });
+  $('#ankClearFlags')?.addEventListener('click', () => { const d = loadDeck(); if (d) { d.shaky = []; saveDeck(d); } render(); });
 }
 
 // ───────────────────────────── stream / skim (stage 3) ─────────────────────────────
@@ -330,7 +434,6 @@ function barHTML(deck) {
         <button type="button" class="ank-mini" id="ankEn" title="Show or hide the English meaning">EN English</button>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
-        <button type="button" class="ank-mini" id="ankReplace">Replace deck</button>
       </div>
     </div>`;
 }
@@ -354,7 +457,7 @@ function renderStream(deck) {
   // The tap zones live in a wrapper as SIBLINGS of #ankCard — paintCard() rewrites #ankCard's
   // innerHTML each card, so overlays placed inside it would be wiped. The bottom control bar
   // (touch only, hidden on desktop by CSS) drives the same next/back/shaky/audio actions.
-  root.innerHTML = `${barHTML(deck)}
+  root.innerHTML = `${barHTML(deck)}${deckBarHTML()}
     <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
     <div class="ank-cardwrap">
       <div class="ank-card" id="ankCard" tabindex="0" role="group" aria-label="Card — tap or press space for next"></div>
@@ -378,7 +481,7 @@ function renderStream(deck) {
 // pile empty at entry — nothing shaky left
 function renderAllClear(deck) {
   stream = { deck, mode: 'chunk', chunk: 0, idx: 0, order: [] };
-  root.innerHTML = `${barHTML(deck)}
+  root.innerHTML = `${barHTML(deck)}${deckBarHTML()}
     <div class="ank-clear">
       <div class="ank-clear-art" aria-hidden="true">◆ ✓</div>
       <h4>All clear — nothing flagged.</h4>
@@ -409,7 +512,7 @@ function renderSkim(deck) {
     </button>`;
   }).join('');
 
-  root.innerHTML = `${barHTML(deck)}
+  root.innerHTML = `${barHTML(deck)}${deckBarHTML()}
     <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
     <div class="ank-skim" id="ankSkim" role="group" aria-label="Skim — tap any row to flag it shaky">${rows}</div>
     <p class="ank-hint">tap / Enter / <b>S</b> flags a row · ↑↓ move · switch to Stream to study</p>`;
@@ -458,8 +561,12 @@ function fillMedia(card) {
   const tok = ++_mediaTok;
   if (_imgUrl) { URL.revokeObjectURL(_imgUrl); _imgUrl = null; }
   if (_audio) { try { _audio.pause(); } catch { /* already stopped */ } _audio = null; }
+  const mkey = f => (stream?.deck?.id ? stream.deck.id + '/' : '') + f;   // deck-scoped media key
+  // try the deck-scoped key, then fall back to the bare filename — a deck MIGRATED from the old single-slot
+  // schema has its media stored unprefixed, so the prefixed lookup would miss and silently drop audio/images.
+  const getMedia = f => mediaGet(mkey(f)).then(b => (b || mkey(f) === f) ? b : mediaGet(f));
   if (card.img) {
-    mediaGet(card.img).then(b => {
+    getMedia(card.img).then(b => {
       if (tok !== _mediaTok || !b) return;
       const el = $('#ankImg'); if (!el) return;
       _imgUrl = URL.createObjectURL(b);
@@ -468,7 +575,7 @@ function fillMedia(card) {
   }
   $('#ankAudio')?.addEventListener('click', (e) => {
     e.stopPropagation();   // play audio without also advancing the card (the card click = next)
-    mediaGet(card.a).then(b => {
+    getMedia(card.a).then(b => {
       if (tok !== _mediaTok || !b) return;   // ignore a stale in-flight read when a newer card loaded
       const u = URL.createObjectURL(b);
       _audio = new Audio(u);
@@ -644,15 +751,23 @@ function wireCommon() {
   });
   $('#ankHira')?.addEventListener('click', () => { setRaw(KEYS.ankiHira, hiraOff() ? '' : 'off'); applyToggles(); });
   $('#ankEn')?.addEventListener('click', () => { setRaw(KEYS.ankiEn, enOff() ? '' : 'off'); applyToggles(); });
-  $('#ankReplace')?.addEventListener('click', () => {
-    DATA = null; stream = null;
-    renderImport();
-    root.insertAdjacentHTML('afterbegin', `<button type="button" class="ank-mini ank-back" id="ankBack">← Back to deck</button>
-      <button type="button" class="ank-mini ank-back" id="ankClearFlags">Clear all flags</button>`);
-    $('#ankBack')?.addEventListener('click', () => { render(); });
-    $('#ankClearFlags')?.addEventListener('click', () => { const d = loadDeck(); if (d) { d.shaky = []; saveDeck(d); } render(); });
-  });
+  wireDeckChips();
   applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar
+}
+
+// deck library wiring — shared by the deck view and the import view (so you can switch/delete decks even
+// when the active deck's data is missing and you've landed on the import screen). Switch / delete / import.
+function wireDeckChips() {
+  $('#ankAddDeck')?.addEventListener('click', enterImport);
+  root.querySelectorAll('.ank-deck-pick[data-deck]').forEach(b => b.addEventListener('click', () => switchDeck(b.dataset.deck)));
+  root.querySelectorAll('.ank-deck-x[data-del-deck]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.delDeck;
+    const meta = deckMeta().find(d => d.id === id);
+    const ok = await confirmModal(`Delete “${meta?.name || 'this deck'}” (${meta?.cardCount || 0} cards)? It's removed from this device along with its audio/images.`, { ok: 'Delete', danger: true });
+    if (!ok) return;
+    deleteDeck(id);
+    stream = null; DATA = null; render();
+  }));
 }
 
 function wireStream() {

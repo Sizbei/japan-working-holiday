@@ -20,9 +20,10 @@ import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
+import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
 
@@ -70,6 +71,11 @@ export async function mountStudy() {
   wireRoot();
   applyFuri();
   await loadUnits();
+  // R9: warm the levels of any persisted leeches so the course-home leech deck renders with real
+  // patterns/meanings on first paint (leeches persist across sessions; their levels may be cold).
+  const leeches0 = leechList(state);
+  if (leeches0.length) await ensureLevelsFor(leeches0.map(l => l.id));
+
   // Land on the course home. Its ▶ Continue button resolves to the right next action (resume /
   // placement / due session / next lesson / caught-up). Prefetch the in-flight queue's levels so
   // a resumed session's synchronous renderCard has its point data ready.
@@ -217,6 +223,56 @@ function levelCardHTML(level) {
     ${open ? `<div class="stu-unit-list">${rows}</div>` : ''}</div>`;
 }
 
+// ── R9: the Leech deck (a course-home section) ───────────────────────────────
+// Points the engine has flagged as leeches (lapses ≥ 5) — the ones actively resisting. Each row
+// carries its pattern + meaning + lapse count + confusables, a "Duel it" shortcut (the R8 nuance
+// duel vs a confusable) and a "Study" shortcut (a focused one-card session). Suspended leeches
+// (lapses ≥ 8, auto-excluded from the queue) are surfaced SEPARATELY with an unsuspend nudge so an
+// auto-suspended point is always visible and recoverable, never silently gone.
+function firstConfusable(point) {
+  const cs = (point && Array.isArray(point.confusable)) ? point.confusable : [];
+  for (const cid of cs) if (pointsCache[cid]) return cid;      // prefer a resolvable pair
+  return cs[0] || null;                                        // else the first id (its level may load on demand)
+}
+function leechRowHTML(l, suspended) {
+  const p = pointsCache[l.id];
+  const pat = p ? (p.pattern || l.id) : l.id;
+  const mean = p ? (p.meaning || '') : '';
+  const conf = p ? firstConfusable(p) : null;
+  const duelBtn = conf
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-leech-duel" data-act="leechDuel" data-id="${esc(l.id)}" data-other="${esc(conf)}">⚔ Duel it</button>` : '';
+  const actions = suspended
+    ? `<button type="button" class="stu-btn stu-btn-primary stu-leech-unsuspend" data-act="leechUnsuspend" data-id="${esc(l.id)}">Unsuspend</button>`
+    : `${duelBtn}<button type="button" class="stu-btn stu-btn-ghost stu-leech-study" data-act="leechStudy" data-id="${esc(l.id)}">Study</button>`;
+  const nudge = suspended
+    ? `<p class="stu-leech-nudge">Suspended after ${esc(String(l.lapses))} misses — unsuspend to retry.</p>` : '';
+  return `<div class="stu-leech${suspended ? ' stu-leech-suspended' : ''}">
+    <div class="stu-leech-main">
+      <span class="stu-leech-pat" lang="ja">${esc(pat)}</span>
+      <span class="stu-leech-mean">${esc(mean)}</span>
+      <span class="stu-leech-lapses" title="${esc(String(l.lapses))} lapses">×${esc(String(l.lapses))}</span>
+    </div>
+    ${nudge}
+    <div class="stu-leech-actions">${actions}</div>
+  </div>`;
+}
+function leechPanelHTML() {
+  const leeches = leechList(state);
+  if (!leeches.length) return '';
+  const active = leeches.filter(l => !l.suspended);
+  const suspended = leeches.filter(l => l.suspended);
+  const activeHTML = active.length
+    ? `<div class="stu-leech-list">${active.map(l => leechRowHTML(l, false)).join('')}</div>` : '';
+  const suspendedHTML = suspended.length
+    ? `<div class="stu-leech-sub"><h4 class="stu-leech-sub-h">Suspended</h4>
+        <div class="stu-leech-list">${suspended.map(l => leechRowHTML(l, true)).join('')}</div></div>` : '';
+  return `<section class="stu-leeches" aria-label="Leeches">
+    <h3 class="stu-leeches-h">🩸 Leeches <span class="stu-leeches-n">${esc(String(leeches.length))}</span></h3>
+    <p class="stu-note stu-leeches-lede">The points fighting back hardest (5+ lapses). Drill the ones you keep confusing, or take a focused pass.</p>
+    ${activeHTML}${suspendedHTML}
+  </section>`;
+}
+
 function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
   const cs = continueState();
@@ -224,10 +280,15 @@ function renderCourseHome(focusSel) {
   const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
   const cards = units.length ? LEVELS.map(levelCardHTML).join('')
     : `<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p>`;
+  const nGhost = ghostCount(state);
+  const hauntHTML = nGhost
+    ? `<p class="stu-haunt-count">👻 ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
   root.innerHTML = `
     <div class="stu-home">
       <div class="stu-cont-wrap">${continueButtonHTML(cs)}</div>
+      ${hauntHTML}
       <div class="stu-home-cards">${cards}</div>
+      ${leechPanelHTML()}
       <div class="stu-home-foot">
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
         <label class="stu-exam"><span>Preparing for</span>
@@ -336,6 +397,46 @@ async function launchCheckpoint(unitId) {
   } finally { launching = false; }
 }
 
+// ── R9: leech-deck actions ───────────────────────────────────────────────────
+// "Study" → a focused single-card session over the one leech (recognition/production picked by the
+// same pickFormat rules). "Duel it" → the R8 nuance duel vs a confusable (formative overlay).
+// "Unsuspend" → clear the auto-suspend + make it due now (engine `unsuspend`), then re-render.
+async function studyLeech(id) {
+  if (launching || activeFlow) return;
+  // a focused leech drill replaces state.session — never discard an in-flight session silently
+  if (state.session && state.session.queue && state.session.pos < state.session.queue.length) {
+    const ok = await confirmModal('You have a session in progress. Start a focused leech drill and discard the rest of that session?', { ok: 'Drill this leech', cancel: 'Keep my session', danger: true });
+    if (!ok) return;
+  }
+  launching = true;
+  try {
+    await ensureAllLevels();                     // MCQ/scramble need confusables resolvable
+    if (!pointsCache[id]) { renderCourseHome(); return; }
+    state = sessionStart(state, [id]);
+    save();
+    renderCard();
+  } catch (err) {
+    console.error('leech study failed', err);
+    renderCourseHome();
+  } finally { launching = false; }
+}
+async function leechDuel(id, otherId) {
+  try {
+    await ensureLevelsFor([id, otherId]);
+    const a = pointsCache[id], b = pointsCache[otherId];
+    if (!a || !b) { announce('Could not open the duel — the pair data is unavailable offline.'); return; }
+    const m = await import('./study-duel.js');
+    m.openDuel(a, b);
+  } catch (err) { console.error('leech duel failed', err); }
+}
+function unsuspendLeech(id) {
+  state = unsuspend(state, id, Date.now());
+  save();
+  const p = pointsCache[id];
+  announce(`${p ? p.pattern : id} unsuspended — it's due again now.`);
+  renderCourseHome();
+}
+
 async function continueSession() {
   if (!state.session || !state.session.queue.length) { renderCourseHome(); return; }
   await ensureLevelsFor(state.session.queue);   // no-op if the mount prefetch already finished
@@ -409,6 +510,13 @@ function pickFormat(id, point, p) {
 // small stable hash so the shown example is deterministic across a resume (no Math.random)
 function idHash(id) { let h = 0; const s = String(id); for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
 
+// R9: the "haunted" badge — shown on a card whose point is currently a ghost (◆ shaky / lapsed,
+// riding the tight relearn ladder). Engine state only; this VISUALISES it.
+function hauntBadge(id) {
+  const p = id && state.points[id];
+  return (p && p.ghost) ? ` <span class="stu-haunt" title="Haunted — on the tight relearn ladder until two clean passes">👻 haunted</span>` : '';
+}
+
 function renderCard() {
   const s = state.session;
   if (!s || s.pos >= s.queue.length) { renderSummary(); return; }
@@ -429,12 +537,14 @@ function renderCard() {
     <div class="stu-card">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
-      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span></p>
+      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <p class="stu-sentence" lang="ja">${sentence}</p>
+      <div class="stu-hints" id="stuHints" hidden></div>
       <p class="stu-en" hidden>${esc(exampleEN(card))}</p>
       <div class="stu-answer">
         <input type="text" class="stu-input" id="stuInput" lang="ja" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" aria-label="Type the missing grammar in kana">
       </div>
+      <p class="stu-cap" id="stuCap" hidden></p>
       <div class="stu-feedback" id="stuFeedback" aria-live="off"></div>
       <div class="stu-controls" id="stuControls">${controlsFor('input')}</div>
       <span class="stu-tap stu-tap-l" id="stuTapL" aria-hidden="true"></span>
@@ -456,7 +566,7 @@ function renderScrambleCard() {
     <div class="stu-card stu-card-scramble">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
-      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span></p>
+      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuScramHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuScramHost');
@@ -476,7 +586,7 @@ function renderMcqCard() {
     <div class="stu-card stu-card-mcq">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
         <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
-      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span></p>
+      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuMcqHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuMcqHost');
@@ -488,9 +598,11 @@ function renderMcqCard() {
 function onMcqResult({ pass, chosen }) {
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
+  const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
+  maybeGhostExit(card.id, wasGhost);
   cardCtl = null;
   renderCard();
 }
@@ -499,11 +611,33 @@ function onMcqResult({ pass, chosen }) {
 function onScrambleResult({ pass, chosen }) {
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
+  const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
+  maybeGhostExit(card.id, wasGhost);
   cardCtl = null;
   renderCard();
+}
+
+// R9: when a point that WAS a ghost is no longer one after grading, it just passed its 2nd clean
+// pass and exited the relearn ladder — a small acknowledgement (toast + live-region), never confetti.
+function maybeGhostExit(id, wasGhost) {
+  if (!wasGhost) return;
+  const p = state.points[id];
+  if (p && !p.ghost && !p.suspended) ghostToast(pointsCache[id] ? pointsCache[id].pattern : id);
+}
+let ghostToastEl = null, ghostToastTimer = 0;
+function ghostToast(pattern) {
+  if (ghostToastEl) ghostToastEl.remove();
+  ghostToastEl = document.createElement('div');
+  ghostToastEl.className = 'stu-toast';
+  ghostToastEl.setAttribute('role', 'status');
+  ghostToastEl.innerHTML = `✨ Exorcised — <b lang="ja">${esc(pattern || '')}</b> is back on track.`;
+  document.body.appendChild(ghostToastEl);
+  clearTimeout(ghostToastTimer);
+  ghostToastTimer = setTimeout(() => { if (ghostToastEl) { ghostToastEl.remove(); ghostToastEl = null; } }, 3200);
+  announce(`${pattern || ''} cleared the relearn ladder — no longer haunted.`);
 }
 
 // render the token list; `revealed` swaps the blanks for the highlighted answer pattern
@@ -526,6 +660,7 @@ function exampleEN(c) { const ex = c.point.examples[c.exIdx]; return (ex && ex.e
 // map both route through the same handlers.
 function controlsFor(ph) {
   if (ph === 'input') return `
+    <button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint">💡 Hint</button>
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reveal">Don't know</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="check">Check ⏎</button>`;
   if (ph === 'close') return `
@@ -538,6 +673,62 @@ function controlsFor(ph) {
   if (ph === 'wrong') return `
     <button type="button" class="stu-btn stu-btn-primary" data-act="again">Continue ⏎</button>`;
   return '';
+}
+
+// ── R9: progressive hint ladder (cloze cards only) ───────────────────────────
+// Three tiers, each press advancing: gloss (EN meaning) → structure (connection string) → kana
+// (first kana of the answer). The anime peg is DELIBERATELY NOT a tier (it contains the pattern
+// verbatim — teaching model item 9); giving up is the separate "Don't know" reveal. Each tier
+// caps the self-graded score through effectiveGrade's `hintTier` param: gloss/structure → Good,
+// kana → Hard (reveal → Again). We track the highest (most-revealing = tightest) tier used and pass
+// it on grade. Recognition cards (MCQ/scramble) have no typed answer, so no hint ladder there.
+const HINT_TIERS = ['gloss', 'structure', 'kana'];
+function firstKana() {
+  const a = (card && card.answers) || [];
+  const kana = a.length > 1 ? a[a.length - 1] : (a[0] || '');   // clozeFor returns [surface, reading]
+  return Array.from(kana)[0] || '';
+}
+function hintContent(tier) {
+  const p = card.point;
+  if (tier === 'gloss') return { label: 'Meaning', body: p.meaning || '—', ja: false };
+  if (tier === 'structure') return { label: 'Structure', body: p.connection || '—', ja: true };
+  return { label: 'Starts with', body: (firstKana() || '？') + '…', ja: true };   // kana
+}
+function hintCapLabel() {
+  let cap = 4;
+  if (card.closeAccepted) cap = Math.min(cap, 2);
+  if (card.hintTier === 'gloss' || card.hintTier === 'structure') cap = Math.min(cap, 3);
+  if (card.hintTier === 'kana') cap = Math.min(cap, 2);
+  return cap === 2 ? 'Hard' : cap === 3 ? 'Good' : 'Easy';
+}
+function useHint() {
+  if (phase !== 'input' || !card || card.type !== 'cloze') return;
+  const used = card.hintUsed || 0;
+  if (used >= HINT_TIERS.length) return;
+  const tier = HINT_TIERS[used];
+  card.hintUsed = used + 1;
+  card.hintTier = tier;                                // latest = most revealing = tightest cap
+  const box = $('#stuHints');
+  if (box) {
+    const c = hintContent(tier);
+    box.hidden = false;
+    box.insertAdjacentHTML('beforeend',
+      `<p class="stu-hint-line"><span class="stu-hint-k">${esc(c.label)}</span> <span${c.ja ? ' lang="ja"' : ''}>${esc(c.body)}</span></p>`);
+  }
+  updateCapNote();
+  if (card.hintUsed >= HINT_TIERS.length) {
+    const hb = root.querySelector('.stu-hint-btn');
+    if (hb) { hb.disabled = true; hb.textContent = 'No more hints'; }
+  }
+  $('#stuInput')?.focus({ preventScroll: true });
+  announce(`Hint: ${hintContent(tier).label}. Max grade now ${hintCapLabel()}.`);
+}
+function updateCapNote() {
+  const el = $('#stuCap');
+  if (!el) return;
+  if (!card.hintTier) { el.hidden = true; el.textContent = ''; return; }
+  el.hidden = false;
+  el.textContent = `Max grade: ${hintCapLabel()} (hint used)`;
 }
 
 // ── answer flow ──────────────────────────────────────────────────────────────
@@ -576,12 +767,18 @@ function reveal(next, opts = {}) {
   if (next === 'graded') {
     phase = 'graded';
     card.closeAccepted = !!opts.closeAccepted;
+    const hinted = !card.closeAccepted && !!card.hintTier;   // hint cap only worth surfacing when not already close-capped
+    const okMsg = hinted
+      ? `<span class="stu-fb-ok">Correct — capped at ${esc(hintCapLabel())} (hint). How did it feel?</span>`
+      : `<span class="stu-fb-ok">Correct — how did it feel?</span>`;
     if (fb) fb.innerHTML = (card.closeAccepted
       ? `<span class="stu-fb-close">Accepted — capped at Hard. How did it feel?</span>`
-      : `<span class="stu-fb-ok">Correct — how did it feel?</span>`) + peg;
+      : okMsg) + peg;
     setControls('graded');
     focusControl('.stu-good');
-    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Hard, Good or Easy.' : 'Correct. Choose Hard, Good or Easy.');
+    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Hard, Good or Easy.'
+      : hinted ? `Correct, capped at ${hintCapLabel()} from the hint. Choose Hard, Good or Easy.`
+      : 'Correct. Choose Hard, Good or Easy.');
   } else {
     phase = 'wrong';
     if (fb) fb.innerHTML = `<span class="stu-fb-wrong">Not quite — the answer is <b lang="ja">${esc(card.answers[0])}</b>.</span>` + peg;
@@ -602,12 +799,14 @@ function focusControl(sel) { const el = root.querySelector(sel); if (el) el.focu
 // wrong path) forces Again regardless of g.
 function grade(g, { typedCorrect = true } = {}) {
   if (phase !== 'graded' && phase !== 'wrong') return;
-  const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, chosen: g });
+  const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, hintTier: card.hintTier, chosen: g });
   const pass = eff > 1;
   const now = Date.now();
+  const wasGhost = !!(state.points[card.id] && state.points[card.id].ghost);
   state = review(state, card.id, { pass, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: typedCorrect });
   save();
+  maybeGhostExit(card.id, wasGhost);
   renderCard();
 }
 
@@ -676,7 +875,9 @@ function wireRoot() {
     if (cardCtl) { cardCtl.onKey(e); return; }         // a live ★-scramble card owns its keys
     const t = e.target;
     if (phase === 'input') {
-      if (e.key === 'Enter') { e.preventDefault(); submitAnswer(); }
+      // Enter on the typed input submits; Enter/Space on a focused control (Hint / Don't know /
+      // Check) activates it natively via the delegated click — don't hijack it into a submit.
+      if (e.key === 'Enter') { if (t && t.tagName === 'BUTTON') return; e.preventDefault(); submitAnswer(); }
       return;
     }
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
@@ -713,6 +914,10 @@ function act(name, btn) {
     case 'checkpoint': launchCheckpoint(btn.dataset.unit); break;
     case 'placementStart': launchPlacement(); break;
     case 'expand': toggleLevel(btn.dataset.level); break;
+    case 'leechStudy': studyLeech(btn.dataset.id); break;
+    case 'leechDuel': leechDuel(btn.dataset.id, btn.dataset.other); break;
+    case 'leechUnsuspend': unsuspendLeech(btn.dataset.id); break;
+    case 'hint': useHint(); break;
     case 'check': submitAnswer(); break;
     case 'reveal': if (phase === 'input') reveal('wrong'); break;
     case 'accept': acceptClose(); break;

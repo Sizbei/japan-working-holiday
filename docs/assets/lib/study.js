@@ -489,3 +489,38 @@ export function testOutResult(state, id, passes, now) {
   };
   return setPoint(state, id, { ...p, stage: stageOf(p) });
 }
+
+// ── R9: struggle-UX selectors (pure — read-only over the same points the engine schedules) ────
+// ghostCount(state) → how many points are currently haunting (in the ◆/relearn ghost ladder). The
+// engine already tracks each point's `ghost`; this is only a headcount for the course-home badge.
+export function ghostCount(state) {
+  let n = 0;
+  for (const p of Object.values((state && state.points) || {})) if (p && p.ghost) n++;
+  return n;
+}
+
+// leechList(state) → the leech deck: every point with `leech:true` (lapses ≥ 5), as
+// { id, lapses, suspended }, sorted most-lapsed first (deterministic id tiebreak). Suspended
+// (lapses ≥ 8) leeches carry suspended:true so the UI can surface them separately and never let
+// them silently vanish. Pattern/meaning/confusables are joined from the corpus by the caller — the
+// pure engine doesn't read grammar data.
+export function leechList(state) {
+  const out = [];
+  for (const [id, p] of Object.entries((state && state.points) || {})) {
+    if (p && p.leech) out.push({ id, lapses: p.lapses || 0, suspended: !!p.suspended });
+  }
+  out.sort((a, b) => (b.lapses - a.lapses) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  return out;
+}
+
+// unsuspend(state, id, now) → clear a suspended leech's `suspended` flag and make it due now so it
+// re-enters the queue (leech status is kept — it's still fragile; a fresh fail re-suspends it). The
+// ONE explicit user recovery for an auto-suspended point; pure and immutable like every other
+// engine mutation.
+export function unsuspend(state, id, now) {
+  const p = state.points[id];
+  if (!p) return state;
+  // Drop lapses just below SUSPEND_AT so the point gets a real second chance: markLeech only
+  // re-suspends at >= SUSPEND_AT, so a PASS now keeps it in play and only a fresh FAIL re-suspends.
+  return setPoint(state, id, { ...p, suspended: false, leech: true, lapses: Math.min(p.lapses || 0, SUSPEND_AT - 1), due: now });
+}

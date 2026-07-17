@@ -233,6 +233,13 @@
    "n4-to-conditional",
    "n3-to-shitara"
   ],
+  "confusable": [
+   "n4-ba",
+   "n4-nara",
+   "n4-to-conditional",
+   "n3-to-shitara",
+   "n4-baai"
+  ],
   "register": "neutral",
   "caution": "The main clause can't be a stative fact tied to the general present; use と or ば for \"whenever X, Y always happens,\" and keep た-form (着いたら, not 着くたら).",
   "flags": [],
@@ -257,6 +264,13 @@
   "related": [
    "n4-tara",
    "n4-nara"
+  ],
+  "confusable": [
+   "n4-tara",
+   "n4-nara",
+   "n4-to-conditional",
+   "n3-to-shitara",
+   "n4-baai"
   ],
   "examples": [
    {
@@ -502,6 +516,13 @@
    "n4-ba",
    "n4-to-conditional"
   ],
+  "confusable": [
+   "n4-ba",
+   "n4-tara",
+   "n4-to-conditional",
+   "n3-to-shitara",
+   "n4-baai"
+  ],
   "examples": [
    {
     "ja": [
@@ -744,6 +765,13 @@
   "related": [
    "n4-tara",
    "n4-nara"
+  ],
+  "confusable": [
+   "n4-ba",
+   "n4-tara",
+   "n4-nara",
+   "n3-to-shitara",
+   "n4-baai"
   ],
   "examples": [
    {
@@ -1181,6 +1209,12 @@
    "n5-temo-ii",
    "n3-tatoe-temo"
   ],
+  "confusable": [
+   "n2-to-shite-mo",
+   "n2-ni-shite-mo",
+   "n1-de-are",
+   "n3-tatoe-temo"
+  ],
   "nuance": "Concedes a condition that fails to change the outcome — \"X, yet Y anyway.\" With a question word (誰でも, いくら…ても) it becomes \"no matter who/how much.\"",
   "register": "neutral",
   "caution": "Don't swap it for the permission 〜てもいい (\"may I…\"): ても alone means \"even if,\" and needs a following clause, not いい.",
@@ -1391,6 +1425,17 @@
   "level": "N4",
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n4-tame-ni",
+   "n4-you-ni-purpose",
+   "n4-you-ni-suru",
+   "n1-beku",
+   "n5-ni-shimasu",
+   "n5-ni-narimasu",
+   "n5-ku-narimasu",
+   "n4-koto-ni-naru",
+   "n4-koto-ni-suru"
+  ],
   "register": "neutral",
   "caution": "Built on the potential/plain verb, not the ます-stem (読めるようになる, ×読みようになる); with a negative use 〜なくなる rather than ×ないようになる in speech.",
   "flags": [],
@@ -1413,6 +1458,12 @@
   ],
   "related": [
    "n4-you-ni-naru"
+  ],
+  "confusable": [
+   "n4-tame-ni",
+   "n4-you-ni-purpose",
+   "n4-you-ni-naru",
+   "n1-beku"
   ],
   "examples": [
    {
@@ -1608,6 +1659,13 @@
    "n4-volitional",
    "n5-to-omoimasu",
    "n3-you-to-suru"
+  ],
+  "confusable": [
+   "n4-volitional",
+   "n3-you-to-suru",
+   "n5-tsumori",
+   "n4-yotei",
+   "n5-mashou"
   ],
   "examples": [
    {
@@ -1875,6 +1933,13 @@
   ],
   "related": [
    "n4-you-to-omou"
+  ],
+  "confusable": [
+   "n4-you-to-omou",
+   "n3-you-to-suru",
+   "n5-tsumori",
+   "n4-yotei",
+   "n5-mashou"
   ],
   "examples": [
    {
@@ -2267,6 +2332,13 @@
   "related": [
    "n5-tsumori"
   ],
+  "confusable": [
+   "n4-volitional",
+   "n4-you-to-omou",
+   "n3-you-to-suru",
+   "n5-tsumori",
+   "n5-mashou"
+  ],
   "nuance": "States a fixed, already-arranged schedule — a plan on the calendar, not just a personal wish. Firmer and more objective than つもり.",
   "register": "neutral",
   "caution": "Nouns take の before 予定 (会議の予定), not だ (×会議だ予定); use it for arranged schedules, not spur-of-the-moment intentions (that's つもり/volitional).",
@@ -2290,6 +2362,12 @@
   ],
   "related": [
    "n4-hazu"
+  ],
+  "confusable": [
+   "n4-darou",
+   "n3-ni-chigainai",
+   "n4-hazu",
+   "n5-deshou"
   ],
   "examples": [
    {
@@ -2482,6 +2560,14 @@
   "related": [
    "n4-kamoshiremasen",
    "n4-darou",
+   "n3-hazu-ga-nai",
+   "n3-hazu-datta"
+  ],
+  "confusable": [
+   "n4-kamoshiremasen",
+   "n4-darou",
+   "n3-ni-chigainai",
+   "n5-deshou",
    "n3-hazu-ga-nai",
    "n3-hazu-datta"
   ],
@@ -2697,6 +2783,12 @@
    "n4-sou-looks",
    "n4-rashii",
    "n3-ni-yoru-to"
+  ],
+  "confusable": [
+   "n4-sou-looks",
+   "n4-you-desu",
+   "n4-mitai",
+   "n4-rashii"
   ],
   "examples": [
    {
@@ -2916,6 +3008,15 @@
    "n4-you-desu",
    "n4-mitai"
   ],
+  "confusable": [
+   "n4-sou-hearsay",
+   "n4-you-desu",
+   "n4-mitai",
+   "n4-rashii",
+   "n4-ga-suru",
+   "n4-mieru-kikoeru",
+   "n5-ga-arimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -3102,6 +3203,12 @@
    "n4-mitai",
    "n4-rashii",
    "n4-sou-looks"
+  ],
+  "confusable": [
+   "n4-sou-hearsay",
+   "n4-sou-looks",
+   "n4-mitai",
+   "n4-rashii"
   ],
   "examples": [
    {
@@ -3315,6 +3422,12 @@
    "n4-you-desu",
    "n4-rashii"
   ],
+  "confusable": [
+   "n4-sou-hearsay",
+   "n4-sou-looks",
+   "n4-you-desu",
+   "n4-rashii"
+  ],
   "examples": [
    {
     "ja": [
@@ -3525,6 +3638,12 @@
   ],
   "related": [
    "n4-sou-hearsay",
+   "n4-you-desu",
+   "n4-mitai"
+  ],
+  "confusable": [
+   "n4-sou-hearsay",
+   "n4-sou-looks",
    "n4-you-desu",
    "n4-mitai"
   ],
@@ -3758,6 +3877,11 @@
    "n4-potential",
    "n4-causative"
   ],
+  "confusable": [
+   "n4-potential",
+   "n4-causative",
+   "n4-causative-passive"
+  ],
   "examples": [
    {
     "ja": [
@@ -3947,6 +4071,14 @@
   ],
   "related": [
    "n4-passive"
+  ],
+  "confusable": [
+   "n4-passive",
+   "n4-causative",
+   "n4-causative-passive",
+   "n5-koto-ga-dekimasu",
+   "n4-mieru-kikoeru",
+   "n2-uru"
   ],
   "examples": [
    {
@@ -4142,6 +4274,11 @@
   "related": [
    "n4-causative-passive",
    "n4-passive"
+  ],
+  "confusable": [
+   "n4-passive",
+   "n4-potential",
+   "n4-causative-passive"
   ],
   "examples": [
    {
@@ -4350,6 +4487,11 @@
   "related": [
    "n4-causative",
    "n4-passive"
+  ],
+  "confusable": [
+   "n4-passive",
+   "n4-potential",
+   "n4-causative"
   ],
   "examples": [
    {
@@ -4690,6 +4832,12 @@
   "related": [
    "n4-na-prohibition"
   ],
+  "confusable": [
+   "n5-temo-ii",
+   "n5-nakute-mo-ii",
+   "n5-te-wa-ikemasen",
+   "n4-na-prohibition"
+  ],
   "register": "polite",
   "caution": "It sounds down-talking, so use it only from a superior to a subordinate (parent→child, teacher→student); never say なさい to a boss, customer, or peer.",
   "flags": [],
@@ -4712,6 +4860,12 @@
    "command"
   ],
   "related": [
+   "n4-nasai"
+  ],
+  "confusable": [
+   "n5-temo-ii",
+   "n5-nakute-mo-ii",
+   "n5-te-wa-ikemasen",
    "n4-nasai"
   ],
   "examples": [
@@ -5050,6 +5204,12 @@
   "level": "N4",
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n4-te-oku",
+   "n4-te-miru",
+   "n4-te-aru",
+   "n5-te-iru"
+  ],
   "register": "neutral",
   "caution": "The casual contraction depends on the te-form: 〜てしまう→〜ちゃう but 〜でしまう→〜じゃう (読んでしまう→読んじゃう, not ×読んちゃう).",
   "flags": [],
@@ -5073,6 +5233,12 @@
   ],
   "related": [
    "n4-te-shimau"
+  ],
+  "confusable": [
+   "n4-te-shimau",
+   "n4-te-miru",
+   "n4-te-aru",
+   "n5-te-iru"
   ],
   "examples": [
    {
@@ -5286,6 +5452,13 @@
   "related": [
    "n4-te-oku"
   ],
+  "confusable": [
+   "n4-te-shimau",
+   "n4-te-oku",
+   "n4-te-aru",
+   "n5-te-iru",
+   "n3-you-to-suru"
+  ],
   "examples": [
    {
     "ja": [
@@ -5497,6 +5670,11 @@
   "related": [
    "n4-te-kureru",
    "n4-te-morau"
+  ],
+  "confusable": [
+   "n4-te-kureru",
+   "n4-te-morau",
+   "n4-te-hoshii"
   ],
   "examples": [
    {
@@ -5736,6 +5914,11 @@
    "n4-te-ageru",
    "n4-te-morau"
   ],
+  "confusable": [
+   "n4-te-ageru",
+   "n4-te-morau",
+   "n4-te-hoshii"
+  ],
   "examples": [
    {
     "ja": [
@@ -5952,6 +6135,11 @@
    "n4-te-ageru",
    "n4-te-kureru",
    "n3-te-itadakemasen-ka"
+  ],
+  "confusable": [
+   "n4-te-ageru",
+   "n4-te-kureru",
+   "n4-te-hoshii"
   ],
   "examples": [
    {
@@ -6201,6 +6389,12 @@
   "related": [
    "n4-te-kuru"
   ],
+  "confusable": [
+   "n3-tsuzukeru",
+   "n2-tsutsu-aru",
+   "n2-ippou-da",
+   "n4-te-kuru"
+  ],
   "examples": [
    {
     "ja": [
@@ -6433,6 +6627,13 @@
   "related": [
    "n4-te-iku"
   ],
+  "confusable": [
+   "n4-te-iku"
+  ],
+  "distractors": [
+   "〜ていった",
+   "〜てまわる"
+  ],
   "examples": [
    {
     "ja": [
@@ -6622,6 +6823,17 @@
   ],
   "related": [
    "n4-te-oku"
+  ],
+  "confusable": [
+   "n4-te-shimau",
+   "n4-te-oku",
+   "n4-te-miru",
+   "n5-te-iru",
+   "n5-ga-arimasu",
+   "n5-ta-koto-ga-arimasu",
+   "n4-koto-ga-aru",
+   "n4-ta-mama",
+   "n5-naide"
   ],
   "examples": [
    {
@@ -6832,6 +7044,12 @@
    "n4-owaru",
    "n3-dasu",
    "n3-tsuzukeru"
+  ],
+  "confusable": [
+   "n3-dasu",
+   "n4-owaru",
+   "n3-kiru",
+   "n3-kake"
   ],
   "examples": [
    {
@@ -7058,6 +7276,12 @@
    "n4-hajimeru",
    "n3-tsuzukeru"
   ],
+  "confusable": [
+   "n4-hajimeru",
+   "n3-dasu",
+   "n3-kiru",
+   "n3-kake"
+  ],
   "examples": [
    {
     "ja": [
@@ -7268,6 +7492,11 @@
   "related": [
    "n4-nikui"
   ],
+  "confusable": [
+   "n4-nikui",
+   "n5-sugimasu",
+   "n4-hodo"
+  ],
   "examples": [
    {
     "ja": [
@@ -7450,6 +7679,11 @@
   ],
   "related": [
    "n4-yasui"
+  ],
+  "confusable": [
+   "n4-yasui",
+   "n5-sugimasu",
+   "n4-hodo"
   ],
   "examples": [
    {
@@ -7645,6 +7879,11 @@
   ],
   "related": [
    "n5-ta-koto-ga-arimasu"
+  ],
+  "confusable": [
+   "n5-ta-koto-ga-arimasu",
+   "n5-ga-arimasu",
+   "n4-te-aru"
   ],
   "examples": [
    {
@@ -7842,6 +8081,13 @@
    "n4-koto-ni-naru",
    "n5-ni-shimasu"
   ],
+  "confusable": [
+   "n5-ni-shimasu",
+   "n5-ni-narimasu",
+   "n5-ku-narimasu",
+   "n4-you-ni-naru",
+   "n4-koto-ni-naru"
+  ],
   "examples": [
    {
     "ja": [
@@ -8035,6 +8281,13 @@
    "aspect"
   ],
   "related": [
+   "n4-koto-ni-suru"
+  ],
+  "confusable": [
+   "n5-ni-shimasu",
+   "n5-ni-narimasu",
+   "n5-ku-narimasu",
+   "n4-you-ni-naru",
    "n4-koto-ni-suru"
   ],
   "examples": [
@@ -8254,6 +8507,11 @@
   ],
   "related": [
    "n3-to-iu-no-wa",
+   "n3-tte"
+  ],
+  "confusable": [
+   "n3-to-iu-no-wa",
+   "n3-to-iu-koto",
    "n3-tte"
   ],
   "examples": [
@@ -8482,6 +8740,11 @@
   ],
   "related": [
    "n4-nado"
+  ],
+  "confusable": [
+   "n5-ya",
+   "n4-nado",
+   "n3-nanka"
   ],
   "examples": [
    {
@@ -8749,6 +9012,11 @@
    "n4-toka",
    "n3-nanka"
   ],
+  "confusable": [
+   "n5-ya",
+   "n4-toka",
+   "n3-nanka"
+  ],
   "examples": [
    {
     "ja": [
@@ -8978,6 +9246,14 @@
    "reason"
   ],
   "related": [],
+  "confusable": [
+   "n5-kara",
+   "n4-node",
+   "n5-dakara",
+   "n5-tari-tari",
+   "n5-nagara",
+   "n5-te-linking"
+  ],
   "examples": [
    {
     "ja": [
@@ -9225,6 +9501,14 @@
    "n3-kuse-ni",
    "n2-nimo-kakawarazu"
   ],
+  "confusable": [
+   "n5-kedo",
+   "n5-ga-but",
+   "n4-keredomo",
+   "n3-kuse-ni",
+   "n3-wari-ni",
+   "n2-ni-shite-wa"
+  ],
   "examples": [
    {
     "ja": [
@@ -9432,6 +9716,11 @@
   ],
   "related": [
    "n5-kara"
+  ],
+  "confusable": [
+   "n5-kara",
+   "n4-shi",
+   "n5-dakara"
   ],
   "examples": [
    {
@@ -9699,6 +9988,11 @@
    "n4-noni",
    "n5-kedo"
   ],
+  "confusable": [
+   "n4-noni",
+   "n5-kedo",
+   "n5-ga-but"
+  ],
   "examples": [
    {
     "ja": [
@@ -9943,6 +10237,11 @@
    "aspect"
   ],
   "related": [],
+  "confusable": [
+   "n4-mieru-kikoeru",
+   "n4-sou-looks",
+   "n5-ga-arimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -10162,6 +10461,11 @@
   ],
   "related": [
    "n3-uchi-ni"
+  ],
+  "confusable": [
+   "n5-toki",
+   "n3-uchi-ni",
+   "n3-saichuu"
   ],
   "examples": [
    {
@@ -10391,6 +10695,11 @@
   "related": [
    "n4-made-ni"
   ],
+  "confusable": [
+   "n4-made-ni",
+   "n5-mae-ni",
+   "n5-ta-ato-de"
+  ],
   "examples": [
    {
     "ja": [
@@ -10612,6 +10921,11 @@
   "related": [
    "n4-made"
   ],
+  "confusable": [
+   "n4-made",
+   "n5-mae-ni",
+   "n5-ta-ato-de"
+  ],
   "examples": [
    {
     "ja": [
@@ -10829,6 +11143,12 @@
    "n4-ta-bakari",
    "n3-te-bakari-iru"
   ],
+  "confusable": [
+   "n4-ta-bakari",
+   "n2-bakari-ni",
+   "n2-bakari-ka",
+   "n3-te-bakari-iru"
+  ],
   "examples": [
    {
     "ja": [
@@ -11030,6 +11350,12 @@
   "related": [
    "n4-tokoro",
    "n4-bakari"
+  ],
+  "confusable": [
+   "n4-bakari",
+   "n2-bakari-ni",
+   "n2-bakari-ka",
+   "n3-te-bakari-iru"
   ],
   "examples": [
    {
@@ -11267,6 +11593,13 @@
    "n4-ta-bakari",
    "n3-tokoro-datta"
   ],
+  "confusable": [
+   "n3-tokoro-datta"
+  ],
+  "distractors": [
+   "〜とたんに",
+   "〜きり"
+  ],
   "examples": [
    {
     "ja": [
@@ -11457,6 +11790,11 @@
   ],
   "related": [
    "n2-ppanashi"
+  ],
+  "confusable": [
+   "n4-te-aru",
+   "n5-te-iru",
+   "n5-naide"
   ],
   "examples": [
    {
@@ -11662,6 +12000,11 @@
    "negation"
   ],
   "related": [],
+  "confusable": [
+   "n5-naide",
+   "n3-zu-ni",
+   "n5-nai"
+  ],
   "examples": [
    {
     "ja": [
@@ -11855,6 +12198,11 @@
   ],
   "related": [
    "n4-embedded-q"
+  ],
+  "confusable": [
+   "n4-embedded-q",
+   "n5-ka",
+   "n4-kana"
   ],
   "examples": [
    {
@@ -12077,6 +12425,11 @@
   "related": [
    "n4-ka-dou-ka"
   ],
+  "confusable": [
+   "n4-ka-dou-ka",
+   "n5-ka",
+   "n4-kana"
+  ],
   "examples": [
    {
     "ja": [
@@ -12297,6 +12650,14 @@
    "question"
   ],
   "related": [],
+  "confusable": [
+   "n5-to-omoimasu",
+   "n3-tte"
+  ],
+  "distractors": [
+   "〜と聞きました",
+   "〜と思っていました"
+  ],
   "examples": [
    {
     "ja": [
@@ -12549,6 +12910,12 @@
    "n4-you-ni-purpose",
    "n1-beku"
   ],
+  "confusable": [
+   "n4-you-ni-purpose",
+   "n4-you-ni-suru",
+   "n4-you-ni-naru",
+   "n1-beku"
+  ],
   "examples": [
    {
     "ja": [
@@ -12782,6 +13149,12 @@
   "related": [
    "n4-tame-ni",
    "n3-you-ni-iu"
+  ],
+  "confusable": [
+   "n4-tame-ni",
+   "n4-you-ni-suru",
+   "n4-you-ni-naru",
+   "n1-beku"
   ],
   "examples": [
    {
@@ -13054,6 +13427,11 @@
   "related": [
    "n4-tara-dou"
   ],
+  "confusable": [
+   "n4-te-yokatta",
+   "n2-koto-da",
+   "n5-ta-hou-ga-ii"
+  ],
   "examples": [
    {
     "ja": [
@@ -13259,6 +13637,15 @@
   "related": [
    "n4-ba-yokatta"
   ],
+  "confusable": [
+   "n5-mashou",
+   "n5-mashou-ka",
+   "n5-masen-ka",
+   "n5-wa-dou-desu-ka",
+   "n5-ta-hou-ga-ii",
+   "n3-beki",
+   "n2-koto-da"
+  ],
   "examples": [
    {
     "ja": [
@@ -13441,6 +13828,12 @@
    "negation"
   ],
   "related": [],
+  "confusable": [
+   "n5-amari-nai",
+   "n5-zenzen-nai",
+   "n3-betsu-ni-nai",
+   "n3-nakanaka-nai"
+  ],
   "examples": [
    {
     "ja": [
@@ -13608,6 +14001,11 @@
    "question"
   ],
   "related": [],
+  "confusable": [
+   "n4-ka-dou-ka",
+   "n4-embedded-q",
+   "n5-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -13773,6 +14171,12 @@
   "related": [
    "n4-hazu",
    "n2-mai"
+  ],
+  "confusable": [
+   "n4-kamoshiremasen",
+   "n3-ni-chigainai",
+   "n4-hazu",
+   "n5-deshou"
   ],
   "examples": [
    {
@@ -13948,6 +14352,11 @@
    "quantity"
   ],
   "related": [],
+  "confusable": [
+   "n3-goto-ni",
+   "n5-gurai",
+   "n4-mo-emphasis"
+  ],
   "examples": [
    {
     "ja": [
@@ -14189,6 +14598,11 @@
    "n4-o-suru",
    "n4-sonkeigo-verbs"
   ],
+  "confusable": [
+   "n4-sonkeigo-verbs",
+   "n3-rareru-keigo",
+   "n4-o-kudasai"
+  ],
   "examples": [
    {
     "ja": [
@@ -14416,6 +14830,11 @@
    "n4-kenjougo-verbs",
    "n3-sasete-itadaku"
   ],
+  "confusable": [
+   "n4-kenjougo-verbs",
+   "n3-sasete-itadaku",
+   "n4-de-gozaimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -14610,6 +15029,11 @@
    "n4-kenjougo-verbs",
    "n3-rareru-keigo"
   ],
+  "confusable": [
+   "n4-o-ni-naru",
+   "n3-rareru-keigo",
+   "n4-o-kudasai"
+  ],
   "examples": [
    {
     "ja": [
@@ -14801,6 +15225,11 @@
    "n4-o-suru",
    "n4-sonkeigo-verbs"
   ],
+  "confusable": [
+   "n4-o-suru",
+   "n3-sasete-itadaku",
+   "n4-de-gozaimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -14977,6 +15406,16 @@
   ],
   "related": [
    "n4-o-ni-naru"
+  ],
+  "confusable": [
+   "n4-o-ni-naru",
+   "n4-sonkeigo-verbs",
+   "n3-rareru-keigo",
+   "n5-te-kudasai",
+   "n5-naide-kudasai",
+   "n5-wo-kudasai",
+   "n3-te-itadakemasen-ka",
+   "n3-you-ni-iu"
   ],
   "examples": [
    {
@@ -15173,6 +15612,11 @@
    "polite"
   ],
   "related": [],
+  "confusable": [
+   "n4-o-suru",
+   "n4-kenjougo-verbs",
+   "n3-sasete-itadaku"
+  ],
   "examples": [
    {
     "ja": [
@@ -15337,6 +15781,11 @@
   ],
   "related": [
    "n3-toori-ni"
+  ],
+  "confusable": [
+   "n5-yori-hou-ga",
+   "n5-de-ichiban",
+   "n3-ni-kurabete"
   ],
   "examples": [
    {
@@ -15623,6 +16072,11 @@
   "related": [
    "n4-tagaru"
   ],
+  "confusable": [
+   "n4-tagaru",
+   "n5-tai",
+   "n4-te-hoshii"
+  ],
   "examples": [
    {
     "ja": [
@@ -15822,6 +16276,11 @@
   "related": [
    "n4-garu",
    "n5-tai"
+  ],
+  "confusable": [
+   "n4-garu",
+   "n5-tai",
+   "n4-te-hoshii"
   ],
   "examples": [
    {
@@ -16045,6 +16504,11 @@
    "polite"
   ],
   "related": [],
+  "confusable": [
+   "n4-ndesu-ga",
+   "n5-n-desu",
+   "n5-kedo"
+  ],
   "examples": [
    {
     "ja": [
@@ -16208,6 +16672,11 @@
   ],
   "related": [
    "n4-te-sumimasen"
+  ],
+  "confusable": [
+   "n4-ba-yokatta",
+   "n2-koto-da",
+   "n5-ta-hou-ga-ii"
   ],
   "examples": [
    {
@@ -16408,6 +16877,14 @@
    "n4-tagaru",
    "n5-ga-hoshii"
   ],
+  "confusable": [
+   "n4-te-ageru",
+   "n4-te-kureru",
+   "n4-te-morau",
+   "n4-garu",
+   "n4-tagaru",
+   "n5-tai"
+  ],
   "examples": [
    {
     "ja": [
@@ -16605,6 +17082,12 @@
   ],
   "related": [
    "n3-koto-wa-nai"
+  ],
+  "confusable": [
+   "n5-nakereba-narimasen",
+   "n4-nakute-wa-ikemasen",
+   "n4-nakya",
+   "n3-beki"
   ],
   "examples": [
    {
@@ -16858,6 +17341,14 @@
    "degree"
   ],
   "related": [],
+  "confusable": [
+   "n5-koto-ga-dekimasu",
+   "n4-potential",
+   "n2-uru",
+   "n4-ga-suru",
+   "n4-sou-looks",
+   "n5-ga-arimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -17068,6 +17559,11 @@
    "polite"
   ],
   "related": [],
+  "confusable": [
+   "n4-te-sumimasen",
+   "n5-n-desu",
+   "n5-kedo"
+  ],
   "examples": [
    {
     "ja": [
@@ -17314,6 +17810,11 @@
    "emphasis"
   ],
   "related": [],
+  "confusable": [
+   "n4-zutsu",
+   "n3-goto-ni",
+   "n5-gurai"
+  ],
   "examples": [
    {
     "ja": [
@@ -17553,6 +18054,12 @@
    "n4-nakya",
    "n5-nakereba-narimasen"
   ],
+  "confusable": [
+   "n5-nakereba-narimasen",
+   "n4-nakya",
+   "n3-beki",
+   "n4-hitsuyou-ga-aru"
+  ],
   "examples": [
    {
     "ja": [
@@ -17715,6 +18222,12 @@
    "n4-nakute-wa-ikemasen",
    "n5-nakereba-narimasen"
   ],
+  "confusable": [
+   "n5-nakereba-narimasen",
+   "n4-nakute-wa-ikemasen",
+   "n3-beki",
+   "n4-hitsuyou-ga-aru"
+  ],
   "examples": [
    {
     "ja": [
@@ -17845,6 +18358,13 @@
    "condition"
   ],
   "related": [],
+  "confusable": [
+   "n4-ba",
+   "n4-tara",
+   "n4-nara",
+   "n4-to-conditional",
+   "n3-to-shitara"
+  ],
   "examples": [
    {
     "ja": [
@@ -18114,6 +18634,14 @@
    "n5-yori-hou-ga",
    "n3-ba-hodo",
    "n3-hodo-nai"
+  ],
+  "confusable": [
+   "n5-sugimasu",
+   "n3-kurai",
+   "n3-ba-hodo",
+   "n3-hodo-nai",
+   "n4-yasui",
+   "n4-nikui"
   ],
   "examples": [
    {

@@ -206,6 +206,11 @@
   "related": [
    "n4-aida-ni"
   ],
+  "confusable": [
+   "n5-toki",
+   "n4-aida-ni",
+   "n3-saichuu"
+  ],
   "peg": {
    "ja": "若いうちに、世界を見ておきたい。",
    "romaji": "Wakai uchi ni, sekai o mite okitai.",
@@ -483,6 +488,14 @@
   "related": [
    "n3-goto-ni"
   ],
+  "confusable": [
+   "n3-goto-ni",
+   "n3-tsuide-ni",
+   "n5-toki",
+   "n3-ta-kiri",
+   "n3-buri",
+   "n3-te-hajimete"
+  ],
   "peg": {
    "ja": "この海を見るたびに、仲間を思い出す。",
    "romaji": "Kono umi o miru tabi ni, nakama o omoidasu.",
@@ -734,6 +747,13 @@
    "n2-to-douji-ni",
    "n2-ka-to-omottara",
    "n2-shidai"
+  ],
+  "confusable": [
+   "n1-ga-hayai-ka",
+   "n1-ya-ina-ya",
+   "n1-nari",
+   "n2-shidai",
+   "n2-ka-to-omottara"
   ],
   "peg": {
    "ja": "ドアを開けたとたん、敵が現れた。",
@@ -992,6 +1012,11 @@
   "level": "N3",
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n5-toki",
+   "n4-aida-ni",
+   "n3-uchi-ni"
+  ],
   "peg": {
    "ja": "戦いの最中に、気を抜くな。",
    "romaji": "Tatakai no saichū ni, ki o nuku na.",
@@ -1244,6 +1269,11 @@
   "related": [
    "n3-buri"
   ],
+  "confusable": [
+   "n3-buri",
+   "n3-tabi-ni",
+   "n3-te-hajimete"
+  ],
   "peg": {
    "ja": "あの日別れたきり、彼には会っていない。",
    "romaji": "Ano hi wakareta kiri, kare ni wa atte inai.",
@@ -1470,6 +1500,11 @@
   "confidence": "high",
   "related": [
    "n3-ta-kiri"
+  ],
+  "confusable": [
+   "n3-ta-kiri",
+   "n3-tabi-ni",
+   "n3-te-hajimete"
   ],
   "peg": {
    "ja": "十年ぶりに、故郷の空を見上げた。",
@@ -1740,6 +1775,11 @@
   "level": "N3",
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n3-tabi-ni",
+   "n3-goto-ni",
+   "n5-toki"
+  ],
   "peg": {
    "ja": "散歩のついでに、君を助けてやろう。",
    "romaji": "Sanpo no tsuide ni, kimi o tasukete yarō.",
@@ -1999,6 +2039,13 @@
   "related": [
    "n4-tara",
    "n2-mono-nara"
+  ],
+  "confusable": [
+   "n4-ba",
+   "n4-tara",
+   "n4-nara",
+   "n4-to-conditional",
+   "n4-baai"
   ],
   "peg": {
    "ja": "もし世界を救えるとしたら、君はどうする？",
@@ -2284,6 +2331,12 @@
    "n4-temo",
    "n2-to-shite-mo"
   ],
+  "confusable": [
+   "n2-to-shite-mo",
+   "n2-ni-shite-mo",
+   "n1-de-are",
+   "n4-temo"
+  ],
   "peg": {
    "ja": "たとえ倒れても、俺は前に進む。",
    "romaji": "Tatoe taorete mo, ore wa mae ni susumu.",
@@ -2536,6 +2589,14 @@
    "n3-datte",
    "n2-sura"
   ],
+  "confusable": [
+   "n3-sae-ba",
+   "n2-kagiri",
+   "n2-nai-kagiri",
+   "n2-sura",
+   "n3-datte",
+   "n3-koso"
+  ],
   "peg": {
    "ja": "お前の名前さえ、俺は忘れない。",
    "romaji": "Omae no namae sae, ore wa wasurenai.",
@@ -2777,6 +2838,11 @@
   "confidence": "high",
   "related": [
    "n3-sae"
+  ],
+  "confusable": [
+   "n3-sae",
+   "n2-kagiri",
+   "n2-nai-kagiri"
   ],
   "peg": {
    "ja": "君さえいれば、他には何もいらない。",
@@ -3038,6 +3104,11 @@
   "confidence": "high",
   "related": [
    "n2-ippou-da"
+  ],
+  "confusable": [
+   "n2-ni-tomonatte",
+   "n2-to-tomo-ni",
+   "n3-ba-hodo"
   ],
   "peg": {
    "ja": "強くなるにつれて、孤独も深くなる。",
@@ -3305,6 +3376,15 @@
   "related": [
    "n4-hodo"
   ],
+  "confusable": [
+   "n5-sugimasu",
+   "n4-hodo",
+   "n3-kurai",
+   "n3-hodo-nai",
+   "n3-ni-tsurete",
+   "n2-ni-tomonatte",
+   "n2-to-tomo-ni"
+  ],
   "peg": {
    "ja": "戦えば戦うほど、俺は強くなる。",
    "romaji": "Tatakaeba tatakau hodo, ore wa tsuyoku naru.",
@@ -3532,6 +3612,12 @@
   "related": [
    "n4-hodo"
   ],
+  "confusable": [
+   "n5-sugimasu",
+   "n4-hodo",
+   "n3-kurai",
+   "n3-ba-hodo"
+  ],
   "peg": {
    "ja": "仲間ほど大切なものはない。",
    "romaji": "Nakama hodo taisetsu na mono wa nai.",
@@ -3721,6 +3807,12 @@
   "confidence": "high",
   "related": [
    "n5-gurai"
+  ],
+  "confusable": [
+   "n5-sugimasu",
+   "n4-hodo",
+   "n3-ba-hodo",
+   "n3-hodo-nai"
   ],
   "peg": {
    "ja": "死ぬくらい、修行はきつかった。",
@@ -3921,6 +4013,12 @@
   "confidence": "high",
   "related": [
    "n5-amari-nai"
+  ],
+  "confusable": [
+   "n5-amari-nai",
+   "n5-zenzen-nai",
+   "n3-nakanaka-nai",
+   "n4-sonna-ni"
   ],
   "peg": {
    "ja": "別に、君のためじゃないんだからね。",
@@ -4180,6 +4278,14 @@
    "n3-wa-mochiron",
    "n2-bakari-ka"
   ],
+  "confusable": [
+   "n2-bakari-ka",
+   "n2-nomi-narazu",
+   "n1-wa-motoyori",
+   "n3-wa-mochiron",
+   "n2-ue-ni",
+   "n2-ni-kuwaete"
+  ],
   "peg": {
    "ja": "力だけでなく、心も鍛えろ。",
    "romaji": "Chikara dake de naku, kokoro mo kitaero.",
@@ -4413,6 +4519,11 @@
   "related": [
    "n2-kara-ni-wa"
   ],
+  "confusable": [
+   "n2-kara-ni-wa",
+   "n1-to-atte",
+   "n1-tomo-naru-to"
+  ],
   "peg": {
    "ja": "戦うと決めた以上、後悔はしない。",
    "romaji": "Tatakau to kimeta ijō, kōkai wa shinai.",
@@ -4615,6 +4726,11 @@
    "n3-wari-ni",
    "n4-noni",
    "n2-monono"
+  ],
+  "confusable": [
+   "n3-wari-ni",
+   "n4-noni",
+   "n2-ni-shite-wa"
   ],
   "peg": {
    "ja": "弱いくせに、口だけは達者だな。",
@@ -4857,6 +4973,14 @@
    "n3-ni-kurabete",
    "n2-ni-shite-wa"
   ],
+  "confusable": [
+   "n3-kuse-ni",
+   "n4-noni",
+   "n2-ni-shite-wa",
+   "n2-dake-atte",
+   "n2-dake-ni",
+   "n1-naradewa"
+  ],
   "peg": {
    "ja": "子供のわりに、なかなか肝が据わっている。",
    "romaji": "Kodomo no wari ni, nakanaka kimo ga suwatte iru.",
@@ -5072,6 +5196,11 @@
   "confidence": "high",
   "related": [
    "n3-sei-de"
+  ],
+  "confusable": [
+   "n3-sei-de",
+   "n2-bakari-ni",
+   "n2-dake-ni"
   ],
   "peg": {
    "ja": "お前のおかげで、俺は立ち上がれた。",
@@ -5298,6 +5427,11 @@
    "n3-okage-de",
    "n2-bakari-ni"
   ],
+  "confusable": [
+   "n3-okage-de",
+   "n2-bakari-ni",
+   "n2-dake-ni"
+  ],
   "peg": {
    "ja": "油断したせいで、敵に逃げられた。",
    "romaji": "Yudan shita sei de, teki ni nigerareta.",
@@ -5510,6 +5644,11 @@
   "level": "N3",
   "confidence": "low",
   "related": [],
+  "confusable": [
+   "n2-nai-koto-wa-nai",
+   "n2-to-wa-kagiranai",
+   "n3-wake-de-wa-nai"
+  ],
   "peg": {
    "ja": "強いからといって、勝てるとは限らない。",
    "romaji": "Tsuyoi kara to itte, kateru to wa kagiranai.",
@@ -5776,6 +5915,11 @@
    "n3-to-iu-koto",
    "n4-to-iu"
   ],
+  "confusable": [
+   "n4-to-iu",
+   "n3-to-iu-koto",
+   "n3-tte"
+  ],
   "peg": {
    "ja": "友達というのは、そばにいてくれる者のことだ。",
    "romaji": "Tomodachi to iu no wa, soba ni ite kureru mono no koto da.",
@@ -6008,6 +6152,14 @@
   "related": [
    "n3-to-iu-no-wa"
   ],
+  "confusable": [
+   "n4-to-iu",
+   "n3-to-iu-no-wa",
+   "n3-tte",
+   "n5-no-nominalizer",
+   "n5-no-ga-suki",
+   "n5-no-ga-jouzu"
+  ],
   "peg": {
    "ja": "生きるということは、戦い続けるということだ。",
    "romaji": "Ikiru to iu koto wa, tatakai tsuzukeru to iu koto da.",
@@ -6191,6 +6343,11 @@
   "confidence": "high",
   "related": [
    "n4-hitsuyou-ga-aru"
+  ],
+  "confusable": [
+   "n1-made-mo-nai",
+   "n1-made-da",
+   "n5-nakute-mo-ii"
   ],
   "peg": {
    "ja": "泣くことはない、まだ終わっていない。",
@@ -6454,6 +6611,11 @@
    "n3-wake-de-wa-nai",
    "n3-wake-ni-wa-ikanai"
   ],
+  "confusable": [
+   "n3-wake-de-wa-nai",
+   "n3-wake-ni-wa-ikanai",
+   "n2-wake-ga-nai"
+  ],
   "peg": {
    "ja": "なるほど、それで負けたわけだ。",
    "romaji": "Naruhodo, sore de maketa wake da.",
@@ -6649,6 +6811,14 @@
    "n2-ni-suginai",
    "n2-to-wa-kagiranai",
    "n2-nai-koto-wa-nai"
+  ],
+  "confusable": [
+   "n3-wake-da",
+   "n3-wake-ni-wa-ikanai",
+   "n2-wake-ga-nai",
+   "n2-nai-koto-wa-nai",
+   "n2-to-wa-kagiranai",
+   "n3-kara-to-itte"
   ],
   "peg": {
    "ja": "勝てないわけではないが、油断は禁物だ。",
@@ -6857,6 +7027,11 @@
    "n3-wake-de-wa-nai",
    "n2-shika-nai"
   ],
+  "confusable": [
+   "n3-wake-da",
+   "n3-wake-de-wa-nai",
+   "n2-wake-ga-nai"
+  ],
   "peg": {
    "ja": "ここで逃げるわけにはいかない。",
    "romaji": "Koko de nigeru wake ni wa ikanai.",
@@ -7044,6 +7219,14 @@
    "n3-hazu-datta",
    "n4-hazu",
    "n2-wake-ga-nai"
+  ],
+  "confusable": [
+   "n4-hazu",
+   "n3-hazu-datta"
+  ],
+  "distractors": [
+   "〜に違いない",
+   "〜かもしれない"
   ],
   "peg": {
    "ja": "あいつが負けるはずがない。",
@@ -7308,6 +7491,16 @@
    "n3-hazu-ga-nai",
    "n2-ni-kimatte-iru"
   ],
+  "confusable": [
+   "n4-kamoshiremasen",
+   "n4-darou",
+   "n4-hazu",
+   "n5-deshou",
+   "n2-wake-ga-nai",
+   "n2-ni-kimatte-iru",
+   "n1-kkonai",
+   "n1-ni-hokanaranai"
+  ],
   "peg": {
    "ja": "この気配、あいつに違いない。",
    "romaji": "Kono kehai, aitsu ni chigainai.",
@@ -7562,6 +7755,13 @@
   "related": [
    "n4-to-onaji"
   ],
+  "confusable": [
+   "n2-ni-motozuite",
+   "n2-ni-sotte",
+   "n1-ni-sokushite",
+   "n1-wo-fumaete",
+   "n1-no-moto-de"
+  ],
   "peg": {
    "ja": "計画通り。",
    "romaji": "Keikaku-dōri.",
@@ -7586,6 +7786,14 @@
   "confidence": "high",
   "related": [
    "n4-you-to-omou"
+  ],
+  "confusable": [
+   "n4-volitional",
+   "n4-you-to-omou",
+   "n5-tsumori",
+   "n4-yotei",
+   "n5-mashou",
+   "n4-te-miru"
   ],
   "examples": [
    {
@@ -7844,6 +8052,12 @@
   ],
   "confidence": "low",
   "related": [],
+  "confusable": [
+   "n4-hajimeru",
+   "n3-dasu",
+   "n4-owaru",
+   "n3-kiru"
+  ],
   "examples": [
    {
     "ja": [
@@ -8103,6 +8317,11 @@
    "n3-gimi",
    "n2-darake"
   ],
+  "confusable": [
+   "n3-gimi",
+   "n3-ppoi",
+   "n1-meku"
+  ],
   "examples": [
    {
     "ja": [
@@ -8311,6 +8530,11 @@
   "related": [
    "n3-gachi",
    "n3-ppoi"
+  ],
+  "confusable": [
+   "n3-gachi",
+   "n3-ppoi",
+   "n1-meku"
   ],
   "examples": [
    {
@@ -8545,6 +8769,14 @@
    "n3-gimi",
    "n1-meku"
   ],
+  "confusable": [
+   "n3-gachi",
+   "n3-gimi",
+   "n1-meku",
+   "n3-muke",
+   "n3-muki",
+   "n3-teki"
+  ],
   "examples": [
    {
     "ja": [
@@ -8764,6 +8996,14 @@
   "related": [
    "n4-hajimeru",
    "n4-owaru"
+  ],
+  "confusable": [
+   "n2-tsutsu-aru",
+   "n2-ippou-da",
+   "n4-te-iku",
+   "n3-au",
+   "n3-naosu",
+   "n3-kiru"
   ],
   "examples": [
    {
@@ -9008,6 +9248,12 @@
   "confidence": "high",
   "related": [
    "n4-hajimeru"
+  ],
+  "confusable": [
+   "n4-hajimeru",
+   "n4-owaru",
+   "n3-kiru",
+   "n3-kake"
   ],
   "examples": [
    {
@@ -9267,6 +9513,15 @@
   ],
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n4-hajimeru",
+   "n3-dasu",
+   "n4-owaru",
+   "n3-kake",
+   "n3-au",
+   "n3-naosu",
+   "n3-tsuzukeru"
+  ],
   "examples": [
    {
     "ja": [
@@ -9525,6 +9780,11 @@
   ],
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n3-naosu",
+   "n3-tsuzukeru",
+   "n3-kiru"
+  ],
   "examples": [
    {
     "ja": [
@@ -9768,6 +10028,11 @@
   ],
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n3-au",
+   "n3-tsuzukeru",
+   "n3-kiru"
+  ],
   "examples": [
    {
     "ja": [
@@ -10029,6 +10294,11 @@
   "related": [
    "n4-o-suru"
   ],
+  "confusable": [
+   "n4-o-suru",
+   "n4-kenjougo-verbs",
+   "n4-de-gozaimasu"
+  ],
   "examples": [
    {
     "ja": [
@@ -10243,6 +10513,11 @@
   "related": [
    "n4-sonkeigo-verbs"
   ],
+  "confusable": [
+   "n4-o-ni-naru",
+   "n4-sonkeigo-verbs",
+   "n4-o-kudasai"
+  ],
   "examples": [
    {
     "ja": [
@@ -10420,6 +10695,11 @@
   "related": [
    "n5-naide",
    "n2-zu-ni-wa-irarenai"
+  ],
+  "confusable": [
+   "n4-nakute",
+   "n5-naide",
+   "n5-nai"
   ],
   "examples": [
    {
@@ -10665,6 +10945,12 @@
   "related": [
    "n5-amari-nai"
   ],
+  "confusable": [
+   "n5-amari-nai",
+   "n5-zenzen-nai",
+   "n3-betsu-ni-nai",
+   "n4-sonna-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -10864,6 +11150,13 @@
   "confidence": "high",
   "related": [
    "n4-tokoro"
+  ],
+  "confusable": [
+   "n4-tokoro"
+  ],
+  "distractors": [
+   "〜そうだった",
+   "〜かけた"
   ],
   "examples": [
    {
@@ -11088,6 +11381,12 @@
   "related": [
    "n4-bakari"
   ],
+  "confusable": [
+   "n4-bakari",
+   "n4-ta-bakari",
+   "n2-bakari-ni",
+   "n2-bakari-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -11301,6 +11600,11 @@
   ],
   "confidence": "high",
   "related": [],
+  "confusable": [
+   "n3-ta-kiri",
+   "n3-buri",
+   "n3-tabi-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -11568,6 +11872,13 @@
   "related": [
    "n4-you-ni-purpose"
   ],
+  "confusable": [
+   "n5-te-kudasai",
+   "n5-naide-kudasai",
+   "n5-wo-kudasai",
+   "n3-te-itadakemasen-ka",
+   "n4-o-kudasai"
+  ],
   "examples": [
    {
     "ja": [
@@ -11795,6 +12106,13 @@
   "related": [
    "n4-te-morau"
   ],
+  "confusable": [
+   "n5-te-kudasai",
+   "n5-naide-kudasai",
+   "n5-wo-kudasai",
+   "n4-o-kudasai",
+   "n3-you-ni-iu"
+  ],
   "examples": [
    {
     "ja": [
@@ -11975,6 +12293,13 @@
    "n3-ni-taishite",
    "n3-ni-totte",
    "n2-ni-kanshite"
+  ],
+  "confusable": [
+   "n3-ni-taishite",
+   "n2-ni-kanshite",
+   "n2-wo-megutte",
+   "n3-ni-totte",
+   "n3-to-shite"
   ],
   "examples": [
    {
@@ -12187,6 +12512,13 @@
    "n3-ni-tsuite",
    "n3-ni-totte",
    "n2-ni-hanshite"
+  ],
+  "confusable": [
+   "n3-ni-tsuite",
+   "n2-ni-kanshite",
+   "n2-wo-megutte",
+   "n3-ni-totte",
+   "n3-to-shite"
   ],
   "examples": [
    {
@@ -12477,6 +12809,13 @@
    "n3-ni-tsuite",
    "n3-ni-taishite"
   ],
+  "confusable": [
+   "n3-ni-tsuite",
+   "n3-ni-taishite",
+   "n2-ni-kanshite",
+   "n2-wo-megutte",
+   "n3-to-shite"
+  ],
   "examples": [
    {
     "ja": [
@@ -12698,6 +13037,11 @@
    "n3-to-shite",
    "n2-shidai-de",
    "n2-wo-tsuujite"
+  ],
+  "confusable": [
+   "n3-ni-yoru-to",
+   "n2-shidai-de",
+   "n1-ikan"
   ],
   "examples": [
    {
@@ -12922,6 +13266,11 @@
    "n3-tte",
    "n4-sou-hearsay"
   ],
+  "confusable": [
+   "n3-ni-yotte",
+   "n2-shidai-de",
+   "n1-ikan"
+  ],
   "examples": [
    {
     "ja": [
@@ -13144,6 +13493,13 @@
    "n3-ni-yotte",
    "n3-muke"
   ],
+  "confusable": [
+   "n3-ni-tsuite",
+   "n3-ni-taishite",
+   "n2-ni-kanshite",
+   "n2-wo-megutte",
+   "n3-ni-totte"
+  ],
   "examples": [
    {
     "ja": [
@@ -13347,6 +13703,11 @@
   "related": [
    "n3-muke",
    "n3-to-shite"
+  ],
+  "confusable": [
+   "n2-ippou",
+   "n2-hanmen",
+   "n2-ni-hanshite"
   ],
   "examples": [
    {
@@ -13614,6 +13975,12 @@
    "n3-koso",
    "n3-dake-de-naku"
   ],
+  "confusable": [
+   "n3-dake-de-naku",
+   "n2-bakari-ka",
+   "n2-nomi-narazu",
+   "n1-wa-motoyori"
+  ],
   "examples": [
    {
     "ja": [
@@ -13844,6 +14211,11 @@
    "n3-koso",
    "n4-nado"
   ],
+  "confusable": [
+   "n5-ya",
+   "n4-nado",
+   "n4-toka"
+  ],
   "examples": [
    {
     "ja": [
@@ -14046,6 +14418,11 @@
    "n3-nanka",
    "n3-datte"
   ],
+  "confusable": [
+   "n3-sae",
+   "n2-sura",
+   "n3-datte"
+  ],
   "examples": [
    {
     "ja": [
@@ -14210,6 +14587,11 @@
    "n3-nanka",
    "n3-koso",
    "n3-sae"
+  ],
+  "confusable": [
+   "n3-sae",
+   "n2-sura",
+   "n3-koso"
   ],
   "examples": [
    {
@@ -14416,6 +14798,13 @@
    "n3-ni-yoru-to",
    "n3-nanka",
    "n4-to-iu"
+  ],
+  "confusable": [
+   "n4-to-iu",
+   "n3-to-iu-no-wa",
+   "n3-to-iu-koto",
+   "n5-to-omoimasu",
+   "n4-to-itte-imashita"
   ],
   "examples": [
    {
@@ -14626,6 +15015,11 @@
   "related": [
    "n3-muki",
    "n3-to-shite"
+  ],
+  "confusable": [
+   "n3-muki",
+   "n3-teki",
+   "n3-ppoi"
   ],
   "examples": [
    {
@@ -14875,6 +15269,11 @@
    "n3-muke",
    "n3-teki"
   ],
+  "confusable": [
+   "n3-muke",
+   "n3-teki",
+   "n3-ppoi"
+  ],
   "examples": [
    {
     "ja": [
@@ -15074,6 +15473,11 @@
   "related": [
    "n3-muki",
    "n3-sa"
+  ],
+  "confusable": [
+   "n3-muke",
+   "n3-muki",
+   "n3-ppoi"
   ],
   "examples": [
    {
@@ -15298,6 +15702,11 @@
   "related": [
    "n3-teki",
    "n3-juu"
+  ],
+  "distractors": [
+   "〜み",
+   "〜げ",
+   "〜がる"
   ],
   "examples": [
    {
@@ -15526,6 +15935,11 @@
    "n3-sa",
    "n3-goto-ni"
   ],
+  "distractors": [
+   "〜あいだ",
+   "〜ごろ",
+   "〜まで"
+  ],
   "examples": [
    {
     "ja": [
@@ -15736,6 +16150,14 @@
    "n3-juu",
    "n3-hazu-datta",
    "n3-tabi-ni"
+  ],
+  "confusable": [
+   "n4-zutsu",
+   "n5-gurai",
+   "n4-mo-emphasis",
+   "n3-tabi-ni",
+   "n3-tsuide-ni",
+   "n5-toki"
   ],
   "examples": [
    {
@@ -15970,6 +16392,14 @@
    "n3-beki",
    "n3-hazu-ga-nai",
    "n4-hazu"
+  ],
+  "confusable": [
+   "n4-hazu",
+   "n3-hazu-ga-nai"
+  ],
+  "distractors": [
+   "〜べきだった",
+   "〜みたいだった"
   ],
   "examples": [
    {
@@ -16220,6 +16650,15 @@
    "n2-koto-da",
    "n1-bekarazu"
   ],
+  "confusable": [
+   "n5-nakereba-narimasen",
+   "n4-nakute-wa-ikemasen",
+   "n4-nakya",
+   "n4-hitsuyou-ga-aru",
+   "n5-ta-hou-ga-ii",
+   "n2-koto-da",
+   "n4-tara-dou"
+  ],
   "examples": [
    {
     "ja": [
@@ -16453,6 +16892,11 @@
    "n3-ni-totte",
    "n5-yori-hou-ga",
    "n3-wari-ni"
+  ],
+  "confusable": [
+   "n5-yori-hou-ga",
+   "n5-de-ichiban",
+   "n4-to-onaji"
   ],
   "examples": [
    {

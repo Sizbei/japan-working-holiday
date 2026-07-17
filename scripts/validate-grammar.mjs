@@ -21,8 +21,11 @@ const READING_RE = /^[ぁ-ゖーー〜・]+$/;                  // point reading
 const KANJI = /[一-鿿々]/;
 
 // Pure: validate an array of points for one level file. `allIds` (a Set) enables
-// cross-file `related` referential checks — pass the union of every loaded file's ids.
-export function validatePoints(points, level, allIds) {
+// cross-file `related`/`confusable` referential checks — pass the union of every loaded
+// file's ids. `allById` (an id→point Map, OPTIONAL) additionally enables the R7 confusable
+// symmetry check and the "≥3 MCQ wrong-options" corpus gate — pass the full corpus map to
+// arm those (fixture callers that only test shape rules may omit it).
+export function validatePoints(points, level, allIds, allById) {
   const errs = [];
   const bad = (id, msg) => errs.push(`${id || '(no id)'}: ${msg}`);
   if (!Array.isArray(points)) return ['file: top level must be an array of points'];
@@ -46,6 +49,36 @@ export function validatePoints(points, level, allIds) {
     if (!Array.isArray(p.tags)) bad(id, 'tags must be an array');
     if (!Array.isArray(p.related)) bad(id, 'related must be an array');
     else p.related.forEach(r => { if (!allIds.has(r)) bad(id, `related → unknown id ${r}`); });
+    // R7 confusable graph + distractors (both OPTIONAL). confusable: a SYMMETRIC id graph
+    // (cross-file OK like related, no self-ref) authoring the deliberate near-synonym traps;
+    // distractors: 2–4 authored wrong surface strings for when confusables can't fill a
+    // 4-choice set. Referential + self-ref + distractor-shape run always; symmetry + the
+    // "≥3 wrong-options" gate run only when the full corpus map (allById) is supplied.
+    if (p.confusable !== undefined) {
+      if (!Array.isArray(p.confusable)) bad(id, 'confusable must be an array');
+      else p.confusable.forEach(c => {
+        if (c === id) bad(id, 'confusable → self-reference');
+        else if (!allIds.has(c)) bad(id, `confusable → unknown id ${c}`);
+        else if (allById && !(Array.isArray(allById.get(c)?.confusable) && allById.get(c).confusable.includes(id)))
+          bad(id, `confusable → ${c} not symmetric (${c} must list ${id} back)`);
+      });
+    }
+    if (p.distractors !== undefined) {
+      if (!Array.isArray(p.distractors)) bad(id, 'distractors must be an array');
+      else {
+        if (p.distractors.length < 2 || p.distractors.length > 4) bad(id, `distractors must have 2–4 entries (has ${p.distractors.length})`);
+        p.distractors.forEach(d => {
+          if (typeof d !== 'string' || !d) bad(id, `distractor must be a non-empty string (got ${JSON.stringify(d)})`);
+          else if (d === p.pattern) bad(id, `distractor "${d}" equals the point's own pattern`);
+        });
+      }
+    }
+    // corpus gate: every point must assemble ≥3 distinct wrong options so a 4-choice MCQ is
+    // always possible. Only armed when the full corpus map is passed.
+    if (allById) {
+      const opts = mcqOptions(p, allById);
+      if (opts.length < 3) bad(id, `cannot assemble ≥3 MCQ wrong-options (has ${opts.length}) — add confusables/distractors`);
+    }
     if (seenPatterns.has(p.pattern)) bad(id, `duplicate pattern (also ${seenPatterns.get(p.pattern)})`);
     seenPatterns.set(p.pattern, id);
     // peg (R5 anime doctrine): a famous line (verbatim) or in-character original (styled)
@@ -109,6 +142,27 @@ export function validatePoints(points, level, allIds) {
   return errs;
 }
 
+// Pure (R8's MCQ generator consumes this): the candidate wrong-answer surface strings for a
+// 4-choice question on `point` — its confusables' `pattern` fields (in order) followed by its
+// authored `distractors[]`, deduped, with the point's own pattern excluded. `allById`
+// (id→point Map, optional) resolves confusable ids to patterns; unresolved ids are skipped.
+export function mcqOptions(point, allById) {
+  const own = point && point.pattern;
+  const byId = allById || new Map();
+  const seen = new Set();
+  const out = [];
+  const add = (s) => {
+    if (typeof s !== 'string' || !s || s === own || seen.has(s)) return;
+    seen.add(s); out.push(s);
+  };
+  (Array.isArray(point && point.confusable) ? point.confusable : []).forEach(cid => {
+    const c = byId.get(cid);
+    if (c) add(c.pattern);
+  });
+  (Array.isArray(point && point.distractors) ? point.distractors : []).forEach(add);
+  return out;
+}
+
 const UNIT_ID_RE = /^n[1-5]-u\d+$/;
 
 // Pure: validate the R3 unit map (grammar-units.json). `allIds` (a Set) is the union of every
@@ -154,13 +208,15 @@ function main() {
     return { file: f, level, points: JSON.parse(readFileSync(f, 'utf8')) };
   });
   const allIds = new Set(loaded.flatMap(l => l.points.map(p => p && p.id)));
+  const allById = new Map(loaded.flatMap(l => l.points).map(p => [p && p.id, p]));
   let total = 0;
   for (const { file, level, points } of loaded) {
-    const errs = validatePoints(points, level, allIds);
+    const errs = validatePoints(points, level, allIds, allById);
     total += errs.length;
     const pegged = points.filter(p => p && p.peg).length;
     const flagged = points.filter(p => p && Array.isArray(p.flags) && p.flags.length).length;
-    console.log(`${basename(file)}: ${points.length} points (${pegged}/${points.length} pegs, ${flagged} flagged), ${errs.length} errors`);
+    const confused = points.filter(p => p && Array.isArray(p.confusable) && p.confusable.length).length;
+    console.log(`${basename(file)}: ${points.length} points (${pegged}/${points.length} pegs, ${flagged} flagged, ${confused} confusable-linked), ${errs.length} errors`);
     errs.forEach(e => console.log('  ✗ ' + e));
   }
   // Units file — validated against the union of every point id (only when the default full run

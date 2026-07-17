@@ -11,6 +11,11 @@
    "polite"
   ],
   "related": [],
+  "confusable": [
+   "n5-ja-arimasen",
+   "n5-n-desu",
+   "n5-deshou-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -178,6 +183,11 @@
   "related": [
    "n5-desu"
   ],
+  "confusable": [
+   "n5-desu",
+   "n5-n-desu",
+   "n5-deshou-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -329,6 +339,11 @@
   "related": [
    "n5-ga-subject",
    "n5-mo"
+  ],
+  "confusable": [
+   "n5-ga-subject",
+   "n5-mo",
+   "n5-no"
   ],
   "examples": [
    {
@@ -542,6 +557,11 @@
   "related": [
    "n5-wa"
   ],
+  "confusable": [
+   "n5-wa",
+   "n5-mo",
+   "n5-no"
+  ],
   "examples": [
    {
     "ja": [
@@ -744,6 +764,11 @@
    "particles"
   ],
   "related": [],
+  "confusable": [
+   "n5-de-place",
+   "n5-ni-time",
+   "n5-e"
+  ],
   "examples": [
    {
     "ja": [
@@ -956,6 +981,11 @@
    "n5-de-place",
    "n5-e"
   ],
+  "confusable": [
+   "n5-wo",
+   "n5-de-place",
+   "n5-e"
+  ],
   "examples": [
    {
     "ja": [
@@ -1150,6 +1180,11 @@
   "related": [
    "n5-ni-time"
   ],
+  "confusable": [
+   "n5-wo",
+   "n5-ni-time",
+   "n5-e"
+  ],
   "examples": [
    {
     "ja": [
@@ -1338,6 +1373,11 @@
    "particles"
   ],
   "related": [
+   "n5-ni-time"
+  ],
+  "confusable": [
+   "n5-wo",
+   "n5-de-place",
    "n5-ni-time"
   ],
   "examples": [
@@ -1536,6 +1576,11 @@
   ],
   "related": [
    "n5-ya"
+  ],
+  "confusable": [
+   "n5-ya",
+   "n5-mo-mo",
+   "n5-to-issho-ni"
   ],
   "examples": [
    {
@@ -1738,6 +1783,14 @@
   ],
   "related": [
    "n5-to-and"
+  ],
+  "confusable": [
+   "n4-nado",
+   "n4-toka",
+   "n3-nanka",
+   "n5-to-and",
+   "n5-mo-mo",
+   "n5-to-issho-ni"
   ],
   "examples": [
    {
@@ -1978,6 +2031,11 @@
    "particles"
   ],
   "related": [],
+  "confusable": [
+   "n5-wa",
+   "n5-ga-subject",
+   "n5-mo"
+  ],
   "examples": [
    {
     "ja": [
@@ -2192,6 +2250,11 @@
   "related": [
    "n5-wa"
   ],
+  "confusable": [
+   "n5-wa",
+   "n5-ga-subject",
+   "n5-no"
+  ],
   "examples": [
    {
     "ja": [
@@ -2397,6 +2460,14 @@
    "particles"
   ],
   "related": [],
+  "confusable": [
+   "n5-ne",
+   "n5-yo",
+   "n5-kedo",
+   "n4-ka-dou-ka",
+   "n4-embedded-q",
+   "n4-kana"
+  ],
   "examples": [
    {
     "ja": [
@@ -2588,6 +2659,11 @@
   ],
   "related": [
    "n5-yo"
+  ],
+  "confusable": [
+   "n5-ka",
+   "n5-yo",
+   "n5-kedo"
   ],
   "examples": [
    {
@@ -2795,6 +2871,11 @@
   ],
   "related": [
    "n5-ne"
+  ],
+  "confusable": [
+   "n5-ka",
+   "n5-ne",
+   "n5-kedo"
   ],
   "examples": [
    {
@@ -3016,6 +3097,11 @@
    "n5-masen",
    "n5-mashita"
   ],
+  "confusable": [
+   "n5-masen",
+   "n5-mashita",
+   "n5-masen-deshita"
+  ],
   "examples": [
    {
     "ja": [
@@ -3201,6 +3287,14 @@
   "related": [
    "n5-masu"
   ],
+  "confusable": [
+   "n5-masu",
+   "n5-mashita",
+   "n5-masen-deshita",
+   "n5-nai",
+   "n5-nakatta",
+   "n5-naide"
+  ],
   "examples": [
    {
     "ja": [
@@ -3376,6 +3470,11 @@
   ],
   "related": [
    "n5-masu",
+   "n5-masen-deshita"
+  ],
+  "confusable": [
+   "n5-masu",
+   "n5-masen",
    "n5-masen-deshita"
   ],
   "examples": [
@@ -3591,6 +3690,11 @@
    "n5-mashita",
    "n5-masen"
   ],
+  "confusable": [
+   "n5-masu",
+   "n5-masen",
+   "n5-mashita"
+  ],
   "examples": [
    {
     "ja": [
@@ -3764,6 +3868,13 @@
   "related": [
    "n5-masen",
    "n5-nakatta"
+  ],
+  "confusable": [
+   "n5-nakatta",
+   "n5-naide",
+   "n5-masen",
+   "n4-nakute",
+   "n3-zu-ni"
   ],
   "examples": [
    {
@@ -3940,6 +4051,11 @@
    "n5-nai",
    "n5-masen-deshita"
   ],
+  "confusable": [
+   "n5-nai",
+   "n5-naide",
+   "n5-masen"
+  ],
   "examples": [
    {
     "ja": [
@@ -4105,6 +4221,17 @@
   ],
   "related": [
    "n5-te-kudasai"
+  ],
+  "confusable": [
+   "n4-te-shimau",
+   "n4-te-oku",
+   "n4-te-miru",
+   "n4-te-aru",
+   "n5-mada",
+   "n5-mou",
+   "n5-ta-koto-ga-arimasu",
+   "n4-ta-mama",
+   "n5-naide"
   ],
   "examples": [
    {
@@ -4317,6 +4444,13 @@
   "related": [
    "n5-naide-kudasai"
   ],
+  "confusable": [
+   "n5-naide-kudasai",
+   "n5-wo-kudasai",
+   "n3-te-itadakemasen-ka",
+   "n4-o-kudasai",
+   "n3-you-ni-iu"
+  ],
   "examples": [
    {
     "ja": [
@@ -4500,6 +4634,13 @@
   ],
   "related": [
    "n5-te-kudasai"
+  ],
+  "confusable": [
+   "n5-te-kudasai",
+   "n5-wo-kudasai",
+   "n3-te-itadakemasen-ka",
+   "n4-o-kudasai",
+   "n3-you-ni-iu"
   ],
   "examples": [
    {
@@ -4694,6 +4835,17 @@
    "n5-mashou-ka",
    "n5-masen-ka"
   ],
+  "confusable": [
+   "n4-volitional",
+   "n4-you-to-omou",
+   "n3-you-to-suru",
+   "n5-tsumori",
+   "n4-yotei",
+   "n5-mashou-ka",
+   "n5-masen-ka",
+   "n4-tara-dou",
+   "n5-wa-dou-desu-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -4872,6 +5024,12 @@
    "n5-mashou",
    "n5-masen-ka"
   ],
+  "confusable": [
+   "n5-mashou",
+   "n5-masen-ka",
+   "n4-tara-dou",
+   "n5-wa-dou-desu-ka"
+  ],
   "examples": [
    {
     "ja": [
@@ -5019,6 +5177,12 @@
   "related": [
    "n5-mashou",
    "n5-mashou-ka"
+  ],
+  "confusable": [
+   "n5-mashou",
+   "n5-mashou-ka",
+   "n4-tara-dou",
+   "n5-wa-dou-desu-ka"
   ],
   "examples": [
    {
@@ -5218,6 +5382,11 @@
    "listing"
   ],
   "related": [],
+  "confusable": [
+   "n5-nagara",
+   "n5-te-linking",
+   "n4-shi"
+  ],
   "examples": [
    {
     "ja": [
@@ -5522,6 +5691,12 @@
    "n4-nakute-wa-ikemasen",
    "n4-nakya"
   ],
+  "confusable": [
+   "n4-nakute-wa-ikemasen",
+   "n4-nakya",
+   "n3-beki",
+   "n4-hitsuyou-ga-aru"
+  ],
   "examples": [
    {
     "ja": [
@@ -5713,6 +5888,15 @@
   "related": [
    "n5-nakereba-narimasen",
    "n5-temo-ii"
+  ],
+  "confusable": [
+   "n5-temo-ii",
+   "n5-te-wa-ikemasen",
+   "n4-na-prohibition",
+   "n4-nasai",
+   "n3-koto-wa-nai",
+   "n1-made-mo-nai",
+   "n1-made-da"
   ],
   "examples": [
    {
@@ -5907,6 +6091,11 @@
    "ability"
   ],
   "related": [
+   "n2-uru"
+  ],
+  "confusable": [
+   "n4-potential",
+   "n4-mieru-kikoeru",
    "n2-uru"
   ],
   "examples": [
@@ -6112,6 +6301,13 @@
   ],
   "related": [
    "n5-no-ga-jouzu"
+  ],
+  "confusable": [
+   "n5-no-ga-jouzu",
+   "n5-ga-hoshii",
+   "n5-tai",
+   "n5-no-nominalizer",
+   "n3-to-iu-koto"
   ],
   "examples": [
    {
@@ -6354,6 +6550,13 @@
   ],
   "related": [
    "n5-no-ga-suki"
+  ],
+  "confusable": [
+   "n5-no-ga-suki",
+   "n5-ga-hoshii",
+   "n5-tai",
+   "n5-no-nominalizer",
+   "n3-to-iu-koto"
   ],
   "examples": [
    {
@@ -6621,6 +6824,11 @@
    "n5-tai",
    "n4-te-hoshii"
   ],
+  "confusable": [
+   "n5-no-ga-suki",
+   "n5-no-ga-jouzu",
+   "n5-tai"
+  ],
   "examples": [
    {
     "ja": [
@@ -6844,6 +7052,14 @@
    "degree"
   ],
   "related": [],
+  "confusable": [
+   "n4-hodo",
+   "n3-kurai",
+   "n3-ba-hodo",
+   "n3-hodo-nai",
+   "n4-yasui",
+   "n4-nikui"
+  ],
   "examples": [
    {
     "ja": [
@@ -7038,6 +7254,14 @@
    "opinion"
   ],
   "related": [],
+  "confusable": [
+   "n5-desu",
+   "n5-ja-arimasen",
+   "n5-deshou-ka",
+   "n4-te-sumimasen",
+   "n4-ndesu-ga",
+   "n5-kedo"
+  ],
   "examples": [
    {
     "ja": [
@@ -7197,6 +7421,14 @@
   "related": [
    "n5-deshou",
    "n4-you-to-omou"
+  ],
+  "confusable": [
+   "n4-to-itte-imashita",
+   "n3-tte"
+  ],
+  "distractors": [
+   "〜と思っています",
+   "〜そうです"
   ],
   "examples": [
    {
@@ -7391,6 +7623,12 @@
   "related": [
    "n5-to-omoimasu"
   ],
+  "confusable": [
+   "n4-kamoshiremasen",
+   "n4-darou",
+   "n3-ni-chigainai",
+   "n4-hazu"
+  ],
   "examples": [
    {
     "ja": [
@@ -7551,6 +7789,11 @@
   "related": [
    "n5-mou",
    "n5-te-iru"
+  ],
+  "confusable": [
+   "n5-mou",
+   "n5-te-iru",
+   "n5-ta-koto-ga-arimasu"
   ],
   "examples": [
    {
@@ -7753,6 +7996,11 @@
   "related": [
    "n5-mada",
    "n5-mashita"
+  ],
+  "confusable": [
+   "n5-mada",
+   "n5-te-iru",
+   "n5-ta-koto-ga-arimasu"
   ],
   "examples": [
    {
@@ -7966,6 +8214,14 @@
   "related": [
    "n3-kurai"
   ],
+  "confusable": [
+   "n5-goro",
+   "n5-dake",
+   "n5-shika-nai",
+   "n4-zutsu",
+   "n3-goto-ni",
+   "n4-mo-emphasis"
+  ],
   "examples": [
    {
     "ja": [
@@ -8165,6 +8421,11 @@
   ],
   "related": [
    "n5-gurai"
+  ],
+  "confusable": [
+   "n5-gurai",
+   "n5-dake",
+   "n5-shika-nai"
   ],
   "examples": [
    {
@@ -8374,6 +8635,13 @@
    "n5-shika-nai",
    "n3-dake-de-naku"
   ],
+  "confusable": [
+   "n5-shika-nai",
+   "n2-shika-nai",
+   "n2-ni-suginai",
+   "n5-gurai",
+   "n5-goro"
+  ],
   "examples": [
    {
     "ja": [
@@ -8549,6 +8817,13 @@
   ],
   "related": [
    "n5-dake"
+  ],
+  "confusable": [
+   "n5-dake",
+   "n2-shika-nai",
+   "n2-ni-suginai",
+   "n5-gurai",
+   "n5-goro"
   ],
   "examples": [
    {
@@ -8733,6 +9008,11 @@
   "related": [
    "n5-de-ichiban",
    "n4-hodo",
+   "n3-ni-kurabete"
+  ],
+  "confusable": [
+   "n5-de-ichiban",
+   "n4-to-onaji",
    "n3-ni-kurabete"
   ],
   "examples": [
@@ -8988,6 +9268,11 @@
   ],
   "related": [
    "n5-yori-hou-ga"
+  ],
+  "confusable": [
+   "n5-yori-hou-ga",
+   "n4-to-onaji",
+   "n3-ni-kurabete"
   ],
   "examples": [
    {
@@ -9299,6 +9584,14 @@
   "related": [
    "n5-mae-ni"
   ],
+  "confusable": [
+   "n4-aida-ni",
+   "n3-uchi-ni",
+   "n3-saichuu",
+   "n3-tabi-ni",
+   "n3-goto-ni",
+   "n3-tsuide-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -9523,6 +9816,13 @@
   ],
   "related": [
    "n5-te-kara"
+  ],
+  "confusable": [
+   "n5-te-kara",
+   "n5-mae-ni",
+   "n2-ue-de",
+   "n4-made",
+   "n4-made-ni"
   ],
   "examples": [
    {
@@ -9785,6 +10085,11 @@
    "ability"
   ],
   "related": [],
+  "distractors": [
+   "〜こと",
+   "〜もの",
+   "〜とき"
+  ],
   "examples": [
    {
     "ja": [
@@ -10006,6 +10311,11 @@
    "time"
   ],
   "related": [],
+  "distractors": [
+   "〜に来ます",
+   "〜へ行きます",
+   "〜てきます"
+  ],
   "examples": [
    {
     "ja": [
@@ -10237,6 +10547,12 @@
    "n3-betsu-ni-nai",
    "n3-nakanaka-nai"
   ],
+  "confusable": [
+   "n5-zenzen-nai",
+   "n3-betsu-ni-nai",
+   "n3-nakanaka-nai",
+   "n4-sonna-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -10416,6 +10732,12 @@
   "related": [
    "n5-amari-nai"
   ],
+  "confusable": [
+   "n5-amari-nai",
+   "n3-betsu-ni-nai",
+   "n3-nakanaka-nai",
+   "n4-sonna-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -10592,6 +10914,12 @@
    "invitation"
   ],
   "related": [],
+  "confusable": [
+   "n5-mashou",
+   "n5-mashou-ka",
+   "n5-masen-ka",
+   "n4-tara-dou"
+  ],
   "examples": [
    {
     "ja": [
@@ -10726,6 +11054,13 @@
    "request"
   ],
   "related": [],
+  "confusable": [
+   "n5-te-kudasai",
+   "n5-naide-kudasai",
+   "n3-te-itadakemasen-ka",
+   "n4-o-kudasai",
+   "n3-you-ni-iu"
+  ],
   "examples": [
    {
     "ja": [
@@ -10863,6 +11198,15 @@
   ],
   "related": [
    "n5-ni-narimasu"
+  ],
+  "confusable": [
+   "n5-ni-shimasu",
+   "n5-ni-narimasu",
+   "n4-you-ni-naru",
+   "n4-koto-ni-naru",
+   "n4-koto-ni-suru",
+   "n5-kute",
+   "n5-te-linking"
   ],
   "examples": [
    {
@@ -11044,6 +11388,15 @@
   ],
   "related": [
    "n5-ku-narimasu"
+  ],
+  "confusable": [
+   "n5-ni-shimasu",
+   "n5-ku-narimasu",
+   "n4-you-ni-naru",
+   "n4-koto-ni-naru",
+   "n4-koto-ni-suru",
+   "n5-kute",
+   "n5-te-linking"
   ],
   "examples": [
    {
@@ -11245,6 +11598,11 @@
    "preference"
   ],
   "related": [],
+  "confusable": [
+   "n5-no-ga-suki",
+   "n5-no-ga-jouzu",
+   "n3-to-iu-koto"
+  ],
   "examples": [
    {
     "ja": [
@@ -11494,6 +11852,11 @@
   "related": [
    "n5-te-linking"
   ],
+  "confusable": [
+   "n5-ku-narimasu",
+   "n5-ni-narimasu",
+   "n5-te-linking"
+  ],
   "examples": [
    {
     "ja": [
@@ -11734,6 +12097,13 @@
    "n5-ni-narimasu",
    "n4-koto-ni-suru"
   ],
+  "confusable": [
+   "n5-ni-narimasu",
+   "n5-ku-narimasu",
+   "n4-you-ni-naru",
+   "n4-koto-ni-naru",
+   "n4-koto-ni-suru"
+  ],
   "examples": [
    {
     "ja": [
@@ -11892,6 +12262,11 @@
    "opinion"
   ],
   "related": [],
+  "confusable": [
+   "n5-desu",
+   "n5-ja-arimasen",
+   "n5-n-desu"
+  ],
   "examples": [
    {
     "ja": [
@@ -12097,6 +12472,16 @@
    "connective"
   ],
   "related": [
+   "n3-zu-ni"
+  ],
+  "confusable": [
+   "n5-nai",
+   "n5-nakatta",
+   "n5-masen",
+   "n4-ta-mama",
+   "n4-te-aru",
+   "n5-te-iru",
+   "n4-nakute",
    "n3-zu-ni"
   ],
   "examples": [
@@ -12335,6 +12720,17 @@
    "n5-ga-but",
    "n4-keredomo"
   ],
+  "confusable": [
+   "n4-noni",
+   "n5-ga-but",
+   "n4-keredomo",
+   "n5-ka",
+   "n5-ne",
+   "n5-yo",
+   "n4-te-sumimasen",
+   "n4-ndesu-ga",
+   "n5-n-desu"
+  ],
   "examples": [
    {
     "ja": [
@@ -12553,6 +12949,11 @@
   ],
   "related": [
    "n5-kedo"
+  ],
+  "confusable": [
+   "n4-noni",
+   "n5-kedo",
+   "n4-keredomo"
   ],
   "examples": [
    {
@@ -12775,6 +13176,11 @@
   "related": [
    "n5-kedo"
   ],
+  "confusable": [
+   "n5-soshite",
+   "n5-sorekara",
+   "n5-te-linking"
+  ],
   "examples": [
    {
     "ja": [
@@ -12965,6 +13371,11 @@
   ],
   "related": [
    "n5-sorekara"
+  ],
+  "confusable": [
+   "n5-sorekara",
+   "n5-demo",
+   "n5-te-linking"
   ],
   "examples": [
    {
@@ -13204,6 +13615,11 @@
   ],
   "related": [
    "n5-soshite"
+  ],
+  "confusable": [
+   "n5-soshite",
+   "n5-demo",
+   "n5-te-linking"
   ],
   "examples": [
    {
@@ -13457,6 +13873,11 @@
   "related": [
    "n5-soshite",
    "n5-kara"
+  ],
+  "confusable": [
+   "n5-kara",
+   "n4-node",
+   "n4-shi"
   ],
   "examples": [
    {
@@ -13733,6 +14154,11 @@
    "connective"
   ],
   "related": [],
+  "confusable": [
+   "n5-to-and",
+   "n5-ya",
+   "n5-mo-mo"
+  ],
   "examples": [
    {
     "ja": [
@@ -13971,6 +14397,17 @@
   "related": [
    "n5-kute"
   ],
+  "confusable": [
+   "n5-soshite",
+   "n5-sorekara",
+   "n5-demo",
+   "n5-kute",
+   "n5-ku-narimasu",
+   "n5-ni-narimasu",
+   "n5-tari-tari",
+   "n5-nagara",
+   "n4-shi"
+  ],
   "examples": [
    {
     "ja": [
@@ -14198,6 +14635,11 @@
    "question"
   ],
   "related": [],
+  "distractors": [
+   "どうやって",
+   "どうして",
+   "いくら"
+  ],
   "examples": [
    {
     "ja": [
@@ -14395,6 +14837,11 @@
    "n5-mae-ni",
    "n5-kara",
    "n5-ta-ato-de"
+  ],
+  "confusable": [
+   "n5-ta-ato-de",
+   "n5-mae-ni",
+   "n2-ue-de"
   ],
   "examples": [
    {
@@ -14673,6 +15120,13 @@
    "n5-te-kara",
    "n5-toki"
   ],
+  "confusable": [
+   "n5-te-kara",
+   "n5-ta-ato-de",
+   "n2-ue-de",
+   "n4-made",
+   "n4-made-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -14911,6 +15365,11 @@
    "listing"
   ],
   "related": [],
+  "confusable": [
+   "n5-to-and",
+   "n5-ya",
+   "n5-to-issho-ni"
+  ],
   "examples": [
    {
     "ja": [
@@ -15188,6 +15647,14 @@
    "n5-ga-hoshii",
    "n4-tagaru"
   ],
+  "confusable": [
+   "n5-no-ga-suki",
+   "n5-no-ga-jouzu",
+   "n5-ga-hoshii",
+   "n4-garu",
+   "n4-tagaru",
+   "n4-te-hoshii"
+  ],
   "examples": [
    {
     "ja": [
@@ -15409,6 +15876,14 @@
    "existence"
   ],
   "related": [],
+  "confusable": [
+   "n4-te-aru",
+   "n5-ta-koto-ga-arimasu",
+   "n4-koto-ga-aru",
+   "n4-ga-suru",
+   "n4-mieru-kikoeru",
+   "n4-sou-looks"
+  ],
   "examples": [
    {
     "ja": [
@@ -15581,6 +16056,12 @@
    "n5-te-wa-ikemasen",
    "n5-nakute-mo-ii",
    "n4-temo"
+  ],
+  "confusable": [
+   "n5-nakute-mo-ii",
+   "n5-te-wa-ikemasen",
+   "n4-na-prohibition",
+   "n4-nasai"
   ],
   "examples": [
    {
@@ -15777,6 +16258,12 @@
   ],
   "related": [
    "n5-temo-ii"
+  ],
+  "confusable": [
+   "n5-temo-ii",
+   "n5-nakute-mo-ii",
+   "n4-na-prohibition",
+   "n4-nasai"
   ],
   "examples": [
    {
@@ -15990,6 +16477,16 @@
   "related": [
    "n2-tsutsu",
    "n1-gatera"
+  ],
+  "confusable": [
+   "n2-tsutsu",
+   "n1-katawara",
+   "n1-gatera",
+   "n5-tari-tari",
+   "n5-te-linking",
+   "n4-shi",
+   "n2-to-douji-ni",
+   "n2-to-tomo-ni"
   ],
   "examples": [
    {
@@ -16245,6 +16742,14 @@
   "related": [
    "n4-koto-ga-aru"
   ],
+  "confusable": [
+   "n4-koto-ga-aru",
+   "n5-mada",
+   "n5-mou",
+   "n5-te-iru",
+   "n5-ga-arimasu",
+   "n4-te-aru"
+  ],
   "examples": [
    {
     "ja": [
@@ -16442,6 +16947,13 @@
   ],
   "related": [
    "n3-beki"
+  ],
+  "confusable": [
+   "n3-beki",
+   "n2-koto-da",
+   "n4-tara-dou",
+   "n4-ba-yokatta",
+   "n4-te-yokatta"
   ],
   "examples": [
    {
@@ -16645,6 +17157,11 @@
    "n5-te-kara",
    "n5-dakara",
    "n4-node"
+  ],
+  "confusable": [
+   "n4-node",
+   "n4-shi",
+   "n5-dakara"
   ],
   "examples": [
    {
@@ -16872,6 +17389,13 @@
   "related": [
    "n5-tai",
    "n4-yotei"
+  ],
+  "confusable": [
+   "n4-volitional",
+   "n4-you-to-omou",
+   "n3-you-to-suru",
+   "n4-yotei",
+   "n5-mashou"
   ],
   "examples": [
    {

@@ -1192,7 +1192,7 @@ test('pileOrder: deck order preserved, ids deduped by Set, empty/missing safe', 
 
 // ---- lib/grammar.js (JLPT grammar reference, P1) ----
 import { readingOf, tokenReading, kanaToRomaji, searchPoints, byLevel } from '../docs/assets/lib/grammar.js';
-import { validatePoints } from '../scripts/validate-grammar.mjs';
+import { validatePoints, mcqOptions } from '../scripts/validate-grammar.mjs';
 
 test('readingOf: per-segment furigana derives the kana reading', () => {
   assert.equal(readingOf([['食', 'た'], ['べて', '']]), 'たべて');
@@ -1236,9 +1236,13 @@ test('all grammar-*.json files pass the validator (the data gate for every bake 
   const COUNTS = { n5: 82, n4: 86, n3: 72, n2: 66, n1: 47 };            // update per bake phase
   const files = Object.keys(COUNTS).map(l => [l.toUpperCase(),
     JSON.parse(readFileSync(new URL(`../docs/data/grammar-${l}.json`, import.meta.url), 'utf8'))]);
-  const allIds = new Set(files.flatMap(([, pts]) => pts.map(p => p.id)));   // related[] crosses levels
+  const allIds = new Set(files.flatMap(([, pts]) => pts.map(p => p.id)));   // related[]/confusable[] cross levels
+  // R7: pass the full id→point map so the confusable-symmetry check + the "every point can
+  // assemble a 4-choice set (≥3 wrong-options)" corpus gate are ARMED. Red-pending-data until
+  // the authoring agents add confusable[]/distractors[] to every point.
+  const allById = new Map(files.flatMap(([, pts]) => pts).map(p => [p.id, p]));
   for (const [level, pts] of files) {
-    assert.deepEqual(validatePoints(pts, level, allIds), [], level);
+    assert.deepEqual(validatePoints(pts, level, allIds, allById), [], level);
     assert.equal(pts.length, COUNTS[level.toLowerCase()], level);
   }
   // plan acid tests: a non-contiguous pattern + a glossed p anchor survive every merge
@@ -1310,6 +1314,61 @@ test('validator rejects R5 enrichment violations (peg / flags / example-count)',
   assert.ok(only({ flags: ['anime-common', 'anime-common'] }).some(e => /duplicate flag/.test(e)));
   // exactly-3 examples enforced (2 is now too few)
   assert.ok(only({ examples: [okEx(), okEx()] }).some(e => /exactly 3/.test(e)));
+});
+
+// ---- R7: confusable graph + distractors + mcqOptions ----
+test('validator accepts a symmetric confusable pair with ≥3 MCQ options each', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜ように', confusable: ['n5-b'], distractors: ['〜ため', '〜べく'] });
+  const B = okPoint({ id: 'n5-b', pattern: '〜ために', confusable: ['n5-a'], distractors: ['〜むけ', '〜よう'] });
+  const allById = new Map([['n5-a', A], ['n5-b', B]]);
+  assert.deepEqual(validatePoints([A, B], 'N5', new Set(['n5-a', 'n5-b']), allById), []);
+});
+
+test('validator rejects an asymmetric confusable edge (A→B but not B→A)', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜A', confusable: ['n5-b'], distractors: ['x', 'y'] });
+  const B = okPoint({ id: 'n5-b', pattern: '〜B', confusable: [], distractors: ['x', 'y', 'z'] });
+  const allById = new Map([['n5-a', A], ['n5-b', B]]);
+  const errs = validatePoints([A, B], 'N5', new Set(['n5-a', 'n5-b']), allById);
+  assert.ok(errs.some(e => /not symmetric/.test(e)));
+});
+
+test('validator rejects a self-referential confusable', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜A', confusable: ['n5-a'], distractors: ['x', 'y', 'z'] });
+  const errs = validatePoints([A], 'N5', new Set(['n5-a']), new Map([['n5-a', A]]));
+  assert.ok(errs.some(e => /self-reference/.test(e)));
+});
+
+test('validator rejects an unknown confusable id (referential, gate off)', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜A', confusable: ['n5-ghost'], distractors: ['x', 'y', 'z'] });
+  const errs = validatePoints([A], 'N5', new Set(['n5-a']));   // 3-arg: symmetry/gate off, referential still runs
+  assert.ok(errs.some(e => /confusable → unknown id n5-ghost/.test(e)));
+});
+
+test('validator rejects a distractor equal to the point pattern', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜ように', distractors: ['〜ように', 'x', 'y'] });
+  assert.ok(validatePoints([A], 'N5', new Set(['n5-a'])).some(e => /equals the point's own pattern/.test(e)));
+});
+
+test('validator rejects a distractors count outside 2–4', () => {
+  const one = okPoint({ id: 'n5-a', pattern: '〜A', distractors: ['x'] });
+  assert.ok(validatePoints([one], 'N5', new Set(['n5-a'])).some(e => /2–4 entries/.test(e)));
+  const five = okPoint({ id: 'n5-a', pattern: '〜A', distractors: ['a', 'b', 'c', 'd', 'e'] });
+  assert.ok(validatePoints([five], 'N5', new Set(['n5-a'])).some(e => /2–4 entries/.test(e)));
+});
+
+test('mcqOptions: confusable patterns ++ distractors, deduped, own pattern excluded', () => {
+  const A = { id: 'n5-a', pattern: '〜ように', confusable: ['n5-b', 'n5-c'], distractors: ['〜ために', 'x'] };
+  const B = { id: 'n5-b', pattern: '〜ために' };   // surfaces as a distractor too → deduped to one
+  const C = { id: 'n5-c', pattern: '〜ように' };   // equals A's own pattern → excluded
+  const allById = new Map([['n5-a', A], ['n5-b', B], ['n5-c', C]]);
+  assert.deepEqual(mcqOptions(A, allById), ['〜ために', 'x']);
+  assert.deepEqual(mcqOptions({ pattern: '〜A' }, allById), []);   // no confusable/distractors → empty
+});
+
+test('validator rejects a point that cannot assemble ≥3 MCQ wrong-options', () => {
+  const A = okPoint({ id: 'n5-a', pattern: '〜A', distractors: ['x', 'y'] });   // 2 options, no confusables
+  const errs = validatePoints([A], 'N5', new Set(['n5-a']), new Map([['n5-a', A]]));
+  assert.ok(errs.some(e => /assemble ≥3 MCQ wrong-options/.test(e)));
 });
 
 

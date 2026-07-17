@@ -1841,6 +1841,7 @@ import {
   seedImport, hash, sessionStart, sessionRecord, sessionEnd,
   lessonOrder, unitProgress, testOutResult,
   checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
+  leechList, ghostCount, unsuspend,
 } from '../docs/assets/lib/study.js';
 
 const DAY = 86400000, MIN = 60000;
@@ -1977,6 +1978,52 @@ test('study: leech at 5 lapses, suspend at 8, suspended excluded from queue', ()
   assert.equal(st.points.L.suspended, true);                              // 8th → suspend
   const q = buildQueue(st, st.points.L.due + 10 * DAY);
   assert.ok(!q.reviews.includes('L'), 'suspended point never queued');
+});
+
+// ── R9 struggle-UX selectors ─────────────────────────────────────────────────
+test('study: leechList — leeches only, sorted by lapses desc, suspended flagged', () => {
+  const st = { ...newState(T0), points: {
+    a: { leech: true, suspended: false, lapses: 5 },
+    b: { leech: true, suspended: true, lapses: 8 },
+    c: { leech: false, lapses: 2 },                 // not a leech → excluded
+    d: { leech: true, suspended: false, lapses: 6 },
+  } };
+  const list = leechList(st);
+  assert.deepEqual(list.map(l => l.id), ['b', 'd', 'a']);   // 8, 6, 5 lapses
+  assert.equal(list.length, 3);
+  assert.equal(list.find(l => l.id === 'b').suspended, true);
+  assert.equal(list.find(l => l.id === 'a').suspended, false);
+  assert.deepEqual(leechList(newState(T0)), []);            // empty state → no leeches
+});
+
+test('study: ghostCount — counts points currently haunting', () => {
+  const st = { ...newState(T0), points: {
+    a: { ghost: { step: 0, streak: 0 } },
+    b: { ghost: null },
+    c: { ghost: { step: 1, streak: 1 } },
+  } };
+  assert.equal(ghostCount(st), 2);
+  assert.equal(ghostCount(newState(T0)), 0);
+});
+
+test('study: unsuspend — clears suspended, keeps leech, due now, immutable, re-queues', () => {
+  const st = { ...newState(T0), points: { L: { leech: true, suspended: true, lapses: 8, S: 0.5, last: T0 - DAY, due: T0 - DAY } } };
+  const ns = unsuspend(st, 'L', T0);
+  assert.equal(ns.points.L.suspended, false);
+  assert.equal(ns.points.L.leech, true);            // still a leech, but with a real second chance
+  assert.equal(ns.points.L.lapses, 7);              // dropped just below SUSPEND_AT (8)
+  assert.equal(ns.points.L.due, T0);
+  assert.equal(st.points.L.suspended, true);        // input untouched (immutable)
+  assert.equal(st.points.L.lapses, 8);              // input untouched
+  assert.ok(!buildQueue(st, T0).reviews.includes('L'), 'suspended → excluded');
+  assert.ok(buildQueue(ns, T0).reviews.includes('L'), 'unsuspended + due now → queued');
+  // a PASS after unsuspend must NOT re-suspend (the bug R9 review caught)
+  const afterPass = review(ns, 'L', { pass: true, grade: 3, mode: 'review' }, T0);
+  assert.equal(afterPass.points.L.suspended, false, 'a correct answer keeps the point in play');
+  // but a FAIL does re-suspend (lapses back to 8)
+  const afterFail = review(ns, 'L', { pass: false, grade: 1, mode: 'review' }, T0);
+  assert.equal(afterFail.points.L.suspended, true, 'a fresh fail re-suspends');
+  assert.equal(unsuspend(st, 'nope', T0), st);      // unknown id → same state
 });
 
 test('study: queue cap + deferral bound (force-entry on the 3rd)', () => {

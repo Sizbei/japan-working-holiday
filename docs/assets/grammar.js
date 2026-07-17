@@ -35,6 +35,33 @@ function loadProg() {
 }
 function saveProg() { set(KEYS.grammar, prog); }
 
+// R9: READ-ONLY reflection of the Grammar Gym's struggle state — points the SRS engine has flagged
+// as ghosts (◆/relearn) or leeches (5+ lapses) get a 👻 marker here, so the reference page and the
+// gym agree on "this one's shaky". We only READ jwh-study-v1; we never write scheduling from here
+// (the two stores stay independent — no dual-write).
+let studyStruggle = new Set();
+function refreshStudyStruggle() {
+  const s = get(KEYS.study, null);
+  const next = new Set();
+  if (s && s.points && typeof s.points === 'object') {
+    for (const [id, p] of Object.entries(s.points)) if (p && (p.leech || p.ghost)) next.add(id);
+  }
+  studyStruggle = next;
+}
+// the per-card header marks (✓ studied / ◆ shaky / 👻 gym-struggling) — shared by first render and
+// the in-place refresh so a mark toggle or a gym update never drops the others.
+function marksHTML(id) {
+  return `${prog.done.includes(id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(id) ? '<span class="g-hd-shaky">◆</span>' : ''}${studyStruggle.has(id) ? '<span class="g-hd-gym" title="Struggling in the Grammar Gym — a ghost or leech">👻</span>' : ''}`;
+}
+// live, non-destructive reflection: update the 👻 markers on already-rendered cards without a
+// rebuild (a rebuild would collapse whatever card the reader has open).
+function reflectStudyMarks() {
+  document.querySelectorAll('#gList .g-card').forEach(card => {
+    const m = card.querySelector('.g-hd-marks');
+    if (m) m.innerHTML = marksHTML(card.dataset.id);
+  });
+}
+
 export function mountGrammar() {
   const root = $('#grammarRoot');
   if (!root || root.dataset.wired) return;
@@ -72,6 +99,12 @@ export function mountGrammar() {
     <div id="gList"></div>
     <div id="gSentinel" aria-hidden="true"></div>`;
   loadProg();
+  refreshStudyStruggle();
+  // keep the 👻 gym-struggle reflection fresh when the reader returns to #/grammar after a study
+  // session (in-place, non-destructive — open cards stay open).
+  document.addEventListener('jwh:route', (e) => {
+    if (e.detail?.route === 'grammar') { refreshStudyStruggle(); reflectStudyMarks(); }
+  });
   wireBar(root);
   applyFuri();
   moveTabInd();
@@ -306,7 +339,7 @@ function cardHTML(p, delay = -1) {
     <button type="button" class="g-card-h" aria-expanded="false" aria-controls="${bid}">
       <span class="g-pat" lang="ja">${esc(p.pattern)}</span>
       <span class="g-mean">${esc(p.meaning)}</span>
-      <span class="g-hd-marks" aria-hidden="true">${prog.done.includes(p.id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(p.id) ? '<span class="g-hd-shaky">◆</span>' : ''}</span>
+      <span class="g-hd-marks" aria-hidden="true">${marksHTML(p.id)}</span>
       ${state.q ? `<span class="g-lvl">${esc(p.level)}</span>` : ''}
       <span class="g-chev" aria-hidden="true">▾</span>
     </button>
@@ -554,7 +587,7 @@ function toggleMark(btn) {
   btn.setAttribute('aria-pressed', String(on));
   btn.classList.remove('g-pop'); void btn.offsetWidth; btn.classList.add('g-pop');   // press pop (reduce-motion kill covers it)
   const marks = card.querySelector('.g-hd-marks');
-  if (marks) marks.innerHTML = `${prog.done.includes(id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(id) ? '<span class="g-hd-shaky">◆</span>' : ''}`;
+  if (marks) marks.innerHTML = marksHTML(id);
   const pt = findPoint(id);
   announce(`${pt ? pt.pattern : id} — ${on ? 'marked' : 'unmarked'} ${kind === 'done' ? 'studied' : 'shaky'}`);
   updateProgressUI();

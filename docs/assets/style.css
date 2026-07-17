@@ -3859,6 +3859,10 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-hair{ width:60px; height:1px; background: var(--line); margin:.5rem 0 .1rem; }
 .ank-sent{ font-size:.95rem; color: var(--ink); max-width:44ch; }
 .ank-sentm{ font-size:.82rem; color: var(--ink-soft); max-width:44ch; }
+/* study toggles: hide the reading (hiragana) / the English gloss to self-quiz. visibility (not display)
+   so the card doesn't reflow when you flip them — the answer just appears in place. */
+.ank-hira-off ruby.ank-word rt{ visibility: hidden; }
+.ank-en-off .ank-mean, .ank-en-off .ank-sentm{ visibility: hidden; }
 
 /* --- progress line --- */
 .ank-prog{ display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-top: var(--s3); font-family: var(--mono); font-size:.74rem; color: var(--ink-soft); }

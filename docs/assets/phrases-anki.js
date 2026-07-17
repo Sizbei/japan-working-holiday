@@ -10,7 +10,7 @@
 // (cleanField in lib/anki.js is for display cleanliness, esc() is the XSS boundary).
 
 import { $, esc } from './lib/dom.js';
-import { KEYS, get, set } from './lib/store.js';
+import { KEYS, get, set, getRaw, setRaw } from './lib/store.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
@@ -41,11 +41,48 @@ function loadDeck() {
 }
 function saveDeck(d) { set(KEYS.anki, { v: 1, cards: d.cards, pos: d.pos, shaky: d.shaky, shuffle: d.shuffle, seed: d.seed, view: d.view === 'skim' ? 'skim' : 'stream', autoplay: !!d.autoplay }); }
 
+// Study toggles — hide the reading (hiragana) or the English meaning on cards to self-quiz. Persisted
+// sentinels (own keys, independent of the site-wide furigana). English is HIDDEN by default (owner).
+function hiraOff() { return getRaw(KEYS.ankiHira, '') === 'off'; }
+function enOff() { return getRaw(KEYS.ankiEn, 'off') === 'off'; }
+// reflect the toggle state as classes on the deck ROOT (they survive the innerHTML rebuilds) — CSS
+// hides `.ank-word rt` / `.ank-mean`+`.ank-sentm` with visibility so nothing reflows on toggle.
+function applyToggles() {
+  if (!root) return;
+  const h = hiraOff(), e = enOff();
+  root.classList.toggle('ank-hira-off', h);
+  root.classList.toggle('ank-en-off', e);
+  const hb = $('#ankHira'); if (hb) { hb.classList.toggle('is-on', !h); hb.setAttribute('aria-pressed', String(!h)); }
+  const eb = $('#ankEn'); if (eb) { eb.classList.toggle('is-on', !e); eb.setAttribute('aria-pressed', String(!e)); }
+}
+
 export function mountAnki() {
   DATA = null;
   root = $('#ankiDeck');
   if (!root) return;
+  wireDeckKeys();
   render();
+}
+
+// Deck keys at DOCUMENT level (attached once) so ←/→/Space/S/P drive the refresher the moment the
+// Phrases page is open — no click-to-focus first (owner: the refresher is the main surface). Guarded to
+// the deck being visible (offsetParent null when the route is hidden) and to skip while typing in a field.
+let _kbdWired = false;
+function wireDeckKeys() {
+  if (_kbdWired) return;
+  _kbdWired = true;
+  document.addEventListener('keydown', (e) => {
+    if (!stream || !root || root.offsetParent === null) return;   // deck not mounted / route hidden
+    if (stream.deck.view === 'skim') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;               // leave Cmd/Ctrl/Alt combos (palette, undo…)
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+    if (t && t.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;   // let a focused button activate
+    if (e.key === 'p' || e.key === 'P') { $('#ankAudio')?.click(); return; }
+    if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
+    else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }
+  });
 }
 
 function render() {
@@ -289,6 +326,8 @@ function barHTML(deck) {
           <button type="button" class="ank-mini${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}">▶ Stream</button>
           <button type="button" class="ank-mini${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}">☰ Skim</button>
         </span>
+        <button type="button" class="ank-mini" id="ankHira" title="Show or hide the reading (hiragana)">あ Hiragana</button>
+        <button type="button" class="ank-mini" id="ankEn" title="Show or hide the English meaning">EN English</button>
         <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
         <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
         <button type="button" class="ank-mini" id="ankReplace">Replace deck</button>
@@ -603,6 +642,8 @@ function wireCommon() {
     stream = { deck, mode: stream.mode, chunk: keep, idx: 0, order: [] };
     deck.view === 'skim' ? renderSkim(deck) : renderStream(deck);
   });
+  $('#ankHira')?.addEventListener('click', () => { setRaw(KEYS.ankiHira, hiraOff() ? '' : 'off'); applyToggles(); });
+  $('#ankEn')?.addEventListener('click', () => { setRaw(KEYS.ankiEn, enOff() ? '' : 'off'); applyToggles(); });
   $('#ankReplace')?.addEventListener('click', () => {
     DATA = null; stream = null;
     renderImport();
@@ -611,6 +652,7 @@ function wireCommon() {
     $('#ankBack')?.addEventListener('click', () => { render(); });
     $('#ankClearFlags')?.addEventListener('click', () => { const d = loadDeck(); if (d) { d.shaky = []; saveDeck(d); } render(); });
   });
+  applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar
 }
 
 function wireStream() {
@@ -655,19 +697,5 @@ function wireStream() {
     prog.addEventListener('click', (e) => { const bar = e.target.closest('.ank-scrub'); if (bar) scrubTo(bar, e.clientX); });
   }
 
-  if (!root.dataset.kbd) {
-    root.dataset.kbd = '1';
-    root.addEventListener('keydown', (e) => {
-      if (!stream) return;
-      const t = e.target;
-      // BUTTON early-return (stage-3 review): S/Space on a focused skim row or strip chip must
-      // not ALSO drive the stream (double-fire); buttons own their keys.
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
-      if (stream.deck.view === 'skim') return;
-      if (e.key === 'p') { $('#ankAudio')?.click(); return; }
-      if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
-      else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleShakyCurrent(); }
-    });
-  }
+  // keys are handled at document level (wireDeckKeys) so they work without focusing the deck first
 }

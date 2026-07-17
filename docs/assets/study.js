@@ -22,6 +22,7 @@ import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
 import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor } from './lib/questions.js';
+import { pegHTML } from './lib/peg.js';
 import { scrambleCard } from './study-scramble.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
@@ -477,18 +478,21 @@ function reveal(next, opts = {}) {
   const input = $('#stuInput');
   if (input) input.disabled = true;
   const fb = $('#stuFeedback');
+  // The anime peg lands ONLY here — post-answer, once the sentence is revealed (never during the
+  // input phase, per teaching model item 9: it contains the pattern verbatim).
+  const peg = pegHTML(card.point);
   if (next === 'graded') {
     phase = 'graded';
     card.closeAccepted = !!opts.closeAccepted;
-    if (fb) fb.innerHTML = card.closeAccepted
+    if (fb) fb.innerHTML = (card.closeAccepted
       ? `<span class="stu-fb-close">Accepted — capped at Hard. How did it feel?</span>`
-      : `<span class="stu-fb-ok">Correct — how did it feel?</span>`;
+      : `<span class="stu-fb-ok">Correct — how did it feel?</span>`) + peg;
     setControls('graded');
     focusControl('.stu-good');
     announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Hard, Good or Easy.' : 'Correct. Choose Hard, Good or Easy.');
   } else {
     phase = 'wrong';
-    if (fb) fb.innerHTML = `<span class="stu-fb-wrong">Not quite — the answer is <b lang="ja">${esc(card.answers[0])}</b>.</span>`;
+    if (fb) fb.innerHTML = `<span class="stu-fb-wrong">Not quite — the answer is <b lang="ja">${esc(card.answers[0])}</b>.</span>` + peg;
     setControls('wrong');
     focusControl('.stu-btn-primary');
     announce(`Not quite. The answer is ${card.answers[0]}.`);

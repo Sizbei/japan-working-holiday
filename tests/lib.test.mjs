@@ -1328,6 +1328,43 @@ test('shakyRows: level order N5→N1, deck order within, tags + TSV round-trip',
   assert.deepEqual(shakyRows(byLevel, []), []);
 });
 
+// ---- lib/peg.js (R6 — anime peg cards + register-flag chips; pure, esc-safe) ----
+import { pegHTML, flagBadgesHTML, matchesFlag, FLAG_META } from '../docs/assets/lib/peg.js';
+test('pegHTML: escapes a hostile peg (no raw < or unescaped quote survives)', () => {
+  const html = pegHTML({ peg: {
+    ja: '<img src=x onerror=alert(1)>「', romaji: 'a"b', en: '</figure><script>', source: 'Evil — "src" (styled)', kind: 'styled',
+  } });
+  assert.ok(!/<img/.test(html), 'raw <img must be escaped');
+  assert.ok(!/<script>/.test(html), 'raw <script must be escaped');
+  assert.ok(html.includes('&lt;img'), 'the payload survives as escaped text');
+  assert.ok(html.includes('&quot;src&quot;'), 'attribution quotes escaped');
+});
+test('pegHTML: verbatim vs styled kind, empty when no peg, drops missing lines', () => {
+  const v = pegHTML({ peg: { ja: 'なんだと', romaji: 'nanda to', en: 'What?!', source: 'X', kind: 'verbatim' } });
+  assert.ok(v.includes('peg--verbatim') && v.includes('「なんだと」') && v.includes('— X'));
+  const s = pegHTML({ peg: { ja: 'ですわ', kind: 'styled' } });
+  assert.ok(s.includes('peg--styled'));
+  assert.ok(!s.includes('peg-romaji') && !s.includes('peg-src'), 'absent romaji/source lines are omitted');
+  assert.equal(pegHTML({}), '');
+  assert.equal(pegHTML({ peg: {} }), '');
+});
+test('flagBadgesHTML: renders known flags, drops unknown, empty for none', () => {
+  const h = flagBadgesHTML({ flags: ['keigo-critical', 'not-a-flag', 'rude-in-life'] });
+  assert.ok(h.includes('flag-chip--keigo') && h.includes('flag-chip--rude'));
+  assert.ok(!h.includes('not-a-flag'));
+  assert.ok(h.includes(FLAG_META['keigo-critical'].title.replace(/'/g, '&#39;')), 'instruction tooltip present');
+  assert.equal(flagBadgesHTML({ flags: [] }), '');
+  assert.equal(flagBadgesHTML({}), '');
+});
+test('matchesFlag: All passes everything; recognize-only composes yakuwarigo + rude', () => {
+  assert.equal(matchesFlag({ flags: ['casual-spoken'] }, ''), true);
+  assert.equal(matchesFlag({ flags: ['written-formal'] }, 'written-formal'), true);
+  assert.equal(matchesFlag({ flags: ['casual-spoken'] }, 'written-formal'), false);
+  assert.equal(matchesFlag({ flags: ['rude-in-life'] }, 'recognize-only'), true);
+  assert.equal(matchesFlag({ flags: ['yakuwarigo-recognize-only'] }, 'recognize-only'), true);
+  assert.equal(matchesFlag({ flags: [] }, 'anime-common'), false);
+});
+
 // ---- lib/trip.js (trip-mode derivations, pre-trip plan PR A) ----
 import { isStay, stayBooked, stayForNight, tripWindow } from '../docs/assets/lib/trip.js';
 test('trip.js: contiguous 4-stay chain — boundaries, day counts (synthetic; NOT live bookings)', () => {

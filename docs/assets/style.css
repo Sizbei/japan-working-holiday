@@ -4031,7 +4031,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .g-prog-t{ font-size:.78rem; color:var(--ink-soft); white-space:nowrap; }
 .g-prog-bar{ flex:1; max-width:220px; height:5px; border-radius:100px; background: color-mix(in srgb, var(--ink) 10%, transparent); overflow:hidden; }
 .g-prog-fill{ display:block; height:100%; width:0; border-radius:100px; background: var(--indigo-ink); transition: width .3s ease; }
-.g-foot{ display:flex; align-items:center; gap:.5rem; margin-top:.5rem; }
+.g-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin-top:.5rem; }
 .g-mark{ font:inherit; font-size:.8rem; padding:.2rem .6rem; border:1px solid var(--line); border-radius:100px; background:var(--bg-soft); color:var(--ink-soft); cursor:pointer; }
 .g-mark-done[aria-pressed="true"]{ color: var(--good-ink, #2e7d32); border-color: currentColor; font-weight:600; }
 .g-mark-shaky[aria-pressed="true"]{ color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); border-color: var(--gold-ink, #8a6508); font-weight:600; }
@@ -4073,6 +4073,54 @@ html[data-theme="dark"]{ --lvl-n5:#5ec27a; --lvl-n4:#3fbcbc; --lvl-n3:#7f9bff; -
 .g-export{ font:inherit; font-size:.85rem; padding:.3rem .6rem; border:1px solid var(--line); border-radius:8px; background:var(--bg-soft); color:var(--ink); cursor:pointer; }
 .g-export[disabled]{ opacity:.45; cursor:default; }
 @media (hover: none){ .g-export{ min-height:44px; } }
+
+/* ===== R6 — anime peg cards + register-flag chips (shared: #/grammar cards + #/study lessons) ===== */
+/* the peg quote card — post-explanation / post-answer only (see lib/peg.js). Verbatim = a real
+   quotation (solid accent rule); styled = an in-character original (dashed, softer). */
+.peg{ margin:.7rem 0; padding:.55rem .8rem; border:1px solid var(--line); border-left:3px solid var(--indigo);
+  border-radius: var(--r-sm, 9px); background: color-mix(in srgb, var(--indigo) 5%, var(--bg-soft)); }
+.peg--styled{ border-left-style: dashed; border-left-color: color-mix(in srgb, var(--indigo) 55%, var(--line)); }
+.peg-ja{ font-size:1.15rem; line-height:1.65; margin:0; font-weight:600; color: var(--ink); }
+.peg-romaji{ font-family: var(--mono); font-size:.76rem; color: var(--ink-soft); margin:.2rem 0 0; }
+.peg-en{ font-size:.85rem; color: var(--ink-soft); margin:.15rem 0 0; }
+.peg-src{ font-size:.75rem; font-style: italic; color: var(--ink-soft); margin:.3rem 0 0; }
+.g-card .peg{ margin-left:0; margin-right:0; }
+
+/* register-flag chips — muted per flag; keigo = the gold prize tone, rude/role-language = warning */
+.flag-chips{ display:inline-flex; flex-wrap:wrap; gap:.3rem; vertical-align:middle; }
+.flag-chip{ font-size:.68rem; font-weight:700; letter-spacing:.02em; padding:.12rem .5rem; border-radius:100px;
+  border:1px solid var(--line); background: var(--bg-soft); color: var(--ink-soft); white-space:nowrap; cursor:default; }
+.flag-chip--anime{ border-color: color-mix(in srgb, var(--indigo) 45%, var(--line)); color: var(--indigo-ink);
+  background: color-mix(in srgb, var(--indigo) 9%, var(--bg-soft)); }
+.flag-chip--casual{ border-color: color-mix(in srgb, var(--ink) 22%, var(--line)); }
+.flag-chip--written{ border-style: dashed; color: color-mix(in srgb, var(--ink) 62%, var(--ink-soft)); }
+.flag-chip--keigo{ border-color: var(--gold-ink, #8a6508); color: color-mix(in srgb, var(--gold-ink, #8a6508) 78%, var(--ink));
+  background: color-mix(in srgb, var(--gold, #b8860b) 13%, var(--bg-soft)); }
+.flag-chip--rude, .flag-chip--role{ border-color: color-mix(in srgb, var(--red) 55%, var(--line));
+  color: color-mix(in srgb, var(--red) 78%, var(--ink)); background: color-mix(in srgb, var(--red) 8%, var(--bg-soft)); }
+.stu-flags{ text-align:center; margin:0 0 .7rem; }
+
+/* archetype→register cheat-sheet disclosure (grammar page) */
+.g-cheat{ border:1px solid var(--line); border-radius:10px; background:var(--bg-soft); margin:.1rem 0 .9rem; overflow:hidden; }
+.g-cheat-h{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; width:100%; text-align:left;
+  font:inherit; font-weight:600; font-size:.9rem; color:var(--ink); background:none; border:none; padding:.7rem .9rem; cursor:pointer; }
+.g-cheat-h:hover, .g-cheat-h:focus-visible{ background: color-mix(in srgb, var(--indigo) 6%, transparent); }
+.g-cheat-h:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; }
+.g-cheat-h .c-chev{ color: var(--ink-soft); transition: transform .15s ease; }
+.g-cheat-h[aria-expanded="true"] .c-chev{ transform: rotate(180deg); }
+.g-cheat-b{ padding:.2rem .9rem .9rem; }
+.g-cheat-cols{ display:grid; gap:.8rem; grid-template-columns:1fr; }
+@media (min-width:640px){ .g-cheat-cols{ grid-template-columns:1fr 1fr; } }
+.g-cheat-half{ border:1px solid var(--line); border-radius:8px; padding:.65rem .75rem; }
+.g-cheat-produce{ border-left:3px solid var(--good-ink, #2e7d32); background: color-mix(in srgb, var(--good-ink, #2e7d32) 5%, var(--bg-soft)); }
+.g-cheat-recognize{ border-left:3px solid var(--red); background: color-mix(in srgb, var(--red) 5%, var(--bg-soft)); }
+.g-cheat-half h4{ margin:.1rem 0 .4rem; font-size:.88rem; }
+.g-cheat-produce h4{ color: var(--good-ink, #2e7d32); }
+.g-cheat-recognize h4{ color: color-mix(in srgb, var(--red) 80%, var(--ink)); }
+.g-cheat-lede{ font-size:.8rem; color: var(--ink-soft); margin:0 0 .5rem; line-height:1.4; }
+.g-cheat-row{ margin:.4rem 0; font-size:.88rem; line-height:1.45; }
+.g-cheat-note{ display:block; color: var(--ink-soft); font-size:.8rem; margin-top:.1rem; }
+@media (hover: none){ .g-cheat-h{ min-height:44px; } }
 
 /* ===== trip mode (pre-trip plan PR A) ===== */
 .w-tripband{ display:block; margin:0 0 .5rem; padding:.4rem .6rem; font-size:.85rem; font-weight:600; text-decoration:none;

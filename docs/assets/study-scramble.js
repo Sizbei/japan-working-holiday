@@ -18,6 +18,7 @@
 
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
+import { pegHTML } from './lib/peg.js';
 import { scrambleFor } from './lib/questions.js';
 
 // scrambleCard(ctx, host, point, exIdx, opts) → controller { teardown, onAct(name, btn), onKey(e) }
@@ -110,6 +111,7 @@ export function scrambleCard(ctx, host, point, exIdx, opts = {}) {
       if (c) c.innerHTML = `<button type="button" class="stu-btn stu-btn-primary" data-act="again">Continue ⏎</button>`;
       announce(`Not quite. The order is ${right}.`);
     }
+    if (fb) fb.insertAdjacentHTML('beforeend', pegHTML(point));   // post-answer peg reward, same as the cloze card
     const btn = host.querySelector('#stuControls .stu-good, #stuControls .stu-btn-primary');
     if (btn) btn.focus({ preventScroll: true });
   }

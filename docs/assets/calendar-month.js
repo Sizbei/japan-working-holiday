@@ -19,31 +19,30 @@ const MONTH_SINGLES = 4;      // rows per cell — all chips, or 3 chips + "+N m
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const addDaysISO = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 
-// TRUE infinite scroll: the grid renders a WINDOW of months (not the whole data range), tight around
-// today, and extends on demand as you scroll to either end — so there's no hard April "wall". The
-// window is module state so extensions persist across re-renders / route re-entry.
+// TRUE infinite scroll via a fixed-size SLIDING window (not the whole data range) — so there's no
+// hard April "wall", and the DOM stays bounded (fast re-render, no growing lag). Reaching an end
+// SLIDES the window (drop CAL_CHUNK off the far end, add it to the near end). Module state, so it
+// persists across re-renders / route re-entry.
 const stepYM = (ym, n) => { const d = new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1 + n, 1)); return d.toISOString().slice(0, 7); };
-const CAL_CHUNK = 6;          // months added each time you reach an edge
-const CAL_CAP = 72;          // don't auto-extend past ~6 years either side of today (bounds the DOM)
-let _winLo = null, _winHi = null;   // YYYY-MM, inclusive
-function initWindow() { const t = TODAY.slice(0, 7); _winLo = stepYM(t, -2); _winHi = stepYM(t, 14); }   // a little lead-in, ~15 months ahead
+const CAL_SIZE = 18;          // months kept in the DOM at once (bounds re-render cost)
+const CAL_CHUNK = 6;          // months the window slides when you reach an edge
+let _winLo = null, _winHi = null;   // YYYY-MM, inclusive (span = CAL_SIZE)
+function initWindow() { const t = TODAY.slice(0, 7); _winLo = stepYM(t, -2); _winHi = stepYM(t, CAL_SIZE - 3); }   // today near the top
 export function calWindow() { if (_winLo === null) initWindow(); return { lo: _winLo, hi: _winHi }; }
-// widen the window one chunk (today always stays inside — we only widen). Returns true if it changed;
-// stops at CAL_CAP so a pinned edge-scroll can't grow the DOM without bound.
+// slide the window one chunk toward dir — bounded DOM, truly infinite (no absolute cap). Always changes.
 export function extendWindow(dir) {
   if (_winLo === null) initWindow();
-  const t = TODAY.slice(0, 7);
-  if (dir < 0) { const n = stepYM(_winLo, -CAL_CHUNK); if (n < stepYM(t, -CAL_CAP)) return false; _winLo = n; return true; }
-  const n = stepYM(_winHi, CAL_CHUNK); if (n > stepYM(t, CAL_CAP)) return false; _winHi = n; return true;
+  const n = dir < 0 ? -CAL_CHUNK : CAL_CHUNK;
+  _winLo = stepYM(_winLo, n); _winHi = stepYM(_winHi, n);
+  return true;
 }
-// explicit jumps (Prev/Next, quick-add, mini-cal) can target a month outside the window — widen to
-// include it (no cap: the user asked to go there). Returns true if the window changed.
+// explicit jumps (Prev/Next, Today, quick-add, mini-cal) — recenter the window on the target month if
+// it's outside the window, so the target cell/separator exists before we scroll to it. Returns changed.
 export function ensureWindowCovers(ym) {
   if (_winLo === null) initWindow();
-  let changed = false;
-  while (ym < _winLo) { _winLo = stepYM(_winLo, -CAL_CHUNK); changed = true; }
-  while (ym > _winHi) { _winHi = stepYM(_winHi, CAL_CHUNK); changed = true; }
-  return changed;
+  if (ym >= _winLo && ym <= _winHi) return false;
+  _winLo = stepYM(ym, -2); _winHi = stepYM(ym, CAL_SIZE - 3);
+  return true;
 }
 // anchor the current scroll to a day cell at the READING LINE (middle of the VISIBLE grid, below the
 // sticky topbar/nav) so a prepend/append doesn't jump. Reuses topline()'s probe point on purpose —
@@ -53,7 +52,10 @@ export function captureAnchor() {
   const gr = grid.getBoundingClientRect();
   const x = gr.left + gr.width / 2;
   const y = (Math.max(gr.top, 0) + Math.min(gr.bottom, window.innerHeight)) / 2;
-  const cell = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
+  let cell = document.elementFromPoint(x, y)?.closest?.('.cal-cell[data-day]');
+  if (!cell) {   // elementFromPoint can miss (a chip/overlay intercepts the point) — scan for the first cell past the reading line so a slide still preserves scroll
+    for (const c of grid.querySelectorAll('.cal-cell[data-day]')) { if (c.getBoundingClientRect().bottom >= y) { cell = c; break; } }
+  }
   if (!cell) return null;
   return { day: cell.dataset.day, offset: cell.getBoundingClientRect().top - gr.top };
 }

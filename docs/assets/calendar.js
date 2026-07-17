@@ -620,8 +620,11 @@ function render() {
       dimFocus();
       if (panel && !panel.hidden) { panel.innerHTML = panelHTML(); wirePanel(); }
     }, (dir) => {
-      // reached an end → grow the window and re-render, anchored so the view doesn't jump (infinite
-      // scroll). Skip the re-render at the cap (extendWindow returns false → nothing to redraw).
+      // reached an end → SLIDE the window and re-render, anchored so the view doesn't jump (infinite
+      // scroll). CRITICAL: don't slide while a re-entry restore is pending — on tab-switch the grid
+      // sits at the top for a beat, which would trigger an upward slide that fights positionEndless
+      // and strands you at the top month instead of the current one.
+      if (_entryPos || _endlessNeedsPos) return;
       const a = captureAnchor();
       if (extendWindow(dir)) { render(); restoreAnchor(a); }
     });

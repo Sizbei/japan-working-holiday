@@ -1842,6 +1842,7 @@ import {
   lessonOrder, unitProgress, testOutResult,
   checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
   leechList, ghostCount, unsuspend,
+  recordSession, streakInfo, weeklyInfo, masteryStats, LEVEL_TOTALS,
 } from '../docs/assets/lib/study.js';
 
 const DAY = 86400000, MIN = 60000;
@@ -2169,28 +2170,133 @@ test('study: seedImport — deterministic stagger + ghost import', () => {
 });
 
 test('study: migrate — corrupt → fresh, current-version passthrough', () => {
-  assert.equal(migrate(null).v, 2);
-  assert.equal(migrate({ nope: 1 }).v, 2);
+  assert.equal(migrate(null).v, 3);
+  assert.equal(migrate({ nope: 1 }).v, 3);
   assert.deepEqual(migrate(null).points, {});
-  assert.equal(migrate({ v: 99, points: { x: 1 } }).v, 2);            // unknown/future version → fresh
+  assert.equal(migrate({ v: 99, points: { x: 1 } }).v, 3);            // unknown/future version → fresh
   assert.deepEqual(migrate({ v: 99 }).points, {});
   const good = newState(T0);
   assert.equal(migrate(good), good);                                   // current-version identity passthrough
 });
 
-test('study: migrate v1→v2 preserves points, gains settings.placed + examLevel', () => {
+test('study: migrate v1→v3 preserves points, gains v2 (placed/examLevel) + v3 (streak/week) shape', () => {
   const v1 = {
     v: 1, points: { 'n5-wa': { S: 7, D: 5, due: 100 } }, session: null, units: {}, log: [],
     lastSession: 0,
-    settings: { newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 0, last: null }, freezes: 2 },
+    settings: { newPerDay: 4, capReviews: 45, weeklyGoal: 5, streak: { count: 4, last: '2026-08-01' }, freezes: 1 },
   };
-  const v2 = migrate(v1);
-  assert.equal(v2.v, 2);
-  assert.deepEqual(v2.points, { 'n5-wa': { S: 7, D: 5, due: 100 } });  // real points survive the chain
-  assert.deepEqual(v2.settings.placed, []);                            // new v2 field
-  assert.equal(v2.settings.examLevel, null);                           // new v2 field
-  assert.equal(v2.settings.newPerDay, 4);                              // old settings preserved
+  const v3 = migrate(v1);
+  assert.equal(v3.v, 3);
+  assert.deepEqual(v3.points, { 'n5-wa': { S: 7, D: 5, due: 100 } });  // real points survive the chain
+  assert.deepEqual(v3.settings.placed, []);                            // v2 field
+  assert.equal(v3.settings.examLevel, null);                           // v2 field
+  assert.equal(v3.settings.newPerDay, 4);                              // old settings preserved
+  // v3 folds the old top-level freezes + streak.last into the streak sub-shape, keeping progress
+  assert.deepEqual(v3.settings.streak, { count: 4, lastDay: '2026-08-01', freezes: 1, lastFreezeMonth: null });
+  assert.deepEqual(v3.settings.week, { done: 0, weekStart: null });    // v3 field
+  assert.equal(v3.settings.freezes, undefined);                        // top-level freezes dropped
   assert.equal(v1.settings.placed, undefined);                         // input untouched (immutable)
+});
+
+// ── R11: streak + weekly-goal habit engine + mastery rollup ─────────────────────
+const withSettings = (over) => ({ ...newState(0), settings: { ...newState(0).settings, ...over } });
+
+test('study R11: recordSession — first session starts the streak + weekly counter', () => {
+  const s1 = recordSession(newState(0), '2026-08-03');            // a Monday
+  assert.equal(s1.settings.streak.count, 1);
+  assert.equal(s1.settings.streak.lastDay, '2026-08-03');
+  assert.equal(s1.settings.streak.lastFreezeMonth, '2026-08');
+  assert.equal(s1.settings.week.done, 1);
+  assert.equal(s1.settings.week.weekStart, '2026-08-03');
+});
+
+test('study R11: a lessons day then a review day = one count (the M1 fix relies on this)', () => {
+  // A lessons/checkpoint completion and a review-session summary both call recordSession;
+  // on the same calendar day the second is a no-op, so streak/weekly count exactly once.
+  let s = recordSession(newState(0), '2026-08-03');   // lessons flow completes
+  s = recordSession(s, '2026-08-03');                 // a review session finishes later the same day
+  assert.equal(s.settings.streak.count, 1);
+  assert.equal(s.settings.week.done, 1);
+  // next day a lessons-only completion still advances the streak (was M1: it didn't)
+  const s2 = recordSession(s, '2026-08-04');
+  assert.equal(s2.settings.streak.count, 2);
+  assert.equal(s2.settings.streak.freezes, 2, 'perfect attendance never spends a freeze');
+});
+
+test('study R11: recordSession — same-day is a no-op (max 1/day, idempotent by reference)', () => {
+  const s1 = recordSession(newState(0), '2026-08-03');
+  assert.equal(recordSession(s1, '2026-08-03'), s1);             // identity → no double count
+});
+
+test('study R11: recordSession — next day increments streak + weekly', () => {
+  const s1 = recordSession(newState(0), '2026-08-03');
+  const s2 = recordSession(s1, '2026-08-04');
+  assert.equal(s2.settings.streak.count, 2);
+  assert.equal(s2.settings.week.done, 2);
+});
+
+test('study R11: recordSession — a gap beyond the freeze budget resets the streak to 1', () => {
+  const s1 = recordSession(newState(0), '2026-08-03');           // freezes replenished to 2
+  const s = recordSession(s1, '2026-08-10');                     // 6 missed days > 2 freezes
+  assert.equal(s.settings.streak.count, 1);
+});
+
+test('study R11: recordSession — a single freeze bridges one missed day', () => {
+  const s1 = recordSession(newState(0), '2026-08-03');           // freezes: 2
+  const s = recordSession(s1, '2026-08-05');                     // 1 missed day → spend 1 freeze
+  assert.equal(s.settings.streak.count, 2);
+  assert.equal(s.settings.streak.freezes, 1);
+});
+
+test('study R11: recordSession — freezes replenish at each new month', () => {
+  const base = withSettings({ streak: { count: 5, lastDay: '2026-08-31', freezes: 0, lastFreezeMonth: '2026-08' } });
+  const s = recordSession(base, '2026-09-01');                   // next day, new month → freezes back to 2
+  assert.equal(s.settings.streak.count, 6);
+  assert.equal(s.settings.streak.freezes, 2);
+  assert.equal(s.settings.streak.lastFreezeMonth, '2026-09');
+  // and the fresh budget can bridge a gap that the drained old month couldn't
+  const base2 = withSettings({ streak: { count: 3, lastDay: '2026-08-30', freezes: 0, lastFreezeMonth: '2026-08' } });
+  const s2 = recordSession(base2, '2026-09-01');                 // 1 missed day, bridged by a replenished freeze
+  assert.equal(s2.settings.streak.count, 4);
+  assert.equal(s2.settings.streak.freezes, 1);
+});
+
+test('study R11: recordSession — weekly counter resets when the Monday week rolls over', () => {
+  let s = recordSession(newState(0), '2026-08-03');              // week of Aug 3
+  s = recordSession(s, '2026-08-04');
+  assert.equal(s.settings.week.done, 2);
+  const next = recordSession(s, '2026-08-11');                   // week of Aug 10 → counter resets
+  assert.equal(next.settings.week.done, 1);
+  assert.equal(next.settings.week.weekStart, '2026-08-10');
+});
+
+test('study R11: streakInfo — atRisk = shown-up-yesterday-not-today; freezes replenish in the read path', () => {
+  const st = withSettings({ streak: { count: 4, lastDay: '2026-08-04', freezes: 1, lastFreezeMonth: '2026-08' } });
+  assert.deepEqual(streakInfo(st, '2026-08-05'), { count: 4, freezes: 1, atRisk: true });   // yesterday, not today
+  assert.equal(streakInfo(st, '2026-08-04').atRisk, false);      // already shown up today
+  assert.equal(streakInfo(st, '2026-08-06').atRisk, false);      // two-day gap — not "yesterday"
+  assert.equal(streakInfo(st, '2026-09-10').freezes, 2);         // new month → effective replenish (no mutation)
+});
+
+test('study R11: weeklyInfo — done within the week, 0 once the week rolls over', () => {
+  const wk = withSettings({ weeklyGoal: 5, week: { done: 3, weekStart: '2026-08-03' } });
+  assert.deepEqual(weeklyInfo(wk, '2026-08-05'), { done: 3, goal: 5, weekStart: '2026-08-03' });
+  assert.equal(weeklyInfo(wk, '2026-08-17').done, 0);            // a later week reads 0
+});
+
+test('study R11: masteryStats — per-level mastered counts, inGate, fixed corpus totals', () => {
+  const ms = { ...newState(0), points: {
+    'n5-a': { gate: { passed: true }, reps: 3, S: 30 },
+    'n5-b': { gate: { passed: true }, reps: 3, S: 30 },
+    'n4-c': { gate: { passed: true }, reps: 3, S: 30 },
+    'n4-d': { reps: 3, S: 25 },                                   // Deep, not gated yet → inGate
+  } };
+  const out = masteryStats(ms);
+  assert.equal(out.perLevel.N5, 2);
+  assert.equal(out.perLevel.N4, 1);
+  assert.equal(out.inGate, 1);
+  assert.equal(out.totals.N4, 86);
+  assert.deepEqual(LEVEL_TOTALS, { N5: 82, N4: 86, N3: 72, N2: 66, N1: 47 });
 });
 
 test('study: lessonOrder walks N5-first, unit order, unseeded only', () => {
@@ -2458,7 +2564,7 @@ test('study: migrate — upgraders are INVOKED and user data survives the chain'
   assert.deepEqual(out.points, { a: { S: 9, D: 5 } });  // data preserved, not wiped
   assert.deepEqual(st.points, { a: { S: 9, D: 5 } });   // input untouched
   // chain that cannot reach the target still resets to fresh (newState = current version)
-  assert.equal(migrate({ v: 1 }, {}, 3).v, 2);
+  assert.equal(migrate({ v: 1 }, {}, 3).v, 3);
 });
 
 test('study: normal-mode lapse voids in-progress gate passes; Mastered stays sticky', () => {

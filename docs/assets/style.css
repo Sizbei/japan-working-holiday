@@ -2526,6 +2526,43 @@ a.prg-lbl{ text-decoration: none; }
 .awk-chip .ok2{ color: var(--ok-ink); } .awk-chip .warn2{ color: var(--warn-ink); }
 .almwk .w-empty{ margin: 0; }
 
+/* ---- 文法ジム GRAMMAR GYM — the R11 habit widget ---- */
+.stw-cta{ display: flex; flex-direction: column; gap: .15rem; padding: var(--s4) var(--s5);
+  border: 1px dashed var(--line-strong); border-radius: var(--r-md); text-decoration: none;
+  color: var(--ink); background: var(--bg-elevated); transition: border-color var(--t-hover); }
+.stw-cta b{ font-weight: var(--fw-med); }
+.stw-cta small{ font-size: var(--fs-xs); color: var(--ink-faint); }
+@media (hover: hover) and (pointer: fine){ .stw-cta:hover{ border-color: var(--indigo); } }
+.stw-top{ display: flex; align-items: center; gap: var(--s4); flex-wrap: wrap; }
+.stw-streak{ display: grid; grid-template-columns: auto auto auto; align-items: center; gap: .1rem .5rem;
+  padding: .4rem .7rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-elevated); }
+.stw-flame{ grid-row: span 2; font-size: 1.6rem; line-height: 1; animation: stw-flicker 2.2s var(--ease-out) infinite; }
+.stw-streak.is-risk .stw-flame{ filter: grayscale(.7); animation: none; }
+.stw-streak-n{ font-family: var(--mono); font-size: var(--fs-xl); font-weight: 700; color: var(--ink); line-height: 1; }
+.stw-streak-l{ font-family: var(--mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wide);
+  color: var(--ink-faint); line-height: 1.15; grid-column: 3; grid-row: 1 / span 2; }
+.stw-freeze{ grid-column: 2; grid-row: 2; font-size: var(--fs-2xs); font-family: var(--mono); color: var(--indigo-ink); }
+.stw-week{ display: flex; align-items: center; gap: .4rem; }
+.stw-week-l{ font-family: var(--mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--ink-faint); line-height: 1.15; }
+.stw-mastery{ display: flex; flex-wrap: wrap; gap: var(--s4); margin: var(--s3) 0 0; }
+.stw-lvl{ display: flex; flex-direction: column; align-items: center; gap: .15rem; }
+.stw-lvl-l{ font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 700; color: var(--ink-soft); }
+.stw-ring{ position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; }
+.stw-ring svg{ width: 44px; height: 44px; transform: rotate(-90deg); }
+.stw-ring-bg{ fill: none; stroke: var(--line); stroke-width: 3; }
+.stw-ring-fg{ fill: none; stroke: var(--indigo); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 600ms var(--ease-out); }
+.stw-ring-txt{ position: absolute; font-family: var(--mono); font-size: .58rem; font-weight: 700; color: var(--ink); }
+.stw-ring-txt small{ font-weight: 400; color: var(--ink-faint); }
+.stw-hint, .stw-risk{ margin: var(--s3) 0 0; font-size: var(--fs-xs); color: var(--ink-faint); }
+.stw-risk{ color: var(--warn-ink); }
+.stw-train{ display: inline-block; margin: var(--s4) 0 0; padding: .5rem 1rem; border-radius: var(--r-md);
+  background: var(--indigo); color: var(--on-accent); text-decoration: none; font-weight: var(--fw-med);
+  font-size: var(--fs-sm); transition: transform 160ms var(--ease-out), background var(--t-hover); }
+.stw-train:active{ transform: scale(.97); }
+@media (hover: hover) and (pointer: fine){ .stw-train:hover{ background: var(--indigo-soft); } }
+@keyframes stw-flicker{ 0%,100%{ transform: scale(1) rotate(-1deg); } 50%{ transform: scale(1.08) rotate(1deg); } }
+@media (prefers-reduced-motion: reduce){ .stw-flame{ animation: none; } .stw-ring-fg{ transition: none; } }
+
 /* ---- 今日の一言 PHRASE (phraseday.js .potd, restyled as a pull-quote) ---- */
 #view-dashboard .phr{ text-align: center; padding: var(--s6) var(--s5); }
 #view-dashboard .phr .alm-h{ justify-content: center; }

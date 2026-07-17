@@ -4221,6 +4221,24 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 .stu-mc-wrong{ border-color: var(--bad-ink, #b3261e); background: color-mix(in srgb, var(--bad-ink, #b3261e) 10%, var(--bg)); }
 .stu-timer{ position:absolute; right:.6rem; top:50%; transform:translateY(-50%); font-family: var(--mono); font-size:.8rem; color: var(--ink-soft); }
 .stu-timer-up{ color: var(--bad-ink, #b3261e); }
+/* ★-scramble (文の組み立て) — 4 slots + shuffled chunk tiles (tap-to-place + keyboard) */
+.stu-scram-q{ text-align:center; font-size:.95rem; margin:.2rem 0 1rem; color: var(--ink-soft); }
+.stu-slots{ display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-bottom:1rem; }
+.stu-slot{ position:relative; display:inline-flex; align-items:center; justify-content:center; min-width:4.5rem; min-height:2.9rem; padding:.5rem .7rem; background: var(--bg); border:2px dashed var(--line); border-radius: var(--r-sm); cursor:pointer; color: var(--ink); font-family: var(--sans); font-size:1.15rem; }
+.stu-slot.is-filled{ border-style:solid; border-color: var(--indigo); background: color-mix(in srgb, var(--indigo) 8%, var(--bg)); }
+.stu-slot:hover:not([disabled]), .stu-slot:focus-visible{ border-color: var(--indigo); }
+.stu-slot[disabled]{ cursor:default; }
+.stu-slot-star{ border-color: color-mix(in srgb, var(--gold) 70%, var(--line)); }
+.stu-slot-star.is-filled{ border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, var(--bg)); }
+.stu-slot-star-mark{ position:absolute; top:-.7rem; left:50%; transform:translateX(-50%); font-size:.8rem; color: var(--gold-ink, #8a6508); }
+.stu-slot-bad{ border-color: var(--bad-ink, #b3261e); background: color-mix(in srgb, var(--bad-ink, #b3261e) 10%, var(--bg)); }
+.stu-slot-ph{ color: var(--ink-soft); opacity:.5; }
+.stu-tiles{ display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; min-height:2.9rem; margin-bottom:.4rem; }
+.stu-tile{ display:inline-flex; align-items:center; padding:.5rem .8rem; background: var(--bg-soft); border:1px solid var(--indigo); border-radius: var(--r-sm); cursor:pointer; color: var(--ink); font-family: var(--sans); font-size:1.15rem; box-shadow: var(--shadow); transition: transform var(--t-hover), border-color var(--t-hover); }
+.stu-tile:hover, .stu-tile:focus-visible{ border-color: var(--indigo-soft, var(--indigo)); transform: translateY(-1px); }
+@media (max-width: 640px){ .stu-slot, .stu-tile{ min-height:44px; } }
+html[data-reduce-motion="on"] .stu-tile{ transition:none; }
+html[data-reduce-motion="on"] .stu-tile:hover, html[data-reduce-motion="on"] .stu-tile:focus-visible{ transform:none; }
 .stu-pl-list{ display:flex; flex-direction:column; gap:.2rem; margin:.6rem 0 1rem; max-height:60vh; overflow:auto; }
 .stu-pl-row{ display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:.7rem; width:100%; text-align:left; background: var(--bg); border:1px solid var(--line); border-radius: var(--r-sm); padding:.55rem .7rem; cursor:pointer; color: var(--ink); font-family: var(--sans); }
 .stu-pl-row[disabled]{ opacity:.55; cursor:default; }

@@ -20,8 +20,9 @@ import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress } from './lib/study.js';
-import { clozeFor, checkAnswer } from './lib/questions.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf } from './lib/study.js';
+import { clozeFor, checkAnswer, scramblable, scrambleFor } from './lib/questions.js';
+import { scrambleCard } from './study-scramble.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -34,8 +35,9 @@ let units = [];                   // grammar-units.json — the R3 unit map (fet
 const pointsCache = {};           // id → point data (examples etc.), filled by fetched levels
 const levelFetched = {};          // level → true once its file is loaded
 let root = null;
-let card = null;                  // { id, exIdx, point, blankedTokens, answers } for the live card
-let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong'
+let card = null;                  // { id, exIdx, point, type, ... } for the live card
+let cardCtl = null;               // active ★-scramble sub-controller (study-scramble.js) while a scramble card shows
+let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble'
 let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
 const expandedLevels = new Set(); // course-home accordion: which level cards are open
 
@@ -200,7 +202,7 @@ function levelCardHTML(level) {
 }
 
 function renderCourseHome(focusSel) {
-  phase = 'idle'; card = null; activeFlow = null;
+  phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
   const cs = continueState();
   const examVal = state.settings.examLevel || '';
   const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
@@ -307,7 +309,10 @@ async function continueSession() {
 
 async function startSession() {
   const now = Date.now();
-  const q = buildQueue(state, now);
+  // Interleaving / confusable co-scheduling ON (R4): warm every level first so the related map is
+  // complete, then feed it to buildQueue — confusable siblings due within 2 days join this session.
+  await ensureAllLevels();
+  const q = buildQueue(state, now, { coSchedule: relatedMap() });
   if (!q.reviews.length) { renderCourseHome(); return; }
   state = sessionStart(state, q);
   save();
@@ -327,9 +332,17 @@ function buildCard() {
   if (!point || !Array.isArray(point.examples) || !point.examples.length) return null;
   const p = state.points[id];
   const exIdx = (((p && p.reps) || 0) + idHash(id)) % point.examples.length;
+  // Format mix by stage (R4): young/mature/deep points alternate typed-cloze / ★-scramble day by
+  // day; seed/sprout/ghost points stay cloze-only (fresh material is produced, not reassembled).
+  const stage = p ? stageOf(p) : 'seed';
+  const eligible = !(p && p.ghost) && (stage === 'young' || stage === 'mature' || stage === 'deep');
+  if (eligible && scramblable(point) && (idHash(id) + Math.floor(Date.now() / DAY)) % 2 === 0) {
+    const sIdx = scrambleFor(point, exIdx) ? exIdx : point.examples.findIndex((_, i) => scrambleFor(point, i));
+    if (sIdx >= 0) return { id, exIdx: sIdx, point, type: 'scramble' };
+  }
   const { blankedTokens, answers } = clozeFor(point, exIdx);
   if (!answers.length) return null;   // degenerate example with no p token — skip
-  return { id, exIdx, point, blankedTokens, answers };
+  return { id, exIdx, point, type: 'cloze', blankedTokens, answers };
 }
 
 // small stable hash so the shown example is deterministic across a resume (no Math.random)
@@ -338,6 +351,7 @@ function idHash(id) { let h = 0; const s = String(id); for (let i = 0; i < s.len
 function renderCard() {
   const s = state.session;
   if (!s || s.pos >= s.queue.length) { renderSummary(); return; }
+  cardCtl = null;
   card = buildCard();
   if (!card) {                       // unrenderable — advance without touching the schedule
     state = sessionRecord(state, { id: s.queue[s.pos], skipped: true });
@@ -345,6 +359,7 @@ function renderCard() {
     renderCard();
     return;
   }
+  if (card.type === 'scramble') { renderScrambleCard(); return; }
   phase = 'input';
   const sentence = renderSentence(card.blankedTokens, false);
   const total = s.queue.length, n = s.pos + 1;
@@ -365,6 +380,37 @@ function renderCard() {
     </div>`;
   $('#stuInput')?.focus({ preventScroll: true });
   announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — type the missing grammar.`);
+}
+
+// ── ★-scramble card (R4) ─────────────────────────────────────────────────────
+// The second card type: mounts the shared study-scramble.js sub-controller into the card shell and
+// parks it in cardCtl (the delegated click/keydown handlers forward to it). On the learner's final
+// action it calls back through onScrambleResult — the one place scheduling happens for this card.
+function renderScrambleCard() {
+  const s = state.session;
+  const total = s.queue.length, n = s.pos + 1;
+  phase = 'scramble';
+  root.innerHTML = `
+    <div class="stu-card stu-card-scramble">
+      <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+      <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span></p>
+      <div id="stuScramHost"></div>
+    </div>`;
+  const hostEl = root.querySelector('#stuScramHost');
+  cardCtl = scrambleCard({ announce }, hostEl, card.point, card.exIdx, { grade: true, onResult: onScrambleResult });
+  announce(`Card ${n} of ${total}. ${card.point.pattern || ''} — arrange the pieces to build the sentence.`);
+}
+
+// Correct order → the learner's Hard/Good/Easy; wrong order → Again (typedCorrect:false → grade 1).
+function onScrambleResult({ pass, chosen }) {
+  const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
+  const now = Date.now();
+  state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: 'review' }, now);
+  state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
+  save();
+  cardCtl = null;
+  renderCard();
 }
 
 // render the token list; `revealed` swaps the blanks for the highlighted answer pattern
@@ -471,6 +517,7 @@ function grade(g, { typedCorrect = true } = {}) {
 
 // ── Summary screen ───────────────────────────────────────────────────────────
 function renderSummary() {
+  cardCtl = null;
   const results = (state.session && state.session.results) || [];
   const graded = results.filter(r => !r.skipped);
   const n = graded.length;
@@ -504,6 +551,7 @@ function wireRoot() {
     if (b) {
       if (b.tagName === 'SELECT') return;          // <select> handled by the change listener below
       if (activeFlow) { activeFlow.onAct(b.dataset.act, b); return; }   // a lesson/placement/test-out owns its buttons
+      if (cardCtl) { cardCtl.onAct(b.dataset.act, b); return; }         // a live ★-scramble card owns its tiles/slots/grade
       act(b.dataset.act, b); return;
     }
     const tapR = e.target.closest('.stu-tap-r'); if (tapR) { primaryAction(); return; }
@@ -521,6 +569,7 @@ function wireRoot() {
   root.addEventListener('keydown', (e) => {
     if (e.isComposing || e.keyCode === 229) return;   // don't fight an IME (matches gestures.js)
     if (activeFlow) { activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
+    if (cardCtl) { cardCtl.onKey(e); return; }         // a live ★-scramble card owns its keys
     const t = e.target;
     if (phase === 'input') {
       if (e.key === 'Enter') { e.preventDefault(); submitAnswer(); }

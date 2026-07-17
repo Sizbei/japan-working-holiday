@@ -16,8 +16,9 @@
 
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
-import { clozeFor, checkAnswer } from './lib/questions.js';
-import { review, effectiveGrade, testOutResult } from './lib/study.js';
+import { clozeFor, checkAnswer, scrambleFor } from './lib/questions.js';
+import { review, effectiveGrade, testOutResult, gateMode } from './lib/study.js';
+import { scrambleCard } from './study-scramble.js';
 
 const NEW_PER_DAY_FALLBACK = 4;
 const TESTOUT_SECONDS = 20;   // soft display timer only — NO hard cutoff in R3
@@ -380,12 +381,14 @@ export function startPlacement(ctx, levels) {
 }
 
 // ── Flow 3: the test-out runner ───────────────────────────────────────────────
-// For each queued id: 2 hint-free typed clozes on DISTINCT examples (exampleIdx 0 and 1) with a
-// soft ~20s timer (display only, no cutoff). Both pass → testOutResult lands the point at Mature
-// (~2-week due); any fail → the point is left unseeded, so it re-enters as a normal lesson.
-// DEVIATION (approved): R3 test-outs are typed-cloze for ALL levels.
-// TODO(R4/R8): switch N1 / `written-formal` points to a recognition (MCQ/scramble) modality once
-// those formats exist — the point's gate modality (lib/study.js gateMode) should drive it.
+// For each queued id: 2 hint-free checks on DISTINCT examples (exampleIdx 0 and 1). Both pass →
+// testOutResult lands the point at Mature (~2-week due); any fail → the point is left unseeded, so
+// it re-enters as a normal lesson.
+// R4: modality follows the point's gate mode (lib/study.js gateMode) — N1 / `written-formal`
+// points test out via recognition (★-scramble) where the example is scramble-able; every other
+// point stays typed cloze (with the soft ~20s timer, display only, no cutoff).
+// TODO(R8): add the confusable-MCQ recognition item (and the written-formal 文法形式 MCQ) once the
+// R8 MCQ generator + distractor data land — scramble alone covers recognition for now.
 export function startTestOuts(ctx, ids, { host, onDone } = {}) {
   const { root, pointsCache } = ctx;
   const container = host || root;
@@ -394,11 +397,11 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
   let sub = null;
   let passedCount = 0;
 
-  function renderShell(pattern, level) {
+  function renderShell(pattern, level, recog) {
     container.innerHTML = `
       <div class="stu-testout">
         <div class="stu-lesson-top"><span class="stu-lesson-tag">Test-out · ${esc(String(i + 1))}/${esc(String(queue.length))}</span><span class="stu-lvl">${esc(level || '')}</span></div>
-        <p class="stu-mc-q">Prove it — type <b lang="ja">${esc(pattern || '')}</b> (${esc(String(exN + 1))} of 2).</p>
+        <p class="stu-mc-q">${recog ? 'Prove it — build the sentence with' : 'Prove it — type'} <b lang="ja">${esc(pattern || '')}</b> (${esc(String(exN + 1))} of 2).</p>
         <div id="stuClozeHost"></div>
       </div>`;
   }
@@ -406,14 +409,19 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
   function renderEx() {
     const p = pointsCache[queue[i]];
     if (!p || !Array.isArray(p.examples) || p.examples.length < 2) { skipPoint(); return; }
-    renderShell(p.pattern, p.level);
+    // recognition (★-scramble) for N1 / written-formal points where this example scrambles; else cloze
+    const recog = gateMode(p, { level: p.level, flags: p.flags }) === 'recognition' && !!scrambleFor(p, exN);
+    renderShell(p.pattern, p.level, recog);
     const hostEl = container.querySelector('#stuClozeHost');
-    sub = clozeCard(ctx, hostEl, p, exN, { timer: true, onResult(res) {
+    const onResult = (res) => {
       results.push(!!res.pass);
       exN++;
       if (exN >= 2) commitPoint();
       else renderEx();
-    } });
+    };
+    sub = recog
+      ? scrambleCard(ctx, hostEl, p, exN, { grade: false, onResult })
+      : clozeCard(ctx, hostEl, p, exN, { timer: true, onResult });
   }
 
   function commitPoint() {

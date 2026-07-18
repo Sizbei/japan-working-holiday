@@ -2838,16 +2838,17 @@
    "stayContact": "No phone bookings — contact via kshouse.jp; screenshot your booking email before you go."
   },
   {
-   "id": "ev26-stay-sapporo2-tbd",
-   "title": "🛏️ Stay: Sapporo (return leg) — NOT BOOKED yet (1 night)",
+   "id": "ev26-stay-sapporo2-ldk",
+   "title": "🛏️ Stay: Grand Hostel LDK Sapporo (return leg) — BOOKED",
    "date": "2026-07-23",
    "endDate": "2026-07-24",
    "category": "personal",
-   "area": "Sapporo",
-   "confidence": "low",
+   "area": "Susukino, Sapporo",
+   "confidence": "high",
    "sources": [],
-   "bookingNotes": "Gap — 1 night before the Jul 24 10:30 CTS flight (Asahidake → Sapporo on the 23rd). Nariya again is the easy option.",
-   "bookBy": "2026-07-16"
+   "bookingNotes": "Booked ✓ — Booking.com #5737679809, PIN 9199. 1 night: in Thu Jul 23, out Fri Jul 24 before the 10:30 CTS→NRT flight. Susukino location — ~1 km / 15 min walk south of the Odori Park beer garden (opening night is the 23rd), and by the subway for the airport run next morning. ¥2,923 paid.",
+   "stayAddress": "Chuo-ku Minami 5-jo Nishi 9-chome 1008-10, Sapporo 064-0805",
+   "stayAddressJa": "北海道札幌市中央区南5条西9丁目1008-10"
   },
   {
    "id": "ev26-manga-cafe-return",

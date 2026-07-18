@@ -25,6 +25,31 @@
     var nav = document.getElementById('routeNav'), topbar = document.querySelector('.topbar');
     if (nav && topbar && nav.parentElement !== topbar) topbar.insertBefore(nav, topbar.querySelector('.countdown'));
   }
+  // Trim hidden tabs + surface Phrases (2nd) BEFORE first paint, so the nav doesn't flash the full
+  // static set and then re-filter when boot's applyNav runs. applyNav re-applies the SAME state
+  // idempotently, so no double-swap. Default-hidden logic is duplicated here (classic script, can't
+  // import) — KEEP IN SYNC with guide.js navHiddenSet() / NAV_HIDDEN_DEFAULT / the Phrases position.
+  var routeNav = document.getElementById('routeNav');   // null in the head run (body not parsed yet) — settles in the after-body run
+  if (routeNav) {
+    var hidden = (function () {
+      try { var v = JSON.parse(localStorage.getItem('jwh-navhidden-v1') || 'null'); if (v && v.length !== undefined) return v; } catch (e) { /* ignore */ }
+      var shownArr = ['phrases'];
+      try { var s = JSON.parse(localStorage.getItem('jwh-navshow-v1') || 'null'); if (s && s.length !== undefined) shownArr = s; } catch (e) { /* ignore */ }
+      var opt = ['phrases', 'survival', 'grammar', 'study', 'packing', 'deadlines'], out = [];
+      for (var i = 0; i < opt.length; i++) if (shownArr.indexOf(opt[i]) < 0) out.push(opt[i]);
+      return out.concat(['emergency', 'map', 'explore', 'rooms', 'people']);
+    })();
+    for (var k = 0; k < hidden.length; k++) {
+      var a = routeNav.querySelector('a[data-route="' + hidden[k] + '"]');
+      if (a && a.parentNode) a.parentNode.removeChild(a);
+    }
+    if (hidden.indexOf('phrases') < 0 && !routeNav.querySelector('a[data-route="phrases"]')) {
+      var pa = document.createElement('a');
+      pa.href = '#/phrases'; pa.setAttribute('data-route', 'phrases'); pa.setAttribute('data-i18n', 'nav.phrases'); pa.textContent = 'Phrases';
+      var dash = routeNav.querySelector('a[data-route="dashboard"]');
+      if (dash) routeNav.insertBefore(pa, dash.nextSibling); else routeNav.appendChild(pa);
+    }
+  }
   // Match router.js parseRoute exactly (it does NOT strip a query): only an exact `#/<route>`
   // whose view exists activates; anything else falls back to dashboard, same as parseRoute.
   var h = (location.hash || '').replace(/^#\/?/, '');

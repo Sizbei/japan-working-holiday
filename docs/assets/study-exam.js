@@ -19,6 +19,7 @@ import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { nowISO } from './lib/dates.js';
 import { buildExam, scoreExam, examBand, recordExam, KATA_COUNT, STAR_COUNT, PASSAGE_COUNT } from './lib/exam.js';
+import { canSpeak, speakExample } from './speak.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const PASSAGES_FILE = 'data/grammar-passages.json';
@@ -370,6 +371,7 @@ function examController(ctx, passages) {
         ${formatHTML(score.byFormat)}
         ${clusterHTML(score.byCluster)}
         ${timeHTML(score.byFormat)}
+        ${reviewHTML()}
         <div class="stu-mock-report-foot">
           <button type="button" class="stu-btn stu-btn-primary" data-act="examRetake" data-level="${esc(exam.level)}">Retake ${esc(exam.level)} (new draw)</button>
           <button type="button" class="stu-btn stu-btn-ghost" data-act="examBack">Done — back to course home</button>
@@ -437,6 +439,32 @@ function examController(ctx, passages) {
     </section>`;
   }
 
+  // ── post-exam audio review (POST-EXAM ONLY — never rendered during the timed run) ──
+  // A 🔊 per point-based item (文法形式 / ★) that reads the source sentence by its DATA kana. Passage
+  // items are omitted (they reference the passage bank, not a single grammar point's example).
+  function reviewHTML() {
+    if (!canSpeak()) return '';
+    const rows = exam.items.map((q, i) => {
+      if (q.format !== 'kata' && q.format !== 'star') return '';
+      return `<div class="stu-mock-review-row">
+        <span class="stu-mock-review-n">問 ${esc(String(i + 1))}</span>
+        <span class="stu-mock-review-pat" lang="ja">${esc(q.pattern || '')}</span>
+        <button type="button" class="stu-speak" data-act="examSpeak" data-i="${esc(String(i))}" aria-label="Play audio for question ${esc(String(i + 1))}" title="Play audio">🔊</button>
+      </div>`;
+    }).join('');
+    if (!rows) return '';
+    return `<section class="stu-mock-sec stu-mock-review"><h4 class="stu-mock-sec-h">Review — hear each sentence</h4>
+      <p class="stu-note">Post-exam audio. Tap 🔊 to hear the grammar spoken in its sentence.</p>${rows}</section>`;
+  }
+  function speakItem(i, btn) {
+    const q = exam.items[i];
+    if (!q) return;
+    const p = (ctx.pointsCache || {})[q.pointId];
+    if (!p || !Array.isArray(p.examples)) return;
+    const ex = (q.exampleIdx != null && p.examples[q.exampleIdx]) || p.examples[0];
+    if (ex && ex.ja) speakExample(ex.ja, btn);
+  }
+
   // ── controller surface (study.js forwards its delegated click/keydown here) ──────
   return {
     teardown() { stopTimer(); },
@@ -453,6 +481,7 @@ function examController(ctx, passages) {
         case 'examTile': placeTile(parseInt(btn.dataset.i, 10)); break;
         case 'examSlot': clearSlot(parseInt(btn.dataset.pos, 10)); break;
         case 'examRetake': startLevel(btn.dataset.level); break;
+        case 'examSpeak': speakItem(parseInt(btn.dataset.i, 10), btn); break;
       }
     },
     onKey(e) {

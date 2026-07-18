@@ -11,13 +11,10 @@
 
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
-import { canSpeak, speak } from './speak.js';
+import { canSpeak, speakExample } from './speak.js';
 
 const RATINGS = [['got', 'Got it'], ['close', 'Close'], ['missed', 'Missed']];
 
-function surfaceText(ja) {
-  return (Array.isArray(ja) ? ja : []).map(t => typeof t === 'string' ? t : String((t && t.t) || '')).join('');
-}
 function tokensHTML(ja) {
   return (Array.isArray(ja) ? ja : []).map(t => {
     if (typeof t === 'string') return esc(t);
@@ -104,7 +101,7 @@ export function startBuild(ctx, point) {
     teardown() {},
     onAct(name, btn) {
       if (name === 'buildModel') showModel();
-      else if (name === 'buildSpeak') { const ex = modelEx(cur); if (ex) speak(surfaceText(ex.ja), btn); }
+      else if (name === 'buildSpeak') { const ex = modelEx(cur); if (ex) speakExample(ex.ja, btn); }
       else if (name === 'buildRate') rate(btn.dataset.r);
       else if (name === 'buildAnother') another();
       else if (name === 'buildDone') ctx.done();

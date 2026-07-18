@@ -1191,7 +1191,7 @@ test('pileOrder: deck order preserved, ids deduped by Set, empty/missing safe', 
 });
 
 // ---- lib/grammar.js (JLPT grammar reference, P1) ----
-import { readingOf, tokenReading, kanaToRomaji, searchPoints, byLevel } from '../docs/assets/lib/grammar.js';
+import { readingOf, tokenReading, exampleReading, kanaToRomaji, searchPoints, byLevel } from '../docs/assets/lib/grammar.js';
 import { validatePoints, mcqOptions } from '../scripts/validate-grammar.mjs';
 
 test('readingOf: per-segment furigana derives the kana reading', () => {
@@ -1201,6 +1201,20 @@ test('readingOf: per-segment furigana derives the kana reading', () => {
   assert.equal(readingOf(undefined), '');
   assert.equal(tokenReading('、'), '、');
   assert.equal(tokenReading({ t: '前に', f: [['前', 'まえ'], ['に', '']] }), 'まえに');
+});
+
+test('exampleReading: concatenates the kana reading of a mixed ja token array', () => {
+  // kanji objects → their furigana readings; particle/punctuation strings pass through verbatim
+  const ja = [
+    { t: '昨日', f: [['昨日', 'きのう']] }, 'は',
+    { t: '学校', f: [['学校', 'がっこう']] }, 'に',
+    { t: '行った', f: [['行', 'い'], ['った', '']] }, '。',
+  ];
+  assert.equal(exampleReading(ja), 'きのうはがっこうにいった。');
+  // homograph: the DATA reading wins (行った → いった, not おこなった)
+  assert.equal(exampleReading([{ t: '行った', f: [['行', 'い'], ['った', '']] }]), 'いった');
+  assert.equal(exampleReading([]), '');
+  assert.equal(exampleReading(undefined), '');
 });
 
 test('kanaToRomaji: wapuro romaji incl. digraphs, gemination, chōon, katakana', () => {

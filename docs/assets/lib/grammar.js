@@ -16,6 +16,16 @@ export function tokenReading(tok) {
   return typeof tok === 'string' ? tok : readingOf(tok && tok.f);
 }
 
+// full kana reading of an example's `ja` token array (mixed strings + {t,f,g,p} objects) —
+// each token mapped through tokenReading (string → itself; object → readingOf its furigana) and
+// concatenated. This is what feeds speak(): TTS pronounces the DATA's readings (行った → いった)
+// instead of guessing homographs from the surface. Pure — unit-tested in tests/lib.test.mjs.
+export function exampleReading(ja) {
+  // fall back to a token's surface when it carries no furigana reading (all current data has f;
+  // this guards a future f-less object token from being silently dropped from speech)
+  return (Array.isArray(ja) ? ja : []).map(t => tokenReading(t) || (t && t.t) || '').join('');
+}
+
 // ---- kana → romaji (wapuro) ------------------------------------------------
 // Wapuro-style on purpose: it mirrors IME typing habits, so a learner's "kyou"/"gakkou"
 // matches. Non-kana characters (〜, kanji, punctuation) are skipped, not errors.

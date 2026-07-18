@@ -4,6 +4,8 @@
 // The button's "is-speaking" pulse is the only motion (CSS, reduce-motion gated) — audio itself
 // always plays.
 
+import { exampleReading } from './lib/grammar.js';
+
 let jaVoice = null;
 
 function pickVoice() {
@@ -41,4 +43,18 @@ export function speak(text, btn) {
     }
     window.speechSynthesis.speak(u);
   } catch { /* speech unavailable — fail silently */ }
+}
+
+// Speak an example's `ja` token array by its DATA readings (exampleReading), not the raw surface —
+// so homographs (行った → いった) sound correct. Used across the Grammar Gym study surfaces.
+export function speakExample(ja, btn) {
+  speak(exampleReading(ja), btn);
+}
+
+// Shared 🔊 button markup for the study surfaces — a real <button data-act="speak"> that the
+// module's delegated handler routes to speak/speakExample. Returns '' when TTS is unavailable, so
+// callers can drop it in unconditionally and it self-hides. `cls` adds a site-specific class.
+export function speakBtnHTML(cls = '') {
+  if (!canSpeak()) return '';
+  return `<button type="button" class="stu-speak${cls ? ' ' + cls : ''}" data-act="speak" aria-label="Play audio" title="Play audio">🔊</button>`;
 }

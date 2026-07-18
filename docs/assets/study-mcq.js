@@ -17,6 +17,7 @@
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { pegHTML } from './lib/peg.js';
+import { speakExample, speakBtnHTML } from './speak.js';
 
 // render the blanked stem tokens (clozeFor/mcqFor `stem` shape: { blank } | { token })
 function stemHTML(stem) {
@@ -33,7 +34,7 @@ function stemHTML(stem) {
 // opts: { onResult({ pass, chosen }), grade:bool (Hard/Good/Easy on correct, else plain Continue),
 // point (for the post-answer peg) }.
 export function mcqCard(ctx, host, mcq, opts = {}) {
-  const { onResult, grade = false, point = null } = opts;
+  const { onResult, grade = false, point = null, exampleJa = null, autoSpeak = false } = opts;
   const announce = ctx.announce || (() => {});
   const options = (mcq && Array.isArray(mcq.options)) ? mcq.options : [];
   if (!mcq || options.length < 2 || typeof mcq.correct !== 'number') {
@@ -89,6 +90,9 @@ export function mcqCard(ctx, host, mcq, opts = {}) {
       announce(`Not quite. The answer is ${answer}.`);
     }
     if (fb && point) fb.insertAdjacentHTML('beforeend', pegHTML(point));   // post-answer peg reward
+    // 🔊 the full sentence (post-answer only). Autoplay reads it aloud on reveal when enabled.
+    if (fb && exampleJa) { const sb = speakBtnHTML(); if (sb) fb.insertAdjacentHTML('beforeend', sb); }
+    if (autoSpeak && exampleJa) speakExample(exampleJa, host.querySelector('.stu-speak'));
     const btn = host.querySelector('#stuControls .stu-good, #stuControls .stu-btn-primary');
     if (btn) btn.focus({ preventScroll: true });
   }
@@ -102,6 +106,7 @@ export function mcqCard(ctx, host, mcq, opts = {}) {
     teardown() {},
     onAct(name, btn) {
       if (name === 'mcq') choose(parseInt(btn.dataset.k, 10));
+      else if (name === 'speak') { if (exampleJa) speakExample(exampleJa, btn); }
       else if (name === 'grade') { if (step === 'graded') finalize(parseInt(btn.dataset.g, 10)); }
       else if (name === 'again') { if (step === 'wrong') finalize(); }
       else if (name === 'next') { if (step === 'graded') finalize(); }

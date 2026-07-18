@@ -12,6 +12,7 @@
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, del, getRaw, setRaw } from './lib/store.js';
 import { confirmModal, askText, openDialog } from './lib/modal.js';
+import { speak, canSpeak } from './speak.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
@@ -680,6 +681,7 @@ function fillMedia(card) {
   const tok = ++_mediaTok;
   if (_imgUrl) { URL.revokeObjectURL(_imgUrl); _imgUrl = null; }
   if (_audio) { try { _audio.pause(); } catch { /* already stopped */ } _audio = null; }
+  try { window.speechSynthesis?.cancel(); } catch { /* no TTS */ }   // stop any in-flight spoken word on card change
   const mkey = f => (stream?.deck?.id ? stream.deck.id + '/' : '') + f;   // deck-scoped media key
   // try the deck-scoped key, then fall back to the bare filename — a deck MIGRATED from the old single-slot
   // schema has its media stored unprefixed, so the prefixed lookup would miss and silently drop audio/images.
@@ -692,9 +694,8 @@ function fillMedia(card) {
       el.src = _imgUrl; el.hidden = false;
     }).catch(() => {});
   }
-  // play a media file (word audio #ankAudio, or the example-sentence audio #ankAudio2) — one at a time.
-  const play = (file) => (e) => {
-    e.stopPropagation();   // play without also advancing the card (the card click = next)
+  // play a recorded media file — one at a time.
+  const playRec = (file) => {
     getMedia(file).then(b => {
       if (tok !== _mediaTok || !b) return;   // ignore a stale in-flight read when a newer card loaded
       if (_audio) { try { _audio.pause(); } catch { /* already stopped */ } }
@@ -704,8 +705,17 @@ function fillMedia(card) {
       _audio.play().catch(() => {});
     }).catch(() => {});
   };
-  $('#ankAudio')?.addEventListener('click', play(card.a));
-  if (card.a2) $('#ankAudio2')?.addEventListener('click', play(card.a2));
+  // each button plays its recorded file, or SPEAKS the text (TTS) when the deck has no audio for it.
+  const wireAudio = (id, file, ttsText) => {
+    const b = $('#' + id); if (!b) return;
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();   // play without also advancing the card (the card click = next)
+      if (b.dataset.tts) { try { window.speechSynthesis?.cancel(); } catch {} speak(ttsText, b); }
+      else playRec(file);
+    });
+  };
+  wireAudio('ankAudio', card.a, card.w);
+  wireAudio('ankAudio2', card.a2, card.s);
 }
 
 // the meaning field of many decks is a part-of-speech label ("Noun", "Verb"…) rather than a gloss;
@@ -743,8 +753,13 @@ function paintCard() {
   if (!el || !card) return;
   const isShaky = deck.shaky.includes(card.id);
   const hair = (card.s || card.sm) ? `<div class="ank-hair" aria-hidden="true"></div>` : '';
-  const sentAudio = card.a2 ? ` <button type="button" class="ank-sentaudio" id="ankAudio2" aria-label="Play sentence audio">🔊</button>` : '';
+  // audio: recorded file when the deck ships one, else TTS the text (data-tts) so decks with no audio
+  // still speak. Word audio lives in the media row; sentence audio sits inline after the sentence.
+  const _tts = canSpeak();
+  const sentAudio = (card.a2 || (_tts && card.s))
+    ? ` <button type="button" class="ank-sentaudio" id="ankAudio2"${card.a2 ? '' : ' data-tts="1"'} aria-label="Play sentence audio">🔊</button>` : '';
   const sent = card.s ? `<div class="ank-sent" lang="ja">${sentenceHTML(card.s, card.w)}${sentAudio}</div>` : '';
+  const hasWordAudio = card.a || (_tts && card.w);
   const sentM = card.sm ? `<div class="ank-sentm">${esc(card.sm)}</div>` : '';
   // reading now rides ABOVE the word as ruby (toggle-able via the site .furi-off rule); the meaning
   // field is a POS tag when it names a part of speech, otherwise a meaning line under the word.
@@ -760,13 +775,13 @@ function paintCard() {
     ${wordHTML}
     ${card.m && !isPos ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
     ${hair}${sent}${sentM}
-    ${(card.a || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${card.a ? '<button type="button" class="ank-audio" id="ankAudio" aria-label="Play audio (P)">🔊</button>' : ''}</div>` : ''}
+    ${(hasWordAudio || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${hasWordAudio ? `<button type="button" class="ank-audio" id="ankAudio"${card.a ? '' : ' data-tts="1"'} aria-label="Play audio (P)">🔊</button>` : ''}</div>` : ''}
     <button type="button" class="ank-peek" aria-label="Reveal the hidden side">👁 Reveal <kbd class="ank-peek-k">↓</kbd></button>`;
   fillMedia(card);
   // auto-play audio ONLY when the card actually changed (not on a re-paint from flagging shaky) —
   // gated on card.id. Browsers block play() until a gesture; advancing IS a gesture, so it works
   // from the first tap onward (the very first mount paint is silently blocked, which is fine).
-  if (deck.autoplay && card.a && card.id !== _lastAutoId) { _lastAutoId = card.id; $('#ankAudio')?.click(); }
+  if (deck.autoplay && hasWordAudio && card.id !== _lastAutoId) { _lastAutoId = card.id; $('#ankAudio')?.click(); }
 
   const total = deck.cards.length;
   const prog = $('#ankProg');

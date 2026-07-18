@@ -20,13 +20,15 @@ import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { pegHTML } from './lib/peg.js';
 import { scrambleFor } from './lib/questions.js';
+import { speakExample, speakBtnHTML } from './speak.js';
 
 // scrambleCard(ctx, host, point, exIdx, opts) → controller { teardown, onAct(name, btn), onKey(e) }
 // opts: { onResult({ pass, chosen }), grade:bool (show Hard/Good/Easy on a correct answer, else a
 // plain Continue), seed }. Reports once, on the learner's final action (grade / again / continue).
 export function scrambleCard(ctx, host, point, exIdx, opts = {}) {
-  const { onResult, grade = false, seed } = opts;
+  const { onResult, grade = false, seed, autoSpeak = false } = opts;
   const announce = ctx.announce || (() => {});
+  const exampleJa = (point && Array.isArray(point.examples) && point.examples[exIdx] && point.examples[exIdx].ja) || null;
   const sc = scrambleFor(point, exIdx, seed);
   if (!sc) {                                   // caller should have gated on scramblable(); be safe
     if (typeof onResult === 'function') onResult({ pass: false });
@@ -112,6 +114,9 @@ export function scrambleCard(ctx, host, point, exIdx, opts = {}) {
       announce(`Not quite. The order is ${right}.`);
     }
     if (fb) fb.insertAdjacentHTML('beforeend', pegHTML(point));   // post-answer peg reward, same as the cloze card
+    // 🔊 the full sentence (post-answer only). Autoplay reads it aloud on reveal when enabled.
+    if (fb && exampleJa) { const sb = speakBtnHTML(); if (sb) fb.insertAdjacentHTML('beforeend', sb); }
+    if (autoSpeak && exampleJa) speakExample(exampleJa, host.querySelector('.stu-speak'));
     const btn = host.querySelector('#stuControls .stu-good, #stuControls .stu-btn-primary');
     if (btn) btn.focus({ preventScroll: true });
   }
@@ -125,6 +130,7 @@ export function scrambleCard(ctx, host, point, exIdx, opts = {}) {
     teardown() {},
     onAct(name, btn) {
       if (name === 'tile') placeTile(parseInt(btn.dataset.i, 10));
+      else if (name === 'speak') { if (exampleJa) speakExample(exampleJa, btn); }
       else if (name === 'slot') clearSlot(parseInt(btn.dataset.pos, 10));
       else if (name === 'check') { if (step === 'place' && slots.every(s2 => s2 != null)) check(); }
       else if (name === 'grade') { if (step === 'graded') finalize(parseInt(btn.dataset.g, 10)); }

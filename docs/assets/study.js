@@ -19,8 +19,10 @@
 import { $, esc } from './lib/dom.js';
 import { nowISO } from './lib/dates.js';
 import { rubyHTML } from './lib/furigana.js';
-import { get, set, getRaw, KEYS } from './lib/store.js';
+import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
+import { canSpeak, speakExample, speakBtnHTML } from './speak.js';
+import { blip } from './lib/audio.js';
 import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
@@ -135,6 +137,17 @@ async function loadLevel(level) {
 function applyFuri() {
   const off = getRaw(KEYS.furi, '') === 'off';
   $('#study')?.classList.toggle('furi-off', off);
+}
+
+// ── audio (kana-driven TTS + autoplay opt-in) ────────────────────────────────
+// autoplay is a string-sentinel preference (default OFF) — speak the example on REVEAL only,
+// never during an unanswered input/pick/place phase (that would leak the answer, like the peg).
+function autoplayOn() { return getRaw(KEYS.studyTts, '') === 'on'; }
+function toggleTts() { setRaw(KEYS.studyTts, autoplayOn() ? '' : 'on'); renderCourseHome('.stu-tts-toggle'); }
+// the ja token array of the live card's shown example (for the 🔊 control + autoplay)
+function cardExampleJa() {
+  const ex = card && card.point && Array.isArray(card.point.examples) && card.point.examples[card.exIdx];
+  return ex ? ex.ja : null;
 }
 
 // ── Course home (the #/study landing) ────────────────────────────────────────
@@ -318,6 +331,9 @@ function renderCourseHome(focusSel) {
   const canBuild = mstats.inGate > 0 || Object.values(mstats.perLevel).some(n => n > 0);
   const buildBtn = canBuild
     ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart">✍️ Build a sentence</button>` : '';
+  // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
+  const ttsBtn = canSpeak()
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}">🔊 Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
   root.innerHTML = `
     <div class="stu-home">
       <div class="stu-cont-wrap">${continueButtonHTML(cs)}</div>
@@ -327,6 +343,7 @@ function renderCourseHome(focusSel) {
       ${leechPanelHTML()}
       <div class="stu-home-foot">
         ${buildBtn}
+        ${ttsBtn}
         <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart">📊 Progress</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
@@ -707,7 +724,7 @@ function renderScrambleCard() {
       <div id="stuScramHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuScramHost');
-  cardCtl = scrambleCard({ announce }, hostEl, card.point, card.exIdx, { grade: true, onResult: onScrambleResult });
+  cardCtl = scrambleCard({ announce }, hostEl, card.point, card.exIdx, { grade: true, autoSpeak: autoplayOn(), onResult: onScrambleResult });
   if (card.gate) gateTimerCtl = mountGateTimer($('#stuGateTimer'));
   announce(`Card ${n} of ${total}. ${card.gate ? 'Mastery check. ' : ''}${card.point.pattern || ''} — arrange the pieces to build the sentence.`);
 }
@@ -729,7 +746,7 @@ function renderMcqCard() {
       <div id="stuMcqHost"></div>
     </div>`;
   const hostEl = root.querySelector('#stuMcqHost');
-  cardCtl = mcqCard({ announce }, hostEl, card.mcq, { grade: true, point: card.point, onResult: onMcqResult });
+  cardCtl = mcqCard({ announce }, hostEl, card.mcq, { grade: true, point: card.point, exampleJa: cardExampleJa(), autoSpeak: autoplayOn(), onResult: onMcqResult });
   if (card.gate) gateTimerCtl = mountGateTimer($('#stuGateTimer'));
   announce(`Card ${n} of ${total}. ${card.gate ? 'Mastery check. ' : ''}${card.point.pattern || ''} — choose the grammar that fills the blank.`);
 }
@@ -744,9 +761,11 @@ function onMcqResult({ pass, chosen }) {
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
-  if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
+  let milestone = false;
+  if (gate) milestone = gateFeedback(card.point, state.points[card.id], eff > 1, announce) === true;
   else maybeGhostExit(card.id, wasGhost);
-  celebrateProgress(card.id, snap, card.point.pattern);
+  if (celebrateProgress(card.id, snap, card.point.pattern)) milestone = true;
+  if (!pass) blip('wrong'); else if (!milestone) blip('coin');
   cardCtl = null;
   renderCard();
 }
@@ -761,9 +780,11 @@ function onScrambleResult({ pass, chosen }) {
   state = review(state, card.id, { pass: eff > 1, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: pass });
   save();
-  if (gate) gateFeedback(card.point, state.points[card.id], eff > 1, announce);
+  let milestone = false;
+  if (gate) milestone = gateFeedback(card.point, state.points[card.id], eff > 1, announce) === true;
   else maybeGhostExit(card.id, wasGhost);
-  celebrateProgress(card.id, snap, card.point.pattern);
+  if (celebrateProgress(card.id, snap, card.point.pattern)) milestone = true;
+  if (!pass) blip('wrong'); else if (!milestone) blip('coin');
   cardCtl = null;
   renderCard();
 }
@@ -779,15 +800,17 @@ function progressSnap(id) {
 }
 function celebrateProgress(id, snap, pattern) {
   const p = state.points[id];
-  if (!p) return;
+  if (!p) return false;
+  let fired = false;
   const after = stageOf(p);
-  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) celebrate(`Mature — ${pattern || ''} 🌳`);
+  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) { celebrate(`Mature — ${pattern || ''} 🌳`); fired = true; }
   const lv = snap.lv;
   if (lv && LEVEL_TOTALS[lv] && after === 'mastered' && snap.mastered < LEVEL_TOTALS[lv]
-      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) celebrate(`${lv} complete — every point mastered! 🏆`);
+      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) { celebrate(`${lv} complete — every point mastered! 🏆`); fired = true; }
   // R15: the JLPT Master moment — the final gate just passed (was incomplete, now 353/353). Open the
   // certificate after this card's own bursts settle (the cert screen plays its own celebration).
-  if (!snap.complete && isMasterComplete(state)) setTimeout(() => launchCertificate(), 1200);
+  if (!snap.complete && isMasterComplete(state)) { setTimeout(() => launchCertificate(), 1200); fired = true; }
+  return fired;
 }
 
 // R9: when a point that WAS a ghost is no longer one after grading, it just passed its 2nd clean
@@ -960,6 +983,12 @@ function reveal(next, opts = {}) {
     focusControl('.stu-btn-primary');
     announce(`Not quite. The answer is ${card.answers[0]}.`);
   }
+  // 🔊 on the now-revealed full sentence (post-answer only — never in the input phase). Autoplay
+  // (opt-in, default off) reads it aloud immediately; the button lets the learner replay it.
+  const ja = cardExampleJa();
+  const sb = ja ? speakBtnHTML() : '';
+  if (sb && fb) fb.insertAdjacentHTML('beforeend', sb);
+  if (ja && autoplayOn()) speakExample(ja, root.querySelector('.stu-speak'));
 }
 
 function acceptClose() { if (phase === 'close') reveal('graded', { closeAccepted: true }); }
@@ -982,9 +1011,11 @@ function grade(g, { typedCorrect = true } = {}) {
   state = review(state, card.id, { pass, grade: eff, exampleIdx: card.exIdx, mode: gate ? 'gate' : 'review' }, now);
   state = sessionRecord(state, { id: card.id, grade: eff, ok: typedCorrect });
   save();
-  if (gate) gateFeedback(card.point, state.points[card.id], pass, announce);
+  let milestone = false;
+  if (gate) milestone = gateFeedback(card.point, state.points[card.id], pass, announce) === true;
   else maybeGhostExit(card.id, wasGhost);
-  celebrateProgress(card.id, snap, card.point.pattern);
+  if (celebrateProgress(card.id, snap, card.point.pattern)) milestone = true;
+  if (!pass) blip('wrong'); else if (!milestone) blip('coin');   // a milestone's own 1up carries the sound
   renderCard();
 }
 
@@ -1117,6 +1148,8 @@ function act(name, btn) {
     case 'reject': rejectClose(); break;
     case 'grade': grade(parseInt(btn.dataset.g, 10)); break;
     case 'again': grade(1, { typedCorrect: false }); break;
+    case 'speak': { const ja = cardExampleJa(); if (ja) speakExample(ja, btn); break; }
+    case 'ttsToggle': toggleTts(); break;
     case 'done': renderCourseHome(); break;
   }
 }

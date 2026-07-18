@@ -22,6 +22,8 @@ import { review, effectiveGrade, testOutResult, gateMode, checkpointQuestions, r
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
 import { celebrate } from './celebrate.js';
+import { canSpeak, speak } from './speak.js';
+import { blip } from './lib/audio.js';
 
 const NEW_PER_DAY_FALLBACK = 4;
 const TESTOUT_SECONDS = 20;   // soft display timer only — NO hard cutoff in R3
@@ -183,7 +185,7 @@ export function startLessons(ctx, ids) {
     root.innerHTML = `
       <div class="stu-lesson">
         <div class="stu-lesson-top"><span class="stu-lesson-tag">Learn · ${esc(String(i + 1))}/${esc(String(queue.length))}</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
-        <p class="stu-pat" lang="ja">${esc(p.pattern || '')}</p>
+        <p class="stu-pat" lang="ja">${esc(p.pattern || '')}${canSpeak() ? ` <button type="button" class="stu-speak stu-rule-speak" data-act="ruleSpeak" aria-label="Play the pattern">🔊</button>` : ''}</p>
         ${p.reading ? `<p class="stu-pat-read" lang="ja">${esc(p.reading)}</p>` : ''}
         ${flagBadgesHTML(p) ? `<p class="stu-flags">${flagBadgesHTML(p)}</p>` : ''}
         <dl class="stu-rule">${rows}</dl>
@@ -279,7 +281,8 @@ export function startLessons(ctx, ids) {
     teardown() { if (sub && sub.teardown) sub.teardown(); },
     onAct(name, btn) {
       if (sub) { sub.onAct(name, btn); return; }
-      if (name === 'beat2') { beat = 2; mcRound = 0; render(); }
+      if (name === 'ruleSpeak') { const p = point(); if (p) speak(p.reading || p.pattern || '', btn); }
+      else if (name === 'beat2') { beat = 2; mcRound = 0; render(); }
       else if (name === 'mc') answerMC(btn);
       else if (name === 'mcNext') mcNext();
       else if (name === 'done') ctx.done();
@@ -440,15 +443,16 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
       if (cursor >= items.length) commitPoint();
       else renderItem();
     };
+    const exJa = (p.examples[ex] && p.examples[ex].ja) || null;
     sub = type === 'scramble' ? scrambleCard(ctx, hostEl, p, ex, { grade: false, onResult })
-      : type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, onResult })
+      : type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, exampleJa: exJa, onResult })
       : clozeCard(ctx, hostEl, p, ex, { timer: true, onResult });
   }
 
   function commitPoint() {
     const p = pointsCache[queue[i]];
     const st = testOutResult(ctx.getState(), p.id, results, Date.now());
-    if (results.every(Boolean)) passedCount++;
+    if (results.every(Boolean)) { passedCount++; blip('coin'); }   // this point tested out
     ctx.commit(st);                    // pass → Mature; fail → unchanged (stays unseeded)
     advance();
   }
@@ -524,7 +528,8 @@ export function startCheckpoint(ctx, unit) {
         <div id="stuClozeHost"></div>
       </div>`;
     const hostEl = root.querySelector('#stuClozeHost');
-    sub = type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, onResult: onQ })
+    const exJa = (p.examples[ex] && p.examples[ex].ja) || null;
+    sub = type === 'mcq' ? mcqCard({ announce: ctx.announce }, hostEl, mcq, { grade: false, point: p, exampleJa: exJa, onResult: onQ })
       : type === 'scramble' ? scrambleCard(ctx, hostEl, p, ex, { grade: false, onResult: onQ })
       : clozeCard(ctx, hostEl, p, ex, { timer: false, onResult: onQ });
     ctx.announce(`Checkpoint question ${qi + 1} of ${TOTAL}.`);
@@ -542,7 +547,8 @@ export function startCheckpoint(ctx, unit) {
     sub = null;
     const passed = correctN >= PASS;
     ctx.commit(recordCheckpoint(ctx.getState(), unit.id, correctN, PASS));   // formative record only
-    if (passed) celebrate(`Checkpoint passed — ${unit.title} ✓★`);
+    if (passed) celebrate(`Checkpoint passed — ${unit.title} ✓★`);   // celebrate() plays its own 1-up
+    else blip('wrong');
     const missedHTML = (!passed && missed.length)
       ? `<div class="stu-cp-missed"><p class="stu-note">Review these — they'll come back on their normal schedule:</p>
            <ul class="stu-cp-missed-list">${missed.map(id => {

@@ -8,7 +8,8 @@
 import { $, esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
-import { searchPoints, readingOf, shakyRows } from './lib/grammar.js';
+import { searchPoints, readingOf, exampleReading, shakyRows } from './lib/grammar.js';
+import { canSpeak, speak } from './speak.js';
 import { pegHTML, flagBadgesHTML, matchesFlag } from './lib/peg.js';
 import { toAnkiTSV } from './lib/anki.js';
 import { lookupWord } from './lang.js';          // shared Jotoba lookup (exported); GLOSSARY is NOT re-exported —
@@ -215,6 +216,8 @@ function wireBar(root) {
       if (body) body.hidden = open;
       return;
     }
+    const spk = e.target.closest('.g-ex-speak');
+    if (spk) { speak(spk.dataset.read || '', spk); return; }
     const rel = e.target.closest('.g-rel-chip');
     if (rel) { jumpTo(rel.dataset.target); return; }
     const duel = e.target.closest('.g-duel-chip');
@@ -369,7 +372,10 @@ function exampleHTML(ex) {
   const ja = (ex.ja || []).map(tok => typeof tok === 'string'
     ? esc(tok)
     : `<span class="gtok${tok.p ? ' gtok-p' : ''}" lang="ja" data-t="${esc(tok.t)}" data-r="${esc(readingOf(tok.f))}" data-g="${esc(tok.g || '')}">${rubyHTML(tok.f, tok.t)}</span>`).join('');
-  return `<div class="g-ex"><p class="g-ja" lang="ja" data-no-swipe tabindex="0">${ja}</p><p class="g-en">${esc(ex.en || '')}</p></div>`;
+  // 🔊 reads the DATA's kana (exampleReading) so homographs sound right; reference view — nothing to leak.
+  const spk = canSpeak()
+    ? `<button type="button" class="g-ex-speak" data-read="${esc(exampleReading(ex.ja))}" aria-label="Play audio" title="Play audio">🔊</button>` : '';
+  return `<div class="g-ex"><p class="g-ja" lang="ja" data-no-swipe tabindex="0">${ja}</p>${spk}<p class="g-en">${esc(ex.en || '')}</p></div>`;
 }
 
 function relChip(id) {

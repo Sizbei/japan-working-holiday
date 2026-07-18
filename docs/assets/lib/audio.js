@@ -66,6 +66,7 @@ const BLIPS = {
   '1up': [[523, 90], [659, 90], [784, 90], [1047, 240]], // C5 E5 G5 C6
   powerup: [[392, 70], [523, 70], [659, 70], [784, 160]],
   select: [[660, 60], [880, 90]],
+  wrong: [[330, 90], [247, 150]],            // soft descending "not quite" (E4 → B3)
 };
 
 export function blip(name) {

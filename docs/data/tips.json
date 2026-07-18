@@ -887,6 +887,19 @@
    ]
   },
   {
+   "id": "ev26-transport-biei-jul19",
+   "title": "🚌 Biei day — getting around",
+   "date": "2026-07-19",
+   "category": "personal",
+   "area": "Furano → Biei (Blue Pond · Shikisai-no-oka · patchwork road)",
+   "bookingNotes": "Furano → Biei: JR Furano Line local ~40 min (or the seasonal Norokko sightseeing train — slower, scenic, stops at the temporary Lavender Farm station). Biei's sights are spread out and rail doesn't reach them: in summer, sightseeing buses (Biei View Bus / round-trip loop) run from BOTH Furano and Biei stations and link Shikisai-no-oka + patchwork road. Blue Pond: Dōhoku Bus from Biei Stn on the Shirogane Onsen line, ~20 min to 'Shirogane Aoiike Iriguchi'. Shikisai-no-oka (paid Jul–Sep) sits ~4 km from Biei Stn — the nearest station is Bibaushi, one stop south. Simplest all-in-one: a day rental car from Furano to loop Blue Pond → patchwork → Shikisai, or a Furano/Sapporo-based sightseeing-bus tour. Bag note: Mutsukari is a bit far from your Jul 18 place, so stash luggage in a Furano Stn coin locker before heading to Biei.",
+   "confidence": "medium",
+   "sources": [
+    "https://www.biei-hokkaido.jp/en/bus",
+    "https://www.japan-guide.com/e/e6826.html"
+   ]
+  },
+  {
    "id": "ev26-hok-sapporo-city-jazz-park-jazz-live-summer-",
    "title": "🎷 Sapporo City Jazz — Park Jazz Live (summer series)",
    "date": "2026-07-20",
@@ -2784,16 +2797,15 @@
    "bookingNotes": "Hokkaido trip base #1 — check in after the NRT→CTS flight lands; out the morning of the Furano leg."
   },
   {
-   "id": "ev26-stay-mangacafe-jul18",
-   "title": "🛌 Manga cafe overnight — Kaikatsu Club Susukino",
+   "id": "ev26-stay-furano-jul18",
+   "title": "🛏️ Stay: Furano (Jul 18) — BOOKED",
    "date": "2026-07-18",
+   "endDate": "2026-07-19",
    "category": "personal",
-   "area": "Susukino, Sapporo",
-   "confidence": "medium",
-   "sources": [
-    "https://www.kaikatsu.jp/shop/detail/20106.html"
-   ],
-   "bookingNotes": "Gap night (Nariya out 18th, Mutsukari in 19th). Walk-in net cafe — night-pack entry 20:00–04:00, ~¥1,800 for an 8h booth (locked room a bit more), showers. 1 min from Susukino Stn exit 5. Backup: DiCE Tanukikoji (24h). Grab bags from the Sapporo Stn coin locker before ~22:00; early Furano/Lavender Express on the 19th."
+   "area": "Furano",
+   "confidence": "high",
+   "sources": [],
+   "bookingNotes": "New booking — fills the former Jul 18 gap night (which was a Susukino manga-café bridge, now retired). You travel Sapporo → Furano on the 18th instead of overnighting in Sapporo, so Furano becomes a 3-night leg (18–21). Check out here on the 19th and move to Minshuku Mutsukari (central Furano, 緑町). Heads-up: Mutsukari is a bit far from this place, so plan the Jul 19 bag transfer — stash at a Furano Stn coin locker (or drop at Mutsukari if reception is open) before the Biei day. (Tell me the property name/address and I'll fill it in properly.)"
   },
   {
    "id": "ev26-stay-furano-tbd",

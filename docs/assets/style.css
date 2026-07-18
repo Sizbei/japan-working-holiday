@@ -4272,19 +4272,22 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 
 /* ===== Grammar Gym — #/study session runner (R2 MVP shell) ===== */
 #studyRoot{ max-width: 44rem; margin: 0 auto; }
-.stu-today, .stu-summary{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; text-align:center; }
-.stu-today-h, .stu-sum-h{ margin: 0 0 1rem; font-size: 1.15rem; }
+.stu-today, .stu-summary{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.6rem; text-align:center; }
+.stu-today-h, .stu-sum-h{ margin: 0 0 1rem; font-family: var(--serif); font-weight:600; font-size: 1.3rem; }
 .stu-stats{ display:flex; justify-content:center; gap: 2rem; margin: 0 0 1.25rem; }
 .stu-stat{ display:flex; flex-direction:column; gap:.15rem; }
-.stu-stat-n{ font-family: var(--pixel); font-size: 2rem; line-height:1; color: var(--indigo); }
+.stu-stat-n{ font-family: var(--serif); font-weight:600; font-size: 2rem; line-height:1; color: var(--ink); font-variant-numeric:tabular-nums; }
 .stu-stat-l{ font-size:.78rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing:.04em; }
 .stu-note{ font-size:.82rem; color: var(--ink-soft); margin:.75rem 0 0; }
-.stu-sum-art{ font-size: 2.5rem; color: var(--good-ink, #2e7d32); margin-bottom:.25rem; }
+.stu-sum-art{ font-size: 2.5rem; color: var(--ok-ink); margin-bottom:.25rem; }
 
 /* buttons */
 .stu-btn{ font-family: var(--sans); font-size:.9rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); padding:.6rem 1rem; cursor:pointer; transition: border-color var(--t-hover), background var(--t-hover), transform var(--t-hover); }
 .stu-btn:hover, .stu-btn:focus-visible{ border-color: var(--indigo); }
 .stu-btn-primary{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+.stu-btn-primary:hover:not([disabled]), .stu-btn-primary:focus-visible:not([disabled]){ transform: translateY(-1px); box-shadow: 0 10px 22px -12px var(--indigo); }
+html[data-reduce-motion="on"] .stu-btn{ transition:none; }
+html[data-reduce-motion="on"] .stu-btn-primary:hover:not([disabled]), html[data-reduce-motion="on"] .stu-btn-primary:focus-visible:not([disabled]){ transform:none; }
 .stu-btn-primary[disabled]{ opacity:.5; cursor:default; background: var(--bg-soft); color: var(--ink-soft); border-color: var(--line); }
 .stu-btn-ghost{ background: transparent; }
 .stu-grade{ min-width: 5.5rem; }
@@ -4292,22 +4295,24 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
 .stu-grade kbd{ font-family: var(--mono); font-size:.7rem; opacity:.6; margin-left:.35rem; }
 
 /* card */
-.stu-card{ position: relative; background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; }
-.stu-prog{ display:flex; align-items:center; gap:.6rem; margin-bottom: 1rem; }
-.stu-prog-n{ font-family: var(--mono); font-size:.75rem; color: var(--ink-soft); white-space:nowrap; }
-.stu-prog-bar{ flex:1; height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; }
-.stu-prog-bar i{ display:block; height:100%; background: var(--indigo); transition: width var(--t-hover); }
-.stu-lvl{ font-size:.78rem; color: var(--ink-soft); margin:0 0 .5rem; }
-.stu-sentence{ font-size: 1.35rem; line-height: 2; text-align:center; margin: .5rem 0 1rem; }
+.stu-card{ position: relative; background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.5rem 1.6rem; }
+.stu-prog{ display:flex; align-items:center; gap:.6rem; margin-bottom: 1.1rem; }
+.stu-prog-n{ font-family: var(--serif); font-size:.78rem; color: var(--ink-faint); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.stu-prog-bar{ flex:1; height: 4px; background: var(--bg-sunk); border-radius: 4px; overflow: hidden; }
+.stu-prog-bar i{ display:block; height:100%; width:100%; background: var(--indigo); transform-origin:left; transition: transform var(--t-base); }
+html[data-reduce-motion="on"] .stu-prog-bar i{ transition:none; }
+.stu-lvl{ font-family: var(--serif); font-size:.78rem; color: var(--ink-faint); margin:0 0 .6rem; letter-spacing:.01em; }
+.stu-sentence{ font-family: var(--serif-jp); font-size: 1.4rem; line-height: 2; text-align:left; margin: .3rem 0 1rem; }
 .stok{ white-space: nowrap; }
-.stu-blank{ display:inline-block; min-width: 3.5rem; border-bottom: 2px dashed var(--indigo); color: transparent; margin: 0 .15rem; vertical-align: baseline; }
-.stu-fill{ color: var(--indigo); font-weight: 700; border-bottom: 2px solid var(--indigo); padding: 0 .1rem; }
-.stu-en{ font-size:.92rem; color: var(--ink-soft); text-align:center; margin: 0 0 1rem; }
+.stu-blank{ display:inline-block; min-width: 3.5rem; border-bottom: 2px solid var(--indigo); color: transparent; margin: 0 .15rem; vertical-align: baseline; }
+.stu-fill{ color: inherit; font-weight: 700; padding: 0 .05em;
+  background: linear-gradient(transparent 58%, color-mix(in srgb, var(--gold) 32%, transparent) 58%); }
+.stu-en{ font-family: var(--serif); font-style:italic; font-size:.95rem; color: var(--ink-faint); text-align:left; margin: 0 0 1rem; }
 .stu-answer{ position: relative; z-index: 1; }
-.stu-input{ width: 100%; font-family: var(--sans); font-size: 1.1rem; text-align:center; padding:.65rem .8rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); }
-.stu-input:focus-visible{ border-color: var(--indigo); outline: 2px solid color-mix(in srgb, var(--indigo) 40%, transparent); outline-offset: 1px; }
+.stu-input{ width: 100%; font-family: var(--serif-jp); font-size: 1.2rem; text-align:left; padding:.7rem .9rem; border:1.5px solid var(--line-strong); border-radius: var(--r-md); background: var(--bg-soft); color: var(--ink); }
+.stu-input:focus-visible{ border-color: var(--indigo); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 18%, transparent); }
 .stu-input[disabled]{ opacity:.7; }
-.stu-feedback{ min-height: 1.4em; text-align:center; margin:.6rem 0; font-size:.9rem; }
+.stu-feedback{ min-height: 1.4em; text-align:left; margin:.7rem 0; font-size:.92rem; }
 .stu-fb-ok{ color: var(--good-ink, #2e7d32); font-weight:600; }
 .stu-fb-close{ color: color-mix(in srgb, var(--gold-ink, #8a6508) 80%, var(--ink)); font-weight:600; }
 .stu-fb-wrong{ color: var(--bad-ink, #b3261e); }
@@ -4323,55 +4328,123 @@ html[data-theme="dark"][data-map-dark="on"] .leaflet-tile{ filter: invert(1) hue
   .stu-btn, .stu-input{ min-height:44px; }
 }
 
-/* ── R3 course home (the #/study landing) ─────────────────────────────────── */
-.stu-home{ display:flex; flex-direction:column; gap:1rem; }
-.stu-cont-wrap{ position: sticky; top:.5rem; z-index:2; }
-.stu-cont{ width:100%; font-size:1.02rem; padding:.85rem 1rem; box-shadow: var(--shadow); }
+/* ── Course home — "The climb" (editorial redesign) ──────────────────────────── */
+/* levels as a vertical ascent to N1: N5/N4 sealed at the base, a "you are here" node on the current
+   level with the session card docked there, N2/N1 as the summit above. Each rung stays an expand
+   accordion to its unit list. Warm paper + serif + vermilion seal; one indigo accent for action. */
+.stu-home{ display:flex; flex-direction:column; gap:1.1rem; }
+.stu-climb-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.stu-climb-title{ font-family: var(--serif); font-weight:600; font-size:1.5rem; line-height:1.1; letter-spacing:-.01em; margin:0; }
+.stu-climb-mastered{ font-size:.85rem; color: var(--ink-faint); margin:.2rem 0 0; }
+.stu-climb-streak{ font-family: var(--serif); font-weight:600; font-size:1.3rem; color: var(--gold-ink); text-align:right; line-height:1; margin:0; }
+.stu-climb-streak span{ display:block; font-family: var(--sans); font-weight:400; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color: var(--ink-faint); margin-top:.25rem; }
+
+/* the ascent rail */
+.stu-climb{ position:relative; margin:.4rem 0 .2rem; padding-left:2.3rem; }
+.stu-climb::before{ content:""; position:absolute; left:.82rem; top:1.2rem; bottom:1.2rem; width:2px; background: var(--line-strong); border-radius:2px; }
+
+/* a rung: a level row on the rail (still an expand accordion) */
 .stu-cont-sub{ font-weight:600; opacity:.85; }
-.stu-home-cards{ display:flex; flex-direction:column; gap:.6rem; }
-.stu-lvl-card{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; }
-.stu-lvl-card.is-open{ border-color: var(--indigo); }
-.stu-lvl-head{ display:grid; grid-template-columns:auto auto 1fr auto; align-items:center; gap:.8rem; width:100%; text-align:left; background:transparent; border:0; padding:.8rem 1rem; cursor:pointer; color: var(--ink); font-family: var(--sans); }
-.stu-lvl-head:hover, .stu-lvl-head:focus-visible{ background: color-mix(in srgb, var(--indigo) 6%, transparent); }
-.stu-lvl-name{ font-family: var(--pixel); font-size:1.1rem; color: var(--indigo); }
-.stu-lvl-meta{ font-size:.78rem; color: var(--ink-soft); }
-.stu-lvl-caret{ color: var(--ink-soft); font-size:.9rem; }
-.stu-ring{ position:relative; display:inline-flex; width:36px; height:36px; align-items:center; justify-content:center; }
-.stu-ring svg{ width:36px; height:36px; transform: rotate(-90deg); }
-.stu-ring-bg{ fill:none; stroke: var(--line); stroke-width:3; }
-.stu-ring-fg{ fill:none; stroke: var(--indigo); stroke-width:3; stroke-linecap:round; transition: stroke-dashoffset var(--t-hover); }
-.stu-ring-pct{ position:absolute; font-family: var(--mono); font-size:.52rem; color: var(--ink-soft); }
-.stu-unit-list{ border-top:1px solid var(--line); padding:.4rem .6rem .6rem; display:flex; flex-direction:column; gap:.15rem; }
-.stu-unit{ display:grid; grid-template-columns:auto 1fr 5rem auto; align-items:center; gap:.6rem; padding:.4rem .4rem; border-radius: var(--r-sm); font-size:.85rem; }
-.stu-unit-glyph{ font-size:.85rem; color: var(--ink-soft); }
-.stu-unit-done .stu-unit-glyph{ color: var(--good-ink, #2e7d32); }
+.stu-lvl-card{ position:relative; background:transparent; border:0; border-radius:0; }
+.stu-lvl-card::before{ content:""; position:absolute; left:-1.62rem; top:1.05rem; width:.95rem; height:.95rem; border-radius:50%;
+  background: var(--bg-sunk); border:2px solid var(--line-strong); box-sizing:border-box; z-index:1; }
+.stu-lvl-done::before{ background: var(--shu); border-color: var(--shu); }
+.stu-lvl-here::before{ background: var(--indigo); border-color: var(--indigo); box-shadow: 0 0 0 4px color-mix(in srgb, var(--indigo) 20%, transparent); }
+.stu-lvl-head{ display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:.7rem; width:100%; text-align:left;
+  background:transparent; border:0; padding:.6rem .4rem; cursor:pointer; color: var(--ink); font-family: var(--sans); border-radius: var(--r-sm); }
+.stu-lvl-head:hover, .stu-lvl-head:focus-visible{ background: color-mix(in srgb, var(--indigo) 5%, transparent); }
+.stu-lvl-head:focus-visible{ outline:2px solid var(--indigo); outline-offset:-2px; }
+.stu-lvl-name{ font-family: var(--serif); font-weight:600; font-size:1.05rem; color: var(--ink); display:flex; align-items:baseline; gap:.4rem; flex-wrap:wrap; }
+.stu-lvl-here .stu-lvl-name{ color: var(--indigo); }
+.stu-lvl-done .stu-lvl-name{ color: var(--ink-soft); }
+.stu-lvl-sub{ font-family: var(--sans); font-weight:400; font-size:.74rem; color: var(--ink-faint); }
+.stu-seal{ color: var(--shu); font-size:.9rem; }
+.stu-lvl-meta{ font-size:.76rem; color: var(--ink-faint); text-align:right; }
+.stu-lvl-mastered{ color: var(--gold-ink); font-weight:600; }
+.stu-lvl-caret{ color: var(--ink-faint); font-size:.85rem; }
+
+/* progress ring on the rung head (gold once the level is mastered) */
+.stu-ring{ position:relative; display:inline-flex; width:34px; height:34px; align-items:center; justify-content:center; }
+.stu-ring svg{ width:34px; height:34px; transform: rotate(-90deg); }
+.stu-ring-bg{ fill:none; stroke: var(--bg-sunk); stroke-width:3; }
+.stu-ring-fg{ fill:none; stroke: var(--indigo); stroke-width:3; stroke-linecap:round; transition: stroke-dashoffset var(--t-base); }
+.stu-lvl-done .stu-ring-fg{ stroke: var(--gold); }
+.stu-ring-pct{ position:absolute; font-family: var(--serif); font-size:.56rem; color: var(--ink-soft); font-variant-numeric:tabular-nums; }
+html[data-reduce-motion="on"] .stu-ring-fg{ transition:none; }
+
+/* the session card docked at the "you are here" rung — negative left margin spans it back over the
+   rail so it reads as a full-width docked card (matches .stu-climb's 2.3rem left padding) */
+.stu-here-card{ margin:.5rem 0 1rem -2.3rem; background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--r-md);
+  padding:1rem 1.1rem; box-shadow: var(--shadow-sm); }
+.stu-here-sub{ font-size:.84rem; color: var(--ink-faint); margin:0 0 .75rem; }
+.stu-here-row{ display:flex; gap:.6rem; align-items:stretch; }
+.stu-cont{ width:100%; font-size:1rem; padding:.85rem 1rem; box-shadow: 0 8px 20px -12px var(--indigo); }
+.stu-here-row .stu-cont{ flex:1 1 auto; width:auto; }
+/* secondary "learn N new" link beside Continue when new lessons are also in reach */
+.stu-mini{ flex:0 0 auto; font-size:.82rem; font-weight:600; color: var(--indigo); padding:.85rem .85rem; white-space:nowrap; }
+
+/* unit accordion (revealed under a rung) */
+.stu-unit-list{ margin:.1rem 0 .6rem; padding:.3rem 0 .3rem .35rem; display:flex; flex-direction:column; gap:.15rem; border-left:1px solid var(--line); }
+.stu-unit{ display:grid; grid-template-columns:auto 1fr 5rem auto; align-items:center; gap:.6rem; padding:.4rem .5rem; border-radius: var(--r-sm); font-size:.85rem; }
+.stu-unit-glyph{ font-size:.85rem; color: var(--ink-faint); }
+.stu-unit-done .stu-unit-glyph{ color: var(--ok-ink); }
 .stu-unit-inprogress .stu-unit-glyph{ color: var(--indigo); }
 .stu-unit-title{ line-height:1.3; }
-.stu-unit-bar{ height:4px; background: var(--line); border-radius:4px; overflow:hidden; }
+.stu-unit-bar{ height:4px; background: var(--bg-sunk); border-radius:4px; overflow:hidden; }
 .stu-unit-bar i{ display:block; height:100%; background: var(--indigo); }
-.stu-unit-done .stu-unit-bar i{ background: var(--good-ink, #2e7d32); }
-.stu-unit-n{ font-family: var(--mono); font-size:.72rem; color: var(--ink-soft); text-align:right; }
-.stu-home-foot{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.6rem; }
-.stu-exam{ display:inline-flex; align-items:center; gap:.4rem; font-size:.78rem; color: var(--ink-soft); }
-.stu-exam-sel{ font-family: var(--sans); font-size:.8rem; padding:.35rem .5rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); }
+.stu-unit-done .stu-unit-bar i{ background: var(--ok-fill); }
+.stu-unit-n{ font-family: var(--serif); font-size:.75rem; color: var(--ink-soft); text-align:right; font-variant-numeric:tabular-nums; }
 
-/* ── R3 lessons / placement / test-out ────────────────────────────────────── */
-.stu-lesson, .stu-placement, .stu-testout{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
-.stu-lesson-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem; }
-.stu-lesson-tag{ font-family: var(--mono); font-size:.72rem; color: var(--on-accent); background: var(--indigo); padding:.2rem .5rem; border-radius: var(--r-sm); }
-.stu-pat{ font-size:2rem; text-align:center; margin:.4rem 0 .1rem; color: var(--indigo); }
-.stu-pat-read{ font-size:1rem; text-align:center; color: var(--ink-soft); margin:0 0 .8rem; }
-.stu-rule{ display:flex; flex-direction:column; gap:.5rem; margin:.4rem 0 1rem; }
-.stu-rule-row{ display:grid; grid-template-columns:6.5rem 1fr; gap:.6rem; align-items:baseline; }
-.stu-rule-row dt{ font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); }
-.stu-rule-row dd{ margin:0; font-size:.92rem; line-height:1.45; }
-.stu-mc-q{ text-align:center; font-size:.95rem; margin:.4rem 0 1rem; }
+/* the quiet foot */
+.stu-home-foot{ display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; padding-top:1.1rem; border-top:1px solid var(--line); }
+.stu-exam{ display:inline-flex; align-items:center; gap:.4rem; font-size:.78rem; color: var(--ink-faint); margin-left:auto; }
+.stu-exam-sel{ font-family: var(--sans); font-size:.8rem; padding:.4rem .55rem; border:1px solid var(--line-strong); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
+
+/* ── R3 lessons / placement / test-out (editorial 3-beat redesign) ───────────── */
+.stu-lesson, .stu-placement, .stu-testout{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.4rem 1.5rem; }
+/* step rail: Learn → Spot it → Produce */
+.stu-rail{ display:flex; align-items:center; gap:.4rem; list-style:none; margin:0 0 1.4rem; padding:0; }
+.stu-rail-step{ display:inline-flex; align-items:center; gap:.4rem; font-size:.76rem; color: var(--ink-faint); }
+.stu-rail-step:not(:last-child)::after{ content:""; width:1.4rem; height:1.5px; background: var(--line); margin-left:.2rem; }
+.stu-rail-dot{ width:1.5rem; height:1.5rem; border-radius:50%; border:1.5px solid var(--line-strong); background: var(--bg);
+  display:grid; place-items:center; font-family: var(--serif); font-size:.8rem; font-weight:600; color: var(--ink-faint); }
+.stu-rail-step.is-on{ color: var(--ink); font-weight:600; }
+.stu-rail-step.is-on .stu-rail-dot{ background: var(--indigo); border-color: var(--indigo); color: var(--on-accent); }
+.stu-rail-step.is-done .stu-rail-dot{ background: var(--ok-fill); border-color: var(--ok-fill); color: var(--on-accent); }
+@media (max-width:400px){ .stu-rail-label{ display:none; } .stu-rail-step:not(:last-child)::after{ width:1rem; } }
+/* lesson meta row */
+.stu-lesson-meta, .stu-lesson-top{ display:flex; justify-content:space-between; align-items:baseline; gap:.6rem; margin-bottom:.8rem; }
+.stu-lesson-tag{ font-family: var(--serif-jp); font-size:.82rem; font-weight:600; color: var(--shu); }
+.stu-lesson-lvl, .stu-lesson-top .stu-lvl{ font-family: var(--serif); font-weight:600; font-size:.85rem; color: var(--ink-faint); margin:0; }
+/* the pattern hero (serif-jp) */
+.stu-pat{ font-family: var(--serif-jp); font-weight:700; font-size:2.4rem; line-height:1.2; letter-spacing:.01em; text-align:left; margin:.2rem 0 .05rem; color: var(--ink); }
+.stu-pat-read{ font-family: var(--serif-jp); font-size:1rem; text-align:left; color: var(--ink-faint); margin:0 0 .1rem; }
+.stu-gloss{ font-family: var(--serif); font-style:italic; font-size:1.2rem; font-weight:400; color: var(--ink); margin:.6rem 0 0; }
+/* connection as a visual formula */
+.stu-formula{ display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; margin:1.2rem 0; padding:.85rem 1rem; background: var(--bg-sunk); border-radius: var(--r-md); }
+.stu-chip{ font-family: var(--sans); font-size:.9rem; padding:.3rem .7rem; border-radius: var(--r-sm); background: var(--bg-elevated); border:1px solid var(--line); white-space:nowrap; }
+.stu-chip.stu-chip-key{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); font-weight:600; }
+.stu-formula-op{ color: var(--ink-faint); font-family: var(--serif); }
+/* example on the rule card — pattern highlighted; NEVER the beat-3 cloze example */
+.stu-eg{ margin:1.3rem 0; padding-left:1rem; border-left:2px solid var(--gold); }
+.stu-eg-ja{ font-family: var(--serif-jp); font-size:1.3rem; line-height:1.75; margin:0; }
+.stu-eg-mark{ background: linear-gradient(transparent 58%, color-mix(in srgb, var(--gold) 32%, transparent) 58%); color: inherit; font-weight:700; padding:0 .05em; }
+.stu-eg-en{ color: var(--ink-faint); font-size:.9rem; margin-top:.35rem; }
+/* nuance / register / watch-out as distinct notes */
+.stu-notes{ display:grid; gap:.7rem; margin:1.4rem 0; }
+.stu-note-item{ display:grid; grid-template-columns:auto 1fr; gap:.6rem; align-items:start; }
+.stu-note-ic{ font-size:1rem; line-height:1.5; color: var(--ink-soft); }
+.stu-note-item.stu-note-warn .stu-note-ic{ color: var(--shu); }
+.stu-note-bd{ margin:0; font-size:.92rem; line-height:1.5; }
+.stu-note-bd b{ display:block; font-weight:600; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color: var(--ink-faint); margin-bottom:.1rem; }
+.stu-rule-card .stu-flags{ text-align:left; margin:1rem 0; }
+.stu-mc-q{ text-align:left; font-size:1rem; margin:.5rem 0 1rem; }
 .stu-mc{ display:flex; flex-direction:column; gap:.6rem; margin-bottom:.6rem; }
 .stu-mc-opt{ text-align:left; background: var(--bg); border:1px solid var(--line); border-radius: var(--r-sm); padding:.8rem 1rem; cursor:pointer; font-size:1.1rem; line-height:1.8; color: var(--ink); }
 .stu-mc-opt:hover:not([disabled]), .stu-mc-opt:focus-visible{ border-color: var(--indigo); }
 .stu-mc-right{ border-color: var(--good-ink, #2e7d32); background: color-mix(in srgb, var(--good-ink, #2e7d32) 12%, var(--bg)); }
 .stu-mc-wrong{ border-color: var(--bad-ink, #b3261e); background: color-mix(in srgb, var(--bad-ink, #b3261e) 10%, var(--bg)); }
-.stu-timer{ position:absolute; right:.6rem; top:50%; transform:translateY(-50%); font-family: var(--mono); font-size:.8rem; color: var(--ink-soft); }
+.stu-timer{ position:absolute; right:.6rem; top:50%; transform:translateY(-50%); font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.8rem; color: var(--ink-soft); }
 .stu-timer-up{ color: var(--bad-ink, #b3261e); }
 /* ★-scramble (文の組み立て) — 4 slots + shuffled chunk tiles (tap-to-place + keyboard) */
 .stu-scram-q{ text-align:center; font-size:.95rem; margin:.2rem 0 1rem; color: var(--ink-soft); }
@@ -4473,14 +4546,14 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
 .stu-leeches{ background: var(--bg-soft); border:1px solid color-mix(in srgb, var(--bad-ink, #b3261e) 30%, var(--line));
   border-radius: var(--radius); padding:.9rem 1rem 1rem; }
 .stu-leeches-h{ margin:0; font-size:1rem; display:flex; align-items:center; gap:.5rem; }
-.stu-leeches-n{ font-family: var(--mono); font-size:.72rem; color: var(--on-accent); background: var(--bad-ink, #b3261e); border-radius:100px; padding:.05rem .5rem; }
+.stu-leeches-n{ font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.72rem; color: var(--on-accent); background: var(--bad-ink, #b3261e); border-radius:100px; padding:.05rem .5rem; }
 .stu-leeches-lede{ margin:.3rem 0 .7rem; }
 .stu-leech-list{ display:flex; flex-direction:column; gap:.5rem; }
 .stu-leech{ background: var(--bg); border:1px solid var(--line); border-radius: var(--r-sm); padding:.6rem .75rem; }
 .stu-leech-main{ display:grid; grid-template-columns: 1fr auto; align-items:baseline; gap:.4rem .6rem; }
 .stu-leech-pat{ font-size:1.1rem; color: var(--indigo); }
 .stu-leech-mean{ grid-column:1 / -1; font-size:.82rem; color: var(--ink-soft); line-height:1.35; }
-.stu-leech-lapses{ font-family: var(--mono); font-size:.78rem; color: var(--bad-ink, #b3261e); white-space:nowrap; }
+.stu-leech-lapses{ font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.78rem; color: var(--bad-ink, #b3261e); white-space:nowrap; }
 .stu-leech-actions{ display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem; }
 .stu-leech-actions .stu-btn{ font-size:.8rem; padding:.4rem .8rem; }
 .stu-leech-suspended{ border-color: color-mix(in srgb, var(--bad-ink, #b3261e) 45%, var(--line)); background: color-mix(in srgb, var(--bad-ink, #b3261e) 5%, var(--bg)); }
@@ -4499,7 +4572,7 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
   border:1px solid color-mix(in srgb, var(--gold, #b8860b) 35%, var(--line)); border-radius: var(--r-sm); }
 .stu-gate-ic{ font-size:1rem; }
 .stu-gate-label{ font-size:.82rem; font-weight:700; color: var(--gold-ink, #8a6508); }
-.stu-gate-label b{ font-family: var(--mono); }
+.stu-gate-label b{ font-family: var(--serif); font-variant-numeric: tabular-nums; }
 .stu-gate-pips{ display:inline-flex; gap:.3rem; }
 .stu-gate-pip{ width:.55rem; height:.55rem; border-radius:50%; background: transparent;
   border:1.5px solid color-mix(in srgb, var(--gold, #b8860b) 55%, var(--line)); }
@@ -4510,8 +4583,8 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
 .stu-gate-timer svg{ width:30px; height:30px; transform: rotate(-90deg); }
 .stu-gt-bg{ fill:none; stroke: color-mix(in srgb, var(--gold, #b8860b) 25%, var(--line)); stroke-width:3; }
 .stu-gt-fg{ fill:none; stroke: var(--gold, #b8860b); stroke-width:3; stroke-linecap:round; }
-.stu-gt-num{ position:absolute; font-family: var(--mono); font-size:.6rem; color: var(--gold-ink, #8a6508); }
-.stu-gate-timer-num{ font-family: var(--mono); font-size:.8rem; color: var(--gold-ink, #8a6508); }
+.stu-gt-num{ position:absolute; font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.6rem; color: var(--gold-ink, #8a6508); }
+.stu-gate-timer-num{ font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.8rem; color: var(--gold-ink, #8a6508); }
 .stu-gate-timer.is-over .stu-gt-fg{ stroke: var(--bad-ink, #b3261e); }
 .stu-gate-timer.is-over .stu-gt-num,
 .stu-gate-timer-num.is-over{ color: var(--bad-ink, #b3261e); }
@@ -4571,14 +4644,14 @@ html[data-reduce-motion="on"] .stu-speak.is-speaking, html[data-reduce-motion="o
 
 /* running: top bar + body + nav + palette */
 .stu-mock-bar{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
-.stu-mock-timer{ font-family: var(--mono, monospace); font-size:.95rem; font-weight:700; color: var(--ink); padding:.2rem .5rem; border-radius: var(--r-sm); background: var(--bg-sunk); }
+.stu-mock-timer{ font-family: var(--serif); font-variant-numeric: tabular-nums; font-size:.95rem; font-weight:700; color: var(--ink); padding:.2rem .5rem; border-radius: var(--r-sm); background: var(--bg-sunk); }
 .stu-mock-timer.is-low{ color: var(--warn-ink); animation: stuMockPulse 1s ease-in-out infinite; }
 .stu-mock-timer.is-over{ color: var(--bad-ink, #b3261e); background: color-mix(in srgb, var(--bad-fill) 12%, var(--bg-sunk)); }
 @keyframes stuMockPulse{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
 html[data-reduce-motion="on"] .stu-mock-timer.is-low{ animation: none; }
 .stu-mock-count{ font-size:.9rem; font-weight:700; color: var(--ink-soft); }
 .stu-mock-flag.is-on{ border-color: var(--gold); color: var(--gold-ink, #8a6508); background: color-mix(in srgb, var(--gold) 10%, var(--bg-soft)); }
-.stu-mock-body{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
+.stu-mock-body{ background: var(--bg-soft); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.4rem 1.5rem; }
 .stu-mock-fmt{ font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; color: var(--ink-soft); margin:0 0 .7rem; font-weight:700; }
 .stu-mc-opt.is-picked{ border-color: var(--indigo); background: color-mix(in srgb, var(--indigo) 10%, var(--bg)); font-weight:600; }
 .stu-mock-passage{ font-size:1.05rem; line-height:2.1; }
@@ -4734,3 +4807,26 @@ html[data-reduce-motion="on"] .stu-mock-timer.is-low{ animation: none; }
   body.stu-cert-printing .stu-cert{ position:absolute; inset:0 0 auto 0; margin:0 auto; padding-top:2rem; }
   body.stu-cert-printing .stu-cert-inner{ box-shadow:none; }
 }
+
+/* ===== Grammar Gym — editorial cohesion pass (climb redesign) =================
+   Scoped to #studyRoot so nothing here touches the shared #/grammar reference. */
+/* the anime peg as a warm pull-quote (post-answer reward, every gym surface) */
+#studyRoot .peg{ margin:1.4rem 0; padding:1.1rem 1.3rem; border:1px solid color-mix(in srgb, var(--shu) 18%, var(--line));
+  border-left:3px solid var(--shu); border-radius: var(--r-md);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--shu) 5%, var(--bg-soft)), var(--bg-soft)); }
+#studyRoot .peg--styled{ border-left-style: dashed; border-left-color: color-mix(in srgb, var(--shu) 55%, var(--line)); }
+#studyRoot .peg-ja{ font-family: var(--serif-jp); font-size:1.25rem; line-height:1.5; font-weight:600; color: var(--ink); }
+#studyRoot .peg-en{ font-family: var(--serif); font-style:italic; }
+#studyRoot .peg-src{ color: var(--shu-deep); font-weight:600; font-style:normal; }
+
+/* recognition options (MCQ / spot-it) — warm cards, serif-jp sentence */
+#studyRoot .stu-mc-opt{ background: var(--bg-soft); border-radius: var(--r-md); padding:.85rem 1rem; }
+#studyRoot .stu-mc-opt [lang="ja"]{ font-family: var(--serif-jp); }
+#studyRoot .stu-mc-key{ font-family: var(--serif); }
+
+/* feedback tones read on warm paper */
+.stu-fb-ok{ color: var(--ok-ink); }
+
+/* stats / exam / certificate — serif headings + display numbers for one voice */
+.stu-stats-title, .stu-mock-h, .stu-cert-title, .stu-leeches-h, .stu-sum-h{ font-family: var(--serif); }
+.stu-mock-score-n, .stu-roll-overall-pct, .stu-ret-pct, .stu-cert-stat-n{ font-family: var(--serif); font-weight:700; }

@@ -36,6 +36,8 @@ const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
 const UNITS_FILE = 'data/grammar-units.json';
 const EXAM_LEVELS = [['', 'Not preparing'], ['N3', 'N3 · Dec 2026'], ['N2', 'N2 · Jul 2027'], ['N1', 'N1 · Jul 2027']];
+// climb-home per-level chapter labels (editorial redesign — the ascent to N1)
+const LEVEL_SUB = { N5: 'first steps', N4: 'conversational core', N3: 'the bridge', N2: 'written register', N1: 'the summit' };
 const DAY = 86400000;
 
 let state = null;                 // the store record (lib/study.js shape)
@@ -229,11 +231,43 @@ function ringHTML(introduced, total) {
     <span class="stu-ring-pct">${esc(String(pct))}%</span></span>`;
 }
 
-function levelCardHTML(level, mstats) {
+// The "you are here" level on the climb: the lowest (N5→N1) level not yet fully mastered, preferring
+// one already in progress. Purely derived from real state — display only.
+function currentLevel(mstats) {
+  let firstUnstarted = null, withProgress = null;
+  for (const lv of LEVELS) {                          // N5 → N1
+    const total = LEVEL_TOTALS[lv] || 0;
+    const mastered = (mstats.perLevel[lv] || 0);
+    if (total > 0 && mastered >= total) continue;      // climbed past this level
+    let intro = 0;
+    for (const u of units.filter(u => u.level === lv)) intro += unitProgress(u, state.points).introduced;
+    if (intro > 0 && withProgress === null) withProgress = lv;
+    if (firstUnstarted === null) firstUnstarted = lv;
+  }
+  return withProgress || firstUnstarted || 'N5';
+}
+
+// the here-card sub-line: what today's session holds, keyed off the Continue state (display only).
+function hereContext(cs) {
+  if (cs.kind === 'session') return `Session in progress · ${cs.pos + 1} of ${cs.total}`;
+  if (cs.kind === 'placement') return 'Sort what you already know to skip ahead';
+  if (cs.kind === 'caught-up') return 'All caught up — nothing due right now';
+  const q = buildQueue(state, Date.now());
+  const due = q.reviews.length, neu = q.lessons;
+  const bits = [];
+  if (due) bits.push(`${due} review${due === 1 ? '' : 's'} ripe`);
+  if (neu) bits.push(`${neu} new point${neu === 1 ? '' : 's'} in reach`);
+  return bits.join(' · ') || 'Ready when you are';
+}
+
+// A climb rung: a level's row on the ascent rail. `here` docks the session card (hereCardHTML) at the
+// current level; each rung stays an expandable accordion to its unit list (data-act="expand").
+function levelCardHTML(level, mstats, here, hereCardHTML = '') {
   const lus = units.filter(u => u.level === level);
   let intro = 0, total = 0;
   for (const u of lus) { const pr = unitProgress(u, state.points); intro += pr.introduced; total += pr.total; }
   const mastered = (mstats && mstats.perLevel[level]) || 0;
+  const done = total > 0 && mastered >= total;
   const open = expandedLevels.has(level);
   const rows = open ? lus.map(u => {
     const pr = unitProgress(u, state.points);
@@ -253,13 +287,17 @@ function levelCardHTML(level, mstats) {
         <span class="stu-unit-n">${esc(String(pr.introduced))}/${esc(String(pr.total))}</span></div>
       ${cpBtn}</div>`;
   }).join('') : '';
-  return `<div class="stu-lvl-card${open ? ' is-open' : ''}">
+  const sub = here ? 'you are here' : (LEVEL_SUB[level] || '');
+  const cls = `stu-lvl-card${done ? ' stu-lvl-done' : here ? ' stu-lvl-here' : ''}${open ? ' is-open' : ''}`;
+  const seal = done ? ` <span class="stu-seal" aria-hidden="true">✦</span>` : '';
+  return `<div class="${cls}">
     <button type="button" class="stu-lvl-head" data-act="expand" data-level="${esc(level)}" aria-expanded="${open ? 'true' : 'false'}">
       ${ringHTML(intro, total)}
-      <span class="stu-lvl-name">${esc(level)}</span>
-      <span class="stu-lvl-meta">${esc(String(lus.length))} units · ${esc(String(intro))}/${esc(String(total))} introduced${mastered ? ` · <span class="stu-lvl-mastered">${esc(String(mastered))}/${esc(String(total))} mastered</span>` : ''}</span>
+      <span class="stu-lvl-name">${esc(level)}${seal}<small class="stu-lvl-sub">${esc(sub)}</small></span>
+      <span class="stu-lvl-meta">${esc(String(intro))}/${esc(String(total))} introduced${mastered ? ` · <span class="stu-lvl-mastered">${esc(String(mastered))} mastered</span>` : ''}</span>
       <span class="stu-lvl-caret" aria-hidden="true">${open ? '▾' : '▸'}</span>
     </button>
+    ${here ? hereCardHTML : ''}
     ${open ? `<div class="stu-unit-list">${rows}</div>` : ''}</div>`;
 }
 
@@ -320,8 +358,24 @@ function renderCourseHome(focusSel) {
   const mstats = masteryStats(state);
   const examVal = state.settings.examLevel || '';
   const examOpts = EXAM_LEVELS.map(([v, l]) => `<option value="${esc(v)}"${v === examVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
-  const cards = units.length ? LEVELS.map(l => levelCardHTML(l, mstats)).join('')
-    : `<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p>`;
+  const totalMastered = LEVELS.reduce((a, lv) => a + (mstats.perLevel[lv] || 0), 0);
+  const streakN = (state.settings.streak && state.settings.streak.count) || 0;
+  const here = currentLevel(mstats);
+  // a secondary "learn N new" link beside Continue when new lessons are in reach but Continue is doing
+  // something else (a session/review/checkpoint). Skipped when Continue already IS the learn action
+  // (kind 'lessons') or when placement hasn't run yet — no duplicate lever.
+  const learnable = (cs.kind !== 'lessons' && cs.kind !== 'placement')
+    ? Math.min(buildQueue(state, Date.now()).lessons || 0, lessonIds().length) : 0;
+  const learnMini = learnable > 0
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-mini" data-act="learn">Learn ${esc(String(learnable))} new</button>` : '';
+  // the session card docked at the "you are here" rung: context sub-line + the one ▶ Continue button
+  const hereCard = `<div class="stu-here-card">
+      <p class="stu-here-sub">${esc(hereContext(cs))}</p>
+      <div class="stu-here-row">${continueButtonHTML(cs)}${learnMini}</div>
+    </div>`;
+  // the ascent: N1 (summit) at the top → N5 (first steps) at the base; the current level is docked
+  const cards = units.length ? [...LEVELS].reverse().map(l => levelCardHTML(l, mstats, l === here, hereCard)).join('')
+    : `<div class="stu-here-card">${continueButtonHTML(cs)}<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p></div>`;
   const nGhost = ghostCount(state);
   const hauntHTML = nGhost
     ? `<p class="stu-haunt-count">👻 ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
@@ -335,18 +389,24 @@ function renderCourseHome(focusSel) {
   const ttsBtn = canSpeak()
     ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}">🔊 Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
   root.innerHTML = `
-    <div class="stu-home">
-      <div class="stu-cont-wrap">${continueButtonHTML(cs)}</div>
+    <div class="stu-home stu-climb-home">
+      <header class="stu-climb-head">
+        <div class="stu-climb-headline">
+          <h3 class="stu-climb-title">Your climb to N1</h3>
+          <p class="stu-climb-mastered">${esc(String(totalMastered))} / 353 points mastered</p>
+        </div>
+        ${streakN ? `<p class="stu-climb-streak">🔥 ${esc(String(streakN))}<span>day streak</span></p>` : ''}
+      </header>
       ${gateHTML}
       ${hauntHTML}
-      <div class="stu-home-cards">${cards}</div>
+      <div class="stu-climb">${cards}</div>
       ${leechPanelHTML()}
       <div class="stu-home-foot">
         ${buildBtn}
         ${ttsBtn}
         <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart">📊 Progress</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
-        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">Placement sweep</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">🎯 Placement</button>
         <label class="stu-exam"><span>Preparing for</span>
           <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
       </div>
@@ -687,7 +747,7 @@ function renderCard() {
   root.innerHTML = `
     <div class="stu-card${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <p class="stu-sentence" lang="ja">${sentence}</p>
@@ -718,7 +778,7 @@ function renderScrambleCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-scramble${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuScramHost"></div>
@@ -740,7 +800,7 @@ function renderMcqCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-mcq${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="width:${Math.round(n / total * 100)}%"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuMcqHost"></div>

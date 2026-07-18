@@ -3863,11 +3863,18 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
 .ank-prev-acts{ display:flex; gap: var(--s3); margin-top: var(--s4); flex-wrap:wrap; }
 
 /* --- chunk strip (reuses the plan-chip rail idea) --- */
-.ank-bar{ display:flex; align-items:center; justify-content:space-between; gap: var(--s3); margin-bottom: var(--s3); }
-.ank-bar-acts{ display:flex; gap: var(--s2); }
-.ank-mini{ font-family: var(--mono); font-size:.7rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink-soft); border-radius: var(--r-sm); padding:.35rem .6rem; cursor:pointer; transition: border-color var(--t-hover), color var(--t-hover); }
-.ank-mini:hover{ border-color: var(--indigo); color: var(--ink); }
-.ank-mini.is-on{ background: var(--indigo); color: var(--on-accent); border-color: var(--indigo); }
+.ank-bar{ display:flex; align-items:center; gap: var(--s3); margin-bottom: var(--s3); flex-wrap:wrap; }
+.ank-h-sm{ font-family: var(--mono); font-weight:700; font-size:.72rem; letter-spacing:.02em; color: var(--ink-soft); flex:none; }
+.ank-bar-acts{ display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
+.ank-grp{ display:inline-flex; align-items:center; gap:.3rem; }
+.ank-div{ width:1px; align-self:stretch; min-height:1.5rem; background: var(--line); margin:0 .2rem; }
+.ank-i{ font-size:.92rem; line-height:1; }
+/* control chip — icon + label, single line; ON is a QUIET indigo tint (not a solid block) so the accent
+   marks what's active without shouting (60:30:10). */
+.ank-mini{ font-family: var(--mono); font-size:.74rem; font-weight:700; border:1px solid var(--line); background: var(--bg-soft); color: var(--ink-soft); border-radius:9px; padding:.4rem .6rem; cursor:pointer; display:inline-flex; align-items:center; gap:.35rem; white-space:nowrap; transition: border-color .12s ease, color .12s ease, background .12s ease, transform .06s ease; }
+.ank-mini:hover{ border-color: var(--indigo-soft); color: var(--ink); }
+.ank-mini:active{ transform: translateY(1px); }
+.ank-mini.is-on{ background: color-mix(in srgb, var(--indigo) 10%, var(--bg-soft)); border-color: color-mix(in srgb, var(--indigo) 45%, var(--line)); color: var(--indigo-ink); }
 .ank-back{ margin-bottom: var(--s3); }
 .ank-strip{ display:flex; gap:.4rem; overflow-x:auto; padding:.2rem .1rem .5rem; margin-bottom: var(--s3); scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
   mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
@@ -3908,6 +3915,13 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-peek:hover{ border-color: var(--indigo); color: var(--ink); }
 .ank-peek-k{ font-family: var(--mono); font-size:.68rem; border:1px solid var(--line); border-radius:4px; padding:0 .32rem; }
 .ank-has-hidden #ankCard:not(.ank-revealed) .ank-peek{ display:inline-flex; }
+/* quiet ✎ edit affordance on the card itself (Edit left the toolbar) — appears on hover/focus, top-right */
+.ank-card-edit{ position:absolute; top:.55rem; right:.55rem; width:1.9rem; height:1.9rem; display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); background: var(--bg-soft); color: var(--ink-faint); border-radius:8px; cursor:pointer; opacity:0;
+  transition: opacity .14s ease, color .12s ease, border-color .12s ease; }
+.ank-card:hover .ank-card-edit, .ank-card-edit:focus-visible{ opacity:1; }
+.ank-card-edit:hover{ color: var(--indigo-ink); border-color: var(--indigo-soft); }
+@media (hover: none){ .ank-card-edit{ opacity:.55; width:2.4rem; height:2.4rem; } }   /* no hover on touch — keep it visible but subtle */
 #ankCard.ank-revealed ruby.ank-word rt, #ankCard.ank-revealed .ank-mean, #ankCard.ank-revealed .ank-sentm, #ankCard.ank-revealed .ank-sent{ visibility: visible !important; }
 
 /* deck library / history — the "Your decks" switch row above the card */
@@ -3928,7 +3942,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-deck-add{ font-family: var(--mono); font-size:.72rem; font-weight:700; border:1px dashed var(--line); background:none; color: var(--ink-soft); border-radius: var(--r-sm); padding:.3rem .6rem; cursor:pointer; }
 .ank-deck-add:hover{ border-color: var(--indigo); color: var(--ink); }
 /* deck search — jump to any card by text */
-.ank-search-wrap{ position:relative; margin-top:.5rem; max-width: 22rem; }
+.ank-search-wrap{ position:relative; margin-left:auto; max-width: 16rem; }   /* sits at the right end of the toolbar row */
 .ank-search{ width:100%; font:inherit; font-size:.82rem; padding:.4rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
 .ank-search:focus{ outline:none; box-shadow: var(--ring); border-color: var(--indigo); }
 .ank-search-res{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 3px); max-height: 15rem; overflow-y:auto; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); }
@@ -3994,7 +4008,11 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 @media (prefers-reduced-motion: reduce){ .ank-ctl{ transition: none; } .ank-ctl:active{ transform: none; } }
 
 /* ===== Anki refresher — stage 3 (skim + pile) ===== */
-.ank-seg{ display:inline-flex; gap:2px; margin-right:.4rem; }
+/* segmented Stream/Skim toggle — a sunk track with a raised active segment (icon + label) */
+.ank-seg{ display:inline-flex; gap:2px; background: var(--bg-sunk); border:1px solid var(--line); border-radius:10px; padding:2px; }
+.ank-segbtn{ font-family: var(--mono); font-size:.74rem; font-weight:700; border:none; background:none; color: var(--ink-faint); border-radius:8px; padding:.33rem .55rem; cursor:pointer; display:inline-flex; align-items:center; gap:.3rem; transition: color .12s ease, background .12s ease; }
+.ank-segbtn:hover{ color: var(--ink); }
+.ank-segbtn.is-on{ background: var(--bg-soft); color: var(--indigo-ink); box-shadow: 0 1px 2px rgba(20,15,10,.12); }
 .ank-chip-pile{ font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }
 .ank-chip-pile[disabled]{ opacity:.45; cursor:default; }
 .ank-skim{ display:flex; flex-direction:column; gap:2px; margin-top:.5rem; }
@@ -4009,7 +4027,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-row-m{ color: var(--ink-soft); font-size:.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .ank-clear{ text-align:center; padding:2.5rem 1rem; }
 .ank-clear-art{ font-size:2rem; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); margin-bottom:.5rem; }
-@media (hover: none){ .ank-row{ min-height:44px; } .ank-seg .ank-mini{ min-height:44px; } }
+@media (hover: none){ .ank-row{ min-height:44px; } .ank-segbtn{ min-height:44px; } }
 
 /* ===== JLPT grammar (#/grammar) — P2 browse UI ===== */
 .g-xlink a{ font-weight:600; text-decoration:none; border-bottom:1px dotted currentColor; }

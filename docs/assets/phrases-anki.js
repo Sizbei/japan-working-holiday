@@ -536,8 +536,8 @@ function barHTML(deck) {
       <span class="ank-h ank-h-sm">Core deck</span>
       <div class="ank-bar-acts">
         <span class="ank-seg" role="group" aria-label="View">
-          <button type="button" class="ank-segbtn${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}" title="Stream — one card at a time"><span class="ank-i" aria-hidden="true">▶</span> Stream</button>
-          <button type="button" class="ank-segbtn${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}" title="Skim — the whole list"><span class="ank-i" aria-hidden="true">☰</span> Skim</button>
+          <button type="button" class="ank-segbtn${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}" aria-label="Stream — one card at a time" title="Stream — one card at a time"><span aria-hidden="true">▶</span></button>
+          <button type="button" class="ank-segbtn${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}" aria-label="Skim — the whole list" title="Skim — the whole list"><span aria-hidden="true">☰</span></button>
         </span>
         <span class="ank-div" aria-hidden="true"></span>
         <span class="ank-grp" role="group" aria-label="Show or hide">

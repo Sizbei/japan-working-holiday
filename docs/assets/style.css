@@ -3942,7 +3942,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-deck-add{ font-family: var(--mono); font-size:.72rem; font-weight:700; border:1px dashed var(--line); background:none; color: var(--ink-soft); border-radius: var(--r-sm); padding:.3rem .6rem; cursor:pointer; }
 .ank-deck-add:hover{ border-color: var(--indigo); color: var(--ink); }
 /* deck search — jump to any card by text */
-.ank-search-wrap{ position:relative; margin-left:auto; max-width: 16rem; }   /* sits at the right end of the toolbar row */
+.ank-search-wrap{ position:relative; flex-basis:100%; max-width: 18rem; margin-top:.15rem; }   /* own row, left-aligned — never float right in a gap */
 .ank-search{ width:100%; font:inherit; font-size:.82rem; padding:.4rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
 .ank-search:focus{ outline:none; box-shadow: var(--ring); border-color: var(--indigo); }
 .ank-search-res{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 3px); max-height: 15rem; overflow-y:auto; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); }
@@ -4010,7 +4010,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 /* ===== Anki refresher — stage 3 (skim + pile) ===== */
 /* segmented Stream/Skim toggle — a sunk track with a raised active segment (icon + label) */
 .ank-seg{ display:inline-flex; gap:2px; background: var(--bg-sunk); border:1px solid var(--line); border-radius:10px; padding:2px; }
-.ank-segbtn{ font-family: var(--mono); font-size:.74rem; font-weight:700; border:none; background:none; color: var(--ink-faint); border-radius:8px; padding:.33rem .55rem; cursor:pointer; display:inline-flex; align-items:center; gap:.3rem; transition: color .12s ease, background .12s ease; }
+.ank-segbtn{ font-size:.95rem; line-height:1; border:none; background:none; color: var(--ink-faint); border-radius:8px; padding:.36rem .7rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: color .12s ease, background .12s ease; }
 .ank-segbtn:hover{ color: var(--ink); }
 .ank-segbtn.is-on{ background: var(--bg-soft); color: var(--indigo-ink); box-shadow: 0 1px 2px rgba(20,15,10,.12); }
 .ank-chip-pile{ font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }

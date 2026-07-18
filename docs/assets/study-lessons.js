@@ -49,6 +49,64 @@ function clozeHTML(blankedTokens, revealed) {
 function exampleEN(point, idx) { const ex = point.examples && point.examples[idx]; return (ex && ex.en) || ''; }
 function focusIn(root, sel) { const el = root.querySelector(sel); if (el) el.focus({ preventScroll: true }); }
 
+// ── editorial lesson chrome (the redesigned 3-beat card) ──────────────────────
+// the 1-2-3 step rail: Learn → Spot it → Produce. Steps before `active` read done (✓).
+const RAIL_STEPS = [[1, 'Learn'], [2, 'Spot it'], [3, 'Produce']];
+function stepRailHTML(active) {
+  return `<ol class="stu-rail" aria-label="Lesson steps">${RAIL_STEPS.map(([n, label]) => {
+    const cls = n < active ? 'is-done' : n === active ? 'is-on' : '';
+    const dot = n < active ? '✓' : String(n);
+    return `<li class="stu-rail-step ${cls}"${n === active ? ' aria-current="step"' : ''}><span class="stu-rail-dot" aria-hidden="true">${dot}</span><span class="stu-rail-label">${esc(label)}</span></li>`;
+  }).join('')}</ol>`;
+}
+
+// connection string → a visual formula (chips joined by + → / operators). Display-only.
+// The chip(s) carrying the grammar pattern surface get .stu-chip-key (indigo fill) — simple
+// heuristic: a chip shares ≥2 chars of the point's pattern (stripped of 〜/space). No match → plain.
+function formulaHTML(conn, pattern) {
+  if (!conn) return '';
+  const key = pattern ? String(pattern).replace(/[〜～\s]/g, '') : '';
+  const isKey = (pt) => {
+    if (!key || key.length < 2) return false;
+    const t = pt.replace(/\s/g, '');
+    return t.length >= 2 && (key.includes(t) || t.includes(key));
+  };
+  const parts = String(conn).split(/\s*([+→/])\s*/).filter(s => s !== '' && s != null);
+  const chips = parts.map(pt => /^[+→/]$/.test(pt)
+    ? `<span class="stu-formula-op" aria-hidden="true">${esc(pt === '/' ? '／' : pt)}</span>`
+    : `<span class="stu-chip${isKey(pt) ? ' stu-chip-key' : ''}" lang="ja">${esc(pt)}</span>`).join('');
+  return `<div class="stu-formula" role="group" aria-label="How it connects">${chips}</div>`;
+}
+
+// an example sentence for the RULE card (beat 1), with the pattern highlighted. Anti-leak: NEVER the
+// beat-3 cloze example (index 0). Only when the point has ≥2 examples — else the pattern reading
+// (already shown + spoken) stands alone. Uses clozeFor to mark the pattern tokens in context.
+function ruleExampleHTML(p) {
+  const exs = Array.isArray(p.examples) ? p.examples : [];
+  if (exs.length < 2) return '';
+  const idx = exs.length - 1;                     // last example — never the beat-3 cloze (index 0)
+  const { blankedTokens, answers } = clozeFor(p, idx);
+  const ja = (blankedTokens && answers.length)
+    ? blankedTokens.map(b => b.blank
+        ? `<mark class="stu-eg-mark">${esc(b.fill || '')}</mark>`
+        : (typeof b.token === 'string' ? esc(b.token) : `<span class="stok" lang="ja">${rubyHTML(b.token.f, b.token.t)}</span>`)).join('')
+    : tokensHTML(exs[idx].ja);
+  const en = exampleEN(p, idx);
+  return `<figure class="stu-eg"><p class="stu-eg-ja" lang="ja">${ja}</p>${en ? `<figcaption class="stu-eg-en">${esc(en)}</figcaption>` : ''}</figure>`;
+}
+
+// nuance / register / watch-out as distinct notes (not a flat dl). Meaning→gloss, connection→formula
+// are surfaced separately on the rule card.
+function notesHTML(p) {
+  const items = [];
+  if (p.nuance) items.push(['◆', 'Nuance', p.nuance, '']);
+  if (p.register) items.push(['◈', 'Register', p.register, '']);
+  if (p.caution) items.push(['⚠', 'Watch out', p.caution, 'stu-note-warn']);
+  if (!items.length) return '';
+  return `<div class="stu-notes">${items.map(([ic, label, body, cls]) =>
+    `<div class="stu-note-item ${cls}"><span class="stu-note-ic" aria-hidden="true">${ic}</span><p class="stu-note-bd"><b>${esc(label)}</b>${esc(body)}</p></div>`).join('')}</div>`;
+}
+
 // pick another same-level point's example sentence as a recognition distractor
 function pickDistractor(pointsCache, level, excludeId) {
   const pool = Object.values(pointsCache).filter(p =>
@@ -178,19 +236,19 @@ export function startLessons(ctx, ids) {
   }
 
   function renderRule(p) {
-    const rows = [
-      ['Meaning', p.meaning], ['Connects to', p.connection], ['Nuance', p.nuance],
-      ['Register', p.register], ['Watch out', p.caution],
-    ].filter(([, v]) => v).map(([k, v]) => `<div class="stu-rule-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
     root.innerHTML = `
-      <div class="stu-lesson">
-        <div class="stu-lesson-top"><span class="stu-lesson-tag">Learn · ${esc(String(i + 1))}/${esc(String(queue.length))}</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
+      <div class="stu-lesson stu-rule-card">
+        ${stepRailHTML(1)}
+        <div class="stu-lesson-meta"><span class="stu-lesson-tag" lang="ja">新しい文法 · point ${esc(String(i + 1))} of ${esc(String(queue.length))}</span><span class="stu-lesson-lvl">${esc(p.level || '')}</span></div>
         <p class="stu-pat" lang="ja">${esc(p.pattern || '')}${canSpeak() ? ` <button type="button" class="stu-speak stu-rule-speak" data-act="ruleSpeak" aria-label="Play the pattern">🔊</button>` : ''}</p>
         ${p.reading ? `<p class="stu-pat-read" lang="ja">${esc(p.reading)}</p>` : ''}
+        ${p.meaning ? `<p class="stu-gloss">${esc(p.meaning)}</p>` : ''}
+        ${formulaHTML(p.connection, p.pattern)}
+        ${ruleExampleHTML(p)}
         ${flagBadgesHTML(p) ? `<p class="stu-flags">${flagBadgesHTML(p)}</p>` : ''}
-        <dl class="stu-rule">${rows}</dl>
+        ${notesHTML(p)}
         ${pegHTML(p)}
-        <div class="stu-controls"><button type="button" class="stu-btn stu-btn-primary" data-act="beat2">Got it — practise →</button></div>
+        <div class="stu-controls"><button type="button" class="stu-btn stu-btn-primary" data-act="beat2">Got it — spot it →</button></div>
       </div>`;
     focusIn(root, '.stu-btn-primary');
     ctx.announce(`Lesson ${i + 1} of ${queue.length}. ${p.pattern || ''}. ${p.meaning || ''}`);
@@ -207,7 +265,8 @@ export function startLessons(ctx, ids) {
     mcData = { answered: false };
     root.innerHTML = `
       <div class="stu-lesson">
-        <div class="stu-lesson-top"><span class="stu-lesson-tag">Spot it · ${esc(String(mcRound + 1))}/2</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
+        ${stepRailHTML(2)}
+        <div class="stu-lesson-meta"><span class="stu-lesson-tag" lang="ja">見つけよう · spot it ${esc(String(mcRound + 1))} of 2</span><span class="stu-lesson-lvl">${esc(p.level || '')}</span></div>
         <p class="stu-mc-q">Which one uses <b lang="ja">${esc(p.pattern || '')}</b>?</p>
         <div class="stu-mc" id="stuMC">
           ${opts.map((o, k) => `<button type="button" class="stu-mc-opt" data-act="mc" data-k="${k}" data-correct="${o.correct ? 1 : 0}"><span lang="ja">${o.html}</span></button>`).join('')}
@@ -244,7 +303,8 @@ export function startLessons(ctx, ids) {
     const exIdx = 0;
     root.innerHTML = `
       <div class="stu-lesson">
-        <div class="stu-lesson-top"><span class="stu-lesson-tag">Produce · type it</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
+        ${stepRailHTML(3)}
+        <div class="stu-lesson-meta"><span class="stu-lesson-tag" lang="ja">書いてみよう · produce</span><span class="stu-lesson-lvl">${esc(p.level || '')}</span></div>
         <p class="stu-mc-q">Fill the blank — type <b lang="ja">${esc(p.pattern || '')}</b> in kana.</p>
         <div id="stuClozeHost"></div>
         <p class="stu-en" hidden>${esc(exampleEN(p, exIdx))}</p>

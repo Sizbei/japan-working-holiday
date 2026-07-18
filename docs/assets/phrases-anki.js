@@ -533,19 +533,24 @@ function stripHTML(deck, chunk, mode) {
 function barHTML(deck) {
   return `
     <div class="ank-bar">
-      <h3 class="ank-h ank-h-sm">Core deck</h3>
+      <span class="ank-h ank-h-sm">Core deck</span>
       <div class="ank-bar-acts">
         <span class="ank-seg" role="group" aria-label="View">
-          <button type="button" class="ank-mini${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}">▶ Stream</button>
-          <button type="button" class="ank-mini${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}">☰ Skim</button>
+          <button type="button" class="ank-segbtn${deck.view !== 'skim' ? ' is-on' : ''}" id="ankViewStream" aria-pressed="${deck.view !== 'skim'}" title="Stream — one card at a time"><span class="ank-i" aria-hidden="true">▶</span> Stream</button>
+          <button type="button" class="ank-segbtn${deck.view === 'skim' ? ' is-on' : ''}" id="ankViewSkim" aria-pressed="${deck.view === 'skim'}" title="Skim — the whole list"><span class="ank-i" aria-hidden="true">☰</span> Skim</button>
         </span>
-        <button type="button" class="ank-mini" id="ankHira" title="Show or hide the reading (hiragana) — key: n">あ Hiragana</button>
-        <button type="button" class="ank-mini" id="ankEn" title="Show or hide the English meaning — key: m">EN English</button>
-        <button type="button" class="ank-mini" id="ankEx" title="Show or hide the example sentence">例 Example</button>
-        <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}">⇄ Shuffle</button>
-        <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card">🔊 Auto</button>
-        <button type="button" class="ank-mini" id="ankAutoAdv" title="Auto-advance through cards (tap to cycle the delay)">⏱ Auto-advance</button>
-        <button type="button" class="ank-mini" id="ankEdit" title="Edit this card's fields — key: e">✎ Edit</button>
+        <span class="ank-div" aria-hidden="true"></span>
+        <span class="ank-grp" role="group" aria-label="Show or hide">
+          <button type="button" class="ank-mini" id="ankHira" title="Show/hide the reading (hiragana) — key: n"><span class="ank-i" aria-hidden="true">あ</span> Hiragana</button>
+          <button type="button" class="ank-mini" id="ankEn" title="Show/hide the English meaning — key: m"><span class="ank-i" aria-hidden="true">A</span> English</button>
+          <button type="button" class="ank-mini" id="ankEx" title="Show/hide the example sentence"><span class="ank-i" aria-hidden="true">例</span> Example</button>
+        </span>
+        <span class="ank-div" aria-hidden="true"></span>
+        <span class="ank-grp" role="group" aria-label="Session">
+          <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}" title="Shuffle the card order"><span class="ank-i" aria-hidden="true">⇄</span> Shuffle</button>
+          <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card"><span class="ank-i" aria-hidden="true">🔊</span> Audio</button>
+          <button type="button" class="ank-mini" id="ankAutoAdv" title="Auto-advance through cards (tap to cycle the delay)"><span class="ank-i" aria-hidden="true">⏱</span> Auto-advance</button>
+        </span>
       </div>
       <div class="ank-search-wrap">
         <input type="search" id="ankSearch" class="ank-search" placeholder="Search this deck…" aria-label="Search cards in this deck" autocomplete="off">
@@ -776,7 +781,8 @@ function paintCard() {
     ${card.m && !isPos ? `<div class="ank-mean">${esc(card.m)}</div>` : ''}
     ${hair}${sent}${sentM}
     ${(hasWordAudio || card.img) ? `<div class="ank-media">${card.img ? '<img class="ank-img" id="ankImg" alt="" hidden>' : ''}${hasWordAudio ? `<button type="button" class="ank-audio" id="ankAudio"${card.a ? '' : ' data-tts="1"'} aria-label="Play audio (P)">🔊</button>` : ''}</div>` : ''}
-    <button type="button" class="ank-peek" aria-label="Reveal the hidden side">👁 Reveal <kbd class="ank-peek-k">↓</kbd></button>`;
+    <button type="button" class="ank-peek" aria-label="Reveal the hidden side">👁 Reveal <kbd class="ank-peek-k">↓</kbd></button>
+    <button type="button" class="ank-card-edit" aria-label="Edit this card (E)" title="Edit this card — key: e">✎</button>`;
   fillMedia(card);
   // auto-play audio ONLY when the card actually changed (not on a re-paint from flagging shaky) —
   // gated on card.id. Browsers block play() until a gesture; advancing IS a gesture, so it works
@@ -915,7 +921,6 @@ function wireCommon() {
     setRaw(KEYS.ankiAutoAdv, nextSecs);
     syncAutoAdv(); scheduleAuto();
   });
-  $('#ankEdit')?.addEventListener('click', editCard);
   wireSearch();
   wireDeckChips();
   applyToggles();   // sync the hiragana/English toggle classes + button state after every (re)render of the bar
@@ -985,6 +990,7 @@ function wireStream() {
   const tap = (fn) => () => { if (_suppressTap) { _suppressTap = false; return; } fn(); };   // swallow the click a swipe also fires
   card?.addEventListener('click', (e) => {
     if (e.target.closest('.ank-peek')) { e.stopPropagation(); revealCard(); return; }   // tap the peek = flip, NOT advance
+    if (e.target.closest('.ank-card-edit')) { e.stopPropagation(); editCard(); return; }   // tap ✎ = edit, NOT advance
     if (_suppressTap) { _suppressTap = false; return; }
     revealOrAdvance();   // tap flips to the answer first (when something's hidden), then advances
   });

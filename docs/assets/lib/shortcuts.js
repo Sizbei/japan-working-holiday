@@ -38,8 +38,9 @@ export const BINDINGS = [
   { id: 'accept', keys: ['Enter'], phase: 'close', surface: 'study', label: 'Take it', control: '[data-act="accept"]', kind: 'grade' },
   { id: 'reject', keys: ['Escape'], phase: 'close', surface: 'study', label: 'Reveal instead', control: '[data-act="reject"]', kind: 'reveal' },
 
-  // ── Study, post-answer grade (correct). 1 was previously swallowed as a no-op — now Again.
-  { id: 'again', keys: ['1'], phase: 'graded', surface: 'study', label: 'Again', control: '[data-g="1"]', kind: 'grade' },
+  // ── Study, post-answer grade (correct). Only Hard/Good/Easy — a correct answer has no "Again"
+  //    (matches the graded control bar; `1` stays unbound here, so it never becomes a control-less
+  //    keyboard-only grade). The wrong-phase Continue is a separate binding below.
   { id: 'grade-2', keys: ['2'], phase: 'graded', surface: 'study', label: 'Hard', control: '[data-g="2"]', kind: 'grade' },
   { id: 'grade-3', keys: ['3'], phase: 'graded', surface: 'study', label: 'Good', control: '[data-g="3"]', kind: 'grade' },
   { id: 'grade-4', keys: ['4'], phase: 'graded', surface: 'study', label: 'Easy', control: '[data-g="4"]', kind: 'grade' },

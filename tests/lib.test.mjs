@@ -3277,7 +3277,7 @@ test('resolveKey: Enter/Space on a focused BUTTON → null (native activation, n
 
 test('resolveKey: correct (key, phase) → actionId mapping', () => {
   assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'other', enabled: true }), 'submit');
-  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), 'again');
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), null); // correct answers have no Again
   assert.equal(resolveKey({ key: '2', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-2');
   assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-3');
   assert.equal(resolveKey({ key: '4', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-4');
@@ -3288,9 +3288,8 @@ test('resolveKey: correct (key, phase) → actionId mapping', () => {
   assert.equal(resolveKey({ key: 'Escape', phase: 'close', targetKind: 'other', enabled: true }), 'reject');
 });
 
-test('resolveKey: phase disambiguates the same key (1 = route pre-card vs Again post-answer)', () => {
-  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), 'again');
-  // '1' has no study binding in the idle/input phases → null (gestures owns route-nav 1-9)
+test('resolveKey: 1 has no study binding in any phase — gestures owns route-nav 1-9', () => {
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), null);
   assert.equal(resolveKey({ key: '1', phase: 'input', targetKind: 'other', enabled: true }), null);
   assert.equal(resolveKey({ key: '1', phase: 'idle', targetKind: 'other', enabled: true }), null);
 });

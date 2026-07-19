@@ -18,6 +18,12 @@ import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { pegHTML } from './lib/peg.js';
 import { speakExample, speakBtnHTML } from './speak.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
+
+// K3 turn-off-aware kbd hint (mirrors study.js kbHint): no dead-key chips/aria when shortcuts are off.
+const kbHint = (key) => shortcutsEnabled()
+  ? { ks: ` aria-keyshortcuts="${key}"`, chip: ` <kbd aria-hidden="true">${key}</kbd>` }
+  : { ks: '', chip: '' };
 
 // render the blanked stem tokens (clozeFor/mcqFor `stem` shape: { blank } | { token })
 function stemHTML(stem) {
@@ -79,9 +85,9 @@ export function mcqCard(ctx, host, mcq, opts = {}) {
     if (ok) {
       if (fb) fb.innerHTML = `<span class="stu-fb-ok">Correct — <b lang="ja">${esc(answer)}</b>.</span>`;
       if (c) c.innerHTML = grade
-        ? `<button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2">Hard <kbd>2</kbd></button>
-           <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3">Good <kbd>3</kbd></button>
-           <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4">Easy <kbd>4</kbd></button>`
+        ? `<button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2"${kbHint('2').ks}>Hard${kbHint('2').chip}</button>
+           <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3"${kbHint('3').ks}>Good${kbHint('3').chip}</button>
+           <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4"${kbHint('4').ks}>Easy${kbHint('4').chip}</button>`
         : `<button type="button" class="stu-btn stu-btn-primary" data-act="next">Continue ⏎</button>`;
       announce(grade ? 'Correct. Choose Hard, Good or Easy.' : 'Correct.');
     } else {

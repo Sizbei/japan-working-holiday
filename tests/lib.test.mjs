@@ -3408,6 +3408,71 @@ test('resolveKey (K2b): summary Enter → native on the focused button, else rou
   assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'other', enabled: true }), 'summary-done');
 });
 
+// ── K3: the ? sheet renders FROM the registry — drift guard (sheet ⇔ registry ⇔ dispatcher) ─────
+import { helpSheetModel, keyGlyph } from '../docs/assets/lib/shortcuts.js';
+
+test('K3 drift: the sheet documents EVERY binding, invents none (sheet ⇔ registry)', () => {
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const covered = model.flatMap(g => g.rows.flatMap(r => r.ids));
+  // every binding id is documented, and nothing outside the registry appears
+  assert.deepEqual(new Set(covered), new Set(BINDINGS.map(b => b.id)));
+});
+
+test('K3 drift: each binding lands in exactly one sheet group', () => {
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  for (const b of BINDINGS) {
+    const groupsWith = model.filter(g => g.rows.some(r => r.ids.includes(b.id)));
+    assert.equal(groupsWith.length, 1, `${b.id} appears in exactly one group`);
+  }
+});
+
+test('K3 drift: the sheet renders no key that is not in the registry', () => {
+  const registryKeys = new Set(BINDINGS.flatMap(b => b.keys));
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  for (const g of model) for (const r of g.rows) for (const k of r.keys) {
+    assert.ok(registryKeys.has(k), `sheet key ${k} is not declared in BINDINGS`);
+  }
+});
+
+test('K3 drift: the page-jump binding expands to the live nav labels when pages are supplied', () => {
+  const pages = [{ key: '1', label: 'Home' }, { key: '2', label: 'Calendar' }];
+  const model = helpSheetModel(BINDINGS, { enabled: true, pages });
+  const nav = model.find(g => g.surface === 'nav');
+  assert.ok(nav.rows.some(r => r.keys[0] === '1' && r.label === 'Home'));
+  assert.ok(nav.rows.some(r => r.keys[0] === '2' && r.label === 'Calendar'));
+  // still exactly one group for nav-page even when expanded to many rows
+  assert.equal(model.filter(g => g.rows.some(r => r.ids.includes('nav-page'))).length, 1);
+});
+
+test('K3 drift: every routed (resolveKey-dispatched) binding actually resolves (registry ⇔ dispatcher)', () => {
+  const routed = BINDINGS.filter(b => b.routed !== false);
+  assert.ok(routed.length >= 12, 'the study surface is resolveKey-routed');
+  for (const b of routed) {
+    // a routed binding must resolve to its own id for its first key + phase (targetKind:'other' so
+    // Enter/Space still command). This is what catches a key added to the dispatcher but not the
+    // sheet, or removed from one side only.
+    const id = resolveKey({ key: b.keys[0], phase: b.phase, targetKind: 'other', enabled: true });
+    assert.equal(id, b.id, `${b.id} resolves through resolveKey`);
+    assert.ok(b.surface === 'study', `${b.id} routed bindings live on the study surface`);
+  }
+});
+
+test('K3 drift: declarative (routed:false) bindings are marked and never mistaken for routed', () => {
+  const declarative = BINDINGS.filter(b => b.routed === false);
+  // the global/nav + calendar/checklist + modifier combos are all declarative documentation
+  assert.ok(declarative.length > 0);
+  for (const b of declarative) assert.notEqual(b.surface, 'study');
+});
+
+test('K3: keyGlyph maps raw event keys to readable chips, passes combos through', () => {
+  assert.equal(keyGlyph('Enter'), '⏎');
+  assert.equal(keyGlyph(' '), 'Space');
+  assert.equal(keyGlyph('ArrowLeft'), '←');
+  assert.equal(keyGlyph('-'), '−');
+  assert.equal(keyGlyph('⌘K'), '⌘K');   // mod-combo display strings pass through untouched
+  assert.equal(keyGlyph('2'), '2');
+});
+
 import { stripEmoji } from '../docs/assets/lib/dom.js';
 test('stripEmoji removes pictographs/flags but keeps arrows, kana, punctuation', () => {
   assert.equal(stripEmoji('🎌 teamLab Planets'), 'teamLab Planets');

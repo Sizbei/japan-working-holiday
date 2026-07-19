@@ -4322,6 +4322,13 @@ html[data-reduce-motion="on"] .stu-btn-primary:hover:not([disabled]), html[data-
 .stu-prog-bar{ flex:1; height: 4px; background: var(--bg-sunk); border-radius: 4px; overflow: hidden; }
 .stu-prog-bar i{ display:block; height:100%; width:100%; background: var(--indigo); transform-origin:left; transition: transform var(--t-base); }
 html[data-reduce-motion="on"] .stu-prog-bar i{ transition:none; }
+/* K2b: subtle ↩ Undo affordance in the card header (tap/Tab parity for the Z key). Quiet by default,
+   inks up on hover/focus — never a big button (owner is clutter-averse). */
+.stu-undo{ flex:none; display:inline-flex; align-items:center; gap:.25rem; background:none; border:none; cursor:pointer;
+  font-family: var(--serif); font-size:.74rem; color: var(--ink-faint); padding:.1rem .3rem; border-radius: var(--r-xs); white-space:nowrap; }
+.stu-undo:hover{ color: var(--indigo); }
+.stu-undo:focus-visible{ outline: 2px solid var(--indigo); outline-offset: 2px; }
+.stu-undo kbd{ font-family: var(--mono); font-size:.7rem; opacity:.6; margin-left:.15rem; }
 .stu-lvl{ font-family: var(--serif); font-size:.78rem; color: var(--ink-faint); margin:0 0 .6rem; letter-spacing:.01em; }
 .stu-sentence{ font-family: var(--serif-jp); font-size: 1.4rem; line-height: 2; text-align:left; margin: .3rem 0 1rem; }
 .stok{ white-space: nowrap; }

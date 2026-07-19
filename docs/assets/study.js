@@ -23,7 +23,7 @@ import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
 import { canSpeak, speakExample, speakBtnHTML } from './speak.js';
 import { blip } from './lib/audio.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, undoReview, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
 import { celebrate } from './celebrate.js';
@@ -49,7 +49,11 @@ let root = null;
 let card = null;                  // { id, exIdx, point, type, ... } for the live card
 let cardCtl = null;               // active ★-scramble sub-controller (study-scramble.js) while a scramble card shows
 let gateTimerCtl = null;          // R10: the soft gate-card countdown controller (torn down on every rebuild)
-let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble'
+let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble' | 'mcq' | 'summary'
+// K2b: the single-level undo snapshot, captured by captureGrade() just BEFORE the review() in every
+// grade path (cloze/scramble/mcq). Restored by undoLast(). In-memory only (NEVER persisted). Holds
+// the whole pre-grade state + the graded card so the just-graded card can be re-presented for a re-grade.
+let lastGraded = null;
 let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
 const expandedLevels = new Set(); // course-home accordion: which level cards are open
 // K1 Enter-safety state: `lastRevealTs` stamps the input→graded/wrong transition so a single Enter
@@ -372,6 +376,7 @@ function leechPanelHTML() {
 
 function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
+  lastGraded = null;   // K2b: leaving the card view closes the undo window
   teardownGateTimer();
   const cs = continueState();
   const mstats = masteryStats(state);
@@ -767,7 +772,7 @@ function renderCard() {
   root.innerHTML = `
     <div class="stu-card${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(true) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <p class="stu-sentence" lang="ja">${sentence}</p>
@@ -798,7 +803,7 @@ function renderScrambleCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-scramble${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(false) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuScramHost"></div>
@@ -820,7 +825,7 @@ function renderMcqCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-mcq${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(false) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuMcqHost"></div>
@@ -833,6 +838,7 @@ function renderMcqCard() {
 
 // Correct pick → the learner's Hard/Good/Easy; wrong pick → Again (typedCorrect:false → grade 1).
 function onMcqResult({ pass, chosen }) {
+  captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
   const gate = !!card.gate;
@@ -852,6 +858,7 @@ function onMcqResult({ pass, chosen }) {
 
 // Correct order → the learner's Hard/Good/Easy; wrong order → Again (typedCorrect:false → grade 1).
 function onScrambleResult({ pass, chosen }) {
+  captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
   const gate = !!card.gate;
@@ -1078,11 +1085,69 @@ function rejectClose() { if (phase === 'close') reveal('wrong'); }
 function setControls(ph) { const c = $('#stuControls'); if (c) c.innerHTML = controlsFor(ph); }
 function focusControl(sel) { const el = root.querySelector(sel); if (el) el.focus({ preventScroll: true }); }
 
+// ── K2b: undo the last grade (single level, within-session) ──────────────────
+// captureGrade() snapshots the WHOLE state (structuredClone) + the graded card BEFORE review() runs,
+// in every grade path. For a cloze card we also stash the revealed root.innerHTML: restoring it
+// re-presents the card in its graded/wrong state so the learner re-grades WITHOUT retyping (the
+// delegated click/keydown handlers live on the persistent root, so the restored markup stays live).
+// ★-scramble / MCQ cards are owned by a sub-controller whose revealed DOM can't be faithfully rebuilt,
+// so undoing one re-presents it FRESH via renderCard() — state is fully restored, so buildCard() is
+// deterministic (same point/example/format). undoReview()'s state restore reverts the graded point's
+// D/S/stage/reps/lapses/ghost/gate/leech AND session.pos/results in one shot; it never re-runs review().
+function captureGrade() {
+  lastGraded = {
+    snapshot: structuredClone(state),
+    card: card ? structuredClone(card) : null,
+    phase,
+    type: card && card.type,
+    html: (card && card.type === 'cloze') ? root.innerHTML : null,
+  };
+}
+
+// A subtle, right-aligned affordance in the cloze card header. Rendered only when an undo is available
+// and a shell-owned cloze card is showing. Tap/Tab-focusable (Principle 5 / WCAG 2.1.1); the Z chip is
+// decorative (aria-hidden) — the accessible name comes from the label + aria-keyshortcuts.
+// `zLive` = whether the bare Z key actually commands undo in this card's context. Only the cloze
+// card fires Z (in its reveal phases); scramble/MCQ cards are owned by a sub-controller that
+// intercepts keys, so there the affordance is tap/Tab-only — don't advertise a Z that won't work.
+function undoAffordanceHTML(zLive = false) {
+  const z = zLive ? ` aria-keyshortcuts="Z"` : '';
+  const chip = zLive ? `<kbd aria-hidden="true">Z</kbd>` : '';
+  return `<button type="button" class="stu-undo" data-act="undo"${z} title="Undo the last grade">`
+    + `<span aria-hidden="true">↩</span> Undo${chip}</button>`;
+}
+
+function undoLast() {
+  if (!lastGraded || !state.session) return;   // bounded to within-session — no undo once the summary ran
+  const lg = lastGraded;
+  lastGraded = null;
+  state = undoReview(lg.snapshot);
+  save();
+  if (lg.type === 'cloze' && lg.html != null) {
+    // restore the revealed cloze view so the learner re-grades in place (no retype)
+    card = lg.card;
+    phase = lg.phase;
+    cardCtl = null;
+    teardownGateTimer();
+    root.innerHTML = lg.html;
+    root.querySelector('.stu-undo')?.remove();   // the captured markup may hold a now-stale affordance
+    lastRevealTs = 0;                             // don't inherit the submit→continue debounce window
+    focusControl(phase === 'graded' ? '.stu-good' : '.stu-btn-primary');
+  } else {
+    // recognition card (or missing markup): re-present the just-graded card FRESH for another attempt
+    card = null;
+    cardCtl = null;
+    renderCard();
+  }
+  announce('Undone. Re-grade the card.');
+}
+
 // grade(g): apply the engine review with the arbitrated effective grade, WRITE THROUGH
 // immediately, record the session result (display-only), advance. `typedCorrect:false` (the
 // wrong path) forces Again regardless of g.
 function grade(g, { typedCorrect = true } = {}) {
   if (phase !== 'graded' && phase !== 'wrong') return;
+  captureGrade();   // K2b: snapshot BEFORE review() so Z can revert this exact grade
   const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, hintTier: card.hintTier, chosen: g });
   const pass = eff > 1;
   const now = Date.now();
@@ -1103,6 +1168,8 @@ function grade(g, { typedCorrect = true } = {}) {
 // ── Summary screen ───────────────────────────────────────────────────────────
 function renderSummary() {
   cardCtl = null;
+  phase = 'summary';    // K2b: no stale grade/undo key resolves on the summary (session ends below)
+  lastGraded = null;    // undo is bounded to within-session — the summary is past the window
   teardownGateTimer();
   const results = (state.session && state.session.results) || [];
   const graded = results.filter(r => !r.skipped);
@@ -1146,6 +1213,7 @@ function wireRoot() {
     const b = e.target.closest('[data-act]');
     if (b) {
       if (b.tagName === 'SELECT') return;          // <select> handled by the change listener below
+      if (b.dataset.act === 'undo') { undoLast(); return; }            // shell-level cross-card action — must beat the cardCtl hijack so ↩ Undo works on scramble/MCQ headers too
       if (activeFlow) { activeFlow.onAct(b.dataset.act, b); return; }   // a lesson/placement/test-out owns its buttons
       if (cardCtl) { cardCtl.onAct(b.dataset.act, b); return; }         // a live ★-scramble card owns its tiles/slots/grade
       act(b.dataset.act, b); return;
@@ -1230,6 +1298,8 @@ function runAction(id) {
       const ja = cardExampleJa(); if (ja) speakExample(ja, root.querySelector('.stu-speak')); break;
     }
     case 'autoplay': toggleTts(); break;                        // A: toggle autoplay (session-safe; announces)
+    case 'undo-graded': case 'undo-wrong': undoLast(); break;   // Z: undo the last grade (within-session)
+    case 'summary-done': renderCourseHome(); break;             // Enter on the summary if focus drifted off Done
   }
 }
 
@@ -1254,6 +1324,7 @@ function act(name, btn) {
     case 'reject': rejectClose(); break;
     case 'grade': grade(parseInt(btn.dataset.g, 10)); break;
     case 'again': grade(1, { typedCorrect: false }); break;
+    case 'undo': undoLast(); break;   // K2b: the header ↩ Undo affordance (tap/Tab parity for the Z key)
     case 'speak': { const ja = cardExampleJa(); if (ja) speakExample(ja, btn); break; }
     case 'ttsToggle': toggleTts(); break;
     case 'done': renderCourseHome(); break;

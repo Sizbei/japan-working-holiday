@@ -110,6 +110,23 @@ export const BINDINGS = [
   //    activates it natively (resolveKey returns null for Enter on a BUTTON). This entry keeps a
   //    keyboard path even if focus drifts off the button, and documents the flow for the ? sheet.
   { id: 'summary-done', keys: ['Enter'], phase: 'summary', surface: 'study', label: 'Done — back to course home', control: '[data-act="done"]', kind: 'nav' },
+
+  // ── Mock exam (K4a). Owned by study-exam.js, NOT resolveKey-dispatched (every entry routed:false,
+  //    surface !== 'study'), so this is declarative documentation for the ? sheet. Two handler paths:
+  //    the runner's own onKey handles the PRINTABLE keys (F flag, 1–4 pick/place) — WCAG-gated because
+  //    study.js only forwards activeFlow.onKey while shortcutsEnabled() — while a dedicated run-container
+  //    listener handles the 2.1.4-EXEMPT nav keys (←/→ question, palette arrows/Home/End, Enter submit,
+  //    Esc exit) so they stay live even when the shortcut toggle is off (native controls never die).
+  //    Every action has a visible tap control (the run bar's flag/exit, prev/next/submit buttons, and
+  //    the palette cells). Digits 1–4 also mean "jump to a page" on the nav surface — no conflict: the
+  //    exam owns the keyboard via activeFlow while running, and the ? sheet groups them separately.
+  { id: 'exam-flag', keys: ['f', 'F'], phase: 'exam', surface: 'exam', label: 'Flag / unflag this question', control: '.stu-mock-flag', kind: 'edit', routed: false },
+  { id: 'exam-prev', keys: ['ArrowLeft'], phase: 'exam', surface: 'exam', label: 'Previous question', control: '[data-act="examPrev"]', kind: 'nav', routed: false },
+  { id: 'exam-next', keys: ['ArrowRight'], phase: 'exam', surface: 'exam', label: 'Next question', control: '[data-act="examNext"]', kind: 'nav', routed: false },
+  { id: 'exam-pick', keys: ['1', '2', '3', '4'], phase: 'exam', surface: 'exam', label: 'Pick an answer / place a piece', control: '.stu-mc-opt, .stu-tile', kind: 'grade', routed: false },
+  { id: 'exam-palette', keys: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'], phase: 'exam', surface: 'exam', label: 'Move within the question palette', control: '.stu-mock-pcell', kind: 'nav', routed: false },
+  { id: 'exam-submit', keys: ['Enter'], phase: 'exam', surface: 'exam', label: 'Submit for scoring (when complete)', control: '.stu-mock-submit', kind: 'nav', routed: false },
+  { id: 'exam-exit', keys: ['Escape'], phase: 'exam', surface: 'exam', label: 'Exit the mock (with confirm)', control: '[data-act="examExit"]', kind: 'nav', routed: false },
 ];
 
 // The pure resolver. Takes the already-computed active-element KIND (no DOM) so it is unit-testable.
@@ -151,8 +168,9 @@ const SURFACE_TITLES = {
   calendar: 'On the calendar',
   checklist: 'On the checklist',
   study: 'Studying grammar (文法帖)',
+  exam: 'In a mock exam',
 };
-const SURFACE_ORDER = ['global', 'nav', 'calendar', 'checklist', 'study'];
+const SURFACE_ORDER = ['global', 'nav', 'calendar', 'checklist', 'study', 'exam'];
 
 // Display glyphs for the ? sheet's <kbd> chips. Raw event.key values → readable symbols; modifier
 // combos (mod:true bindings) already carry display strings in their keys, so they pass through.

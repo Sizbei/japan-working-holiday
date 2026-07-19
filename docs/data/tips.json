@@ -2856,14 +2856,14 @@
   },
   {
    "id": "ev26-stay-furano-jul18",
-   "title": "🛏️ Stay: Furano (Jul 18) — BOOKED",
+   "title": "🛏️ Stay: Hostel Tomar — Furano (BOOKED)",
    "date": "2026-07-18",
    "endDate": "2026-07-19",
    "category": "personal",
    "area": "Furano",
    "confidence": "high",
    "sources": [],
-   "bookingNotes": "New booking — fills the former Jul 18 gap night (which was a Susukino manga-café bridge, now retired). You travel Sapporo → Furano on the 18th instead of overnighting in Sapporo, so Furano becomes a 3-night leg (18–21). Check out here on the 19th and move to Minshuku Mutsukari (central Furano, 緑町). Heads-up: Mutsukari is a bit far from this place, so plan the Jul 19 bag transfer — stash at a Furano Stn coin locker (or drop at Mutsukari if reception is open) before the Biei day. (Tell me the property name/address and I'll fill it in properly.)"
+   "bookingNotes": "Booked ✓ — Hostel Tomar. Nice amenities and a free wine coupon on arrival (Furano wine country — use it). Night 1 of the 3-night Furano leg (18–21). Check out on the 19th and move to Minshuku Mutsukari. Heads-up: Mutsukari is a bit far from here, so plan the Jul 19 bag transfer — stash at a Furano Stn coin locker (or drop at Mutsukari if reception is open) before the Biei day."
   },
   {
    "id": "ev26-stay-furano-tbd",
@@ -2910,13 +2910,13 @@
   },
   {
    "id": "ev26-manga-cafe-return",
-   "title": "🛏️ Tokyo bed (Jul 24) — NOT BOOKED (share house or hostel)",
+   "title": "🛏️ Tokyo night (Jul 24) — manga café (or book a quiet capsule)",
    "date": "2026-07-24",
    "category": "personal",
-   "area": "Tokyo (near the home base / Akihabara)",
-   "confidence": "low",
+   "area": "Tokyo — Shinagawa (3pm checkup) → Akihabara",
+   "confidence": "medium",
    "sources": [],
-   "bookingNotes": "Back from Hokkaido (GK104 lands NRT ~12:10) + 3pm Shinagawa checkup this day. Bed still TBD: your share house if the move-in is ready, else a hostel/net-café bridge for the Jul 24–26 Tokyo nights (fireworks the 25th, WonderFes the 26th). See the 'Book Tokyo beds Jul 24–26' to-do."
+   "bookingNotes": "Land NRT ~12:10 → 3pm LASIK follow-up in Shinagawa → one night before Base Inn Tabata starts the 25th. Plan: manga café. Do you need to book? A net café is walk-in — but Fri the 24th is a busy night and the quiet 完全個室 (locked private rooms) sell out first, so phone-reserve one or check in early (~18:00–21:00, before the last-train crowd). Quiet-leaning near Akihabara: 秋葉原和堂 (Nagomi, by Suehirocho — calmest) or 快活CLUB 末広町駅前店 (all private rooms); avoid カスタマカフェ上野 (noisy). Post-LASIK your eyes will be light-sensitive/screen-averse, so a dark, quiet capsule with a real bed is the better rest — 秋葉原 BAY HOTEL, Smart Stay SHIZUKU 上野, or a Nippori single (~¥3,300–4,100). Those DO need booking and you're ~5 days out — grab one now if you want it."
   },
   {
    "id": "ev-jlpt-2026-dec",
@@ -11846,12 +11846,12 @@
     "dow": "Sat",
     "title": "Sapporo → Furano",
     "base": "Furano",
-    "stay": "New Furano place (booked — name TBD)",
+    "stay": "Hostel Tomar (free wine coupon, nice amenities)",
     "move": "Check out of Sapporo Guest House Nariya · travel to Furano",
     "schedule": [
      { "t": "morning", "what": "Check out of Nariya (Sapporo); leave a relaxed morning for the trip south." },
      { "t": "midday", "what": "Sapporo → Furano by rail", "note": "Simplest summer option: the direct Furano Lavender Express (ラベンダーエクスプレス), Sapporo→Furano ~2h, ~¥4,700 reserved. Otherwise Limited Express to Takikawa → JR Furano Line local (~2–2.5h total). Highway bus (Chuo/Furano Bus) is a slower ~2.5–3h alternative." },
-     { "t": "~15:00", "what": "Arrive Furano · check into the new Jul-18 place · drop bags." },
+     { "t": "~15:00", "what": "Arrive Furano · check into Hostel Tomar · drop bags (grab the free wine coupon)." },
      { "t": "evening", "what": "Easy first evening — Furano Marché for food/local produce, or a curry-soup dinner (Furano is soup-curry country)." }
     ],
     "highlights": ["You're in lavender country at peak bloom", "Furano Marché (food hall + local goods)"],
@@ -11961,15 +11961,17 @@
     "dow": "Fri",
     "title": "Sapporo → Tokyo (depart)",
     "base": "→ Tokyo",
-    "stay": "Tokyo tonight — the Jul 24 night isn't booked yet (Base Inn Tabata is the Jul 25–31 leg)",
-    "move": "Sapporo → New Chitose (CTS) → Narita (NRT), then into Tokyo",
+    "stay": "Manga café for the night in Akihabara (or book a quiet capsule) — Base Inn Tabata starts the 25th",
+    "move": "Sapporo → New Chitose (CTS) → Narita (NRT) → Shinagawa → Akihabara",
     "schedule": [
      { "t": "~07:30", "what": "Check out; JR Rapid Airport Sapporo Stn → New Chitose (~37 min, ¥1,150, every ~15 min). Aim to be airside ~2 hr before departure." },
      { "t": "10:30", "what": "Jetstar CTS → NRT (arr 12:10, 1h40m). Booking ID 1744421190." },
-     { "t": "afternoon", "what": "Narita → central Tokyo (Keisei Skyliner ~41 min to Ueno, or Access Express) · settle into the Tokyo leg." }
+     { "t": "~13:00", "what": "Narita → Shinagawa. Fastest is the N'EX (Narita Express) direct to Shinagawa ~78 min.", "note": "Tight for a 15:00 appointment — clear immigration/bags fast and grab the first N'EX (~hourly); reserve a seat. If the connection looks risky, ask the clinic about a slightly later slot." },
+     { "t": "15:00", "what": "LASIK follow-up appointment (Shinagawa clinic)." },
+     { "t": "evening", "what": "→ Akihabara; manga café for the night (or a quiet capsule).", "note": "Net cafés are walk-in, but Fri night the quiet 完全個室 (locked rooms) go first — reserve or check in by ~18:00–21:00. Quiet-leaning near Akihabara: 秋葉原和堂 (Nagomi, by Suehirocho) or 快活CLUB 末広町駅前店 (all private rooms); avoid カスタマカフェ上野. For real post-LASIK rest, a capsule (秋葉原 BAY HOTEL / Smart Stay SHIZUKU 上野, ~¥3,300–4,100) is quieter but needs booking now." }
     ],
     "highlights": ["Last-chance garlic: Biei Senka counter at New Chitose (domestic terminal, 2F Dōsanko market)"],
-    "notes": ["End of the Hokkaido leg (Jul 15–24). Base Inn Tabata covers Jul 25–31 — so book (or confirm) somewhere for the night of the 24th."],
+    "notes": ["End of the Hokkaido leg (Jul 15–24). Base Inn Tabata covers Jul 25–31 — the 24th night is the one open slot; the manga café is the no-booking fallback, a quiet capsule the better-rest option (book soon).", "The NRT→Shinagawa→3pm connection is tight — pre-book an N'EX seat."],
     "cost": "≈ ¥1,150 airport train + flight (paid)"
    }
   ]

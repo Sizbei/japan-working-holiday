@@ -3234,3 +3234,69 @@ test('exam: recordExam — pure append, bounded ring, initialises from a state w
   assert.equal(s.examLog[0].date, 'd20');
   assert.equal(s.examLog[99].date, 'd119');
 });
+
+// ── K1: keyboard binding registry + pure resolver (lib/shortcuts.js) ──────────
+import { BINDINGS, resolveKey } from '../docs/assets/lib/shortcuts.js';
+
+test('shortcuts: BINDINGS is a well-formed registry (unique ids, non-empty keys)', () => {
+  assert.ok(Array.isArray(BINDINGS) && BINDINGS.length > 0);
+  const ids = BINDINGS.map(b => b.id);
+  assert.equal(new Set(ids).size, ids.length, 'binding ids are unique');
+  for (const b of BINDINGS) {
+    assert.ok(Array.isArray(b.keys) && b.keys.length, `${b.id} has keys`);
+    assert.ok(typeof b.phase === 'string' && b.phase, `${b.id} has a phase`);
+    assert.ok(typeof b.label === 'string' && b.label, `${b.id} has a label`);
+  }
+});
+
+test('resolveKey: disabled → null (WCAG 2.1.4 turn-off)', () => {
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', enabled: false }), null);
+});
+
+test('resolveKey: composing → null (never command mid-変換)', () => {
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', composing: true, enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', composing: true, enabled: true }), null);
+});
+
+test('resolveKey: a printable single-char key over a text field types, never commands', () => {
+  // digit/letter must fall through to the field (return null) while the kana input is focused
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  // …but Enter is NOT a printable key, so it still commands inside the input (that is how submit fires)
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', enabled: true }), 'submit');
+});
+
+test('resolveKey: Enter/Space on a focused BUTTON → null (native activation, no double-fire)', () => {
+  assert.equal(resolveKey({ key: 'Enter', phase: 'graded', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'close', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: ' ', phase: 'wrong', targetKind: 'button', enabled: true }), null);
+  // a digit grade key is NOT native-activating, so it still resolves even on a focused button
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', enabled: true }), 'grade-3');
+});
+
+test('resolveKey: correct (key, phase) → actionId mapping', () => {
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'other', enabled: true }), 'submit');
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), 'again');
+  assert.equal(resolveKey({ key: '2', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-2');
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-3');
+  assert.equal(resolveKey({ key: '4', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-4');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-default');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'wrong', targetKind: 'other', enabled: true }), 'advance');
+  assert.equal(resolveKey({ key: ' ', phase: 'wrong', targetKind: 'other', enabled: true }), 'advance');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'close', targetKind: 'other', enabled: true }), 'accept');
+  assert.equal(resolveKey({ key: 'Escape', phase: 'close', targetKind: 'other', enabled: true }), 'reject');
+});
+
+test('resolveKey: phase disambiguates the same key (1 = route pre-card vs Again post-answer)', () => {
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), 'again');
+  // '1' has no study binding in the idle/input phases → null (gestures owns route-nav 1-9)
+  assert.equal(resolveKey({ key: '1', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: '1', phase: 'idle', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey: unknown key or phase → null', () => {
+  assert.equal(resolveKey({ key: 'q', phase: 'graded', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: '5', phase: 'graded', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'nonsense', targetKind: 'other', enabled: true }), null);
+});

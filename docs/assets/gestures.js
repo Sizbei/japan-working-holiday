@@ -4,12 +4,13 @@
 // generic long-press → quick-action menu wired to calendar days, explore cards, and
 // checklist rows. All framework-free, pointer-events based, reduced-motion aware.
 
-import { ROUTES } from './router.js';
+import { ROUTES, markNavSource, parseRoute } from './router.js';
 import { prefersReducedMotion } from './motion.js';
 import { openMenu } from './lib/menu.js';
 import { getEventMenu, undoLastDelete } from './calendar.js';
 import { openPalette } from './palette.js';
 import { ensureRoute } from './lazyroutes.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -28,6 +29,13 @@ function visibleRoutes() {
   return rs.length ? rs : ROUTES;
 }
 function go(route) { if (route) location.hash = '#/' + route; }
+// keyboard route-swap: flag the source BEFORE mutating the hash so router.activate() can skip the
+// View Transition (a keyboard swap renders instantly — Binding Principle 6). Only marks when a real
+// nav will happen (a null / same-route target would leave the flag stuck for the next mouse nav).
+// Compare against the REAL current route (parseRoute knows HIDDEN routes) — currentRoute()
+// collapses every hidden route to 'dashboard', which would make `1`=Home a silent no-op on
+// #/study etc. (the pages this keyboard work targets). Only bail on a genuine same-route nav.
+function goKbd(route) { if (!route || route === parseRoute(location.hash)) return; markNavSource('keyboard'); go(route); }
 function neighbour(dir) {
   const vr = visibleRoutes();
   const i = vr.indexOf(currentRoute());
@@ -160,18 +168,21 @@ function wireKeyboard() {
     }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (typingTarget(document.activeElement)) return;
-    if (e.key === 'Escape') { closeHelp(); return; }
+    if (e.key === 'Escape') { closeHelp(); return; }         // Escape is exempt from the WCAG gate (a named key + closes the help UI)
+    // WCAG 2.1.4 turn-off: every bare single-char shortcut below is silenced when the user disables
+    // keyboard shortcuts in Guide & Settings. ⌘K / ⌘Z above stay live (documented modifier exceptions).
+    if (!shortcutsEnabled()) return;
     // ? still toggles the help over itself; every OTHER open dialog blocks all shortcuts
     // (was '.modal-overlay' only — confirm dialogs/datepickers/palette let 1-9 navigate underneath)
     const modal = document.querySelector('[aria-modal="true"]');
     if (e.key === '?' && (!modal || modal.classList.contains('kbd-help'))) { e.preventDefault(); toggleHelp(); return; }
     if (modal) return;
     if (e.key === '/' && !document.querySelector('.cmdk-overlay')) { e.preventDefault(); openPalette(); return; }
-    if (e.key >= '1' && e.key <= '9') { const vr = visibleRoutes(); const idx = +e.key - 1; if (idx < vr.length) { e.preventDefault(); go(vr[idx]); } return; }
-    if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
-    if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
+    if (e.key >= '1' && e.key <= '9') { const vr = visibleRoutes(); const idx = +e.key - 1; if (idx < vr.length) { e.preventDefault(); goKbd(vr[idx]); } return; }
+    if (e.key === '[') { e.preventDefault(); goKbd(neighbour(-1)); return; }
+    if (e.key === ']') { e.preventDefault(); goKbd(neighbour(1)); return; }
     // common utility shortcuts — keys unused by the calendar (m/w/d/a/n/t) + checklist (j/k/d/p/e) layers
-    if (e.key === '0') { e.preventDefault(); go('emergency'); return; }        // 0 = Emergency, always (11 routes; 1-9 cover the first nine)
+    if (e.key === '0') { e.preventDefault(); goKbd('emergency'); return; }        // 0 = Emergency, always (11 routes; 1-9 cover the first nine)
     if (e.key === 'b' || e.key === 'B') { e.preventDefault(); document.getElementById('notifBell')?.click(); return; }   // notifications
     if (e.key === '\\') { e.preventDefault(); document.getElementById('themeToggle')?.click(); return; }                 // light/dark
     if (e.key === ',') { e.preventDefault(); document.getElementById('guideBtn')?.click(); return; }                     // guide & settings (⌘, convention)
@@ -209,6 +220,10 @@ function openHelp() {
     <div class="kh-row"><kbd>d</kbd><span>Set a due date</span></div>
     <div class="kh-row"><kbd>p</kbd><span>Cycle priority (P1→P4)</span></div>
     <div class="kh-row"><kbd>e</kbd> <kbd>−</kbd><span>Edit / remove your own task</span></div>
+    <p class="kh-sub">Studying grammar (文法帖)</p>
+    <div class="kh-row"><kbd>⏎</kbd><span>Check your answer / continue</span></div>
+    <div class="kh-row"><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd><span>After answering: grade Again / Hard / Good / Easy</span></div>
+    <div class="kh-row"><kbd>Space</kbd><span>Continue after a wrong answer</span></div>
     <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
     <p class="kh-hint">Tap 🔍 on the Checklist & Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>

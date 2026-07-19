@@ -15,6 +15,7 @@ import { loadPlaces, patchPlace } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
@@ -494,6 +495,7 @@ function onCalKeydown(e) {
   if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+  if (!shortcutsEnabled() && e.key.length === 1) return;   // WCAG 2.1.4: single-char shortcuts (t/n/f/m/w/d/a/−) off; arrows + Del/Backspace stay
 
   if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') {
     const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');

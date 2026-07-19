@@ -179,6 +179,7 @@ function openGuide() {
   const mapDark = document.documentElement.dataset.mapDark === 'on';
   const celebrate = getRaw(KEYS.celebrations, '') !== 'off';   // default on
   const sound = getRaw(KEYS.sound, '') === 'on';               // default off
+  const kbd = getRaw(KEYS.kbd, '') !== 'off';                  // keyboard shortcuts, default on (WCAG 2.1.4)
   const listCtlCur = listCtl();
   const navHidden = new Set(navHiddenSet());
   ov = document.createElement('div');
@@ -216,6 +217,7 @@ function openGuide() {
       ${row('setMapDark', 'Dark map tiles', 'Night-mode map when dark theme is on (opt-in)', mapDark)}
       ${row('setCelebrate', 'Celebrations', 'Confetti when you finish things', celebrate)}
       ${row('setSound', 'Sound effects', 'Chiptune blips on milestones &amp; eggs', sound)}
+      ${row('setKbd', 'Keyboard shortcuts', 'Single-key shortcuts (grade with 1–4, [ ] to switch pages…)', kbd)}
     </section>
 
     <section class="guide-sec">
@@ -291,6 +293,11 @@ function openGuide() {
     const on = getRaw(KEYS.sound, '') === 'on';               // currently on? (default off)
     setRaw(KEYS.sound, on ? 'off' : 'on');
     setSwitch('setSound', !on);
+  });
+  $('#setKbd', ov)?.addEventListener('click', () => {
+    const on = getRaw(KEYS.kbd, '') !== 'off';               // currently on? (default on)
+    setRaw(KEYS.kbd, on ? 'off' : '');                        // '' = on sentinel (default), 'off' = disabled
+    setSwitch('setKbd', !on);
   });
   $$('.set-seg [data-listctl-opt]', ov).forEach(b => b.addEventListener('click', () => {
     const v = b.dataset.listctlOpt === LISTCTL.PILLS ? LISTCTL.PILLS : LISTCTL.QUICKLINE;

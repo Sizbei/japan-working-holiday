@@ -31,6 +31,7 @@ import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
 import { isGateCard, buildGateCard, gateHeaderHTML, gatePasses, mountGateTimer, gateFeedback } from './study-gate.js';
+import { resolveKey, shortcutsEnabled } from './lib/shortcuts.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -51,6 +52,14 @@ let gateTimerCtl = null;          // R10: the soft gate-card countdown controlle
 let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble'
 let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
 const expandedLevels = new Set(); // course-home accordion: which level cards are open
+// K1 Enter-safety state: `lastRevealTs` stamps the input→graded/wrong transition so a single Enter
+// can't submit AND then skip past the revealed result (key-repeat / IME double-fire); `lastComposeEnd`
+// stamps the last compositionend so a stray finalize-Enter (Safari/mobile mis-set isComposing) can't
+// submit half-composed text. Both are short time windows — see the wireRoot keydown handler.
+let lastRevealTs = 0;
+let lastComposeEnd = 0;
+const ENTER_DEBOUNCE_MS = 250;    // submit→continue: ignore Enter/Space this long after a reveal
+const COMPOSE_GUARD_MS = 120;     // finalize fallback: ignore a submit-Enter this long after compositionend
 
 // ── boot ───────────────────────────────────────────────────────────────────
 export async function mountStudy() {
@@ -921,6 +930,7 @@ function controlsFor(ph, gate) {
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reject">No — reveal (esc)</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="accept">Take it (⏎)</button>`;
   if (ph === 'graded') return `
+    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="1">Again <kbd>1</kbd></button>
     <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2">Hard <kbd>2</kbd></button>
     <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3">Good <kbd>3</kbd></button>
     <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4">Easy <kbd>4</kbd></button>`;
@@ -1011,6 +1021,7 @@ function submitAnswer() {
 // reveal the full sentence + EN; open either the grade buttons (correct / close-accept) or the
 // Again continue (wrong).
 function reveal(next, opts = {}) {
+  lastRevealTs = Date.now();   // K1: start the submit→continue debounce window (the phase just flipped to graded/wrong)
   if (card.gate) teardownGateTimer();   // the soft timer's job ends the moment the answer is shown
   const sentEl = root.querySelector('.stu-sentence');
   if (sentEl) sentEl.innerHTML = renderSentence(card.blankedTokens, true);
@@ -1033,9 +1044,9 @@ function reveal(next, opts = {}) {
       : okMsg) + peg;
     setControls('graded');
     focusControl('.stu-good');
-    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Hard, Good or Easy.'
-      : hinted ? `Correct, capped at ${hintCapLabel()} from the hint. Choose Hard, Good or Easy.`
-      : 'Correct. Choose Hard, Good or Easy.');
+    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Again, Hard, Good or Easy.'
+      : hinted ? `Correct, capped at ${hintCapLabel()} from the hint. Choose Again, Hard, Good or Easy.`
+      : 'Correct. Choose Again, Hard, Good or Easy.');
   } else {
     phase = 'wrong';
     const gateNote = card.gate ? ' <span class="stu-fb-gate-reset">Mastery gate restarts.</span>' : '';
@@ -1139,45 +1150,45 @@ function wireRoot() {
     const sel = e.target.closest('.stu-exam-sel'); if (sel) setExamLevel(sel.value);
   });
 
-  // keyboard: scoped to the study root only, with a phase-aware dispatch. The typed input owns
-  // Enter during the input phase; grade/close keys act in their phases. BUTTON default keys
-  // (Enter/Space on a focused control) fall through to native activation to avoid double-fire.
+  // keyboard: scoped to the study root only. The shell's phase-specific contract now routes through
+  // the shared pure resolver (lib/shortcuts.js resolveKey) + the WCAG turn-off gate; card
+  // sub-controllers (scramble/MCQ/lessons) keep their own onKey in K1 (incremental registry adoption).
   root.addEventListener('keydown', (e) => {
-    if (e.isComposing || e.keyCode === 229) return;   // don't fight an IME (matches gestures.js)
-    // While a card/flow owns the keyboard, keep its control keys (digits, Enter/Space/Esc)
-    // from bubbling to gestures.js's document-level 1-9 route-nav — otherwise answering an
-    // MCQ or grading a card would navigate the learner away. gestures ignores defaultPrevented,
-    // so stopPropagation is the guard.
+    if (e.isComposing || e.keyCode === 229) return;   // IME first — never removed (matches gestures.js)
+
+    // ── Leak fix (WIDENED): while a card/flow owns the keyboard, stop EVERY bare key from bubbling
+    // to gestures' document-level route-nav — EXCEPT `?` (it must reach gestures so the help sheet
+    // opens). Previously only {1-9, Enter, Space, Escape} were stopped, so ] [ 0 b \ , / leaked, and
+    // `]` navigated to a neighbour route, ABANDONING the session (#/study is hidden → currentRoute
+    // fell back to dashboard). Modified keys (⌘K / ⌘Z …) are NOT stopped — they must reach gestures.
     const cardActive = activeFlow || cardCtl || ['input', 'close', 'graded', 'wrong', 'scramble', 'mcq'].includes(phase);
-    if (cardActive && ((e.key >= '1' && e.key <= '9') || e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
-      e.stopPropagation();
-    }
-    if (activeFlow) { activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
-    if (cardCtl) { cardCtl.onKey(e); return; }         // a live ★-scramble card owns its keys
-    const t = e.target;
-    if (phase === 'input') {
-      // Enter on the typed input submits; Enter/Space on a focused control (Hint / Don't know /
-      // Check) activates it natively via the delegated click — don't hijack it into a submit.
-      if (e.key === 'Enter') { if (t && t.tagName === 'BUTTON') return; e.preventDefault(); submitAnswer(); }
-      return;
-    }
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
-    if (phase === 'close') {
-      if (e.key === 'Enter') { if (t.tagName === 'BUTTON') return; e.preventDefault(); acceptClose(); }
-      else if (e.key === 'Escape') { e.preventDefault(); rejectClose(); }
-      return;
-    }
-    if (phase === 'graded') {
-      if (e.key === '2') { e.preventDefault(); grade(2); }
-      else if (e.key === '3') { e.preventDefault(); grade(3); }
-      else if (e.key === '4') { e.preventDefault(); grade(4); }
-      else if (e.key === 'Enter' && t.tagName !== 'BUTTON') { e.preventDefault(); grade(3); }
-      return;
-    }
-    if (phase === 'wrong') {
-      if ((e.key === 'Enter' || e.key === ' ')) { if (t.tagName === 'BUTTON') return; e.preventDefault(); grade(1, { typedCorrect: false }); }
-    }
+    const bareKey = !e.metaKey && !e.ctrlKey && !e.altKey && (e.key.length === 1 || e.key === 'Enter' || e.key === 'Escape');
+    if (cardActive && bareKey && e.key !== '?') e.stopPropagation();
+
+    // WCAG 2.1.4 turn-off: when shortcuts are disabled, no bare key commands on any study surface
+    // (native Tab + Enter/Space-on-a-focused-button still operate every control — Principle 5).
+    const enabled = shortcutsEnabled();
+
+    if (activeFlow) { if (enabled) activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
+    if (cardCtl) { if (enabled) cardCtl.onKey(e); return; }         // a live ★-scramble / MCQ card owns its keys
+
+    // submit→continue debounce: one physical Enter/Space must not submit AND then skip past the
+    // revealed result (key-repeat / IME double-fire). We preventDefault so the focused grade/Continue
+    // BUTTON doesn't activate natively during the window either.
+    if (enabled && (e.key === 'Enter' || e.key === ' ') && (phase === 'graded' || phase === 'wrong')
+        && (Date.now() - lastRevealTs) < ENTER_DEBOUNCE_MS) { e.preventDefault(); return; }
+
+    const id = resolveKey({ key: e.key, phase, targetKind: targetKindOf(e.target), composing: e.isComposing, enabled });
+    if (!id) return;
+    // finalize-side IME fallback: ignore a submit-Enter fired right after compositionend — Safari/
+    // mobile have mis-set isComposing=false on the finalize-Enter, which would submit half-composed text.
+    if (id === 'submit' && (Date.now() - lastComposeEnd) < COMPOSE_GUARD_MS) return;
+    e.preventDefault();
+    runAction(id);
   });
+
+  // track the last IME finalize so the submit path can ignore a stray finalize-Enter (see above).
+  root.addEventListener('compositionend', () => { lastComposeEnd = Date.now(); });
 
   // repaint furigana toggle if it changes elsewhere; stop a test-out's soft timer if the user
   // navigates away mid-flow (display-only, but don't leave an interval running off-screen).
@@ -1186,6 +1197,28 @@ function wireRoot() {
     if (activeFlow && activeFlow.teardown) activeFlow.teardown();
     teardownGateTimer();   // don't leave the soft gate countdown ticking off-screen
   });
+}
+
+// the active-element KIND resolveKey needs (kept in the module so resolveKey stays DOM-free/pure).
+function targetKindOf(el) {
+  if (!el) return 'other';
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable) return 'input';
+  if (el.tagName === 'BUTTON') return 'button';
+  return 'other';
+}
+// map a resolved actionId → the existing shell handler (the same ones the delegated click routes to).
+function runAction(id) {
+  switch (id) {
+    case 'submit': submitAnswer(); break;
+    case 'accept': acceptClose(); break;
+    case 'reject': rejectClose(); break;
+    case 'again': grade(1); break;                              // graded phase: 1 = Again — matches the graded [data-g="1"] button (answer WAS typed correctly → ok:true; effectiveGrade returns 1 for chosen 1)
+    case 'grade-2': grade(2); break;
+    case 'grade-3': grade(3); break;
+    case 'grade-4': grade(4); break;
+    case 'grade-default': grade(3); break;                       // Enter in graded, no control focused → Good
+    case 'advance': grade(1, { typedCorrect: false }); break;   // wrong phase: Enter/Space = Continue
+  }
 }
 
 function act(name, btn) {

@@ -127,6 +127,22 @@ export const BINDINGS = [
   { id: 'exam-palette', keys: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'], phase: 'exam', surface: 'exam', label: 'Move within the question palette', control: '.stu-mock-pcell', kind: 'nav', routed: false },
   { id: 'exam-submit', keys: ['Enter'], phase: 'exam', surface: 'exam', label: 'Submit for scoring (when complete)', control: '.stu-mock-submit', kind: 'nav', routed: false },
   { id: 'exam-exit', keys: ['Escape'], phase: 'exam', surface: 'exam', label: 'Exit the mock (with confirm)', control: '[data-act="examExit"]', kind: 'nav', routed: false },
+
+  // ── Progress · mastery heat grid (K4b). Owned by study-stats.js's grid-container listener, NOT
+  //    resolveKey-dispatched (every entry routed:false, surface !== 'study') — declarative documentation
+  //    for the ? sheet. The 353-cell grid is ONE roving-tabindex composite, so every key here is a
+  //    WCAG-2.1.4-EXEMPT named key (arrows / Home / End / Ctrl+Home / Ctrl+End / PageUp / PageDown /
+  //    Enter) that stays live even when the shortcut toggle is off — none is a bare printable char.
+  //    Enter opens the focused cell's detail via native <button> activation (no explicit dispatch), so
+  //    it is documented, not handled in the keydown listener (avoids a double-fire). Each cell is a real
+  //    focusable, tappable control (Principle 5). Up/Down move by VISUAL column (fluid wrap — computed
+  //    from layout rects); Home/End walk the level group; PageUp/Down jump whole levels; Ctrl+Home/End
+  //    jump the ends of the whole map.
+  { id: 'grid-move', keys: ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'], phase: 'stats', surface: 'stats', label: 'Move around the mastery map', control: '.stu-hc[data-act="hcCell"]', kind: 'nav', routed: false },
+  { id: 'grid-row-ends', keys: ['Home', 'End'], phase: 'stats', surface: 'stats', label: 'First / last point in this level', control: null, kind: 'nav', routed: false },
+  { id: 'grid-ends', keys: ['⌃Home', '⌃End', '⌘Home', '⌘End'], phase: 'stats', surface: 'stats', label: 'First / last point in the whole map', control: null, kind: 'nav', routed: false, mod: true },
+  { id: 'grid-page', keys: ['PageUp', 'PageDown'], phase: 'stats', surface: 'stats', label: 'Jump to the previous / next level', control: null, kind: 'nav', routed: false },
+  { id: 'grid-open', keys: ['Enter', ' '], phase: 'stats', surface: 'stats', label: 'Open the point (drill it)', control: '.stu-hc[data-act="hcCell"]', kind: 'nav', routed: false },
 ];
 
 // The pure resolver. Takes the already-computed active-element KIND (no DOM) so it is unit-testable.
@@ -169,8 +185,9 @@ const SURFACE_TITLES = {
   checklist: 'On the checklist',
   study: 'Studying grammar (文法帖)',
   exam: 'In a mock exam',
+  stats: 'On the mastery map',
 };
-const SURFACE_ORDER = ['global', 'nav', 'calendar', 'checklist', 'study', 'exam'];
+const SURFACE_ORDER = ['global', 'nav', 'calendar', 'checklist', 'study', 'exam', 'stats'];
 
 // Display glyphs for the ? sheet's <kbd> chips. Raw event.key values → readable symbols; modifier
 // combos (mod:true bindings) already carry display strings in their keys, so they pass through.
@@ -178,6 +195,7 @@ const KEY_GLYPH = {
   Enter: '⏎', ' ': 'Space', Escape: 'Esc',
   ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓',
   Delete: 'Del', Backspace: '⌫', '-': '−',
+  PageUp: 'PgUp', PageDown: 'PgDn', Home: 'Home', End: 'End',
 };
 export function keyGlyph(k) { return KEY_GLYPH[k] || k; }
 

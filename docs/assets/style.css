@@ -4865,3 +4865,9 @@ html[data-reduce-motion="on"] .stu-mock-timer.is-low{ animation: none; }
 .hok-foot{ margin:.6rem 0 0; font-size:.8rem; }
 .hok-foot a{ color:var(--c-personal); text-decoration:none; }
 .hok-foot a:hover{ text-decoration:underline; }
+
+/* #/plan — the date-aware Hokkaido "load this day's plan" seed (plan.js applyItinerary). */
+.plan-hok{ margin:.6rem 0 0; }
+.plan-tpl-hok{ display:block; width:100%; text-align:left; border-color:var(--c-personal); color:var(--ink); background:var(--bg-soft); font-weight:600; }
+.plan-tpl-hok:hover{ border-color:var(--c-personal); box-shadow:0 0 0 1px var(--c-personal) inset; }
+.plan-tpl-hok .pt-n{ font-weight:400; color:var(--ink-faint); }

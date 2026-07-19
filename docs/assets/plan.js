@@ -21,6 +21,7 @@ import {
   loadPlans, savePlans, getPlan, hasPlan, newStop, planToEvents,
   upsertStop, removeStop, patchStop, reorderStops,
 } from './lib/dayplan.js';
+import { itineraryDay, itineraryStops } from './lib/itinerary.js';
 import { makeSortable } from './dnd.js';
 import { alertModal } from './lib/modal.js';
 
@@ -142,12 +143,36 @@ function applyTemplate(tid) {
   $('#planBody .stop-grab, #planBody button, #planBody [tabindex="0"]')?.focus();
 }
 
+// seed the active (stop-less) day from the baked Hokkaido `itinerary` for that exact date — the
+// schedule becomes editable stops. Single source: reads DATA.itinerary, never a duplicated copy.
+function applyItinerary() {
+  const day = itineraryDay(DATA && DATA.itinerary, activeDate);
+  if (!day || hasPlan(activeDate)) return;
+  const prior = getPlan(activeDate);
+  const plans = loadPlans();
+  savePlans({
+    ...plans,
+    [activeDate]: {
+      date: activeDate,
+      title: (prior && prior.title) || day.title || 'Hokkaido',
+      note: (prior && prior.note) || (day.base ? `Hokkaido — ${day.base}` : ''),
+      stops: itineraryStops(day).map((s, i) => newStop({ ...s, coordKind: 'approx', id: 'hok' + Date.now() + '-' + i })),
+    },
+  });   // dispatches jwh:data-changed → this page + dashboard/map re-derive
+  $('#planBody .stop-grab, #planBody button, #planBody [tabindex="0"]')?.focus();
+}
+
 function render() {
   const body = $('#planBody'); if (!body) return;
   const focus = captureBodyFocus(body);
   const plan = getPlan(activeDate);
   const stops = plan ? plan.stops : [];
   if (!stops.length) {
+    // date-aware Hokkaido seed: on an empty day that has a baked itinerary, offer it prominently
+    const iday = itineraryDay(DATA && DATA.itinerary, activeDate);
+    const hokHtml = iday ? `<div class="plan-hok" role="group" aria-label="Load the baked trip plan">
+        <button type="button" class="plan-tpl plan-tpl-hok" data-hok="1">🗾 Load this day’s plan — ${esc(iday.title)} <span class="pt-n">${itineraryStops(iday).length} stops</span></button>
+      </div>` : '';
     // additive template library (S2): only offered on an EMPTY day — never overwrites a plan
     const tpls = (DATA && DATA.planTemplates) || [];
     const tplHtml = tpls.length ? `<div class="plan-tpls" role="group" aria-label="Start from a template">
@@ -157,7 +182,8 @@ function render() {
     body.innerHTML = `<div class="plan-empty">
       <p class="plan-empty-h">No plan for <b>${esc(fmtShort(activeDate))}</b> yet.</p>
       <p>Add your first stop — pull from your saved pins, the catalogue, upcoming events, or type your own.</p>
-      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>${tplHtml}</div>`;
+      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>${hokHtml}${tplHtml}</div>`;
+    body.querySelector('[data-hok]')?.addEventListener('click', () => applyItinerary());
     body.querySelectorAll('[data-tpl]').forEach(b => b.addEventListener('click', () => applyTemplate(b.dataset.tpl)));
     restoreBodyFocus(body, focus);
     return;

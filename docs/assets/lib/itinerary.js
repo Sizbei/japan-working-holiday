@@ -31,6 +31,31 @@ export function legStatus(itin, todayISO, leadDays = 3) {
   return { days, todayIdx, phase, start, end };
 }
 
+// Find the itinerary day for an ISO date (or null). Used by the #/plan day planner to offer a
+// one-tap seed of the baked schedule on the matching date.
+export function itineraryDay(itin, dateISO) {
+  if (!itin || !Array.isArray(itin.days) || !dateISO) return null;
+  return itin.days.find(d => d.date === dateISO) || null;
+}
+
+// Convert a baked itinerary day's schedule[] into day-plan stop fields (lib/dayplan.js newStop
+// shape). A "HH:MM"-ish `t` becomes startTime; a soft label ("morning"/"evening") folds into the
+// note so nothing is lost. Pure — no coords (the planner treats these as approx).
+export function itineraryStops(day) {
+  if (!day || !Array.isArray(day.schedule)) return [];
+  return day.schedule.map(s => {
+    const m = String(s.t || '').match(/(\d{1,2}):(\d{2})/);
+    const label = m ? '' : String(s.t || '').replace(/^~/, '').trim();
+    return {
+      name: s.what || 'Stop',
+      area: day.base || '',
+      startTime: m ? `${String(m[1]).padStart(2, '0')}:${m[2]}` : '',
+      durationMin: 60,
+      note: [label, s.note].filter(Boolean).join(' · '),
+    };
+  });
+}
+
 // The day indices to open/spotlight: today + tomorrow while travelling, or day 1 during the lead-in.
 // Always in-bounds; the "next couple of days" the request asked to surface.
 export function focusDays(status) {

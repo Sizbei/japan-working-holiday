@@ -411,7 +411,7 @@ function renderCourseHome(focusSel) {
     ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart"><span aria-hidden="true">作</span> Build a sentence</button>` : '';
   // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
   const ttsBtn = canSpeak()
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}" aria-keyshortcuts="A"><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'} <kbd aria-hidden="true">A</kbd></button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}"${kbHint('A').ks}><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'}${kbHint('A').chip}</button>` : '';
   root.innerHTML = `
     <div class="stu-home stu-climb-home">
       <header class="stu-climb-head">
@@ -937,6 +937,16 @@ function renderSentence(blankedTokens, revealed) {
 function exampleEN(c) { const ex = c.point.examples[c.exIdx]; return (ex && ex.en) || ''; }
 
 // per-phase control bar. Buttons carry data-act; the delegated click handler + the keyboard
+// K3 turn-off-aware keyboard hint: a control's aria-keyshortcuts + its decorative <kbd> chip. When
+// the WCAG shortcuts toggle is OFF we advertise nothing (no aria-keyshortcuts announced to AT, no
+// chip shown) — the key wouldn't command, so pointing at it would be a lie. The chip is aria-hidden;
+// the accessible name comes from the control's label + aria-keyshortcuts (never doubled).
+function kbHint(key) {
+  return shortcutsEnabled()
+    ? { ks: ` aria-keyshortcuts="${esc(key)}"`, chip: ` <kbd aria-hidden="true">${esc(key)}</kbd>` }
+    : { ks: '', chip: '' };
+}
+
 // map both route through the same handlers.
 function controlsFor(ph, gate) {
   if (ph === 'input') return `
@@ -947,9 +957,9 @@ function controlsFor(ph, gate) {
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reject">No — reveal (esc)</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="accept">Take it (⏎)</button>`;
   if (ph === 'graded') return `
-    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2">Hard <kbd>2</kbd></button>
-    <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3">Good <kbd>3</kbd></button>
-    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4">Easy <kbd>4</kbd></button>`;
+    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2"${kbHint('2').ks}>Hard${kbHint('2').chip}</button>
+    <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3"${kbHint('3').ks}>Good${kbHint('3').chip}</button>
+    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4"${kbHint('4').ks}>Easy${kbHint('4').chip}</button>`;
   if (ph === 'wrong') return `
     <button type="button" class="stu-btn stu-btn-primary" data-act="again">Continue ⏎</button>`;
   return '';
@@ -1074,7 +1084,7 @@ function reveal(next, opts = {}) {
   // 🔊 on the now-revealed full sentence (post-answer only — never in the input phase). Autoplay
   // (opt-in, default off) reads it aloud immediately; the button lets the learner replay it.
   const ja = cardExampleJa();
-  const sb = ja ? speakBtnHTML('', 'R') : '';   // 'R' chip: the R replay key is wired for this shell reveal (graded/wrong)
+  const sb = ja ? speakBtnHTML('', shortcutsEnabled() ? 'R' : '') : '';   // 'R' chip only while the R replay key is live (WCAG turn-off drops it)
   if (sb && fb) fb.insertAdjacentHTML('beforeend', sb);
   if (ja && autoplayOn()) speakExample(ja, root.querySelector('.stu-speak'));
 }
@@ -1111,10 +1121,9 @@ function captureGrade() {
 // card fires Z (in its reveal phases); scramble/MCQ cards are owned by a sub-controller that
 // intercepts keys, so there the affordance is tap/Tab-only — don't advertise a Z that won't work.
 function undoAffordanceHTML(zLive = false) {
-  const z = zLive ? ` aria-keyshortcuts="Z"` : '';
-  const chip = zLive ? `<kbd aria-hidden="true">Z</kbd>` : '';
-  return `<button type="button" class="stu-undo" data-act="undo"${z} title="Undo the last grade">`
-    + `<span aria-hidden="true">↩</span> Undo${chip}</button>`;
+  const hint = zLive ? kbHint('Z') : { ks: '', chip: '' };   // K3: also drops the Z chip/aria when shortcuts are off
+  return `<button type="button" class="stu-undo" data-act="undo"${hint.ks} title="Undo the last grade">`
+    + `<span aria-hidden="true">↩</span> Undo${hint.chip}</button>`;
 }
 
 function undoLast() {

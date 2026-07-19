@@ -7,28 +7,61 @@
 //   - the ? help sheet + command palette (K3/K5) render each row's key from BINDINGS
 //   - every bare-key listener consults shortcutsEnabled() (WCAG 2.1.4 turn-off gate)
 //
-// A binding: { id, keys[], phase, surface, label, control, kind }.
-//   phase   — the app state the binding is live in ('global' | study card phases 'input'/'close'/
-//             'graded'/'wrong' | 'any'). resolveKey matches on it so one key (e.g. Enter, or the
-//             digit 1) can mean different things pre- vs post-answer.
-//   surface — which module owns it ('global' | 'nav' | 'study'), for grouping the ? sheet.
+// A binding: { id, keys[], phase, surface, label, control, kind, routed?, mod? }.
+//   phase   — the app state the binding is live in ('global' | 'calendar' | 'checklist' | study card
+//             phases 'input'/'close'/'graded'/'wrong' | 'any'). resolveKey matches on it so one key
+//             (e.g. Enter, or the digit 1) can mean different things pre- vs post-answer.
+//   surface — which module owns it ('global' | 'nav' | 'calendar' | 'checklist' | 'study'), which is
+//             how the ? sheet groups the rows.
 //   control — a selector for the visible, focusable control that performs the same action (every
 //             action has a tap target — WCAG 2.1.1 — and the chips/aria-keyshortcuts hang off it).
-//   kind    — nav | grade | reveal | media | integrity | help (K1 seeds nav/grade/reveal/help).
+//   kind    — nav | grade | reveal | media | integrity | edit | help.
+//   routed  — omit (⇒ dispatched through resolveKey — every study binding) vs `false` (DECLARATIVE
+//             ONLY: gestures.js / calendar.js / checklist-page.js keep their own handlers per the K1
+//             incremental-adoption note; the entry exists so the ? sheet reads EVERY key from one
+//             source — K3). The drift test resolves the routed subset; it never resolves routed:false.
+//   mod     — `true` marks a modifier / chorded combo (⌘K, ⌘Z, ⇧←) whose `keys` are display glyphs
+//             rather than raw event.key values (those combos are handled outside resolveKey).
 
 import { getRaw, KEYS } from './store.js';
 
 export const BINDINGS = [
   // ── Global (owned by gestures.js wireKeyboard). Listed here so the ? sheet / palette can read
-  //    their keys; gestures keeps its own if/switch chain in K1 (incremental registry adoption).
-  { id: 'help', keys: ['?'], phase: 'global', surface: 'global', label: 'Show keyboard shortcuts', control: '#kbdHelp', kind: 'help' },
-  { id: 'palette', keys: ['/'], phase: 'global', surface: 'global', label: 'Command palette', control: null, kind: 'nav' },
-  { id: 'nav-prev', keys: ['['], phase: 'global', surface: 'nav', label: 'Previous page', control: null, kind: 'nav' },
-  { id: 'nav-next', keys: [']'], phase: 'global', surface: 'nav', label: 'Next page', control: null, kind: 'nav' },
-  { id: 'nav-emergency', keys: ['0'], phase: 'global', surface: 'nav', label: 'Emergency page', control: null, kind: 'nav' },
-  { id: 'nav-notif', keys: ['b'], phase: 'global', surface: 'nav', label: 'Notifications', control: '#notifBell', kind: 'nav' },
-  { id: 'nav-theme', keys: ['\\'], phase: 'global', surface: 'nav', label: 'Light / dark theme', control: '#themeToggle', kind: 'nav' },
-  { id: 'nav-guide', keys: [','], phase: 'global', surface: 'nav', label: 'Guide & settings', control: '#guideBtn', kind: 'nav' },
+  //    their keys; gestures keeps its own if/switch chain in K1 (incremental registry adoption), so
+  //    every entry is routed:false — DECLARATIVE documentation, not resolveKey-dispatched.
+  { id: 'help', keys: ['?'], phase: 'global', surface: 'global', label: 'Show keyboard shortcuts', control: '#kbdHelp', kind: 'help', routed: false },
+  { id: 'palette', keys: ['/'], phase: 'global', surface: 'global', label: 'Command palette', control: null, kind: 'nav', routed: false },
+  { id: 'palette-cmd', keys: ['⌘K', 'Ctrl+K'], phase: 'global', surface: 'global', label: 'Command palette', control: null, kind: 'nav', routed: false, mod: true },
+  { id: 'undo-cmd', keys: ['⌘Z', 'Ctrl+Z'], phase: 'global', surface: 'global', label: 'Undo the last calendar delete', control: null, kind: 'integrity', routed: false, mod: true },
+  { id: 'nav-page', keys: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], phase: 'global', surface: 'nav', label: 'Jump to a page', control: null, kind: 'pages', routed: false },
+  { id: 'nav-prev', keys: ['['], phase: 'global', surface: 'nav', label: 'Previous page', control: null, kind: 'nav', routed: false },
+  { id: 'nav-next', keys: [']'], phase: 'global', surface: 'nav', label: 'Next page', control: null, kind: 'nav', routed: false },
+  { id: 'nav-emergency', keys: ['0'], phase: 'global', surface: 'nav', label: 'Emergency page', control: null, kind: 'nav', routed: false },
+  { id: 'nav-notif', keys: ['b'], phase: 'global', surface: 'nav', label: 'Notifications', control: '#notifBell', kind: 'nav', routed: false },
+  { id: 'nav-theme', keys: ['\\'], phase: 'global', surface: 'nav', label: 'Light / dark theme', control: '#themeToggle', kind: 'nav', routed: false },
+  { id: 'nav-guide', keys: [','], phase: 'global', surface: 'nav', label: 'Guide & settings', control: '#guideBtn', kind: 'nav', routed: false },
+
+  // ── Calendar (owned by calendar.js onCalKeydown — its OWN keydown handler, NOT routed through
+  //    resolveKey; these mirror that handler so the ? sheet documents them from the one registry).
+  { id: 'cal-view-month', keys: ['m'], phase: 'calendar', surface: 'calendar', label: 'Month view', control: '#calModeMonth', kind: 'nav', routed: false },
+  { id: 'cal-view-week', keys: ['w'], phase: 'calendar', surface: 'calendar', label: 'Week view', control: '#calModeWeek', kind: 'nav', routed: false },
+  { id: 'cal-view-day', keys: ['d'], phase: 'calendar', surface: 'calendar', label: 'Day view', control: '#calModeDay', kind: 'nav', routed: false },
+  { id: 'cal-view-agenda', keys: ['a'], phase: 'calendar', surface: 'calendar', label: 'Agenda view', control: '#calModeAgenda', kind: 'nav', routed: false },
+  { id: 'cal-new', keys: ['n'], phase: 'calendar', surface: 'calendar', label: 'New event on the focused day', control: '#calAdd', kind: 'edit', routed: false },
+  { id: 'cal-today', keys: ['t'], phase: 'calendar', surface: 'calendar', label: 'Jump to today', control: '#calToday', kind: 'nav', routed: false },
+  { id: 'cal-find', keys: ['f'], phase: 'calendar', surface: 'calendar', label: 'Find / quick-add an event', control: '#calCmd', kind: 'nav', routed: false },
+  { id: 'cal-move', keys: ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'], phase: 'calendar', surface: 'calendar', label: 'Move between days (month view)', control: null, kind: 'nav', routed: false },
+  { id: 'cal-step', keys: ['⇧←', '⇧→'], phase: 'calendar', surface: 'calendar', label: 'Previous / next month (or week)', control: '#calPrev', kind: 'nav', routed: false, mod: true },
+  { id: 'cal-remove', keys: ['-', 'Delete', 'Backspace'], phase: 'calendar', surface: 'calendar', label: 'Remove the focused / open event', control: null, kind: 'edit', routed: false },
+
+  // ── Checklist (owned by checklist-page.js onCheckKeydown — its OWN handler; Space is the browser's
+  //    native toggle on the focused task checkbox, so it has no explicit handler entry there).
+  { id: 'check-move', keys: ['ArrowUp', 'ArrowDown', 'j', 'k'], phase: 'checklist', surface: 'checklist', label: 'Move between tasks', control: null, kind: 'nav', routed: false },
+  { id: 'check-tick', keys: [' '], phase: 'checklist', surface: 'checklist', label: 'Tick / untick the focused task', control: null, kind: 'edit', routed: false },
+  { id: 'check-due', keys: ['d'], phase: 'checklist', surface: 'checklist', label: 'Set a due date', control: '.ci-due', kind: 'edit', routed: false },
+  { id: 'check-priority', keys: ['p'], phase: 'checklist', surface: 'checklist', label: 'Cycle priority (P1→P4)', control: '.ci-flag', kind: 'edit', routed: false },
+  { id: 'check-edit', keys: ['e'], phase: 'checklist', surface: 'checklist', label: 'Edit your own task', control: '.check-edit', kind: 'edit', routed: false },
+  { id: 'check-remove', keys: ['-', 'Delete', 'Backspace'], phase: 'checklist', surface: 'checklist', label: 'Remove your own task', control: '.check-del', kind: 'edit', routed: false },
 
   // ── Study, pre-answer (typed cloze). Enter is the reveal/submit — it is NOT a printable typing
   //    key, so it commands even while the kana input is focused (unlike bare letters/digits).
@@ -105,3 +138,55 @@ export function resolveKey({ key, phase, targetKind = 'other', composing = false
 // only the literal 'off' disables. Every bare-single-char listener consults this so ONE toggle in
 // Guide & Settings silences the whole single-key surface (native Tab/Enter/Space controls stay).
 export function shortcutsEnabled() { return getRaw(KEYS.kbd, '') !== 'off'; }
+
+// ── K3: the ? sheet renders FROM the registry ────────────────────────────────
+// helpSheetModel is the single source of truth for what the ? sheet lists — a drift test asserts the
+// model ⇔ BINDINGS ⇔ resolveKey stay in lock-step for the ROUTED (study) surface, so a study key
+// added without documenting it (or vice-versa) fails CI. The routed:false entries (global/calendar/
+// checklist) are hand-mirrored from their own handlers — the test can't see those, so a key added to
+// onCalKeydown/onCheckKeydown/wireKeyboard still needs a matching entry here by convention.
+const SURFACE_TITLES = {
+  global: 'General',
+  nav: 'Getting around',
+  calendar: 'On the calendar',
+  checklist: 'On the checklist',
+  study: 'Studying grammar (文法帖)',
+};
+const SURFACE_ORDER = ['global', 'nav', 'calendar', 'checklist', 'study'];
+
+// Display glyphs for the ? sheet's <kbd> chips. Raw event.key values → readable symbols; modifier
+// combos (mod:true bindings) already carry display strings in their keys, so they pass through.
+const KEY_GLYPH = {
+  Enter: '⏎', ' ': 'Space', Escape: 'Esc',
+  ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓',
+  Delete: 'Del', Backspace: '⌫', '-': '−',
+};
+export function keyGlyph(k) { return KEY_GLYPH[k] || k; }
+
+// Pure: turn the registry into the ordered, grouped rows the ? sheet renders. ONE row per distinct
+// action — bindings that share a label (e.g. the graded/wrong replay-audio pair) collapse into a
+// single row carrying every covering id. The dynamic page-jump binding (kind:'pages') expands against
+// the caller-supplied `pages` [{key,label}] so 1–9 read as their live nav labels; with no pages it
+// falls back to one generic row. Rows list the same keys whether shortcuts are on or off — `enabled`
+// is passed through only so the caller can theme the disabled banner; the model itself is unchanged.
+export function helpSheetModel(bindings, { enabled = true, pages = null } = {}) {   // eslint-disable-line no-unused-vars
+  const bySurface = new Map();
+  const groupFor = (s) => {
+    let g = bySurface.get(s);
+    if (!g) { g = { surface: s, title: SURFACE_TITLES[s] || s, rows: [] }; bySurface.set(s, g); }
+    return g;
+  };
+  for (const b of bindings) {
+    const g = groupFor(b.surface);
+    if (b.kind === 'pages' && Array.isArray(pages) && pages.length) {
+      for (const p of pages) g.rows.push({ keys: [p.key], label: p.label, ids: [b.id] });
+      continue;
+    }
+    const row = g.rows.find(r => r.label === b.label);
+    if (row) { row.ids.push(b.id); for (const k of b.keys) if (!row.keys.includes(k)) row.keys.push(k); }
+    else g.rows.push({ keys: [...b.keys], label: b.label, ids: [b.id] });
+  }
+  const known = SURFACE_ORDER.filter(s => bySurface.has(s));
+  const extra = [...bySurface.keys()].filter(s => !SURFACE_ORDER.includes(s));
+  return [...known, ...extra].map(s => bySurface.get(s));
+}

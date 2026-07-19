@@ -2013,20 +2013,21 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 }
 .kh-panel{
   background: var(--bg-elevated); border: 1px solid var(--line-strong); border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lg); padding: var(--s6); width: min(420px, 92vw);
+  box-shadow: var(--shadow-lg); padding: var(--s6); width: min(440px, 92vw);
+  max-height: 88vh; overflow-y: auto;
 }
 .kh-title{ font-family: var(--serif); font-size: 1.3rem; margin: 0 0 var(--s4); }
-.kh-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2) var(--s4); margin-bottom: var(--s3); }
+.kh-group{ margin-bottom: var(--s3); }
 .kh-row{ display: flex; align-items: center; gap: .5rem; font-size: .92rem; color: var(--ink-soft); margin: .2rem 0; }
 .kh-row span{ color: var(--ink); }
-.kbd-help kbd{
+.kbd-help kbd, .kbd-nudge kbd{
   font-family: var(--mono); font-size: .8rem; min-width: 1.6rem; text-align: center;
   background: var(--bg-sunk); border: 1px solid var(--line-strong); border-bottom-width: 2px;
   border-radius: var(--r-xs); padding: .12rem .35rem; color: var(--ink);
 }
 .kh-sub{ font-size: .76rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); margin: var(--s3) 0 .15rem; }
-.kh-tip{ font-size: .8rem; color: var(--ink-faint); }
-.kh-tip em{ color: var(--ink-soft); font-style: italic; }
+.kh-off{ font-size: .84rem; color: var(--ink-soft); background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--s2) var(--s3); margin: 0 0 var(--s3); }
+.kh-groups.is-off{ opacity: .55; }          /* shortcuts off: still discoverable, but visibly not live */
 .kh-hint{ font-size: .82rem; color: var(--ink-faint); margin: var(--s3) 0 var(--s4); }
 .kh-close{
   display: block; width: 100%; padding: .6rem; border: 1px solid var(--line-strong);
@@ -2034,6 +2035,23 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
 }
 .kh-close:hover{ background: var(--bg-sunk); }
 @media (prefers-reduced-motion: reduce){ .lp-menu, .kbd-help{ animation: none; } }
+
+/* ---------- one-time "press ? for shortcuts" nudge (gestures.js maybeShowKbdNudge) ---------- */
+.kbd-nudge{
+  position: fixed; left: 50%; bottom: max(var(--s4), env(safe-area-inset-bottom)); transform: translateX(-50%);
+  z-index: 65; display: flex; align-items: center; gap: var(--s3);
+  background: var(--bg-elevated); border: 1px solid var(--line-strong); border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg); padding: .5rem .5rem .5rem var(--s4);
+  font-size: .88rem; color: var(--ink); max-width: min(92vw, 24rem);
+  animation: kbd-nudge-in var(--dur-2) var(--ease-out);
+}
+.kbd-nudge-x{
+  border: none; background: transparent; color: var(--ink-faint); cursor: pointer;
+  font-size: .9rem; line-height: 1; padding: .3rem .4rem; border-radius: var(--r-xs);
+}
+.kbd-nudge-x:hover{ background: var(--bg-sunk); color: var(--ink); }
+@keyframes kbd-nudge-in{ from{ opacity: 0; transform: translate(-50%, .5rem); } to{ opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce){ .kbd-nudge{ animation: none; } }
 
 /* ---------- command palette (⌘K / "/") — see palette.js ---------- */
 .cmdk-overlay{

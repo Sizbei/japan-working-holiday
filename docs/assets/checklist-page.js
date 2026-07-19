@@ -15,6 +15,7 @@ import { askDate, askTags, alertModal, confirmModal } from './lib/modal.js';
 import { tagsFor, allTags, setTags, tagHue } from './lib/tags.js';
 import { migratePriority, getLevel, setLevel, cyclePriority, priorityRank } from './lib/priority.js';
 import { filterView, groupByDay } from './lib/smartviews.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 
 let DATA = null;
 
@@ -60,6 +61,7 @@ function onCheckKeydown(e) {
   // bail on text entry, but NOT on the task checkboxes (those are our nav anchors)
   const isText = (tag === 'input' && !['checkbox', 'radio'].includes(e.target.type)) || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
   if (isText) return;
+  if (!shortcutsEnabled() && e.key.length === 1) return;   // WCAG 2.1.4: single-char shortcuts (j/k/e/−/p/d) off; arrows + Del/Backspace stay
   const row = e.target.closest?.('.check-item');
   if (['ArrowDown', 'ArrowUp', 'j', 'k'].includes(e.key)) {
     const boxes = visibleChecks();

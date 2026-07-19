@@ -930,7 +930,6 @@ function controlsFor(ph, gate) {
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reject">No — reveal (esc)</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="accept">Take it (⏎)</button>`;
   if (ph === 'graded') return `
-    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="1">Again <kbd>1</kbd></button>
     <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2">Hard <kbd>2</kbd></button>
     <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3">Good <kbd>3</kbd></button>
     <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4">Easy <kbd>4</kbd></button>`;
@@ -1044,9 +1043,9 @@ function reveal(next, opts = {}) {
       : okMsg) + peg;
     setControls('graded');
     focusControl('.stu-good');
-    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Again, Hard, Good or Easy.'
-      : hinted ? `Correct, capped at ${hintCapLabel()} from the hint. Choose Again, Hard, Good or Easy.`
-      : 'Correct. Choose Again, Hard, Good or Easy.');
+    announce(card.closeAccepted ? 'Accepted, capped at Hard. Choose Hard, Good or Easy.'
+      : hinted ? `Correct, capped at ${hintCapLabel()} from the hint. Choose Hard, Good or Easy.`
+      : 'Correct. Choose Hard, Good or Easy.');
   } else {
     phase = 'wrong';
     const gateNote = card.gate ? ' <span class="stu-fb-gate-reset">Mastery gate restarts.</span>' : '';
@@ -1212,7 +1211,6 @@ function runAction(id) {
     case 'submit': submitAnswer(); break;
     case 'accept': acceptClose(); break;
     case 'reject': rejectClose(); break;
-    case 'again': grade(1); break;                              // graded phase: 1 = Again — matches the graded [data-g="1"] button (answer WAS typed correctly → ok:true; effectiveGrade returns 1 for chosen 1)
     case 'grade-2': grade(2); break;
     case 'grade-3': grade(3); break;
     case 'grade-4': grade(4); break;

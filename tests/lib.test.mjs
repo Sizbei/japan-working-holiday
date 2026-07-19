@@ -1949,7 +1949,7 @@ test('calendars: normalize drops malformed + dedupes; nextColor avoids used', ()
 // ─────────────────────────────────────────────────────────────────────────────
 import {
   STAGES, stageOf, retrievability, nextInterval, effectiveGrade, gateMode,
-  newState, migrate, review, buildQueue, interleave, deferCard, amnesty,
+  newState, migrate, review, undoReview, buildQueue, interleave, deferCard, amnesty,
   seedImport, hash, sessionStart, sessionRecord, sessionEnd,
   lessonOrder, unitProgress, testOutResult,
   checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
@@ -3358,4 +3358,52 @@ test('recur: occurrences are single-day (no endDate) and reversed windows yield 
   const e = { date: '2026-08-08', recur: 'yearly' };
   assert.equal(recurOccurrences(e, '2026-01-01', '2027-12-31').every(o => o.endDate === ''), true);
   assert.deepEqual(recurOccurrences(e, '2027-01-01', '2026-01-01'), []);
+});
+
+// ── K2b: undo the last grade (Z) + session wrap-up (Enter) ────────────────────
+test('undoReview: review()→undo round-trips to a state deep-equal to the pre-grade state', () => {
+  const s0 = review(newState(T0), 'n5-1', { pass: true, grade: 3, exampleIdx: 0 }, T0 + DAY);
+  const snap = structuredClone(s0);                       // the shell snapshots BEFORE the next grade
+  const s1 = review(s0, 'n5-1', { pass: false, grade: 1 }, T0 + 2 * DAY);   // a lapse: really moves D/S/lapses/due
+  assert.deepStrictEqual(s0, snap, 'review() did not mutate its input (immutable)');
+  assert.notDeepStrictEqual(s1.points['n5-1'], s0.points['n5-1'], 'the grade actually changed the point');
+  const undone = undoReview(snap);
+  assert.deepStrictEqual(undone, s0, 'undo restores the pre-grade state byte-for-byte');
+  // the restore is a fresh clone — mutating it must not reach back into the snapshot (no aliasing)
+  undone.points['n5-1'].D = 99;
+  assert.notEqual(snap.points['n5-1'].D, 99);
+});
+
+test('undoReview: session position + results revert together with the graded point', () => {
+  let s = sessionStart(review(newState(T0), 'n5-1', { pass: true, grade: 3 }, T0), ['n5-1', 'n5-2']);
+  const snap = structuredClone(s);                        // pos 0, no results
+  s = review(s, 'n5-1', { pass: true, grade: 4 }, T0 + DAY);
+  s = sessionRecord(s, { id: 'n5-1', grade: 4, ok: true });   // pos → 1, one result
+  assert.equal(s.session.pos, 1);
+  assert.equal(s.session.results.length, 1);
+  const undone = undoReview(snap);
+  assert.equal(undone.session.pos, 0, 'pos reverted');
+  assert.equal(undone.session.results.length, 0, 'results reverted');
+  assert.deepStrictEqual(undone, snap);
+});
+
+test('resolveKey (K2b): Z undoes the last grade in the reveal phases only', () => {
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'other', enabled: true }), 'undo-graded');
+  assert.equal(resolveKey({ key: 'Z', phase: 'wrong', targetKind: 'other', enabled: true }), 'undo-wrong');
+  // a bare letter still commands on a focused grade/Continue button
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'button', enabled: true }), 'undo-graded');
+  // NOT during input ("nothing to undo yet"), and never over the focused kana field (rule 3)
+  assert.equal(resolveKey({ key: 'z', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  // WCAG turn-off silences it; not a command key on the course home or summary
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'other', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'idle', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'summary', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey (K2b): summary Enter → native on the focused button, else routed to summary-done', () => {
+  // focus on the Done button → null so the browser activates it natively (no double-fire)
+  assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'button', enabled: true }), null);
+  // focus elsewhere → the registry routes Enter to the wrap-up action
+  assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'other', enabled: true }), 'summary-done');
 });

@@ -362,6 +362,18 @@ export function sessionEnd(state) {
   return { ...state, session: null };
 }
 
+// K2b — undo the last grade. The shell snapshots the WHOLE state (structuredClone) just BEFORE the
+// review()+sessionRecord() pair; undoing is simply restoring that snapshot. review() is immutable
+// (returns a new state via setPoint — see above), but we deep-clone the snapshot on the way out so a
+// restored state can never alias the object the caller kept around (a later in-place tweak of one
+// must not silently mutate the other). Whole-state restore reverts the graded point's D/S/stage/
+// reps/lapses/ghost/gate/leech AND session.pos/results in one shot — it never re-runs review(), so it
+// cannot double-apply or diverge from FSRS. Streak/week/daysStudied live in settings and are only
+// bumped at the summary (post-undo-window), so the snapshot needs no special streak handling.
+export function undoReview(snapshot) {
+  return structuredClone(snapshot);
+}
+
 // ── R3: course-home lesson ordering, unit progress, test-out ─────────────────
 const LEVEL_RANK = { N5: 0, N4: 1, N3: 2, N2: 3, N1: 4 };
 const levelOfId = (id) => { const m = /^n([1-5])-/.exec(String(id)); return m ? 'N' + m[1] : null; };

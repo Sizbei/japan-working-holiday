@@ -62,6 +62,21 @@ export const BINDINGS = [
   { id: 'speak-graded', keys: ['r', 'R'], phase: 'graded', surface: 'study', label: 'Replay audio', control: '.stu-speak', kind: 'media' },
   { id: 'speak-wrong', keys: ['r', 'R'], phase: 'wrong', surface: 'study', label: 'Replay audio', control: '.stu-speak', kind: 'media' },
   { id: 'autoplay', keys: ['a', 'A'], phase: 'idle', surface: 'study', label: 'Toggle autoplay', control: '.stu-tts-toggle', kind: 'media' },
+
+  // ── Study integrity (K2b). Z undoes the LAST grade — bounded to within-session (the summary's
+  //    sessionEnd/recordSession is post-window, so the shell no-ops Z once state.session is null).
+  //    Scoped to the reveal phases 'graded'/'wrong' (the just-answered card, focus on a grade/Continue
+  //    BUTTON — a bare letter still commands on a button, but rule 3 keeps it from firing over the
+  //    focused kana input, so it is NOT bound in 'input': "nothing to undo yet"). The always-available
+  //    tap/Tab path is the visible .stu-undo affordance in the card header (Principle 5). Undo is not
+  //    offered while a ★-scramble / MCQ card owns the keyboard (cardCtl intercepts before resolveKey).
+  { id: 'undo-graded', keys: ['z', 'Z'], phase: 'graded', surface: 'study', label: 'Undo last grade', control: '.stu-undo', kind: 'integrity' },
+  { id: 'undo-wrong', keys: ['z', 'Z'], phase: 'wrong', surface: 'study', label: 'Undo last grade', control: '.stu-undo', kind: 'integrity' },
+
+  // ── Study session wrap-up (K2b). The end-of-session summary's primary button is focused, so Enter
+  //    activates it natively (resolveKey returns null for Enter on a BUTTON). This entry keeps a
+  //    keyboard path even if focus drifts off the button, and documents the flow for the ? sheet.
+  { id: 'summary-done', keys: ['Enter'], phase: 'summary', surface: 'study', label: 'Done — back to course home', control: '[data-act="done"]', kind: 'nav' },
 ];
 
 // The pure resolver. Takes the already-computed active-element KIND (no DOM) so it is unit-testable.

@@ -3550,6 +3550,11 @@ ruby > rt {
 /* scrollable hour grid */
 .wk2-scroll{ overflow-y:auto; max-height: min(62vh, 560px); overscroll-behavior: contain; }
 .wk2-inner{ position:relative; display:grid; grid-template-columns: var(--wk-gutter) repeat(7, minmax(0,1fr)); }
+/* all-day-only week/day → the hour grid is empty; a gentle hint beats a blank void (points to the band) */
+.wk2-emptyhint{ position:absolute; top:60px; left: calc(var(--wk-gutter) + 8px); right:14px; z-index:2; text-align:center;
+  font-size:.85rem; color: var(--ink-soft); background: color-mix(in srgb, var(--bg-soft) 92%, transparent);
+  border:1px dashed var(--line); border-radius:12px; padding:.7rem 1rem; pointer-events:none; }
+.wk2-emptyhint-ic{ margin-right:.35rem; }
 /* Day view: one full-width column — collapse every 7-col track (header, hour grid, all-day lanes + chips) */
 .wk2.is-day .wk2-head, .wk2.is-day .wk2-inner{ grid-template-columns: var(--wk-gutter) minmax(0,1fr); }
 .wk2.is-day .wk-lane, .wk2.is-day .wk-chips{ grid-template-columns: 1fr; }

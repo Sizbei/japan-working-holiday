@@ -74,6 +74,7 @@ function gridHTML(days, isDay) {
     const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
   });
   const chips = bandCols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
+  const anyTimed = timedCols.some(c => c.length);   // a fully all-day week → the hour grid would be an empty void; show a hint instead
 
   // hour gutter (JST, 24h) — a label sits at the top of each hour block
   const hours = Array.from({ length: 24 }, (_, h) => `<div class="wk2-hr" style="height:${WK_HH}px"><span>${String(h).padStart(2, '0')}</span></div>`).join('');
@@ -108,6 +109,7 @@ function gridHTML(days, isDay) {
       <div class="wk2-inner" style="height:${24 * WK_HH}px">
         <div class="wk2-hours">${hours}</div>
         ${dayCols}
+        ${anyTimed ? '' : `<div class="wk2-emptyhint"><span class="wk2-emptyhint-ic" aria-hidden="true">🕑</span>No timed events this ${isDay ? 'day' : 'week'} — your stays &amp; day plans are in the band above ↑</div>`}
       </div>
     </div>
   </div>`;
@@ -156,13 +158,19 @@ export function wireWeek() {
     const hh = String(Math.floor(min / 60)).padStart(2, '0'), mm = String(min % 60).padStart(2, '0');
     openModal(null, col.dataset.day, '', `${hh}:${mm}`);
   }));
-  // auto-scroll the hour grid to ~7am (or an hour before "now" if today is in view)
+  // auto-scroll the hour grid so you LAND ON THE EVENTS, not a random empty hour: to ~30min before the
+  // earliest timed event this week (most of a trip is all-day, so the grid is often morning-light and
+  // "now" lands in a dead afternoon). Fallbacks: an hour before now if today's in view, else 7am.
   const scroll = $('#wkScroll');
   if (scroll && !scroll.dataset.scrolled) {
     scroll.dataset.scrolled = '1';
-    const days = gridDays();
-    const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
-    scroll.scrollTop = target * WK_HH;
+    const blocks = $$('#calView .wk2-ev');
+    if (blocks.length) {
+      const minTop = Math.min(...blocks.map(b => parseFloat(b.style.top) || 0));
+      scroll.scrollTop = Math.max(0, minTop - WK_HH * 0.5);
+    } else {
+      scroll.scrollTop = 0;   // no timed events → keep the top (all-day band + the empty-grid hint) in view
+    }
   }
   // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.

@@ -144,7 +144,10 @@ export function monthHTML() {
         return `<button class="cal-chip cat-${esc(catOf(e))} cont cont-mid" data-ev="${esc(e.id)}" aria-label="${esc(e.title)} — continues" title="${esc(e.title)}"></button>`;
       }
       // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the titles
-      const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(fmtShort(x.end))}</span>` : '';
+      // range end shows on the start chip only; drop the redundant month when the span ends in the same
+      // month it started ("→ 28" not "→ Jul 28") so the title keeps more room
+      const rangeEndTxt = x.end ? (x.end.slice(0, 7) === date.slice(0, 7) ? '' + +x.end.slice(8, 10) : fmtShort(x.end)) : '';
+      const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(rangeEndTxt)}</span>` : '';
       const cont = x.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
       const tm = x.end ? '' : fmt12(e.time);
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';

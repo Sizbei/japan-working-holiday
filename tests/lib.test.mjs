@@ -3486,6 +3486,36 @@ test('K4a: the mock-exam bindings are declarative, documented, and in their own 
   assert.ok(exam.some(b => b.keys.includes('ArrowLeft')) && exam.some(b => b.keys.includes('ArrowRight')), '←/→ move between questions');
 });
 
+// ── K4b: heat-grid roving bindings (declarative, handler-owned by study-stats.js) ────
+test('K4b: the mastery-map bindings are declarative, documented, and in their own sheet group', () => {
+  const stats = BINDINGS.filter(b => b.surface === 'stats');
+  assert.ok(stats.length >= 5, 'the mastery map carries its roving-grid bindings (move/row-ends/ends/page/open)');
+  // handler-owned (study-stats.js's grid-container listener), never resolveKey-DISPATCHED: the grid runs
+  // as activeFlow, so study.js returns before the resolver — phase 'stats' is never passed to resolveKey.
+  for (const b of stats) {
+    assert.equal(b.routed, false, `${b.id} is handler-owned (routed:false)`);
+    assert.notEqual(b.surface, 'study', `${b.id} is NOT the resolveKey-routed study surface`);
+  }
+  // every key is a WCAG-2.1.4-EXEMPT named key (or a modifier combo) — no bare printable single char.
+  for (const b of stats) for (const k of b.keys) {
+    const named = k.length > 1 || k === ' ';   // ' ' (Space) is a named key too, exempt on a focused button
+    assert.ok(named, `${b.id} key ${JSON.stringify(k)} is a named/exempt key, never a bare printable char`);
+  }
+  // the K3 sheet documents every one of them, in exactly one "mastery map" group
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const group = model.find(g => g.surface === 'stats');
+  assert.ok(group && /mastery map/i.test(group.title), 'the stats bindings render under a mastery-map sheet group');
+  const covered = new Set(group.rows.flatMap(r => r.ids));
+  for (const b of stats) assert.ok(covered.has(b.id), `${b.id} appears in the stats sheet group`);
+  // the arrow-move + Ctrl+Home/End + PageUp/Down keys are surfaced
+  assert.ok(stats.some(b => b.keys.includes('ArrowUp') && b.keys.includes('ArrowDown')), '↑/↓ move vertically');
+  assert.ok(stats.some(b => b.keys.includes('PageUp') && b.keys.includes('PageDown')), 'PageUp/Down jump levels');
+  assert.ok(stats.some(b => b.keys.includes('⌃Home') && b.keys.includes('⌃End') && b.mod === true), 'Ctrl+Home/End are modifier combos');
+  // handler-owned means study.js never PASSES phase 'stats' to resolveKey (the activeFlow path returns
+  // before the resolver); the grid-container listener owns these keys directly. That the dispatcher is
+  // never invoked for 'stats' is a dispatch-site fact, mirrored by the same routed:false marking K4a uses.
+});
+
 test('K3: keyGlyph maps raw event keys to readable chips, passes combos through', () => {
   assert.equal(keyGlyph('Enter'), '⏎');
   assert.equal(keyGlyph(' '), 'Space');
@@ -3493,6 +3523,9 @@ test('K3: keyGlyph maps raw event keys to readable chips, passes combos through'
   assert.equal(keyGlyph('-'), '−');
   assert.equal(keyGlyph('⌘K'), '⌘K');   // mod-combo display strings pass through untouched
   assert.equal(keyGlyph('2'), '2');
+  assert.equal(keyGlyph('PageUp'), 'PgUp');    // K4b heat-grid keys
+  assert.equal(keyGlyph('PageDown'), 'PgDn');
+  assert.equal(keyGlyph('⌃Home'), '⌃Home');   // Ctrl combo display string passes through
 });
 
 import { stripEmoji } from '../docs/assets/lib/dom.js';

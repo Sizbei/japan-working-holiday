@@ -3122,34 +3122,34 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
    band and the single-day chips below stay aligned. Not interactive. */
 .cal-chip.cc-spacer{ background: none; border: none; box-shadow: none; visibility: hidden; pointer-events: none; }
 /* per-category: set --chip-cat so the chip fill, legend swatch and ongoing pills pick up the colour */
-:is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
-:is(.cal-chip,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }
-:is(.cal-chip,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination); }
-:is(.cal-chip,.cal-opill,.calrow).cat-convention { --chip-cat: var(--c-convention); }
-:is(.cal-chip,.cal-opill,.calrow).cat-seasonal   { --chip-cat: var(--c-seasonal); }
-:is(.cal-chip,.cal-opill,.calrow).cat-nature     { --chip-cat: var(--c-nature); }
-:is(.cal-chip,.cal-opill,.calrow).cat-holiday    { --chip-cat: var(--c-holiday); }
-:is(.cal-chip,.cal-opill,.calrow).cat-food       { --chip-cat: var(--c-food); }
-:is(.cal-chip,.cal-opill,.calrow).cat-disney     { --chip-cat: var(--c-disney); }
-:is(.cal-chip,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music); }
-:is(.cal-chip,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal); }
-:is(.cal-chip,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported); }
-:is(.cal-chip,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-convention { --chip-cat: var(--c-convention); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-seasonal   { --chip-cat: var(--c-seasonal); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-nature     { --chip-cat: var(--c-nature); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-holiday    { --chip-cat: var(--c-holiday); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-food       { --chip-cat: var(--c-food); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-disney     { --chip-cat: var(--c-disney); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported); }
+:is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday); }
 
 /* dark: use the -ink variants (lighter, visible on dark bg-soft #1d1d26) */
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-convention { --chip-cat: var(--c-convention-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-nature     { --chip-cat: var(--c-nature-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-holiday    { --chip-cat: var(--c-holiday-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-food       { --chip-cat: var(--c-food-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-disney     { --chip-cat: var(--c-disney-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported-ink); }
-[data-theme="dark"] :is(.cal-chip,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-illumination{ --chip-cat: var(--c-illumination-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-convention { --chip-cat: var(--c-convention-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-seasonal   { --chip-cat: var(--c-seasonal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-nature     { --chip-cat: var(--c-nature-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-holiday    { --chip-cat: var(--c-holiday-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-food       { --chip-cat: var(--c-food-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-disney     { --chip-cat: var(--c-disney-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-music      { --chip-cat: var(--c-music-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-personal   { --chip-cat: var(--c-personal-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-imported   { --chip-cat: var(--c-imported-ink); }
+[data-theme="dark"] :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-birthday   { --chip-cat: var(--c-birthday-ink); }
 
 /* chip title truncates with an ellipsis (flex child needs min-width:0) */
 .cal-chip .cc-t{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -3733,21 +3733,30 @@ ruby > rt {
 /* auto rows: grid-auto-rows minmax() would force 88px separators — cells carry the floor instead.
    MUST out-specify `body[data-route="calendar"] .cal-grid{ grid-auto-rows: minmax(88px,1fr) }` (line ~3518),
    or 1fr row-sizing wins and rows collapse toward 88px on scroll → "skinny months". */
-body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; border: none; border-radius: 0; }   /* open, no outer box (Notion) */
-/* compact re-asserts minmax(88px,1fr) with higher specificity — a zero-height sentinel row would
-   stretch into an empty 88px band at every month boundary */
-html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; }
-.cal-grid.cal-endless .cal-cell{ min-height: 134px; }   /* rows resolve to this floor, content never grows them — 96px clipped the 4th row (owner: 4 rows per cell, the 4th is "+N more"); 134 = date row + 4 chip rows + gaps + padding */
-/* ---- Notion-tight month: hairline separators (not gapped rounded boxes), compact cells, and multi-day
-   events as ONE connected bar. body-prefixed to out-specify the min-height/border/gap defaults above. ---- */
-body[data-route="calendar"] .cal-grid.cal-endless{ gap: 1px; background: var(--line); }               /* 1px grid lines between days */
-body[data-route="calendar"] .cal-grid.cal-endless .cal-cell{ min-height: 98px; border: none; border-radius: 0; padding: 2px 0 3px; gap: 1px; }
-body[data-route="calendar"] .cal-grid.cal-endless .cal-row{ padding: 0 5px; }                          /* only the date number keeps a horizontal inset */
-body[data-route="calendar"] .cal-grid.cal-endless .cal-more{ padding: 0 6px; }
-body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ padding: 1px 6px; min-height: 15px; border-radius: 3px; gap: 4px; }   /* chips reach the cell edges so multi-day bars touch across the 1px line */
-/* flatten the corners on the side a multi-day bar continues → the day-segments read as one continuous bar */
-.cal-grid.cal-endless .cal-chip.seg-l{ border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.cal-grid.cal-endless .cal-chip.seg-r{ border-top-right-radius: 0; border-bottom-right-radius: 0; }
+/* ===== Endless month = a STACK of week rows. Multi-day events are TRUE column-spanning bars in a lane
+   layer ABOVE the day cells — one element per event per week, full width, full title. ===== */
+body[data-route="calendar"] .cal-grid.cal-endless,
+html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ display: block; gap: 0; background: none; border: none; border-radius: 0; --bar-h: 19px; --date-h: 24px; }
+.cal-grid.cal-endless .cal-week{ position: relative; }
+.cal-grid.cal-endless .cal-weekgrid{ display: grid; grid-template-columns: repeat(7, 1fr); }
+/* inset box-shadow (not border) draws the hairline grid WITHOUT changing cell width — so the bar lane's
+   7 columns line up exactly with the day columns */
+body[data-route="calendar"] .cal-grid.cal-endless .cal-cell{ min-height: 92px; background: var(--bg-soft); border: none; border-radius: 0; padding: 2px 0 3px; gap: 0; overflow: hidden; box-shadow: inset -1px 0 0 var(--line), inset 0 -1px 0 var(--line); }
+body[data-route="calendar"] .cal-grid.cal-endless .cal-row{ padding: 0 5px; }
+body[data-route="calendar"] .cal-grid.cal-endless .cal-more{ padding: 0 5px; }
+.cal-grid.cal-endless .cal-cbody{ display: flex; flex-direction: column; gap: 1px; padding: 0 2px; margin-top: calc(var(--barrows, 0) * var(--bar-h)); }   /* reserve space so single-day chips sit below the bars */
+body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ padding: 1px 6px; min-height: 15px; border-radius: 3px; gap: 4px; }
+/* the spanning-bar lane layer: absolute over the week, offset below the date row, same 7-col geometry */
+.cal-grid.cal-endless .cal-bars{ position: absolute; top: var(--date-h); left: 0; right: 0; display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: var(--bar-h); z-index: 2; pointer-events: none; }
+.cal-bar{ pointer-events: auto; margin: 0 3px 1px; min-width: 0; height: calc(var(--bar-h) - 2px); display: flex; align-items: center; gap: 2px; padding: 0 6px; border: none; border-radius: 4px; cursor: pointer;
+  font-size: .66rem; font-weight: 600; line-height: 1; white-space: nowrap; overflow: hidden; text-align: left; color: var(--ink);
+  background: color-mix(in srgb, var(--chip-cat, var(--line)) 42%, var(--bg-elevated)); }
+.cal-bar .cc-t{ overflow: hidden; text-overflow: ellipsis; }
+.cal-bar .cc-cont{ flex: none; color: var(--ink-soft); }
+.cal-bar.seg-l{ border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: 0; }    /* continues from the previous week → flush left */
+.cal-bar.seg-r{ border-top-right-radius: 0; border-bottom-right-radius: 0; margin-right: 0; } /* continues into the next week → flush right */
+.cal-bar.bar-past{ opacity: .5; }
+.cal-bar:hover, .cal-bar:focus-visible{ filter: brightness(.96); }
 /* separators are invisible SENTINELS (owner: Notion-style, no banner row): the sticky label +
    the inline "July 1" day label carry the month; the elements remain in the DOM because the
    topline detector and the ‹ › scroll targets are keyed off .cal-msep[data-ym] */
@@ -3775,6 +3784,7 @@ body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ padding: 1px 6px; m
 @media (hover: none){
   .cal-grid.cal-endless .cal-cell .cal-date{ padding: 6px 8px; }   /* .cal-cell bumps specificity over the later hover-pill padding rule */
   body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ min-height: 24px; }   /* must out-specify the Notion-tight 15px chip rule so touch targets stay ≥24px (WCAG 2.5.8) */
+  body[data-route="calendar"] .cal-grid.cal-endless{ --bar-h: 26px; }   /* taller lane rows → bars become 24px touch targets; the reserve tracks --bar-h so alignment holds */
 }
 /* normal mode is now viewport-locked too (the sidebar sizing is owned by the shared
    body[data-route="calendar"] rules — overflow-y:auto; max-height:100% inside .cal-layout, which

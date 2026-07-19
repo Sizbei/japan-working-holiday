@@ -3407,3 +3407,15 @@ test('resolveKey (K2b): summary Enter → native on the focused button, else rou
   // focus elsewhere → the registry routes Enter to the wrap-up action
   assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'other', enabled: true }), 'summary-done');
 });
+
+import { stripEmoji } from '../docs/assets/lib/dom.js';
+test('stripEmoji removes pictographs/flags but keeps arrows, kana, punctuation', () => {
+  assert.equal(stripEmoji('🎌 teamLab Planets'), 'teamLab Planets');
+  assert.equal(stripEmoji('✈️ OZ271 SEA→ICN'), 'OZ271 SEA→ICN');
+  assert.equal(stripEmoji('🇯🇵 Comiket C108'), 'Comiket C108');
+  assert.equal(stripEmoji('Anniversary 💛'), 'Anniversary');
+  assert.equal(stripEmoji('‹ Makoto Guesthouse → 10'), '‹ Makoto Guesthouse → 10');   // arrows/marks survive
+  assert.equal(stripEmoji('渋谷 の カフェ'), '渋谷 の カフェ');                          // kana/kanji survive
+  assert.equal(stripEmoji(''), '');
+  assert.equal(stripEmoji(null), '');
+});

@@ -39,7 +39,7 @@ let current = null;
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', people: 'People', checklist: 'Checklist',
   budget: 'Budget', explore: 'Explore', eats: 'Eats', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
-  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar', survival: 'Useful phrases', study: 'Grammar Gym',
+  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar', survival: 'Useful phrases', study: 'The Grammar Almanac',
 };
 const SITE = 'My Year in Japan';
 

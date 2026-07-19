@@ -41,7 +41,7 @@ export function startBuild(ctx, point) {
     const p = cur;
     root.innerHTML = `
       <div class="stu-build">
-        <div class="stu-lesson-top"><span class="stu-lesson-tag">✍️ Build a sentence</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
+        <div class="stu-lesson-top"><span class="stu-lesson-tag"><span aria-hidden="true">作</span> Build a sentence</span><span class="stu-lvl">${esc(p.level || '')}</span></div>
         <p class="stu-build-prompt">Write your own sentence using <b lang="ja">${esc(p.pattern || '')}</b>.</p>
         ${p.meaning ? `<p class="stu-note stu-build-mean">${esc(p.meaning)}</p>` : ''}
         <textarea class="stu-build-input" id="stuBuildInput" lang="ja" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Write your sentence"></textarea>
@@ -63,7 +63,7 @@ export function startBuild(ctx, point) {
     if (!ex || !box) { announce('No model sentence available for this point.'); return; }
     revealed = true;
     const speakBtn = canSpeak()
-      ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-speak" data-act="buildSpeak" aria-label="Play the model sentence">🔊 Play</button>` : '';
+      ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-speak" data-act="buildSpeak" aria-label="Play the model sentence"><span aria-hidden="true">音</span> Play</button>` : '';
     box.hidden = false;
     box.innerHTML = `
       <p class="stu-build-model-h">Model — compare with yours:</p>

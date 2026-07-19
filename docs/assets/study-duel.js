@@ -130,7 +130,7 @@ export function openDuel(a, b) {
     const pct = Math.round(score / items.length * 100);
     body.innerHTML = `
       <div class="duel-score">
-        <div class="duel-score-art" aria-hidden="true">⚔️</div>
+        <div class="duel-score-art" aria-hidden="true">対</div>
         <p class="duel-score-n">${score} / ${items.length}</p>
         <p class="stu-note">${pct >= 80 ? "You've got the distinction." : 'Keep drilling this pair — the contrast is the point.'}</p>
         <div class="stu-controls">

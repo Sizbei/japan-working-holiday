@@ -88,7 +88,7 @@ export function startStats(ctx, opts = {}) {
     if (p.done) {
       return `<section class="stu-pace stu-pace-done" aria-label="Pacing">
         <h4 class="stu-stats-h">Exam pacing</h4>
-        <p class="stu-pace-line">🏅 <b>All 353 gates passed.</b> Nothing left to project — you're a JLPT grammar master.</p></section>`;
+        <p class="stu-pace-line"><span class="stu-mark-shu" aria-hidden="true">✦</span> <b>All 353 gates passed.</b> Nothing left to project — you're a JLPT grammar master.</p></section>`;
     }
     const projISO = new Date(p.projected).toISOString().slice(0, 10);
     const anchors = EXAM_ANCHORS.map(a => {
@@ -166,7 +166,7 @@ export function startStats(ctx, opts = {}) {
         <span class="stu-trend-last">${esc(String(last.pct))}% <span class="stu-note">(${esc(String(series.length))} mock${series.length === 1 ? '' : 's'})</span></span></div>`;
     }).join('');
     if (!rows) return `<section class="stu-trend" aria-label="Mock trend"><h4 class="stu-stats-h">Mock trend</h4>
-      <p class="stu-note">No mock exams logged yet — run one from the course home (🎓 Mock exam) to start the trendline.</p></section>`;
+      <p class="stu-note">No mock exams logged yet — run one from the course home (試 Mock exam) to start the trendline.</p></section>`;
     return `<section class="stu-trend" aria-label="Mock trend"><h4 class="stu-stats-h">Mock trend <span class="stu-note">(grammar half, directional)</span></h4>${rows}</section>`;
   }
 
@@ -277,7 +277,7 @@ export function startStats(ctx, opts = {}) {
     }).join('');
     return `<div class="stu-cert" role="group" aria-label="JLPT Grammar Master certificate">
       <div class="stu-cert-inner">
-        <div class="stu-cert-seal" aria-hidden="true">🏅</div>
+        <div class="stu-cert-seal stu-mark-shu" aria-hidden="true">✦</div>
         <p class="stu-cert-kicker">Certificate of Mastery</p>
         <h3 class="stu-cert-title" lang="ja">文法マスター</h3>
         <p class="stu-cert-sub">${complete ? 'JLPT Grammar Master — all 353 points mastered' : 'Preview — unlocks at 353 / 353 mastered'}</p>
@@ -306,7 +306,7 @@ export function startStats(ctx, opts = {}) {
       ${preview ? `<p class="stu-note stu-cert-preview-note">Preview — the real certificate unlocks when all 353 points reach Mastered.</p>` : ''}
       ${certificateHTML(state)}
       <div class="stu-cert-foot">
-        <button type="button" class="stu-btn stu-btn-primary stu-cert-print" data-act="certPrint">🖨 Print / save</button>
+        <button type="button" class="stu-btn stu-btn-primary stu-cert-print" data-act="certPrint"><span aria-hidden="true">印</span> Print / save</button>
         <button type="button" class="stu-btn stu-btn-ghost" data-act="statsBack">Back to progress</button>
       </div>
     </div>`;
@@ -324,8 +324,8 @@ export function startStats(ctx, opts = {}) {
     const previewFlag = (() => { try { return localStorage.getItem(PREVIEW_KEY) === '1'; } catch { return false; } })();
     const ms = masteryStats(state);
     const certRow = (complete || previewFlag)
-      ? `<button type="button" class="stu-btn stu-btn-primary stu-cert-open" data-act="certOpen">🏅 ${complete ? 'View your JLPT Master certificate' : 'Preview certificate'} →</button>`
-      : `<p class="stu-note stu-cert-locked">🔒 JLPT Master certificate unlocks at 353/353 mastered (you're at ${esc(String(Object.values(ms.perLevel).reduce((a, b) => a + b, 0)))}).</p>`;
+      ? `<button type="button" class="stu-btn stu-btn-primary stu-cert-open" data-act="certOpen"><span class="stu-mark-shu" aria-hidden="true">✦</span> ${complete ? 'View your JLPT Master certificate' : 'Preview certificate'} →</button>`
+      : `<p class="stu-note stu-cert-locked">JLPT Master certificate unlocks at 353/353 mastered (you're at ${esc(String(Object.values(ms.perLevel).reduce((a, b) => a + b, 0)))}).</p>`;
     root.innerHTML = `<div class="stu-stats-view">
       <div class="stu-stats-top">
         <button type="button" class="stu-btn stu-btn-ghost stu-stats-back" data-act="statsBack">← Course home</button>
@@ -370,7 +370,7 @@ export function startStats(ctx, opts = {}) {
   if (view === 'cert') {
     renderCert();
     // the master-moment burst (self-gates on reduce-motion / celebrations-off inside celebrate())
-    if (isMasterComplete(ctx.getState())) celebrate('🏅 JLPT Grammar Master — all 353 points!');
+    if (isMasterComplete(ctx.getState())) celebrate('✦ JLPT Grammar Master — all 353 points!');
   } else {
     renderMain();
   }

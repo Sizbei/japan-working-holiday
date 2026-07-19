@@ -71,7 +71,7 @@ const NAV_ALL = [
   { r: 'emergency', label: 'Emergency', i18n: 'nav.emergency' },
   { r: 'survival', label: 'Useful phrases', i18n: 'nav.survival' },
   { r: 'grammar', label: 'Grammar', i18n: 'nav.grammar' },
-  { r: 'study', label: 'Grammar Gym', i18n: 'nav.study' },
+  { r: 'study', label: 'The Grammar Almanac', i18n: 'nav.study' },
   { r: 'packing', label: 'Packing', i18n: 'nav.packing' },
   { r: 'deadlines', label: 'Deadlines', i18n: 'nav.deadlines' },
 ];

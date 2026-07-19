@@ -345,7 +345,7 @@ function leechPanelHTML() {
     ? `<div class="stu-leech-sub"><h4 class="stu-leech-sub-h">Suspended</h4>
         <div class="stu-leech-list">${suspended.map(l => leechRowHTML(l, true)).join('')}</div></div>` : '';
   return `<section class="stu-leeches" aria-label="Leeches">
-    <h3 class="stu-leeches-h">🩸 Leeches <span class="stu-leeches-n">${esc(String(leeches.length))}</span></h3>
+    <h3 class="stu-leeches-h"><span class="stu-mark-shu" aria-hidden="true">虫</span> Leeches <span class="stu-leeches-n">${esc(String(leeches.length))}</span></h3>
     <p class="stu-note stu-leeches-lede">The points fighting back hardest (5+ lapses). Drill the ones you keep confusing, or take a focused pass.</p>
     ${activeHTML}${suspendedHTML}
   </section>`;
@@ -378,24 +378,25 @@ function renderCourseHome(focusSel) {
     : `<div class="stu-here-card">${continueButtonHTML(cs)}<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p></div>`;
   const nGhost = ghostCount(state);
   const hauntHTML = nGhost
-    ? `<p class="stu-haunt-count">👻 ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
+    ? `<p class="stu-haunt-count"><span class="stu-mark-shu" aria-hidden="true">幽</span> ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
   // R10: Deep points are the ones actively being gated (their next reviews are mastery checks).
   const gateHTML = mstats.inGate
-    ? `<p class="stu-gate-count">🎯 ${esc(String(mstats.inGate))} in the gate — mastery ${mstats.inGate === 1 ? 'check' : 'checks'} in progress.</p>` : '';
+    ? `<p class="stu-gate-count"><span aria-hidden="true">◉</span> ${esc(String(mstats.inGate))} in the gate — mastery ${mstats.inGate === 1 ? 'check' : 'checks'} in progress.</p>` : '';
   const canBuild = mstats.inGate > 0 || Object.values(mstats.perLevel).some(n => n > 0);
   const buildBtn = canBuild
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart">✍️ Build a sentence</button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart"><span aria-hidden="true">作</span> Build a sentence</button>` : '';
   // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
   const ttsBtn = canSpeak()
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}">🔊 Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}"><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
   root.innerHTML = `
     <div class="stu-home stu-climb-home">
       <header class="stu-climb-head">
         <div class="stu-climb-headline">
+          <p class="stu-climb-kick"><span class="stu-kick-jp" lang="ja">文法帖</span> The Grammar Almanac</p>
           <h3 class="stu-climb-title">Your climb to N1</h3>
           <p class="stu-climb-mastered">${esc(String(totalMastered))} / 353 points mastered</p>
         </div>
-        ${streakN ? `<p class="stu-climb-streak">🔥 ${esc(String(streakN))}<span>day streak</span></p>` : ''}
+        ${streakN ? `<p class="stu-climb-streak">連 ${esc(String(streakN))}<span>day streak</span></p>` : ''}
       </header>
       ${gateHTML}
       ${hauntHTML}
@@ -404,9 +405,9 @@ function renderCourseHome(focusSel) {
       <div class="stu-home-foot">
         ${buildBtn}
         ${ttsBtn}
-        <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart">📊 Progress</button>
-        <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
-        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">🎯 Placement</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart"><span aria-hidden="true">表</span> Progress</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart"><span aria-hidden="true">試</span> Mock exam</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart"><span aria-hidden="true">◉</span> Placement</button>
         <label class="stu-exam"><span>Preparing for</span>
           <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
       </div>
@@ -724,7 +725,7 @@ function idHash(id) { let h = 0; const s = String(id); for (let i = 0; i < s.len
 // riding the tight relearn ladder). Engine state only; this VISUALISES it.
 function hauntBadge(id) {
   const p = id && state.points[id];
-  return (p && p.ghost) ? ` <span class="stu-haunt" title="Haunted — on the tight relearn ladder until two clean passes">👻 haunted</span>` : '';
+  return (p && p.ghost) ? ` <span class="stu-haunt" title="Haunted — on the tight relearn ladder until two clean passes">幽 haunted</span>` : '';
 }
 
 function renderCard() {
@@ -863,10 +864,10 @@ function celebrateProgress(id, snap, pattern) {
   if (!p) return false;
   let fired = false;
   const after = stageOf(p);
-  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) { celebrate(`Mature — ${pattern || ''} 🌳`); fired = true; }
+  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) { celebrate(`Mature — ${pattern || ''} ✦`); fired = true; }
   const lv = snap.lv;
   if (lv && LEVEL_TOTALS[lv] && after === 'mastered' && snap.mastered < LEVEL_TOTALS[lv]
-      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) { celebrate(`${lv} complete — every point mastered! 🏆`); fired = true; }
+      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) { celebrate(`${lv} complete — every point mastered! ✦`); fired = true; }
   // R15: the JLPT Master moment — the final gate just passed (was incomplete, now 353/353). Open the
   // certificate after this card's own bursts settle (the cert screen plays its own celebration).
   if (!snap.complete && isMasterComplete(state)) { setTimeout(() => launchCertificate(), 1200); fired = true; }
@@ -886,7 +887,7 @@ function ghostToast(pattern) {
   ghostToastEl = document.createElement('div');
   ghostToastEl.className = 'stu-toast';
   ghostToastEl.setAttribute('role', 'status');
-  ghostToastEl.innerHTML = `✨ Exorcised — <b lang="ja">${esc(pattern || '')}</b> is back on track.`;
+  ghostToastEl.innerHTML = `✦ Exorcised — <b lang="ja">${esc(pattern || '')}</b> is back on track.`;
   document.body.appendChild(ghostToastEl);
   clearTimeout(ghostToastTimer);
   ghostToastTimer = setTimeout(() => { if (ghostToastEl) { ghostToastEl.remove(); ghostToastEl = null; } }, 3200);
@@ -913,7 +914,7 @@ function exampleEN(c) { const ex = c.point.examples[c.exIdx]; return (ex && ex.e
 // map both route through the same handlers.
 function controlsFor(ph, gate) {
   if (ph === 'input') return `
-    ${gate ? '' : '<button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint">💡 Hint</button>'}
+    ${gate ? '' : '<button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint"><span aria-hidden="true">灯</span> Hint</button>'}
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reveal">Don't know</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="check">Check ⏎</button>`;
   if (ph === 'close') return `
@@ -1110,7 +1111,7 @@ function renderSummary() {
       <div class="stu-stats">
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(n))}</span><span class="stu-stat-l">reviewed</span></div>
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(acc))}%</span><span class="stu-stat-l">accuracy</span></div>
-        <div class="stu-stat"><span class="stu-stat-n">🔥 ${esc(String(streakN))}</span><span class="stu-stat-l">day streak</span></div>
+        <div class="stu-stat"><span class="stu-stat-n"><span class="stu-mark-gold" aria-hidden="true">連</span> ${esc(String(streakN))}</span><span class="stu-stat-l">day streak</span></div>
       </div>
       <p class="stu-note">${esc(String(weekDone))} / ${esc(String(weekGoal))} sessions this week · ${nextDue ? `${esc(String(nextDue))} due in the next 24 hours.` : 'nothing else due in the next 24 hours.'}</p>
       <button type="button" class="stu-btn stu-btn-primary" data-act="done">Done</button>

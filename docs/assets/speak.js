@@ -56,5 +56,5 @@ export function speakExample(ja, btn) {
 // callers can drop it in unconditionally and it self-hides. `cls` adds a site-specific class.
 export function speakBtnHTML(cls = '') {
   if (!canSpeak()) return '';
-  return `<button type="button" class="stu-speak${cls ? ' ' + cls : ''}" data-act="speak" aria-label="Play audio" title="Play audio">🔊</button>`;
+  return `<button type="button" class="stu-speak${cls ? ' ' + cls : ''}" data-act="speak" aria-label="Play audio" title="Play audio">音</button>`;
 }

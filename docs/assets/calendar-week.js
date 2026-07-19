@@ -2,6 +2,7 @@
 import { $, $$, esc } from './lib/dom.js';
 import { parseISO, MONTHS, fmtShort } from './lib/dates.js';
 import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { makeMovable } from './dnd.js';
 import { weekAnchor, TODAY, allEvents, visible, safeCat, isEvergreen, openModal, openSidePanel, rescheduleEvent, saveUser, loadUser } from './calendar.js';
 
@@ -40,17 +41,6 @@ function weekListHTML() {
 }
 const WK_HH = 44;   // px per hour in the time grid
 
-// a single-day event's timed placement, or null if it's all-day (goes to the band).
-// no endTime, or a bad one → a default 60-min block.
-function timedOf(e) {
-  if (isMultiDay(e)) return null;
-  const start = parseHM(e.time);
-  if (start == null) return null;
-  let end = parseHM(e.endTime);
-  if (end == null || end <= start) end = Math.min(24 * 60, start + 60);
-  return { startMin: start, endMin: end };
-}
-
 // the shared time-grid builder — `days` is the array of ISO dates to show (7 for week, 1 for day).
 // isDay adds the .is-day class so the CSS collapses the 7-col tracks to a single full-width column.
 function gridHTML(days, isDay) {
@@ -61,17 +51,25 @@ function gridHTML(days, isDay) {
   }).join('');
 
   const evs = allEvents().filter(e => visible(e) && !isEvergreen(e));   // evergreen residencies live in the month view's Ongoing strip, not the band
-  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring)
-  const packed = packLanes(evs.filter(isMultiDay), days);
+  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring). Recurring
+  // events are single-day occurrences, never span bars.
+  const packed = packLanes(evs.filter(e => isMultiDay(e) && !isRecurring(e)), days);
   const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);
   let lanes = '';
   for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
-  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid
+  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid. Recurring
+  // events place a single-day occurrence on each matching day within this week.
   const bandCols = Array.from({ length: days.length }, () => []);
   const timedCols = Array.from({ length: days.length }, () => []);
-  evs.filter(e => !isMultiDay(e)).forEach(e => {
-    const i = days.indexOf(e.date.slice(0, 10)); if (i < 0) return;
-    const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
+  evs.forEach(e => {
+    if (isMultiDay(e) && !isRecurring(e)) return;   // handled by the span bars above
+    for (const occ of recurOccurrences(e, days[0], days[days.length - 1])) {
+      if (occ.endDate && occ.endDate > occ.date) continue;   // a non-recurring multi-day slipped in — bars own it
+      const i = days.indexOf(occ.date); if (i < 0) continue;
+      const start = parseHM(e.time);
+      if (start != null) { let end = parseHM(e.endTime); if (end == null || end <= start) end = Math.min(24 * 60, start + 60); timedCols[i].push({ id: e.id, ev: e, startMin: start, endMin: end }); }
+      else bandCols[i].push(e);
+    }
   });
   const chips = bandCols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
   const anyTimed = timedCols.some(c => c.length);   // a fully all-day week → the hour grid would be an empty void; show a hint instead
@@ -135,7 +133,8 @@ function barHTML(p) {
     + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
 }
 function chipHTML(e) {
-  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
+  const rec = isRecurring(e);
+  return `<button type="button" class="wk-chip${rec ? ' recurring' : ''}" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}${rec ? ' (repeats ' + esc(e.recur) + ')' : ''}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${rec ? '<span class="cc-recur" aria-hidden="true">↻</span>' : ''}</button>`;
 }
 export function wireWeek() {
   const view = $('#calView'); if (!view) return;
@@ -145,7 +144,7 @@ export function wireWeek() {
   // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
   // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
   makeMovable(view, {
-    itemSelector: '.wk-chip[data-id]', label: 'event',
+    itemSelector: '.wk-chip[data-id]:not(.recurring)', label: 'event',   // a recurring chip is one occurrence — not draggable (would move the series)
     idOf: el => el.dataset.id,
     targetSelector: '.wk2-dayhd[data-day]', keyOf: t => t.dataset.day,
     onMove: rescheduleEvent,

@@ -2,11 +2,17 @@
 import { $$, esc } from './lib/dom.js';
 import { fmtShort, daysBetween, parseISO } from './lib/dates.js';
 import { gcalUrl } from './lib/ics.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { allEvents, visible, isEvergreen, allTasks, catOf, gotoTask, openSidePanel, TODAY, hiddenCats } from './calendar.js';
 
 export function agendaHTML() {
-  // merge upcoming events + checklist tasks (with a due date) into one date-sorted stream
-  const evRows = allEvents().filter(e => visible(e) && !isEvergreen(e) && (e.endDate || e.date).slice(0, 10) >= TODAY).map(e => ({ date: e.date, ev: e }));
+  // merge upcoming events + checklist tasks (with a due date) into one date-sorted stream. A recurring
+  // event contributes only its NEXT upcoming occurrence here so a weekly repeat can't flood the list.
+  const horizon = (+TODAY.slice(0, 4) + 3) + TODAY.slice(4);
+  const evRows = allEvents().filter(e => visible(e) && !isEvergreen(e)).flatMap(e => {
+    const occs = recurOccurrences(e, TODAY, horizon).filter(occ => (occ.endDate || occ.date).slice(0, 10) >= TODAY);
+    return (isRecurring(e) ? occs.slice(0, 1) : occs).map(occ => ({ date: occ.date, ev: e }));
+  });
   const tkRows = allTasks().filter(t => t.date.slice(0, 10) >= TODAY).map(t => ({ date: t.date, tk: t }));
   const upcoming = [...evRows, ...tkRows].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 60);
   if (!upcoming.length) {
@@ -34,7 +40,7 @@ export function agendaHTML() {
     const e = x.ev;
     return head + `<div class="agenda-row" data-ev="${esc(e.id)}">
       <span class="agenda-dot cat-${esc(catOf(e))}" aria-hidden="true"></span>
-      <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
+      <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}${isRecurring(e) ? ' <span class="agenda-recur" title="repeats ' + esc(e.recur) + '" aria-label="repeats ' + esc(e.recur) + '">↻</span>' : ''}</button>
         ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
         ${e.bookBy ? bookByHTML(e.bookBy) : ''}</span>
       <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;

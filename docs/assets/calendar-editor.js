@@ -33,6 +33,12 @@ export function openModal(ev, presetDate, presetEnd, presetTime) {
       </div>
       <div class="row2">
         <label>Category<select name="category">${opts}</select></label>
+        <label>Repeats<select name="recur" id="evRecur">
+          <option value="none"${!e.recur || e.recur === 'none' ? ' selected' : ''}>Doesn’t repeat</option>
+          <option value="weekly"${e.recur === 'weekly' ? ' selected' : ''}>Weekly</option>
+          <option value="monthly"${e.recur === 'monthly' ? ' selected' : ''}>Monthly</option>
+          <option value="yearly"${e.recur === 'yearly' ? ' selected' : ''}>Yearly (birthday, anniversary…)</option>
+        </select></label>
       </div>
       <label class="ev-loc-field">Location (optional)
         <input name="area" id="evArea" value="${esc(e.area || '')}" placeholder="Search an address…" autocomplete="off">
@@ -47,10 +53,15 @@ export function openModal(ev, presetDate, presetEnd, presetTime) {
     </form>`;
   const ov = showModal(body);
   wireLocationField(ov);
+  // a recurring event is single-day (it repeats a date), so an end date is meaningless — grey it out
+  const recurSel = ov.querySelector('#evRecur'), endInput = ov.querySelector('input[name="endDate"]');
+  const syncRecur = () => { const on = recurSel && recurSel.value !== 'none'; if (endInput) { endInput.disabled = on; if (on) endInput.value = ''; } };
+  recurSel?.addEventListener('change', syncRecur); syncRecur();
   ov.querySelector('#evForm').addEventListener('submit', (sub) => {
     sub.preventDefault();
     const obj = Object.fromEntries(new FormData(sub.target).entries());
     if (!obj.title.trim() || !obj.date) return;
+    if (obj.recur && obj.recur !== 'none') obj.endDate = '';   // recurring = single-day; drop any stale end date
     if (obj.endDate && obj.endDate < obj.date) { alertModal('End date can’t be before the start date.'); return; }   // else the event is invisible on the grid but counts in alerts
     if (obj.endTime && !obj.time) { alertModal('Add a start time before an end time.'); return; }
     if (obj.time && obj.endTime && !obj.endDate && obj.endTime <= obj.time) { alertModal('End time must be after the start time (same day).'); return; }

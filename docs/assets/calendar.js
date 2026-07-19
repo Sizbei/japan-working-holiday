@@ -28,6 +28,7 @@ import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireResche
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { askCalendar } from './lib/modal.js';
 import { CAL_PALETTE, normalizeCalendars, addCalendar, updateCalendar, removeCalendar, nextColor } from './lib/calendars.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
@@ -185,11 +186,12 @@ export function visible(e) {
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
     if (!visible(e)) return false;
-    const s = e.date.slice(0, 10);
-    const en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : '';
-    if (!en) return s === iso;
-    if (capLong) { const span = daysBetween(s, en); if (span !== null && span > SPAN_CAP) return s === iso; }
-    return iso >= s && iso <= en;
+    return recurOccurrences(e, iso, iso).some(occ => {   // recurring events match on any occurrence date
+      const s = occ.date, en = (occ.endDate && parseISO(occ.endDate)) ? occ.endDate.slice(0, 10) : '';
+      if (!en) return s === iso;
+      if (capLong) { const span = daysBetween(s, en); if (span !== null && span > SPAN_CAP) return s === iso; }
+      return iso >= s && iso <= en;
+    });
   });
 }
 
@@ -775,6 +777,7 @@ export function safeCat(e) { const c = catOf(e); return (CATS.includes(c) || cal
 export function rescheduleEvent(id, day) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
+  if (isRecurring(ev)) return;                 // a recurring chip is an occurrence, not a movable instance — dragging it would silently rewrite the whole series' anchor. Edit the event to change its date/cadence.
   if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
   if (ev.source === 'user') {
     saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span

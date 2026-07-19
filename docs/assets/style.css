@@ -793,6 +793,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .agenda-title:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .agenda-area,.agenda-book{ font-size:.74rem; color: var(--ink-soft); }
 .agenda-book{ color: var(--warn-ink); font-weight:700; }
+.agenda-recur{ color: var(--ink-faint); font-weight:400; font-size:.82em; }
+.cc-recur{ color: var(--ink-faint); font-size:.9em; flex:none; }
 .agenda-book.overdue{ color: var(--red-ink); }   /* deadline already passed — book ASAP */
 .agenda-book.soon{ color: var(--warn-ink); }
 .agenda-cat{ font-size:.7rem; color: var(--ink-soft); }
@@ -3732,8 +3734,10 @@ ruby > rt {
 .sp-foot{ font-family: var(--mono); font-size:.64rem; color: var(--ink-faint); margin:.55rem 0 0; }
 
 /* ===== Endless month ===== */
-/* auto rows: grid-auto-rows minmax() would force 88px separators — cells carry the floor instead */
-.cal-grid.cal-endless{ grid-auto-rows: auto; border: none; border-radius: 0; }   /* open, no outer box (Notion) */
+/* auto rows: grid-auto-rows minmax() would force 88px separators — cells carry the floor instead.
+   MUST out-specify `body[data-route="calendar"] .cal-grid{ grid-auto-rows: minmax(88px,1fr) }` (line ~3518),
+   or 1fr row-sizing wins and rows collapse toward 88px on scroll → "skinny months". */
+body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; border: none; border-radius: 0; }   /* open, no outer box (Notion) */
 /* compact re-asserts minmax(88px,1fr) with higher specificity — a zero-height sentinel row would
    stretch into an empty 88px band at every month boundary */
 html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; }

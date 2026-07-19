@@ -171,7 +171,7 @@ export function applyCalColors() {
   if (!el) { el = document.createElement('style'); el.id = 'calCustomColors'; document.head.appendChild(el); }
   const escId = (id) => (window.CSS && CSS.escape) ? CSS.escape(id) : id;   // ids are already slug-validated in normalizeCalendars; escape too as defence-in-depth
   el.textContent = customCals().map(c =>
-    `:is(.cal-chip,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${escId(c.id)}{--chip-cat:${c.color};}`).join('');
+    `:is(.cal-chip,.cal-bar,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${escId(c.id)}{--chip-cat:${c.color};}`).join('');
 }
 
 export function catOf(e) { return e.category || 'personal'; }
@@ -500,7 +500,7 @@ function onCalKeydown(e) {
   if (!shortcutsEnabled() && e.key.length === 1) return;   // WCAG 2.1.4: single-char shortcuts (t/n/f/m/w/d/a/−) off; arrows + Del/Backspace stay
 
   if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') {
-    const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
+    const chip = e.target.closest?.('.cal-chip[data-ev], .cal-bar[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
     const id = _sidePanelEv || chip?.dataset.ev;
     if (id) { e.preventDefault(); removeEventByKey(id); }
     return;
@@ -1154,7 +1154,7 @@ function eventMenuItems(ev) {
 
 // Resolve a DOM node to event menu items, or null if it's not an event trigger. Exported for gestures.js.
 export function getEventMenu(node) {
-  const trig = node?.closest?.('.cal-chip[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
+  const trig = node?.closest?.('.cal-chip[data-ev], .cal-bar[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
   if (!trig) return null;
   const ev = allEvents().find(x => x.id === trig.dataset.ev);
   return ev ? eventMenuItems(ev) : null;

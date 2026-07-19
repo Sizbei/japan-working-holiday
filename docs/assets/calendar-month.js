@@ -177,12 +177,9 @@ export function monthHTML() {
       if (x.bd) return birthdayChipHTML(x.bd);
       if (x.span) {
         const m = x.span, e = m.ev;
-        // title on the start day, re-labeled at each week-start; MID-week days are an empty coloured bar,
-        // SAME height as a titled chip (so the lane aligns) — the span reads as one continuous band.
-        if (m.cont && !weekStart) {
-          return `<button class="cal-chip cat-${esc(catOf(e))} cont cont-mid" data-ev="${esc(e.id)}" aria-label="${esc(e.title)} — continues" title="${esc(e.title)}"></button>`;
-        }
-        // drop the redundant month when the span ends in its start month ("→ 28" not "→ Jul 28")
+        // EVERY covered day shows the title (a "‹" marks a continuation) so no day reads as a blank bar;
+        // the stable lane keeps them aligned into one continuous, labelled band. End date shows on the
+        // start chip only, with the redundant month dropped when it ends in its start month ("→ 28").
         const rangeEndTxt = m.end ? (m.end.slice(0, 7) === date.slice(0, 7) ? '' + +m.end.slice(8, 10) : fmtShort(m.end)) : '';
         const range = m.end && !m.cont ? `<span class="cc-range">→ ${esc(rangeEndTxt)}</span>` : '';
         const cont = m.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';

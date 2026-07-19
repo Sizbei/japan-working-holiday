@@ -3299,3 +3299,28 @@ test('resolveKey: unknown key or phase → null', () => {
   assert.equal(resolveKey({ key: '5', phase: 'graded', targetKind: 'other', enabled: true }), null);
   assert.equal(resolveKey({ key: 'Enter', phase: 'nonsense', targetKind: 'other', enabled: true }), null);
 });
+
+// ── K2a: reviewer audio power keys (R replay, A autoplay) ──────────────────────
+test('resolveKey (K2a): R replays audio ONLY post-answer (graded/wrong), never pre-answer', () => {
+  assert.equal(resolveKey({ key: 'r', phase: 'graded', targetKind: 'other', enabled: true }), 'speak-graded');
+  assert.equal(resolveKey({ key: 'R', phase: 'wrong', targetKind: 'other', enabled: true }), 'speak-wrong');
+  assert.equal(resolveKey({ key: 'r', phase: 'wrong', targetKind: 'button', enabled: true }), 'speak-wrong'); // a bare letter still commands on a focused button
+  // no leak: R is unbound pre-answer (would speak the answer-bearing sentence aloud)
+  assert.equal(resolveKey({ key: 'r', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'close', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'idle', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey (K2a): A toggles autoplay ONLY on the course home (idle) where the visible toggle lives', () => {
+  assert.equal(resolveKey({ key: 'a', phase: 'idle', targetKind: 'other', enabled: true }), 'autoplay');
+  assert.equal(resolveKey({ key: 'A', phase: 'idle', targetKind: 'other', enabled: true }), 'autoplay');
+  // scoped to idle: mid-session A is unbound — the autoplay tap control (.stu-tts-toggle) only
+  // exists on the course home, so binding A there keeps keyboard/touch parity (Principle 5)
+  assert.equal(resolveKey({ key: 'A', phase: 'graded', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'a', phase: 'wrong', targetKind: 'other', enabled: true }), null);
+  // a bare letter must still type into the kana field
+  assert.equal(resolveKey({ key: 'a', phase: 'input', targetKind: 'input', enabled: true }), null);
+  // WCAG turn-off silences both audio keys
+  assert.equal(resolveKey({ key: 'a', phase: 'idle', targetKind: 'other', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'graded', targetKind: 'other', enabled: false }), null);
+});

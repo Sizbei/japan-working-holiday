@@ -54,7 +54,13 @@ export function speakExample(ja, btn) {
 // Shared 🔊 button markup for the study surfaces — a real <button data-act="speak"> that the
 // module's delegated handler routes to speak/speakExample. Returns '' when TTS is unavailable, so
 // callers can drop it in unconditionally and it self-hides. `cls` adds a site-specific class.
-export function speakBtnHTML(cls = '') {
+// `key` (K2a) opts a surface into a keyboard chip: pass 'R' ONLY where the R replay shortcut is
+// actually wired (the shell cloze/gate reveal) — a passive <kbd> hint + aria-keyshortcuts on the
+// control (SR reads the shortcut from aria-keyshortcuts, not the doubled accessible name, so the
+// chip is aria-hidden). Callers where R is NOT wired (mcq/scramble sub-cards) omit it.
+export function speakBtnHTML(cls = '', key = '') {
   if (!canSpeak()) return '';
-  return `<button type="button" class="stu-speak${cls ? ' ' + cls : ''}" data-act="speak" aria-label="Play audio" title="Play audio">音</button>`;
+  const chip = key ? ` <kbd aria-hidden="true">${key}</kbd>` : '';
+  const ks = key ? ` aria-keyshortcuts="${key}"` : '';
+  return `<button type="button" class="stu-speak${cls ? ' ' + cls : ''}" data-act="speak" aria-label="Play audio" title="Play audio"${ks}>音${chip}</button>`;
 }

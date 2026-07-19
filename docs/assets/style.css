@@ -2085,6 +2085,11 @@ html.js-router .view.is-active{ padding-top: var(--s2); }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%; }
 .cmdk-mine{ color: var(--gold); font-size: .8rem; flex: 0 0 auto; padding-left: .4rem; }
 .cmdk-lab + .cmdk-mine{ margin-left: auto; }   /* no sub → push the star to the right edge */
+/* K5 Superhuman-teaches: a right-aligned direct-key chip on route rows (matched to the ? sheet's kbd) */
+.cmdk-key{ margin-left: auto; flex: 0 0 auto; align-self: center; font-family: var(--mono);
+  font-size: .74rem; min-width: 1.4rem; text-align: center; color: var(--ink-soft);
+  background: var(--bg-sunk); border: 1px solid var(--line-strong); border-bottom-width: 2px;
+  border-radius: var(--r-xs); padding: .08rem .3rem; }
 .cmdk-empty{ list-style: none; padding: .7rem; color: var(--ink-faint); text-align: center; }
 @keyframes cmdk-rise{ from{ transform: translateY(-8px); opacity: .6; } to{ transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce){ .cmdk-overlay, .cmdk-panel{ animation: none; } }
@@ -4694,8 +4699,8 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
 .g-ex-speak{ margin:.1rem 0 .2rem; }
 @media (prefers-reduced-motion: reduce){ .stu-speak.is-speaking, .g-ex-speak.is-speaking{ animation:none; } }
 html[data-reduce-motion="on"] .stu-speak.is-speaking, html[data-reduce-motion="on"] .g-ex-speak.is-speaking{ animation:none; }
-/* 🔊 autoplay toggle in the course-home foot */
-.stu-tts-toggle.is-on{ color: var(--indigo); border-color: color-mix(in srgb, var(--indigo) 45%, var(--line)); }
+/* 🔊 autoplay toggle + K5 auto-advance toggle in the course-home foot */
+.stu-tts-toggle.is-on, .stu-auto-toggle.is-on{ color: var(--indigo); border-color: color-mix(in srgb, var(--indigo) 45%, var(--line)); }
 /* K2a keyboard chips on the audio controls (R replay, A autoplay) — passive hints, matched to .stu-grade kbd */
 .stu-speak kbd, .stu-tts-toggle kbd{ font-family: var(--mono); font-size:.7rem; opacity:.6; margin-left:.2rem; }
 /* post-exam audio review rows */

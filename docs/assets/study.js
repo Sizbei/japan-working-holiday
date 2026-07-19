@@ -31,7 +31,7 @@ import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
 import { isGateCard, buildGateCard, gateHeaderHTML, gatePasses, mountGateTimer, gateFeedback } from './study-gate.js';
-import { resolveKey, shortcutsEnabled } from './lib/shortcuts.js';
+import { resolveKey, shortcutsEnabled, shouldAutoAdvance } from './lib/shortcuts.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -173,6 +173,42 @@ function toggleTts() {
 function cardExampleJa() {
   const ex = card && card.point && Array.isArray(card.point.examples) && card.point.examples[card.exIdx];
   return ex ? ex.ja : null;
+}
+
+// ── K5: auto-advance on a correct answer (opt-in, default OFF) ────────────────
+// When on, a CORRECT session answer (typed-correct cloze / right MCQ / correct scramble) arms a short
+// beat, then activates the default Good grade — by CLICKING the same `.stu-good` control a tap/Enter
+// would (so it routes through the ONE grade path; never a parallel review()). The grade bar stays live
+// during the beat; any manual grade tap/keypress advances first and cancelAutoAdvance() clears the
+// pending timer, so there is never a double-grade. Gate/mastery-check cards are excluded (their pacing
+// is deliberate — see shouldAutoAdvance). NOT tied to reduce-motion (it's a timing opt-in, not motion).
+const AUTO_ADVANCE_MS = 750;
+let autoTimer = 0;
+function autoAdvanceOn() { return getRaw(KEYS.studyAuto, '') === 'on'; }
+function cancelAutoAdvance() { if (autoTimer) { clearTimeout(autoTimer); autoTimer = 0; } }
+function armAutoAdvance() {
+  cancelAutoAdvance();
+  autoTimer = setTimeout(() => {
+    autoTimer = 0;
+    // Re-query at fire time: if the learner already graded (or navigated), the control is gone → no-op.
+    root?.querySelector('.stu-good[data-act="grade"]')?.click();
+  }, AUTO_ADVANCE_MS);
+}
+// Session-safe toggle (mirrors toggleTts): the auto-advance switch lives ONLY on the course home, so a
+// tap always re-renders there; there is no mid-session key for it, so no live-card blow-away risk.
+function toggleAutoAdvance() {
+  const on = !autoAdvanceOn();
+  setRaw(KEYS.studyAuto, on ? 'on' : '');
+  announce(`Auto-advance ${on ? 'on' : 'off'}`);
+  if (root.querySelector('.stu-auto-toggle')) renderCourseHome('.stu-auto-toggle');
+  return on;
+}
+// Called after a ★-scramble / MCQ sub-controller handles a pick: a correct answer has just revealed the
+// Hard/Good/Easy bar (a wrong one shows only Continue), so `.stu-good` present ⇒ correct ⇒ maybe arm.
+function maybeAutoAdvanceAfterPick() {
+  if (autoTimer) return;
+  const good = root.querySelector('.stu-good[data-act="grade"]');
+  if (shouldAutoAdvance({ enabled: autoAdvanceOn(), correct: !!good, gate: !!(card && card.gate) })) armAutoAdvance();
 }
 
 // ── Course home (the #/study landing) ────────────────────────────────────────
@@ -378,6 +414,7 @@ function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
   lastGraded = null;   // K2b: leaving the card view closes the undo window
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: no pending auto-advance can fire onto the course home
   const cs = continueState();
   const mstats = masteryStats(state);
   const examVal = state.settings.examLevel || '';
@@ -412,6 +449,9 @@ function renderCourseHome(focusSel) {
   // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
   const ttsBtn = canSpeak()
     ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}"${kbHint('A').ks}><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'}${kbHint('A').chip}</button>` : '';
+  // K5: auto-advance-on-correct opt-in (default off). A control, NOT a key — no kbHint (no bare key
+  // bound; the mid-session `A` is autoplay's). 進 = "advance/proceed" (ink-toned mark, inherits color).
+  const autoBtn = `<button type="button" class="stu-btn stu-btn-ghost stu-auto-toggle${autoAdvanceOn() ? ' is-on' : ''}" data-act="autoAdvToggle" aria-pressed="${autoAdvanceOn() ? 'true' : 'false'}"><span aria-hidden="true">進</span> Auto-advance ${autoAdvanceOn() ? 'on' : 'off'}</button>`;
   root.innerHTML = `
     <div class="stu-home stu-climb-home">
       <header class="stu-climb-head">
@@ -429,6 +469,7 @@ function renderCourseHome(focusSel) {
       <div class="stu-home-foot">
         ${buildBtn}
         ${ttsBtn}
+        ${autoBtn}
         <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart"><span aria-hidden="true">表</span> Progress</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart"><span aria-hidden="true">試</span> Mock exam</button>
         <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart"><span aria-hidden="true">◉</span> Placement</button>
@@ -757,6 +798,7 @@ function renderCard() {
   if (!s || s.pos >= s.queue.length) { renderSummary(); return; }
   cardCtl = null;
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: defensive — a new card must never inherit the prior card's pending timer
   card = buildCard();
   if (!card) {                       // unrenderable — advance without touching the schedule
     state = sessionRecord(state, { id: s.queue[s.pos], skipped: true });
@@ -838,6 +880,7 @@ function renderMcqCard() {
 
 // Correct pick → the learner's Hard/Good/Easy; wrong pick → Again (typedCorrect:false → grade 1).
 function onMcqResult({ pass, chosen }) {
+  cancelAutoAdvance();   // K5: this grade (manual or auto) is landing — no second auto-fire
   captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
@@ -858,6 +901,7 @@ function onMcqResult({ pass, chosen }) {
 
 // Correct order → the learner's Hard/Good/Easy; wrong order → Again (typedCorrect:false → grade 1).
 function onScrambleResult({ pass, chosen }) {
+  cancelAutoAdvance();   // K5: this grade (manual or auto) is landing — no second auto-fire
   captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
@@ -1087,6 +1131,8 @@ function reveal(next, opts = {}) {
   const sb = ja ? speakBtnHTML('', shortcutsEnabled() ? 'R' : '') : '';   // 'R' chip only while the R replay key is live (WCAG turn-off drops it)
   if (sb && fb) fb.insertAdjacentHTML('beforeend', sb);
   if (ja && autoplayOn()) speakExample(ja, root.querySelector('.stu-speak'));
+  // K5: a genuinely-correct cloze (not a close-accept, not a gate check) may auto-advance after a beat.
+  if (shouldAutoAdvance({ enabled: autoAdvanceOn(), correct: next === 'graded' && !card.closeAccepted, gate: !!card.gate })) armAutoAdvance();
 }
 
 function acceptClose() { if (phase === 'close') reveal('graded', { closeAccepted: true }); }
@@ -1128,6 +1174,7 @@ function undoAffordanceHTML(zLive = false) {
 
 function undoLast() {
   if (!lastGraded || !state.session) return;   // bounded to within-session — no undo once the summary ran
+  cancelAutoAdvance();   // K5: undo is a manual intervention — never let a pending auto-advance fire over it
   const lg = lastGraded;
   lastGraded = null;
   state = undoReview(lg.snapshot);
@@ -1156,6 +1203,7 @@ function undoLast() {
 // wrong path) forces Again regardless of g.
 function grade(g, { typedCorrect = true } = {}) {
   if (phase !== 'graded' && phase !== 'wrong') return;
+  cancelAutoAdvance();   // K5: this grade (manual tap/key or the auto-fire itself) is landing — clear any pending timer
   captureGrade();   // K2b: snapshot BEFORE review() so Z can revert this exact grade
   const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, hintTier: card.hintTier, chosen: g });
   const pass = eff > 1;
@@ -1180,6 +1228,7 @@ function renderSummary() {
   phase = 'summary';    // K2b: no stale grade/undo key resolves on the summary (session ends below)
   lastGraded = null;    // undo is bounded to within-session — the summary is past the window
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: never fire an auto-advance onto the summary screen
   const results = (state.session && state.session.results) || [];
   const graded = results.filter(r => !r.skipped);
   const n = graded.length;
@@ -1224,7 +1273,7 @@ function wireRoot() {
       if (b.tagName === 'SELECT') return;          // <select> handled by the change listener below
       if (b.dataset.act === 'undo') { undoLast(); return; }            // shell-level cross-card action — must beat the cardCtl hijack so ↩ Undo works on scramble/MCQ headers too
       if (activeFlow) { activeFlow.onAct(b.dataset.act, b); return; }   // a lesson/placement/test-out owns its buttons
-      if (cardCtl) { cardCtl.onAct(b.dataset.act, b); return; }         // a live ★-scramble card owns its tiles/slots/grade
+      if (cardCtl) { cardCtl.onAct(b.dataset.act, b); maybeAutoAdvanceAfterPick(); return; }   // a live ★-scramble / MCQ card owns its tiles/slots/grade; a correct pick may arm auto-advance (K5)
       act(b.dataset.act, b); return;
     }
     const tapR = e.target.closest('.stu-tap-r'); if (tapR) { primaryAction(); return; }
@@ -1256,7 +1305,7 @@ function wireRoot() {
     const enabled = shortcutsEnabled();
 
     if (activeFlow) { if (enabled) activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
-    if (cardCtl) { if (enabled) cardCtl.onKey(e); return; }         // a live ★-scramble / MCQ card owns its keys
+    if (cardCtl) { if (enabled) cardCtl.onKey(e); maybeAutoAdvanceAfterPick(); return; }   // a live ★-scramble / MCQ card owns its keys; a correct digit-pick may arm auto-advance (K5)
 
     // submit→continue debounce: one physical Enter/Space must not submit AND then skip past the
     // revealed result (key-repeat / IME double-fire). We preventDefault so the focused grade/Continue
@@ -1282,6 +1331,7 @@ function wireRoot() {
     if (e.detail?.route === 'study') { applyFuri(); return; }
     if (activeFlow && activeFlow.teardown) activeFlow.teardown();
     teardownGateTimer();   // don't leave the soft gate countdown ticking off-screen
+    cancelAutoAdvance();   // K5: navigating away kills any pending auto-advance (never fire off-screen)
   });
 }
 
@@ -1336,6 +1386,7 @@ function act(name, btn) {
     case 'undo': undoLast(); break;   // K2b: the header ↩ Undo affordance (tap/Tab parity for the Z key)
     case 'speak': { const ja = cardExampleJa(); if (ja) speakExample(ja, btn); break; }
     case 'ttsToggle': toggleTts(); break;
+    case 'autoAdvToggle': toggleAutoAdvance(); break;   // K5: auto-advance-on-correct opt-in
     case 'done': renderCourseHome(); break;
   }
 }

@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { parseISO, daysBetween, daysUntil, countdown, windowStatus, fmtShort } from '../docs/assets/lib/dates.js';
+import { addDaysISO, legStatus, focusDays } from '../docs/assets/lib/itinerary.js';
 import { computeAlerts, alertCount } from '../docs/assets/lib/notify.js';
 import { toICS, parseICS, gcalUrl } from '../docs/assets/lib/ics.js';
 import { parseEvent } from '../docs/assets/lib/nlevent.js';
@@ -3233,4 +3234,42 @@ test('exam: recordExam — pure append, bounded ring, initialises from a state w
   assert.equal(s.examLog.length, 100);
   assert.equal(s.examLog[0].date, 'd20');
   assert.equal(s.examLog[99].date, 'd119');
+});
+
+// ---- lib/itinerary.js — Hokkaido leg-window logic ------------------------------------------
+const ITIN = { days: [
+  { date: '2026-07-18' }, { date: '2026-07-19' }, { date: '2026-07-20' }, { date: '2026-07-21' },
+  { date: '2026-07-22' }, { date: '2026-07-23' }, { date: '2026-07-24' },
+] };
+
+test('addDaysISO shifts UTC-stably and tolerates junk', () => {
+  assert.equal(addDaysISO('2026-07-18', -3), '2026-07-15');
+  assert.equal(addDaysISO('2026-07-31', 1), '2026-08-01');
+  assert.equal(addDaysISO('nope', 1), 'nope');
+});
+
+test('legStatus hides before the lead-in and after the trip', () => {
+  assert.equal(legStatus(ITIN, '2026-07-14'), null);          // >3 days before start → hidden
+  assert.equal(legStatus(ITIN, '2026-07-25'), null);          // past the last day → hidden
+  assert.equal(legStatus(null, '2026-07-20'), null);          // no data → hidden
+  assert.equal(legStatus({ days: [] }, '2026-07-20'), null);
+});
+
+test('legStatus phases: lead-in / during / last', () => {
+  const before = legStatus(ITIN, '2026-07-16');               // within lead-in, before start
+  assert.equal(before.phase, 'before');
+  assert.equal(before.todayIdx, -1);
+  const during = legStatus(ITIN, '2026-07-20');
+  assert.equal(during.phase, 'during');
+  assert.equal(during.todayIdx, 2);
+  const last = legStatus(ITIN, '2026-07-24');
+  assert.equal(last.phase, 'last');
+  assert.equal(last.todayIdx, 6);
+});
+
+test('focusDays picks today+tomorrow, clamps at the ends', () => {
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-16')), [0]);       // lead-in → preview day 1
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-20')), [2, 3]);    // during → today + tomorrow
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-24')), [6]);       // last day → just today
+  assert.deepEqual(focusDays(null), []);
 });

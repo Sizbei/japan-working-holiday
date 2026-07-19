@@ -36,9 +36,20 @@ export function agendaHTML() {
       <span class="agenda-dot cat-${esc(catOf(e))}" aria-hidden="true"></span>
       <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
         ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
-        ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
+        ${e.bookBy ? bookByHTML(e.bookBy) : ''}</span>
       <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;
   }).join('')}</div>`;
+}
+
+// a booking deadline reads by urgency: OVERDUE (passed — book now) in red, due-soon (≤7d) emphasised,
+// otherwise a quiet reminder. A trip planner's whole point is not missing these.
+function bookByHTML(iso) {
+  const d = daysBetween(TODAY, iso);
+  const overdue = d !== null && d < 0;
+  const soon = d !== null && d >= 0 && d <= 7;
+  const cls = overdue ? ' overdue' : soon ? ' soon' : '';
+  const txt = overdue ? `book-by ${fmtShort(iso)} passed — book ASAP` : `book by ${fmtShort(iso)}`;
+  return `<span class="agenda-book${cls}">${overdue ? '⚠ ' : ''}${esc(txt)}</span>`;
 }
 
 const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

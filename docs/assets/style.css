@@ -793,6 +793,8 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 .agenda-title:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; border-radius:var(--r-xs); }
 .agenda-area,.agenda-book{ font-size:.74rem; color: var(--ink-soft); }
 .agenda-book{ color: var(--warn-ink); font-weight:700; }
+.agenda-book.overdue{ color: var(--red-ink); }   /* deadline already passed — book ASAP */
+.agenda-book.soon{ color: var(--warn-ink); }
 .agenda-cat{ font-size:.7rem; color: var(--ink-soft); }
 
 /* ---- Tracker ---- */

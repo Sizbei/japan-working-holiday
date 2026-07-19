@@ -111,6 +111,28 @@ export function monthHTML() {
   }
   for (const list of singlesByDay.values()) list.sort((a, b) => (a.time || '~').localeCompare(b.time || '~'));
 
+  // ---- lane assignment: a multi-day span keeps ONE vertical lane across every day it covers, so its
+  // bars line up into a continuous band instead of zig-zagging cell to cell. Greedy interval packing. ----
+  const spanLane = new Map();   // ev.id → lane index
+  {
+    const spans = [], seen = new Set();
+    for (const e of evs) {
+      if (isEvergreen(e) || !isMultiDay(e) || seen.has(e.id)) continue;
+      seen.add(e.id);
+      const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
+      const cs = s < rangeStart ? rangeStart : s, ce = en > rangeEnd ? rangeEnd : en;
+      if (cs > rangeEnd || ce < rangeStart) continue;
+      spans.push({ id: e.id, s: cs, en: ce });
+    }
+    spans.sort((a, b) => a.s.localeCompare(b.s) || a.en.localeCompare(b.en));
+    const laneEnd = [];   // laneEnd[l] = last day still covered in lane l
+    for (const sp of spans) {
+      let l = 0;
+      while (l < laneEnd.length && laneEnd[l] >= sp.s) l++;
+      laneEnd[l] = sp.en;
+      spanLane.set(sp.id, l);
+    }
+  }
   let cells = '', day = rangeStart, i = 0;
   while (day <= rangeEnd) {
     // a full-width month separator above the week containing each 1st (incl. the very first week)
@@ -127,33 +149,46 @@ export function monthHTML() {
     const tks = tasksOn(date);
     const bds = birthdaysOn(date);
     const hasBook = singles.some(e => e.bookBy);
-    // spans first (Notion stacks its bars above the day's own events), then timed singles, birthdays, tasks
-    const items = [...multis, ...singles.map(e => ({ ev: e })), ...bds.map(b => ({ bd: b })), ...tks.map(t => ({ tk: t }))];
+    const weekStart = i % 7 === 0;
+    // reserve leading rows up to the highest lane THIS day uses. A span's lane == its row index on every
+    // day it covers, so the bars line up into one continuous band. An empty lower lane takes a real
+    // single-day chip rather than a blank spacer, so reserved rows never evict real events from the cap;
+    // a spacer only survives when there's genuinely nothing to fill it.
+    const dayMaxLane = multis.reduce((mx, m) => Math.max(mx, spanLane.get(m.ev.id) ?? 0), -1);
+    const queue = [...singles.map(e => ({ ev: e })), ...bds.map(b => ({ bd: b })), ...tks.map(t => ({ tk: t }))];
+    const realTotal = multis.length + queue.length;
+    const laneRows = [];
+    for (let L = 0; L <= dayMaxLane; L++) {
+      const sp = multis.find(m => (spanLane.get(m.ev.id) ?? 0) === L);
+      laneRows.push(sp ? { span: sp } : (queue.shift() || { spacer: true }));
+    }
+    const rows = [...laneRows, ...queue];
     // "+N more" REPLACES the last row (owner: 4 rows per cell, the 4th IS the count when a day
     // overflows) — never a 5th row that compact's fixed row height clips into invisibility
-    const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
-    const weekStart = i % 7 === 0;
-    const chips = items.slice(0, shown).map(x => {
+    const shown = rows.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : rows.length;
+    const shownRows = rows.slice(0, shown);
+    const chips = shownRows.map(x => {
+      if (x.spacer) return '<span class="cal-chip cc-spacer" aria-hidden="true"></span>';
       if (x.tk) return taskChipHTML(x.tk);
       if (x.bd) return birthdayChipHTML(x.bd);
-      const e = x.ev;
-      // A multi-day span reads as ONE bar: the title shows on its start day and is re-labeled at each
-      // new week (Sunday) it covers; MID-week continuation days are a slim quiet connecting bar with no
-      // repeated title (that flooded the grid — "Makoto Guesthouse" stamped on every day).
-      if (x.cont && !weekStart) {
-        return `<button class="cal-chip cat-${esc(catOf(e))} cont cont-mid" data-ev="${esc(e.id)}" aria-label="${esc(e.title)} — continues" title="${esc(e.title)}"></button>`;
+      if (x.span) {
+        const m = x.span, e = m.ev;
+        // title on the start day, re-labeled at each week-start; MID-week days are an empty coloured bar,
+        // SAME height as a titled chip (so the lane aligns) — the span reads as one continuous band.
+        if (m.cont && !weekStart) {
+          return `<button class="cal-chip cat-${esc(catOf(e))} cont cont-mid" data-ev="${esc(e.id)}" aria-label="${esc(e.title)} — continues" title="${esc(e.title)}"></button>`;
+        }
+        // drop the redundant month when the span ends in its start month ("→ 28" not "→ Jul 28")
+        const rangeEndTxt = m.end ? (m.end.slice(0, 7) === date.slice(0, 7) ? '' + +m.end.slice(8, 10) : fmtShort(m.end)) : '';
+        const range = m.end && !m.cont ? `<span class="cc-range">→ ${esc(rangeEndTxt)}</span>` : '';
+        const cont = m.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
+        return `<button class="cal-chip cat-${esc(catOf(e))}${m.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
       }
-      // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the titles
-      // range end shows on the start chip only; drop the redundant month when the span ends in the same
-      // month it started ("→ 28" not "→ Jul 28") so the title keeps more room
-      const rangeEndTxt = x.end ? (x.end.slice(0, 7) === date.slice(0, 7) ? '' + +x.end.slice(8, 10) : fmtShort(x.end)) : '';
-      const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(rangeEndTxt)}</span>` : '';
-      const cont = x.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
-      const tm = x.end ? '' : fmt12(e.time);
+      const e = x.ev, tm = fmt12(e.time);   // single-day event
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${x.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span></button>`;
     }).join('');
-    const moreN = items.length - shown;
+    const moreN = realTotal - shownRows.filter(x => !x.spacer).length;
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
     const bk = hasBook ? `<span class="bk-dot" role="img" aria-label="has a booking deadline" title="has a booking deadline"></span>` : '';
     const nEv = singles.length + multis.length;

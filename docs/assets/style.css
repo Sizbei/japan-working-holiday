@@ -900,8 +900,8 @@ html.gated{ overflow: hidden; }
      Continuation (.cont) span chips yield the slot — spans sort first, so an 8-day stay
      would otherwise be the ONLY visible chip on all 8 days, hiding every daily event */
   .cal-chip{ font-size: var(--fs-2xs); padding: 1px 4px; height: auto; border-radius: 4px; }
-  .cal-cell .cal-chip.cont{ display:none; }
-  .cal-cell .cal-chip:not(.cont) ~ .cal-chip:not(.cont){ display:none; }
+  .cal-cell .cal-chip.cont, .cal-cell .cal-chip.cc-spacer{ display:none; }   /* spacers are desktop lane-padding; compact shows start-day chips only */
+  .cal-cell .cal-chip:not(.cont):not(.cc-spacer) ~ .cal-chip:not(.cont):not(.cc-spacer){ display:none; }
   .cal-date{ font-size:.74rem; }
 }
 
@@ -3117,15 +3117,12 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 /* continuation chips (mid-span days): quieter fill so daily one-offs pop — the span already
    announced itself (title + "→ end") on its start day */
 .cal-chip.cont{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 16%, var(--bg-elevated)); }
-/* mid-week continuation days render as a slim connecting bar (no repeated title): the span reads as one
-   continuous run instead of the same title stamped on every covered day. Title re-labels each week-start. */
-.cal-chip.cont-mid{
-  min-height: 7px;
-  padding: 0;
-  border-radius: 100px;
-  margin: 2px 0;
-  background: color-mix(in srgb, var(--chip-cat, var(--line)) 40%, var(--bg-elevated));
-}
+/* mid-week continuation days: an empty coloured bar the SAME height as a titled chip (no repeated title).
+   Because each span holds a fixed lane, the bars align into one continuous band across the days it covers. */
+.cal-chip.cont-mid{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 34%, var(--bg-elevated)); }
+/* a lane a span occupies on OTHER days of the week but not this one — invisible, holds the row so the
+   band and the single-day chips below stay aligned. Not interactive. */
+.cal-chip.cc-spacer{ background: none; border: none; box-shadow: none; visibility: hidden; pointer-events: none; }
 /* per-category: set --chip-cat so the chip fill, legend swatch and ongoing pills pick up the colour */
 :is(.cal-chip,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
 :is(.cal-chip,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }

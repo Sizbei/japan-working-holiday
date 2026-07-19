@@ -50,6 +50,18 @@ export const BINDINGS = [
   //    focused Continue button activates natively — resolveKey returns null for Enter/Space on a
   //    button to avoid the double-advance).
   { id: 'advance', keys: ['Enter', ' '], phase: 'wrong', surface: 'study', label: 'Continue', control: '[data-act="again"]', kind: 'nav' },
+
+  // ── Study audio (K2a). R replays the current card's example sentence — POST-ANSWER ONLY (the
+  //    sentence contains the answer, so it is scoped to the reveal phases 'graded'/'wrong' where the
+  //    音 button renders, never pre-answer/'input'/'close'). It is a bare letter, so rule 3 of
+  //    resolveKey already blocks it while the kana input is focused. R needs one entry per reveal
+  //    phase (ids stay unique — the K1 registry invariant); both route to the same speak handler.
+  //    A toggles autoplay and is scoped to 'idle' (the course home) — the ONLY view where the visible
+  //    .stu-tts-toggle control exists, so the key keeps keyboard/touch parity (Principle 5). Mid-
+  //    session A is intentionally unbound (a keyboard action must not fire where it has no control).
+  { id: 'speak-graded', keys: ['r', 'R'], phase: 'graded', surface: 'study', label: 'Replay audio', control: '.stu-speak', kind: 'media' },
+  { id: 'speak-wrong', keys: ['r', 'R'], phase: 'wrong', surface: 'study', label: 'Replay audio', control: '.stu-speak', kind: 'media' },
+  { id: 'autoplay', keys: ['a', 'A'], phase: 'idle', surface: 'study', label: 'Toggle autoplay', control: '.stu-tts-toggle', kind: 'media' },
 ];
 
 // The pure resolver. Takes the already-computed active-element KIND (no DOM) so it is unit-testable.

@@ -154,7 +154,17 @@ function applyFuri() {
 // autoplay is a string-sentinel preference (default OFF) — speak the example on REVEAL only,
 // never during an unanswered input/pick/place phase (that would leak the answer, like the peg).
 function autoplayOn() { return getRaw(KEYS.studyTts, '') === 'on'; }
-function toggleTts() { setRaw(KEYS.studyTts, autoplayOn() ? '' : 'on'); renderCourseHome('.stu-tts-toggle'); }
+// Session-safe (K2a): the `A` key can flip autoplay mid-session, where re-rendering the course home
+// would blow away the live card. So only re-render when the course-home toggle is actually present
+// (its click path — keeps the visible button's label/aria-pressed in sync); otherwise just persist +
+// announce via #stuLive. Announced in both branches for a consistent SR cue.
+function toggleTts() {
+  const on = !autoplayOn();
+  setRaw(KEYS.studyTts, on ? 'on' : '');
+  announce(`Autoplay ${on ? 'on' : 'off'}`);
+  if (root.querySelector('.stu-tts-toggle')) renderCourseHome('.stu-tts-toggle');
+  return on;
+}
 // the ja token array of the live card's shown example (for the 🔊 control + autoplay)
 function cardExampleJa() {
   const ex = card && card.point && Array.isArray(card.point.examples) && card.point.examples[card.exIdx];
@@ -396,7 +406,7 @@ function renderCourseHome(focusSel) {
     ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart"><span aria-hidden="true">作</span> Build a sentence</button>` : '';
   // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
   const ttsBtn = canSpeak()
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}"><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}" aria-keyshortcuts="A"><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'} <kbd aria-hidden="true">A</kbd></button>` : '';
   root.innerHTML = `
     <div class="stu-home stu-climb-home">
       <header class="stu-climb-head">
@@ -1057,7 +1067,7 @@ function reveal(next, opts = {}) {
   // 🔊 on the now-revealed full sentence (post-answer only — never in the input phase). Autoplay
   // (opt-in, default off) reads it aloud immediately; the button lets the learner replay it.
   const ja = cardExampleJa();
-  const sb = ja ? speakBtnHTML() : '';
+  const sb = ja ? speakBtnHTML('', 'R') : '';   // 'R' chip: the R replay key is wired for this shell reveal (graded/wrong)
   if (sb && fb) fb.insertAdjacentHTML('beforeend', sb);
   if (ja && autoplayOn()) speakExample(ja, root.querySelector('.stu-speak'));
 }
@@ -1216,6 +1226,10 @@ function runAction(id) {
     case 'grade-4': grade(4); break;
     case 'grade-default': grade(3); break;                       // Enter in graded, no control focused → Good
     case 'advance': grade(1, { typedCorrect: false }); break;   // wrong phase: Enter/Space = Continue
+    case 'speak-graded': case 'speak-wrong': {                  // R: replay (post-answer only; no-op if no audio)
+      const ja = cardExampleJa(); if (ja) speakExample(ja, root.querySelector('.stu-speak')); break;
+    }
+    case 'autoplay': toggleTts(); break;                        // A: toggle autoplay (session-safe; announces)
   }
 }
 

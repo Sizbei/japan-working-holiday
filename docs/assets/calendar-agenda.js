@@ -1,6 +1,6 @@
 'use strict';
 import { $$, esc } from './lib/dom.js';
-import { MONTHS, fmtShort } from './lib/dates.js';
+import { fmtShort, daysBetween, parseISO } from './lib/dates.js';
 import { gcalUrl } from './lib/ics.js';
 import { allEvents, visible, isEvergreen, allTasks, catOf, gotoTask, openSidePanel, TODAY, hiddenCats } from './calendar.js';
 
@@ -17,25 +17,48 @@ export function agendaHTML() {
       ${hidden ? '<p class="empty-sub">Some categories are filtered out — tap a greyed legend chip above to show them.</p>' : ''}
     </div>`;
   }
-  let last = '';
+  // group by DAY: one header per date (weekday + date + a relative "Today / Tomorrow / in N days"
+  // cue), so same-day events sit together and the temporal distance is legible at a glance. The
+  // per-row date pill is replaced by a small category-colour dot (the day header carries the date).
+  let lastDay = '';
   return `<div class="agenda">${upcoming.map(x => {
-    const mk = x.date.slice(0, 7);
-    const head = mk !== last ? (last = mk, `<div class="agenda-month">${MONTHS[+x.date.slice(5, 7) - 1]} ${x.date.slice(0, 4)}</div>`) : '';
+    const day = x.date.slice(0, 10);
+    const head = day !== lastDay ? (lastDay = day, dayHeadHTML(day)) : '';
     if (x.tk) {
       const t = x.tk;
       return head + `<div class="agenda-row agenda-task" data-task="${esc(t.taskId)}">
-        <span class="agenda-date cat-task">${esc(fmtShort(t.date))}</span>
+        <span class="agenda-dot cat-task" aria-hidden="true"></span>
         <span class="agenda-body"><button type="button" class="agenda-title" data-task="${esc(t.taskId)}">☑ ${esc(t.title)}</button>
           <span class="agenda-area">checklist task</span></span></div>`;
     }
     const e = x.ev;
     return head + `<div class="agenda-row" data-ev="${esc(e.id)}">
-      <span class="agenda-date cat-${esc(catOf(e))}">${esc(fmtShort(e.date))}</span>
+      <span class="agenda-dot cat-${esc(catOf(e))}" aria-hidden="true"></span>
       <span class="agenda-body"><button type="button" class="agenda-title" data-ev="${esc(e.id)}">${esc(e.title)}</button>
         ${e.area ? `<span class="agenda-area">${esc(e.area)}</span>` : ''}
         ${e.bookBy ? `<span class="agenda-book">book by ${esc(fmtShort(e.bookBy))}</span>` : ''}</span>
       <a class="agenda-gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener noreferrer" title="Add to Google Calendar" data-stop>+G</a></div>`;
   }).join('')}</div>`;
+}
+
+const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+function relLabel(iso) {
+  const d = daysBetween(TODAY, iso);
+  if (d === null) return '';
+  if (d < 0) return 'Now';                 // an ongoing multi-day stay that started before today
+  if (d === 0) return 'Today';
+  if (d === 1) return 'Tomorrow';
+  if (d <= 30) return `in ${d} days`;
+  return '';
+}
+function dayHeadHTML(iso) {
+  const dt = parseISO(iso);
+  const wd = dt ? WD[dt.getUTCDay()] : '';
+  const rel = relLabel(iso);
+  const isToday = daysBetween(TODAY, iso) === 0;
+  return `<div class="agenda-day${isToday ? ' is-today' : ''}">
+    <span class="agenda-day-date">${wd ? esc(wd) + ' · ' : ''}${esc(fmtShort(iso))}</span>
+    ${rel ? `<span class="agenda-day-rel">${esc(rel)}</span>` : ''}</div>`;
 }
 export function wireAgenda() {
   // the .agenda-title button is the keyboard trigger (native Enter/Space); its click bubbles to the

@@ -778,6 +778,7 @@ export function rescheduleEvent(id, day) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
   if (isRecurring(ev)) return;                 // a recurring chip is an occurrence, not a movable instance — dragging it would silently rewrite the whole series' anchor. Edit the event to change its date/cadence.
+  if (ev.endDate && ev.endDate.slice(0, 10) !== ev.date.slice(0, 10)) return;   // multi-day events must NEVER move via drag — only their bars render them and bars aren't drag targets, but enforce it here too so no future selector regression can teleport a whole stay. Move/resize via the editor or the week grips.
   if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
   if (ev.source === 'user') {
     saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span

@@ -3039,7 +3039,6 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 
 /* multi-day chip range hint — "→ Jul 15" on the span's START chip only, right-aligned so the
    title always wins the width fight; continuation days show a bare faint "‹" instead */
-.cc-range{ font-family: var(--mono); font-size:.9em; color: var(--ink-soft); margin-left:auto; padding-left:.25rem; white-space:nowrap; flex:none; }
 .cc-cont{ font-family: var(--mono); font-size:.9em; color: var(--ink-soft); flex:none; }
 /* dim in-month days that have already passed (out-of-month .out styling wins where they overlap) */
 /* owner: all day cells the SAME color (no past/weekend background tints — Notion-uniform);
@@ -3739,6 +3738,16 @@ body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; border:
    stretch into an empty 88px band at every month boundary */
 html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-auto-rows: auto; }
 .cal-grid.cal-endless .cal-cell{ min-height: 134px; }   /* rows resolve to this floor, content never grows them — 96px clipped the 4th row (owner: 4 rows per cell, the 4th is "+N more"); 134 = date row + 4 chip rows + gaps + padding */
+/* ---- Notion-tight month: hairline separators (not gapped rounded boxes), compact cells, and multi-day
+   events as ONE connected bar. body-prefixed to out-specify the min-height/border/gap defaults above. ---- */
+body[data-route="calendar"] .cal-grid.cal-endless{ gap: 1px; background: var(--line); }               /* 1px grid lines between days */
+body[data-route="calendar"] .cal-grid.cal-endless .cal-cell{ min-height: 98px; border: none; border-radius: 0; padding: 2px 0 3px; gap: 1px; }
+body[data-route="calendar"] .cal-grid.cal-endless .cal-row{ padding: 0 5px; }                          /* only the date number keeps a horizontal inset */
+body[data-route="calendar"] .cal-grid.cal-endless .cal-more{ padding: 0 6px; }
+body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ padding: 1px 6px; min-height: 15px; border-radius: 3px; gap: 4px; }   /* chips reach the cell edges so multi-day bars touch across the 1px line */
+/* flatten the corners on the side a multi-day bar continues → the day-segments read as one continuous bar */
+.cal-grid.cal-endless .cal-chip.seg-l{ border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.cal-grid.cal-endless .cal-chip.seg-r{ border-top-right-radius: 0; border-bottom-right-radius: 0; }
 /* separators are invisible SENTINELS (owner: Notion-style, no banner row): the sticky label +
    the inline "July 1" day label carry the month; the elements remain in the DOM because the
    topline detector and the ‹ › scroll targets are keyed off .cal-msep[data-ym] */
@@ -3765,7 +3774,7 @@ html[data-compact="on"] body[data-route="calendar"] .cal-grid.cal-endless{ grid-
    deliberate compromise, noted in the loop backlog.) */
 @media (hover: none){
   .cal-grid.cal-endless .cal-cell .cal-date{ padding: 6px 8px; }   /* .cal-cell bumps specificity over the later hover-pill padding rule */
-  .cal-grid.cal-endless .cal-chip{ min-height: 24px; }
+  body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ min-height: 24px; }   /* must out-specify the Notion-tight 15px chip rule so touch targets stay ≥24px (WCAG 2.5.8) */
 }
 /* normal mode is now viewport-locked too (the sidebar sizing is owned by the shared
    body[data-route="calendar"] rules — overflow-y:auto; max-height:100% inside .cal-layout, which

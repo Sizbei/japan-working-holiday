@@ -1,5 +1,5 @@
 'use strict';
-import { $, $$, esc } from './lib/dom.js';
+import { $, $$, esc, stripEmoji } from './lib/dom.js';
 import { daysBetween, fmtShort, parseISO } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
 import { recurOccurrences, isRecurring } from './lib/recur.js';
@@ -176,19 +176,23 @@ export function monthHTML() {
       if (x.tk) return taskChipHTML(x.tk);
       if (x.bd) return birthdayChipHTML(x.bd);
       if (x.span) {
-        const m = x.span, e = m.ev;
-        // EVERY covered day shows the title (a "‹" marks a continuation) so no day reads as a blank bar;
-        // the stable lane keeps them aligned into one continuous, labelled band. End date shows on the
-        // start chip only, with the redundant month dropped when it ends in its start month ("→ 28").
-        const rangeEndTxt = m.end ? (m.end.slice(0, 7) === date.slice(0, 7) ? '' + +m.end.slice(8, 10) : fmtShort(m.end)) : '';
-        const range = m.end && !m.cont ? `<span class="cc-range">→ ${esc(rangeEndTxt)}</span>` : '';
+        const m = x.span, e = m.ev, ttl = esc(stripEmoji(e.title));
+        // Notion-style: ONE continuous bar. The title shows once per week-segment (start day, or the
+        // Sunday it wraps onto); interior days are the same bar, empty, with flat corners on the sides
+        // that continue — so a multi-day stay reads as a single connected bar, not repeated chips.
+        const weekStart = i % 7 === 0, weekEnd = i % 7 === 6;
+        const segStart = !m.cont || weekStart;
+        const segCls = (m.cont && !weekStart ? ' seg-l' : '') + (m.end > date && !weekEnd ? ' seg-r' : '');
+        if (!segStart) {
+          return `<button class="cal-chip cat-${esc(catOf(e))} cont${segCls}" data-ev="${esc(e.id)}" aria-label="${ttl} — continues" title="${esc(e.title)}"></button>`;
+        }
         const cont = m.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
-        return `<button class="cal-chip cat-${esc(catOf(e))}${m.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+        return `<button class="cal-chip cat-${esc(catOf(e))}${m.cont ? ' cont' : ''}${segCls}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}<span class="cc-t">${ttl}</span></button>`;
       }
       const e = x.ev, tm = fmt12(e.time);   // single-day event
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
       const rec = isRecurring(e) ? '<span class="cc-recur" aria-hidden="true">↻</span>' : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${isRecurring(e) ? ' recurring' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}${isRecurring(e) ? ' (repeats ' + esc(e.recur) + ')' : ''}">${time}${rec}<span class="cc-t">${esc(e.title)}</span></button>`;
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${isRecurring(e) ? ' recurring' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}${isRecurring(e) ? ' (repeats ' + esc(e.recur) + ')' : ''}">${time}${rec}<span class="cc-t">${esc(stripEmoji(e.title))}</span></button>`;
     }).join('');
     const moreN = realTotal - shownRows.filter(x => !x.spacer).length;
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';

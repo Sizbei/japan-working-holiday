@@ -96,7 +96,7 @@ function examController(ctx, passages) {
     root.innerHTML = `
       <div class="stu-mock stu-mock-picker">
         <div class="stu-mock-head">
-          <h3 class="stu-mock-h">🎓 Mock exam — grammar section</h3>
+          <h3 class="stu-mock-h"><span aria-hidden="true">試</span> Mock exam — grammar section</h3>
           <p class="stu-note">A timed, feedback-free simulation of the JLPT 文字・語彙・文法 grammar items. Pick a level to begin.</p>
         </div>
         <div class="stu-mock-picks">${cards}</div>
@@ -449,12 +449,12 @@ function examController(ctx, passages) {
       return `<div class="stu-mock-review-row">
         <span class="stu-mock-review-n">問 ${esc(String(i + 1))}</span>
         <span class="stu-mock-review-pat" lang="ja">${esc(q.pattern || '')}</span>
-        <button type="button" class="stu-speak" data-act="examSpeak" data-i="${esc(String(i))}" aria-label="Play audio for question ${esc(String(i + 1))}" title="Play audio">🔊</button>
+        <button type="button" class="stu-speak" data-act="examSpeak" data-i="${esc(String(i))}" aria-label="Play audio for question ${esc(String(i + 1))}" title="Play audio">音</button>
       </div>`;
     }).join('');
     if (!rows) return '';
     return `<section class="stu-mock-sec stu-mock-review"><h4 class="stu-mock-sec-h">Review — hear each sentence</h4>
-      <p class="stu-note">Post-exam audio. Tap 🔊 to hear the grammar spoken in its sentence.</p>${rows}</section>`;
+      <p class="stu-note">Post-exam audio. Tap 音 to hear the grammar spoken in its sentence.</p>${rows}</section>`;
   }
   function speakItem(i, btn) {
     const q = exam.items[i];

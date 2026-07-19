@@ -59,7 +59,7 @@ export function gateHeaderHTML(passes) {
   const pips = Array.from({ length: GATE_TARGET }, (_, k) =>
     `<span class="stu-gate-pip${k < done ? ' is-done' : ''}" aria-hidden="true"></span>`).join('');
   return `<div class="stu-gate-head">
-    <span class="stu-gate-ic" aria-hidden="true">🎯</span>
+    <span class="stu-gate-ic" aria-hidden="true">◉</span>
     <span class="stu-gate-label">Mastery check — <b>${esc(String(done))}/${esc(String(GATE_TARGET))}</b></span>
     <span class="stu-gate-pips" role="img" aria-label="${esc(String(done))} of ${esc(String(GATE_TARGET))} passes">${pips}</span>
     <span class="stu-gate-timer-slot" id="stuGateTimer"></span>
@@ -109,14 +109,14 @@ export function mountGateTimer(host, opts = {}) {
 export function gateFeedback(point, newP, pass, announce) {
   const pat = (point && point.pattern) || '';
   if (stageOf(newP) === 'mastered') {
-    celebrate(`Mastered — ${pat} 🎯`);
+    celebrate(`Mastered — ${pat} ✦`);
     if (announce) announce(`Gate complete. ${pat} is mastered.`);
     return true;
   }
   if (!pass) {
     const demoted = stageOf(newP) !== 'deep';   // a high-stability point stays Deep after the halving
     const where = demoted ? 'drops to Mature; ' : '';
-    gateToast(`🎯 Missed — <b lang="ja">${esc(pat)}</b> ${where}the gate restarts.`);
+    gateToast(`◉ Missed — <b lang="ja">${esc(pat)}</b> ${where}the gate restarts.`);
     if (announce) announce(`Missed. ${pat}${demoted ? ' drops back to Mature and' : ','} the mastery gate restarts.`);
   }
   return false;

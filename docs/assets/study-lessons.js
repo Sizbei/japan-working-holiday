@@ -240,7 +240,7 @@ export function startLessons(ctx, ids) {
       <div class="stu-lesson stu-rule-card">
         ${stepRailHTML(1)}
         <div class="stu-lesson-meta"><span class="stu-lesson-tag" lang="ja">新しい文法 · point ${esc(String(i + 1))} of ${esc(String(queue.length))}</span><span class="stu-lesson-lvl">${esc(p.level || '')}</span></div>
-        <p class="stu-pat" lang="ja">${esc(p.pattern || '')}${canSpeak() ? ` <button type="button" class="stu-speak stu-rule-speak" data-act="ruleSpeak" aria-label="Play the pattern">🔊</button>` : ''}</p>
+        <p class="stu-pat" lang="ja">${esc(p.pattern || '')}${canSpeak() ? ` <button type="button" class="stu-speak stu-rule-speak" data-act="ruleSpeak" aria-label="Play the pattern">音</button>` : ''}</p>
         ${p.reading ? `<p class="stu-pat-read" lang="ja">${esc(p.reading)}</p>` : ''}
         ${p.meaning ? `<p class="stu-gloss">${esc(p.meaning)}</p>` : ''}
         ${formulaHTML(p.connection, p.pattern)}
@@ -327,7 +327,7 @@ export function startLessons(ctx, ids) {
     sub = null;
     root.innerHTML = `
       <div class="stu-summary">
-        <div class="stu-sum-art" aria-hidden="true">🌱</div>
+        <div class="stu-sum-art" aria-hidden="true">✦</div>
         <h3 class="stu-sum-h">${esc(String(queue.length))} new ${queue.length === 1 ? 'point' : 'points'} planted</h3>
         <p class="stu-note">They'll come back as reviews on their own schedule. Keep the streak going.</p>
         <button type="button" class="stu-btn stu-btn-primary" data-act="done">Done</button>
@@ -426,7 +426,7 @@ export function startPlacement(ctx, levels) {
   function finishAll() {
     root.innerHTML = `
       <div class="stu-summary">
-        <div class="stu-sum-art" aria-hidden="true">🗺️</div>
+        <div class="stu-sum-art" aria-hidden="true">◉</div>
         <h3 class="stu-sum-h">Placement done</h3>
         <p class="stu-note">Everything you already knew is banked; the rest is queued as lessons. One session a day from here.</p>
         <button type="button" class="stu-btn stu-btn-primary" data-act="done">Done</button>
@@ -523,7 +523,7 @@ export function startTestOuts(ctx, ids, { host, onDone } = {}) {
     sub = null;
     container.innerHTML = `
       <div class="stu-summary">
-        <div class="stu-sum-art" aria-hidden="true">⚡</div>
+        <div class="stu-sum-art" aria-hidden="true">✦</div>
         <h3 class="stu-sum-h">${esc(String(passedCount))}/${esc(String(queue.length))} tested out</h3>
         <p class="stu-note">Passed points are banked at two weeks out. Any you missed come back as lessons.</p>
         <button type="button" class="stu-btn stu-btn-primary" data-act="toDone">Continue ⏎</button>
@@ -621,7 +621,7 @@ export function startCheckpoint(ctx, unit) {
          <button type="button" class="stu-btn stu-btn-primary" data-act="cpRetake">Retake ⏎</button>`;
     root.innerHTML = `
       <div class="stu-summary">
-        <div class="stu-sum-art" aria-hidden="true">${passed ? '✓★' : '🎯'}</div>
+        <div class="stu-sum-art" aria-hidden="true">${passed ? '✓★' : '◉'}</div>
         <h3 class="stu-sum-h">${esc(String(correctN))}/${esc(String(TOTAL))} — ${passed ? 'checkpoint passed' : 'not yet'}</h3>
         <p class="stu-note">${passed ? `${esc(unit.title)} is gold. On to the next.` : `Need ${PASS} to pass. Give it another go when you're ready.`}</p>
         ${missedHTML}

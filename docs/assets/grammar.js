@@ -52,7 +52,7 @@ function refreshStudyStruggle() {
 // the per-card header marks (✓ studied / ◆ shaky / 👻 gym-struggling) — shared by first render and
 // the in-place refresh so a mark toggle or a gym update never drops the others.
 function marksHTML(id) {
-  return `${prog.done.includes(id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(id) ? '<span class="g-hd-shaky">◆</span>' : ''}${studyStruggle.has(id) ? '<span class="g-hd-gym" title="Struggling in the Grammar Gym — a ghost or leech">👻</span>' : ''}`;
+  return `${prog.done.includes(id) ? '<span class="g-hd-done">✓</span>' : ''}${prog.shaky.includes(id) ? '<span class="g-hd-shaky">◆</span>' : ''}${studyStruggle.has(id) ? '<span class="g-hd-gym" title="Struggling in The Grammar Almanac — a ghost or leech">幽</span>' : ''}`;
 }
 // live, non-destructive reflection: update the 👻 markers on already-rendered cards without a
 // rebuild (a rebuild would collapse whatever card the reader has open).
@@ -73,7 +73,7 @@ export function mountGrammar() {
         <span class="g-tab-ind" id="gTabInd" aria-hidden="true"></span>
         ${LEVELS.map(l => `<button type="button" class="g-tab" data-level="${l}" aria-pressed="${l === state.level}">${l}<span class="g-count" data-count="${l}"></span></button>`).join('')}
       </div>
-      <a class="g-gym" href="#/study" title="Train your marked points in the Grammar Gym">🏋 Gym</a>
+      <a class="g-gym" href="#/study" title="Train your marked points in The Grammar Almanac"><span class="stu-mark-shu" aria-hidden="true">帖</span> Almanac</a>
       <button type="button" class="g-furi" id="gFuri"></button>
       <button type="button" class="g-shaky-f" id="gShakyF" aria-pressed="false" title="Show only ◆ shaky points">◆ <span id="gShakyN">0</span></button>
       <button type="button" class="g-export" id="gExport" disabled title="Export every ◆ point as an Anki TSV file">⬇ ◆→Anki</button>
@@ -374,7 +374,7 @@ function exampleHTML(ex) {
     : `<span class="gtok${tok.p ? ' gtok-p' : ''}" lang="ja" data-t="${esc(tok.t)}" data-r="${esc(readingOf(tok.f))}" data-g="${esc(tok.g || '')}">${rubyHTML(tok.f, tok.t)}</span>`).join('');
   // 🔊 reads the DATA's kana (exampleReading) so homographs sound right; reference view — nothing to leak.
   const spk = canSpeak()
-    ? `<button type="button" class="g-ex-speak" data-read="${esc(exampleReading(ex.ja))}" aria-label="Play audio" title="Play audio">🔊</button>` : '';
+    ? `<button type="button" class="g-ex-speak" data-read="${esc(exampleReading(ex.ja))}" aria-label="Play audio" title="Play audio">音</button>` : '';
   return `<div class="g-ex"><p class="g-ja" lang="ja" data-no-swipe tabindex="0">${ja}</p>${spk}<p class="g-en">${esc(ex.en || '')}</p></div>`;
 }
 

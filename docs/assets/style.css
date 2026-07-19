@@ -2536,7 +2536,7 @@ a.prg-lbl{ text-decoration: none; }
 .stw-top{ display: flex; align-items: center; gap: var(--s4); flex-wrap: wrap; }
 .stw-streak{ display: grid; grid-template-columns: auto auto auto; align-items: center; gap: .1rem .5rem;
   padding: .4rem .7rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-elevated); }
-.stw-flame{ grid-row: span 2; font-size: 1.6rem; line-height: 1; animation: stw-flicker 2.2s var(--ease-out) infinite; }
+.stw-flame{ grid-row: span 2; font-size: 1.6rem; line-height: 1; color: var(--gold-ink); animation: stw-flicker 2.2s var(--ease-out) infinite; }
 .stw-streak.is-risk .stw-flame{ filter: grayscale(.7); animation: none; }
 .stw-streak-n{ font-family: var(--mono); font-size: var(--fs-xl); font-weight: 700; color: var(--ink); line-height: 1; }
 .stw-streak-l{ font-family: var(--mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wide);
@@ -4338,6 +4338,13 @@ html[data-reduce-motion="on"] .stu-prog-bar i{ transition:none; }
 .stu-climb-mastered{ font-size:.85rem; color: var(--ink-faint); margin:.2rem 0 0; }
 .stu-climb-streak{ font-family: var(--serif); font-weight:600; font-size:1.3rem; color: var(--gold-ink); text-align:right; line-height:1; margin:0; }
 .stu-climb-streak span{ display:block; font-family: var(--sans); font-weight:400; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color: var(--ink-faint); margin-top:.25rem; }
+/* almanac masthead kicker: serif-jp seal + mono English, echoing the seasonal-almanac headers */
+.stu-climb-kick{ margin:0 0 .3rem; font-family: var(--mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tracking-kicker); color: var(--shu); }
+.stu-climb-kick .stu-kick-jp{ font-family: var(--serif-jp); font-size: 1.05rem; text-transform: none; letter-spacing: .12em; margin-right: .3rem; }
+/* ink-toned monochrome feature marks (replaced the old multicolor emoji — inherit color like the ✦ seal) */
+.stu-mark-shu{ color: var(--shu); }
+.stu-mark-gold{ color: var(--gold-ink); }
+[data-theme="dark"] .stu-mark-shu, [data-theme="dark"] .g-hd-gym{ color: color-mix(in srgb, var(--shu) 55%, var(--ink)); }  /* lift vermilion to AA on dark surfaces */
 
 /* the ascent rail */
 .stu-climb{ position:relative; margin:.4rem 0 .2rem; padding-left:2.3rem; }
@@ -4562,7 +4569,7 @@ html[data-reduce-motion="on"] .stu-toast{ animation:none; }
 .stu-leech-sub-h{ margin:0 0 .4rem; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color: var(--ink-soft); }
 @media (max-width: 640px){ .stu-leech-actions .stu-btn{ min-height:40px; } }
 /* grammar-page 👻 reflection marker (shares the header marks slot) */
-.g-hd-gym{ margin-left:.15rem; }
+.g-hd-gym{ margin-left:.15rem; color: var(--shu); }
 
 /* ===== R10 — the Mastered gate goes live: gate-mode cards, soft timer, sentence-build ===== */
 /* a Deep-point review is a mastery check: a gold-accented header + a soft ~20s countdown */

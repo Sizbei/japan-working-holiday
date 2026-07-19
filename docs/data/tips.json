@@ -2910,13 +2910,17 @@
   },
   {
    "id": "ev26-manga-cafe-return",
-   "title": "🛏️ Tokyo night (Jul 24) — manga café (or book a quiet capsule)",
+   "title": "🛏️ Tokyo night (Jul 24) — 快活CLUB 秋葉原駅前店 (manga café)",
    "date": "2026-07-24",
    "category": "personal",
    "area": "Tokyo — Shinagawa (3pm checkup) → Akihabara",
    "confidence": "medium",
-   "sources": [],
-   "bookingNotes": "Land NRT ~12:10 → 3pm LASIK follow-up in Shinagawa → one night before Base Inn Tabata starts the 25th. Plan: manga café. Do you need to book? A net café is walk-in — but Fri the 24th is a busy night and the quiet 完全個室 (locked private rooms) sell out first, so phone-reserve one or check in early (~18:00–21:00, before the last-train crowd). Quiet-leaning near Akihabara: 秋葉原和堂 (Nagomi, by Suehirocho — calmest) or 快活CLUB 末広町駅前店 (all private rooms); avoid カスタマカフェ上野 (noisy). Post-LASIK your eyes will be light-sensitive/screen-averse, so a dark, quiet capsule with a real bed is the better rest — 秋葉原 BAY HOTEL, Smart Stay SHIZUKU 上野, or a Nippori single (~¥3,300–4,100). Those DO need booking and you're ~5 days out — grab one now if you want it."
+   "sources": [
+    "https://www.kaikatsu.jp/shop/detail/20315.html"
+   ],
+   "bookingNotes": "Land NRT ~12:10 → 3pm LASIK follow-up → one night before Base Inn Tabata starts the 25th. Manga café for the night: 快活CLUB 秋葉原駅前店 — 外神田1-13-3, above AOKI (reception 4F), ~1 min from JR Akihabara (Electric Town exit) and right by your home base. 鍵付完全個室 (locked private rooms) with flat sleeping mats + free showers; tel 03-5289-3288. Route from the clinic: JR Keihin-Tōhoku/Yamanote direct to Akihabara — ~13 min from Shinagawa (0 transfers), or ~6 min if the appointment is actually in Yurakucho (heads-up: the '品川近視/Shinagawa LASIK' brand's Tokyo clinic is in Yurakucho, not Shinagawa — check your booking). Walk-in, but Fri night the private rooms go first — reserve or check in ~18:00–21:00. NB: 秋葉原和堂/Nagomi closed in 2023, don't route there.",
+   "stayAddress": "Sotokanda 1-13-3, Chiyoda-ku, Tokyo (AOKI building, reception 4F)",
+   "stayAddressJa": "東京都千代田区外神田1-13-3 AOKI秋葉原店ビル4F"
   },
   {
    "id": "ev-jlpt-2026-dec",
@@ -11961,17 +11965,17 @@
     "dow": "Fri",
     "title": "Sapporo → Tokyo (depart)",
     "base": "→ Tokyo",
-    "stay": "Manga café for the night in Akihabara (or book a quiet capsule) — Base Inn Tabata starts the 25th",
+    "stay": "快活CLUB 秋葉原駅前店 (manga café, locked private room) — Base Inn Tabata starts the 25th",
     "move": "Sapporo → New Chitose (CTS) → Narita (NRT) → Shinagawa → Akihabara",
     "schedule": [
      { "t": "~07:30", "what": "Check out; JR Rapid Airport Sapporo Stn → New Chitose (~37 min, ¥1,150, every ~15 min). Aim to be airside ~2 hr before departure." },
      { "t": "10:30", "what": "Jetstar CTS → NRT (arr 12:10, 1h40m). Booking ID 1744421190." },
      { "t": "~13:00", "what": "Narita → Shinagawa. Fastest is the N'EX (Narita Express) direct to Shinagawa ~78 min.", "note": "Tight for a 15:00 appointment — clear immigration/bags fast and grab the first N'EX (~hourly); reserve a seat. If the connection looks risky, ask the clinic about a slightly later slot." },
      { "t": "15:00", "what": "LASIK follow-up appointment (Shinagawa clinic)." },
-     { "t": "evening", "what": "→ Akihabara; manga café for the night (or a quiet capsule).", "note": "Net cafés are walk-in, but Fri night the quiet 完全個室 (locked rooms) go first — reserve or check in by ~18:00–21:00. Quiet-leaning near Akihabara: 秋葉原和堂 (Nagomi, by Suehirocho) or 快活CLUB 末広町駅前店 (all private rooms); avoid カスタマカフェ上野. For real post-LASIK rest, a capsule (秋葉原 BAY HOTEL / Smart Stay SHIZUKU 上野, ~¥3,300–4,100) is quieter but needs booking now." }
+     { "t": "evening", "what": "→ Akihabara; manga café for the night — 快活CLUB 秋葉原駅前店 (外神田1-13-3, above AOKI, reception 4F; ~1 min from JR Akihabara Electric Town exit).", "note": "鍵付完全個室 (locked private room) with flat sleeping mats + free showers; tel 03-5289-3288. From the clinic it's a direct JR Keihin-Tōhoku/Yamanote ride to Akihabara — ~13 min from Shinagawa (~6 min if the appt is actually Yurakucho), 0 transfers. Walk-in, but reserve or arrive ~18:00–21:00 so a private room isn't gone. Base Inn Tabata starts tomorrow." }
     ],
     "highlights": ["Last-chance garlic: Biei Senka counter at New Chitose (domestic terminal, 2F Dōsanko market)"],
-    "notes": ["End of the Hokkaido leg (Jul 15–24). Base Inn Tabata covers Jul 25–31 — the 24th night is the one open slot; the manga café is the no-booking fallback, a quiet capsule the better-rest option (book soon).", "The NRT→Shinagawa→3pm connection is tight — pre-book an N'EX seat."],
+    "notes": ["End of the Hokkaido leg (Jul 15–24). Base Inn Tabata covers Jul 25–31; tonight's manga café (快活CLUB 秋葉原駅前店) is the one open slot.", "The NRT→Shinagawa→3pm connection is tight — pre-book an N'EX seat."],
     "cost": "≈ ¥1,150 airport train + flight (paid)"
    }
   ]

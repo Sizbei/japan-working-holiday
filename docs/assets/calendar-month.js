@@ -132,12 +132,18 @@ export function monthHTML() {
     // "+N more" REPLACES the last row (owner: 4 rows per cell, the 4th IS the count when a day
     // overflows) — never a 5th row that compact's fixed row height clips into invisibility
     const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
+    const weekStart = i % 7 === 0;
     const chips = items.slice(0, shown).map(x => {
       if (x.tk) return taskChipHTML(x.tk);
       if (x.bd) return birthdayChipHTML(x.bd);
       const e = x.ev;
-      // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the
-      // titles; continuation days carry just a faint "‹" (the quieter .cont fill says the rest)
+      // A multi-day span reads as ONE bar: the title shows on its start day and is re-labeled at each
+      // new week (Sunday) it covers; MID-week continuation days are a slim quiet connecting bar with no
+      // repeated title (that flooded the grid — "Makoto Guesthouse" stamped on every day).
+      if (x.cont && !weekStart) {
+        return `<button class="cal-chip cat-${esc(catOf(e))} cont cont-mid" data-ev="${esc(e.id)}" aria-label="${esc(e.title)} — continues" title="${esc(e.title)}"></button>`;
+      }
+      // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the titles
       const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(fmtShort(x.end))}</span>` : '';
       const cont = x.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
       const tm = x.end ? '' : fmt12(e.time);

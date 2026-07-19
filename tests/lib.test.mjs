@@ -3324,3 +3324,38 @@ test('resolveKey (K2a): A toggles autoplay ONLY on the course home (idle) where 
   assert.equal(resolveKey({ key: 'a', phase: 'idle', targetKind: 'other', enabled: false }), null);
   assert.equal(resolveKey({ key: 'r', phase: 'graded', targetKind: 'other', enabled: false }), null);
 });
+
+import { recurOccurrences, isRecurring } from '../docs/assets/lib/recur.js';
+test('recur: a non-recurring event passes through as one span (multi-day preserved)', () => {
+  const e = { date: '2026-07-20', endDate: '2026-07-28' };
+  assert.equal(isRecurring(e), false);
+  assert.deepEqual(recurOccurrences(e, '2026-07-01', '2026-08-31'), [{ date: '2026-07-20', endDate: '2026-07-28' }]);
+});
+test('recur: yearly repeats the month-day each year within the window, never before the anchor', () => {
+  const e = { date: '2026-08-08', recur: 'yearly' };
+  const occ = recurOccurrences(e, '2025-01-01', '2029-12-31').map(o => o.date);
+  assert.deepEqual(occ, ['2026-08-08', '2027-08-08', '2028-08-08', '2029-08-08']);   // no 2025 (before anchor)
+  assert.equal(recurOccurrences(e, '2026-08-08', '2026-08-08').length, 1);           // matches its own day
+  assert.equal(recurOccurrences(e, '2026-08-09', '2026-12-31').length, 0);           // not on a non-anniversary day
+});
+test('recur: yearly Feb-29 anchor clamps to Feb-28 in common years', () => {
+  const e = { date: '2028-02-29', recur: 'yearly' };
+  const occ = recurOccurrences(e, '2028-01-01', '2030-12-31').map(o => o.date);
+  assert.deepEqual(occ, ['2028-02-29', '2029-02-28', '2030-02-28']);
+});
+test('recur: monthly clamps Jan-31 to short months and stays in window', () => {
+  const e = { date: '2026-01-31', recur: 'monthly' };
+  const occ = recurOccurrences(e, '2026-01-01', '2026-04-30').map(o => o.date);
+  assert.deepEqual(occ, ['2026-01-31', '2026-02-28', '2026-03-31', '2026-04-30']);
+});
+test('recur: weekly steps every 7 days and fast-forwards into a later window', () => {
+  const e = { date: '2026-07-01', recur: 'weekly' };
+  assert.deepEqual(recurOccurrences(e, '2026-07-01', '2026-07-22').map(o => o.date), ['2026-07-01', '2026-07-08', '2026-07-15', '2026-07-22']);
+  const far = recurOccurrences(e, '2026-08-01', '2026-08-14').map(o => o.date);
+  assert.deepEqual(far, ['2026-08-05', '2026-08-12']);   // aligned to the weekly cadence, not the window edge
+});
+test('recur: occurrences are single-day (no endDate) and reversed windows yield nothing', () => {
+  const e = { date: '2026-08-08', recur: 'yearly' };
+  assert.equal(recurOccurrences(e, '2026-01-01', '2027-12-31').every(o => o.endDate === ''), true);
+  assert.deepEqual(recurOccurrences(e, '2027-01-01', '2026-01-01'), []);
+});

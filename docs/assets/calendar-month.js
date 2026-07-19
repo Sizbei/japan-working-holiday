@@ -2,6 +2,7 @@
 import { $, $$, esc } from './lib/dom.js';
 import { daysBetween, fmtShort, parseISO } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
 import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, birthdaysOn, birthdayChipHTML, gotoPerson, rescheduleEvent, goAgenda, goWeek } from './calendar.js';
@@ -93,20 +94,23 @@ export function monthHTML() {
   const singlesByDay = new Map();
   for (const e of evs) {
     if (isEvergreen(e)) continue;
-    // parseISO-guard the end like eventsOn does — a corrupted endDate ('2026-13-05') would otherwise
-    // pass the lexical comparisons and flood a chip onto every day through the end of the range
-    const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
-    if (!isMultiDay(e)) {
-      if (!singlesByDay.has(s)) singlesByDay.set(s, []);
-      singlesByDay.get(s).push(e);
-      continue;
-    }
-    let d = s < rangeStart ? rangeStart : s;
-    const stop = en > rangeEnd ? rangeEnd : en;
-    while (d <= stop) {
-      if (!spansByDay.has(d)) spansByDay.set(d, []);
-      spansByDay.get(d).push({ ev: e, cont: d > s, end: en });
-      d = addDaysISO(d, 1);
+    // recurring events expand into single-day occurrences; a plain event passes through as one span
+    for (const occ of recurOccurrences(e, rangeStart, rangeEnd)) {
+      // parseISO-guard the end like eventsOn does — a corrupted endDate ('2026-13-05') would otherwise
+      // pass the lexical comparisons and flood a chip onto every day through the end of the range
+      const s = occ.date, en = (occ.endDate && parseISO(occ.endDate)) ? occ.endDate.slice(0, 10) : s;
+      if (en <= s) {
+        if (!singlesByDay.has(s)) singlesByDay.set(s, []);
+        singlesByDay.get(s).push(e);
+        continue;
+      }
+      let d = s < rangeStart ? rangeStart : s;
+      const stop = en > rangeEnd ? rangeEnd : en;
+      while (d <= stop) {
+        if (!spansByDay.has(d)) spansByDay.set(d, []);
+        spansByDay.get(d).push({ ev: e, cont: d > s, end: en });
+        d = addDaysISO(d, 1);
+      }
     }
   }
   for (const list of singlesByDay.values()) list.sort((a, b) => (a.time || '~').localeCompare(b.time || '~'));
@@ -117,7 +121,7 @@ export function monthHTML() {
   {
     const spans = [], seen = new Set();
     for (const e of evs) {
-      if (isEvergreen(e) || !isMultiDay(e) || seen.has(e.id)) continue;
+      if (isEvergreen(e) || !isMultiDay(e) || isRecurring(e) || seen.has(e.id)) continue;   // recurring = single-day occurrences, never a span
       seen.add(e.id);
       const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
       const cs = s < rangeStart ? rangeStart : s, ce = en > rangeEnd ? rangeEnd : en;
@@ -186,7 +190,8 @@ export function monthHTML() {
       }
       const e = x.ev, tm = fmt12(e.time);   // single-day event
       const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${time}<span class="cc-t">${esc(e.title)}</span></button>`;
+      const rec = isRecurring(e) ? '<span class="cc-recur" aria-hidden="true">↻</span>' : '';
+      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${isRecurring(e) ? ' recurring' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}${isRecurring(e) ? ' (repeats ' + esc(e.recur) + ')' : ''}">${time}${rec}<span class="cc-t">${esc(e.title)}</span></button>`;
     }).join('');
     const moreN = realTotal - shownRows.filter(x => !x.spacer).length;
     const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
@@ -429,8 +434,9 @@ export function wireReschedule() {
   if (!view) return;
   makeMovable(view, {
     // .cont excluded: rescheduleEvent snaps the START to the drop day, so a continuation chip as a
-    // drag handle would teleport the whole span (and a >6px wobble released on its own day shifts it)
-    itemSelector: '.cal-chip[data-ev]:not(.cont)', label: 'event',
+    // drag handle would teleport the whole span (and a >6px wobble released on its own day shifts it).
+    // .recurring excluded: a recurring chip is one occurrence — dragging it would move the whole series.
+    itemSelector: '.cal-chip[data-ev]:not(.cont):not(.recurring)', label: 'event',
     canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,

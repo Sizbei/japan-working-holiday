@@ -3464,6 +3464,28 @@ test('K3 drift: declarative (routed:false) bindings are marked and never mistake
   for (const b of declarative) assert.notEqual(b.surface, 'study');
 });
 
+// ── K4a: mock-exam keyboard bindings (declarative, handler-owned by study-exam.js) ────
+test('K4a: the mock-exam bindings are declarative, documented, and in their own sheet group', () => {
+  const exam = BINDINGS.filter(b => b.surface === 'exam');
+  assert.ok(exam.length >= 6, 'the mock exam surface carries its bindings (flag/prev/next/pick/palette/submit/exit)');
+  // handler-owned (study-exam.js onKey + a run-container listener), never resolveKey-DISPATCHED: the
+  // exam runs as activeFlow, so study.js returns before the resolver — phase 'exam' is never passed to
+  // resolveKey/runAction. These entries exist only so the ? sheet documents them from one registry.
+  for (const b of exam) {
+    assert.equal(b.routed, false, `${b.id} is handler-owned (routed:false)`);
+    assert.notEqual(b.surface, 'study', `${b.id} is NOT the resolveKey-routed study surface`);
+  }
+  // the K3 sheet documents every one of them, in exactly one "In a mock exam" group
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const group = model.find(g => g.surface === 'exam');
+  assert.ok(group && /mock exam/i.test(group.title), 'the exam bindings render under a mock-exam sheet group');
+  const covered = new Set(group.rows.flatMap(r => r.ids));
+  for (const b of exam) assert.ok(covered.has(b.id), `${b.id} appears in the exam sheet group`);
+  // the flag key F and the ←/→ nav keys are surfaced
+  assert.ok(exam.some(b => b.keys.includes('f') && b.keys.includes('F')), 'F flags a question');
+  assert.ok(exam.some(b => b.keys.includes('ArrowLeft')) && exam.some(b => b.keys.includes('ArrowRight')), '←/→ move between questions');
+});
+
 test('K3: keyGlyph maps raw event keys to readable chips, passes combos through', () => {
   assert.equal(keyGlyph('Enter'), '⏎');
   assert.equal(keyGlyph(' '), 'Space');

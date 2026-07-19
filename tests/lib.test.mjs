@@ -3528,6 +3528,40 @@ test('K3: keyGlyph maps raw event keys to readable chips, passes combos through'
   assert.equal(keyGlyph('⌃Home'), '⌃Home');   // Ctrl combo display string passes through
 });
 
+// ── K5: palette route→key map + auto-advance eligibility ──────────────────────
+import { routeKeys } from '../docs/assets/lib/palette.js';
+import { shouldAutoAdvance } from '../docs/assets/lib/shortcuts.js';
+
+test('routeKeys: first 9 visible routes get 1–9, emergency gets 0, rest none', () => {
+  const vr = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'eats', 'people', 'checklist', 'budget', 'rooms', 'emergency'];
+  const m = routeKeys(vr);
+  assert.equal(m.dashboard, '1');
+  assert.equal(m.calendar, '2');
+  assert.equal(m.budget, '9');       // 9th visible route
+  assert.equal(m.rooms, undefined);  // 10th — past the digit range, no key
+  assert.equal(m.emergency, '0');    // always the 0 route (not in the first 9 here)
+  assert.equal(m.study, undefined);  // hidden route — no direct key → no chip
+});
+
+test('routeKeys: emergency keeps its own digit when it lands in the first 9 (no 0 override)', () => {
+  const vr = ['dashboard', 'emergency', 'calendar'];
+  const m = routeKeys(vr);
+  assert.equal(m.emergency, '2');    // earned a digit → not overwritten by 0
+});
+
+test('routeKeys: empty / non-array input → just the emergency 0 fallback', () => {
+  assert.deepEqual(routeKeys([]), { emergency: '0' });
+  assert.deepEqual(routeKeys(null), { emergency: '0' });
+});
+
+test('shouldAutoAdvance: fires only on a correct answer, opt-in on, non-gate', () => {
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: true, gate: false }), true);
+  assert.equal(shouldAutoAdvance({ enabled: false, correct: true, gate: false }), false);  // opt-in off
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: false, gate: false }), false);  // wrong answer never advances
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: true, gate: true }), false);    // gate cards excluded
+  assert.equal(shouldAutoAdvance(), false);                                                // defaults → off
+});
+
 import { stripEmoji } from '../docs/assets/lib/dom.js';
 test('stripEmoji removes pictographs/flags but keeps arrows, kana, punctuation', () => {
   assert.equal(stripEmoji('🎌 teamLab Planets'), 'teamLab Planets');

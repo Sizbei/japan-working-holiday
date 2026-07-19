@@ -69,6 +69,7 @@ export const KEYS = {
   grammar: 'jwh-grammar-v1',         // JLPT grammar reference: { v, done[], shaky[] } (✓ studied / ◆ shaky per point id)
   study: 'jwh-study-v1',             // grammar gym SRS engine: { v, points, session, units, log, examLog, settings } (lib/study.js)
   studyTts: 'jwh-study-tts-v1',      // grammar gym autoplay TTS opt-in ('on'/'') — string sentinel, getRaw/setRaw ONLY (default OFF)
+  studyAuto: 'jwh-study-auto-v1',    // grammar gym auto-advance-on-correct opt-in ('on'/'') — string sentinel, getRaw/setRaw ONLY (default OFF, K5)
   kbd: 'jwh-kbd-v1',                 // keyboard shortcuts on/off (WCAG 2.1.4) — string sentinel, getRaw/setRaw ONLY ('' = ON default, 'off' = disabled)
   kbdNudge: 'jwh-kbd-nudge-v1',      // one-time "press ? for shortcuts" nudge seen-flag ('seen'/'') — string sentinel, getRaw/setRaw ONLY (K3)
   mapDark: 'jwh-mapdark-v1',         // dark map tiles opt-in ('on'/'') — CSS filter, dark theme only

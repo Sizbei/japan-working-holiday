@@ -196,6 +196,7 @@ function openGuide() {
         <li><b>Get around</b> — tap the nav, <b>swipe</b> left/right between pages on a phone, or press <b>1–8</b> and <b>[ ]</b> on a keyboard (<b>?</b> shows every shortcut).</li>
         <li><b>Quick actions</b> — <b>long-press</b> a calendar day, an Explore card, or a checklist item for a pop-up menu. Tap <b>★</b> on a restaurant to add it to your map (Tabetai).</li>
         <li><b>Rearrange</b> — drag the ⠿ handle to reorder lists; drag an event chip to another day to reschedule.</li>
+        <li><b>Keyboard</b> — press <b>?</b> for the full list; <b>⌘K</b> / <b>/</b> opens the command palette (it reaches the grammar pages too). In the grammar trainer, type your answer then <b>⏎</b>, grade with <b>2 / 3 / 4</b>, <b>Z</b> undoes; its foot has an <b>Auto-advance</b> switch that moves on for you after a correct answer. Turn every single-key shortcut off under <b>Keyboard shortcuts</b> below.</li>
         <li><b>Your data</b> — everything saves on <i>this device only</i>. Use <b>⬇ Back up my data</b> (bottom of the page) before switching phones.</li>
         <li><b>Languages</b> — the <b>あ</b> button toggles a Japanese chrome + hover-dictionary; <b>🌙</b> switches dark mode.</li>
         <li><b>Anki sync</b> — works when you run this dashboard locally (http://localhost) with Anki + the AnkiConnect add-on open, and add that origin to AnkiConnect's webCorsOriginList (per-origin, all-or-nothing — only add origins you trust). On the live site, Export/Import fall back to a file.</li>

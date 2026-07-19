@@ -167,6 +167,15 @@ export function resolveKey({ key, phase, targetKind = 'other', composing = false
   return b.id;
 }
 
+// Pure: whether a just-revealed session answer should auto-advance (K5 opt-in mode). Fires ONLY on a
+// genuinely CORRECT answer, only while the opt-in is on, and NEVER on a gate/mastery-check card (its
+// deliberate ~20s pacing is preserved — the plan's documented exclusion). The caller arms a short
+// timer that activates the default Good grade through the SAME grade path a manual tap would take;
+// this decides only "arm or not", so it stays DOM-free and unit-testable.
+export function shouldAutoAdvance({ enabled = false, correct = false, gate = false } = {}) {
+  return !!enabled && !!correct && !gate;
+}
+
 // The shared WCAG 2.1.4 (Level A) turn-off gate. Default ON: an empty/unset sentinel means on,
 // only the literal 'off' disables. Every bare-single-char listener consults this so ONE toggle in
 // Guide & Settings silences the whole single-key surface (native Tab/Enter/Space controls stay).

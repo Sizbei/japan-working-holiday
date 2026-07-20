@@ -899,11 +899,9 @@ html.gated{ overflow: hidden; }
   .cal-cell{ gap: 1px; }
   /* show one legible chip + a "+N" count, not illegible bars; the density meter
      and ticket glyph carry the rest, and tapping the day opens the full list.
-     Continuation (.cont) span chips yield the slot — spans sort first, so an 8-day stay
-     would otherwise be the ONLY visible chip on all 8 days, hiding every daily event */
+     (Multi-day events are .cal-bar in the week's lane layer, never chips, so they don't compete.) */
   .cal-chip{ font-size: var(--fs-2xs); padding: 1px 4px; height: auto; border-radius: 4px; }
-  .cal-cell .cal-chip.cont, .cal-cell .cal-chip.cc-spacer{ display:none; }   /* spacers are desktop lane-padding; compact shows start-day chips only */
-  .cal-cell .cal-chip:not(.cont):not(.cc-spacer) ~ .cal-chip:not(.cont):not(.cc-spacer){ display:none; }
+  .cal-cell .cal-chip ~ .cal-chip{ display:none; }
   .cal-date{ font-size:.74rem; }
 }
 
@@ -3138,12 +3136,6 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
   width: 100%;
   text-align: left;
 }
-/* continuation chips (mid-span days): quieter fill so daily one-offs pop — the span already
-   announced itself (title + "→ end") on its start day */
-.cal-chip.cont{ background: color-mix(in srgb, var(--chip-cat, var(--line)) 16%, var(--bg-elevated)); }
-/* a lane a span occupies on OTHER days of the week but not this one — invisible, holds the row so the
-   band and the single-day chips below stay aligned. Not interactive. */
-.cal-chip.cc-spacer{ background: none; border: none; box-shadow: none; visibility: hidden; pointer-events: none; }
 /* per-category: set --chip-cat so the chip fill, legend swatch and ongoing pills pick up the colour */
 :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-festival   { --chip-cat: var(--c-festival); }
 :is(.cal-chip,.cal-bar,.cal-opill,.calrow).cat-fireworks  { --chip-cat: var(--c-fireworks); }

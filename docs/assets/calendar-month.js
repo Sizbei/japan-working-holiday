@@ -406,10 +406,9 @@ export function wireReschedule() {
   const view = $('#calView');
   if (!view) return;
   makeMovable(view, {
-    // .cont excluded: rescheduleEvent snaps the START to the drop day, so a continuation chip as a
-    // drag handle would teleport the whole span (and a >6px wobble released on its own day shifts it).
     // .recurring excluded: a recurring chip is one occurrence — dragging it would move the whole series.
-    itemSelector: '.cal-chip[data-ev]:not(.cont):not(.recurring)', label: 'event',
+    // Multi-day events are .cal-bar (never .cal-chip), so they can't match; rescheduleEvent hard-guards them too.
+    itemSelector: '.cal-chip[data-ev]:not(.recurring)', label: 'event',
     canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,

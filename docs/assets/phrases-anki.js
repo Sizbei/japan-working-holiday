@@ -11,7 +11,8 @@
 
 import { $, esc } from './lib/dom.js';
 import { KEYS, get, set, del, getRaw, setRaw } from './lib/store.js';
-import { confirmModal, askText, openDialog } from './lib/modal.js';
+import { confirmModal, askText, openDialog, showModal } from './lib/modal.js';
+import { dndToast } from './dnd.js';
 import { speak, canSpeak } from './speak.js';
 import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
@@ -212,6 +213,7 @@ function wireDeckKeys() {
   _kbdWired = true;
   document.addEventListener('keydown', (e) => {
     if (!stream || !root || root.offsetParent === null) return;   // deck not mounted / route hidden
+    if (document.querySelector('[aria-modal="true"]')) return;    // a dialog is open — keys stay in it
     if (stream.deck.view === 'skim') return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;               // leave Cmd/Ctrl/Alt combos (palette, undo…)
     if (!shortcutsEnabled() && e.key.length === 1) return;         // WCAG 2.1.4: single-char deck keys off (arrows still drive the deck)
@@ -448,12 +450,14 @@ function showPreview(res) {
         cards = res.cards.map(({ srcIdx, ...c }) => c);
       }
     } else cards = res.cards.map(({ srcIdx, ...c }) => c);   // srcIdx is import plumbing — never persisted
-    if (!addDeck(id, name, { cards, pos: {}, shaky: [], shuffle: false, seed: 1, view: 'stream', autoplay: false })) {
+    if (addDeck(id, name, { cards, pos: {}, shaky: [], shuffle: false, seed: 1, view: 'stream', autoplay: false })) {
+      dndToast('Deck saved on this device');
+    } else {
       // localStorage full — roll back this deck's data + media so nothing is orphaned, and tell the owner to prune
       del(deckKey(id));
       mediaDeletePrefix(id + '/').catch(() => {});
       if (btn) { btn.disabled = false; btn.textContent = `Save deck — ${res.cards.length} cards`; }
-      showErr('Not enough storage to save this deck. Remove an old deck from “Your decks” below and try again.');
+      showErr('Not enough storage to save this deck. Remove an old deck from “Deck library” below and try again.');
       return;
     }
     DATA = null;
@@ -471,7 +475,7 @@ function showPreview(res) {
 
 // ───────────────────────────── deck library / history ─────────────────────────────
 
-// the "Your decks" row — every saved deck as a switch chip (active highlighted) + a ✕ to delete, plus
+// the "Deck library" row — every saved deck as a switch chip (active highlighted) + a ✕ to delete, plus
 // an Import affordance. Shown above the card so switching decks / seeing history is one tap away.
 function deckBarHTML() {
   const { active, decks } = loadLib();
@@ -486,8 +490,8 @@ function deckBarHTML() {
       <button type="button" class="ank-deck-x" data-del-deck="${esc(d.id)}" aria-label="Delete deck ${esc(d.name)}" title="Delete deck">✕</button>
     </span>`;
   }).join('');
-  return `<div class="ank-decks" role="group" aria-label="Your decks">
-      <span class="ank-decks-lbl">Your decks</span>${chips}
+  return `<div class="ank-decks" role="group" aria-label="Deck library">
+      <span class="ank-decks-lbl">Deck library — saved on this device</span>${chips}
       <button type="button" class="ank-deck-add" id="ankAddDeck" aria-label="Import another deck">＋ Import</button>
     </div>`;
 }
@@ -532,6 +536,28 @@ function stripHTML(deck, chunk, mode) {
   return `${chips}
     <button type="button" class="ank-chip ank-chip-pile${mode === 'pile' ? ' active' : ''}" data-pile="1" aria-pressed="${mode === 'pile' ? 'true' : 'false'}" ${n ? '' : 'disabled'}>◆ Shaky (<span id="ankPileN">${esc(String(n))}</span>)</button>`;
 }
+// the "?" help sheet (static trusted markup — no dynamic strings). The Keys list MIRRORS what
+// wireDeckKeys actually binds — update BOTH together.
+const HELP_HTML = `
+  <h4>Keys</h4>
+  <ul>
+    <li><b>Space</b> — flip to the answer, then advance</li>
+    <li><b>→</b> / <b>.</b> — next · <b>←</b> / <b>,</b> — back</li>
+    <li><b>↓</b> — reveal the hidden side</li>
+    <li><b>S</b> — flag shaky · <b>E</b> — edit this card</li>
+    <li><b>P</b> — play audio · <b>N</b> — hiragana · <b>M</b> — English</li>
+  </ul>
+  <h4>Touch</h4>
+  <ul>
+    <li>Tap the card — flip to the answer, then next</li>
+    <li>Tap zones <b>‹</b> <b>›</b> on the card edges — back / next · swipe works too</li>
+    <li>The bottom bar has Back · audio · shaky · Next</li>
+  </ul>
+  <h4>Decks</h4>
+  <p>Every imported deck is saved on this device automatically — manage them under
+  “Deck library”. “Back up my data” (Checklist page) includes your decks;
+  audio/images return when you re-import the .apkg.</p>`;
+
 function barHTML(deck) {
   return `
     <div class="ank-bar">
@@ -552,6 +578,7 @@ function barHTML(deck) {
           <button type="button" class="ank-mini${deck.shuffle ? ' is-on' : ''}" id="ankShuffle" aria-pressed="${deck.shuffle ? 'true' : 'false'}" title="Shuffle the card order"><span class="ank-i" aria-hidden="true">⇄</span> Shuffle</button>
           <button type="button" class="ank-mini${deck.autoplay ? ' is-on' : ''}" id="ankAuto" aria-pressed="${deck.autoplay ? 'true' : 'false'}" title="Auto-play audio on each card"><span class="ank-i" aria-hidden="true">🔊</span> Audio</button>
           <button type="button" class="ank-mini" id="ankAutoAdv" title="Auto-advance through cards (tap to cycle the delay)"><span class="ank-i" aria-hidden="true">⏱</span> Auto-advance</button>
+          <button type="button" class="ank-mini" id="ankHelp" aria-label="Deck help" title="How this deck works">?</button>
         </span>
       </div>
       <div class="ank-search-wrap">
@@ -590,7 +617,6 @@ function renderStream(deck) {
       <span class="ank-tap ank-tap-r" id="ankTapNext" aria-hidden="true"><span class="ank-tap-hint">›</span></span>
     </div>
     <div class="ank-prog" id="ankProg"></div>
-    <p class="ank-hint">space / → next · ← back · <b>S</b> flag shaky · <b>E</b> edit · tap the card = next</p>
     <div class="ank-controls" role="group" aria-label="Card controls">
       <button type="button" class="ank-ctl ank-ctl-prev" id="ankPrevBtn">◀ Back</button>
       <button type="button" class="ank-ctl ank-ctl-icon" id="ankAudioBtn" aria-label="Play audio">🔊</button>
@@ -641,8 +667,7 @@ function renderSkim(deck) {
 
   root.innerHTML = `${barHTML(deck)}${deckBarHTML()}
     <div class="ank-strip" id="ankStrip">${stripHTML(deck, chunk, mode)}</div>
-    <div class="ank-skim" id="ankSkim" role="group" aria-label="Skim — tap any row to flag it shaky">${rows}</div>
-    <p class="ank-hint">tap / Enter / <b>S</b> flags a row · ↑↓ move · switch to Stream to study</p>`;
+    <div class="ank-skim" id="ankSkim" role="group" aria-label="Skim — tap any row to flag it shaky">${rows}</div>`;
 
   wireCommon();
   wireSkim();
@@ -753,6 +778,20 @@ function sentenceHTML(s, w) {
   return esc(s);
 }
 
+// pre-load the 700-weight JP glyph subsets for the current + next 3 cards so a fresh card never
+// paints in a fallback weight and swaps (the owner-visible "bold flash"). Fire-and-forget, deduped.
+const _warmed = new Set();   // keyed by the TEXT (card ids are positional 'a0…' — they collide across decks)
+function warmFonts() {
+  if (!stream || !document.fonts?.load) return;
+  for (let k = 0; k <= 3; k++) {
+    const c = stream.order[stream.idx + k]; if (!c) continue;
+    const t = `${c.w || ''}${c.r || ''}${c.s || ''}`;
+    if (!t || _warmed.has(t)) continue;
+    _warmed.add(t);
+    document.fonts.load('700 1em "Zen Kaku Gothic New"', t).catch(() => {});
+  }
+}
+
 function paintCard() {
   const { deck, order, idx, chunk, mode } = stream;
   const card = order[idx];
@@ -808,6 +847,7 @@ function paintCard() {
   }
   announce(`${card.w}${card.r ? ', ' + card.r : ''}${card.m ? ', ' + card.m : ''}${isShaky ? ', flagged shaky' : ''}`);
   scheduleAuto();   // (re)start the auto-advance countdown for this card (no-op when auto is off)
+  warmFonts();
 }
 
 function persistPos() {
@@ -917,6 +957,7 @@ function wireCommon() {
   $('#ankHira')?.addEventListener('click', flipHira);
   $('#ankEn')?.addEventListener('click', flipEn);
   $('#ankEx')?.addEventListener('click', flipEx);
+  $('#ankHelp')?.addEventListener('click', () => showModal('Deck help', HELP_HTML));
   $('#ankAutoAdv')?.addEventListener('click', () => {
     const cur = getRaw(KEYS.ankiAutoAdv, '');
     const nextSecs = AUTO_STEPS[(AUTO_STEPS.indexOf(AUTO_STEPS.includes(cur) ? cur : '') + 1) % AUTO_STEPS.length];

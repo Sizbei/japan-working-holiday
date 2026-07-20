@@ -21,6 +21,7 @@ import { summary, fmtYen } from './lib/budget.js';
 import { progress } from './lib/packing.js';
 import { sekkiFor } from './lib/sekki.js';
 import { migrate as migrateStudy, buildQueue, streakInfo, weeklyInfo, masteryStats } from './lib/study.js';
+import { legStatus, focusDays } from './lib/itinerary.js';
 
 let DATA = null, TODAY = nowISO();
 
@@ -256,12 +257,21 @@ function renderPanel(alerts) {
   // swipe-to-dismiss (pointer; tap still navigates, vertical scroll preserved)
   const reduce = prefersReducedMotion();   // honours the app's ⚙ toggle as well as the OS setting
   $$('#notifPanel .np-item').forEach(li => {
-    let sx = 0, dx = 0, dragging = false;
-    li.addEventListener('pointerdown', e => { sx = e.clientX; dx = 0; dragging = true; li.setPointerCapture?.(e.pointerId); });
+    let sx = 0, dx = 0, dragging = false, captured = false;
+    li.addEventListener('pointerdown', e => {
+      if (e.target.closest('.np-x')) return;   // pressing ✕ is a dismiss click, never a swipe — don't hijack it
+      sx = e.clientX; dx = 0; dragging = true; captured = false;
+    });
     li.addEventListener('pointermove', e => {
       if (!dragging) return;
       dx = e.clientX - sx;
-      if (Math.abs(dx) > 6) { e.preventDefault(); if (!reduce) { li.style.transform = `translateX(${dx}px)`; li.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 180)); } }
+      if (Math.abs(dx) > 6) {
+        // capture ONLY once a real drag starts — capturing on pointerdown retargets the ✕'s click
+        // to the <li>, so tapping ✕ never fires its dismiss handler (the reported bug)
+        if (!captured) { li.setPointerCapture?.(e.pointerId); captured = true; }
+        e.preventDefault();
+        if (!reduce) { li.style.transform = `translateX(${dx}px)`; li.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 180)); }
+      }
     });
     const end = () => {
       if (!dragging) return; dragging = false;
@@ -282,12 +292,57 @@ function renderPanel(alerts) {
 // ---- home: promoted "needs me" cards + demoted teasers ----
 function renderWidgets(alerts) {
   renderToday();
+  renderHokkaido();
   renderWeek();
   renderSpend();
   fill('#wDeadlines', alerts.filter(a => a.kind === 'deadline' || a.kind === 'task' || a.kind === 'book'), 6);
   renderProgress();
   renderStudy();
   renderTeasers();
+}
+
+// ---- 北海道 Hokkaido week — the baked `itinerary` day-by-day, spotlit during the trip -----------
+// "Add this page to the main page for the next couple of days": the widget SELF-HIDES outside the
+// trip window (legStatus → null), and while travelling opens today + tomorrow to their full
+// hour-by-hour while the other days collapse to a tap-to-expand <details>. tips.json's `itinerary`
+// is the single source of truth for the schedule (the calendar events carry only summaries). Native
+// <details> means no JS animation, so reduce-motion is a non-issue. Every dynamic string via esc().
+function hokDayHTML(d, i, todayIdx, open) {
+  const isToday = i === todayIdx;
+  const rows = (Array.isArray(d.schedule) ? d.schedule : []).map(s =>
+    `<li><span class="hok-t">${esc(s.t || '')}</span><span class="hok-w"><b>${esc(s.what || '')}</b>${s.note ? `<small>${esc(s.note)}</small>` : ''}</span></li>`).join('');
+  const chips = (d.highlights || []).map(h => `<span class="hok-chip">${esc(h)}</span>`).join('');
+  const notes = (d.notes || []).map(n => `<li>${esc(n)}</li>`).join('');
+  const fb = (d.fallback || []).length
+    ? `<p class="hok-note"><b>Fallbacks:</b> ${d.fallback.map(f => esc(f)).join(' · ')}</p>` : '';
+  const safety = d.safety ? `<p class="hok-safety"><b>⚠ Safety:</b> ${esc(d.safety)}</p>` : '';
+  const move = d.move ? `<p class="hok-move">↝ ${esc(d.move)}</p>` : '';
+  const cost = d.cost ? `<p class="hok-cost">${esc(d.cost)}</p>` : '';
+  return `<details class="hok-day${isToday ? ' is-today' : ''}"${open ? ' open' : ''}>
+    <summary><span class="hok-date"><b>${esc(fmtShort(d.date))}</b><small>${esc(d.dow || '')}</small></span>`
+    + `<span class="hok-sum"><b>${esc(d.title)}</b><small>${esc(d.base || '')}${d.stay ? ` · ${esc(clip(d.stay, 48))}` : ''}</small></span>`
+    + `${isToday ? '<span class="hok-badge">today</span>' : ''}</summary>`
+    + `<div class="hok-detail">${move}${chips ? `<div class="hok-chips">${chips}</div>` : ''}`
+    + `${rows ? `<ul class="hok-sched">${rows}</ul>` : ''}`
+    + `${notes ? `<ul class="hok-notes">${notes}</ul>` : ''}${fb}${safety}${cost}</div></details>`;
+}
+function renderHokkaido() {
+  const el = $('#wHokkaido');
+  if (!el) return;
+  const status = legStatus(DATA.itinerary, TODAY);
+  if (!status) { el.hidden = true; return; }   // outside the trip window — stay out of the way
+  el.hidden = false;
+  const body = el.querySelector('.widget-body');
+  if (!body) return;
+  const focus = new Set(focusDays(status));
+  const total = status.days.length;
+  const todayDay = status.todayIdx >= 0 ? status.days[status.todayIdx] : null;
+  const lead = status.phase === 'before'
+    ? `Starts ${esc(fmtShort(status.start))} · ${total}-day leg — here's day one`
+    : `Day ${status.todayIdx + 1} of ${total}${todayDay ? ` · ${esc(todayDay.base)}` : ''}`;
+  body.innerHTML = `<p class="hok-lead">${lead}</p>`
+    + status.days.map((d, i) => hokDayHTML(d, i, status.todayIdx, focus.has(i))).join('')
+    + `<p class="hok-foot"><a href="#/calendar">open in the calendar →</a></p>`;
 }
 
 // ---- 文法ジム Grammar Gym widget (R11 habit dashboard) ----------------------------------------

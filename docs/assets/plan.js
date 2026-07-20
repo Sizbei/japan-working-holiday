@@ -21,6 +21,7 @@ import {
   loadPlans, savePlans, getPlan, hasPlan, newStop, planToEvents,
   upsertStop, removeStop, patchStop, reorderStops,
 } from './lib/dayplan.js';
+import { itineraryDay, itineraryStops } from './lib/itinerary.js';
 import { makeSortable } from './dnd.js';
 import { alertModal } from './lib/modal.js';
 
@@ -36,6 +37,7 @@ export function mountPlan(data) {
   activeDate = today >= arrival ? today : arrival;   // default to TODAY once the trip has started (else the arrival day)
   renderRail();
   render();
+  deferCenter();   // land on today already centered in the rail (no manual scroll to reach it)
   $('#planBody')?.addEventListener('click', onBodyClick);
   // EF3: hidden → dirty-mark; render on next entry (a plan edit can only happen ON the page,
   // but cross-page writers — templates seed, map pushEvent, backup restore — dispatch too)
@@ -47,9 +49,9 @@ export function mountPlan(data) {
   document.addEventListener('jwh:route', (e) => {
     if (e.detail?.route !== 'plan') return;
     if (planDirty) { planDirty = false; renderRail(); render(); }
-    requestAnimationFrame(scrollActiveIntoView);   // stage 5: entering mid-trip, the active chip can be deep in the 2000px strip
+    deferCenter();   // stage 5: entering mid-trip, the active chip can be deep in the 2000px strip — recentre it
   });
-  document.addEventListener('jwh:plan-goto', (e) => { const d = e.detail?.date; if (d) { activeDate = d; planDirty = false; renderRail(); render(); scrollActiveIntoView(); } });   // fresh render — clear dirty so the route listener doesn't repeat it (review)   // long-press a calendar day → plan it
+  document.addEventListener('jwh:plan-goto', (e) => { const d = e.detail?.date; if (d) { activeDate = d; planDirty = false; renderRail(); render(); centerActiveChip(); } });   // fresh render — clear dirty so the route listener doesn't repeat it (review)   // long-press a calendar day → plan it
   // the route line is drawn on demand (Show route on map); clear it only when leaving BOTH
   // plan and map (never auto-load Leaflet on #/plan).
   document.addEventListener('jwh:route', (e) => { const r = e.detail?.route; if (r !== 'plan' && r !== 'map') clearRoute(); });
@@ -79,7 +81,7 @@ function renderRail() {
       <span class="plan-chip-d" aria-hidden="true">${esc(fmtShort(d))}</span>${isToday ? '<span class="plan-chip-tag" aria-hidden="true">today</span>' : ''}${planned ? '<span class="plan-chip-dot" aria-hidden="true"></span>' : ''}
     </button>`;
   }).join('') + `<label class="plan-pick">+ date<input type="date" id="planPick" aria-label="Jump to any date"></label>`;
-  rail.querySelectorAll('.plan-chip').forEach(b => b.addEventListener('click', () => { activeDate = b.dataset.date; renderRail(); render(); scrollActiveIntoView(); }));
+  rail.querySelectorAll('.plan-chip').forEach(b => b.addEventListener('click', () => { activeDate = b.dataset.date; renderRail(); render(); centerActiveChip(); }));
   // stage 5: scroll-edge fades — only where content actually overflows (45 pills ≈ 2000px hidden)
   if (!rail.dataset.fadeWired) {
     rail.dataset.fadeWired = '1';
@@ -89,10 +91,24 @@ function renderRail() {
     rail._fades = fades;
   }
   rail._fades?.();
-  $('#planPick')?.addEventListener('change', (e) => { if (e.target.value) { activeDate = e.target.value; renderRail(); render(); } });
+  $('#planPick')?.addEventListener('change', (e) => { if (e.target.value) { activeDate = e.target.value; renderRail(); render(); centerActiveChip(); } });
   if (railHadFocus) $('#planDays .plan-chip.active')?.focus();   // keep keyboard focus on the selected day across the rebuild
 }
-function scrollActiveIntoView() { $('#planDays .plan-chip.active')?.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+// Put the active day in the MIDDLE of the rail. Manual scrollLeft (not scrollIntoView) because the
+// page sets `html{scroll-behavior:smooth}` and the chips use scroll-snap — scrollIntoView fights
+// both and mis-lands during the view transition. We center instantly and clamp to the ends.
+function centerActiveChip() {
+  const rail = $('#planDays'); if (!rail || !rail.clientWidth) return;   // hidden/not laid out → skip (deferCenter retries)
+  const chip = rail.querySelector('.plan-chip.active'); if (!chip) return;
+  const delta = (chip.getBoundingClientRect().left - rail.getBoundingClientRect().left) - (rail.clientWidth - chip.clientWidth) / 2;
+  const prev = rail.style.scrollBehavior;
+  rail.style.scrollBehavior = 'auto';   // bypass the global smooth-scroll so it lands in one frame
+  rail.scrollLeft = Math.max(0, Math.min(rail.scrollLeft + delta, rail.scrollWidth - rail.clientWidth));
+  rail.style.scrollBehavior = prev;
+  rail._fades?.();
+}
+// entering the page via the router, the rail isn't laid out on the first frame — retry after it is
+function deferCenter() { requestAnimationFrame(() => requestAnimationFrame(centerActiveChip)); }
 
 // ---- the day ----
 // identify the focused stop control so render() can restore it after the innerHTML rebuild
@@ -142,12 +158,36 @@ function applyTemplate(tid) {
   $('#planBody .stop-grab, #planBody button, #planBody [tabindex="0"]')?.focus();
 }
 
+// seed the active (stop-less) day from the baked Hokkaido `itinerary` for that exact date — the
+// schedule becomes editable stops. Single source: reads DATA.itinerary, never a duplicated copy.
+function applyItinerary() {
+  const day = itineraryDay(DATA && DATA.itinerary, activeDate);
+  if (!day || hasPlan(activeDate)) return;
+  const prior = getPlan(activeDate);
+  const plans = loadPlans();
+  savePlans({
+    ...plans,
+    [activeDate]: {
+      date: activeDate,
+      title: (prior && prior.title) || day.title || 'Hokkaido',
+      note: (prior && prior.note) || (day.base ? `Hokkaido — ${day.base}` : ''),
+      stops: itineraryStops(day).map((s, i) => newStop({ ...s, coordKind: 'approx', id: 'hok' + Date.now() + '-' + i })),
+    },
+  });   // dispatches jwh:data-changed → this page + dashboard/map re-derive
+  $('#planBody .stop-grab, #planBody button, #planBody [tabindex="0"]')?.focus();
+}
+
 function render() {
   const body = $('#planBody'); if (!body) return;
   const focus = captureBodyFocus(body);
   const plan = getPlan(activeDate);
   const stops = plan ? plan.stops : [];
   if (!stops.length) {
+    // date-aware Hokkaido seed: on an empty day that has a baked itinerary, offer it prominently
+    const iday = itineraryDay(DATA && DATA.itinerary, activeDate);
+    const hokHtml = iday ? `<div class="plan-hok" role="group" aria-label="Load the baked trip plan">
+        <button type="button" class="plan-tpl plan-tpl-hok" data-hok="1">🗾 Load this day’s plan — ${esc(iday.title)} <span class="pt-n">${itineraryStops(iday).length} stops</span></button>
+      </div>` : '';
     // additive template library (S2): only offered on an EMPTY day — never overwrites a plan
     const tpls = (DATA && DATA.planTemplates) || [];
     const tplHtml = tpls.length ? `<div class="plan-tpls" role="group" aria-label="Start from a template">
@@ -157,7 +197,8 @@ function render() {
     body.innerHTML = `<div class="plan-empty">
       <p class="plan-empty-h">No plan for <b>${esc(fmtShort(activeDate))}</b> yet.</p>
       <p>Add your first stop — pull from your saved pins, the catalogue, upcoming events, or type your own.</p>
-      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>${tplHtml}</div>`;
+      <button type="button" class="plan-add" data-act="add">＋ Add a stop</button>${hokHtml}${tplHtml}</div>`;
+    body.querySelector('[data-hok]')?.addEventListener('click', () => applyItinerary());
     body.querySelectorAll('[data-tpl]').forEach(b => b.addEventListener('click', () => applyTemplate(b.dataset.tpl)));
     restoreBodyFocus(body, focus);
     return;

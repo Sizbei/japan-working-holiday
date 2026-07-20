@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { parseISO, daysBetween, daysUntil, countdown, windowStatus, fmtShort } from '../docs/assets/lib/dates.js';
+import { addDaysISO, legStatus, focusDays, itineraryDay, itineraryStops } from '../docs/assets/lib/itinerary.js';
 import { computeAlerts, alertCount } from '../docs/assets/lib/notify.js';
 import { toICS, parseICS, gcalUrl } from '../docs/assets/lib/ics.js';
 import { parseEvent } from '../docs/assets/lib/nlevent.js';
@@ -3233,6 +3234,74 @@ test('exam: recordExam — pure append, bounded ring, initialises from a state w
   assert.equal(s.examLog.length, 100);
   assert.equal(s.examLog[0].date, 'd20');
   assert.equal(s.examLog[99].date, 'd119');
+});
+
+// ---- lib/itinerary.js — Hokkaido leg-window logic ------------------------------------------
+const ITIN = { days: [
+  { date: '2026-07-18' }, { date: '2026-07-19' }, { date: '2026-07-20' }, { date: '2026-07-21' },
+  { date: '2026-07-22' }, { date: '2026-07-23' }, { date: '2026-07-24' },
+] };
+
+test('addDaysISO shifts UTC-stably and tolerates junk', () => {
+  assert.equal(addDaysISO('2026-07-18', -3), '2026-07-15');
+  assert.equal(addDaysISO('2026-07-31', 1), '2026-08-01');
+  assert.equal(addDaysISO('nope', 1), 'nope');
+});
+
+test('legStatus hides before the lead-in and after the trip', () => {
+  assert.equal(legStatus(ITIN, '2026-07-14'), null);          // >3 days before start → hidden
+  assert.equal(legStatus(ITIN, '2026-07-25'), null);          // past the last day → hidden
+  assert.equal(legStatus(null, '2026-07-20'), null);          // no data → hidden
+  assert.equal(legStatus({ days: [] }, '2026-07-20'), null);
+});
+
+test('legStatus phases: lead-in / during / last', () => {
+  const before = legStatus(ITIN, '2026-07-16');               // within lead-in, before start
+  assert.equal(before.phase, 'before');
+  assert.equal(before.todayIdx, -1);
+  const during = legStatus(ITIN, '2026-07-20');
+  assert.equal(during.phase, 'during');
+  assert.equal(during.todayIdx, 2);
+  const last = legStatus(ITIN, '2026-07-24');
+  assert.equal(last.phase, 'last');
+  assert.equal(last.todayIdx, 6);
+});
+
+test('focusDays picks today+tomorrow, clamps at the ends', () => {
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-16')), [0]);       // lead-in → preview day 1
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-20')), [2, 3]);    // during → today + tomorrow
+  assert.deepEqual(focusDays(legStatus(ITIN, '2026-07-24')), [6]);       // last day → just today
+  assert.deepEqual(focusDays(null), []);
+});
+
+// ---- lib/itinerary.js — day-plan seeding (itineraryDay / itineraryStops) --------------------
+const ITIN2 = { days: [
+  { date: '2026-07-20', base: 'Furano (day trip)', schedule: [
+    { t: '08:12', what: 'Train Furano → Biei', note: 'arr ~08:50' },
+    { t: '~15:00', what: 'Lunch at Biei Senka' },
+    { t: 'the hills', what: 'Patchwork Road by e-bike', note: '~2 hr loop' },
+    { t: 'evening', what: 'Train home' },
+  ] },
+] };
+
+test('itineraryDay finds a day by ISO date, else null', () => {
+  assert.equal(itineraryDay(ITIN2, '2026-07-20').base, 'Furano (day trip)');
+  assert.equal(itineraryDay(ITIN2, '2026-07-21'), null);
+  assert.equal(itineraryDay(null, '2026-07-20'), null);
+});
+
+test('itineraryStops maps schedule → stop fields, times parsed, labels folded to note', () => {
+  const stops = itineraryStops(itineraryDay(ITIN2, '2026-07-20'));
+  assert.equal(stops.length, 4);
+  assert.deepEqual(
+    { name: stops[0].name, startTime: stops[0].startTime, note: stops[0].note, area: stops[0].area },
+    { name: 'Train Furano → Biei', startTime: '08:12', note: 'arr ~08:50', area: 'Furano (day trip)' });
+  assert.equal(stops[1].startTime, '15:00');            // "~15:00" → 15:00, tilde stripped
+  assert.equal(stops[1].note, '');                       // no soft label, no note
+  assert.equal(stops[2].startTime, '');                  // "the hills" is not a time
+  assert.equal(stops[2].note, 'the hills · ~2 hr loop'); // soft label folded in with the note
+  assert.equal(stops[3].note, 'evening');                // soft label alone
+  assert.equal(itineraryStops(null).length, 0);
 });
 
 // ── K1: keyboard binding registry + pure resolver (lib/shortcuts.js) ──────────

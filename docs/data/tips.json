@@ -923,11 +923,11 @@
   },
   {
    "id": "ev26-transport-asahidake-jul21",
-   "title": "🚌 Furano → Asahidake + Sugatami loop",
+   "title": "🚌 Furano → Asahidake (relaxed start)",
    "date": "2026-07-21",
    "category": "personal",
    "area": "Furano → Asahikawa → Asahidake Onsen",
-   "bookingNotes": "07:19 train Furano → Asahikawa (~08:35) → transfer to Bus Stop No. 9 → 09:15 Ideyu-go bus (route 66) → Asahidake ~11:03 (¥1,800, pay on board, only 3 buses/day — be early). Drop bags at K's House, then ropeway up (round trip ¥3,500) for the easy 1.7 km Sugatami Pond alpine loop; onsen + lodge dinner. Full detail on the Home planner.",
+   "bookingNotes": "Relaxed morning — waking ~7:15 rules out the 09:15 bus (the 08:12 train misses it by 2 min). 10:01 train Furano → Asahikawa (~11:11) → lunch near the station → 13:15 Ideyu-go bus (route 66) from Stop No. 9 → Asahidake ~15:03 (¥1,800, pay on board, LAST bus of the day). Check into K's House. Optional Sugatami loop if you're up for it (ropeway ¥3,500, easy 1.7 km, must be down by 18:00) — or save the mountain for tomorrow. Onsen + lodge dinner. Full detail on the Home planner.",
    "confidence": "high",
    "sources": [
     "https://asahidake.hokkaido.jp/en/"
@@ -11903,23 +11903,22 @@
    {
     "date": "2026-07-21",
     "dow": "Tue",
-    "title": "Furano → Asahidake + Sugatami loop",
+    "title": "Furano → Asahidake (relaxed start; onsen)",
     "base": "Asahidake Onsen",
     "stay": "K's House Asahidake (check in) · onsen village",
-    "move": "Furano → Asahikawa (train) → Asahidake (Ideyu-go bus)",
+    "move": "Furano → Asahikawa (train) → Asahidake (13:15 Ideyu-go bus)",
     "schedule": [
-     { "t": "07:19", "what": "Train Furano → Asahikawa (arr ~08:35, ~¥1,290).", "note": "Confirm it's the direct train that lands by ~09:00; you need the 09:15 bus." },
-     { "t": "~08:35", "what": "Transfer to Bus Touch Stop No. 9 at Asahikawa Station." },
-     { "t": "09:15", "what": "Ideyu-go bus (route 66) → Asahidake (arr ~11:03, ¥1,800, ~1h50m). Pay on board, no reservations.", "note": "Only 3 buses/day. The next one (13:15) leaves you rushing the mountain before the 18:00 last ropeway — be at Stop No. 9 early." },
-     { "t": "~11:15", "what": "Drop bags at K's House (front desk holds before 15:00 check-in); grab lunch + water." },
-     { "t": "~11:45", "what": "Ropeway up to Sugatami (¥3,500 return, 10 min, cars every 15 min). Buy a round trip — one-way uphill tickets aren't sold after 16:00.", "note": "" },
-     { "t": "12:00–13:45", "what": "Sugatami Pond loop — 1.7 km boardwalk, ~1.5 hr, easy. Steam vents, alpine flowers, mirror pond under Asahidake." },
-     { "t": "~14:00", "what": "Ropeway down (last car 18:00)." },
-     { "t": "15:00", "what": "Check in · onsen · dinner at the lodge (the hamlet has almost no eateries — take the lodge meal)." }
+     { "t": "~07:15", "what": "Wake up — no rush. Relaxed Furano morning: breakfast, pack, maybe a last lavender stop." },
+     { "t": "10:01", "what": "Train Furano → Asahikawa (arr ~11:11, ~¥1,290, direct).", "note": "The 11:42 train (arr 13:02) also makes the bus but the transfer's tight — take 10:01 for a calm connection." },
+     { "t": "11:11–13:00", "what": "Lunch + a wander near Asahikawa Station (Asahikawa Ramen Village, or the AEON mall by the station) — you have ~2 hr before the bus." },
+     { "t": "13:15", "what": "Ideyu-go bus (route 66) from Bus Stop No. 9 → Asahidake (arr ~15:03, ¥1,800). Pay on board.", "note": "Last bus of the day — don't miss it. Waking at 7:15 rules out the 09:15 bus (the fastest train, 08:12, reaches Asahikawa 09:13 — 2 min after the bus leaves)." },
+     { "t": "~15:15", "what": "Check into K's House · drop bags." },
+     { "t": "~15:30", "what": "OPTIONAL Sugatami loop if you're up for it — ropeway up (¥3,500 return), the easy 1.7 km alpine boardwalk (~1.5 hr). You MUST catch a car down by 18:00 (the last one). Otherwise skip it — the full mountain day is tomorrow.", "note": "One-way uphill tickets aren't sold after 16:00, so buy the round trip if you go up." },
+     { "t": "evening", "what": "Onsen + dinner at the lodge (the hamlet has almost no eateries — take the lodge meal)." }
     ],
-    "highlights": ["🏔️ Sugatami Pond alpine loop", "Onsen at the ropeway village"],
-    "notes": ["Ideyu-go both ways (3/day, ¥1,800): Asahikawa→Asahidake 07:15→09:03 · 09:15→11:03 · 13:15→15:03. Asahidake→Asahikawa 09:40→11:18 · 11:40→13:18 · 15:40→17:18.", "Ropeway (summer): first up ~06:00, last down 18:00, every 15 min. Round trip ¥3,500 / one-way ¥2,200."],
-    "cost": "≈ ¥6,600 (train + bus + ropeway)"
+    "highlights": ["Onsen at the ropeway village", "Sugatami alpine loop (if there's time/energy)"],
+    "notes": ["Waking at 7:15 forfeits the 09:15 bus, so this day takes the 13:15. Furano→Asahikawa trains: 08:12→09:13, 10:01→11:11, 11:42→13:02.", "Ideyu-go both ways (3/day, ¥1,800): Asahikawa→Asahidake 07:15 · 09:15 · 13:15 (arr ~15:03). Asahidake→Asahikawa 09:40→11:18 · 11:40→13:18 · 15:40→17:18.", "Ropeway (summer): first up ~06:00, last down 18:00, every 15 min. Round trip ¥3,500."],
+    "cost": "≈ ¥3,100 (train + bus) + ¥3,500 ropeway if you go up"
    },
    {
     "date": "2026-07-22",

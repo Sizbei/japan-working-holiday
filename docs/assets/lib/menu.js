@@ -53,7 +53,7 @@ export function openMenu(items, x, y, opts = {}) {
   if (opts.anchor) { const r = opts.anchor.getBoundingClientRect(); px = r.left; py = r.bottom + 4; }
   const w = menuEl.offsetWidth, h = menuEl.offsetHeight;
   let left = Math.min(px, window.innerWidth - w - 10);
-  let top = py + 8; if (top + h > window.innerHeight - 10) top = py - h - 8;
+  let top = py + 8; if (top + h > window.innerHeight - 10) { top = py - h - 8; menuEl.classList.add('lp-menu--up'); }   // flipped above the point → grow from the bottom edge (CSS origin hook)
   menuEl.style.left = Math.max(10, left) + 'px';
   menuEl.style.top = Math.max(10, top) + 'px';
   menuEl.addEventListener('click', (e) => {

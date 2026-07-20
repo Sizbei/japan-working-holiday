@@ -35,11 +35,19 @@ export function parseRoute(hash) {
 
 let current = null;
 
+// Route-swap source flag (K1 motion): gestures sets this to 'keyboard' BEFORE mutating location.hash
+// on a keyboard route-swap; activate() reads + consumes it before transitionView() to render the swap
+// INSTANTLY (no View Transition) — a keyboard nav should never animate (Binding Principle 6). The
+// jwh:route event fires AFTER transitionView, so a route-detail flag couldn't gate the animation; a
+// pre-set module flag can. Mouse/tap/swipe navs leave it null and keep their animation.
+let pendingNavSource = null;
+export function markNavSource(src) { pendingNavSource = src; }
+
 // per-route document title so browser tabs + history entries read like real pages
 const TITLES = {
   dashboard: 'Dashboard', calendar: 'Calendar', people: 'People', checklist: 'Checklist',
   budget: 'Budget', explore: 'Explore', eats: 'Eats', rooms: 'Rooms', map: 'Map', plan: 'Plan a Day', emergency: 'Emergency',
-  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar', survival: 'Useful phrases', study: 'Grammar Gym',
+  deadlines: 'Deadlines', packing: 'Packing', phrases: 'Phrases', grammar: 'Grammar', survival: 'Useful phrases', study: 'The Grammar Almanac',
 };
 const SITE = 'My Year in Japan';
 
@@ -64,14 +72,19 @@ function activate(route, { scroll = true } = {}) {
     document.getElementById('main')?.scrollTo({ top: 0 });
     if (route !== 'calendar') window.scrollTo({ top: 0 });   // calendar owns its own scroll (positions to today)
   };
-  transitionView(() => {
+  const swap = () => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('is-active'));
     target.classList.add('is-active');
     // reset IN the swap: same frame the new (short) layout applies, so the window never renders at the
     // clamped bottom — this is what removes the flash (the pre-swap reset ran while the tall calendar
     // was still laid out; the shrink then re-clamped it)
     if (scroll && changing) resetTop();
-  }).then(() => {
+  };
+  // consume the keyboard-nav flag: a keyboard route-swap renders instantly (no View Transition).
+  const instant = pendingNavSource === 'keyboard';
+  pendingNavSource = null;
+  const swapped = instant ? (swap(), Promise.resolve()) : transitionView(swap);
+  swapped.then(() => {
     if (scroll && changing && route === current) resetTop();   // belt-and-suspenders; skip if a faster later nav superseded this
     de.style.scrollBehavior = '';                  // restore CSS-default smooth for in-page scrolling
     // prefer a VISIBLE heading (compact hides some page titles; focusing a display:none node is a silent no-op)

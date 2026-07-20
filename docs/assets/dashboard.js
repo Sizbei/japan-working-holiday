@@ -124,7 +124,7 @@ function buildItems() {
   const study = get(KEYS.study, null);
   if (study) {
     const dueN = buildQueue(migrateStudy(study), Date.now()).reviews.length;
-    if (dueN > 0) items.push({ id: 'study-reviews@' + TODAY, title: dueN + ' grammar review' + (dueN === 1 ? '' : 's') + ' due', when: TODAY, kind: 'review', detail: 'Grammar Gym — clear them in one bounded session.' });
+    if (dueN > 0) items.push({ id: 'study-reviews@' + TODAY, title: dueN + ' grammar review' + (dueN === 1 ? '' : 's') + ' due', when: TODAY, kind: 'review', detail: 'The Grammar Almanac — clear them in one bounded session.' });
   }
   // Drop dead history: a deadline/book/task more than 30 days past isn't actionable — it's just
   // clutter that re-floods the bell. Future + ≤30-day-past items are kept (still worth surfacing).
@@ -367,7 +367,7 @@ function renderStudy() {
   if (!body) return;
   const stored = get(KEYS.study, null);
   if (!stored) {   // never opened the gym — a plain onboarding CTA, no streak/rings to show
-    body.innerHTML = `<a class="stw-cta" href="#/study"><b>▶ Start the Grammar Gym</b><small>Drill JLPT grammar — one bounded session a day</small></a>`;
+    body.innerHTML = `<a class="stw-cta" href="#/study"><b>▶ Start The Grammar Almanac</b><small>Drill JLPT grammar — one bounded session a day</small></a>`;
     return;
   }
   const st = migrateStudy(stored);
@@ -381,17 +381,17 @@ function renderStudy() {
     ? `<div class="stw-mastery">${levels.map(l =>
         `<div class="stw-lvl">${stwRingHTML(ms.perLevel[l], ms.totals[l], `${l} ${ms.perLevel[l]} of ${ms.totals[l]} mastered`)}<span class="stw-lvl-l">${esc(l)}</span></div>`).join('')}</div>`
     : `<p class="stw-hint">No points mastered yet — the rings fill as you clear mastery gates.</p>`;
-  const trainLabel = due > 0 ? `▶ Train — ${due} due` : '▶ Open the gym';
+  const trainLabel = due > 0 ? `▶ Train — ${due} due` : '▶ Open the almanac';
   const riskHTML = si.atRisk
     ? `<p class="stw-risk">Study today to keep your ${esc(String(si.count))}-day streak alive.</p>` : '';
 
   body.innerHTML = `
     <div class="stw-top">
       <div class="stw-streak${si.atRisk ? ' is-risk' : ''}" role="img" aria-label="${esc(String(si.count))} day streak, ${esc(String(si.freezes))} freezes left this month">
-        <span class="stw-flame" aria-hidden="true">🔥</span>
+        <span class="stw-flame" aria-hidden="true">連</span>
         <span class="stw-streak-n">${esc(String(si.count))}</span>
         <span class="stw-streak-l">day${si.count === 1 ? '' : 's'}<br>streak</span>
-        <span class="stw-freeze" title="Streak freezes left this month">❄️${esc(String(si.freezes))}</span>
+        <span class="stw-freeze" title="Streak freezes left this month">❄${esc(String(si.freezes))}</span>
       </div>
       <div class="stw-week">
         ${stwRingHTML(wi.done, wi.goal, `${wi.done} of ${wi.goal} sessions this week`)}

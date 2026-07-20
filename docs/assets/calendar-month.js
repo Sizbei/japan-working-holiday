@@ -1,7 +1,8 @@
 'use strict';
-import { $, $$, esc } from './lib/dom.js';
+import { $, $$, esc, stripEmoji } from './lib/dom.js';
 import { daysBetween, fmtShort, parseISO } from './lib/dates.js';
 import { isMultiDay, fmt12 } from './lib/weekgrid.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { monthGrid } from './lib/minical.js';
 import { makeMovable } from './dnd.js';
 import { viewY, viewM, TODAY, allEvents, visible, catOf, safeCat, tasksOn, taskChipHTML, allTasks, isEvergreen, openModal, openSidePanel, dayPopover, gotoTask, birthdaysOn, birthdayChipHTML, gotoPerson, rescheduleEvent, goAgenda, goWeek } from './calendar.js';
@@ -87,77 +88,90 @@ export function monthHTML() {
   // The "Ongoing this season" strip that used to surface them was removed for vertical space
   // (owner) — they remain reachable via the Find/add search popover and the agenda view.
 
-  // multi-day (non-evergreen): a chip on EVERY covered day, Notion-style ("‹" = continuing from an
-  // earlier day) — so a mid-stay day counts the span toward the chip cap and "+N more" like Notion's bars
-  const spansByDay = new Map();   // iso → [{ ev, cont, end }]
+  // multi-day (non-evergreen, non-recurring) events → TRUE spanning BARS: one element per event per week,
+  // spanning its day columns, so the FULL title shows across the width (Notion-style). Greedy lane packing.
+  const spanEvents = [];   // { ev, s, en, fullEnd, lane }  — s/en clamped to the visible range; fullEnd = real end (dimming)
+  {
+    const seen = new Set();
+    for (const e of evs) {
+      if (isEvergreen(e) || !isMultiDay(e) || isRecurring(e) || seen.has(e.id)) continue;
+      seen.add(e.id);
+      const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
+      const cs = s < rangeStart ? rangeStart : s, ce = en > rangeEnd ? rangeEnd : en;
+      if (cs > rangeEnd || ce < rangeStart) continue;
+      spanEvents.push({ ev: e, s: cs, en: ce, fullEnd: en });
+    }
+    spanEvents.sort((a, b) => a.s.localeCompare(b.s) || b.en.localeCompare(a.en));   // earlier start, then longer, for stable lanes
+    const laneEnd = [];   // laneEnd[l] = last day still covered in lane l
+    for (const sp of spanEvents) { let l = 0; while (l < laneEnd.length && laneEnd[l] >= sp.s) l++; laneEnd[l] = sp.en; sp.lane = l; }
+  }
+
+  // single-day events + recurring occurrences bucket per day (multi-day non-recurring are bars, above)
   const singlesByDay = new Map();
   for (const e of evs) {
-    if (isEvergreen(e)) continue;
-    // parseISO-guard the end like eventsOn does — a corrupted endDate ('2026-13-05') would otherwise
-    // pass the lexical comparisons and flood a chip onto every day through the end of the range
-    const s = e.date.slice(0, 10), en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : s;
-    if (!isMultiDay(e)) {
+    if (isEvergreen(e) || (isMultiDay(e) && !isRecurring(e))) continue;
+    for (const occ of recurOccurrences(e, rangeStart, rangeEnd)) {
+      const s = occ.date;
       if (!singlesByDay.has(s)) singlesByDay.set(s, []);
       singlesByDay.get(s).push(e);
-      continue;
-    }
-    let d = s < rangeStart ? rangeStart : s;
-    const stop = en > rangeEnd ? rangeEnd : en;
-    while (d <= stop) {
-      if (!spansByDay.has(d)) spansByDay.set(d, []);
-      spansByDay.get(d).push({ ev: e, cont: d > s, end: en });
-      d = addDaysISO(d, 1);
     }
   }
   for (const list of singlesByDay.values()) list.sort((a, b) => (a.time || '~').localeCompare(b.time || '~'));
+  // single-day chip (event; tasks/birthdays have their own builders)
+  const singleChip = (e) => {
+    const tm = fmt12(e.time);
+    const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
+    const rec = isRecurring(e) ? '<span class="cc-recur" aria-hidden="true">↻</span>' : '';
+    return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${isRecurring(e) ? ' recurring' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}${isRecurring(e) ? ' (repeats ' + esc(e.recur) + ')' : ''}">${time}${rec}<span class="cc-t">${esc(stripEmoji(e.title))}</span></button>`;
+  };
 
-  let cells = '', day = rangeStart, i = 0;
+  // ---- render week by week: a lane layer of spanning bars sits over the row of 7 day cells ----
+  let out = '', day = rangeStart, w = 0;
   while (day <= rangeEnd) {
-    // a full-width month separator above the week containing each 1st (incl. the very first week)
-    if (i % 7 === 0) {
-      const weekEnd = addDaysISO(day, 6);
-      const firstOfMonth = day.slice(8, 10) === '01' ? day : (weekEnd.slice(8, 10) < day.slice(8, 10) ? weekEnd.slice(0, 8) + '01' : null);
-      const sepYm = i === 0 ? lo : (firstOfMonth ? firstOfMonth.slice(0, 7) : null);   // week-0 pad days belong to lo's PRIOR month — label the range month
-      if (sepYm) cells += `<div class="cal-msep" data-ym="${esc(sepYm)}" role="heading" aria-level="3">${esc(MONTHS_LONG[+sepYm.slice(5, 7) - 1])} ${esc(sepYm.slice(0, 4))}</div>`;
-    }
-    const date = day, weekend = (i % 7 === 0 || i % 7 === 6), isToday = date === TODAY;
-    const past = date < TODAY;
-    const singles = singlesByDay.get(date) || [];
-    const multis = spansByDay.get(date) || [];
-    const tks = tasksOn(date);
-    const bds = birthdaysOn(date);
-    const hasBook = singles.some(e => e.bookBy);
-    // spans first (Notion stacks its bars above the day's own events), then timed singles, birthdays, tasks
-    const items = [...multis, ...singles.map(e => ({ ev: e })), ...bds.map(b => ({ bd: b })), ...tks.map(t => ({ tk: t }))];
-    // "+N more" REPLACES the last row (owner: 4 rows per cell, the 4th IS the count when a day
-    // overflows) — never a 5th row that compact's fixed row height clips into invisibility
-    const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
-    const chips = items.slice(0, shown).map(x => {
-      if (x.tk) return taskChipHTML(x.tk);
-      if (x.bd) return birthdayChipHTML(x.bd);
-      const e = x.ev;
-      // end date only on the span's START chip — repeating "→ Jul 10" on every covered day ate the
-      // titles; continuation days carry just a faint "‹" (the quieter .cont fill says the rest)
-      const range = x.end && !x.cont ? `<span class="cc-range">→ ${esc(fmtShort(x.end))}</span>` : '';
-      const cont = x.cont ? '<span class="cc-cont" aria-hidden="true">‹</span>' : '';
-      const tm = x.end ? '' : fmt12(e.time);
-      const time = tm ? `<span class="cc-time">${esc(tm)}</span>` : '';
-      return `<button class="cal-chip cat-${esc(catOf(e))}${tm ? ' timed' : ''}${x.cont ? ' cont' : ''}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${cont}${time}<span class="cc-t">${esc(e.title)}</span>${range}</button>`;
+    const wStart = day, wEnd = addDaysISO(wStart, 6);
+    // month separator sentinel above the week that contains a 1st (or the very first week)
+    const firstOfMonth = wStart.slice(8, 10) === '01' ? wStart : (wEnd.slice(8, 10) < wStart.slice(8, 10) ? wEnd.slice(0, 8) + '01' : null);
+    const sepYm = w === 0 ? lo : (firstOfMonth ? firstOfMonth.slice(0, 7) : null);
+    if (sepYm) out += `<div class="cal-msep" data-ym="${esc(sepYm)}" role="heading" aria-level="3">${esc(MONTHS_LONG[+sepYm.slice(5, 7) - 1])} ${esc(sepYm.slice(0, 4))}</div>`;
+
+    // spanning bars overlapping this week — grid-column start/end gives the FULL-WIDTH bar + full title
+    const bars = spanEvents.filter(sp => sp.s <= wEnd && sp.en >= wStart).map(sp => {
+      const segS = sp.s < wStart ? wStart : sp.s, segE = sp.en > wEnd ? wEnd : sp.en;
+      return { sp, startCol: daysBetween(wStart, segS), endCol: daysBetween(wStart, segE),
+        roundedL: sp.s >= wStart, roundedR: sp.en <= wEnd, dimmed: sp.fullEnd < TODAY };   // dim ONLY a fully-ended event, never an ongoing stay
+    });
+    const barRows = bars.reduce((m, b) => Math.max(m, b.sp.lane + 1), 0);
+    const barsHTML = bars.map(b => {
+      const e = b.sp.ev, ttl = esc(stripEmoji(e.title));
+      const cls = `cal-bar cat-${esc(catOf(e))}${b.dimmed ? ' bar-past' : ''}${b.roundedL ? '' : ' seg-l'}${b.roundedR ? '' : ' seg-r'}`;
+      const arr = b.roundedL ? '' : '<span class="cc-cont" aria-hidden="true">‹ </span>';
+      return `<button class="${cls}" style="grid-column:${b.startCol + 1}/${b.endCol + 2};grid-row:${b.sp.lane + 1}" data-ev="${esc(e.id)}" title="${esc(e.title)}">${arr}<span class="cc-t">${ttl}</span></button>`;
     }).join('');
-    const moreN = items.length - shown;
-    const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
-    const bk = hasBook ? `<span class="bk-dot" role="img" aria-label="has a booking deadline" title="has a booking deadline"></span>` : '';
-    const nEv = singles.length + multis.length;
-    const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
-    const dayN = date.slice(8, 10).replace(/^0/, '');
-    const label = date.slice(8, 10) === '01' ? `${esc(MONTHS_LONG[+date.slice(5, 7) - 1])} ${dayN}` : dayN;   // "July 1" — the inline month transition (Notion-style)
-    const cls = ['cal-cell', isToday && 'today', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
-    cells += `<div class="${cls}" data-day="${esc(date)}">
-      <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${label}</button>${bk}</span>
-      ${chips}${more}</div>`;
-    day = addDaysISO(day, 1); i++;
+
+    // 7 day cells: day number + single-day chips + "+N more" (bars are the layer above, not per cell)
+    let cellsHTML = '';
+    for (let c = 0; c < 7; c++) {
+      const date = addDaysISO(wStart, c), isToday = date === TODAY, past = date < TODAY, weekend = c === 0 || c === 6;
+      const singles = singlesByDay.get(date) || [], tks = tasksOn(date), bds = birthdaysOn(date);
+      const items = [...singles.map(e => ({ ev: e })), ...bds.map(b => ({ bd: b })), ...tks.map(t => ({ tk: t }))];
+      const shown = items.length > MONTH_SINGLES ? MONTH_SINGLES - 1 : items.length;
+      const chips = items.slice(0, shown).map(x => x.tk ? taskChipHTML(x.tk) : x.bd ? birthdayChipHTML(x.bd) : singleChip(x.ev)).join('');
+      const moreN = items.length - shown;
+      const more = moreN > 0 ? `<button type="button" class="cal-more" data-day="${esc(date)}">+${moreN} more</button>` : '';
+      const bk = singles.some(e => e.bookBy) ? `<span class="bk-dot" role="img" aria-label="has a booking deadline" title="has a booking deadline"></span>` : '';
+      const nEv = singles.length + bars.filter(b => b.startCol <= c && b.endCol >= c).length;
+      const aria = `${esc(date)}, ${nEv} event${nEv === 1 ? '' : 's'}${tks.length ? `, ${tks.length} task${tks.length === 1 ? '' : 's'}` : ''}`;
+      const dayN = date.slice(8, 10).replace(/^0/, '');
+      const label = date.slice(8, 10) === '01' ? `${esc(MONTHS_LONG[+date.slice(5, 7) - 1])} ${dayN}` : dayN;
+      const cls = ['cal-cell', isToday && 'today', past && 'past', weekend && 'weekend'].filter(Boolean).join(' ');
+      cellsHTML += `<div class="${cls}" data-day="${esc(date)}">
+        <span class="cal-row"><button type="button" class="cal-date" data-day="${esc(date)}" aria-label="${aria}">${label}</button>${bk}</span>
+        <div class="cal-cbody">${chips}${more}</div></div>`;
+    }
+    out += `<div class="cal-week" style="--barrows:${barRows}">${barsHTML ? `<div class="cal-bars">${barsHTML}</div>` : ''}<div class="cal-weekgrid">${cellsHTML}</div></div>`;
+    day = addDaysISO(wStart, 7); w++;
   }
-  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid cal-endless">${cells}</div>`;
+  return `<div class="cal-dowrow">${dows.map(x => `<div class="cal-dow">${esc(x)}</div>`).join('')}</div><div class="cal-grid cal-endless">${out}</div>`;
 }
 
 // ---- endless-scroll reactions ----
@@ -327,6 +341,14 @@ export function wireCells() {
       else openModal(null, c.dataset.day);                                        // empty day → add straight away
     });
   });
+  // multi-day BARS live in the lane layer (a sibling of the day cells), so the per-cell handler above
+  // never sees them — give them their own click/Enter → open the event.
+  $$('#calView .cal-bar[data-ev]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ev = allEvents().find(x => x.id === b.dataset.ev); if (ev) openSidePanel(ev, b);
+    });
+  });
 }
 // Notion-style: drag across the month grid to select a date range → opens the editor pre-filled with
 // that span. A plain click (no drag) falls through to wireCells (add / peek). Chips/date-buttons excluded.
@@ -384,9 +406,9 @@ export function wireReschedule() {
   const view = $('#calView');
   if (!view) return;
   makeMovable(view, {
-    // .cont excluded: rescheduleEvent snaps the START to the drop day, so a continuation chip as a
-    // drag handle would teleport the whole span (and a >6px wobble released on its own day shifts it)
-    itemSelector: '.cal-chip[data-ev]:not(.cont)', label: 'event',
+    // .recurring excluded: a recurring chip is one occurrence — dragging it would move the whole series.
+    // Multi-day events are .cal-bar (never .cal-chip), so they can't match; rescheduleEvent hard-guards them too.
+    itemSelector: '.cal-chip[data-ev]:not(.recurring)', label: 'event',
     canDrag: () => true,                       // any event can be rescheduled now (baked → override layer)
     idOf: el => el.dataset.ev,
     targetSelector: '.cal-cell[data-day]', keyOf: t => t.dataset.day,

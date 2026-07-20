@@ -4,12 +4,15 @@
 // generic long-press → quick-action menu wired to calendar days, explore cards, and
 // checklist rows. All framework-free, pointer-events based, reduced-motion aware.
 
-import { ROUTES } from './router.js';
+import { ROUTES, markNavSource, parseRoute } from './router.js';
 import { prefersReducedMotion } from './motion.js';
 import { openMenu } from './lib/menu.js';
 import { getEventMenu, undoLastDelete } from './calendar.js';
 import { openPalette } from './palette.js';
 import { ensureRoute } from './lazyroutes.js';
+import { BINDINGS, helpSheetModel, keyGlyph, shortcutsEnabled } from './lib/shortcuts.js';
+import { esc } from './lib/dom.js';
+import { getRaw, setRaw, KEYS } from './lib/store.js';
 
 const PAGE_LABEL = {
   dashboard: 'Home', calendar: 'Calendar', people: 'People', deadlines: 'Deadlines', checklist: 'Checklist',
@@ -28,6 +31,13 @@ function visibleRoutes() {
   return rs.length ? rs : ROUTES;
 }
 function go(route) { if (route) location.hash = '#/' + route; }
+// keyboard route-swap: flag the source BEFORE mutating the hash so router.activate() can skip the
+// View Transition (a keyboard swap renders instantly — Binding Principle 6). Only marks when a real
+// nav will happen (a null / same-route target would leave the flag stuck for the next mouse nav).
+// Compare against the REAL current route (parseRoute knows HIDDEN routes) — currentRoute()
+// collapses every hidden route to 'dashboard', which would make `1`=Home a silent no-op on
+// #/study etc. (the pages this keyboard work targets). Only bail on a genuine same-route nav.
+function goKbd(route) { if (!route || route === parseRoute(location.hash)) return; markNavSource('keyboard'); go(route); }
 function neighbour(dir) {
   const vr = visibleRoutes();
   const i = vr.indexOf(currentRoute());
@@ -42,6 +52,7 @@ export function mountGestures() {
   wireLongPress();
   wireNavDrawer();
   document.getElementById('kbdHelp')?.addEventListener('click', () => toggleHelp());   // discoverable trigger for the ? overlay
+  maybeShowKbdNudge();
 }
 
 /* ------------------------------------------------------------- mobile hamburger nav drawer */
@@ -160,18 +171,21 @@ function wireKeyboard() {
     }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (typingTarget(document.activeElement)) return;
-    if (e.key === 'Escape') { closeHelp(); return; }
+    if (e.key === 'Escape') { closeHelp(); return; }         // Escape is exempt from the WCAG gate (a named key + closes the help UI)
+    // WCAG 2.1.4 turn-off: every bare single-char shortcut below is silenced when the user disables
+    // keyboard shortcuts in Guide & Settings. ⌘K / ⌘Z above stay live (documented modifier exceptions).
+    if (!shortcutsEnabled()) return;
     // ? still toggles the help over itself; every OTHER open dialog blocks all shortcuts
     // (was '.modal-overlay' only — confirm dialogs/datepickers/palette let 1-9 navigate underneath)
     const modal = document.querySelector('[aria-modal="true"]');
     if (e.key === '?' && (!modal || modal.classList.contains('kbd-help'))) { e.preventDefault(); toggleHelp(); return; }
     if (modal) return;
     if (e.key === '/' && !document.querySelector('.cmdk-overlay')) { e.preventDefault(); openPalette(); return; }
-    if (e.key >= '1' && e.key <= '9') { const vr = visibleRoutes(); const idx = +e.key - 1; if (idx < vr.length) { e.preventDefault(); go(vr[idx]); } return; }
-    if (e.key === '[') { e.preventDefault(); go(neighbour(-1)); return; }
-    if (e.key === ']') { e.preventDefault(); go(neighbour(1)); return; }
+    if (e.key >= '1' && e.key <= '9') { const vr = visibleRoutes(); const idx = +e.key - 1; if (idx < vr.length) { e.preventDefault(); goKbd(vr[idx]); } return; }
+    if (e.key === '[') { e.preventDefault(); goKbd(neighbour(-1)); return; }
+    if (e.key === ']') { e.preventDefault(); goKbd(neighbour(1)); return; }
     // common utility shortcuts — keys unused by the calendar (m/w/d/a/n/t) + checklist (j/k/d/p/e) layers
-    if (e.key === '0') { e.preventDefault(); go('emergency'); return; }        // 0 = Emergency, always (11 routes; 1-9 cover the first nine)
+    if (e.key === '0') { e.preventDefault(); goKbd('emergency'); return; }        // 0 = Emergency, always (11 routes; 1-9 cover the first nine)
     if (e.key === 'b' || e.key === 'B') { e.preventDefault(); document.getElementById('notifBell')?.click(); return; }   // notifications
     if (e.key === '\\') { e.preventDefault(); document.getElementById('themeToggle')?.click(); return; }                 // light/dark
     if (e.key === ',') { e.preventDefault(); document.getElementById('guideBtn')?.click(); return; }                     // guide & settings (⌘, convention)
@@ -179,38 +193,35 @@ function wireKeyboard() {
 }
 let helpEl = null, helpReturnFocus = null;
 function toggleHelp() { helpEl ? closeHelp() : openHelp(); }
+// render one row's <kbd> chips from its (raw) registry keys → display glyphs, deduped case-
+// insensitively so 'r'/'R' shows a single chip (both cases command; the sheet shows one).
+function khChips(keys) {
+  const seen = new Set(), out = [];
+  for (const k of keys) { const lc = String(k).toLowerCase(); if (seen.has(lc)) continue; seen.add(lc); out.push(k); }
+  return out.map(k => `<kbd>${esc(keyGlyph(k))}</kbd>`).join(' ');
+}
 function openHelp() {
   helpReturnFocus = document.activeElement;   // restore focus to the ?-trigger on close
+  dismissNudge();                             // opening the sheet is the strongest signal the nudge worked
+  const enabled = shortcutsEnabled();
   helpEl = document.createElement('div');
   helpEl.className = 'kbd-help';
   helpEl.setAttribute('role', 'dialog'); helpEl.setAttribute('aria-modal', 'true'); helpEl.setAttribute('aria-label', 'Keyboard shortcuts');
-  const rows = visibleRoutes().slice(0, 9).map((r, i) => `<div class="kh-row"><kbd>${i + 1}</kbd><span>${PAGE_LABEL[r] || r}</span></div>`).join('');   // 1–9 follow the VISIBLE nav order (same as the shortcut); the rest are reachable via ⌘K (below)
+  // 1–9 follow the VISIBLE nav order (same as the live shortcut); fed into the model so the page-jump
+  // binding renders its real labels. The whole sheet is built from BINDINGS — a drift test guards it.
+  const pages = visibleRoutes().slice(0, 9).map((r, i) => ({ key: String(i + 1), label: PAGE_LABEL[r] || r }));
+  const model = helpSheetModel(BINDINGS, { enabled, pages });
+  const groupsHTML = model.map(g => `<section class="kh-group">
+      <p class="kh-sub">${esc(g.title)}</p>
+      ${g.rows.map(r => `<div class="kh-row">${khChips(r.keys)}<span>${esc(r.label)}</span></div>`).join('')}
+    </section>`).join('');
+  const banner = enabled ? '' :
+    `<p class="kh-off">Keyboard shortcuts are currently <strong>off</strong>. Turn them back on in the ⚙ Guide &amp; Settings panel to use the keys below.</p>`;
   helpEl.innerHTML = `<div class="kh-panel">
     <h2 class="kh-title">Keyboard shortcuts</h2>
-    <div class="kh-grid">${rows}</div>
-    <div class="kh-row"><kbd>[</kbd> <kbd>]</kbd><span>Previous / next page</span></div>
-    <div class="kh-row"><kbd>0</kbd><span>Emergency page</span></div>
-    <div class="kh-row"><kbd>b</kbd><span>Notifications</span></div>
-    <div class="kh-row"><kbd>\\</kbd><span>Light / dark theme</span></div>
-    <div class="kh-row"><kbd>,</kbd><span>Guide &amp; settings</span></div>
-    <div class="kh-row"><kbd>⌘K</kbd> <kbd>/</kbd><span>Jump anywhere + search everything (command palette)</span></div>
-    <div class="kh-row"><kbd>⌘Z</kbd> <kbd>Ctrl+Z</kbd><span>Undo the last calendar delete</span></div>
-    <p class="kh-sub">On the calendar</p>
-    <div class="kh-row"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd><span>Move between days (month view)</span></div>
-    <div class="kh-row"><kbd>⇧←</kbd> <kbd>⇧→</kbd><span>Previous / next month (or week)</span></div>
-    <div class="kh-row"><kbd>m</kbd> <kbd>w</kbd> <kbd>d</kbd> <kbd>a</kbd><span>Switch to Month / Week / Day / Agenda</span></div>
-    <div class="kh-row"><kbd>n</kbd><span>New event on the focused day</span></div>
-    <div class="kh-row"><kbd>−</kbd> <kbd>Del</kbd><span>Remove the focused / open event</span></div>
-    <div class="kh-row"><kbd>t</kbd><span>Jump to today</span></div>
-    <div class="kh-row"><span class="kh-tip">Quick-add box: type <em>"Ramen with Kenji Fri 7pm"</em> → an event</span></div>
-    <p class="kh-sub">On the checklist</p>
-    <div class="kh-row"><kbd>↑</kbd><kbd>↓</kbd> <kbd>j</kbd><kbd>k</kbd><span>Move between tasks</span></div>
-    <div class="kh-row"><kbd>Space</kbd><span>Tick / untick the focused task</span></div>
-    <div class="kh-row"><kbd>d</kbd><span>Set a due date</span></div>
-    <div class="kh-row"><kbd>p</kbd><span>Cycle priority (P1→P4)</span></div>
-    <div class="kh-row"><kbd>e</kbd> <kbd>−</kbd><span>Edit / remove your own task</span></div>
-    <div class="kh-row"><kbd>?</kbd><span>Toggle this help</span></div>
-    <p class="kh-hint">Tap 🔍 on the Checklist & Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
+    ${banner}
+    <div class="kh-groups${enabled ? '' : ' is-off'}">${groupsHTML}</div>
+    <p class="kh-hint">Tap 🔍 on the Checklist &amp; Packing pages to filter those lists. Long-press a calendar event, checklist or packing item for quick actions. Swipe left/right to change pages on a phone.</p>
     <button type="button" class="kh-close">Close</button>
   </div>`;
   document.body.appendChild(helpEl);
@@ -226,6 +237,31 @@ function closeHelp() {
   helpEl.remove(); helpEl = null;
   if (helpReturnFocus?.isConnected) helpReturnFocus.focus();   // don't drop keyboard focus to <body>
   helpReturnFocus = null;
+}
+
+/* ------------------------------------------------------- one-time "press ? for shortcuts" nudge */
+// K3: a single, unobtrusive first-run pill pointing at the ? sheet. Shown ONCE (persisted-dismiss —
+// no usage-tracking, just "seen"), only on a real keyboard device, only while shortcuts are ON (never
+// advertise dead keys). Auto-dismisses on a timeout, on close, or when the ? sheet opens.
+let nudgeEl = null, nudgeTimer = null;
+function dismissNudge() {
+  if (nudgeTimer) { clearTimeout(nudgeTimer); nudgeTimer = null; }
+  if (nudgeEl) { nudgeEl.remove(); nudgeEl = null; }
+}
+function maybeShowKbdNudge() {
+  if (getRaw(KEYS.kbdNudge, '') === 'seen') return;         // already shown once — never again
+  if (!shortcutsEnabled()) return;                          // shortcuts off → don't point at dead keys
+  // keyboard-only affordance: skip on touch/coarse-pointer devices where ? can't be pressed
+  if (!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches)) return;
+  setRaw(KEYS.kbdNudge, 'seen');                            // mark seen the moment it shows (idempotent)
+  nudgeEl = document.createElement('div');
+  nudgeEl.className = 'kbd-nudge';
+  nudgeEl.setAttribute('role', 'status');
+  nudgeEl.innerHTML = `<span>Press <kbd>?</kbd> for keyboard shortcuts</span>`
+    + `<button type="button" class="kbd-nudge-x" aria-label="Dismiss">✕</button>`;
+  document.body.appendChild(nudgeEl);
+  nudgeEl.querySelector('.kbd-nudge-x')?.addEventListener('click', dismissNudge);
+  nudgeTimer = setTimeout(dismissNudge, 9000);
 }
 
 /* --------------------------------------------------------------- long-press quick actions */

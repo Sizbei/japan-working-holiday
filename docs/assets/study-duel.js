@@ -13,6 +13,7 @@
 import { esc } from './lib/dom.js';
 import { rubyHTML } from './lib/furigana.js';
 import { pegHTML } from './lib/peg.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 import { clozeFor } from './lib/questions.js';
 
 const DUEL_N = 6;
@@ -130,7 +131,7 @@ export function openDuel(a, b) {
     const pct = Math.round(score / items.length * 100);
     body.innerHTML = `
       <div class="duel-score">
-        <div class="duel-score-art" aria-hidden="true">⚔️</div>
+        <div class="duel-score-art" aria-hidden="true">対</div>
         <p class="duel-score-n">${score} / ${items.length}</p>
         <p class="stu-note">${pct >= 80 ? "You've got the distinction." : 'Keep drilling this pair — the contrast is the point.'}</p>
         <div class="stu-controls">
@@ -167,6 +168,10 @@ export function openDuel(a, b) {
       return;
     }
     if (e.isComposing || e.keyCode === 229) return;
+    // WCAG 2.1.4 turn-off — the duel is the one card surface with its own listener (the rest run
+    // through the shell's gated activeFlow/cardCtl onKey), so it consults the shared gate too.
+    // After Escape/Tab (named keys must survive the toggle for focus/close); every bare char stops.
+    if (!shortcutsEnabled() && e.key.length === 1) return;
     const t = e.target;
     if (step === 'choose' && /^[12]$/.test(e.key)) {           // 1/2 pick (an option button is focused — don't gate on that)
       e.preventDefault(); pick(parseInt(e.key, 10) - 1);

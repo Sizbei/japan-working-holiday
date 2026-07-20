@@ -88,7 +88,7 @@ export function startStats(ctx, opts = {}) {
     if (p.done) {
       return `<section class="stu-pace stu-pace-done" aria-label="Pacing">
         <h4 class="stu-stats-h">Exam pacing</h4>
-        <p class="stu-pace-line">🏅 <b>All 353 gates passed.</b> Nothing left to project — you're a JLPT grammar master.</p></section>`;
+        <p class="stu-pace-line"><span class="stu-mark-shu" aria-hidden="true">✦</span> <b>All 353 gates passed.</b> Nothing left to project — you're a JLPT grammar master.</p></section>`;
     }
     const projISO = new Date(p.projected).toISOString().slice(0, 10);
     const anchors = EXAM_ANCHORS.map(a => {
@@ -166,7 +166,7 @@ export function startStats(ctx, opts = {}) {
         <span class="stu-trend-last">${esc(String(last.pct))}% <span class="stu-note">(${esc(String(series.length))} mock${series.length === 1 ? '' : 's'})</span></span></div>`;
     }).join('');
     if (!rows) return `<section class="stu-trend" aria-label="Mock trend"><h4 class="stu-stats-h">Mock trend</h4>
-      <p class="stu-note">No mock exams logged yet — run one from the course home (🎓 Mock exam) to start the trendline.</p></section>`;
+      <p class="stu-note">No mock exams logged yet — run one from the course home (試 Mock exam) to start the trendline.</p></section>`;
     return `<section class="stu-trend" aria-label="Mock trend"><h4 class="stu-stats-h">Mock trend <span class="stu-note">(grammar half, directional)</span></h4>${rows}</section>`;
   }
 
@@ -190,13 +190,20 @@ export function startStats(ctx, opts = {}) {
       const m = STAGE_META[st];
       return `<span class="stu-hc-key"><span class="stu-hc stu-hc-${st}" aria-hidden="true"><i style="height:${(m.rank + 1) / 6 * 100}%"></i></span>${esc(m.label)}</span>`;
     }).join('');
-    const levels = LEVELS.map(lv => `<div class="stu-hc-level" data-level="${lv}">
-      <div class="stu-hc-level-h">${esc(lv)} <span class="stu-note" data-lvcount>· ${esc(String(LEVEL_TOTALS[lv]))}</span></div>
-      <div class="stu-hc-grid" data-grid="${lv}"></div></div>`).join('');
+    // Grid semantics (K4b): the visual grid flow-wraps into fluid, viewport-dependent lines, so
+    // fabricating a role="row" per visual line would LIE to AT (the row count would change with the
+    // window and never match the DOM). The ONE honest, stable grouping is by JLPT level — which is how
+    // the grid is already organised — so each level is a single ARIA row inside role="grid", the level
+    // header is aria-hidden (its text rides the row's aria-label), and every cell is a role="gridcell".
+    // Arrow/Home/End/Page/Ctrl+Home/End nav is a roving-tabindex composite (one tab stop for all 353)
+    // driven by onGridKey below; Up/Down move by VISUAL column since the rows wrap.
+    const levels = LEVELS.map((lv, i) => `<div class="stu-hc-level" data-level="${lv}" role="rowgroup">
+      <div class="stu-hc-level-h" aria-hidden="true">${esc(lv)} <span class="stu-note" data-lvcount>· ${esc(String(LEVEL_TOTALS[lv]))}</span></div>
+      <div class="stu-hc-grid" data-grid="${lv}" role="row" aria-rowindex="${i + 1}" aria-label="${esc(lv)}, ${esc(String(LEVEL_TOTALS[lv]))} points"></div></div>`).join('');
     return `<section class="stu-heat" aria-label="Mastery heat grid">
-      <h4 class="stu-stats-h">Mastery map <span class="stu-note">(353 points · tap a cell to drill it)</span></h4>
+      <h4 class="stu-stats-h" id="stuHcH">Mastery map <span class="stu-note">(353 points · arrow keys to move, Enter to drill)</span></h4>
       <div class="stu-hc-legend">${legend}</div>
-      ${levels}
+      <div class="stu-hc-grids" role="grid" aria-labelledby="stuHcH" aria-rowcount="${LEVELS.length}">${levels}</div>
       <div class="stu-hc-detail" id="stuHcDetail" role="status" aria-live="polite"></div>
     </section>`;
   }
@@ -217,7 +224,10 @@ export function startStats(ctx, opts = {}) {
       const m = STAGE_META[st] || STAGE_META.none;
       const pat = (pc[id] && pc[id].pattern) || id;
       const fill = m.rank >= 0 ? (m.rank + 1) / 6 * 100 : 0;
-      return `<button type="button" class="stu-hc stu-hc-${st}" data-act="hcCell" data-id="${esc(id)}" title="${esc(pat)} — ${esc(m.label)}" aria-label="${esc(pat)}, ${esc(m.label)}"><i style="height:${fill.toFixed(0)}%"></i></button>`;
+      // role="gridcell" on the <button>: a focusable cell (native Enter/Space still fires click →
+      // hcCell, independent of the role override). tabindex="-1" for the roving pattern — fillHeat
+      // promotes the very first cell to 0 once it mounts.
+      return `<button type="button" role="gridcell" tabindex="-1" class="stu-hc stu-hc-${st}" data-act="hcCell" data-id="${esc(id)}" title="${esc(pat)} — ${esc(m.label)}" aria-label="${esc(pat)}, ${esc(m.label)}"><i style="height:${fill.toFixed(0)}%"></i></button>`;
     };
 
     // queue: [{ grid, html }] flattened, filled in batches of 64
@@ -237,7 +247,95 @@ export function startStats(ctx, opts = {}) {
       i = end;
       if (i < queue.length) rafId = requestAnimationFrame(step); else rafId = 0;
     };
-    if (queue.length) step();
+    if (queue.length) {
+      step();                                    // first batch is synchronous → the first cell now exists
+      const first = gridCells()[0];              // promote it to the single tab stop (roving init)
+      if (first) first.tabIndex = 0;
+    }
+  }
+
+  // ── heat-grid roving tabindex (K4b) ────────────────────────────────────────────
+  // The 353 cells are ONE tab stop; named keys move the active cell + roll the `0`. All keys here are
+  // WCAG-2.1.4-EXEMPT (arrows / Home / End / PageUp/Down / Ctrl+Home/End — never bare printable chars),
+  // so onGridKey lives on the grid container (fires before study.js's root handler and stopPropagation-s)
+  // and stays live even when the shortcut toggle is off. Enter/Space are NOT handled here — the native
+  // <button> activation opens the cell (delegated click → hcCell), so a keydown handler would double-fire.
+  const gridCells = () => [...root.querySelectorAll('.stu-hc-grid .stu-hc')];
+
+  function focusCell(cells, idx) {
+    if (!cells.length) return;
+    idx = Math.max(0, Math.min(cells.length - 1, idx));
+    const prev = root.querySelector('.stu-hc-grid .stu-hc[tabindex="0"]');
+    if (prev) prev.tabIndex = -1;
+    const c = cells[idx];
+    c.tabIndex = 0;
+    c.focus({ preventScroll: true });
+    c.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+  }
+
+  // Up/Down move by VISUAL column: with fluid wrapping there is no logical column, so we read layout
+  // rects (viewport coords, consistent across the 5 per-level containers) and step to the nearest cell
+  // one visual line up/down, matching x as closely as possible. O(353) per press — negligible.
+  function moveVertical(cells, cur, dir) {
+    const r = cells[cur].getBoundingClientRect();
+    const cx = r.left, cy = r.top;
+    let lineTop = null;                          // the top of the immediately adjacent line in `dir`
+    for (const cell of cells) {
+      const t = cell.getBoundingClientRect().top;
+      if (dir < 0) { if (t < cy - 1 && (lineTop === null || t > lineTop)) lineTop = t; }
+      else { if (t > cy + 1 && (lineTop === null || t < lineTop)) lineTop = t; }
+    }
+    if (lineTop === null) return cur;            // already on the top/bottom line
+    let best = cur, bestDx = Infinity;
+    for (let k = 0; k < cells.length; k++) {
+      const rr = cells[k].getBoundingClientRect();
+      if (Math.abs(rr.top - lineTop) > 2) continue;   // only cells on the target line
+      const dx = Math.abs(rr.left - cx);
+      if (dx < bestDx) { bestDx = dx; best = k; }
+    }
+    return best;
+  }
+
+  // level-group anchors for Home/End (this level's ends) and PageUp/Down (jump whole levels).
+  function levelBounds(cells, cur) {
+    const grid = cells[cur].closest('.stu-hc-grid');
+    let start = cur, end = cur;
+    while (start > 0 && cells[start - 1].closest('.stu-hc-grid') === grid) start--;
+    while (end < cells.length - 1 && cells[end + 1].closest('.stu-hc-grid') === grid) end++;
+    return { start, end };
+  }
+  function levelJump(cells, cur, dir) {
+    const { start, end } = levelBounds(cells, cur);
+    if (dir > 0) return end < cells.length - 1 ? end + 1 : cur;   // first cell of the next level
+    // PageUp: from mid-level land on this level's start first; from the start, jump to the previous level.
+    if (cur > start) return start;
+    return start > 0 ? levelBounds(cells, start - 1).start : cur;
+  }
+
+  function onGridKey(e) {
+    if (e.isComposing || e.keyCode === 229) return;
+    const cells = gridCells();
+    if (!cells.length) return;                   // guard the chunked mount — nothing to move yet
+    let cur = cells.findIndex(c => c === document.activeElement);
+    if (cur < 0) cur = cells.findIndex(c => c.tabIndex === 0);
+    if (cur < 0) cur = 0;
+    const k = e.key;
+    let next = null;
+    if ((e.ctrlKey || e.metaKey) && k === 'Home') next = 0;
+    else if ((e.ctrlKey || e.metaKey) && k === 'End') next = cells.length - 1;
+    else if (e.ctrlKey || e.metaKey) return;     // leave other modified combos to the OS/gestures
+    else if (k === 'ArrowLeft') next = cur - 1;
+    else if (k === 'ArrowRight') next = cur + 1;
+    else if (k === 'ArrowUp') next = moveVertical(cells, cur, -1);
+    else if (k === 'ArrowDown') next = moveVertical(cells, cur, 1);
+    else if (k === 'Home') next = levelBounds(cells, cur).start;
+    else if (k === 'End') next = levelBounds(cells, cur).end;
+    else if (k === 'PageUp') next = levelJump(cells, cur, -1);
+    else if (k === 'PageDown') next = levelJump(cells, cur, 1);
+    else return;                                 // Enter/Space fall through to native button activation
+    e.preventDefault();
+    e.stopPropagation();                         // don't let study.js's root handler / gestures also see it
+    focusCell(cells, next);
   }
 
   function onHcCell(btn) {
@@ -277,7 +375,7 @@ export function startStats(ctx, opts = {}) {
     }).join('');
     return `<div class="stu-cert" role="group" aria-label="JLPT Grammar Master certificate">
       <div class="stu-cert-inner">
-        <div class="stu-cert-seal" aria-hidden="true">🏅</div>
+        <div class="stu-cert-seal stu-mark-shu" aria-hidden="true">✦</div>
         <p class="stu-cert-kicker">Certificate of Mastery</p>
         <h3 class="stu-cert-title" lang="ja">文法マスター</h3>
         <p class="stu-cert-sub">${complete ? 'JLPT Grammar Master — all 353 points mastered' : 'Preview — unlocks at 353 / 353 mastered'}</p>
@@ -306,7 +404,7 @@ export function startStats(ctx, opts = {}) {
       ${preview ? `<p class="stu-note stu-cert-preview-note">Preview — the real certificate unlocks when all 353 points reach Mastered.</p>` : ''}
       ${certificateHTML(state)}
       <div class="stu-cert-foot">
-        <button type="button" class="stu-btn stu-btn-primary stu-cert-print" data-act="certPrint">🖨 Print / save</button>
+        <button type="button" class="stu-btn stu-btn-primary stu-cert-print" data-act="certPrint"><span aria-hidden="true">印</span> Print / save</button>
         <button type="button" class="stu-btn stu-btn-ghost" data-act="statsBack">Back to progress</button>
       </div>
     </div>`;
@@ -324,8 +422,8 @@ export function startStats(ctx, opts = {}) {
     const previewFlag = (() => { try { return localStorage.getItem(PREVIEW_KEY) === '1'; } catch { return false; } })();
     const ms = masteryStats(state);
     const certRow = (complete || previewFlag)
-      ? `<button type="button" class="stu-btn stu-btn-primary stu-cert-open" data-act="certOpen">🏅 ${complete ? 'View your JLPT Master certificate' : 'Preview certificate'} →</button>`
-      : `<p class="stu-note stu-cert-locked">🔒 JLPT Master certificate unlocks at 353/353 mastered (you're at ${esc(String(Object.values(ms.perLevel).reduce((a, b) => a + b, 0)))}).</p>`;
+      ? `<button type="button" class="stu-btn stu-btn-primary stu-cert-open" data-act="certOpen"><span class="stu-mark-shu" aria-hidden="true">✦</span> ${complete ? 'View your JLPT Master certificate' : 'Preview certificate'} →</button>`
+      : `<p class="stu-note stu-cert-locked">JLPT Master certificate unlocks at 353/353 mastered (you're at ${esc(String(Object.values(ms.perLevel).reduce((a, b) => a + b, 0)))}).</p>`;
     root.innerHTML = `<div class="stu-stats-view">
       <div class="stu-stats-top">
         <button type="button" class="stu-btn stu-btn-ghost stu-stats-back" data-act="statsBack">← Course home</button>
@@ -341,6 +439,9 @@ export function startStats(ctx, opts = {}) {
     </div>`;
     root.querySelector('.stu-stats-back')?.focus({ preventScroll: true });
     fillHeat(state);
+    // roving-tabindex nav for the heat grid — named keys only, so it's live even with shortcuts off.
+    // Self-cleans on the next root.innerHTML rebuild (same lifecycle as K4a's run-container listener).
+    root.querySelector('.stu-hc-grids')?.addEventListener('keydown', onGridKey);
     announce('Progress. Mastery analytics, exam pacing, and the mastery map.');
   }
 
@@ -370,7 +471,7 @@ export function startStats(ctx, opts = {}) {
   if (view === 'cert') {
     renderCert();
     // the master-moment burst (self-gates on reduce-motion / celebrations-off inside celebrate())
-    if (isMasterComplete(ctx.getState())) celebrate('🏅 JLPT Grammar Master — all 353 points!');
+    if (isMasterComplete(ctx.getState())) celebrate('✦ JLPT Grammar Master — all 353 points!');
   } else {
     renderMain();
   }

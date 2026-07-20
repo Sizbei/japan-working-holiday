@@ -15,6 +15,7 @@ import { loadPlaces, patchPlace } from './lib/places.js';
 import { approxCoord } from './lib/geo.js';
 import { dndToast } from './dnd.js';
 import { duplicateUserEvent, eventMenuSpec } from './lib/calevents.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 import { customItem, loadChecklistCustom, saveChecklistCustom } from './lib/checklist.js';
 import { checklistItems, revealChecklistItem } from './checklist-page.js';
 import { parseEvent } from './lib/nlevent.js';
@@ -27,6 +28,7 @@ import { monthHTML, panelHTML, wirePanel, wireCells, wireMonthSelect, wireResche
 import { openModal, openExport, onImport } from './calendar-editor.js';
 import { ensureRoute } from './lazyroutes.js';
 import { birthdaysByDate } from './lib/people.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { askCalendar } from './lib/modal.js';
 import { CAL_PALETTE, normalizeCalendars, addCalendar, updateCalendar, removeCalendar, nextColor } from './lib/calendars.js';
 export { openModal };   // re-export so calendar-week.js / calendar-month.js keep importing it from here
@@ -169,7 +171,7 @@ export function applyCalColors() {
   if (!el) { el = document.createElement('style'); el.id = 'calCustomColors'; document.head.appendChild(el); }
   const escId = (id) => (window.CSS && CSS.escape) ? CSS.escape(id) : id;   // ids are already slug-validated in normalizeCalendars; escape too as defence-in-depth
   el.textContent = customCals().map(c =>
-    `:is(.cal-chip,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${escId(c.id)}{--chip-cat:${c.color};}`).join('');
+    `:is(.cal-chip,.cal-bar,.cal-opill,.calrow,.cp-cd,.sp-dot,.pop-sw).cat-${escId(c.id)}{--chip-cat:${c.color};}`).join('');
 }
 
 export function catOf(e) { return e.category || 'personal'; }
@@ -184,11 +186,12 @@ export function visible(e) {
 function eventsOn(iso, capLong = false) {
   return allEvents().filter(e => {
     if (!visible(e)) return false;
-    const s = e.date.slice(0, 10);
-    const en = (e.endDate && parseISO(e.endDate)) ? e.endDate.slice(0, 10) : '';
-    if (!en) return s === iso;
-    if (capLong) { const span = daysBetween(s, en); if (span !== null && span > SPAN_CAP) return s === iso; }
-    return iso >= s && iso <= en;
+    return recurOccurrences(e, iso, iso).some(occ => {   // recurring events match on any occurrence date
+      const s = occ.date, en = (occ.endDate && parseISO(occ.endDate)) ? occ.endDate.slice(0, 10) : '';
+      if (!en) return s === iso;
+      if (capLong) { const span = daysBetween(s, en); if (span !== null && span > SPAN_CAP) return s === iso; }
+      return iso >= s && iso <= en;
+    });
   });
 }
 
@@ -494,9 +497,10 @@ function onCalKeydown(e) {
   if (e.metaKey || e.ctrlKey || e.altKey) return;           // leave combos to the global/browser handlers
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+  if (!shortcutsEnabled() && e.key.length === 1) return;   // WCAG 2.1.4: single-char shortcuts (t/n/f/m/w/d/a/−) off; arrows + Del/Backspace stay
 
   if (e.key === '-' || e.key === 'Delete' || e.key === 'Backspace') {
-    const chip = e.target.closest?.('.cal-chip[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
+    const chip = e.target.closest?.('.cal-chip[data-ev], .cal-bar[data-ev], .agenda-row[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
     const id = _sidePanelEv || chip?.dataset.ev;
     if (id) { e.preventDefault(); removeEventByKey(id); }
     return;
@@ -773,6 +777,8 @@ export function safeCat(e) { const c = catOf(e); return (CATS.includes(c) || cal
 export function rescheduleEvent(id, day) {
   const ev = allEvents().find(x => x.id === id);
   if (!ev) return;
+  if (isRecurring(ev)) return;                 // a recurring chip is an occurrence, not a movable instance — dragging it would silently rewrite the whole series' anchor. Edit the event to change its date/cadence.
+  if (ev.endDate && ev.endDate.slice(0, 10) !== ev.date.slice(0, 10)) return;   // multi-day events must NEVER move via drag — only their bars render them and bars aren't drag targets, but enforce it here too so no future selector regression can teleport a whole stay. Move/resize via the editor or the week grips.
   if (ev.date.slice(0, 10) === day) return;   // dropped on its own day — not a real move (no phantom override / "moved" flag)
   if (ev.source === 'user') {
     saveUser(loadUser().map(x => x.id === id ? { ...x, date: day, endDate: shiftEnd(x.date, day, x.endDate) } : x));   // keep multi-day span
@@ -1149,7 +1155,7 @@ function eventMenuItems(ev) {
 
 // Resolve a DOM node to event menu items, or null if it's not an event trigger. Exported for gestures.js.
 export function getEventMenu(node) {
-  const trig = node?.closest?.('.cal-chip[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
+  const trig = node?.closest?.('.cal-chip[data-ev], .cal-bar[data-ev], .agenda-title[data-ev], .agenda-row[data-ev], .pop-open[data-ev], .cp-deadline[data-ev], .wkl-ev[data-ev], .wk-chip[data-ev], .wk-bar[data-ev], .wk2-ev[data-ev]');
   if (!trig) return null;
   const ev = allEvents().find(x => x.id === trig.dataset.ev);
   return ev ? eventMenuItems(ev) : null;

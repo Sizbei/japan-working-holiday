@@ -17,6 +17,7 @@ import {
   cardsFromRows, chunkCount, chunkSlice, chunkLabel, toggleShaky, shuffled, pileOrder,
 } from './lib/anki.js';
 import { listZip, readZipEntry } from './lib/zip.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
 import { openSqlite, sqliteTables, sqliteRows } from './lib/sqlite.js';
 import { parseMediaManifest, soundRef, imgRef, mediaPut, mediaGet, mediaClear, mediaDeletePrefix } from './lib/ankimedia.js';
 
@@ -213,6 +214,7 @@ function wireDeckKeys() {
     if (!stream || !root || root.offsetParent === null) return;   // deck not mounted / route hidden
     if (stream.deck.view === 'skim') return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;               // leave Cmd/Ctrl/Alt combos (palette, undo…)
+    if (!shortcutsEnabled() && e.key.length === 1) return;         // WCAG 2.1.4: single-char deck keys off (arrows still drive the deck)
     const t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
     if (t && t.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;   // let a focused button activate

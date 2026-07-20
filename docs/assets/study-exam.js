@@ -20,6 +20,14 @@ import { rubyHTML } from './lib/furigana.js';
 import { nowISO } from './lib/dates.js';
 import { buildExam, scoreExam, examBand, recordExam, KATA_COUNT, STAR_COUNT, PASSAGE_COUNT } from './lib/exam.js';
 import { canSpeak, speakExample } from './speak.js';
+import { shortcutsEnabled } from './lib/shortcuts.js';
+import { confirmModal } from './lib/modal.js';
+
+// K3/K4a turn-off-aware kbd hint (mirrors study.js kbHint): no dead-key chips/aria when shortcuts are
+// off. `ksVal` is the aria-keyshortcuts token (e.g. ArrowLeft); `glyph` is the readable <kbd> label.
+const kbHint = (ksVal, glyph = ksVal) => shortcutsEnabled()
+  ? { ks: ` aria-keyshortcuts="${esc(ksVal)}"`, chip: ` <kbd aria-hidden="true">${esc(glyph)}</kbd>` }
+  : { ks: '', chip: '' };
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const PASSAGES_FILE = 'data/grammar-passages.json';
@@ -66,6 +74,7 @@ function examController(ctx, passages) {
   const flags = new Set();
   let pos = 0;
   let pendingSubmit = false;    // two-press submit when blanks remain
+  let exiting = false;          // K4a: an exit-confirm modal is open (re-entrancy guard for Esc)
 
   // timing
   let timerId = 0;
@@ -96,7 +105,7 @@ function examController(ctx, passages) {
     root.innerHTML = `
       <div class="stu-mock stu-mock-picker">
         <div class="stu-mock-head">
-          <h3 class="stu-mock-h">🎓 Mock exam — grammar section</h3>
+          <h3 class="stu-mock-h"><span aria-hidden="true">試</span> Mock exam — grammar section</h3>
           <p class="stu-note">A timed, feedback-free simulation of the JLPT 文字・語彙・文法 grammar items. Pick a level to begin.</p>
         </div>
         <div class="stu-mock-picks">${cards}</div>
@@ -168,20 +177,26 @@ function examController(ctx, passages) {
     root.innerHTML = `
       <div class="stu-mock stu-mock-run">
         <div class="stu-mock-bar">
+          <button type="button" class="stu-btn stu-btn-ghost stu-mock-exit" data-act="examExit" aria-label="Exit the mock exam"${kbHint('Escape', 'Esc').ks}>✕ Exit${kbHint('Escape', 'Esc').chip}</button>
           <span class="stu-mock-timer" id="stuExamTimer">⏱ ${esc(fmtClock(remaining))}</span>
           <span class="stu-mock-count">問 ${esc(String(pos + 1))} / ${esc(String(total))}</span>
-          <button type="button" class="stu-btn stu-btn-ghost stu-mock-flag${flags.has(pos) ? ' is-on' : ''}" data-act="examFlag" aria-pressed="${flags.has(pos) ? 'true' : 'false'}">⚑ ${flags.has(pos) ? 'Flagged' : 'Flag'}</button>
+          <button type="button" class="stu-btn stu-btn-ghost stu-mock-flag${flags.has(pos) ? ' is-on' : ''}" data-act="examFlag" aria-pressed="${flags.has(pos) ? 'true' : 'false'}"${kbHint('F').ks}>⚑ ${flags.has(pos) ? 'Flagged' : 'Flag'}${kbHint('F').chip}</button>
         </div>
         <div class="stu-mock-body" id="stuExamBody">${cardHTML(q)}</div>
         <div class="stu-mock-nav">
-          <button type="button" class="stu-btn stu-btn-ghost" data-act="examPrev"${pos === 0 ? ' disabled' : ''}>← 前</button>
-          <button type="button" class="stu-btn stu-btn-ghost" data-act="examNext"${pos === total - 1 ? ' disabled' : ''}>次 →</button>
-          <button type="button" class="stu-btn stu-btn-primary stu-mock-submit" data-act="examSubmit">${submitLabel()}</button>
+          <button type="button" class="stu-btn stu-btn-ghost" data-act="examPrev"${pos === 0 ? ' disabled' : ''}${kbHint('ArrowLeft', '←').ks}>← 前${kbHint('ArrowLeft', '←').chip}</button>
+          <button type="button" class="stu-btn stu-btn-ghost" data-act="examNext"${pos === total - 1 ? ' disabled' : ''}${kbHint('ArrowRight', '→').ks}>次 →${kbHint('ArrowRight', '→').chip}</button>
+          <button type="button" class="stu-btn stu-btn-primary stu-mock-submit" data-act="examSubmit"${kbHint('Enter', '⏎').ks}>${submitLabel()}</button>
         </div>
         ${paletteHTML()}
       </div>`;
     focusCard(focusSel);
     paintTimer();
+    // K4a: the dedicated run-container listener handles the WCAG-2.1.4-EXEMPT nav keys (arrows / Enter
+    // / Esc) so they work regardless of the shortcut toggle; it lives on the freshly-built element, so
+    // no manual cleanup is needed (the next root.innerHTML drops it). Printable keys (F / digits) stay
+    // on the controller's onKey, which study.js only forwards while shortcutsEnabled() (WCAG-gated).
+    root.querySelector('.stu-mock-run')?.addEventListener('keydown', onRunKey);
     announce(`Question ${pos + 1} of ${total}. ${FMT_LABEL[q.format]}.`);
   }
 
@@ -264,8 +279,10 @@ function examController(ctx, passages) {
         ${isStar ? '<span class="stu-slot-star-mark" aria-hidden="true">★</span>' : ''}
         <span class="stu-slot-body" lang="ja">${filled ? tileRuby(ti) : '<span class="stu-slot-ph" aria-hidden="true">＿</span>'}</span></button>`;
     }).join('');
+    // K4a: a numbered badge per tile is the visible affordance for the digit place-path (press N to
+    // drop piece N into the next empty slot — mirrors the 文法形式 option numbers; tap parity via click).
     const tileHTML = sc.chunks.map((c, i) => placed.has(i) ? ''
-      : `<button type="button" class="stu-tile" data-act="examTile" data-i="${i}" lang="ja">${tileRuby(i)}</button>`).join('');
+      : `<button type="button" class="stu-tile" data-act="examTile" data-i="${i}"><span class="stu-mc-key" aria-hidden="true">${i + 1}</span><span lang="ja">${tileRuby(i)}</span></button>`).join('');
     return `<p class="stu-mock-fmt">${FMT_LABEL.star}</p>
       <p class="stu-scram-q">並べ替え — arrange all four pieces (★ = the starred slot). No feedback until you submit.</p>
       <div class="stu-slots" role="group" aria-label="Answer slots">${slotHTML}</div>
@@ -280,10 +297,12 @@ function examController(ctx, passages) {
         isAnswered(i) ? 'is-answered' : '',
         flags.has(i) ? 'is-flagged' : '',
       ].filter(Boolean).join(' ');
-      return `<button type="button" class="stu-mock-pcell ${cls}" data-act="examJump" data-i="${i}"
+      // roving tabindex: the current question's cell is the ONE tab stop; the run-container listener
+      // rolls the 0 as arrows/Home/End move focus within the palette (K4a — not the K4b heat grid).
+      return `<button type="button" class="stu-mock-pcell ${cls}" data-act="examJump" data-i="${i}" tabindex="${i === pos ? '0' : '-1'}"${i === pos ? ' aria-current="true"' : ''}
         aria-label="Question ${i + 1}${isAnswered(i) ? ', answered' : ', blank'}${flags.has(i) ? ', flagged' : ''}${i === pos ? ', current' : ''}">${i + 1}</button>`;
     }).join('');
-    return `<div class="stu-mock-palette" role="group" aria-label="Question palette">${cells}</div>`;
+    return `<div class="stu-mock-palette" role="group" aria-label="Question palette (arrow keys move, Enter jumps)">${cells}</div>`;
   }
 
   // ── interactions ────────────────────────────────────────────────────────────────
@@ -325,7 +344,7 @@ function examController(ctx, passages) {
   }
   function toggleFlag() {
     if (flags.has(pos)) flags.delete(pos); else flags.add(pos);
-    renderRunning();
+    renderRunning('.stu-mock-flag');   // keep focus on the flag control (tap + F both re-toggle here)
     announce(flags.has(pos) ? 'Flagged.' : 'Unflagged.');
   }
   function trySubmit() {
@@ -340,6 +359,61 @@ function examController(ctx, passages) {
     chargeDwell();
     stopTimer();
     renderReport();
+  }
+
+  // K4a: exit the running mock with a confirm (NEVER a silent discard). The confirm modal (modal.js)
+  // owns its own focus trap + Esc; `exiting` guards against re-entry. The modal DOM lives outside the
+  // run container, so its Esc can't bubble back into onRunKey. On confirm we stop the timer + go home;
+  // on cancel the modal restores focus to where it was.
+  async function tryExit() {
+    if (exiting) return;
+    exiting = true;
+    let ok = false;
+    try {
+      ok = await confirmModal('Leave this mock exam? Your progress on it will be discarded.', { ok: 'Leave', cancel: 'Keep going', danger: true });
+    } catch (err) { console.error('[study-exam] exit confirm', err); }
+    exiting = false;
+    if (ok) { stopTimer(); ctx.done(); }
+  }
+
+  // ── roving tabindex within the question palette (K4a — NOT the K4b heat grid) ─────
+  function paletteCells() { return [...root.querySelectorAll('.stu-mock-pcell')]; }
+  function moveInPalette(where) {
+    const cells = paletteCells();
+    const cur = cells.indexOf(document.activeElement);
+    if (cur < 0) return false;
+    const next = where === 'first' ? 0 : where === 'last' ? cells.length - 1
+      : Math.min(cells.length - 1, Math.max(0, cur + where));
+    cells[cur].tabIndex = -1;
+    cells[next].tabIndex = 0;
+    cells[next].focus({ preventScroll: true });
+    return true;
+  }
+
+  // The WCAG-2.1.4-EXEMPT nav keys, live regardless of the shortcut toggle (Enter/Esc/arrows are named
+  // keys, not single printable chars). Bound on the run container (fires before study.js's root
+  // handler); F / digit picks stay on onKey (WCAG-gated). Enter on a focused BUTTON falls through to
+  // native activation (the BUTTON-fallthrough guard) so we never double-fire the submit/nav controls.
+  function onRunKey(e) {
+    if (screen !== 'running') return;
+    if (e.isComposing || e.keyCode === 229) return;
+    const k = e.key;
+    const inPalette = !!(e.target.closest && e.target.closest('.stu-mock-palette'));
+    if (inPalette) {
+      if (k === 'ArrowRight' || k === 'ArrowDown') { if (moveInPalette(1)) { e.preventDefault(); e.stopPropagation(); } return; }
+      if (k === 'ArrowLeft' || k === 'ArrowUp') { if (moveInPalette(-1)) { e.preventDefault(); e.stopPropagation(); } return; }
+      if (k === 'Home') { if (moveInPalette('first')) { e.preventDefault(); e.stopPropagation(); } return; }
+      if (k === 'End') { if (moveInPalette('last')) { e.preventDefault(); e.stopPropagation(); } return; }
+      // Enter on a palette cell = native jump (examJump); Esc handled below.
+    } else {
+      if (k === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); go(pos - 1); return; }
+      if (k === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); go(pos + 1); return; }
+    }
+    if (k === 'Enter') {
+      if (e.target.tagName === 'BUTTON') return;   // native activation of the focused control
+      e.preventDefault(); e.stopPropagation(); trySubmit(); return;
+    }
+    if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); tryExit(); return; }
   }
 
   // ── report (feedback lands HERE, and only here) ─────────────────────────────────
@@ -449,12 +523,12 @@ function examController(ctx, passages) {
       return `<div class="stu-mock-review-row">
         <span class="stu-mock-review-n">問 ${esc(String(i + 1))}</span>
         <span class="stu-mock-review-pat" lang="ja">${esc(q.pattern || '')}</span>
-        <button type="button" class="stu-speak" data-act="examSpeak" data-i="${esc(String(i))}" aria-label="Play audio for question ${esc(String(i + 1))}" title="Play audio">🔊</button>
+        <button type="button" class="stu-speak" data-act="examSpeak" data-i="${esc(String(i))}" aria-label="Play audio for question ${esc(String(i + 1))}" title="Play audio">音</button>
       </div>`;
     }).join('');
     if (!rows) return '';
     return `<section class="stu-mock-sec stu-mock-review"><h4 class="stu-mock-sec-h">Review — hear each sentence</h4>
-      <p class="stu-note">Post-exam audio. Tap 🔊 to hear the grammar spoken in its sentence.</p>${rows}</section>`;
+      <p class="stu-note">Post-exam audio. Tap 音 to hear the grammar spoken in its sentence.</p>${rows}</section>`;
   }
   function speakItem(i, btn) {
     const q = exam.items[i];
@@ -473,6 +547,7 @@ function examController(ctx, passages) {
         case 'examPick': startLevel(btn.dataset.level); break;
         case 'examOpt': pick(parseInt(btn.dataset.k, 10)); break;
         case 'examBack': stopTimer(); ctx.done(); break;
+        case 'examExit': tryExit(); break;
         case 'examFlag': toggleFlag(); break;
         case 'examPrev': go(pos - 1); break;
         case 'examNext': go(pos + 1); break;
@@ -484,14 +559,22 @@ function examController(ctx, passages) {
         case 'examSpeak': speakItem(parseInt(btn.dataset.i, 10), btn); break;
       }
     },
+    // Printable-key accelerators (F flag + 1–4 pick/place) — WCAG-gated: study.js only forwards this
+    // onKey while shortcutsEnabled(). The named nav keys (arrows/Enter/Esc) live in onRunKey instead,
+    // so they keep working when the toggle is off. study.js already stopPropagation'd these bare keys.
     onKey(e) {
       if (screen !== 'running') return;
       const q = exam.items[pos];
-      // digit accelerators pick an option (kata/passage) — study.js already stopPropagation'd these
-      if (/^[1-9]$/.test(e.key) && q && (q.format === 'kata' || q.format === 'passage')) {
+      if (!q) return;
+      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFlag(); return; }
+      if (/^[1-9]$/.test(e.key)) {
         const k = parseInt(e.key, 10) - 1;
-        const opts = q.format === 'kata' ? q.mcq.options : q.blank.options;
-        if (k < opts.length) { e.preventDefault(); pick(k); }
+        if (q.format === 'kata' || q.format === 'passage') {
+          const opts = q.format === 'kata' ? q.mcq.options : q.blank.options;
+          if (k < opts.length) { e.preventDefault(); pick(k); }
+        } else if (q.format === 'star' && q.scramble && k < q.scramble.chunks.length) {
+          e.preventDefault(); placeTile(k);   // place piece #(k+1) into the next empty slot (digit path)
+        }
       }
     },
   };

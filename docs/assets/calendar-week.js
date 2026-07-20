@@ -1,7 +1,8 @@
 'use strict';
-import { $, $$, esc } from './lib/dom.js';
+import { $, $$, esc, stripEmoji } from './lib/dom.js';
 import { parseISO, MONTHS, fmtShort } from './lib/dates.js';
 import { weekDays, isMultiDay, packLanes, parseHM, layoutDay } from './lib/weekgrid.js';
+import { recurOccurrences, isRecurring } from './lib/recur.js';
 import { makeMovable } from './dnd.js';
 import { weekAnchor, TODAY, allEvents, visible, safeCat, isEvergreen, openModal, openSidePanel, rescheduleEvent, saveUser, loadUser } from './calendar.js';
 
@@ -29,7 +30,7 @@ function weekListHTML() {
     const rows = dayEvs.map(e => {
       const s = e.date.slice(0, 10), en = e.endDate ? e.endDate.slice(0, 10) : s;
       const cont = isMultiDay(e) ? (d === s ? `<span class="wkl-cont">→ ${esc(fmtShort(en))}</span>` : d === en ? '<span class="wkl-cont">ends</span>' : '<span class="wkl-cont">ongoing ┄</span>') : '';
-      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${cont}</button>`;
+      return `<button type="button" class="wkl-ev" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(stripEmoji(e.title))}</span>${cont}</button>`;
     }).join('') || '<p class="wkl-empty">No events</p>';
     const cls = (d === TODAY ? ' today' : '') + (dow === 0 || dow === 6 ? ' weekend' : '');
     return `<section class="wkl-day${cls}">
@@ -39,17 +40,6 @@ function weekListHTML() {
   }).join('') + `</div>`;
 }
 const WK_HH = 44;   // px per hour in the time grid
-
-// a single-day event's timed placement, or null if it's all-day (goes to the band).
-// no endTime, or a bad one → a default 60-min block.
-function timedOf(e) {
-  if (isMultiDay(e)) return null;
-  const start = parseHM(e.time);
-  if (start == null) return null;
-  let end = parseHM(e.endTime);
-  if (end == null || end <= start) end = Math.min(24 * 60, start + 60);
-  return { startMin: start, endMin: end };
-}
 
 // the shared time-grid builder — `days` is the array of ISO dates to show (7 for week, 1 for day).
 // isDay adds the .is-day class so the CSS collapses the 7-col tracks to a single full-width column.
@@ -61,19 +51,28 @@ function gridHTML(days, isDay) {
   }).join('');
 
   const evs = allEvents().filter(e => visible(e) && !isEvergreen(e));   // evergreen residencies live in the month view's Ongoing strip, not the band
-  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring)
-  const packed = packLanes(evs.filter(isMultiDay), days);
+  // multi-day → lane-packed BARS in the all-day band (reuses barHTML + the drag-resize wiring). Recurring
+  // events are single-day occurrences, never span bars.
+  const packed = packLanes(evs.filter(e => isMultiDay(e) && !isRecurring(e)), days);
   const laneN = packed.reduce((m, p) => Math.max(m, p.lane + 1), 0);
   let lanes = '';
   for (let ln = 0; ln < laneN; ln++) lanes += `<div class="wk-lane">${packed.filter(p => p.lane === ln).map(barHTML).join('')}</div>`;
-  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid
+  // single-day, NO time → chips in the band; single-day WITH time → positioned in the hour grid. Recurring
+  // events place a single-day occurrence on each matching day within this week.
   const bandCols = Array.from({ length: days.length }, () => []);
   const timedCols = Array.from({ length: days.length }, () => []);
-  evs.filter(e => !isMultiDay(e)).forEach(e => {
-    const i = days.indexOf(e.date.slice(0, 10)); if (i < 0) return;
-    const t = timedOf(e); if (t) timedCols[i].push({ id: e.id, ev: e, ...t }); else bandCols[i].push(e);
+  evs.forEach(e => {
+    if (isMultiDay(e) && !isRecurring(e)) return;   // handled by the span bars above
+    for (const occ of recurOccurrences(e, days[0], days[days.length - 1])) {
+      if (occ.endDate && occ.endDate > occ.date) continue;   // a non-recurring multi-day slipped in — bars own it
+      const i = days.indexOf(occ.date); if (i < 0) continue;
+      const start = parseHM(e.time);
+      if (start != null) { let end = parseHM(e.endTime); if (end == null || end <= start) end = Math.min(24 * 60, start + 60); timedCols[i].push({ id: e.id, ev: e, startMin: start, endMin: end }); }
+      else bandCols[i].push(e);
+    }
   });
   const chips = bandCols.map(c => `<div class="wk-chipcol">${c.map(chipHTML).join('')}</div>`).join('');
+  const anyTimed = timedCols.some(c => c.length);   // a fully all-day week → the hour grid would be an empty void; show a hint instead
 
   // hour gutter (JST, 24h) — a label sits at the top of each hour block
   const hours = Array.from({ length: 24 }, (_, h) => `<div class="wk2-hr" style="height:${WK_HH}px"><span>${String(h).padStart(2, '0')}</span></div>`).join('');
@@ -89,7 +88,7 @@ function gridHTML(days, isDay) {
       const tm = b.ev.time + (b.ev.endTime ? '–' + b.ev.endTime : '');
       const aria = `${b.ev.time}${b.ev.endTime ? ' to ' + b.ev.endTime : ''}, ${b.ev.title}`;
       return `<button type="button" class="wk2-ev" data-id="${esc(b.id)}" data-ev="${esc(b.id)}" style="top:${top}px;height:${h}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px);--cat:var(--c-${safeCat(b.ev)}-ink)" aria-label="${esc(aria)}">`
-        + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(b.ev.title)}</span></button>`;
+        + `<span class="wk2-etime" aria-hidden="true">${esc(tm)}</span><span class="wk2-et" aria-hidden="true">${esc(stripEmoji(b.ev.title))}</span></button>`;
     }).join('');
     const now = d === TODAY ? `<div class="wk2-now" style="top:${Math.round(nowMin / 60 * WK_HH)}px"><span class="wk2-now-dot"></span></div>` : '';
     return `<div class="wk2-col${d === TODAY ? ' today' : d < TODAY ? ' past' : ''}" data-day="${esc(d)}" style="height:${24 * WK_HH}px">${now}${blocks}</div>`;
@@ -108,6 +107,7 @@ function gridHTML(days, isDay) {
       <div class="wk2-inner" style="height:${24 * WK_HH}px">
         <div class="wk2-hours">${hours}</div>
         ${dayCols}
+        ${anyTimed ? '' : `<div class="wk2-emptyhint"><span class="wk2-emptyhint-ic" aria-hidden="true">🕑</span>No timed events this ${isDay ? 'day' : 'week'} — your stays &amp; day plans are in the band above ↑</div>`}
       </div>
     </div>
   </div>`;
@@ -130,10 +130,11 @@ function barHTML(p) {
   const gl = (user && !p.contL) ? '<span class="wk-resize wk-resize-l" aria-hidden="true"></span>' : '';   // grips only on edges visible this week
   const gr = (user && !p.contR) ? '<span class="wk-resize wk-resize-r" aria-hidden="true"></span>' : '';
   return `<button type="button" class="wk-bar${cls}${user ? ' wk-user' : ''}" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="grid-column:${p.col0 + 1}/${p.col1 + 2};--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}">`
-    + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
+    + `${gl}${p.contL ? '<span class="wk-arr" aria-hidden="true">‹</span>' : ''}<span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(stripEmoji(e.title))}</span>${p.contR ? '<span class="wk-arr" aria-hidden="true">›</span>' : ''}${gr}</button>`;
 }
 function chipHTML(e) {
-  return `<button type="button" class="wk-chip" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(e.title)}</span></button>`;
+  const rec = isRecurring(e);
+  return `<button type="button" class="wk-chip${rec ? ' recurring' : ''}" data-id="${esc(e.id)}" data-ev="${esc(e.id)}" style="--cat:var(--c-${safeCat(e)}-ink)" title="${esc(e.title)}${rec ? ' (repeats ' + esc(e.recur) + ')' : ''}"><span class="wk-dot" aria-hidden="true"></span><span class="wk-bt">${esc(stripEmoji(e.title))}</span>${rec ? '<span class="cc-recur" aria-hidden="true">↻</span>' : ''}</button>`;
 }
 export function wireWeek() {
   const view = $('#calView'); if (!view) return;
@@ -143,7 +144,7 @@ export function wireWeek() {
   // LOCKED decision: only SINGLE-DAY chips are draggable to reschedule (a multi-day seasonal bar must
   // never drag — that would shift the whole window). Bars are click-to-edit only. Day headers = drop targets.
   makeMovable(view, {
-    itemSelector: '.wk-chip[data-id]', label: 'event',
+    itemSelector: '.wk-chip[data-id]:not(.recurring)', label: 'event',   // a recurring chip is one occurrence — not draggable (would move the series)
     idOf: el => el.dataset.id,
     targetSelector: '.wk2-dayhd[data-day]', keyOf: t => t.dataset.day,
     onMove: rescheduleEvent,
@@ -156,13 +157,19 @@ export function wireWeek() {
     const hh = String(Math.floor(min / 60)).padStart(2, '0'), mm = String(min % 60).padStart(2, '0');
     openModal(null, col.dataset.day, '', `${hh}:${mm}`);
   }));
-  // auto-scroll the hour grid to ~7am (or an hour before "now" if today is in view)
+  // auto-scroll the hour grid so you LAND ON THE EVENTS, not a random empty hour: to ~30min before the
+  // earliest timed event this week (most of a trip is all-day, so the grid is often morning-light and
+  // "now" lands in a dead afternoon). Fallbacks: an hour before now if today's in view, else 7am.
   const scroll = $('#wkScroll');
   if (scroll && !scroll.dataset.scrolled) {
     scroll.dataset.scrolled = '1';
-    const days = gridDays();
-    const target = days.includes(TODAY) ? Math.max(0, (new Date().getHours() - 1)) : 7;
-    scroll.scrollTop = target * WK_HH;
+    const blocks = $$('#calView .wk2-ev');
+    if (blocks.length) {
+      const minTop = Math.min(...blocks.map(b => parseFloat(b.style.top) || 0));
+      scroll.scrollTop = Math.max(0, minTop - WK_HH * 0.5);
+    } else {
+      scroll.scrollTop = 0;   // no timed events → keep the top (all-day band + the empty-grid hint) in view
+    }
   }
   // click/Enter a chip OR bar → openSidePanel (baked → detail view w/ Reset/Copy; user → edit modal).
   // A real drag releases over a day header, so it never also fires this.

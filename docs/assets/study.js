@@ -23,7 +23,7 @@ import { get, set, getRaw, setRaw, KEYS } from './lib/store.js';
 import { readingOf } from './lib/grammar.js';
 import { canSpeak, speakExample, speakBtnHTML } from './speak.js';
 import { blip } from './lib/audio.js';
-import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
+import { newState, migrate, seedImport, buildQueue, sessionStart, sessionRecord, sessionEnd, review, undoReview, effectiveGrade, lessonOrder, unitProgress, stageOf, gateMode, checkpointPassed, nextCheckpointUnit, leechList, ghostCount, unsuspend, recordSession, masteryStats, isMasterComplete, STAGES, LEVEL_TOTALS } from './lib/study.js';
 import { clozeFor, checkAnswer, scramblable, scrambleFor, mcqFor } from './lib/questions.js';
 import { pegHTML } from './lib/peg.js';
 import { celebrate } from './celebrate.js';
@@ -31,6 +31,7 @@ import { confirmModal } from './lib/modal.js';
 import { scrambleCard } from './study-scramble.js';
 import { mcqCard } from './study-mcq.js';
 import { isGateCard, buildGateCard, gateHeaderHTML, gatePasses, mountGateTimer, gateFeedback } from './study-gate.js';
+import { resolveKey, shortcutsEnabled, shouldAutoAdvance } from './lib/shortcuts.js';
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const FILES = { N5: 'data/grammar-n5.json', N4: 'data/grammar-n4.json', N3: 'data/grammar-n3.json', N2: 'data/grammar-n2.json', N1: 'data/grammar-n1.json' };
@@ -48,9 +49,21 @@ let root = null;
 let card = null;                  // { id, exIdx, point, type, ... } for the live card
 let cardCtl = null;               // active ★-scramble sub-controller (study-scramble.js) while a scramble card shows
 let gateTimerCtl = null;          // R10: the soft gate-card countdown controller (torn down on every rebuild)
-let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble'
+let phase = 'idle';               // 'input' | 'close' | 'graded' | 'wrong' | 'scramble' | 'mcq' | 'summary'
+// K2b: the single-level undo snapshot, captured by captureGrade() just BEFORE the review() in every
+// grade path (cloze/scramble/mcq). Restored by undoLast(). In-memory only (NEVER persisted). Holds
+// the whole pre-grade state + the graded card so the just-graded card can be re-presented for a re-grade.
+let lastGraded = null;
 let activeFlow = null;            // a study-lessons.js controller { onAct, onKey, teardown } while a lesson/placement/test-out flow runs
 const expandedLevels = new Set(); // course-home accordion: which level cards are open
+// K1 Enter-safety state: `lastRevealTs` stamps the input→graded/wrong transition so a single Enter
+// can't submit AND then skip past the revealed result (key-repeat / IME double-fire); `lastComposeEnd`
+// stamps the last compositionend so a stray finalize-Enter (Safari/mobile mis-set isComposing) can't
+// submit half-composed text. Both are short time windows — see the wireRoot keydown handler.
+let lastRevealTs = 0;
+let lastComposeEnd = 0;
+const ENTER_DEBOUNCE_MS = 250;    // submit→continue: ignore Enter/Space this long after a reveal
+const COMPOSE_GUARD_MS = 120;     // finalize fallback: ignore a submit-Enter this long after compositionend
 
 // ── boot ───────────────────────────────────────────────────────────────────
 export async function mountStudy() {
@@ -145,11 +158,57 @@ function applyFuri() {
 // autoplay is a string-sentinel preference (default OFF) — speak the example on REVEAL only,
 // never during an unanswered input/pick/place phase (that would leak the answer, like the peg).
 function autoplayOn() { return getRaw(KEYS.studyTts, '') === 'on'; }
-function toggleTts() { setRaw(KEYS.studyTts, autoplayOn() ? '' : 'on'); renderCourseHome('.stu-tts-toggle'); }
+// Session-safe (K2a): the `A` key can flip autoplay mid-session, where re-rendering the course home
+// would blow away the live card. So only re-render when the course-home toggle is actually present
+// (its click path — keeps the visible button's label/aria-pressed in sync); otherwise just persist +
+// announce via #stuLive. Announced in both branches for a consistent SR cue.
+function toggleTts() {
+  const on = !autoplayOn();
+  setRaw(KEYS.studyTts, on ? 'on' : '');
+  announce(`Autoplay ${on ? 'on' : 'off'}`);
+  if (root.querySelector('.stu-tts-toggle')) renderCourseHome('.stu-tts-toggle');
+  return on;
+}
 // the ja token array of the live card's shown example (for the 🔊 control + autoplay)
 function cardExampleJa() {
   const ex = card && card.point && Array.isArray(card.point.examples) && card.point.examples[card.exIdx];
   return ex ? ex.ja : null;
+}
+
+// ── K5: auto-advance on a correct answer (opt-in, default OFF) ────────────────
+// When on, a CORRECT session answer (typed-correct cloze / right MCQ / correct scramble) arms a short
+// beat, then activates the default Good grade — by CLICKING the same `.stu-good` control a tap/Enter
+// would (so it routes through the ONE grade path; never a parallel review()). The grade bar stays live
+// during the beat; any manual grade tap/keypress advances first and cancelAutoAdvance() clears the
+// pending timer, so there is never a double-grade. Gate/mastery-check cards are excluded (their pacing
+// is deliberate — see shouldAutoAdvance). NOT tied to reduce-motion (it's a timing opt-in, not motion).
+const AUTO_ADVANCE_MS = 750;
+let autoTimer = 0;
+function autoAdvanceOn() { return getRaw(KEYS.studyAuto, '') === 'on'; }
+function cancelAutoAdvance() { if (autoTimer) { clearTimeout(autoTimer); autoTimer = 0; } }
+function armAutoAdvance() {
+  cancelAutoAdvance();
+  autoTimer = setTimeout(() => {
+    autoTimer = 0;
+    // Re-query at fire time: if the learner already graded (or navigated), the control is gone → no-op.
+    root?.querySelector('.stu-good[data-act="grade"]')?.click();
+  }, AUTO_ADVANCE_MS);
+}
+// Session-safe toggle (mirrors toggleTts): the auto-advance switch lives ONLY on the course home, so a
+// tap always re-renders there; there is no mid-session key for it, so no live-card blow-away risk.
+function toggleAutoAdvance() {
+  const on = !autoAdvanceOn();
+  setRaw(KEYS.studyAuto, on ? 'on' : '');
+  announce(`Auto-advance ${on ? 'on' : 'off'}`);
+  if (root.querySelector('.stu-auto-toggle')) renderCourseHome('.stu-auto-toggle');
+  return on;
+}
+// Called after a ★-scramble / MCQ sub-controller handles a pick: a correct answer has just revealed the
+// Hard/Good/Easy bar (a wrong one shows only Continue), so `.stu-good` present ⇒ correct ⇒ maybe arm.
+function maybeAutoAdvanceAfterPick() {
+  if (autoTimer) return;
+  const good = root.querySelector('.stu-good[data-act="grade"]');
+  if (shouldAutoAdvance({ enabled: autoAdvanceOn(), correct: !!good, gate: !!(card && card.gate) })) armAutoAdvance();
 }
 
 // ── Course home (the #/study landing) ────────────────────────────────────────
@@ -345,7 +404,7 @@ function leechPanelHTML() {
     ? `<div class="stu-leech-sub"><h4 class="stu-leech-sub-h">Suspended</h4>
         <div class="stu-leech-list">${suspended.map(l => leechRowHTML(l, true)).join('')}</div></div>` : '';
   return `<section class="stu-leeches" aria-label="Leeches">
-    <h3 class="stu-leeches-h">🩸 Leeches <span class="stu-leeches-n">${esc(String(leeches.length))}</span></h3>
+    <h3 class="stu-leeches-h"><span class="stu-mark-shu" aria-hidden="true">虫</span> Leeches <span class="stu-leeches-n">${esc(String(leeches.length))}</span></h3>
     <p class="stu-note stu-leeches-lede">The points fighting back hardest (5+ lapses). Drill the ones you keep confusing, or take a focused pass.</p>
     ${activeHTML}${suspendedHTML}
   </section>`;
@@ -353,7 +412,9 @@ function leechPanelHTML() {
 
 function renderCourseHome(focusSel) {
   phase = 'idle'; card = null; cardCtl = null; activeFlow = null;
+  lastGraded = null;   // K2b: leaving the card view closes the undo window
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: no pending auto-advance can fire onto the course home
   const cs = continueState();
   const mstats = masteryStats(state);
   const examVal = state.settings.examLevel || '';
@@ -378,24 +439,28 @@ function renderCourseHome(focusSel) {
     : `<div class="stu-here-card">${continueButtonHTML(cs)}<p class="stu-note">Course map unavailable offline — your ▶ Continue button still works.</p></div>`;
   const nGhost = ghostCount(state);
   const hauntHTML = nGhost
-    ? `<p class="stu-haunt-count">👻 ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
+    ? `<p class="stu-haunt-count"><span class="stu-mark-shu" aria-hidden="true">幽</span> ${esc(String(nGhost))} haunting — on a tight relearn schedule until ${nGhost === 1 ? 'it settles' : 'they settle'}.</p>` : '';
   // R10: Deep points are the ones actively being gated (their next reviews are mastery checks).
   const gateHTML = mstats.inGate
-    ? `<p class="stu-gate-count">🎯 ${esc(String(mstats.inGate))} in the gate — mastery ${mstats.inGate === 1 ? 'check' : 'checks'} in progress.</p>` : '';
+    ? `<p class="stu-gate-count"><span aria-hidden="true">◉</span> ${esc(String(mstats.inGate))} in the gate — mastery ${mstats.inGate === 1 ? 'check' : 'checks'} in progress.</p>` : '';
   const canBuild = mstats.inGate > 0 || Object.values(mstats.perLevel).some(n => n > 0);
   const buildBtn = canBuild
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart">✍️ Build a sentence</button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-build-btn" data-act="buildStart"><span aria-hidden="true">作</span> Build a sentence</button>` : '';
   // 🔊 autoplay toggle (only when the platform can speak) — auto-plays the example on reveal.
   const ttsBtn = canSpeak()
-    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}">🔊 Autoplay ${autoplayOn() ? 'on' : 'off'}</button>` : '';
+    ? `<button type="button" class="stu-btn stu-btn-ghost stu-tts-toggle${autoplayOn() ? ' is-on' : ''}" data-act="ttsToggle" aria-pressed="${autoplayOn() ? 'true' : 'false'}"${kbHint('A').ks}><span aria-hidden="true">音</span> Autoplay ${autoplayOn() ? 'on' : 'off'}${kbHint('A').chip}</button>` : '';
+  // K5: auto-advance-on-correct opt-in (default off). A control, NOT a key — no kbHint (no bare key
+  // bound; the mid-session `A` is autoplay's). 進 = "advance/proceed" (ink-toned mark, inherits color).
+  const autoBtn = `<button type="button" class="stu-btn stu-btn-ghost stu-auto-toggle${autoAdvanceOn() ? ' is-on' : ''}" data-act="autoAdvToggle" aria-pressed="${autoAdvanceOn() ? 'true' : 'false'}"><span aria-hidden="true">進</span> Auto-advance ${autoAdvanceOn() ? 'on' : 'off'}</button>`;
   root.innerHTML = `
     <div class="stu-home stu-climb-home">
       <header class="stu-climb-head">
         <div class="stu-climb-headline">
+          <p class="stu-climb-kick"><span class="stu-kick-jp" lang="ja">文法帖</span> The Grammar Almanac</p>
           <h3 class="stu-climb-title">Your climb to N1</h3>
           <p class="stu-climb-mastered">${esc(String(totalMastered))} / 353 points mastered</p>
         </div>
-        ${streakN ? `<p class="stu-climb-streak">🔥 ${esc(String(streakN))}<span>day streak</span></p>` : ''}
+        ${streakN ? `<p class="stu-climb-streak">連 ${esc(String(streakN))}<span>day streak</span></p>` : ''}
       </header>
       ${gateHTML}
       ${hauntHTML}
@@ -404,9 +469,10 @@ function renderCourseHome(focusSel) {
       <div class="stu-home-foot">
         ${buildBtn}
         ${ttsBtn}
-        <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart">📊 Progress</button>
-        <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart">🎓 Mock exam</button>
-        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart">🎯 Placement</button>
+        ${autoBtn}
+        <button type="button" class="stu-btn stu-btn-ghost stu-stats-btn" data-act="statsStart"><span aria-hidden="true">表</span> Progress</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-mock-btn" data-act="examStart"><span aria-hidden="true">試</span> Mock exam</button>
+        <button type="button" class="stu-btn stu-btn-ghost stu-pl-btn" data-act="placementStart"><span aria-hidden="true">◉</span> Placement</button>
         <label class="stu-exam"><span>Preparing for</span>
           <select class="stu-exam-sel" data-act="exam" aria-label="Exam you're preparing for">${examOpts}</select></label>
       </div>
@@ -724,7 +790,7 @@ function idHash(id) { let h = 0; const s = String(id); for (let i = 0; i < s.len
 // riding the tight relearn ladder). Engine state only; this VISUALISES it.
 function hauntBadge(id) {
   const p = id && state.points[id];
-  return (p && p.ghost) ? ` <span class="stu-haunt" title="Haunted — on the tight relearn ladder until two clean passes">👻 haunted</span>` : '';
+  return (p && p.ghost) ? ` <span class="stu-haunt" title="Haunted — on the tight relearn ladder until two clean passes">幽 haunted</span>` : '';
 }
 
 function renderCard() {
@@ -732,6 +798,7 @@ function renderCard() {
   if (!s || s.pos >= s.queue.length) { renderSummary(); return; }
   cardCtl = null;
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: defensive — a new card must never inherit the prior card's pending timer
   card = buildCard();
   if (!card) {                       // unrenderable — advance without touching the schedule
     state = sessionRecord(state, { id: s.queue[s.pos], skipped: true });
@@ -747,7 +814,7 @@ function renderCard() {
   root.innerHTML = `
     <div class="stu-card${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(true) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <p class="stu-sentence" lang="ja">${sentence}</p>
@@ -778,7 +845,7 @@ function renderScrambleCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-scramble${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(false) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuScramHost"></div>
@@ -800,7 +867,7 @@ function renderMcqCard() {
   root.innerHTML = `
     <div class="stu-card stu-card-mcq${card.gate ? ' stu-card-gate' : ''}">
       <div class="stu-prog"><span class="stu-prog-n">${esc(String(n))} / ${esc(String(total))}</span>
-        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span></div>
+        <span class="stu-prog-bar" aria-hidden="true"><i style="transform:scaleX(${total ? (n / total).toFixed(4) : 0})"></i></span>${lastGraded ? undoAffordanceHTML(false) : ''}</div>
       ${card.gate ? gateHeaderHTML(gatePasses(state.points[card.id])) : ''}
       <p class="stu-lvl">${esc(card.point.level || '')} · <span lang="ja">${esc(card.point.pattern || '')}</span>${hauntBadge(card.id)}</p>
       <div id="stuMcqHost"></div>
@@ -813,6 +880,8 @@ function renderMcqCard() {
 
 // Correct pick → the learner's Hard/Good/Easy; wrong pick → Again (typedCorrect:false → grade 1).
 function onMcqResult({ pass, chosen }) {
+  cancelAutoAdvance();   // K5: this grade (manual or auto) is landing — no second auto-fire
+  captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
   const gate = !!card.gate;
@@ -832,6 +901,8 @@ function onMcqResult({ pass, chosen }) {
 
 // Correct order → the learner's Hard/Good/Easy; wrong order → Again (typedCorrect:false → grade 1).
 function onScrambleResult({ pass, chosen }) {
+  cancelAutoAdvance();   // K5: this grade (manual or auto) is landing — no second auto-fire
+  captureGrade();   // K2b: snapshot BEFORE review() (recognition card → undo re-presents it fresh)
   const eff = effectiveGrade({ typedCorrect: pass, chosen: chosen || 3 });
   const now = Date.now();
   const gate = !!card.gate;
@@ -863,10 +934,10 @@ function celebrateProgress(id, snap, pattern) {
   if (!p) return false;
   let fired = false;
   const after = stageOf(p);
-  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) { celebrate(`Mature — ${pattern || ''} 🌳`); fired = true; }
+  if (after === 'mature' && STAGES.indexOf(after) > STAGES.indexOf(snap.stage)) { celebrate(`Mature — ${pattern || ''} ✦`); fired = true; }
   const lv = snap.lv;
   if (lv && LEVEL_TOTALS[lv] && after === 'mastered' && snap.mastered < LEVEL_TOTALS[lv]
-      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) { celebrate(`${lv} complete — every point mastered! 🏆`); fired = true; }
+      && masteryStats(state).perLevel[lv] >= LEVEL_TOTALS[lv]) { celebrate(`${lv} complete — every point mastered! ✦`); fired = true; }
   // R15: the JLPT Master moment — the final gate just passed (was incomplete, now 353/353). Open the
   // certificate after this card's own bursts settle (the cert screen plays its own celebration).
   if (!snap.complete && isMasterComplete(state)) { setTimeout(() => launchCertificate(), 1200); fired = true; }
@@ -886,7 +957,7 @@ function ghostToast(pattern) {
   ghostToastEl = document.createElement('div');
   ghostToastEl.className = 'stu-toast';
   ghostToastEl.setAttribute('role', 'status');
-  ghostToastEl.innerHTML = `✨ Exorcised — <b lang="ja">${esc(pattern || '')}</b> is back on track.`;
+  ghostToastEl.innerHTML = `✦ Exorcised — <b lang="ja">${esc(pattern || '')}</b> is back on track.`;
   document.body.appendChild(ghostToastEl);
   clearTimeout(ghostToastTimer);
   ghostToastTimer = setTimeout(() => { if (ghostToastEl) { ghostToastEl.remove(); ghostToastEl = null; } }, 3200);
@@ -910,19 +981,29 @@ function renderSentence(blankedTokens, revealed) {
 function exampleEN(c) { const ex = c.point.examples[c.exIdx]; return (ex && ex.en) || ''; }
 
 // per-phase control bar. Buttons carry data-act; the delegated click handler + the keyboard
+// K3 turn-off-aware keyboard hint: a control's aria-keyshortcuts + its decorative <kbd> chip. When
+// the WCAG shortcuts toggle is OFF we advertise nothing (no aria-keyshortcuts announced to AT, no
+// chip shown) — the key wouldn't command, so pointing at it would be a lie. The chip is aria-hidden;
+// the accessible name comes from the control's label + aria-keyshortcuts (never doubled).
+function kbHint(key) {
+  return shortcutsEnabled()
+    ? { ks: ` aria-keyshortcuts="${esc(key)}"`, chip: ` <kbd aria-hidden="true">${esc(key)}</kbd>` }
+    : { ks: '', chip: '' };
+}
+
 // map both route through the same handlers.
 function controlsFor(ph, gate) {
   if (ph === 'input') return `
-    ${gate ? '' : '<button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint">💡 Hint</button>'}
+    ${gate ? '' : '<button type="button" class="stu-btn stu-btn-ghost stu-hint-btn" data-act="hint"><span aria-hidden="true">灯</span> Hint</button>'}
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reveal">Don't know</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="check">Check ⏎</button>`;
   if (ph === 'close') return `
     <button type="button" class="stu-btn stu-btn-ghost" data-act="reject">No — reveal (esc)</button>
     <button type="button" class="stu-btn stu-btn-primary" data-act="accept">Take it (⏎)</button>`;
   if (ph === 'graded') return `
-    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2">Hard <kbd>2</kbd></button>
-    <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3">Good <kbd>3</kbd></button>
-    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4">Easy <kbd>4</kbd></button>`;
+    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="2"${kbHint('2').ks}>Hard${kbHint('2').chip}</button>
+    <button type="button" class="stu-btn stu-grade stu-good" data-act="grade" data-g="3"${kbHint('3').ks}>Good${kbHint('3').chip}</button>
+    <button type="button" class="stu-btn stu-grade" data-act="grade" data-g="4"${kbHint('4').ks}>Easy${kbHint('4').chip}</button>`;
   if (ph === 'wrong') return `
     <button type="button" class="stu-btn stu-btn-primary" data-act="again">Continue ⏎</button>`;
   return '';
@@ -1010,6 +1091,7 @@ function submitAnswer() {
 // reveal the full sentence + EN; open either the grade buttons (correct / close-accept) or the
 // Again continue (wrong).
 function reveal(next, opts = {}) {
+  lastRevealTs = Date.now();   // K1: start the submit→continue debounce window (the phase just flipped to graded/wrong)
   if (card.gate) teardownGateTimer();   // the soft timer's job ends the moment the answer is shown
   const sentEl = root.querySelector('.stu-sentence');
   if (sentEl) sentEl.innerHTML = renderSentence(card.blankedTokens, true);
@@ -1046,9 +1128,11 @@ function reveal(next, opts = {}) {
   // 🔊 on the now-revealed full sentence (post-answer only — never in the input phase). Autoplay
   // (opt-in, default off) reads it aloud immediately; the button lets the learner replay it.
   const ja = cardExampleJa();
-  const sb = ja ? speakBtnHTML() : '';
+  const sb = ja ? speakBtnHTML('', shortcutsEnabled() ? 'R' : '') : '';   // 'R' chip only while the R replay key is live (WCAG turn-off drops it)
   if (sb && fb) fb.insertAdjacentHTML('beforeend', sb);
   if (ja && autoplayOn()) speakExample(ja, root.querySelector('.stu-speak'));
+  // K5: a genuinely-correct cloze (not a close-accept, not a gate check) may auto-advance after a beat.
+  if (shouldAutoAdvance({ enabled: autoAdvanceOn(), correct: next === 'graded' && !card.closeAccepted, gate: !!card.gate })) armAutoAdvance();
 }
 
 function acceptClose() { if (phase === 'close') reveal('graded', { closeAccepted: true }); }
@@ -1057,11 +1141,70 @@ function rejectClose() { if (phase === 'close') reveal('wrong'); }
 function setControls(ph) { const c = $('#stuControls'); if (c) c.innerHTML = controlsFor(ph); }
 function focusControl(sel) { const el = root.querySelector(sel); if (el) el.focus({ preventScroll: true }); }
 
+// ── K2b: undo the last grade (single level, within-session) ──────────────────
+// captureGrade() snapshots the WHOLE state (structuredClone) + the graded card BEFORE review() runs,
+// in every grade path. For a cloze card we also stash the revealed root.innerHTML: restoring it
+// re-presents the card in its graded/wrong state so the learner re-grades WITHOUT retyping (the
+// delegated click/keydown handlers live on the persistent root, so the restored markup stays live).
+// ★-scramble / MCQ cards are owned by a sub-controller whose revealed DOM can't be faithfully rebuilt,
+// so undoing one re-presents it FRESH via renderCard() — state is fully restored, so buildCard() is
+// deterministic (same point/example/format). undoReview()'s state restore reverts the graded point's
+// D/S/stage/reps/lapses/ghost/gate/leech AND session.pos/results in one shot; it never re-runs review().
+function captureGrade() {
+  lastGraded = {
+    snapshot: structuredClone(state),
+    card: card ? structuredClone(card) : null,
+    phase,
+    type: card && card.type,
+    html: (card && card.type === 'cloze') ? root.innerHTML : null,
+  };
+}
+
+// A subtle, right-aligned affordance in the cloze card header. Rendered only when an undo is available
+// and a shell-owned cloze card is showing. Tap/Tab-focusable (Principle 5 / WCAG 2.1.1); the Z chip is
+// decorative (aria-hidden) — the accessible name comes from the label + aria-keyshortcuts.
+// `zLive` = whether the bare Z key actually commands undo in this card's context. Only the cloze
+// card fires Z (in its reveal phases); scramble/MCQ cards are owned by a sub-controller that
+// intercepts keys, so there the affordance is tap/Tab-only — don't advertise a Z that won't work.
+function undoAffordanceHTML(zLive = false) {
+  const hint = zLive ? kbHint('Z') : { ks: '', chip: '' };   // K3: also drops the Z chip/aria when shortcuts are off
+  return `<button type="button" class="stu-undo" data-act="undo"${hint.ks} title="Undo the last grade">`
+    + `<span aria-hidden="true">↩</span> Undo${hint.chip}</button>`;
+}
+
+function undoLast() {
+  if (!lastGraded || !state.session) return;   // bounded to within-session — no undo once the summary ran
+  cancelAutoAdvance();   // K5: undo is a manual intervention — never let a pending auto-advance fire over it
+  const lg = lastGraded;
+  lastGraded = null;
+  state = undoReview(lg.snapshot);
+  save();
+  if (lg.type === 'cloze' && lg.html != null) {
+    // restore the revealed cloze view so the learner re-grades in place (no retype)
+    card = lg.card;
+    phase = lg.phase;
+    cardCtl = null;
+    teardownGateTimer();
+    root.innerHTML = lg.html;
+    root.querySelector('.stu-undo')?.remove();   // the captured markup may hold a now-stale affordance
+    lastRevealTs = 0;                             // don't inherit the submit→continue debounce window
+    focusControl(phase === 'graded' ? '.stu-good' : '.stu-btn-primary');
+  } else {
+    // recognition card (or missing markup): re-present the just-graded card FRESH for another attempt
+    card = null;
+    cardCtl = null;
+    renderCard();
+  }
+  announce('Undone. Re-grade the card.');
+}
+
 // grade(g): apply the engine review with the arbitrated effective grade, WRITE THROUGH
 // immediately, record the session result (display-only), advance. `typedCorrect:false` (the
 // wrong path) forces Again regardless of g.
 function grade(g, { typedCorrect = true } = {}) {
   if (phase !== 'graded' && phase !== 'wrong') return;
+  cancelAutoAdvance();   // K5: this grade (manual tap/key or the auto-fire itself) is landing — clear any pending timer
+  captureGrade();   // K2b: snapshot BEFORE review() so Z can revert this exact grade
   const eff = effectiveGrade({ typedCorrect, closeAccepted: !!card.closeAccepted, hintTier: card.hintTier, chosen: g });
   const pass = eff > 1;
   const now = Date.now();
@@ -1082,7 +1225,10 @@ function grade(g, { typedCorrect = true } = {}) {
 // ── Summary screen ───────────────────────────────────────────────────────────
 function renderSummary() {
   cardCtl = null;
+  phase = 'summary';    // K2b: no stale grade/undo key resolves on the summary (session ends below)
+  lastGraded = null;    // undo is bounded to within-session — the summary is past the window
   teardownGateTimer();
+  cancelAutoAdvance();   // K5: never fire an auto-advance onto the summary screen
   const results = (state.session && state.session.results) || [];
   const graded = results.filter(r => !r.skipped);
   const n = graded.length;
@@ -1110,7 +1256,7 @@ function renderSummary() {
       <div class="stu-stats">
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(n))}</span><span class="stu-stat-l">reviewed</span></div>
         <div class="stu-stat"><span class="stu-stat-n">${esc(String(acc))}%</span><span class="stu-stat-l">accuracy</span></div>
-        <div class="stu-stat"><span class="stu-stat-n">🔥 ${esc(String(streakN))}</span><span class="stu-stat-l">day streak</span></div>
+        <div class="stu-stat"><span class="stu-stat-n"><span class="stu-mark-gold" aria-hidden="true">連</span> ${esc(String(streakN))}</span><span class="stu-stat-l">day streak</span></div>
       </div>
       <p class="stu-note">${esc(String(weekDone))} / ${esc(String(weekGoal))} sessions this week · ${nextDue ? `${esc(String(nextDue))} due in the next 24 hours.` : 'nothing else due in the next 24 hours.'}</p>
       <button type="button" class="stu-btn stu-btn-primary" data-act="done">Done</button>
@@ -1125,8 +1271,9 @@ function wireRoot() {
     const b = e.target.closest('[data-act]');
     if (b) {
       if (b.tagName === 'SELECT') return;          // <select> handled by the change listener below
+      if (b.dataset.act === 'undo') { undoLast(); return; }            // shell-level cross-card action — must beat the cardCtl hijack so ↩ Undo works on scramble/MCQ headers too
       if (activeFlow) { activeFlow.onAct(b.dataset.act, b); return; }   // a lesson/placement/test-out owns its buttons
-      if (cardCtl) { cardCtl.onAct(b.dataset.act, b); return; }         // a live ★-scramble card owns its tiles/slots/grade
+      if (cardCtl) { cardCtl.onAct(b.dataset.act, b); maybeAutoAdvanceAfterPick(); return; }   // a live ★-scramble / MCQ card owns its tiles/slots/grade; a correct pick may arm auto-advance (K5)
       act(b.dataset.act, b); return;
     }
     const tapR = e.target.closest('.stu-tap-r'); if (tapR) { primaryAction(); return; }
@@ -1138,45 +1285,48 @@ function wireRoot() {
     const sel = e.target.closest('.stu-exam-sel'); if (sel) setExamLevel(sel.value);
   });
 
-  // keyboard: scoped to the study root only, with a phase-aware dispatch. The typed input owns
-  // Enter during the input phase; grade/close keys act in their phases. BUTTON default keys
-  // (Enter/Space on a focused control) fall through to native activation to avoid double-fire.
+  // keyboard: scoped to the study root only. The shell's phase-specific contract now routes through
+  // the shared pure resolver (lib/shortcuts.js resolveKey) + the WCAG turn-off gate; card
+  // sub-controllers (scramble/MCQ/lessons) keep their own onKey in K1 (incremental registry adoption).
   root.addEventListener('keydown', (e) => {
-    if (e.isComposing || e.keyCode === 229) return;   // don't fight an IME (matches gestures.js)
-    // While a card/flow owns the keyboard, keep its control keys (digits, Enter/Space/Esc)
-    // from bubbling to gestures.js's document-level 1-9 route-nav — otherwise answering an
-    // MCQ or grading a card would navigate the learner away. gestures ignores defaultPrevented,
-    // so stopPropagation is the guard.
+    if (e.isComposing || e.keyCode === 229) return;   // IME first — never removed (matches gestures.js)
+
+    // ── Leak fix (WIDENED): while a card/flow owns the keyboard, stop EVERY bare key from bubbling
+    // to gestures' document-level route-nav — EXCEPT `?` (it must reach gestures so the help sheet
+    // opens). Previously only {1-9, Enter, Space, Escape} were stopped, so ] [ 0 b \ , / leaked, and
+    // `]` navigated to a neighbour route, ABANDONING the session (#/study is hidden → currentRoute
+    // fell back to dashboard). Modified keys (⌘K / ⌘Z …) are NOT stopped — they must reach gestures.
     const cardActive = activeFlow || cardCtl || ['input', 'close', 'graded', 'wrong', 'scramble', 'mcq'].includes(phase);
-    if (cardActive && ((e.key >= '1' && e.key <= '9') || e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
-      e.stopPropagation();
-    }
-    if (activeFlow) { activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
-    if (cardCtl) { cardCtl.onKey(e); return; }         // a live ★-scramble card owns its keys
-    const t = e.target;
-    if (phase === 'input') {
-      // Enter on the typed input submits; Enter/Space on a focused control (Hint / Don't know /
-      // Check) activates it natively via the delegated click — don't hijack it into a submit.
-      if (e.key === 'Enter') { if (t && t.tagName === 'BUTTON') return; e.preventDefault(); submitAnswer(); }
-      return;
-    }
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
-    if (phase === 'close') {
-      if (e.key === 'Enter') { if (t.tagName === 'BUTTON') return; e.preventDefault(); acceptClose(); }
-      else if (e.key === 'Escape') { e.preventDefault(); rejectClose(); }
-      return;
-    }
-    if (phase === 'graded') {
-      if (e.key === '2') { e.preventDefault(); grade(2); }
-      else if (e.key === '3') { e.preventDefault(); grade(3); }
-      else if (e.key === '4') { e.preventDefault(); grade(4); }
-      else if (e.key === 'Enter' && t.tagName !== 'BUTTON') { e.preventDefault(); grade(3); }
-      return;
-    }
-    if (phase === 'wrong') {
-      if ((e.key === 'Enter' || e.key === ' ')) { if (t.tagName === 'BUTTON') return; e.preventDefault(); grade(1, { typedCorrect: false }); }
-    }
+    const bareKey = !e.metaKey && !e.ctrlKey && !e.altKey && (e.key.length === 1 || e.key === 'Enter' || e.key === 'Escape');
+    if (cardActive && bareKey && e.key !== '?') e.stopPropagation();
+
+    // WCAG 2.1.4 turn-off: when shortcuts are disabled, no bare key commands on any study surface
+    // (native Tab + Enter/Space-on-a-focused-button still operate every control — Principle 5).
+    const enabled = shortcutsEnabled();
+
+    // Bare Escape is a named key (WCAG-2.1.4-exempt, like the exam's container-listener Esc), so it
+    // still reaches the flow when shortcuts are off — Esc never activates a focused button natively,
+    // so unlike Enter there is no double-fire / wrong-button risk in forwarding it.
+    if (activeFlow) { if (enabled || e.key === 'Escape') activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
+    if (cardCtl) { if (enabled) cardCtl.onKey(e); maybeAutoAdvanceAfterPick(); return; }   // a live ★-scramble / MCQ card owns its keys; a correct digit-pick may arm auto-advance (K5)
+
+    // submit→continue debounce: one physical Enter/Space must not submit AND then skip past the
+    // revealed result (key-repeat / IME double-fire). We preventDefault so the focused grade/Continue
+    // BUTTON doesn't activate natively during the window either.
+    if (enabled && (e.key === 'Enter' || e.key === ' ') && (phase === 'graded' || phase === 'wrong')
+        && (Date.now() - lastRevealTs) < ENTER_DEBOUNCE_MS) { e.preventDefault(); return; }
+
+    const id = resolveKey({ key: e.key, phase, targetKind: targetKindOf(e.target), composing: e.isComposing, enabled });
+    if (!id) return;
+    // finalize-side IME fallback: ignore a submit-Enter fired right after compositionend — Safari/
+    // mobile have mis-set isComposing=false on the finalize-Enter, which would submit half-composed text.
+    if (id === 'submit' && (Date.now() - lastComposeEnd) < COMPOSE_GUARD_MS) return;
+    e.preventDefault();
+    runAction(id);
   });
+
+  // track the last IME finalize so the submit path can ignore a stray finalize-Enter (see above).
+  root.addEventListener('compositionend', () => { lastComposeEnd = Date.now(); });
 
   // repaint furigana toggle if it changes elsewhere; stop a test-out's soft timer if the user
   // navigates away mid-flow (display-only, but don't leave an interval running off-screen).
@@ -1184,7 +1334,35 @@ function wireRoot() {
     if (e.detail?.route === 'study') { applyFuri(); return; }
     if (activeFlow && activeFlow.teardown) activeFlow.teardown();
     teardownGateTimer();   // don't leave the soft gate countdown ticking off-screen
+    cancelAutoAdvance();   // K5: navigating away kills any pending auto-advance (never fire off-screen)
   });
+}
+
+// the active-element KIND resolveKey needs (kept in the module so resolveKey stays DOM-free/pure).
+function targetKindOf(el) {
+  if (!el) return 'other';
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable) return 'input';
+  if (el.tagName === 'BUTTON') return 'button';
+  return 'other';
+}
+// map a resolved actionId → the existing shell handler (the same ones the delegated click routes to).
+function runAction(id) {
+  switch (id) {
+    case 'submit': submitAnswer(); break;
+    case 'accept': acceptClose(); break;
+    case 'reject': rejectClose(); break;
+    case 'grade-2': grade(2); break;
+    case 'grade-3': grade(3); break;
+    case 'grade-4': grade(4); break;
+    case 'grade-default': grade(3); break;                       // Enter in graded, no control focused → Good
+    case 'advance': grade(1, { typedCorrect: false }); break;   // wrong phase: Enter/Space = Continue
+    case 'speak-graded': case 'speak-wrong': {                  // R: replay (post-answer only; no-op if no audio)
+      const ja = cardExampleJa(); if (ja) speakExample(ja, root.querySelector('.stu-speak')); break;
+    }
+    case 'autoplay': toggleTts(); break;                        // A: toggle autoplay (session-safe; announces)
+    case 'undo-graded': case 'undo-wrong': undoLast(); break;   // Z: undo the last grade (within-session)
+    case 'summary-done': renderCourseHome(); break;             // Enter on the summary if focus drifted off Done
+  }
 }
 
 function act(name, btn) {
@@ -1208,8 +1386,10 @@ function act(name, btn) {
     case 'reject': rejectClose(); break;
     case 'grade': grade(parseInt(btn.dataset.g, 10)); break;
     case 'again': grade(1, { typedCorrect: false }); break;
+    case 'undo': undoLast(); break;   // K2b: the header ↩ Undo affordance (tap/Tab parity for the Z key)
     case 'speak': { const ja = cardExampleJa(); if (ja) speakExample(ja, btn); break; }
     case 'ttsToggle': toggleTts(); break;
+    case 'autoAdvToggle': toggleAutoAdvance(); break;   // K5: auto-advance-on-correct opt-in
     case 'done': renderCourseHome(); break;
   }
 }

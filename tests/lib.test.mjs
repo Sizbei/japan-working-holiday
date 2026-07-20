@@ -1950,7 +1950,7 @@ test('calendars: normalize drops malformed + dedupes; nextColor avoids used', ()
 // ─────────────────────────────────────────────────────────────────────────────
 import {
   STAGES, stageOf, retrievability, nextInterval, effectiveGrade, gateMode,
-  newState, migrate, review, buildQueue, interleave, deferCard, amnesty,
+  newState, migrate, review, undoReview, buildQueue, interleave, deferCard, amnesty,
   seedImport, hash, sessionStart, sessionRecord, sessionEnd,
   lessonOrder, unitProgress, testOutResult,
   checkpointQuestions, recordCheckpoint, checkpointPassed, nextCheckpointUnit,
@@ -3302,4 +3302,398 @@ test('itineraryStops maps schedule → stop fields, times parsed, labels folded 
   assert.equal(stops[2].note, 'the hills · ~2 hr loop'); // soft label folded in with the note
   assert.equal(stops[3].note, 'evening');                // soft label alone
   assert.equal(itineraryStops(null).length, 0);
+});
+
+// ── K1: keyboard binding registry + pure resolver (lib/shortcuts.js) ──────────
+import { BINDINGS, resolveKey } from '../docs/assets/lib/shortcuts.js';
+
+test('shortcuts: BINDINGS is a well-formed registry (unique ids, non-empty keys)', () => {
+  assert.ok(Array.isArray(BINDINGS) && BINDINGS.length > 0);
+  const ids = BINDINGS.map(b => b.id);
+  assert.equal(new Set(ids).size, ids.length, 'binding ids are unique');
+  for (const b of BINDINGS) {
+    assert.ok(Array.isArray(b.keys) && b.keys.length, `${b.id} has keys`);
+    assert.ok(typeof b.phase === 'string' && b.phase, `${b.id} has a phase`);
+    assert.ok(typeof b.label === 'string' && b.label, `${b.id} has a label`);
+  }
+});
+
+test('resolveKey: disabled → null (WCAG 2.1.4 turn-off)', () => {
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', enabled: false }), null);
+});
+
+test('resolveKey: composing → null (never command mid-変換)', () => {
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', composing: true, enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', composing: true, enabled: true }), null);
+});
+
+test('resolveKey: a printable single-char key over a text field types, never commands', () => {
+  // digit/letter must fall through to the field (return null) while the kana input is focused
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  // …but Enter is NOT a printable key, so it still commands inside the input (that is how submit fires)
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'input', enabled: true }), 'submit');
+});
+
+test('resolveKey: Enter/Space on a focused BUTTON → null (native activation, no double-fire)', () => {
+  assert.equal(resolveKey({ key: 'Enter', phase: 'graded', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'close', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: ' ', phase: 'wrong', targetKind: 'button', enabled: true }), null);
+  // a digit grade key is NOT native-activating, so it still resolves even on a focused button
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'button', enabled: true }), 'grade-3');
+});
+
+test('resolveKey: correct (key, phase) → actionId mapping', () => {
+  assert.equal(resolveKey({ key: 'Enter', phase: 'input', targetKind: 'other', enabled: true }), 'submit');
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), null); // correct answers have no Again
+  assert.equal(resolveKey({ key: '2', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-2');
+  assert.equal(resolveKey({ key: '3', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-3');
+  assert.equal(resolveKey({ key: '4', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-4');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'graded', targetKind: 'other', enabled: true }), 'grade-default');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'wrong', targetKind: 'other', enabled: true }), 'advance');
+  assert.equal(resolveKey({ key: ' ', phase: 'wrong', targetKind: 'other', enabled: true }), 'advance');
+  assert.equal(resolveKey({ key: 'Enter', phase: 'close', targetKind: 'other', enabled: true }), 'accept');
+  assert.equal(resolveKey({ key: 'Escape', phase: 'close', targetKind: 'other', enabled: true }), 'reject');
+});
+
+test('resolveKey: 1 has no study binding in any phase — gestures owns route-nav 1-9', () => {
+  assert.equal(resolveKey({ key: '1', phase: 'graded', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: '1', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: '1', phase: 'idle', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey: unknown key or phase → null', () => {
+  assert.equal(resolveKey({ key: 'q', phase: 'graded', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: '5', phase: 'graded', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'Enter', phase: 'nonsense', targetKind: 'other', enabled: true }), null);
+});
+
+// ── K2a: reviewer audio power keys (R replay, A autoplay) ──────────────────────
+test('resolveKey (K2a): R replays audio ONLY post-answer (graded/wrong), never pre-answer', () => {
+  assert.equal(resolveKey({ key: 'r', phase: 'graded', targetKind: 'other', enabled: true }), 'speak-graded');
+  assert.equal(resolveKey({ key: 'R', phase: 'wrong', targetKind: 'other', enabled: true }), 'speak-wrong');
+  assert.equal(resolveKey({ key: 'r', phase: 'wrong', targetKind: 'button', enabled: true }), 'speak-wrong'); // a bare letter still commands on a focused button
+  // no leak: R is unbound pre-answer (would speak the answer-bearing sentence aloud)
+  assert.equal(resolveKey({ key: 'r', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'close', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'idle', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey (K2a): A toggles autoplay ONLY on the course home (idle) where the visible toggle lives', () => {
+  assert.equal(resolveKey({ key: 'a', phase: 'idle', targetKind: 'other', enabled: true }), 'autoplay');
+  assert.equal(resolveKey({ key: 'A', phase: 'idle', targetKind: 'other', enabled: true }), 'autoplay');
+  // scoped to idle: mid-session A is unbound — the autoplay tap control (.stu-tts-toggle) only
+  // exists on the course home, so binding A there keeps keyboard/touch parity (Principle 5)
+  assert.equal(resolveKey({ key: 'A', phase: 'graded', targetKind: 'button', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'a', phase: 'wrong', targetKind: 'other', enabled: true }), null);
+  // a bare letter must still type into the kana field
+  assert.equal(resolveKey({ key: 'a', phase: 'input', targetKind: 'input', enabled: true }), null);
+  // WCAG turn-off silences both audio keys
+  assert.equal(resolveKey({ key: 'a', phase: 'idle', targetKind: 'other', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'r', phase: 'graded', targetKind: 'other', enabled: false }), null);
+});
+
+import { recurOccurrences, isRecurring } from '../docs/assets/lib/recur.js';
+test('recur: a non-recurring event passes through as one span (multi-day preserved)', () => {
+  const e = { date: '2026-07-20', endDate: '2026-07-28' };
+  assert.equal(isRecurring(e), false);
+  assert.deepEqual(recurOccurrences(e, '2026-07-01', '2026-08-31'), [{ date: '2026-07-20', endDate: '2026-07-28' }]);
+});
+test('recur: yearly repeats the month-day each year within the window, never before the anchor', () => {
+  const e = { date: '2026-08-08', recur: 'yearly' };
+  const occ = recurOccurrences(e, '2025-01-01', '2029-12-31').map(o => o.date);
+  assert.deepEqual(occ, ['2026-08-08', '2027-08-08', '2028-08-08', '2029-08-08']);   // no 2025 (before anchor)
+  assert.equal(recurOccurrences(e, '2026-08-08', '2026-08-08').length, 1);           // matches its own day
+  assert.equal(recurOccurrences(e, '2026-08-09', '2026-12-31').length, 0);           // not on a non-anniversary day
+});
+test('recur: yearly Feb-29 anchor clamps to Feb-28 in common years', () => {
+  const e = { date: '2028-02-29', recur: 'yearly' };
+  const occ = recurOccurrences(e, '2028-01-01', '2030-12-31').map(o => o.date);
+  assert.deepEqual(occ, ['2028-02-29', '2029-02-28', '2030-02-28']);
+});
+test('recur: monthly clamps Jan-31 to short months and stays in window', () => {
+  const e = { date: '2026-01-31', recur: 'monthly' };
+  const occ = recurOccurrences(e, '2026-01-01', '2026-04-30').map(o => o.date);
+  assert.deepEqual(occ, ['2026-01-31', '2026-02-28', '2026-03-31', '2026-04-30']);
+});
+test('recur: weekly steps every 7 days and fast-forwards into a later window', () => {
+  const e = { date: '2026-07-01', recur: 'weekly' };
+  assert.deepEqual(recurOccurrences(e, '2026-07-01', '2026-07-22').map(o => o.date), ['2026-07-01', '2026-07-08', '2026-07-15', '2026-07-22']);
+  const far = recurOccurrences(e, '2026-08-01', '2026-08-14').map(o => o.date);
+  assert.deepEqual(far, ['2026-08-05', '2026-08-12']);   // aligned to the weekly cadence, not the window edge
+});
+test('recur: occurrences are single-day (no endDate) and reversed windows yield nothing', () => {
+  const e = { date: '2026-08-08', recur: 'yearly' };
+  assert.equal(recurOccurrences(e, '2026-01-01', '2027-12-31').every(o => o.endDate === ''), true);
+  assert.deepEqual(recurOccurrences(e, '2027-01-01', '2026-01-01'), []);
+});
+
+// ── K2b: undo the last grade (Z) + session wrap-up (Enter) ────────────────────
+test('undoReview: review()→undo round-trips to a state deep-equal to the pre-grade state', () => {
+  const s0 = review(newState(T0), 'n5-1', { pass: true, grade: 3, exampleIdx: 0 }, T0 + DAY);
+  const snap = structuredClone(s0);                       // the shell snapshots BEFORE the next grade
+  const s1 = review(s0, 'n5-1', { pass: false, grade: 1 }, T0 + 2 * DAY);   // a lapse: really moves D/S/lapses/due
+  assert.deepStrictEqual(s0, snap, 'review() did not mutate its input (immutable)');
+  assert.notDeepStrictEqual(s1.points['n5-1'], s0.points['n5-1'], 'the grade actually changed the point');
+  const undone = undoReview(snap);
+  assert.deepStrictEqual(undone, s0, 'undo restores the pre-grade state byte-for-byte');
+  // the restore is a fresh clone — mutating it must not reach back into the snapshot (no aliasing)
+  undone.points['n5-1'].D = 99;
+  assert.notEqual(snap.points['n5-1'].D, 99);
+});
+
+test('undoReview: session position + results revert together with the graded point', () => {
+  let s = sessionStart(review(newState(T0), 'n5-1', { pass: true, grade: 3 }, T0), ['n5-1', 'n5-2']);
+  const snap = structuredClone(s);                        // pos 0, no results
+  s = review(s, 'n5-1', { pass: true, grade: 4 }, T0 + DAY);
+  s = sessionRecord(s, { id: 'n5-1', grade: 4, ok: true });   // pos → 1, one result
+  assert.equal(s.session.pos, 1);
+  assert.equal(s.session.results.length, 1);
+  const undone = undoReview(snap);
+  assert.equal(undone.session.pos, 0, 'pos reverted');
+  assert.equal(undone.session.results.length, 0, 'results reverted');
+  assert.deepStrictEqual(undone, snap);
+});
+
+test('resolveKey (K2b): Z undoes the last grade in the reveal phases only', () => {
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'other', enabled: true }), 'undo-graded');
+  assert.equal(resolveKey({ key: 'Z', phase: 'wrong', targetKind: 'other', enabled: true }), 'undo-wrong');
+  // a bare letter still commands on a focused grade/Continue button
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'button', enabled: true }), 'undo-graded');
+  // NOT during input ("nothing to undo yet"), and never over the focused kana field (rule 3)
+  assert.equal(resolveKey({ key: 'z', phase: 'input', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'input', enabled: true }), null);
+  // WCAG turn-off silences it; not a command key on the course home or summary
+  assert.equal(resolveKey({ key: 'z', phase: 'graded', targetKind: 'other', enabled: false }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'idle', targetKind: 'other', enabled: true }), null);
+  assert.equal(resolveKey({ key: 'z', phase: 'summary', targetKind: 'other', enabled: true }), null);
+});
+
+test('resolveKey (K2b): summary Enter → native on the focused button, else routed to summary-done', () => {
+  // focus on the Done button → null so the browser activates it natively (no double-fire)
+  assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'button', enabled: true }), null);
+  // focus elsewhere → the registry routes Enter to the wrap-up action
+  assert.equal(resolveKey({ key: 'Enter', phase: 'summary', targetKind: 'other', enabled: true }), 'summary-done');
+});
+
+// ── K3: the ? sheet renders FROM the registry — drift guard (sheet ⇔ registry ⇔ dispatcher) ─────
+import { helpSheetModel, keyGlyph } from '../docs/assets/lib/shortcuts.js';
+
+test('K3 drift: the sheet documents EVERY binding, invents none (sheet ⇔ registry)', () => {
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const covered = model.flatMap(g => g.rows.flatMap(r => r.ids));
+  // every binding id is documented, and nothing outside the registry appears
+  assert.deepEqual(new Set(covered), new Set(BINDINGS.map(b => b.id)));
+});
+
+test('K3 drift: each binding lands in exactly one sheet group', () => {
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  for (const b of BINDINGS) {
+    const groupsWith = model.filter(g => g.rows.some(r => r.ids.includes(b.id)));
+    assert.equal(groupsWith.length, 1, `${b.id} appears in exactly one group`);
+  }
+});
+
+test('K3 drift: the sheet renders no key that is not in the registry', () => {
+  const registryKeys = new Set(BINDINGS.flatMap(b => b.keys));
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  for (const g of model) for (const r of g.rows) for (const k of r.keys) {
+    assert.ok(registryKeys.has(k), `sheet key ${k} is not declared in BINDINGS`);
+  }
+});
+
+test('K3 drift: the page-jump binding expands to the live nav labels when pages are supplied', () => {
+  const pages = [{ key: '1', label: 'Home' }, { key: '2', label: 'Calendar' }];
+  const model = helpSheetModel(BINDINGS, { enabled: true, pages });
+  const nav = model.find(g => g.surface === 'nav');
+  assert.ok(nav.rows.some(r => r.keys[0] === '1' && r.label === 'Home'));
+  assert.ok(nav.rows.some(r => r.keys[0] === '2' && r.label === 'Calendar'));
+  // still exactly one group for nav-page even when expanded to many rows
+  assert.equal(model.filter(g => g.rows.some(r => r.ids.includes('nav-page'))).length, 1);
+});
+
+test('K3 drift: every routed (resolveKey-dispatched) binding actually resolves (registry ⇔ dispatcher)', () => {
+  const routed = BINDINGS.filter(b => b.routed !== false);
+  assert.ok(routed.length >= 12, 'the study surface is resolveKey-routed');
+  for (const b of routed) {
+    // a routed binding must resolve to its own id for its first key + phase (targetKind:'other' so
+    // Enter/Space still command). This is what catches a key added to the dispatcher but not the
+    // sheet, or removed from one side only.
+    const id = resolveKey({ key: b.keys[0], phase: b.phase, targetKind: 'other', enabled: true });
+    assert.equal(id, b.id, `${b.id} resolves through resolveKey`);
+    assert.ok(b.surface === 'study', `${b.id} routed bindings live on the study surface`);
+  }
+});
+
+test('K3 drift: declarative (routed:false) bindings are marked and never mistaken for routed', () => {
+  const declarative = BINDINGS.filter(b => b.routed === false);
+  // the global/nav + calendar/checklist + modifier combos are all declarative documentation.
+  // K5.1 exception: 'pick-option' documents the cardCtl-owned in-card digits (MCQ pick / tile
+  // place) — study-surface for the sheet, but dispatched by the card controller, never resolveKey.
+  assert.ok(declarative.length > 0);
+  for (const b of declarative) {
+    if (b.id === 'pick-option') continue;
+    assert.notEqual(b.surface, 'study');
+  }
+  // resolveKey matches generically by (key, phase) over ALL of BINDINGS (the K4a exam-phase lesson),
+  // so the entry WOULD resolve if handed phase 'card' — but the runtime never passes it: study.js's
+  // cardCtl short-circuit returns before the resolver whenever an MCQ/scramble card is live.
+  assert.equal(resolveKey({ key: '1', phase: 'card', targetKind: 'other', composing: false, enabled: true }), 'pick-option');
+});
+
+// ── K4a: mock-exam keyboard bindings (declarative, handler-owned by study-exam.js) ────
+test('K4a: the mock-exam bindings are declarative, documented, and in their own sheet group', () => {
+  const exam = BINDINGS.filter(b => b.surface === 'exam');
+  assert.ok(exam.length >= 6, 'the mock exam surface carries its bindings (flag/prev/next/pick/palette/submit/exit)');
+  // handler-owned (study-exam.js onKey + a run-container listener), never resolveKey-DISPATCHED: the
+  // exam runs as activeFlow, so study.js returns before the resolver — phase 'exam' is never passed to
+  // resolveKey/runAction. These entries exist only so the ? sheet documents them from one registry.
+  for (const b of exam) {
+    assert.equal(b.routed, false, `${b.id} is handler-owned (routed:false)`);
+    assert.notEqual(b.surface, 'study', `${b.id} is NOT the resolveKey-routed study surface`);
+  }
+  // the K3 sheet documents every one of them, in exactly one "In a mock exam" group
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const group = model.find(g => g.surface === 'exam');
+  assert.ok(group && /mock exam/i.test(group.title), 'the exam bindings render under a mock-exam sheet group');
+  const covered = new Set(group.rows.flatMap(r => r.ids));
+  for (const b of exam) assert.ok(covered.has(b.id), `${b.id} appears in the exam sheet group`);
+  // the flag key F and the ←/→ nav keys are surfaced
+  assert.ok(exam.some(b => b.keys.includes('f') && b.keys.includes('F')), 'F flags a question');
+  assert.ok(exam.some(b => b.keys.includes('ArrowLeft')) && exam.some(b => b.keys.includes('ArrowRight')), '←/→ move between questions');
+});
+
+// ── K4b: heat-grid roving bindings (declarative, handler-owned by study-stats.js) ────
+test('K4b: the mastery-map bindings are declarative, documented, and in their own sheet group', () => {
+  const stats = BINDINGS.filter(b => b.surface === 'stats');
+  assert.ok(stats.length >= 5, 'the mastery map carries its roving-grid bindings (move/row-ends/ends/page/open)');
+  // handler-owned (study-stats.js's grid-container listener), never resolveKey-DISPATCHED: the grid runs
+  // as activeFlow, so study.js returns before the resolver — phase 'stats' is never passed to resolveKey.
+  for (const b of stats) {
+    assert.equal(b.routed, false, `${b.id} is handler-owned (routed:false)`);
+    assert.notEqual(b.surface, 'study', `${b.id} is NOT the resolveKey-routed study surface`);
+  }
+  // every key is a WCAG-2.1.4-EXEMPT named key (or a modifier combo) — no bare printable single char.
+  for (const b of stats) for (const k of b.keys) {
+    const named = k.length > 1 || k === ' ';   // ' ' (Space) is a named key too, exempt on a focused button
+    assert.ok(named, `${b.id} key ${JSON.stringify(k)} is a named/exempt key, never a bare printable char`);
+  }
+  // the K3 sheet documents every one of them, in exactly one "mastery map" group
+  const model = helpSheetModel(BINDINGS, { enabled: true });
+  const group = model.find(g => g.surface === 'stats');
+  assert.ok(group && /mastery map/i.test(group.title), 'the stats bindings render under a mastery-map sheet group');
+  const covered = new Set(group.rows.flatMap(r => r.ids));
+  for (const b of stats) assert.ok(covered.has(b.id), `${b.id} appears in the stats sheet group`);
+  // the arrow-move + Ctrl+Home/End + PageUp/Down keys are surfaced
+  assert.ok(stats.some(b => b.keys.includes('ArrowUp') && b.keys.includes('ArrowDown')), '↑/↓ move vertically');
+  assert.ok(stats.some(b => b.keys.includes('PageUp') && b.keys.includes('PageDown')), 'PageUp/Down jump levels');
+  assert.ok(stats.some(b => b.keys.includes('⌃Home') && b.keys.includes('⌃End') && b.mod === true), 'Ctrl+Home/End are modifier combos');
+  // handler-owned means study.js never PASSES phase 'stats' to resolveKey (the activeFlow path returns
+  // before the resolver); the grid-container listener owns these keys directly. That the dispatcher is
+  // never invoked for 'stats' is a dispatch-site fact, mirrored by the same routed:false marking K4a uses.
+});
+
+test('K3: keyGlyph maps raw event keys to readable chips, passes combos through', () => {
+  assert.equal(keyGlyph('Enter'), '⏎');
+  assert.equal(keyGlyph(' '), 'Space');
+  assert.equal(keyGlyph('ArrowLeft'), '←');
+  assert.equal(keyGlyph('-'), '−');
+  assert.equal(keyGlyph('⌘K'), '⌘K');   // mod-combo display strings pass through untouched
+  assert.equal(keyGlyph('2'), '2');
+  assert.equal(keyGlyph('PageUp'), 'PgUp');    // K4b heat-grid keys
+  assert.equal(keyGlyph('PageDown'), 'PgDn');
+  assert.equal(keyGlyph('⌃Home'), '⌃Home');   // Ctrl combo display string passes through
+});
+
+// ── K5: palette route→key map + auto-advance eligibility ──────────────────────
+import { routeKeys } from '../docs/assets/lib/palette.js';
+import { shouldAutoAdvance } from '../docs/assets/lib/shortcuts.js';
+
+test('routeKeys: first 9 visible routes get 1–9, emergency gets 0, rest none', () => {
+  const vr = ['dashboard', 'calendar', 'plan', 'map', 'explore', 'eats', 'people', 'checklist', 'budget', 'rooms', 'emergency'];
+  const m = routeKeys(vr);
+  assert.equal(m.dashboard, '1');
+  assert.equal(m.calendar, '2');
+  assert.equal(m.budget, '9');       // 9th visible route
+  assert.equal(m.rooms, undefined);  // 10th — past the digit range, no key
+  assert.equal(m.emergency, '0');    // always the 0 route (not in the first 9 here)
+  assert.equal(m.study, undefined);  // hidden route — no direct key → no chip
+});
+
+test('routeKeys: emergency keeps its own digit when it lands in the first 9 (no 0 override)', () => {
+  const vr = ['dashboard', 'emergency', 'calendar'];
+  const m = routeKeys(vr);
+  assert.equal(m.emergency, '2');    // earned a digit → not overwritten by 0
+});
+
+test('routeKeys: empty / non-array input → just the emergency 0 fallback', () => {
+  assert.deepEqual(routeKeys([]), { emergency: '0' });
+  assert.deepEqual(routeKeys(null), { emergency: '0' });
+});
+
+test('shouldAutoAdvance: fires only on a correct answer, opt-in on, non-gate', () => {
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: true, gate: false }), true);
+  assert.equal(shouldAutoAdvance({ enabled: false, correct: true, gate: false }), false);  // opt-in off
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: false, gate: false }), false);  // wrong answer never advances
+  assert.equal(shouldAutoAdvance({ enabled: true, correct: true, gate: true }), false);    // gate cards excluded
+  assert.equal(shouldAutoAdvance(), false);                                                // defaults → off
+});
+
+import { stripEmoji } from '../docs/assets/lib/dom.js';
+test('stripEmoji removes pictographs/flags but keeps arrows, kana, punctuation', () => {
+  assert.equal(stripEmoji('🎌 teamLab Planets'), 'teamLab Planets');
+  assert.equal(stripEmoji('✈️ OZ271 SEA→ICN'), 'OZ271 SEA→ICN');
+  assert.equal(stripEmoji('🇯🇵 Comiket C108'), 'Comiket C108');
+  assert.equal(stripEmoji('Anniversary 💛'), 'Anniversary');
+  assert.equal(stripEmoji('‹ Makoto Guesthouse → 10'), '‹ Makoto Guesthouse → 10');   // arrows/marks survive
+  assert.equal(stripEmoji('渋谷 の カフェ'), '渋谷 の カフェ');                          // kana/kanji survive
+  assert.equal(stripEmoji(''), '');
+  assert.equal(stripEmoji(null), '');
+});
+
+import { dialHTML, dialsHTML, linkifyIntlPhones } from '../docs/assets/lib/emergency-render.js';
+test('dialHTML builds a tel: target, esc()s, gates the note to hero tier', () => {
+  const police = { num: '110', label: 'Police', note: 'Crime, theft & accidents.' };
+  const hero = dialHTML(police, 'hero');
+  assert.ok(hero.includes('href="tel:110"'));
+  assert.ok(hero.includes('sos-dial--hero'));
+  assert.ok(hero.includes('aria-label="Call Police, 110"'));
+  assert.ok(hero.includes('Crime, theft'));                       // hero shows the note
+  assert.ok(!dialHTML(police, 'sub').includes('sos-dial-note'));  // sub/compact hide it
+  assert.ok(!dialHTML(police, 'compact').includes('sos-dial-note'));
+  assert.equal(dialHTML({ num: '' }), '');                        // no number → nothing
+  assert.equal(dialHTML(null), '');
+  assert.ok(dialHTML({ num: '119', label: '<b>x</b>' }).includes('&lt;b&gt;'));  // esc'd
+});
+test('dialsHTML: hero-count splits tiers on the page, compact flattens for the pocket', () => {
+  const nums = [{ num: '110', label: 'Police' }, { num: '119', label: 'Fire' },
+    { num: '118', label: 'Coast Guard' }, { num: '', label: 'skip me' }];
+  const page = dialsHTML(nums, { hero: 2 });
+  assert.equal((page.match(/sos-dial--hero/g) || []).length, 2);
+  assert.equal((page.match(/sos-dial--sub/g) || []).length, 1);   // 118; blank entry dropped
+  const pocket = dialsHTML(nums, { compact: true });
+  assert.equal((pocket.match(/sos-dial--compact/g) || []).length, 3);
+  assert.ok(!pocket.includes('sos-dial--hero'));
+  assert.equal(dialsHTML(null), '');
+  assert.equal(dialsHTML([]), '');
+});
+test('linkifyIntlPhones links +-numbers, leaves postal/street codes alone', () => {
+  const out = linkifyIntlPhones('+81-3-5412-6200 · 7-3-38 Akasaka, Tokyo 107-8503');
+  assert.ok(out.includes('href="tel:+81-3-5412-6200"'));
+  assert.ok(out.includes('>+81-3-5412-6200</a>'));
+  assert.ok(!out.includes('tel:7-3-38'));       // street number stays text
+  assert.ok(!out.includes('tel:107-8503'));     // postal code stays text
+  const collect = linkifyIntlPhones('Ottawa +1-613-996-8885 (call collect)');
+  assert.ok(collect.includes('href="tel:+1-613-996-8885"'));
+  assert.ok(collect.includes('(call collect)'));
+  assert.ok(linkifyIntlPhones('<script>').includes('&lt;script&gt;'));  // plain text esc'd
+  assert.equal(linkifyIntlPhones(''), '');
+  assert.equal(linkifyIntlPhones(null), '');
+  // greedy-merge guard: a trailing space-separated digit run must NEVER fuse into the tel: target
+  // (a corrupted dial number). Spaces terminate a match — spaced phones stay plain text (safe).
+  const greedy = linkifyIntlPhones('+81-3-1234-5678 90 more');
+  assert.ok(greedy.includes('href="tel:+81-3-1234-5678"'));
+  assert.ok(!greedy.includes('tel:+81-3-1234-567890'));
+  assert.ok(!linkifyIntlPhones('+81 3 5412 6200').includes('<a'));  // spaced → under-link, not corrupt
 });

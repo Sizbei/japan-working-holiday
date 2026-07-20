@@ -68,6 +68,18 @@ export function buildUserEntries(stores) {
   return out;
 }
 
+// Pure: map each route to the bare digit that navigates to it, for the palette's Superhuman-teaches
+// key chips (K5). Mirrors gestures.js: the first 9 VISIBLE nav routes get '1'–'9' (their live
+// route-jump binding), and 'emergency' gets '0' unless it already earned a digit. Hidden routes
+// (study/grammar) and routes past the 9th get no key → no chip. Takes the live visible-nav order.
+export function routeKeys(visibleRoutes) {
+  const vr = Array.isArray(visibleRoutes) ? visibleRoutes : [];
+  const map = {};
+  vr.slice(0, 9).forEach((r, i) => { if (r && !(r in map)) map[r] = String(i + 1); });
+  if (!('emergency' in map)) map.emergency = '0';
+  return map;
+}
+
 // score one entry against a normalized (lowercased, trimmed) query. 0 = drop.
 function scoreOf(entry, q) {
   const label = entry.label.toLowerCase();
@@ -81,8 +93,9 @@ function scoreOf(entry, q) {
   return s;
 }
 
-// searchIndex(index, query, limit=12) → ranked subset. Empty query → just the route entries.
-export function searchIndex(index, query, limit = 12) {
+// searchIndex(index, query, limit=13) → ranked subset. Empty query → just the route entries
+// (13 = 11 nav routes + the two reachable hidden ones — keep >= the route count so none drop).
+export function searchIndex(index, query, limit = 13) {
   const list = Array.isArray(index) ? index : [];
   const q = String(query || '').trim().toLowerCase();
   if (!q) return list.filter(e => e.kind === 'route').slice(0, limit);

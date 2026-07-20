@@ -9,6 +9,7 @@ import { $, esc } from './lib/dom.js';
 import { showModal } from './lib/modal.js';
 import { stayForNight, stayBooked } from './lib/trip.js';
 import { nowISO, fmtShort } from './lib/dates.js';
+import { dialsHTML } from './lib/emergency-render.js';
 
 export function mountPocket(data) {
   const btn = $('#pocketBtn');
@@ -24,13 +25,8 @@ function openPocket(data) {
   const stay = stayForNight(cal, today);
   const online = navigator.onLine;
 
-  const dials = numbers.slice(0, 4).map(n => {
-    const num = String(n?.num || '');
-    if (!num) return '';
-    return `<a class="pk-dial" href="tel:${esc(num)}">
-      <span class="pk-dial-num">${esc(num)}</span>
-      <span class="pk-dial-lbl">${esc(n?.label || '')}</span></a>`;
-  }).join('');
+  // Same tap-to-dial builder the #/emergency page uses — the numbers can never drift.
+  const dials = dialsHTML(numbers.slice(0, 4), { compact: true });
 
   let stayHTML;
   if (stay) {
@@ -52,7 +48,7 @@ function openPocket(data) {
   const html = `<div class="pk">
     <section class="pk-sec">
       <h3 class="pk-h">Tap to dial</h3>
-      <div class="pk-dials">${dials || '<p class="pk-note">No numbers in the data.</p>'}</div>
+      <div class="sos-dials sos-dials--compact">${dials || '<p class="pk-note">No numbers in the data.</p>'}</div>
     </section>
     <section class="pk-sec">
       <h3 class="pk-h">Tonight's stay</h3>

@@ -5,7 +5,7 @@
 // Pure index/ranking lives in lib/palette.js; this file is the DOM + interaction shell.
 // Every dynamic string goes through esc() with double-quoted attributes only.
 
-import { ROUTES, routeLabel } from './router.js';
+import { ROUTES, routeLabel, markNavSource, parseRoute } from './router.js';
 import { buildIndex, searchIndex, buildUserEntries, routeKeys } from './lib/palette.js';
 import { KEYS, get } from './lib/store.js';
 import { shortcutsEnabled } from './lib/shortcuts.js';
@@ -105,10 +105,14 @@ export function openPalette() {
     overlay.querySelector('.cmdk-opt.is-active')?.scrollIntoView({ block: 'nearest' });
   };
 
-  const activate = (i) => {
+  const activate = (i, viaKey = false) => {
     const entry = results[i];
     if (!entry) return;
     close();
+    // Enter-driven selection swaps instantly like the 1-9/[/] nav keys; a tapped row keeps the
+    // normal view transition (same keyboard-skips-the-swipe rule as gestures' goKbd — including its
+    // same-route guard: an identical hash fires no hashchange, which would strand a stale flag).
+    if (viaKey && entry.route !== parseRoute(location.hash)) markNavSource('keyboard');
     location.hash = '#/' + entry.route;   // route comes from ROUTES or HIDDEN_REACHABLE — both hardcoded, safe
   };
 
@@ -116,7 +120,7 @@ export function openPalette() {
     if (e.key === 'Escape') { e.preventDefault(); close(); return; }
     if (e.key === 'ArrowDown') { e.preventDefault(); setActive(activeIdx + 1); return; }
     if (e.key === 'ArrowUp') { e.preventDefault(); setActive(activeIdx - 1); return; }
-    if (e.key === 'Enter') { e.preventDefault(); if (activeIdx >= 0) activate(activeIdx); return; }
+    if (e.key === 'Enter') { e.preventDefault(); if (activeIdx >= 0) activate(activeIdx, true); return; }
     if (e.key === 'Tab') {   // trap focus — input is the only focusable, keep it focused
       e.preventDefault(); input.focus();
     }

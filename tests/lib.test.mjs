@@ -3459,9 +3459,18 @@ test('K3 drift: every routed (resolveKey-dispatched) binding actually resolves (
 
 test('K3 drift: declarative (routed:false) bindings are marked and never mistaken for routed', () => {
   const declarative = BINDINGS.filter(b => b.routed === false);
-  // the global/nav + calendar/checklist + modifier combos are all declarative documentation
+  // the global/nav + calendar/checklist + modifier combos are all declarative documentation.
+  // K5.1 exception: 'pick-option' documents the cardCtl-owned in-card digits (MCQ pick / tile
+  // place) — study-surface for the sheet, but dispatched by the card controller, never resolveKey.
   assert.ok(declarative.length > 0);
-  for (const b of declarative) assert.notEqual(b.surface, 'study');
+  for (const b of declarative) {
+    if (b.id === 'pick-option') continue;
+    assert.notEqual(b.surface, 'study');
+  }
+  // resolveKey matches generically by (key, phase) over ALL of BINDINGS (the K4a exam-phase lesson),
+  // so the entry WOULD resolve if handed phase 'card' — but the runtime never passes it: study.js's
+  // cardCtl short-circuit returns before the resolver whenever an MCQ/scramble card is live.
+  assert.equal(resolveKey({ key: '1', phase: 'card', targetKind: 'other', composing: false, enabled: true }), 'pick-option');
 });
 
 // ── K4a: mock-exam keyboard bindings (declarative, handler-owned by study-exam.js) ────

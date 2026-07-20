@@ -594,13 +594,7 @@ html[data-reduce-motion="on"] .acc-chevron { transition: none; }   /* honor the 
 @media (max-width: 350px){ .topbar .countdown{ display: none; } }
 .pk-sec{ margin: 0 0 var(--s4); }
 .pk-h{ font-family: var(--mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); margin: 0 0 .5rem; }
-.pk-dials{ display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.pk-dial{ display: flex; flex-direction: column; gap: .1rem; padding: .6rem .7rem; min-height: 56px; justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--red) 30%, var(--line)); border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--red) 7%, var(--bg-soft)); text-decoration: none; }
-.pk-dial:active{ transform: translateY(1px); }
-.pk-dial-num{ font-family: var(--mono); font-weight: 700; font-size: 1.35rem; color: var(--red); line-height: 1; letter-spacing: .02em; }
-.pk-dial-lbl{ font-size: .78rem; color: var(--ink); }
+/* pocket dials use the shared .sos-dial--compact grid (see the emergency block) */
 .pk-stay{ border: 1px solid var(--line); border-radius: var(--r-md); padding: .7rem .8rem; background: var(--bg-soft); }
 .pk-stay-name{ font-weight: 700; margin: 0 0 .2rem; }
 .pk-badge{ font-size: .68rem; font-weight: 700; color: var(--good-ink, #2e7d32); margin-left: .3rem; }
@@ -2851,27 +2845,87 @@ html[data-reduce-motion="on"] .lc-search-wrap { transition: none; }
 .bdg-tools { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s5); }
 @media (max-width: 760px) { .bdg-line-amt input { width: 5rem; } }
 
-/* ============ Emergency (#/emergency) — high-contrast, scannable under stress ============ */
-#emergency .em-section { margin-top: var(--s6); }
-#emergency .em-h { font-size: 1rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 var(--s3); }
-.em-calls { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: var(--s3); }
-.em-call { display: block; text-decoration: none; color: var(--ink); background: var(--bg-elevated); border: 2px solid var(--bad-fill); border-radius: var(--r-lg); padding: var(--s4); transition: var(--t-hover); }
-.em-call:hover { filter: brightness(1.02); box-shadow: var(--elev-1); }
-.em-call:focus-visible { outline: none; box-shadow: var(--ring); }
-.em-num { display: block; font-size: 2.2rem; font-weight: 900; line-height: 1; color: var(--bad-ink); font-variant-numeric: tabular-nums; }
-.em-call-label { display: block; font-weight: 700; margin-top: var(--s2); }
-.em-note { margin: var(--s2) 0 0; color: var(--ink-soft); font-size: .9rem; }
+/* ============ Emergency (#/emergency) — SOS-grade hierarchy, same editorial register ============
+   Read in three modes: (a) genuine emergency → 110/119 dialable in one glance+tap; (b) lost
+   passport / sick / embassy; (c) calm pre-reading. Designed for (a) first: the dials shout in
+   earned vermilion, everything under them stays quiet washi. No accordions over tier-(a) content. */
+
+/* --- shared tap-to-dial targets (this page's hero + the 🆘 pocket modal, one source) --- */
+.sos-dial { display: flex; flex-direction: column; justify-content: center; gap: .1rem;
+  text-decoration: none; color: var(--ink); border: 1px solid var(--line); border-radius: var(--r-lg);
+  background: var(--bg-soft); -webkit-tap-highlight-color: transparent;
+  transition: transform var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover); }
+.sos-dial:active { transform: translateY(1px); }
+.sos-dial:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.sos-dial-num { color: var(--red); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.sos-dial-lbl { color: var(--ink); }
+.sos-dial-note { color: var(--ink-soft); }
+
+/* hero tier — 110 / 119: the whole reason this page exists offline */
+.sos-dial--hero { min-height: 128px; padding: var(--s5); border-width: 2px;
+  border-color: color-mix(in srgb, var(--red) 38%, var(--line));
+  background: color-mix(in srgb, var(--red) 6%, var(--bg-soft)); }
+.sos-dial--hero .sos-dial-num { font-family: var(--serif); font-weight: 600; font-size: var(--fs-3xl); letter-spacing: -.01em; }
+.sos-dial--hero .sos-dial-lbl { font-family: var(--serif); font-size: var(--fs-md); font-weight: 600; margin-top: .1rem; }
+.sos-dial--hero .sos-dial-note { font-size: var(--fs-sm); line-height: var(--lh-snug); margin-top: .4rem; }
+@media (hover: hover) and (pointer: fine) { .sos-dial--hero:hover { border-color: var(--red); box-shadow: var(--elev-1); } }
+
+/* sub tier — 118 Coast Guard / helpline: present, not shouting */
+.sos-dial--sub { flex-direction: row; align-items: baseline; gap: var(--s3); min-height: 60px; padding: var(--s3) var(--s4);
+  border-color: color-mix(in srgb, var(--red) 22%, var(--line)); }
+.sos-dial--sub .sos-dial-num { font-family: var(--serif); font-weight: 600; font-size: var(--fs-lg); flex: none; }
+.sos-dial--sub .sos-dial-lbl { font-size: var(--fs-sm); color: var(--ink-soft); }
+@media (hover: hover) and (pointer: fine) { .sos-dial--sub:hover { border-color: var(--red); } }
+
+/* compact tier — the pocket modal (kept deliberately minimal) */
+.sos-dials--compact { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.sos-dial--compact { min-height: 56px; padding: .55rem .7rem;
+  border-color: color-mix(in srgb, var(--red) 30%, var(--line));
+  background: color-mix(in srgb, var(--red) 7%, var(--bg-soft)); }
+.sos-dial--compact .sos-dial-num { font-family: var(--mono); font-size: 1.3rem; letter-spacing: .02em; }
+.sos-dial--compact .sos-dial-lbl { font-size: .78rem; }
+
+/* --- the dial hero (page) --- */
+.em-hero { margin: 0 0 var(--s8); }
+.em-hero-kicker { margin: 0 0 var(--s3); font-family: var(--mono); font-size: var(--fs-2xs);
+  text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--shu); font-weight: 700; }
+[data-theme="dark"] .em-hero-kicker { color: color-mix(in srgb, var(--shu) 55%, var(--ink)); }  /* lift vermilion to AA on dark surfaces (same as .stu-mark-shu) */
+.em-dialpad { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+.em-dials-sub { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s3); }
+@media (max-width: 460px) { .em-dials-sub { grid-template-columns: 1fr; } }
+
+/* --- quiet editorial sections below the hero --- */
+#emergency .em-section { margin-top: var(--s8); }
+#emergency .em-h { display: flex; align-items: baseline; gap: var(--s2); margin: 0 0 var(--s4);
+  font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 700; text-transform: uppercase;
+  letter-spacing: var(--tracking-wide); color: var(--ink-faint); }
+#emergency .em-h::before { content: ""; align-self: center; flex: none; width: .45rem; height: .45rem; border-radius: 2px; background: var(--shu); }
+.em-h-aside { font-family: var(--serif); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-faint); }
+.em-note { margin: var(--s2) 0 0; color: var(--ink-soft); font-size: .9rem; line-height: var(--lh-snug); }
+
+/* dialable phone links inside embassy/contact copy */
+.sos-tel { color: var(--red); text-decoration: none; font-weight: 700; white-space: nowrap;
+  font-variant-numeric: tabular-nums; border-bottom: 1px solid color-mix(in srgb, var(--red) 35%, transparent); }
+.sos-tel:hover { border-bottom-color: var(--red); }
+.sos-tel:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 2px; }
+
+/* contacts — floating washi cards (.alm-card) */
 .em-contacts { display: grid; gap: var(--s3); }
-.em-contact { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); }
-.em-contact-label { margin: 0; font-weight: 800; }
-.em-contact-detail { margin: var(--s2) 0 0; font-variant-numeric: tabular-nums; }
-.em-carry { margin: 0; padding-left: 1.25rem; display: grid; gap: var(--s2); }
-.em-carry li { line-height: 1.5; }
-.em-phrases { display: grid; gap: var(--s2); }
-.em-phrase { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); display: grid; gap: .15rem; }
-.em-phrase .jp { font-size: 1.25rem; font-weight: 700; }
-.em-phrase .em-read { color: var(--ink-soft); font-size: .9rem; }
-.em-phrase .em-en { font-weight: 600; }
+.em-contact { padding: var(--s4); }
+.em-contact-label { margin: 0; font-family: var(--serif); font-weight: 600; font-size: var(--fs-md); }
+.em-contact-detail { margin: var(--s2) 0 0; line-height: var(--lh-snug); }
+
+/* always-carry — a clean checklist on the page ground (gold ticks, not a card) */
+.em-carry { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s3); }
+.em-carry li { position: relative; padding-left: 1.5rem; line-height: var(--lh-snug); color: var(--ink); }
+.em-carry li::before { content: ""; position: absolute; left: .25rem; top: .5em; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); }
+
+/* phrases — big JA, meant to be turned toward a stranger and shown */
+.em-phrases { display: grid; gap: var(--s3); }
+.em-phrase { display: grid; gap: .15rem; padding: var(--s4); }
+.em-phrase .jp { font-size: var(--fs-xl); font-weight: 600; line-height: var(--lh-tight); color: var(--ink); }
+.em-phrase .em-read { margin-top: var(--s2); font-family: var(--mono); font-size: var(--fs-xs); color: var(--ink-faint); }
+.em-phrase .em-en { margin-top: var(--s1); font-family: var(--serif); font-style: italic; font-size: var(--fs-sm); color: var(--ink-soft); }
 
 /* ============ Print one-page summary (#printView) ============ */
 /* #printView is hidden on screen (hidden attr); the @media print rule reveals it and hides chrome. */

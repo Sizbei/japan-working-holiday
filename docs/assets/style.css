@@ -4012,7 +4012,7 @@ body[data-route="calendar"] .cal-grid.cal-endless .cal-chip{ padding: 1px 6px; m
 .ank-card:focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 .ank-card.is-shaky{ border-color: var(--gold); }
 .ank-flag{ position:absolute; top:.6rem; right:.7rem; font-family: var(--mono); font-size:.62rem; font-weight:700; color: color-mix(in srgb, var(--gold-ink, #8a6508) 60%, var(--ink)); }   /* stage-20 critic: was 2.96:1 in light */
-.ank-word{ font-size:2.6rem; font-weight:800; line-height:1.1; color: var(--ink); }
+.ank-word{ font-size:2.6rem; font-weight:700; line-height:1.1; color: var(--ink); }
 /* reading rides above the word as ruby; SIZE stays on .ank-word so the mobile 2.1rem override still
    wins. The site's `.furi-off ruby > rt{visibility:hidden}` toggles the reading for free. */
 ruby.ank-word{ ruby-position: over; line-height: 1.9; }
@@ -4088,8 +4088,6 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-prog-mini{ opacity:.7; }
 .ank-prog-bar{ flex:1 1 120px; height:5px; min-width:100px; background: var(--line); border-radius: var(--r-pill); overflow:hidden; }
 .ank-prog-bar > i{ display:block; height:100%; background: var(--indigo); border-radius: var(--r-pill); transition: width var(--t-hover); }
-.ank-hint{ margin:.5rem 0 0; font-size:.76rem; color: var(--ink-soft); }
-.ank-hint b{ font-family: var(--mono); }
 
 /* touch: 44px targets, no reliance on hover */
 @media (hover: none){
@@ -4108,7 +4106,6 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-controls{ display: none; }
 .ank-tap{ display: none; }
 @media (hover: none), (max-width: 560px){
-  .ank-hint{ display: none; }                                   /* keyboard hint is irrelevant on touch */
   .ank-bar, .ank-bar-acts{ flex-wrap: wrap; }                   /* Stream/Skim/Shuffle/Replace wrap instead of clipping off-screen */
   .ank-card{ padding: var(--s6) var(--s4); min-height: 200px; }  /* fit a phone */
   .ank-word{ font-size: 2.1rem; }

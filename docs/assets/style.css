@@ -3942,7 +3942,7 @@ ruby.ank-word rt{ font-size:.42em; font-weight:500; color: var(--ink-soft); }   
 .ank-deck-add{ font-family: var(--mono); font-size:.72rem; font-weight:700; border:1px dashed var(--line); background:none; color: var(--ink-soft); border-radius: var(--r-sm); padding:.3rem .6rem; cursor:pointer; }
 .ank-deck-add:hover{ border-color: var(--indigo); color: var(--ink); }
 /* deck search — jump to any card by text */
-.ank-search-wrap{ position:relative; flex-basis:100%; max-width: 18rem; margin-top:.15rem; }   /* own row, left-aligned — never float right in a gap */
+.ank-search-wrap{ position:relative; flex:1 1 12rem; min-width:9rem; max-width:26rem; }   /* sits inline after the toggles and grows into the leftover space; wraps to its own full-width row only when the bar is too narrow (mobile) */
 .ank-search{ width:100%; font:inherit; font-size:.82rem; padding:.4rem .6rem; border:1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); color: var(--ink); }
 .ank-search:focus{ outline:none; box-shadow: var(--ring); border-color: var(--indigo); }
 .ank-search-res{ position:absolute; z-index:20; left:0; right:0; top:calc(100% + 3px); max-height: 15rem; overflow-y:auto; background: var(--bg-elevated); border:1px solid var(--line); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); }

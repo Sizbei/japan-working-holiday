@@ -9,6 +9,7 @@ import { wireJpAccents } from './lang.js';
 import { fetchQuakes } from './lib/quakes.js';
 import { tripWindow, stayForNight, stayBooked } from './lib/trip.js';
 import { nowISO, fmtShort } from './lib/dates.js';
+import { dialsHTML, linkifyIntlPhones } from './lib/emergency-render.js';
 
 export function mountEmergency(data) {
   const host = $('#emergencyContent');
@@ -18,33 +19,28 @@ export function mountEmergency(data) {
 
   const sections = [];
 
+  // THE HERO — 110 / 119 the instant the page opens: dial-in-one-glance-and-tap from
+  // anywhere, before anything scrolls. First two numbers (Police, Fire/Ambulance) render
+  // as big display cards; any remaining lines (Coast Guard, helpline) ride below, slimmer.
   if (numbers.length) {
-    const rows = numbers.map(n => {
-      const num = String(n?.num || '');
-      const note = n?.note ? `<p class="em-note">${esc(n.note)}</p>` : '';
-      return `<a class="em-call" href="tel:${esc(num)}">
-        <span class="em-num">${esc(num)}</span>
-        <span class="em-call-label">${esc(n?.label || '')}</span>
-        ${note}
-      </a>`;
-    }).join('');
-    sections.push(`<section class="em-section" aria-labelledby="em-h-numbers">
-      <h3 id="em-h-numbers" class="em-h">Emergency numbers</h3>
-      <div class="em-calls">${rows}</div>
+    sections.push(`<section class="em-hero" aria-labelledby="em-h-numbers">
+      <h3 id="em-h-numbers" class="em-hero-kicker">Emergency · tap to call · free from any phone</h3>
+      <div class="em-dialpad">${dialsHTML(numbers.slice(0, 2), { hero: 2 })}</div>
+      ${numbers.length > 2 ? `<div class="em-dials-sub">${dialsHTML(numbers.slice(2))}</div>` : ''}
     </section>`);
   }
 
   if (contacts.length) {
     const rows = contacts.map(c => {
-      const note = c?.note ? `<p class="em-note">${esc(c.note)}</p>` : '';
-      return `<div class="em-contact">
+      const note = c?.note ? `<p class="em-note">${linkifyIntlPhones(c.note)}</p>` : '';
+      return `<div class="em-contact alm-card">
         <p class="em-contact-label">${esc(c?.label || '')}</p>
-        <p class="em-contact-detail">${esc(c?.detail || '')}</p>
+        <p class="em-contact-detail">${linkifyIntlPhones(c?.detail || '')}</p>
         ${note}
       </div>`;
     }).join('');
     sections.push(`<section class="em-section" aria-labelledby="em-h-contacts">
-      <h3 id="em-h-contacts" class="em-h">Key contacts</h3>
+      <h3 id="em-h-contacts" class="em-h">Embassy &amp; key contacts</h3>
       <div class="em-contacts">${rows}</div>
     </section>`);
   }
@@ -65,14 +61,14 @@ export function mountEmergency(data) {
   if (phrases.length) {
     const rows = phrases.map(p => {
       const read = p?.read ? `<span class="em-read">${esc(p.read)}</span>` : '';
-      return `<div class="em-phrase">
+      return `<div class="em-phrase alm-card">
         <span class="jp" lang="ja">${esc(p?.jp || '')}</span>
         ${read}
         <span class="em-en">${esc(p?.en || '')}</span>
       </div>`;
     }).join('');
     sections.push(`<section class="em-section" aria-labelledby="em-h-phrases">
-      <h3 id="em-h-phrases" class="em-h">Emergency phrases</h3>
+      <h3 id="em-h-phrases" class="em-h">Emergency phrases <span class="em-h-aside">show the Japanese</span></h3>
       <div class="em-phrases">${rows}</div>
     </section>`);
   }

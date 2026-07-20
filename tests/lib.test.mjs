@@ -3582,3 +3582,49 @@ test('stripEmoji removes pictographs/flags but keeps arrows, kana, punctuation',
   assert.equal(stripEmoji(''), '');
   assert.equal(stripEmoji(null), '');
 });
+
+import { dialHTML, dialsHTML, linkifyIntlPhones } from '../docs/assets/lib/emergency-render.js';
+test('dialHTML builds a tel: target, esc()s, gates the note to hero tier', () => {
+  const police = { num: '110', label: 'Police', note: 'Crime, theft & accidents.' };
+  const hero = dialHTML(police, 'hero');
+  assert.ok(hero.includes('href="tel:110"'));
+  assert.ok(hero.includes('sos-dial--hero'));
+  assert.ok(hero.includes('aria-label="Call Police, 110"'));
+  assert.ok(hero.includes('Crime, theft'));                       // hero shows the note
+  assert.ok(!dialHTML(police, 'sub').includes('sos-dial-note'));  // sub/compact hide it
+  assert.ok(!dialHTML(police, 'compact').includes('sos-dial-note'));
+  assert.equal(dialHTML({ num: '' }), '');                        // no number → nothing
+  assert.equal(dialHTML(null), '');
+  assert.ok(dialHTML({ num: '119', label: '<b>x</b>' }).includes('&lt;b&gt;'));  // esc'd
+});
+test('dialsHTML: hero-count splits tiers on the page, compact flattens for the pocket', () => {
+  const nums = [{ num: '110', label: 'Police' }, { num: '119', label: 'Fire' },
+    { num: '118', label: 'Coast Guard' }, { num: '', label: 'skip me' }];
+  const page = dialsHTML(nums, { hero: 2 });
+  assert.equal((page.match(/sos-dial--hero/g) || []).length, 2);
+  assert.equal((page.match(/sos-dial--sub/g) || []).length, 1);   // 118; blank entry dropped
+  const pocket = dialsHTML(nums, { compact: true });
+  assert.equal((pocket.match(/sos-dial--compact/g) || []).length, 3);
+  assert.ok(!pocket.includes('sos-dial--hero'));
+  assert.equal(dialsHTML(null), '');
+  assert.equal(dialsHTML([]), '');
+});
+test('linkifyIntlPhones links +-numbers, leaves postal/street codes alone', () => {
+  const out = linkifyIntlPhones('+81-3-5412-6200 · 7-3-38 Akasaka, Tokyo 107-8503');
+  assert.ok(out.includes('href="tel:+81-3-5412-6200"'));
+  assert.ok(out.includes('>+81-3-5412-6200</a>'));
+  assert.ok(!out.includes('tel:7-3-38'));       // street number stays text
+  assert.ok(!out.includes('tel:107-8503'));     // postal code stays text
+  const collect = linkifyIntlPhones('Ottawa +1-613-996-8885 (call collect)');
+  assert.ok(collect.includes('href="tel:+1-613-996-8885"'));
+  assert.ok(collect.includes('(call collect)'));
+  assert.ok(linkifyIntlPhones('<script>').includes('&lt;script&gt;'));  // plain text esc'd
+  assert.equal(linkifyIntlPhones(''), '');
+  assert.equal(linkifyIntlPhones(null), '');
+  // greedy-merge guard: a trailing space-separated digit run must NEVER fuse into the tel: target
+  // (a corrupted dial number). Spaces terminate a match — spaced phones stay plain text (safe).
+  const greedy = linkifyIntlPhones('+81-3-1234-5678 90 more');
+  assert.ok(greedy.includes('href="tel:+81-3-1234-5678"'));
+  assert.ok(!greedy.includes('tel:+81-3-1234-567890'));
+  assert.ok(!linkifyIntlPhones('+81 3 5412 6200').includes('<a'));  // spaced → under-link, not corrupt
+});

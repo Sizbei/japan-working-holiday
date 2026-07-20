@@ -257,12 +257,21 @@ function renderPanel(alerts) {
   // swipe-to-dismiss (pointer; tap still navigates, vertical scroll preserved)
   const reduce = prefersReducedMotion();   // honours the app's ⚙ toggle as well as the OS setting
   $$('#notifPanel .np-item').forEach(li => {
-    let sx = 0, dx = 0, dragging = false;
-    li.addEventListener('pointerdown', e => { sx = e.clientX; dx = 0; dragging = true; li.setPointerCapture?.(e.pointerId); });
+    let sx = 0, dx = 0, dragging = false, captured = false;
+    li.addEventListener('pointerdown', e => {
+      if (e.target.closest('.np-x')) return;   // pressing ✕ is a dismiss click, never a swipe — don't hijack it
+      sx = e.clientX; dx = 0; dragging = true; captured = false;
+    });
     li.addEventListener('pointermove', e => {
       if (!dragging) return;
       dx = e.clientX - sx;
-      if (Math.abs(dx) > 6) { e.preventDefault(); if (!reduce) { li.style.transform = `translateX(${dx}px)`; li.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 180)); } }
+      if (Math.abs(dx) > 6) {
+        // capture ONLY once a real drag starts — capturing on pointerdown retargets the ✕'s click
+        // to the <li>, so tapping ✕ never fires its dismiss handler (the reported bug)
+        if (!captured) { li.setPointerCapture?.(e.pointerId); captured = true; }
+        e.preventDefault();
+        if (!reduce) { li.style.transform = `translateX(${dx}px)`; li.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 180)); }
+      }
     });
     const end = () => {
       if (!dragging) return; dragging = false;

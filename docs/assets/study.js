@@ -1304,7 +1304,10 @@ function wireRoot() {
     // (native Tab + Enter/Space-on-a-focused-button still operate every control — Principle 5).
     const enabled = shortcutsEnabled();
 
-    if (activeFlow) { if (enabled) activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
+    // Bare Escape is a named key (WCAG-2.1.4-exempt, like the exam's container-listener Esc), so it
+    // still reaches the flow when shortcuts are off — Esc never activates a focused button natively,
+    // so unlike Enter there is no double-fire / wrong-button risk in forwarding it.
+    if (activeFlow) { if (enabled || e.key === 'Escape') activeFlow.onKey(e); return; }   // active lesson/placement/test-out owns keys
     if (cardCtl) { if (enabled) cardCtl.onKey(e); maybeAutoAdvanceAfterPick(); return; }   // a live ★-scramble / MCQ card owns its keys; a correct digit-pick may arm auto-advance (K5)
 
     // submit→continue debounce: one physical Enter/Space must not submit AND then skip past the
